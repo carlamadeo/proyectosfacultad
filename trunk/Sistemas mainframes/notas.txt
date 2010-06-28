@@ -1,0 +1,109 @@
+PSW: Program status word. Estado de la ejecución de un programa.
+Clustering-> Sysplex (system complex)
+	Brinda posibilidades:
+		- Escalabilidad.
+		- Alta disponibildad.
+		- Imagen de un único sistema
+
+¿Se puede armar entre pares de una caja con otra caja? Si. Se puede armar como quieras.
+
+GRS/XES: GRS extendido (Extended Services). Es lo que permite serializar los recursos. Se usa en Parallel sysplex.
+
+¿Qué cosas eran necesarias, desde el punto de vista del hardware, para poder armar un sysplex?
+
+- Facilidad de acoplamiento (Coupling Facility) un lpar que tiene un zos especial cuya función es el control de sysplex
+- Canales de alta velocidad CTC (Coupling Links).
+- En caso de que las máquinas sean de distinta velocidad un ETR (External timer requester ó Sysplex timer)
+- Y por su puesto esto se monta sobre un esquema de discos compartidos, shared DASD
+
+GDPS: Alta disponibilidad en un data center ante atentados o imprevistos (torres gemelas, etc). La distancia máxima de 100km se puede ampliar utilizando un switch FICON (DWM). Con el switch se amplia a 400km. Y con un DWM se puede levantar a satélite.
+GDPS es sw + hw + protocolo de I/O
+
+DAT: Dynamic Adress Translation. Traduce una dirección virtual en una dirección real.
+
+Z10 es la única quad-core.
+
+Tipos de Work Load:
+	- Batch.
+	- Online.
+	- ?
+
+LPar(Partición lógica) se hace por hardware. Max: 60 particiones. Está limitado por la cantidad de procesadores y memoria.
+
+Max. cantidad procesadores: 64.
+
+MCM: puede tener hasta 12, y tiene 5 procesadores por placa.
+
+Roles:
+System programmer
+Operador
+Usuario final
+Desarrollador
+
+
+Canal: Es la forma que tiene el hardware de esta arquitectura para comunicarse con cualquier dispositivo (disco, cinta, terminal, impresora).
+
+
+IOCDS: Archivo de control de I/O. Está metido dentro del service processor. Hay un IOCDS vivo por cada vez que la máquina es encendida.
+
+Los dispositivos son identificados según su dirección.
+
+130 x ejemplo:
+- 1: Dirección del canal
+- 2: Dirección de la unidad de control
+- 3: Dirección del dispositivo.
+Puede ser FFF. Por lo tanto, permite 4k dispositivos.
+
+IOCDS - IOCP - IODF
+
+A cada dispositivo se lo llama con el Real Device Number (Rdevno) que es equivalente a lo que en la arquitectura 360 era el Device Adress. No hay que confundirlos, en la arquitectura z no hay Device Adress.
+
+CHPID: Channel Path ID.(Canales virtuales). Son configurables.
+
+Bits usados para armar las direcciones virtuales (apunte 3):
+64 z
+31
+24
+
+Command Set List
+
+TLP 
+
+MP Parte de TSO que permite simular una terminal de TSO. Permite escribir command process.
+
+*** -> Indica que hay más info para ver.
+
+Usando ISPF Para copiar el contenido de un archivo en otro? Se hace con el menú Utílities. ¿opción 3?
+
+Paging: bajar páginas de memoria a disco.
+
+Swap: Es un algoritmo que sigue el WEM (que maneja la performance) para evitar la saturación de recursos críticos como son la memoria y el procesador. Cuando tengo una demanda de carga excesiva y empiezo a llegar a umbrales de saturación, comienzan los algoritmos de swapping. Se hace un page out de tódas las páginas que residen en memoria.
+El Swap hace que todo el working set sea forzado a salir, para liberar esas páginas y por lo tanto se produzca una menor demanda de carga de máquina. Es un mecanismo de balanceo de carga, no está relacionado con la paginación. Lo hace el system resource manager (SRM). El SRM trabaja de la mano con el work load manager (WLM).
+
+Working set: Cantidad mínima de páginas que tienen que estar residiendo en memoria real para que una instrucción se pueda ejecutar.
+
+Página no referenciada. Cada vez que haya un adress space que referencie un frame (página) se va a incrementar un contador. Las páginas más predispuestas a salir son las que tienen contador menor.
+
+Page-Fault: Cuando hay una falta de una página, un programa necesita una página para seguir ejecutando. Automáticamente está acompañado de un page-in. Y de vez en cuando un page-out.
+
+Diferencias entre paginado y swap:
+- El paginado es página a página, mientras que el swap es contra todas las páginas.
+- El paginado está relacionado con el uso del recurso de la memoria. El swap está relacionado con el uso de los recursos procesador y memoria.
+
+Interrupción: Evento del sistema que interrumpe el programa que se está ejecutando. Por ejemplo: page fault o I/O. Hay 16 tipos de interrupciones.
+
+RAS: Reliability Availability Service -> Zero Fallas -> Z
+
+Storage Isolation: Controla que no haya fallas de segmentación. No deja acceder a un área de memoria para el que no tengo acceso.
+
+Son facilidades de hardware de disco, ahora la cpu no interviene.
+Se conocía como ESS (Enterprise Server Storage).
+Copias locales:
+- Flash Copy: espejado de disco en la misma caja de disco.
+- snapshot: agarrar un disco, un dataset, o un conjunto de disco, y copiarlo en otro disco del mismo mueble. (Local)
+Copias remotas:
+- Asincrónica XRC (Extended remote copy): idem que el snapshot, pero la copia va a parar en un disco en otra caja.
+- Sincrónico PPRC (Pear to Pear Remote Copy): El disco secundario es un clon del primario. En cuanto termina de grabar, el segundo disco avisa al primero que terminó la operación de I/O.
+
+Cualquier duda:
+taretto@ar.ibm.com
