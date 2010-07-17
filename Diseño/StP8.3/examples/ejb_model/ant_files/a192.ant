@@ -1,0 +1,47 @@
+FileObject 1
+{
+    { Name "a192" }
+    { Type ObjectAnnotation }
+    { GUID "UID_000E2B75-F298-4895-B63D-8F54B540CFB2" }
+}
+
+NodeObject 99999
+{
+    { Name "SessionBean" }
+    { Type UmlStereotype }
+    { ObjectId 409 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_7A2C12E5-1676-11d5-8C78-000000000000" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 411 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 413 }
+    { DescLine "This Stereotype denotes an SessionBean" }
+    { DescLine "(stateless or stateful)." }
+    { DescLine "It can be used to differentiate this class from " }
+    { DescLine "EntityBeans, Datasources or non-EJB-related" }
+    { DescLine "Java classes." }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "SessionBean" }
+    { NoteId 3 }
+    { ObjectId 414 }
+}
+

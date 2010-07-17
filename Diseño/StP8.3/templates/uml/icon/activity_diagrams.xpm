@@ -1,0 +1,27 @@
+/* XPM */
+static char* activity_diagrams_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 5 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #ffffff	c #c0c0c0",
+"o	m #000000	c #00ffff",
+/* pixels */
+".....XXX........",
+".....XXXO.......",
+".....XXXO.......",
+"......XOO.......",
+"......XO........",
+".....XXX........",
+"......XOO.......",
+"......OO........",
+"...XXXXXXX......",
+"..XoooooooX..X..",
+"..X O O O XXXXX.",
+"..XO O O OXOOXOO",
+"...XXXXXXX.O..O.",
+"....OOXOOOO.....",
+".....XXX........",
+"......XO........"};

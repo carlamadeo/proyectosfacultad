@@ -1,0 +1,200 @@
+4054038019421021pend = new Pendulum();
+currentState = _HASNOENERGY;
+4074038019501021409403800035102141541380195010414174138000351041send  pendulum.go
+424422801950106142642280003510614334318019421081display.showDoorState("\nDoor closed\n\n");
+doorStatus = false;
+435431801950108143743180003510814434418019421101display.showDoorState("Door opened\n");
+doorStatus = true;
+4454418019501101447441800035110145345180192411214554518019501121457451800035112146145180157011214664648019241141468464801950114147046480003511414744648015701141479477801950116148147780003511614864848019421181setEnergy(e);
+4884848019501181490484800035118149649480192412014984948019501201500494800035120150449480157012015095078019421221System.out.print(hour + "." + minute + " ");
+if (minute == 0)
+	System.out.print("\n");
+5115078019501221513507800035122151951780192412415215178019501241523517800035124152751780157012415325308019421261setEnergy(getEnergy()-e);
+return 0;
+5345308019501261536530800035126154254080195012815445408000351281549547801956130155454780195013015565478000351301561559801956132156555980195013215675598000351321572570801950134157457080003513415795778019561361582577801950136158457780003513615895878019561381593587801950138159558780003513816005988019421401return door.getDoorStatus();
+602598801950140160459880003514016106088019421421display.showTime(hour, minute);
+61260880195014216146088000351421620618801952144162561880195014416276188000351441In order to start the watch the administrator has 
+to raise the weight.
+6306188015701441635633801952146164063380195014616426338000351461The administrator has to set the starting time. 
+For ease of use this can be part of the model, so the starting time is
+always the same.
+6464128019241481648412801950148165041280003514816544128015701481659657801952150166465780195015016666578000351501The following behaviour is visible to the user:
+- each quarter of an hour is shown,
+  represented by a grahical interface.
+- each solid hour the door opens,
+- each solid hour the clockbird is crying 
+  during daytime the coocoo,
+  at night the owl.
+- after the bird cried the door closes.
+6696578015701501674672801952152167967280195015216816728000351521The clockwork runs as long as the pendulum moves 
+from side to side.
+Each movement of the pendulum forces the 
+clockwork to move that in turn represents
+passing of time.
+Each solid hour the clockwork forces the 
+clockbird to cry as well as opening/closing
+the door so that the clockbird will not be hurt
+when it jumps outside to cry.  
+Each quarter of an hour is shown on a display.
+6846728015701521691689801950154169368980003515416986968019501561700696800035156170670480195015817087048000351581713711801950160171571180003516017207188019501621722718800035162172872680195016417307268000351641This state will be reached at each solid hour at night.
+The definition of night is made by the appropriate guard condition of the 
+transition, that leads to this state, thus it can be changed by the model.
+73673480195016617387348000351661This state will be reached by each transition if time is not a solid hour.
+74474280195016817467428000351681This state will be reached at each solid hour during daytime.
+The definition of daytime is made by the appropriate guard condition of the 
+transition, that leads to this state, thus it can be changed by the model.
+752750801950170175475080003517017597578019421721if (isDoorOpened()) {
+	int i = hour % 12;
+	if (i==0) 
+		i = 12;
+	while (i-- > 0)
+		display.showBirdCry("Ouhouu ");
+}
+else
+	display.showBirdCry("\nOutsch\n");
+761757801950172176375780003517217697678019421741if (isDoorOpened()) {
+	int i = hour % 12;
+	if (i==0) 
+		i = 12;
+	while (i-- > 0)
+		display.showBirdCry("Cuckoo ");
+}
+else
+	display.showBirdCry("\nOutsch\n");
+77176780195017417737678000351741779777801952176178477780195017617867778000351761The movement of the pendulum from left to right
+and vice versa needs energy that is delivered
+by the sinking weight.
+7897778015701761795793801950178179779380003517818017928019501801803792800035180180880680195018218108068000351821The normal nationality of a black forest 
+coocoo watch owner is japanese or american.
+It was a souvenir of a wonderful and unforgetable
+journey to the deep black forest.
+81581380195018418178138000351841Keep care:
+an original black forest coocoo watch is a 
+piece of high tech manufactured by the 
+original inhabitants of black forest.
+So it is strictly recommended for the watch
+administrator to hold a diploma of engineering.
+822820801950186182482080003518618298278019561881832827801950188183482780003518818398378019561901843837801950190184583780003519018508488019421921System.out.print(s);
+852848801950192185484880003519218608588019421941System.out.print(s);
+8628588019501941864858800035194187086880195019618728688000351961877875801956198188187580195019818838758000351981888886801956200189188680195020018938868000352001898896801950202190089680003520219059038019562041909903801950204191190380003520419169148019562061919914801950206192191480003520619269248019502081928924800035208193393180195621019389318019502101941931800035210194694480195621219509448019502121952944800035212195795580195021419599558000352141964962801956216196796280195021619699628000352161974972801956218197897280195021819809728000352181985983801950220198798380003522019929908019562221997990801950222199999080003522211004100280195622411008100280195022411010100280003522411014316801950226110163168000352261In this class diagram only the clockwork classes (domain classes)
+are considered.
+1020318801950228110223188000352281In this diagram the focus is at the class display.
+The classes Door, Clockwork and Clockbird all send their output
+to the central Display class.
+At a first approach the output will be send to a console window by 
+class Display.
+In a next, more elaborated version, the output could be graphical
+that's why the output is encapsulated by Display.
+1026322801950230110283228000352301At the moment ClockBird is only used to hold the reference to the 
+Singleton class Door. This reference is used from Owl and Coocoo.
+1032332801950232110343328000352321The cry method of class Owl is called from the clockwork
+state diagram. It will be called by whatever is defined in the
+state diagram to be a solid hour at night.
+1038326801950234110403268000352341The cry method of class coocoo is called from the clockwork
+state diagram. It will be called by whatever is defined in the
+state diagram to be a solid hour during day.
+1044360801950236110463608000352361Once the pendulum started moving it just moves from left to right
+and vice versa. Each movement is denoted by a transition, that sends
+a send event tick to the clockwork.
+1050366801950238110523668000352381This diagram clarifies again the energy source of the 
+whole clock. 
+Once the weight is raised up to a higher energetic level
+it delivers energy by sinking. This energy is used to move
+the pendulum (send event move to pendulum).
+While sinking the potential energy is decreasing until it 
+is zero. Then the whole process stops.
+1056362801950240110583628000352401This diagrams clarifies, that weight has only one state - 
+hasEnergy. Each transition proofs the guard condition.
+If the decreasing energy is zero no more send events 
+will be send to pendulum.
+1062308801950242110643088000352421In this table only requirements are captured that belong to the
+application.
+1068310801950244110703108000352441All information that should be presented to the user may not be part of the
+application. In order to exchange the output meschanism later from a console to 
+a graphical user interface we need a louse coupling between application and
+display. 
+That's why display requirements are captured in a separate requirements table.
+1074352801950246110763528000352461The only object that needs explanation is Clockbird.
+It's used only because it is the generalisation of Owl and Coocoo to
+keep the diagram simple. In fact either owl or coocoo is crying.
+When they will cry is defined as part of the state diagram
+of class Clockwork.
+108110798019522481108610798019502481108810798000352481There is a magic and still secret behaviour of the coocoo clock
+bird if the solid hour during day falls at a total solar eclipse.
+In this really seldom situation the owl comes out to cry.
+109110798015702481109610948019502501109810948000352501110110948015702501110611048019502521110811048000352521111111048015702521111611148019502541111811148000352541112111148015702541112411148700022541112970380195025611131703800035256111347038015702561113911378019502581114111378000352581114411378015702581114872580195026011150725800035260111537258015702601115811568019502621116011568000352621116311568015702621116811668019422641if ((hour>6 && hour<=18) && minute==0)
+	return true;
+else
+	return false;
+117011668019502641117211668000352641117811768019422661if ((hour>18 || hour<=6) && minute==0)
+	return true;
+else
+	return false;
+118011768019502661118211768000352661118742180192426811189421801950268111914218000352681119711958019422701if (minute != 0)
+	return true;
+else 
+	return false;
+119911958019502701120111958000352701120712058019502721120912058000352721121512138019502741121712138000352741122243080192427611226430801950276112294308000352761The class Door is extended with an tagged value
+"pattern=singleton".
+The reason is that two other classes (Clockwork and Clockbird)
+have associations to class Door.
+Because the coocoo watch only has one door it must be ensured 
+that the instances of Clockwork and Clockbird hold the same 
+reference to the same (single) door.
+If the codegenerator detects that tagged value it automatically
+generates the appropriate class as singleton.
+This has some impacts for the class (marked as singleton) as well
+as classes that hold associations to the singleton class.
+These impacts are:
+- for the class Door:
+  it will be generated a static instance variable of type Door,
+  it will be generated a static instance access method that returns
+  the content of the static instance variable.
+- for classes having association to the class marked as singleton:
+  to obtain a reference to the singleton class its static
+  instance access method is invoked.
+12334308015702761123812368019502781124012368000352781124512438019562801124812438019502801125012438000352801125512538019562821126012538019502821126212538000352821126712658019422841Weight weight = new Weight();
+weight.run();
+126912658019502841127112658000352841127612748019422861takeEvent(_RAISE);
+while(hasEnergy(10)) {
+  takeEvent(_SINK);
+}
+127812748019502861128012748000352861128512838019422881door = Door.getInstance();
+cuckoo = new Cuckoo();
+owl = new Owl();
+display = new Display();
+currentState = _NOTMOVING;
+128712838019502881128912838000352881129412928019422901door = Door.getInstance();
+display = new Display();
+129612928019502901129812928000352901130313018019422921display = new Display();
+130513018019502921130713018000352921131213108019422941clockwork = new Clockwork();
+currentState = _NOTMOVING;
+131413108019502941131613108000352941132113198019422961if (energy-e >= 0)
+  return true;
+else
+  return false;
+132313198019502961132513198000352961133013288019672981133213288019502981133413288000352981The packages holds all classes that
+are responsible for the inner workings
+of the blackforest watch clockwork.
+133913378019673001134113378019503001134313378000353001This package contains all classes that are responsible
+for representing the user visible parts of a blackforest
+watch, that means door and clockbirds.
+134813468019673021135013468019503021135213468000353021This package holds just one class - Display.
+135640280192430411358402801950304113604028000353041Because Weight is the represantation of the physical weight
+that delivers the energy for the clock to run, it should
+contain the main method.
+
+Inside the main method the class Weight will be instantiated
+and as second step a run method will be invoked .
+The behavioural aspect of Weight is modelled in a state diagram, so 
+the label of the transition between the creation state and the first state
+will although be automatically generated as part of the run method.
+13644028015703041136913678019423061if (minute+m == 60) {
+	minute = 0;
+	if (hour + 1 == 24)
+		hour = 0;
+	else
+		++hour;
+} else
+	minute += m;
+137113678019503061137313678000353061140614038015713081The weight must be raised in order to deliver the "energy" that forces the pendulum to move. Moving the pendulum is an energy consuming process141114088015713081The pendulum is moved by the weight where each movement from side to side costs energy (delivered by the sinking weight).141614138015713081The clockwork is moved by the pendulum. The movement of the clockwork  simulates the passing of time. The clockwork controls time and forces the clockbird to cry each solid hour. The clockwork although is responsible to send the time to the display and opens and closes the door.142114188015713081The door must be opened before the clockbird can cry. Afterwards the door must be closed.142814248015713081During daytime the coocoo has to cry each hour. This is controlled by the clockwork.143414308015713081At nighttime the owl has to cry each solid hour. This is controlled by the clockwork.143714238015713081Each hour the clockbird has to cry. It is forced by the clockwork.146114588015713101The display is responsible for all output. As a first approach it is enough to show the output at the console. In order to exchange the console based display with a graphical one, we need a loose coupling between the application and the display150415028040023141151415128040023141152415228040023141153415328040023141154515438040023141155315518040023141156115598040023141157115698040023141157915778040023141180342280193832211805598801938322118071292801938322118094228019343221181159880193432211813129280193432211815422801944322118175988019443221181912928019443221182142280194532211823598801945322118251292801945322118274228019703221182959880197032211831129280197032211833421801923322118364228019403221185259880194032211867129280194032211883121380190232411885477801902324118871213801900324118894778019003241189112138019063241189347780190632411895121380190732411897477801907324118991213801971324119014778019713241190313678019383241190560880193832411907116680193832411909117680193832411911119580193832411913128380193832411915136780193432411917608801934324119191166801934324119211176801934324119231195801934324119251283801934324119271367801944324119296088019443241193111668019443241193311768019443241193511958019443241193712838019443241193913678019453241194160880194532411943116680194532411945117680194532411947119580194532411949128380194532411951136780197032411953608801970324119551166801970324119571176801970324119591195801970324119611283801970324119634128019233241196612138019043241197647780190432411986136780194032412001608801940324120161166801940324120311176801940324120461195801940324120611283801940324120817678019383261208376780193432612085767801944326120877678019453261208976780197032612091464801923326120947678019403261211350780193832812115848801938328121178588019383281211950780193432812121848801934328121238588019343281212550780194432812127848801944328121298588019443281213150780194532812133848801945328121358588019453281213750780197032812139848801970328121418588019703281214349480192332812146507801940328121618488019403281217685880194032812196120580190233012198120580190033012200120580190633012202120580190733012204120580197133012206431801938330122084418019383301221013018019383301221243180193433012214441801934330122161301801934330122184318019443301222044180194433012222130180194433012224431801945330122264418019453301222813018019453301223043180197033012232441801970330122341301801970330122364308019233301223912058019043301224943180194033012264441801940330122791301801940330122967578019383321229875780193433212300757801944332123027578019453321230475780197033212306451801923332123097578019403321232913108019383341233113108019343341233313108019443341233513108019453341233713108019703341233951780192333412342131080194033412355160280190233612357160280190033612359160280190633612361160280190733612363160280197133612365403801938336123674848019383361236953080193833612371126580193833612373127480193833612375131980193833612377403801934336123794848019343361238153080193433612383126580193433612385127480193433612387131980193433612389403801944336123914848019443361239353080194433612395126580194433612397127480194433612399131980194433612401403801945336124034848019453361240553080194533612407126580194533612409127480194533612411131980194533612413403801970336124154848019703361241753080197033612419126580197033612421127480197033612423131980197033612425402801923336124281602801904336124344038019403361244448480194033612459530801940336124741265801940336124851274801940336124951319801940336127042702801954UmlSequenceDiagram340127172715801929UmlSequenceDiagram%ClockBirdBehaviourAtTotalSolarEclipse__1%16340127262724801929UmlSequenceDiagram%ClockBirdBehaviourAtTotalSolarEclipse__1%13340127352733801929UmlSequenceDiagram%ClockBirdBehaviourAtTotalSolarEclipse__1%12340127442742801929UmlSequenceDiagram%ClockBirdBehaviourAtTotalSolarEclipse__1%11340127681137801954UmlSequenceDiagram342127812715801929UmlSequenceDiagram%ClockworkIsRunning__1%638342127892724801929UmlSequenceDiagram%ClockworkIsRunning__1%600342127982796801929UmlSequenceDiagram%ClockworkIsRunning__1%26342128072805801929UmlSequenceDiagram%ClockworkIsRunning__1%24342128152733801929UmlSequenceDiagram%ClockworkIsRunning__1%13342128242822801929UmlSequenceDiagram%ClockworkIsRunning__1%12342128332831801929UmlSequenceDiagram%ClockworkIsRunning__1%11342128672865801954UmlSequenceDiagram344128772875801929UmlSequenceDiagram%ForceClockToRun__1%19344128862884801929UmlSequenceDiagram%ForceClockToRun__1%8344129062904801954UmlSequenceDiagram346129132911801929UmlSequenceDiagram%PendulumIsMoving__1%6346129222920801929UmlSequenceDiagram%PendulumIsMoving__1%5346129411094801954UmlSequenceDiagram348129462944801929UmlSequenceDiagram%Raiseweight__1%5348129552953801929UmlSequenceDiagram%Raiseweight__1%7348129722970801954UmlSequenceDiagram350129782976801929UmlSequenceDiagram%SetTime__1%7350129872985801929UmlSequenceDiagram%SetTime__1%5350130031156801954UmlSequenceDiagram352130163014801929UmlSequenceDiagram%ShowClockBehaviour__1%67352130253023801929UmlSequenceDiagram%ShowClockBehaviour__1%40352130343032801929UmlSequenceDiagram%ShowClockBehaviour__1%16352130433041801929UmlSequenceDiagram%ShowClockBehaviour__1%14352130523050801929UmlSequenceDiagram%ShowClockBehaviour__1%97352130603012801929UmlSequenceDiagram%ShowClockBehaviour__1%95352130693067801929UmlSequenceDiagram%ShowClockBehaviour__1%102352130783076801929UmlSequenceDiagram%ShowClockBehaviour__1%71352131113109801954UmlSequenceDiagram354131163114801929UmlSequenceDiagram%WeightIsSinking__1%11354131253123801929UmlSequenceDiagram%WeightIsSinking__1%8354131343132801929UmlSequenceDiagram%WeightIsSinking__1%16354132031137801954UmlCollaborationDiagram356132072715801929UmlCollaborationDiagram%ClockworkIsRunning__1%14356132152796801929UmlCollaborationDiagram%ClockworkIsRunning__1%17356132232805801929UmlCollaborationDiagram%ClockworkIsRunning__1%18356132312733801929UmlCollaborationDiagram%ClockworkIsRunning__1%21356132392822801929UmlCollaborationDiagram%ClockworkIsRunning__1%24356132472831801929UmlCollaborationDiagram%ClockworkIsRunning__1%27356132552724801929UmlCollaborationDiagram%ClockworkIsRunning__1%283561330433028019513581331133098019513581331833168019513581332533238019513581333233308019513581333933378019513581335833568019513601336533638019513601337233708019513601338611048019513621339333918019513621360936078019503661361436128019513661362136198019513661362636248019513661363136298019513661363636348019513661

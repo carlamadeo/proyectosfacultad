@@ -1,0 +1,298 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+#include "rules/qrl/ps.inc"
+
+////////////////////////////////////////////////////////////////////////////////
+// 
+//  Collaboration Nodes
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void
+UmlCollaboration_ps_show()
+
+{
+    gde_builtin("PropertySheetShow UmlCollaboration_ps");
+
+    // reset
+
+    UmlCollaboration_ps_init();
+}
+
+
+// double click hook
+void
+UmlCollaboration_ps_double_click(gde_mapsymbol ms)
+{
+    ps_reset_last_fill();
+    UmlCollaboration_ps_show();
+}
+
+
+
+boolean UmlCollaboration_ps_initted = False;
+
+void
+UmlCollaboration_ps_init()
+
+{
+    if (UmlCollaboration_ps_initted)
+    {
+        // just refresh the prop sheet
+        ps_fill("UmlCollaboration_ps");
+        return;
+    }
+    UmlCollaboration_ps_initted = True;
+//    gde_builtin("EditorActionDone 0214951139  UmlCollaboration_ps_ActionDone();"); // ECR 6880
+    ps_init("UmlCollaboration_ps", "ObjectName", ps_Node, 
+            string_to_list("Actor Collaboration PassiveCompositeObject PassiveObject ActiveCompositeObject ActiveObject Package PackageName", " "), ps_Node);
+
+    // ECR 3789 begin
+    ps_append_field("UmlCollaboration_ps", "ObjectDescription",
+    "GenericObject", "", ps_NoteDescriptionExternal, NULL);
+    // ECR 3789 end
+    ps_append_field("UmlCollaboration_ps", "Stereotype", 
+                    "UmlExtensibilityDefinition", 
+                    "UmlStereotype", ps_StringAnt, NULL);
+    ps_append_field("UmlCollaboration_ps", "Constraints", 
+                    "UmlExtensibilityDefinition", 
+                    "UmlConstraintItem", ps_StringList, NULL);
+    ps_append_field("UmlCollaboration_ps", "TaggedValues",
+                    "UmlExtensibilityDefinition", 
+                    "UmlTaggedValue", ps_StringList, NULL);
+
+    ps_fill("UmlCollaboration_ps");
+
+    //ps_dump();
+
+    return;
+}
+
+
+// change focus of property sheet
+
+void
+UmlCollaboration_ps_ActionDone()
+
+{
+    // reset propsheet
+
+    if( ui_owner_visible(to_ui_prop("UmlCollaboration_ps","OK")) ) // ECR 4037
+        ps_fill("UmlCollaboration_ps");
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// 
+//  Collaboration Links
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void
+UmlCollaborationLink_ps_show()
+
+{
+    gde_builtin("PropertySheetShow UmlCollaborationLink_ps");
+
+    // reset
+
+    UmlCollaborationLink_ps_init();
+}
+
+
+// double click hook
+void
+UmlCollaborationLink_ps_double_click(gde_mapsymbol ms)
+{
+    ps_reset_last_fill();
+    UmlCollaborationLink_ps_show();
+}
+
+
+
+boolean UmlCollaborationLink_ps_initted = False;
+
+void
+UmlCollaborationLink_ps_init()
+
+{
+    if (UmlCollaborationLink_ps_initted)
+    {
+        // just refresh the prop sheet
+        ps_fill("UmlCollaborationLink_ps");
+        return;
+    }
+    UmlCollaborationLink_ps_initted = True;
+//    gde_builtin("EditorActionDone 0214951140  UmlCollaborationLink_ps_ActionDone();"); // ECR 6880
+
+// ECR 6926 begin
+    //ps_init("UmlCollaborationLink_ps", "", ps_Link, string_to_list("ObjectLink CollaborationRole", " "), ps_Link);
+    ps_init("UmlCollaborationLink_ps", "ObjectName", ps_Link, string_to_list("ObjectLink CollaborationRole", " "), ps_Link);
+// ECR 6926 end
+
+    // ECR 3789 begin
+    ps_append_field("UmlCollaborationLink_ps", "ObjectDescription",
+    "GenericObject", "", ps_NoteDescriptionExternal, NULL);
+    // ECR 3789 end
+    ps_append_field("UmlCollaborationLink_ps", "Stereotype", "UmlExtensibilityDefinition", "UmlStereotype", ps_StringAnt, NULL);
+    ps_append_field("UmlCollaborationLink_ps", "Constraints", "UmlExtensibilityDefinition", "UmlConstraintItem", ps_StringList, NULL);
+    ps_append_field("UmlCollaborationLink_ps", "TaggedValues", "UmlExtensibilityDefinition", "UmlTaggedValue", ps_StringList, NULL);
+
+    ps_fill("UmlCollaborationLink_ps");
+
+    //ps_dump();
+
+    return;
+}
+
+
+// change focus of property sheet
+
+void
+UmlCollaborationLink_ps_ActionDone()
+
+{
+    // reset propsheet
+
+    if( ui_owner_visible(to_ui_prop("UmlCollaborationLink_ps","OK")) ) // ECR 4037
+        ps_fill("UmlCollaborationLink_ps");
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 
+//  Collaboration Cntxs
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void
+UmlCollaborationCntx_ps_show()
+
+{
+    gde_builtin("PropertySheetShow UmlCollaborationCntx_ps");
+
+    // reset
+
+    UmlCollaborationCntx_ps_init();
+}
+
+
+// double click hook
+void
+UmlCollaborationCntx_ps_double_click(gde_mapsymbol ms)
+{
+    ps_reset_last_fill();
+    UmlCollaborationCntx_ps_show();
+}
+
+
+
+boolean UmlCollaborationCntx_ps_initted = False;
+
+void
+UmlCollaborationCntx_ps_init()
+
+{
+    if (UmlCollaborationCntx_ps_initted)
+    {
+        // just refresh the prop sheet
+        ps_fill("UmlCollaborationCntx_ps");
+        return;
+    }
+    ui_text_set_readonly(to_ui_prop("UmlCollaborationCntx_ps", "MessageObjectName"), True);
+
+    UmlCollaborationCntx_ps_initted = True;
+//    gde_builtin("EditorActionDone 0214951141  UmlCollaborationCntx_ps_ActionDone();"); // ECR 6880
+    
+// ECR 6577 begin
+    //ps_init("UmlCollaborationCntx_ps", "ObjectName", ps_Cntx, string_to_list("SimpleMessage RevSimpleMessage SynchronousMessage RevSynchronousMessage BalkingMessage RevBalkingMessage TimeoutMessage RevTimeoutMessage AsynchronousMessage RevAsynchronousMessage ReturnMessage", " "), ps_Link);
+    ps_init("UmlCollaborationCntx_ps", "ObjectName", ps_Cntx, string_to_list("SimpleMessage RevSimpleMessage SynchronousMessage RevSynchronousMessage BalkingMessage RevBalkingMessage TimeoutMessage RevTimeoutMessage AsynchronousMessage RevAsynchronousMessage ReturnMessage RevReturnMessage", " "), ps_Link);
+// ECR 6577 ned
+    // ECR 3789 begin
+    ps_append_field("UmlCollaborationCntx_ps", "ObjectDescription",
+    "GenericObject", "", ps_NoteDescriptionExternal, NULL);
+    // ECR 3789 end
+
+    ps_append_field("UmlCollaborationCntx_ps", "Stereotype", "UmlExtensibilityDefinition", "UmlStereotype", ps_StringAnt, NULL);
+    ps_append_field("UmlCollaborationCntx_ps", "Constraints", "UmlExtensibilityDefinition", "UmlConstraintItem", ps_StringList, NULL);
+    ps_append_field("UmlCollaborationCntx_ps", "TaggedValues", "UmlExtensibilityDefinition", "UmlTaggedValue", ps_StringList, NULL);
+
+    ps_append_field("UmlCollaborationCntx_ps", "MessageObjectName", "", "", ps_SeqCollab, NULL);
+
+    ps_append_field("UmlCollaborationCntx_ps", "NameComponent", "", "", ps_SeqCollab, NULL);
+    // Begin add ECR 5050
+    ps_append_field("UmlCollaborationCntx_ps", "ChooseAction", "", "", ps_ChooseAction, NULL);
+    // End add ECR 5050
+                        
+    ps_append_field("UmlCollaborationCntx_ps", "ReturnType", "", "", ps_SeqCollab, NULL);
+    ps_append_field("UmlCollaborationCntx_ps", "MessageArgs", "", "", ps_SeqCollab, NULL);
+    // Begin ECR4197
+    ps_append_field("UmlCollaborationCntx_ps", "Destruction", "UmlMessageDefinition", "UmlMessageIsDestruction", ps_TrueFalse, NULL);
+    // End ECR4197
+    ps_append_field("UmlCollaborationCntx_ps", "PredecessorGuard", "", "", ps_SeqCollab, NULL);
+    // Begin add ECR 5050
+    ps_append_field("UmlCollaborationCntx_ps", "ChooseGuard", "", "", ps_ChooseGuard, NULL);
+    // End add ECR 5050
+                   
+    ps_append_field("UmlCollaborationCntx_ps", "MessageSequence", "", "", ps_SeqCollab, NULL);
+
+    ps_append_field("UmlCollaborationCntx_ps", "MessageRecurrence", "", "", ps_SeqCollab, NULL);
+    // Begin ECR4197
+    ps_append_field("UmlCollaborationCntx_ps", "Creation", "UmlMessageDefinition", "UmlMessageIsCreation", ps_TrueFalse, NULL);
+// End ECR4197
+
+    ps_fill("UmlCollaborationCntx_ps");
+
+    //ps_dump();
+
+    return;
+}
+
+
+// change focus of property sheet
+
+void
+UmlCollaborationCntx_ps_ActionDone()
+
+{
+    // reset propsheet
+
+    if( ui_owner_visible(to_ui_prop("UmlCollaborationCntx_ps","OK")) ) // ECR 4037
+        ps_fill("UmlCollaborationCntx_ps");
+}
+
+
+// Active Function
+
+int 
+UmlCollaborationObjectPropsActive()
+{
+    list symbols;
+    
+    symbols = gde_selected_symbols();
+    if (list_count(symbols) != 1)
+        return ACTIVE_FUNC_IS_INACTIVE;
+    
+    // Begin Add ECR 7169
+    list objects = gde_symbols_find_with_types(symbols, string_to_list("Actor PassiveCompositeObject PassiveObject ActiveCompositeObject ActiveObject ", " "));
+    if (list_count( objects ) == 1)
+    {
+    	return ActiveIfNonAnonymousObject( objects );
+    }        
+    // End Add ECR 7169
+
+    if (list_count(gde_symbols_find_with_types(symbols, 
+// ECR 6577 begin
+       //string_to_list("Collaboration Package PackageName ObjectLink CollaborationRole SimpleMessage RevSimpleMessage SynchronousMessage RevSynchronousMessage BalkingMessage RevBalkingMessage TimeoutMessage RevTimeoutMessage AsynchronousMessage RevAsynchronousMessage ReturnMessage", " "))) == 1)
+       string_to_list("Collaboration Package PackageName ObjectLink CollaborationRole SimpleMessage RevSimpleMessage SynchronousMessage RevSynchronousMessage BalkingMessage RevBalkingMessage TimeoutMessage RevTimeoutMessage AsynchronousMessage RevAsynchronousMessage ReturnMessage RevReturnMessage", " "))) == 1)
+// ECR 6577 end
+        return ACTIVE_FUNC_IS_ACTIVE;
+
+    return ACTIVE_FUNC_IS_INACTIVE;
+}
+
+
+

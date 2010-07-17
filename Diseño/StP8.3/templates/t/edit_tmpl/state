@@ -1,0 +1,5 @@
+State                 <StateID>
+    is statetype      <action>;
+    has description   <description_string>;
+    allows action     <ActionID> { , <ActionID> };
+.

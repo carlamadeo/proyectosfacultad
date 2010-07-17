@@ -1,0 +1,98 @@
+
+FillTable ProcessActivationMatrix 
+{
+	{ GUID "UID_ED7E0C70-5940-4eff-948B-2980FF0EB736" }
+	{ Hsect	{ Appid 2 }
+		{ NumRows 2 }
+		{ Hidden False }
+		{ NumVisRows 2 }
+		{ Vsect	{ Appid 3 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 8 }
+				{ Cell	{ Appid 10 }
+					 } }
+			{ Row	{ Appid 13 }
+				{ Cell	{ Appid 15 }
+					 } } }
+		{ Vsect	{ Appid 4 }
+		{ NumCols 2 }
+		{ Hidden False }
+		{ NumVisCols 2 }
+			{ Row	{ Appid 9 }
+				{ Cell	{ Appid 11 }
+					 }
+				{ Cell	{ Appid 12 }
+					 } }
+			{ Row	{ Appid 14 }
+				{ Cell	{ Appid 16 }
+					{ Label "read pulse" }
+					
+					{ ObjectCache { Object { PDMType node } { MappingName ControlSpecMap } { ID 2739 } { GUID "UID_67582A44-DDD7-45f7-B6BF-F9EE30D788AC" }  } } }
+				{ Cell	{ Appid 17 }
+					{ Label "calculate delay" }
+					
+					{ ObjectCache { Object { PDMType node } { MappingName ControlSpecMap } { ID 2838 } { GUID "UID_B1D57930-51C9-4387-B98A-BB30487DD9DD" }  } } } } }
+		{ Vsect	{ Appid 28 }
+		{ NumCols 1 }
+		{ Hidden True }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 30 }
+				{ Cell	{ Appid 31 }
+					 } }
+			{ Row	{ Appid 32 }
+				{ Cell	{ Appid 33 }
+					 } } } }
+	{ Hsect	{ Appid 5 }
+		{ NumRows 2 }
+		{ Hidden False }
+		{ NumVisRows 2 }
+		{ Vsect	{ Appid 6 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 18 }
+				{ Cell	{ Appid 20 }
+					{ Label "first\npulse" }
+					
+					{ ObjectCache { Object { PDMType node } { MappingName ControlSpecMap } { ID 4203 } { GUID "UID_93E4C2D3-B5C6-11d4-879B-00C04F8DEC45" }  } } } }
+			{ Row	{ Appid 23 }
+				{ Cell	{ Appid 25 }
+					{ Label "second\npulse" }
+					
+					{ ObjectCache { Object { PDMType node } { MappingName ControlSpecMap } { ID 4206 } { GUID "UID_93E4C2DC-B5C6-11d4-879B-00C04F8DEC45" }  } } } } }
+		{ Vsect	{ Appid 7 }
+		{ NumCols 2 }
+		{ Hidden False }
+		{ NumVisCols 2 }
+			{ Row	{ Appid 19 }
+				{ ObjectCache { Object { PDMType link } { MappingName DefinitionMap } { ID 4204 } { GUID "UID_93E4C2D6-B5C6-11d4-879B-00C04F8DEC45" }  } { Object { PDMType node } { MappingName CombinationMap } { ID 4202 } { GUID "UID_93E4C2D0-B5C6-11d4-879B-00C04F8DEC45" }  } }
+				{ Cell	{ Appid 21 }
+					{ Label "1" }
+					
+					{ ObjectCache { Object { PDMType link } { MappingName ControlSpecMap } { ID 4208 } { GUID "UID_93E4C2EA-B5C6-11d4-879B-00C04F8DEC45" }  } } }
+				{ Cell	{ Appid 22 }
+					{ Label "0" }
+					
+					{ ObjectCache { Object { PDMType link } { MappingName ControlSpecMap } { ID 4209 } { GUID "UID_93E4C2ED-B5C6-11d4-879B-00C04F8DEC45" }  } } } }
+			{ Row	{ Appid 24 }
+				{ ObjectCache { Object { PDMType link } { MappingName DefinitionMap } { ID 4207 } { GUID "UID_93E4C2DF-B5C6-11d4-879B-00C04F8DEC45" }  } { Object { PDMType node } { MappingName CombinationMap } { ID 4205 } { GUID "UID_93E4C2D9-B5C6-11d4-879B-00C04F8DEC45" }  } }
+				{ Cell	{ Appid 26 }
+					{ Label "0" }
+					
+					{ ObjectCache { Object { PDMType link } { MappingName ControlSpecMap } { ID 4210 } { GUID "UID_93E4C2F0-B5C6-11d4-879B-00C04F8DEC45" }  } } }
+				{ Cell	{ Appid 27 }
+					{ Label "1" }
+					
+					{ ObjectCache { Object { PDMType link } { MappingName ControlSpecMap } { ID 4211 } { GUID "UID_93E4C2F3-B5C6-11d4-879B-00C04F8DEC45" }  } } } } }
+		{ Vsect	{ Appid 29 }
+		{ NumCols 1 }
+		{ Hidden True }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 34 }
+				{ Cell	{ Appid 35 }
+					 } }
+			{ Row	{ Appid 36 }
+				{ Cell	{ Appid 37 }
+					 } } } } }

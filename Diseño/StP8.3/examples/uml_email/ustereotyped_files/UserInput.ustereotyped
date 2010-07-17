@@ -1,0 +1,91 @@
+Diagram UmlStereotypeDiagram
+{
+    { Name "UserInput" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -211 }
+    { PanY -161 }
+    { Alignment 32 }
+    { GUID "UID_CEA7975C-F72C-4b8d-9F73-2EFCADC055C5" }
+    { Summary
+        { Nodes 2 }
+        { Arcs 1 }
+    }
+}
+
+Node 1
+{
+    { Type Stereotype }
+    { Loc 0 -57 }
+    { Scale 120.00 65.00 }
+    { Label
+        { Text "Interface" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_00CB6690-5390-11d4-8777-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName StereotypeMapping }
+        { ID 3802 }
+        { GUID "UID_0E58F556-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 2
+{
+    { Type Stereotype }
+    { Loc 0 57 }
+    { Scale 128.00 65.00 }
+    { Label
+        { Text "UserInput" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_00CB6691-5390-11d4-8777-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName StereotypeMapping }
+        { ID 3803 }
+        { GUID "UID_0E58F559-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Arc 3
+{
+    { Type StereotypeInheritance }
+    { From
+        { ID 2 }
+        { Loc 0 44 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 1 }
+        { Loc 0 -45 }
+        { Offset 0 0 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_00CB6692-5390-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Link 4
+{
+    { FirstArc 3 }
+    { LastArc 3 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 3804 }
+        { GUID "UID_0E58F55C-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}

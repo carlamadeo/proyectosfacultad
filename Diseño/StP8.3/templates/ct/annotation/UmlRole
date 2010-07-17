@@ -1,0 +1,15 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Aonix
+// 	Copyright (c) 1997
+// 	All rights reserved
+//
+
+Include "annotation/UmlRole.note"
+Include "annotation/UmlGenericObject"
+// ECR: 5223 added next line
+IncludeIfExists "annotation/acd_UmlRole"
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_UmlRole"

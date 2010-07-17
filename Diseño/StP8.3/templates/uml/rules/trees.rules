@@ -1,0 +1,3579 @@
+// New file for ECR 2602, 4731
+
+// Tree definitions
+Tree TreeUseCaseView
+{
+    { Label "UseCase View" }
+    { Image "folder" }
+    { RootObjects
+        (
+            UmlSystems
+            UmlTopLevelUseCases
+            UmlTopLevelUseCaseActors
+            UmlTopLevelUseCasePackages
+        )
+    }
+    { NodeObjects
+        (
+            UmlSystemActors            
+            UmlSystemUseCases
+            UmlSystemPackages
+            UmlUseCasePackageUseCases
+            UmlUseCasePackageSubPackages
+            UmlUseCaseScenarioInstances
+            UmlUseCaseCollaborationInstances
+            UmlUseCaseActivityInstances
+        )
+    }
+    { LeafObjects
+        (
+            UmlUseCaseDiagramRef
+            UmlSeqDiagramReferences
+            UmlCollDiagramReferences
+            UmlActivityDiagramReferences
+        )
+    }
+}
+
+Tree TreeStaticView
+{
+    { Label "Static View" }
+    { Image "folder" }
+    { RootObjects
+        (
+            UmlTopLevelClasses
+            UmlTopLevelInterfaces
+            UmlTopLevelParameterizedClasses
+            UmlTopLevelInstantiatedClasses
+            UmlTopLevelClassPackages
+        )
+    }
+    { NodeObjects
+        (
+            UmlClassPackageClasses
+            UmlClassPackageInterfaces
+            UmlClassPackageParameterizedClasses
+            UmlClassPackageInstantiatedClasses
+            UmlClassGeneralizations
+            UmlClassSubClasses
+            UmlClassSubParameterizedClasses
+            UmlClassForeignGeneralizations
+            UmlClassForeignSubClasses
+            UmlClassForeignSubParameterizedClasses
+            UmlClassForeignInheritance
+            UmlClassForeignSuperClasses
+            UmlClassForeignSuperInstantiatedClasses
+            UmlClassPackageSubPackages
+            UmlClassObjectInstances
+            UmlClassObjectInstanceAttribute
+            UmlClassAttributes
+            UmlClassOperations
+            // Begin Add ECR 5080
+            UmlClassActivityStateMachines
+            UmlClassStateStateMachines
+            // End Add ECR 5080
+        )
+    }
+    { LeafObjects
+        (
+            UmlClassDiagramReferences
+            UmlClassDiagramLinkReferences
+            UmlClassTableReferences
+            // Begin Add ECR 5080
+            UmlActivityDiagramReferences
+            UmlStateDiagramReferences
+            // End Add ECR 5080
+        )
+    }
+}
+
+Tree TreeDynamicView
+{
+    { Label "Dynamic View" }
+    { Image "folder" }
+    { RootObjects
+        (
+			UmlScenarioInstances 
+			UmlScenarios // files w/o UmlScenarioInstance
+            UmlCollaborationInstances
+			UmlCollaborations // files w/o UmlScenarioInstance
+            UmlStateMachines
+            UmlActivityTopLevelStateMachines
+        )
+    }
+    { NodeObjects
+        (
+            // Sequence Diagrams
+            UmlSeqPackages
+            UmlScenarioPackages
+            UmlSeqActors
+            UmlScenarioActors
+            UmlSeqObjectInstances
+            UmlScenarioObjectInstances
+                UmlSeqObjectInSimpleMessages
+                UmlSeqObjectInSynchronousMessages
+                UmlSeqObjectInAsynchronousMessages
+                UmlSeqObjectInBalkingMessages
+                UmlSeqObjectInTimeoutMessages
+                UmlSeqObjectInReturnMessages
+                UmlSeqObjectOutSimpleMessages
+                UmlSeqObjectOutSynchronousMessages
+                UmlSeqObjectOutAsynchronousMessages
+                UmlSeqObjectOutBalkingMessages
+                UmlSeqObjectOutTimeoutMessages
+                UmlSeqObjectOutReturnMessages
+            // Collaboration Diagrams
+            UmlCollPackages
+            UmlCollaborationPackages
+            UmlCollTypes
+            UmlCollaborationTypes
+            UmlCollActors
+            UmlCollaborationActors
+            UmlCollObjectInstances
+            UmlCollCompositeObjectInstances
+            UmlCollCollaboration
+            UmlCollaborationObjectInstances
+            UmlCollaborationCompositeObjectInstances
+            UmlCollaborationCollaboration
+                UmlCollaborationRoleObject
+                UmlCollaborationNestedObjectInstances
+                UmlCollObjectInSimpleMessages
+                UmlCollObjectInSynchronousMessages
+                UmlCollObjectInAsynchronousMessages
+                UmlCollObjectInBalkingMessages
+                UmlCollObjectInTimeoutMessages
+                UmlCollObjectInReturnMessages
+                UmlCollObjectOutSimpleMessages
+                UmlCollObjectOutSynchronousMessages
+                UmlCollObjectOutAsynchronousMessages
+                UmlCollObjectOutBalkingMessages
+                UmlCollObjectOutTimeoutMessages
+                UmlCollObjectOutReturnMessages
+                UmlCollObjectInstanceAttribute
+            // Activity Diagrams
+            UmlActivitySwimlanes
+                UmlActivitySwimlaneInitialStates
+                UmlActivitySwimlaneActionStates
+                UmlActivitySwimlaneDecision
+                UmlActivitySwimlaneFinalStates
+            UmlActivityInitialStates
+            UmlActivityActionStates
+            UmlActivityDecision
+            UmlActivityFinalStates
+                UmlActivityActionStatesInTransition
+                UmlActivityActionStatesOutTransition
+                UmlActivityInputObjectInstance
+                UmlActivityOutputObjectInstance
+                UmlActivityRefinedStateMachines
+            // State Diagrams
+            UmlStateInitialStates
+    	    UmlCompositeState
+    	    UmlConcurrentState
+            UmlState
+            UmlHistory
+            UmlStateFinalStates
+                UmlStateInTransition
+                UmlStateOutTransition
+                UmlStateRefinedState
+        )
+    }
+    { LeafObjects
+        (
+            UmlSeqDiagramReferences
+            UmlSeqDiagramLinkReferences
+            UmlCollDiagramReferences
+            UmlCollDiagramLinkReferences
+            UmlActivityDiagramReferences
+            UmlActivityDiagramLinkReferences
+            UmlStateDiagramReferences
+            UmlStateDiagramLinkReferences
+            UmlStateTableReferences
+        )
+    }
+}
+
+Tree TreeDeploymentView
+{
+    { Label "Deployment View" }
+    { Image "folder" }
+    { RootObjects
+        (
+            UmlComponentSources
+            UmlComponentBinaries
+            UmlComponentExecutables
+            UmlComponentInterfaces
+            UmlComponentObjects
+            UmlComponentClasses
+            UmlDeploymentNodes
+        )
+    }
+    { NodeObjects
+        (
+            UmlComponentPartClasses
+            UmlComponentPartObjects
+        )
+    }
+    { LeafObjects
+        (
+            UmlDeploymentDiagramReferences
+            UmlComponentDiagramReferences
+        )
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////
+//classes in UseCase View
+
+// UseCase diagrams and contents --------------------------------------------------------
+Class 0 UmlSystems
+{
+    { Label "Diagram References" }
+    { Image "this_system" }
+    { OMSObjects
+        { Match "node[UmlSystem && node_refs && !in_links[UmlContains && link_refs]] sort by name" }
+        { Editor "uusecased" }
+    }
+    { UseObjectCommand ShowSystemCommand }
+    { UseObjectCommand EditSystemAnnotationCommand }
+    { ChildObjects
+        ( 
+            UmlSystemActors
+            UmlSystemUseCases
+            UmlSystemPackages
+            // LeafObjects
+            UmlUseCaseDiagramRef
+        )
+    }
+}
+ 
+Class 0 UmlTopLevelUseCases
+{
+    { Label "Diagram References" }
+    { Image "use_case" }
+    { OMSObjects
+        { Match "node[UmlUseCase && node_refs && !in_links[UmlContains && link_refs]] sort by name" }
+        { Editor "uusecased" }
+    }   
+    { UseObjectCommand ShowUseCaseCommand }
+    { UseObjectCommand EditUseCaseAnnotationCommand }
+    { ChildObjects
+        (
+            UmlUseCaseScenarioInstances
+            UmlUseCaseCollaborationInstances
+            UmlUseCaseActivityInstances
+            // LeafObjects
+            UmlUseCaseDiagramRef
+            UmlSeqDiagramReferences
+            UmlCollDiagramReferences
+            UmlActivityDiagramReferences
+      )
+    }
+}
+
+Class 0 UmlTopLevelUseCaseActors
+{
+    { Label "Diagram References" }
+    { Image "actor_usecase" }
+    { OMSObjects
+        { Match "node[UmlActor && node_refs[file[UmlUseCaseDiagram]] && !in_links[UmlContains && link_refs]] sort by name" }
+        { Editor "uusecased" }
+    }
+    { UseObjectCommand ShowActorCommand }
+    { UseObjectCommand EditActorAnnotationCommand }
+    { ChildObjects
+        (
+            // LeafObjects
+            UmlUseCaseDiagramRef
+        )
+    }
+}
+
+Class 0 UmlTopLevelUseCasePackages
+{
+    { Label "Diagram References" }
+    { Image "package" }
+    { OMSObjects
+        { Match "node[UmlPackage && node_refs[file[UmlUseCaseDiagram]] && !in_links[UmlContains && link_refs[file[UmlUseCaseDiagram]]]] sort by name" }
+        { Editor "uusecased" }
+    }
+    { UseObjectCommand ShowPackageCommand }
+    { UseObjectCommand EditPackageAnnotationCommand }
+    { ChildObjects
+        (
+            UmlUseCasePackageUseCases
+            UmlUseCasePackageSubPackages
+            // LeafObjects
+            UmlUseCaseDiagramRef
+        )
+    }
+}
+
+Class 0 UmlSystemActors
+{
+    { Label "Diagram References" }
+    { Image "actor_usecase" }
+    { OMSObjects
+        { Match "node[UmlActor && node_refs[file[UmlUseCaseDiagram]] && in_links[UmlContains && link_refs && from_node[UmlSystem && id = ${parent.id}]]]"}
+        { Editor "uusecased" }
+    }
+    { UseObjectCommand ShowActorCommand }
+    { UseObjectCommand EditActorAnnotationCommand }
+    { ChildObjects
+        (
+            // LeafObjects
+            UmlUseCaseDiagramRef
+        )
+    }
+}
+
+Class 0 UmlSystemUseCases
+{
+    { Label "Diagram References" }
+    { Image "use_case" }
+    { OMSObjects
+        { Match "node[UmlUseCase && node_refs && in_links[UmlContains && link_refs && from_node[UmlSystem && id = ${parent.id}]]]"}
+        { Editor "uusecased" }
+    }
+    { UseObjectCommand ShowUseCaseCommand }
+    { UseObjectCommand EditUseCaseAnnotationCommand }
+    { ChildObjects
+        (
+            UmlUseCaseScenarioInstances            
+            UmlUseCaseCollaborationInstances
+            UmlUseCaseActivityInstances
+            // LeafObjects
+            UmlUseCaseDiagramRef
+            UmlSeqDiagramReferences
+            UmlCollDiagramReferences
+            UmlActivityDiagramReferences
+        )
+    }
+}
+
+Class 0 UmlSystemPackages
+{
+    { Label "Diagram References" }
+    { Image "package" }
+    { OMSObjects
+        { Match "node[UmlPackage && node_refs[file[UmlUseCaseDiagram]] && in_links[UmlContains && link_refs && from_node[UmlSystem && id = ${parent.id}]]]"}
+        { Editor "uusecased" }
+    }
+    { UseObjectCommand ShowPackageCommand }
+    { UseObjectCommand EditPackageAnnotationCommand }
+    { ChildObjects
+        (
+            UmlUseCasePackageUseCases
+            UmlUseCasePackageSubPackages
+            // LeafObjects
+            UmlUseCaseDiagramRef
+        )
+    }
+     
+}
+
+Class 0 UmlUseCasePackageActors
+{
+    { Label "Diagram References" }
+    { Image "actor_usecase" }
+    { OMSObjects
+        { Match "node[UmlActor && node_refs[file[UmlUseCaseDiagram]] && in_links[UmlContains && link_refs && from_node[UmlPackage && id = ${parent.id}]]]"}
+        { Editor "uusecased" }
+    }
+    { UseObjectCommand ShowActorCommand }
+    { UseObjectCommand EditActorAnnotationCommand }
+    { ChildObjects
+        (
+            // LeafObjects
+            UmlUseCaseDiagramRef
+        )
+    }
+}
+
+Class 0 UmlUseCasePackageUseCases
+{
+    { Label "Diagram References" }
+    { Image "use_case" }
+    { OMSObjects
+        { Match "node[UmlUseCase && node_refs[file[UmlUseCaseDiagram]] && in_links[UmlContains && link_refs && from_node[UmlPackage && id = ${parent.id}]]]"}
+        { Editor "uusecased" }
+    }
+    { UseObjectCommand ShowUseCaseCommand }
+    { UseObjectCommand EditUseCaseAnnotationCommand }
+    { ChildObjects
+        (
+            UmlUseCaseScenarioInstances
+            UmlUseCaseCollaborationInstances
+            UmlUseCaseActivityInstances
+            // LeafObjects
+            UmlUseCaseDiagramRef
+            UmlSeqDiagramReferences
+            UmlCollDiagramReferences
+            UmlActivityDiagramReferences
+        )
+    }
+}
+
+Class 0 UmlUseCasePackageSubPackages
+{
+    { Label "Diagram References" }
+    { Image "package" }
+    { OMSObjects
+        { Match "node[UmlPackage && node_refs[file[UmlUseCaseDiagram]] && in_links[UmlContains && link_refs && from_node[UmlPackage && id = ${parent.id}]]]"}
+        { Editor "uusecased" }
+    }
+    { UseObjectCommand ShowPackageCommand }
+    { UseObjectCommand EditPackageAnnotationCommand }
+    { ChildObjects
+        (
+            UmlUseCasePackageUseCases
+            UmlUseCasePackageSubPackages
+            // LeafObjects
+            UmlUseCaseDiagramRef
+        )
+    }
+}
+
+Class 0 UmlUseCaseDiagramRef
+{
+    { Image "use_case_diagrams" }
+    { OMSObjects
+        { Match "file[UmlUseCaseDiagram && node_refs[node_id = ${parent.id}]]" }
+        { Editor "uusecased" }
+    }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+// Sequence diagrams and contents -------------------------------------------------------
+// (further child elements are defined in Dynamic view classes section)
+Class 0 UmlUseCaseScenarioInstances
+{
+    { Label "Diagram References" }
+    { Image "sequence_diagrams" }
+    { OMSObjects
+        { Match "node[UmlScenarioInstance && node_refs[file[UmlSequenceDiagram]] && items[UmlParentNameItem && value='${parent.name}']] sort by name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects ( UmlSeqDiagramReferences ) } // ECR 4983
+    { UseObjectCommand ShowScenarioInstanceCommand }
+    { UseObjectCommand EditScenarioInstanceAnnotationCommand }
+}
+
+// Collaboration diagrams and contents --------------------------------------------------
+// (further child elements are defined in Dynamic view classes section)
+Class 0 UmlUseCaseCollaborationInstances
+{
+    { Label "Diagram References" }
+    { Image "collaboration_diagrams" }
+    { OMSObjects
+        { Match "node[UmlScenarioInstance && node_refs[file[UmlCollaborationDiagram]] && items[UmlParentNameItem && value == '${parent.name}']] sort by name"}
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects ( UmlCollDiagramReferences ) } // ECR 4983
+    { UseObjectCommand ShowScenarioInstanceCommand }
+    { UseObjectCommand EditScenarioInstanceAnnotationCommand }
+}
+
+// Activity diagrams and contents -------------------------------------------------------
+// (further child elements are defined in Dynamic view classes section)
+Class 0 UmlUseCaseActivityInstances
+{
+    { Label "Diagram References" }
+    { Image "state_machine_a" }
+    { OMSObjects
+        { Match "node[UmlStatemachine && node_refs[file[UmlActivityDiagram]] && name == '${parent.name}' && id != ${parent.id}] sort by name"}
+        { Editor "uactivityd" }
+    }
+    { ChildObjects
+        (
+            UmlActivityDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowActivityStateMachineCommand }
+    { UseObjectCommand EditStateMachineAnnotationCommand }
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+//classes in Static View
+
+// Class diagrams and contents ----------------------------------------------------------
+Class 0 UmlTopLevelClassPackages
+{
+    { Label "Diagram References" }
+    { Image "package" }
+    { OMSObjects
+        { Match "node[UmlPackage && node_refs[file[UmlClassDiagram || UmlClassTable]] && !in_links[UmlContains && link_refs[file[UmlClassDiagram]]]] sort by name" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowPackageCommand }
+    { UseObjectCommand EditPackageAnnotationCommand }
+    { ChildObjects
+        (
+            UmlClassPackageClasses
+            UmlClassPackageInterfaces
+            UmlClassPackageParameterizedClasses
+            UmlClassPackageInstantiatedClasses
+            UmlClassPackageSubPackages
+            // LeafObjects
+            UmlClassDiagramReferences
+        )
+    }
+}
+
+Class 0 UmlTopLevelClasses
+{
+    { Label "Diagram References" }
+    { Image "class" }
+    { OMSObjects
+        { ObjectsFunc "get_toplevel_classes(\"\");" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowClassTableCommand }
+    { UseObjectCommand ShowClassCommand }
+    { UseObjectCommand EditClassAnnotationCommand }
+    { ChildObjects
+        (
+            UmlClassGeneralizations
+            UmlClassForeignGeneralizations
+            UmlClassObjectInstances
+            UmlClassAttributes
+            UmlClassOperations
+            // Begin Add ECR 5080
+            UmlClassStateStateMachines
+            UmlClassActivityStateMachines
+            // End Add ECR 5080
+            // LeafObjects
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+        )
+    }
+}
+
+Class 0 UmlTopLevelInterfaces
+{
+    { Label "Diagram References" }
+    { Image "interface" }
+    { OMSObjects
+        { ObjectsFunc "get_toplevel_classes(\"UmlInterface\");" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowClassTableCommand }
+    { UseObjectCommand ShowClassCommand }
+    { UseObjectCommand EditClassAnnotationCommand }
+    { ChildObjects
+        (
+            UmlClassGeneralizations
+            UmlClassForeignGeneralizations
+            UmlClassAttributes
+            UmlClassOperations
+            // Begin Add ECR 5080
+            UmlClassStateStateMachines
+            UmlClassActivityStateMachines
+            // End Add ECR 5080
+            // LeafObjects
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+        )
+    }
+}
+
+Class 0 UmlTopLevelParameterizedClasses
+{
+    { Label "Diagram References" }
+    { Image "parameterized_class" }
+    { OMSObjects
+        { ObjectsFunc "get_toplevel_classes(\"UmlParameterizedClass\");" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowClassTableCommand }
+    { UseObjectCommand ShowClassCommand }
+    { UseObjectCommand EditClassAnnotationCommand }
+    { ChildObjects
+        (
+            UmlClassGeneralizations
+            UmlClassForeignGeneralizations
+            UmlClassAttributes
+            UmlClassOperations
+            // Begin Add ECR 5080
+            UmlClassStateStateMachines
+            UmlClassActivityStateMachines
+            // End Add ECR 5080
+            // LeafObjects
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+        )
+    }
+}
+
+Class 0 UmlTopLevelInstantiatedClasses
+{
+    { Label "Diagram References" }
+    { Image "instantiated_class" }
+    { OMSObjects
+        { ObjectsFunc "get_toplevel_classes(\"UmlInstantiatedClass\");" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowClassTableCommand }
+    { UseObjectCommand ShowClassCommand }
+    { UseObjectCommand EditClassAnnotationCommand }
+    { ChildObjects
+        (
+            UmlClassGeneralizations
+            UmlClassForeignGeneralizations
+            UmlClassAttributes
+            UmlClassOperations
+            // Begin Add ECR 5080
+            UmlClassStateStateMachines
+            UmlClassActivityStateMachines
+            // End Add ECR 5080
+            // LeafObjects
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+        )
+    }
+}
+
+Class 0 UmlClassObjectInstances
+{
+    { Label "Diagram References" }
+    { Image "object" }
+    { OMSObjects
+        { Match "node[UmlObjectInstance && node_refs[file[UmlClassDiagram]] && scope_node[name=='${parent.name}' && node_refs]]" }
+        { LabelFunc "get_object_instance_full_name" }
+        { Editor "uclassd" }
+    }
+    { ChildObjects
+        (
+            UmlClassObjectInstanceAttribute
+            UmlClassDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowObjectCommand }
+    { UseObjectCommand EditObjectAnnotationCommand }
+}
+    
+Class 0 UmlClassObjectInstanceAttribute
+{
+    { Label "Diagram References" }
+    { Image "value_of_attribute" }
+    { OMSObjects
+        { Match "node[UmlObjectInstanceAttribute && scope_node_id == ${parent.id} && node_refs[file[UmlClassDiagram]]]" }
+        { Editor "uclassd" }
+    }
+    { ChildObjects ( UmlClassDiagramReferences ) }
+    { UseObjectCommand ShowInstanceAttributeCommand }
+    { UseObjectCommand EditInstanceAttributeAnnotationCommand }
+}
+
+Class 0 UmlClassGeneralizations
+{
+    { Label "Diagram References" }
+    { Image "generalization_tree" }
+    { OMSObjects
+        { ObjectsFunc "get_package_generalizations(${parent.id},1);" }
+        { LabelFunc "get_generalization_name" }
+        { Editor "uclassd" }
+    }
+    { ChildObjects
+        (
+            UmlClassSubClasses
+            UmlClassSubParameterizedClasses
+            // LeafObjects
+            UmlClassDiagramLinkReferences
+        )
+    }
+}
+    
+Class 0 UmlClassForeignGeneralizations
+{
+    { Label "Diagram References" }
+    { Image "generalization_tree" }
+    { OMSObjects
+        { ObjectsFunc "get_package_generalizations(${parent.id},0);" }
+        { LabelFunc "get_generalization_name" }
+        { Editor "uclassd" }
+    }
+    { ChildObjects
+        (
+            UmlClassForeignSubClasses
+            UmlClassForeignSubParameterizedClasses
+            // LeafObjects
+            UmlClassDiagramLinkReferences
+        )
+    }
+}
+    
+// Inheritance is only shown for package foreign classes since they don't appear in the
+// package tree
+Class 0 UmlClassForeignInheritance
+{
+    { Label "Diagram References" }
+    { Image "inheritance_tree" }
+    { OMSObjects
+        { ObjectsFunc "get_inheritance_outside_package(${parent.id});" }
+        { LabelFunc "get_generalization_name" }
+        { Editor "uclassd" }
+    }
+    { ChildObjects
+        (
+            UmlClassForeignSuperClasses
+            UmlClassForeignSuperInstantiatedClasses
+            // LeafObjects
+            UmlClassDiagramLinkReferences
+        )
+    }
+}
+    
+Class 0 UmlClassSubClasses
+{
+    { Label "Diagram References" }
+    { Image "class" }
+    { OMSObjects
+        { ObjectsFunc "get_sub_classes(${parent.id},\"\");" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowClassTableCommand }
+    { UseObjectCommand ShowClassCommand }
+    { UseObjectCommand EditClassAnnotationCommand }
+    { ChildObjects
+        (
+            UmlClassGeneralizations
+            UmlClassForeignGeneralizations
+            UmlClassObjectInstances
+            UmlClassAttributes
+            UmlClassOperations
+            // Begin Add ECR 5080
+            UmlClassStateStateMachines
+            UmlClassActivityStateMachines
+            // End Add ECR 5080
+            // LeafObjects
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+        )
+    }
+}
+
+Class 0 UmlClassSubParameterizedClasses
+{
+    { Label "Diagram References" }
+    { Image "parameterized_class" }
+    { OMSObjects
+        { ObjectsFunc "get_sub_classes(${parent.id},\"UmlParameterizedClass\");" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowClassTableCommand }
+    { UseObjectCommand ShowClassCommand }
+    { UseObjectCommand EditClassAnnotationCommand }
+    { ChildObjects
+        (
+            UmlClassGeneralizations
+            UmlClassForeignGeneralizations
+            UmlClassAttributes
+            UmlClassOperations
+            // Begin Add ECR 5080
+            UmlClassStateStateMachines
+            UmlClassActivityStateMachines
+            // End Add ECR 5080
+            // LeafObjects
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+        )
+    }
+}
+
+Class 0 UmlClassSubUmlInstantiatedClasses
+{
+    { Label "Diagram References" }
+    { Image "instantiated_class" }
+    { OMSObjects
+        { ObjectsFunc "get_sub_classes(${parent.id},\"UmlInstantiatedClass\");" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowClassTableCommand }
+    { UseObjectCommand ShowClassCommand }
+    { UseObjectCommand EditClassAnnotationCommand }
+    { ChildObjects
+        (
+            UmlClassGeneralizations
+            UmlClassForeignGeneralizations
+            UmlClassAttributes
+            UmlClassOperations
+            // Begin Add ECR 5080
+            UmlClassStateStateMachines
+            UmlClassActivityStateMachines
+            // End Add ECR 5080
+            // LeafObjects
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+        )
+    }
+}
+
+Class 0 UmlClassForeignSubClasses
+{
+    { Label "Diagram References" }
+    { Image "foreign_class" }
+    { OMSObjects
+        { ObjectsFunc "get_sub_classes(${parent.id},\"\");" }
+        { LabelFunc "get_parent_package_name" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowClassTableCommand }
+    { UseObjectCommand ShowClassCommand }
+    { UseObjectCommand EditClassAnnotationCommand }
+    { ChildObjects
+        (
+            UmlClassAttributes
+            UmlClassOperations
+            // Begin Add ECR 5080
+            UmlClassStateStateMachines
+            UmlClassActivityStateMachines
+            // End Add ECR 5080
+            // LeafObjects
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+        )
+    }
+}
+
+Class 0 UmlClassForeignSubParameterizedClasses
+{
+    { Label "Diagram References" }
+    { Image "foreign_parameterized_class" }
+    { OMSObjects
+        { ObjectsFunc "get_sub_classes(${parent.id},\"UmlParameterizedClass\");" }
+        { LabelFunc "get_parent_package_name" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowClassTableCommand }
+    { UseObjectCommand ShowClassCommand }
+    { UseObjectCommand EditClassAnnotationCommand }
+    { ChildObjects
+        (
+            UmlClassAttributes
+            UmlClassOperations
+            // Begin Add ECR 5080
+            UmlClassStateStateMachines
+            UmlClassActivityStateMachines
+            // End Add ECR 5080
+            // LeafObjects
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+        )
+    }
+}
+
+Class 0 UmlClassForeignSuperClasses
+{
+    { Label "Diagram References" }
+    { Image "foreign_class" }
+    { OMSObjects
+        { ObjectsFunc "get_foreign_super_classes(${parent.id},\"\");" }
+        { LabelFunc "get_parent_package_name" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowClassTableCommand }
+    { UseObjectCommand ShowClassCommand }
+    { UseObjectCommand EditClassAnnotationCommand }
+    { ChildObjects
+        (
+            UmlClassAttributes
+            UmlClassOperations
+            // Begin Add ECR 5080
+            UmlClassStateStateMachines
+            UmlClassActivityStateMachines
+            // End Add ECR 5080
+            // LeafObjects
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+        )
+    }
+}
+
+Class 0 UmlClassForeignSuperInstantiatedClasses
+{
+    { Label "Diagram References" }
+    { Image "foreign_instantiated_class" }
+    { OMSObjects
+        { ObjectsFunc "get_foreign_super_classes(${parent.id},\"UmlInstantiatedClass\");" }
+        { LabelFunc "get_parent_package_name" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowClassTableCommand }
+    { UseObjectCommand ShowClassCommand }
+    { UseObjectCommand EditClassAnnotationCommand }
+    { ChildObjects
+        (
+            UmlClassAttributes
+            UmlClassOperations
+            // Begin Add ECR 5080
+            UmlClassStateStateMachines
+            UmlClassActivityStateMachines
+            // End Add ECR 5080
+            // LeafObjects
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+        )
+    }
+}
+
+Class 0 UmlClassPackageClasses
+{
+    { Label "Diagram References" }
+    { Image "class" }
+    { OMSObjects
+        { ObjectsFunc "get_package_root_classes(${parent.id},\"\");" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowClassTableCommand }
+    { UseObjectCommand ShowClassCommand }
+    { UseObjectCommand EditClassAnnotationCommand }
+    { ChildObjects
+        (
+            UmlClassGeneralizations
+            UmlClassForeignGeneralizations
+            UmlClassForeignInheritance
+            UmlClassObjectInstances
+            UmlClassAttributes
+            UmlClassOperations
+            // Begin Add ECR 5080
+            UmlClassStateStateMachines
+            UmlClassActivityStateMachines
+            // End Add ECR 5080
+            // LeafObjects
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+        )
+    }
+}
+
+Class 0 UmlClassPackageInterfaces
+{
+    { Label "Diagram References" }
+    { Image "interface" }
+    { OMSObjects
+        { ObjectsFunc "get_package_root_classes(${parent.id},\"UmlInterface\");" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowClassTableCommand }
+    { UseObjectCommand ShowClassCommand }
+    { UseObjectCommand EditClassAnnotationCommand }
+    { ChildObjects
+        (
+            UmlClassGeneralizations
+            UmlClassForeignGeneralizations
+            UmlClassForeignInheritance
+            UmlClassAttributes
+            UmlClassOperations
+            // Begin Add ECR 5080
+            UmlClassStateStateMachines
+            UmlClassActivityStateMachines
+            // End Add ECR 5080
+            // LeafObjects
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+        )
+    }
+}
+
+Class 0 UmlClassPackageParameterizedClasses
+{
+    { Label "Diagram References" }
+    { Image "parameterized_class" }
+    { OMSObjects
+        { ObjectsFunc "get_package_root_classes(${parent.id},\"UmlParameterizedClass\");" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowClassTableCommand }
+    { UseObjectCommand ShowClassCommand }
+    { UseObjectCommand EditClassAnnotationCommand }
+    { ChildObjects
+        (
+            UmlClassGeneralizations
+            UmlClassForeignGeneralizations
+            UmlClassForeignInheritance
+            UmlClassAttributes
+            UmlClassOperations
+            // Begin Add ECR 5080
+            UmlClassStateStateMachines
+            UmlClassActivityStateMachines
+            // End Add ECR 5080
+            // LeafObjects
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+        )
+    }
+}
+
+Class 0 UmlClassPackageInstantiatedClasses
+{
+    { Label "Diagram References" }
+    { Image "instantiated_class" }
+    { OMSObjects
+        { ObjectsFunc "get_package_root_classes(${parent.id},\"UmlInstantiatedClass\");" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowClassTableCommand }
+    { UseObjectCommand ShowClassCommand }
+    { UseObjectCommand EditClassAnnotationCommand }
+    { ChildObjects
+        (
+            UmlClassGeneralizations
+            UmlClassForeignGeneralizations
+            UmlClassForeignInheritance
+            UmlClassAttributes
+            UmlClassOperations
+            // Begin Add ECR 5080
+            UmlClassStateStateMachines
+            UmlClassActivityStateMachines
+            // End Add ECR 5080
+            // LeafObjects
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+        )
+    }
+}
+
+Class 0 UmlClassPackageSubPackages
+{
+    { Label "Diagram References" }
+    { Image "package" }
+    { OMSObjects
+        { Match "node[UmlPackage && node_refs && in_links[UmlContains && link_refs && from_node[UmlPackage && id = ${parent.id}]]] sort by name"}
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowPackageCommand }
+    { UseObjectCommand EditPackageAnnotationCommand }
+    { ChildObjects
+        (
+            UmlClassPackageClasses
+            UmlClassPackageSubPackages
+            // LeafObjects
+            UmlClassDiagramReferences
+        )
+    }
+}
+
+Class 0 UmlClassAttributes
+{
+    { Label "Diagram References" }
+    { Image "attribute" }
+    { OMSObjects
+        { Match "node[UmlAttribute && node_refs && scope_node_id = ${parent.id}] sort by name"}
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand EditAttributeAnnotationCommand }
+    { ChildObjects
+        (
+            // LeafObjects
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+        )
+    }
+}
+
+Class 0 UmlClassOperations
+{
+    { Label "Diagram References" }
+    { Image "operation" }
+    { OMSObjects
+        { Match "node[UmlOperation && node_refs && scope_node_id = ${parent.id}] sort by name" }
+        { LabelFunc "get_op_full_name" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand EditOperationAnnotationCommand }
+    { ChildObjects
+        (
+            // Begin Add ECR 5080
+            UmlClassStateStateMachines
+            UmlClassActivityStateMachines
+            // End Add ECR 5080
+            // LeafObjects
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+        )
+    }
+}
+
+// Begin add ECR 5080
+Class 0 UmlClassActivityStateMachines
+{
+    { Label "Diagram References" }
+    { Image "state_machine_a"}
+    { OMSObjects
+        { ObjectsFunc "find_implicit_state_machines(\"${parent.name}\",${parent.id},\"${parent.type}\",\"UmlActivityDiagram\");" }
+        { Editor "uactivityd" }
+    }
+    { ChildObjects
+        (
+            UmlActivityDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowActivityStateMachineCommand }
+    { UseObjectCommand EditStateMachineAnnotationCommand }
+}
+
+Class 0 UmlClassStateStateMachines
+{
+    { Label "Diagram References" }
+    { Image "state_machine_s"}
+    { OMSObjects
+        { ObjectsFunc "find_implicit_state_machines(\"${parent.name}\",${parent.id},\"${parent.type}\",\"UmlStateDiagram\");" }
+        { Editor "ustated" }
+    }
+    { ChildObjects
+        (
+            UmlStateDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowStateMachineCommand }
+    { UseObjectCommand EditStateMachineAnnotationCommand }
+}
+// End Add ECR 5080
+
+Class 0 UmlClassDiagramReferences
+{
+    { Label "Diagram References" }
+    { Image "class_diagrams" }
+    { OMSObjects
+        { Match "file[UmlClassDiagram && node_refs[node_id = ${parent.id}]] sort by name" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlClassDiagramLinkReferences
+{
+    { Label "Diagram References" }
+    { Image "class_diagrams" }
+    { OMSObjects
+        { Match "file[UmlClassDiagram && link_refs[link_id = ${parent.id}]] sort by name" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlClassTableReferences
+{
+    { Label "Table References" }
+    { Image "class_tables" }
+    { OMSObjects
+        { Match "file[UmlClassTable && node_refs[node_id = ${parent.id}]] sort by name" }
+        { Editor "uclasst" }
+    }
+    { UseObjectCommand EditTable }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+/////////////////////////////////////////////////////////////////////////
+// classes in Dynamic View
+
+// --- Scenario diagrams and contents ---------------------------------------------------
+Class 0 UmlScenarioInstances
+{
+    { Label "Diagram References" }
+    { Image "sequence_diagrams" }
+    { OMSObjects
+        { Match "node[UmlScenarioInstance && node_refs[file[UmlSequenceDiagram]]] sort by name"}
+        { Editor "usequenced" }
+    }
+    { ChildObjects
+        (
+            UmlSeqActors
+            UmlSeqObjectInstances
+            UmlSeqPackages
+            UmlSeqDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowScenarioInstanceCommand }
+    { UseObjectCommand EditScenarioInstanceAnnotationCommand }
+}
+
+// scenarios w/o an UmlScenarioInstance
+Class 0 UmlScenarios
+{
+    { Label "Diagram References" }
+    { Image "sequence_diagrams" }
+    { OMSObjects
+        { Match "file[UmlSequenceDiagram && ! node_refs[node[UmlScenarioInstance]]] sort by name"}
+        { Editor "usequenced" }
+        { LabelFunc "get_plain_scenario_name" }
+    }
+    { ChildObjects
+        (
+            UmlScenarioActors
+            UmlScenarioObjectInstances
+            UmlScenarioPackages
+        )
+    }
+    { UseObjectCommand ShowScenarioCommand }
+}
+
+// children of UmlScenarioInstance ------------------------------------------------------
+Class 0 UmlSeqActors
+{
+    { Label "Diagram References" }
+    { Image "actor_sequence" }
+    { OMSObjects
+        { Match "node[UmlActor && node_refs[file[UmlSequenceDiagram && node_refs[node_id = ${parent.id}]]]] sort by name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects
+        (
+            UmlSeqObjectInSimpleMessages
+            UmlSeqObjectInSynchronousMessages
+            UmlSeqObjectInAsynchronousMessages
+            UmlSeqObjectInBalkingMessages
+            UmlSeqObjectInTimeoutMessages
+            UmlSeqObjectInReturnMessages
+            UmlSeqObjectOutSimpleMessages
+            UmlSeqObjectOutSynchronousMessages
+            UmlSeqObjectOutAsynchronousMessages
+            UmlSeqObjectOutBalkingMessages
+            UmlSeqObjectOutTimeoutMessages
+            UmlSeqObjectOutReturnMessages
+            UmlSeqDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowActorCommand}
+    { UseObjectCommand EditActorAnnotationCommand }
+}
+
+Class 0 UmlSeqPackages
+{
+    { Label "Diagram References" }
+    { Image "package" }
+    { OMSObjects
+        { Match "node[UmlPackage && node_refs[file[UmlSequenceDiagram && node_refs[node_id = ${parent.id}]]]] sort by name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects
+        (
+            UmlSeqDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowPackageCommand }
+    { UseObjectCommand EditPackageAnnotationCommand }
+}
+
+Class 0 UmlSeqObjectInstances
+{
+    { Label "Diagram References" }
+    { Image "object_sequence" }
+    { OMSObjects
+        { Match "node[UmlObjectInstance && node_refs[file[UmlSequenceDiagram && node_refs[node_id = ${parent.id}]]]] sort by name" }
+        { LabelFunc "get_object_instance_full_name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects
+        (
+            UmlSeqObjectInSimpleMessages
+            UmlSeqObjectInSynchronousMessages
+            UmlSeqObjectInAsynchronousMessages
+            UmlSeqObjectInBalkingMessages
+            UmlSeqObjectInTimeoutMessages
+            UmlSeqObjectInReturnMessages
+            UmlSeqObjectOutSimpleMessages
+            UmlSeqObjectOutSynchronousMessages
+            UmlSeqObjectOutAsynchronousMessages
+            UmlSeqObjectOutBalkingMessages
+            UmlSeqObjectOutTimeoutMessages
+            UmlSeqObjectOutReturnMessages
+            UmlSeqDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowObjectCommand }
+    { UseObjectCommand EditObjectAnnotationCommand }
+}
+
+// children of "plain" scenarios --------------------------------------------------------
+Class 0 UmlScenarioActors
+{
+    { Label "Diagram References" }
+    { Image "actor_sequence" }
+    { OMSObjects
+        { Match "node[UmlActor && node_refs[file[UmlSequenceDiagram && id = ${parent.id}]]] sort by name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects
+        (
+            UmlSeqObjectInSimpleMessages
+            UmlSeqObjectInSynchronousMessages
+            UmlSeqObjectInAsynchronousMessages
+            UmlSeqObjectInBalkingMessages
+            UmlSeqObjectInTimeoutMessages
+            UmlSeqObjectInReturnMessages
+            UmlSeqObjectOutSimpleMessages
+            UmlSeqObjectOutSynchronousMessages
+            UmlSeqObjectOutAsynchronousMessages
+            UmlSeqObjectOutBalkingMessages
+            UmlSeqObjectOutTimeoutMessages
+            UmlSeqObjectOutReturnMessages
+            UmlSeqDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowActorCommand}
+    { UseObjectCommand EditActorAnnotationCommand }
+}
+
+Class 0 UmlScenarioPackages
+{
+    { Label "Diagram References" }
+    { Image "package" }
+    { OMSObjects
+        { Match "node[UmlPackage && node_refs[file[UmlSequenceDiagram && id = ${parent.id}]]] sort by name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects
+        (
+            UmlSeqDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowPackageCommand }
+    { UseObjectCommand EditPackageAnnotationCommand }
+}
+
+Class 0 UmlScenarioObjectInstances
+{
+    { Label "Diagram References" }
+    { Image "object_sequence" }
+    { OMSObjects
+        { Match "node[UmlObjectInstance && node_refs[file[UmlSequenceDiagram && id = ${parent.id}]]] sort by name" }
+        { LabelFunc "get_object_instance_full_name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects
+        (
+            UmlSeqObjectInSimpleMessages
+            UmlSeqObjectInSynchronousMessages
+            UmlSeqObjectInAsynchronousMessages
+            UmlSeqObjectInBalkingMessages
+            UmlSeqObjectInTimeoutMessages
+            UmlSeqObjectInReturnMessages
+            UmlSeqObjectOutSimpleMessages
+            UmlSeqObjectOutSynchronousMessages
+            UmlSeqObjectOutAsynchronousMessages
+            UmlSeqObjectOutBalkingMessages
+            UmlSeqObjectOutTimeoutMessages
+            UmlSeqObjectOutReturnMessages
+            UmlSeqDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowObjectCommand }
+    { UseObjectCommand EditObjectAnnotationCommand }
+}
+
+// children of UmlSeqObjectInstances ----------------------------------------------------
+Class 0 UmlSeqObjectInSimpleMessages
+{
+    { Label "Diagram References" }
+    { Image "simplemessage" }
+    { OMSObjects
+        { Match "link[UmlSimpleMessage && to_node_id == ${parent.id} && link_refs[file[UmlSequenceDiagram]]]" }
+        { LabelFunc "get_message_link_to_name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects ( UmlSeqDiagramLinkReferences ) }
+}
+
+Class 0 UmlSeqObjectInSynchronousMessages
+{
+    { Label "Diagram References" }
+    { Image "synchronousmessage" }
+    { OMSObjects
+        { Match "link[UmlSynchronousMessage && to_node_id == ${parent.id} && link_refs[file[UmlSequenceDiagram]]]" }
+        { LabelFunc "get_message_link_to_name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects ( UmlSeqDiagramLinkReferences ) }
+}
+
+Class 0 UmlSeqObjectInAsynchronousMessages
+{
+    { Label "Diagram References" }
+    { Image "asynchronousmessage" }
+    { OMSObjects
+        { Match "link[UmlAsynchronousMessage && to_node_id == ${parent.id} && link_refs[file[UmlSequenceDiagram]]]" }
+        { LabelFunc "get_message_link_to_name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects ( UmlSeqDiagramLinkReferences ) }
+}
+
+Class 0 UmlSeqObjectInBalkingMessages
+{
+    { Label "Diagram References" }
+    { Image "balkingmessage" }
+    { OMSObjects
+        { Match "link[UmlBalkingMessage && to_node_id == ${parent.id} && link_refs[file[UmlSequenceDiagram]]]" }
+        { LabelFunc "get_message_link_to_name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects ( UmlSeqDiagramLinkReferences ) }
+}
+
+Class 0 UmlSeqObjectInTimeoutMessages
+{
+    { Label "Diagram References" }
+    { Image "timeoutmessage" }
+    { OMSObjects
+        { Match "link[UmlTimeoutMessage && to_node_id == ${parent.id} && link_refs[file[UmlSequenceDiagram]]]" }
+        { LabelFunc "get_message_link_to_name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects ( UmlSeqDiagramLinkReferences ) }
+}
+
+Class 0 UmlSeqObjectInReturnMessages
+{
+    { Label "Diagram References" }
+    { Image "returnmessage" }
+    { OMSObjects
+        { Match "link[UmlReturnMessage && to_node_id == ${parent.id} && link_refs[file[UmlSequenceDiagram]]]" }
+        { LabelFunc "get_message_link_to_name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects ( UmlSeqDiagramLinkReferences ) }
+}
+
+Class 0 UmlSeqObjectOutSimpleMessages
+{
+    { Label "Diagram References" }
+    { Image "simplemessage" }
+    { OMSObjects
+        { Match "link[UmlSimpleMessage && from_node_id == ${parent.id} && link_refs[file[UmlSequenceDiagram]]]" }
+        { LabelFunc "get_message_link_from_name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects ( UmlSeqDiagramLinkReferences ) }
+}
+
+Class 0 UmlSeqObjectOutSynchronousMessages
+{
+    { Label "Diagram References" }
+    { Image "synchronousmessage" }
+    { OMSObjects
+        { Match "link[UmlSynchronousMessage && from_node_id == ${parent.id} && link_refs[file[UmlSequenceDiagram]]]" }
+        { LabelFunc "get_message_link_from_name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects ( UmlSeqDiagramLinkReferences ) }
+}
+
+Class 0 UmlSeqObjectOutAsynchronousMessages
+{
+    { Label "Diagram References" }
+    { Image "asynchronousmessage" }
+    { OMSObjects
+        { Match "link[UmlAsynchronousMessage && from_node_id == ${parent.id} && link_refs[file[UmlSequenceDiagram]]]" }
+        { LabelFunc "get_message_link_from_name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects ( UmlSeqDiagramLinkReferences ) }
+}
+
+Class 0 UmlSeqObjectOutBalkingMessages
+{
+    { Label "Diagram References" }
+    { Image "balkingmessage" }
+    { OMSObjects
+        { Match "link[UmlBalkingMessage && from_node_id == ${parent.id} && link_refs[file[UmlSequenceDiagram]]]" }
+        { LabelFunc "get_message_link_from_name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects ( UmlSeqDiagramLinkReferences ) }
+}
+
+Class 0 UmlSeqObjectOutTimeoutMessages
+{
+    { Label "Diagram References" }
+    { Image "timeoutmessage" }
+    { OMSObjects
+        { Match "link[UmlTimeoutMessage && from_node_id == ${parent.id} && link_refs[file[UmlSequenceDiagram]]]" }
+        { LabelFunc "get_message_link_from_name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects ( UmlSeqDiagramLinkReferences ) }
+}
+
+Class 0 UmlSeqObjectOutReturnMessages
+{
+    { Label "Diagram References" }
+    { Image "returnmessage" }
+    { OMSObjects
+        { Match "link[UmlReturnMessage && from_node_id == ${parent.id} && link_refs[file[UmlSequenceDiagram]]]" }
+        { LabelFunc "get_message_link_from_name" }
+        { Editor "usequenced" }
+    }
+    { ChildObjects ( UmlSeqDiagramLinkReferences ) }
+}
+
+Class 0 UmlSeqDiagramReferences
+{
+    { Label "Diagram References" }
+    { Image "sequence_diagrams" }
+    { OMSObjects
+        { Match "file[UmlSequenceDiagram && node_refs[node_id = ${parent.id}]] sort by name"}
+        { Editor "usequenced" }
+    }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlSeqDiagramLinkReferences
+{
+    { Label "Diagram References" }
+    { Image "sequence_diagrams" }
+    { OMSObjects
+        { Match "file[UmlSequenceDiagram && link_refs[link_id = ${parent.id}]] sort by name"}
+        { Editor "usequenced" }
+    }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+// --- Scenario diagrams and contents ---------------------------------------------------
+// scenarios with UmlScenarioInstance
+Class 0 UmlCollaborationInstances
+{
+    { Label "Diagram References" }
+    { Image "collaboration_diagrams" }
+    { OMSObjects
+        { Match "node[UmlScenarioInstance && node_refs[file[UmlCollaborationDiagram]]] sort by name"}
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects
+        (
+            UmlCollActors
+            UmlCollObjectInstances
+            UmlCollCompositeObjectInstances
+            UmlCollCollaboration
+            UmlCollPackages
+            UmlCollTypes
+            UmlCollDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowScenarioInstanceCommand }
+    { UseObjectCommand EditScenarioInstanceAnnotationCommand }
+}
+
+// scenarios w/o UmlScenarioInstance
+Class 0 UmlCollaborations
+{
+    { Label "Diagram References" }
+    { Image "collaboration_diagrams" }
+    { OMSObjects
+        { Match "file[UmlCollaborationDiagram && ! node_refs[node[UmlScenarioInstance]]] sort by name"}
+        { Editor "ucollaborationd" }
+        { LabelFunc "get_plain_scenario_name" }
+    }
+    { ChildObjects
+        (
+            UmlCollaborationActors
+            UmlCollaborationCompositeObjectInstances
+            UmlCollaborationObjectInstances
+            UmlCollaborationCollaboration
+            UmlCollaborationPackages
+            UmlCollaborationTypes
+        )
+    }
+    { UseObjectCommand ShowCollaborationCommand }
+}
+
+// children of "plain" scenarios --------------------------------------------------------
+Class 0 UmlCollaborationActors
+{
+    { Label "Diagram References" }
+    { Image "actor_collaboration" }
+    { OMSObjects
+        { Match "node[UmlActor && node_refs[file[UmlCollaborationDiagram && id = ${parent.id}]]] sort by name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects
+        (
+            UmlCollObjectInSimpleMessages
+            UmlCollObjectInSynchronousMessages
+            UmlCollObjectInAsynchronousMessages
+            UmlCollObjectInBalkingMessages
+            UmlCollObjectInTimeoutMessages
+            UmlCollObjectInReturnMessages
+            UmlCollObjectOutSimpleMessages
+            UmlCollObjectOutSynchronousMessages
+            UmlCollObjectOutAsynchronousMessages
+            UmlCollObjectOutBalkingMessages
+            UmlCollObjectOutTimeoutMessages
+            UmlCollObjectOutReturnMessages
+            UmlCollDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowActorCommand}
+    { UseObjectCommand EditActorAnnotationCommand }
+}
+
+Class 0 UmlCollaborationPackages
+{
+    { Label "Diagram References" }
+    { Image "package" }
+    { OMSObjects
+        { Match "node[UmlPackage && node_refs[file[UmlCollaborationDiagram && id = ${parent.id}]]] sort by name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects
+        (
+            UmlCollDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowPackageCommand }
+    { UseObjectCommand EditPackageAnnotationCommand }
+}
+
+Class 0 UmlCollaborationTypes
+{
+    { Label "Diagram References" }
+    { Image "type" }
+    { OMSObjects
+        { Match "node[UmlType && node_refs[file[UmlCollaborationDiagram && id = ${parent.id}]]] sort by name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects
+        (
+            UmlCollDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowTypeCommand }
+    { UseObjectCommand EditTypeAnnotationCommand }
+}
+
+Class 0 UmlCollaborationCollaboration
+{
+    { Label "Diagram References" }
+    { Image "collaboration" }
+    { OMSObjects
+        { Match "node[UmlCollaboration && node_refs[file[UmlCollaborationDiagram && id = ${parent.id}]]] sort by name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects
+        (
+            UmlCollaborationRoleObject
+            UmlCollDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowCollaborationCommand }
+    { UseObjectCommand EditCollaborationAnnotationCommand }
+}
+
+Class 0 UmlCollaborationRoleObject
+{
+    { Label "Diagram References" }
+    { Image "object" }
+    { OMSObjects
+        { Match "node[UmlObjectInstance && scope_node[UmlObjectClassScope && scoped_nodes[UmlObjectInState]] && in_links[UmlCollaborationRole && link_refs && from_node_id == ${parent.id}] && node_refs[file[UmlCollaborationDiagram]]] sort by name" }
+        { LabelFunc "get_object_instance_full_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects
+        (
+            UmlCollObjectInSimpleMessages
+            UmlCollObjectInSynchronousMessages
+            UmlCollObjectInAsynchronousMessages
+            UmlCollObjectInBalkingMessages
+            UmlCollObjectInTimeoutMessages
+            UmlCollObjectInReturnMessages
+            UmlCollObjectOutSimpleMessages
+            UmlCollObjectOutSynchronousMessages
+            UmlCollObjectOutAsynchronousMessages
+            UmlCollObjectOutBalkingMessages
+            UmlCollObjectOutTimeoutMessages
+            UmlCollObjectOutReturnMessages
+            UmlCollObjectInstanceAttribute
+            UmlCollDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowObjectCommand }
+    { UseObjectCommand EditObjectAnnotationCommand }
+}
+
+Class 0 UmlCollaborationObjectInstances
+{
+    { Label "Diagram References" }
+    { Image "object" }
+    { OMSObjects
+        { Match "node[UmlObjectInstance && scope_node[UmlObjectClassScope && scoped_nodes[UmlObjectInState]] && !in_links[UmlContains && link_refs && from_node[UmlObjectInstance]] && node_refs[file[UmlCollaborationDiagram && id = ${parent.id}]]] sort by name" }
+        { LabelFunc "get_object_instance_full_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects
+        (
+            UmlCollObjectInSimpleMessages
+            UmlCollObjectInSynchronousMessages
+            UmlCollObjectInAsynchronousMessages
+            UmlCollObjectInBalkingMessages
+            UmlCollObjectInTimeoutMessages
+            UmlCollObjectInReturnMessages
+            UmlCollObjectOutSimpleMessages
+            UmlCollObjectOutSynchronousMessages
+            UmlCollObjectOutAsynchronousMessages
+            UmlCollObjectOutBalkingMessages
+            UmlCollObjectOutTimeoutMessages
+            UmlCollObjectOutReturnMessages
+            UmlCollObjectInstanceAttribute
+            UmlCollDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowObjectCommand }
+    { UseObjectCommand EditObjectAnnotationCommand }
+}
+
+Class 0 UmlCollaborationCompositeObjectInstances
+{
+    { Label "Diagram References" }
+    { Image "composite_object" }
+    { OMSObjects
+        { Match "node[UmlObjectInstance && scope_node[UmlObjectClassScope && ! scoped_nodes[UmlObjectInState]] && !in_links[UmlContains && link_refs && from_node[UmlObjectInstance]] && node_refs[file[UmlCollaborationDiagram && id = ${parent.id}]]] sort by name" }
+        { LabelFunc "get_object_instance_full_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects
+        (
+            UmlCollObjectInSimpleMessages
+            UmlCollObjectInSynchronousMessages
+            UmlCollObjectInAsynchronousMessages
+            UmlCollObjectInBalkingMessages
+            UmlCollObjectInTimeoutMessages
+            UmlCollObjectInReturnMessages
+            UmlCollObjectOutSimpleMessages
+            UmlCollObjectOutSynchronousMessages
+            UmlCollObjectOutAsynchronousMessages
+            UmlCollObjectOutBalkingMessages
+            UmlCollObjectOutTimeoutMessages
+            UmlCollObjectOutReturnMessages
+            UmlCollaborationNestedObjectInstances
+            UmlCollDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowObjectCommand }
+    { UseObjectCommand EditObjectAnnotationCommand }
+}
+
+Class 0 UmlCollaborationNestedObjectInstances
+{
+    { Label "Diagram References" }
+    { Image "object" }
+    { OMSObjects
+        { Match "node[UmlObjectInstance && scope_node[UmlObjectClassScope && scoped_nodes[UmlObjectInState]] && in_links[UmlContains && link_refs && from_node[id = ${parent.id}]] && node_refs[file[UmlCollaborationDiagram]]] sort by name" }
+        { LabelFunc "get_object_instance_full_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects
+        (
+            UmlCollObjectInSimpleMessages
+            UmlCollObjectInSynchronousMessages
+            UmlCollObjectInAsynchronousMessages
+            UmlCollObjectInBalkingMessages
+            UmlCollObjectInTimeoutMessages
+            UmlCollObjectInReturnMessages
+            UmlCollObjectOutSimpleMessages
+            UmlCollObjectOutSynchronousMessages
+            UmlCollObjectOutAsynchronousMessages
+            UmlCollObjectOutBalkingMessages
+            UmlCollObjectOutTimeoutMessages
+            UmlCollObjectOutReturnMessages
+            UmlCollObjectInstanceAttribute
+            UmlCollDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowObjectCommand }
+    { UseObjectCommand EditObjectAnnotationCommand }
+}
+
+// children of UmlScenarioInstances ----------------------------------------------------
+Class 0 UmlCollActors
+{
+    { Label "Diagram References" }
+    { Image "actor_collaboration" }
+    { OMSObjects
+        { Match "node[UmlActor && node_refs[file[UmlCollaborationDiagram && node_refs[node_id = ${parent.id}]]]] sort by name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects
+        (
+            UmlCollObjectInSimpleMessages
+            UmlCollObjectInSynchronousMessages
+            UmlCollObjectInAsynchronousMessages
+            UmlCollObjectInBalkingMessages
+            UmlCollObjectInTimeoutMessages
+            UmlCollObjectInReturnMessages
+            UmlCollObjectOutSimpleMessages
+            UmlCollObjectOutSynchronousMessages
+            UmlCollObjectOutAsynchronousMessages
+            UmlCollObjectOutBalkingMessages
+            UmlCollObjectOutTimeoutMessages
+            UmlCollObjectOutReturnMessages
+            UmlCollDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowActorCommand}
+    { UseObjectCommand EditActorAnnotationCommand}
+}
+
+Class 0 UmlCollPackages
+{
+    { Label "Diagram References" }
+    { Image "package" }
+    { OMSObjects
+        { Match "node[UmlPackage && node_refs[file[UmlCollaborationDiagram && node_refs[node_id = ${parent.id}]]]] sort by name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects
+        (
+            UmlCollDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowPackageCommand }
+    { UseObjectCommand EditPackageAnnotationCommand }
+}
+
+Class 0 UmlCollTypes
+{
+    { Label "Diagram References" }
+    { Image "type" }
+    { OMSObjects
+        { Match "node[UmlType && node_refs[file[UmlCollaborationDiagram && node_refs[node_id = ${parent.id}]]]] sort by name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects
+        (
+            UmlCollDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowTypeCommand }
+    { UseObjectCommand EditTypeAnnotationCommand }
+}
+
+Class 0 UmlCollCollaboration
+{
+    { Label "Diagram References" }
+    { Image "collaboration" }
+    { OMSObjects
+        { Match "node[UmlCollaboration && node_refs[file[UmlCollaborationDiagram && node_refs[node_id = ${parent.id}]]]] sort by name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects
+        (
+            UmlCollaborationRoleObject
+            UmlCollDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowCollaborationCommand }
+    { UseObjectCommand EditCollaborationAnnotationCommand }
+}
+
+Class 0 UmlCollObjectInstances
+{
+    { Label "Diagram References" }
+    { Image "object" }
+    { OMSObjects
+        { Match "node[UmlObjectInstance && scope_node[UmlObjectClassScope && scoped_nodes[UmlObjectInState]] && !in_links[UmlContains && link_refs && from_node[UmlObjectInstance]] && node_refs[file[UmlCollaborationDiagram && node_refs[node_id = ${parent.id}]]]] sort by name" }
+        { LabelFunc "get_object_instance_full_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects
+        (
+            UmlCollObjectInSimpleMessages
+            UmlCollObjectInSynchronousMessages
+            UmlCollObjectInAsynchronousMessages
+            UmlCollObjectInBalkingMessages
+            UmlCollObjectInTimeoutMessages
+            UmlCollObjectInReturnMessages
+            UmlCollObjectOutSimpleMessages
+            UmlCollObjectOutSynchronousMessages
+            UmlCollObjectOutAsynchronousMessages
+            UmlCollObjectOutBalkingMessages
+            UmlCollObjectOutTimeoutMessages
+            UmlCollObjectOutReturnMessages
+            UmlCollObjectInstanceAttribute
+            UmlCollDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowObjectCommand }
+    { UseObjectCommand EditObjectAnnotationCommand }
+}
+
+Class 0 UmlCollCompositeObjectInstances
+{
+    { Label "Diagram References" }
+    { Image "composite_object" }
+    { OMSObjects
+        { Match "node[UmlObjectInstance && scope_node[UmlObjectClassScope && ! scoped_nodes[UmlObjectInState]] && !in_links[UmlContains && link_refs && from_node[UmlObjectInstance]] && node_refs[file[UmlCollaborationDiagram && node_refs[node_id = ${parent.id}]]]] sort by name" }
+        { LabelFunc "get_object_instance_full_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects
+        (
+            UmlCollObjectInSimpleMessages
+            UmlCollObjectInSynchronousMessages
+            UmlCollObjectInAsynchronousMessages
+            UmlCollObjectInBalkingMessages
+            UmlCollObjectInTimeoutMessages
+            UmlCollObjectInReturnMessages
+            UmlCollObjectOutSimpleMessages
+            UmlCollObjectOutSynchronousMessages
+            UmlCollObjectOutAsynchronousMessages
+            UmlCollObjectOutBalkingMessages
+            UmlCollObjectOutTimeoutMessages
+            UmlCollObjectOutReturnMessages
+            UmlCollaborationNestedObjectInstances
+            UmlCollDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowObjectCommand }
+    { UseObjectCommand EditObjectAnnotationCommand }
+}
+
+Class 0 UmlCollObjectInSimpleMessages
+{
+    { Label "Diagram References" }
+    { Image "simplemessage" }
+    { OMSObjects
+        { Match "link[UmlSimpleMessage && to_node_id == ${parent.id} && link_refs[file[UmlCollaborationDiagram]]]" }
+        { LabelFunc "get_message_link_to_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects ( UmlCollDiagramLinkReferences ) }
+}
+
+Class 0 UmlCollObjectInSynchronousMessages
+{
+    { Label "Diagram References" }
+    { Image "synchronousmessage" }
+    { OMSObjects
+        { Match "link[UmlSynchronousMessage && to_node_id == ${parent.id} && link_refs[file[UmlCollaborationDiagram]]]" }
+        { LabelFunc "get_message_link_to_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects ( UmlCollDiagramLinkReferences ) }
+}
+
+Class 0 UmlCollObjectInAsynchronousMessages
+{
+    { Label "Diagram References" }
+    { Image "asynchronousmessage" }
+    { OMSObjects
+        { Match "link[UmlAsynchronousMessage && to_node_id == ${parent.id} && link_refs[file[UmlCollaborationDiagram]]]" }
+        { LabelFunc "get_message_link_to_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects ( UmlCollDiagramLinkReferences ) }
+}
+
+Class 0 UmlCollObjectInBalkingMessages
+{
+    { Label "Diagram References" }
+    { Image "balkingmessage" }
+    { OMSObjects
+        { Match "link[UmlBalkingMessage && to_node_id == ${parent.id} && link_refs[file[UmlCollaborationDiagram]]]" }
+        { LabelFunc "get_message_link_to_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects ( UmlCollDiagramLinkReferences ) }
+}
+
+Class 0 UmlCollObjectInTimeoutMessages
+{
+    { Label "Diagram References" }
+    { Image "timeoutmessage" }
+    { OMSObjects
+        { Match "link[UmlTimeoutMessage && to_node_id == ${parent.id} && link_refs[file[UmlCollaborationDiagram]]]" }
+        { LabelFunc "get_message_link_to_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects ( UmlCollDiagramLinkReferences ) }
+}
+
+Class 0 UmlCollObjectInReturnMessages
+{
+    { Label "Diagram References" }
+    { Image "returnmessage" }
+    { OMSObjects
+        { Match "link[UmlReturnMessage && to_node_id == ${parent.id} && link_refs[file[UmlCollaborationDiagram]]]" }
+        { LabelFunc "get_message_link_to_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects ( UmlCollDiagramLinkReferences ) }
+}
+
+Class 0 UmlCollObjectOutSimpleMessages
+{
+    { Label "Diagram References" }
+    { Image "simplemessage" }
+    { OMSObjects
+        { Match "link[UmlSimpleMessage && from_node_id == ${parent.id} && link_refs[file[UmlCollaborationDiagram]]]" }
+        { LabelFunc "get_message_link_from_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects ( UmlCollDiagramLinkReferences ) }
+}
+
+Class 0 UmlCollObjectOutSynchronousMessages
+{
+    { Label "Diagram References" }
+    { Image "synchronousmessage" }
+    { OMSObjects
+        { Match "link[UmlSynchronousMessage && from_node_id == ${parent.id} && link_refs[file[UmlCollaborationDiagram]]]" }
+        { LabelFunc "get_message_link_from_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects ( UmlCollDiagramLinkReferences ) }
+}
+
+Class 0 UmlCollObjectOutAsynchronousMessages
+{
+    { Label "Diagram References" }
+    { Image "asynchronousmessage" }
+    { OMSObjects
+        { Match "link[UmlAsynchronousMessage && from_node_id == ${parent.id} && link_refs[file[UmlCollaborationDiagram]]]" }
+        { LabelFunc "get_message_link_from_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects ( UmlCollDiagramLinkReferences ) }
+}
+
+Class 0 UmlCollObjectOutBalkingMessages
+{
+    { Label "Diagram References" }
+    { Image "balkingmessage" }
+    { OMSObjects
+        { Match "link[UmlBalkingMessage && from_node_id == ${parent.id} && link_refs[file[UmlCollaborationDiagram]]]" }
+        { LabelFunc "get_message_link_from_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects ( UmlCollDiagramLinkReferences ) }
+}
+
+Class 0 UmlCollObjectOutTimeoutMessages
+{
+    { Label "Diagram References" }
+    { Image "timeoutmessage" }
+    { OMSObjects
+        { Match "link[UmlTimeoutMessage && from_node_id == ${parent.id} && link_refs[file[UmlCollaborationDiagram]]]" }
+        { LabelFunc "get_message_link_from_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects ( UmlCollDiagramLinkReferences ) }
+}
+
+Class 0 UmlCollObjectOutReturnMessages
+{
+    { Label "Diagram References" }
+    { Image "returnmessage" }
+    { OMSObjects
+        { Match "link[UmlReturnMessage && from_node_id == ${parent.id} && link_refs[file[UmlCollaborationDiagram]]]" }
+        { LabelFunc "get_message_link_from_name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects ( UmlCollDiagramLinkReferences ) }
+}
+
+Class 0 UmlCollObjectInstanceAttribute
+{
+    { Label "Diagram References" }
+    { Image "value_of_attribute" }
+    { OMSObjects
+        { Match "node[UmlObjectInstanceAttribute && scope_node_id == ${parent.id} && node_refs[file[UmlCollaborationDiagram]]]" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects ( UmlCollDiagramReferences ) }
+    { UseObjectCommand ShowInstanceAttributeCommand }
+    { UseObjectCommand EditInstanceAttributeAnnotationCommand }
+}
+
+Class 0 UmlCollPackages
+{
+    { Label "Diagram References" }
+    { Image "package" }
+    { OMSObjects
+        { Match "node[UmlPackage && node_refs[file[UmlCollaborationDiagram && id = ${parent.id}]]] sort by name" }
+        { Editor "ucollaborationd" }
+    }
+    { ChildObjects
+        (
+            UmlCollDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowPackageCommand }
+    { UseObjectCommand EditPackageAnnotationCommand }
+}
+
+Class 0 UmlCollDiagramReferences
+{
+    { Label "Diagram References" }
+    { Image "collaboration_diagrams" }
+    { OMSObjects
+        { Match "file[UmlCollaborationDiagram && node_refs[node_id = ${parent.id}]] sort by name"}
+        { Editor "ucollaborationd" }
+    }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlCollDiagramLinkReferences
+{
+    { Label "Diagram References" }
+    { Image "collaboration_diagrams" }
+    { OMSObjects
+        { Match "file[UmlCollaborationDiagram && link_refs[link_id = ${parent.id}]] sort by name"}
+        { Editor "ucollaborationd" }
+    }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+// --- Activity Diagrams and contents ---------------------------------------------------
+Class 0 UmlActivityTopLevelStateMachines
+{
+    { Label "Diagram References" }
+    { Image "state_machine_a"}
+    { OMSObjects
+        { ObjectsFunc "find_toplevel_state_machines();" }
+        { Editor "uactivityd" }
+    }
+    { ChildObjects
+        (
+            UmlActivitySwimlanes
+            UmlActivityInitialStates
+            UmlActivityActionStates
+            UmlActivityDecision
+            UmlActivityFinalStates
+            UmlActivityDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowActivityStateMachineCommand }
+    { UseObjectCommand EditStateMachineAnnotationCommand }
+}
+
+Class 0 UmlActivitySwimlanes
+{
+    { Label "Diagram References" }
+    { Image "swimlane" }
+    { OMSObjects
+        { Match "node[UmlSwimlane && node_refs[file[UmlActivityDiagram]] && scope_node_id = ${parent.id} && name != ''] sort by name" }
+        { Editor "uactivityd" }
+    }
+    { ChildObjects
+        (
+            UmlActivitySwimlaneInitialStates
+            UmlActivitySwimlaneActionStates
+            UmlActivitySwimlaneDecision
+            UmlActivitySwimlaneFinalStates
+            UmlActivityDiagramReferences
+        )
+    }
+}
+
+Class 0 UmlActivityActionStates
+{
+    { Label "Diagram References" }
+    { Image "state" }
+    { OMSObjects
+        { Match "node[UmlActionState && node_refs[file[UmlActivityDiagram]] && scope_node_id = ${parent.id} && name != '' && !in_links[UmlContains && link_refs]] sort by name" }
+        { Editor "uactivityd" }
+    }
+    { ChildObjects
+        (
+            UmlActivityActionStatesInTransition
+            UmlActivityActionStatesOutTransition
+            UmlActivityRefinedStateMachines
+            UmlActivityInputObjectInstance
+            UmlActivityOutputObjectInstance
+            UmlActivityDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowActivityActionStateCommand }
+    { UseObjectCommand EditActionStateAnnotationCommand }
+}
+
+Class 0 UmlActivityDecision
+{
+    { Label "Diagram References" }
+    { Image "decision" }
+    { OMSObjects
+        { Match "node[UmlActionState && items[UmlStereotype && value == 'Decision'] && node_refs[file[UmlActivityDiagram]] && scope_node_id = ${parent.id} && !in_links[UmlContains && link_refs]]" }
+        { Editor "uactivityd" }
+    }
+    { ChildObjects
+        (
+            UmlActivityActionStatesInTransition
+            UmlActivityActionStatesOutTransition
+            UmlActivityDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowActivityActionStateCommand }
+    { UseObjectCommand EditActionStateAnnotationCommand }
+}
+
+Class 0 UmlActivitySwimlaneActionStates
+{
+    { Label "Diagram References" }
+    { Image "state" }
+    { OMSObjects
+        { Match "node[UmlActionState && node_refs[file[UmlActivityDiagram]] && in_links[UmlContains && link_refs && from_node_id = ${parent.id}] && name != ''] sort by name" }
+        { Editor "uactivityd" }
+    }
+    { ChildObjects
+        (
+            UmlActivityActionStatesInTransition
+            UmlActivityActionStatesOutTransition
+            UmlActivityRefinedStateMachines
+            UmlActivityInputObjectInstance
+            UmlActivityOutputObjectInstance
+            UmlActivityDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowActivityActionStateCommand }
+    { UseObjectCommand EditActionStateAnnotationCommand }
+}
+
+Class 0 UmlActivitySwimlaneDecision
+{
+    { Label "Diagram References" }
+    { Image "decision" }
+    { OMSObjects
+        { Match "node[UmlActionState && items[UmlStereotype && value == 'Decision'] && node_refs[file[UmlActivityDiagram]] && in_links[UmlContains && link_refs && from_node_id = ${parent.id}]]" }
+        { Editor "uactivityd" }
+    }
+    { ChildObjects
+        (
+            UmlActivityActionStatesInTransition
+            UmlActivityActionStatesOutTransition
+            UmlActivityDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowActivityActionStateCommand }
+    { UseObjectCommand EditActionStateAnnotationCommand }
+}
+
+Class 0 UmlActivityActionStatesInTransition
+{
+    { Label "Diagram References" }
+    { Image "statetransitionlink" }
+    { OMSObjects
+        { Match "link[UmlTransition && link_refs[file[UmlActivityDiagram]] && to_node_id = ${parent.id}] sort by name" }
+        { LabelFunc "get_message_link_to_name" }
+        { Editor "uactivityd" }
+    }
+    { ChildObjects ( UmlActivityDiagramLinkReferences ) }
+}
+
+Class 0 UmlActivityActionStatesOutTransition
+{
+    { Label "Diagram References" }
+    { Image "statetransitionlink" }
+    { OMSObjects
+        { Match "link[UmlTransition && link_refs[file[UmlActivityDiagram]] && from_node_id = ${parent.id}] sort by name" }
+        { LabelFunc "get_message_link_from_name" }
+        { Editor "uactivityd" }
+    }
+    { ChildObjects ( UmlActivityDiagramLinkReferences ) }
+}
+
+Class 0 UmlActivityRefinedStateMachines
+{
+    { Label "Diagram References" }
+    { Image "state_machine_a"}
+    { OMSObjects
+        { ObjectsFunc "find_refined_action_state(${parent.id});" }
+        { Editor "uactivityd" }
+    }
+    { ChildObjects
+        (
+            UmlActivityInitialStates
+            UmlActivityActionStates
+            UmlActivityDecision
+            UmlActivityFinalStates
+            UmlActivityDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowActivityStateMachineCommand }
+    { UseObjectCommand EditStateMachineAnnotationCommand }
+}
+
+Class 0 UmlActivityInputObjectInstance
+{
+    { Label "Diagram References" }
+    { Image "object" }
+    { OMSObjects
+        { Match "node[UmlObjectInstance && out_links[UmlInput && link_refs && to_node_id == ${parent.id}] && node_refs[file[UmlActivityDiagram]]] sort by name" }
+        { LabelFunc "get_object_instance_full_name" }
+        { Editor "uactivityd" }
+    }
+    { ChildObjects ( UmlActivityDiagramReferences ) }
+    { UseObjectCommand ShowObjectCommand }
+    { UseObjectCommand EditObjectAnnotationCommand }
+}
+
+Class 0 UmlActivityOutputObjectInstance
+{
+    { Label "Diagram References" }
+    { Image "object" }
+    { OMSObjects
+        { Match "node[UmlObjectInstance && in_links[UmlOutput && link_refs && from_node_id == ${parent.id}] && node_refs[file[UmlActivityDiagram]]] sort by name" }
+        { LabelFunc "get_object_instance_full_name" }
+        { Editor "uactivityd" }
+    }
+    { ChildObjects ( UmlActivityDiagramReferences ) }
+    { UseObjectCommand ShowObjectCommand }
+    { UseObjectCommand EditObjectAnnotationCommand }
+}
+
+Class 0 UmlActivityInitialStates
+{
+    { Label "Diagram References" }
+    { Image "initial_state" }
+    { OMSObjects
+        { Match "node[UmlInitialState && node_refs && scope_node_id = ${parent.id} && !in_links[UmlContains && link_refs]] sort by name" }
+        { Editor "uactivityd" }
+    }
+    { ChildObjects
+        (
+            UmlActivityActionStatesOutTransition
+            UmlActivityDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowInitialStateCommand }
+    { UseObjectCommand EditInitialStateAnnotationCommand }
+}
+
+Class 0 UmlActivityFinalStates
+{
+    { Label "Diagram References" }
+    { Image "final_state" }
+    { OMSObjects
+        { Match "node[UmlFinalState && node_refs && scope_node_id = ${parent.id} && !in_links[UmlContains && link_refs]] sort by name" }
+        { Editor "uactivityd" }
+    }
+    { ChildObjects
+        (
+            UmlActivityActionStatesInTransition
+            UmlActivityDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowFinalStateCommand }
+    { UseObjectCommand EditFinalStateAnnotationCommand }
+}
+
+Class 0 UmlActivitySwimlaneInitialStates
+{
+    { Label "Diagram References" }
+    { Image "initial_state" }
+    { OMSObjects
+        { Match "node[UmlInitialState && node_refs && in_links[UmlContains && link_refs && from_node_id == ${parent.id}]] sort by name" }
+        { Editor "uactivityd" }
+    }
+    { ChildObjects
+        (
+            UmlActivityActionStatesOutTransition
+            UmlActivityDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowInitialStateCommand }
+    { UseObjectCommand EditInitialStateAnnotationCommand }
+}
+
+Class 0 UmlActivitySwimlaneFinalStates
+{
+    { Label "Diagram References" }
+    { Image "final_state" }
+    { OMSObjects
+        { Match "node[UmlFinalState && node_refs && in_links[UmlContains && link_refs && from_node_id == ${parent.id}]] sort by name" }
+        { Editor "uactivityd" }
+    }
+    { ChildObjects
+        (
+            UmlActivityActionStatesInTransition
+            UmlActivityDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowFinalStateCommand }
+    { UseObjectCommand EditFinalStateAnnotationCommand }
+}
+
+Class 0 UmlActivityDiagramReferences
+{
+    { Label "Diagram References" }
+    { Image "activity_diagrams" }
+    { OMSObjects
+        { Match "file[UmlActivityDiagram && node_refs[node_id = ${parent.id}]]" }
+        { Editor "uactivityd" }
+    }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlActivityDiagramLinkReferences
+{
+    { Label "Diagram References" }
+    { Image "activity_diagrams" }
+    { OMSObjects
+        { Match "file[UmlActivityDiagram && link_refs[link_id = ${parent.id}]]" }
+        { Editor "uactivityd" }
+    }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+// --- State diagrams and contents ------------------------------------------------------
+Class 0 UmlStateMachines
+{
+    { Label "Diagram References" }
+    { Image "state_machine_s"}
+    { OMSObjects
+        { Match "node[UmlStateMachine && node_refs[file[UmlStateDiagram]]] sort by name"}
+        { Editor "ustated" }
+    }
+    { ChildObjects
+        (
+            UmlStateInitialStates
+    	    UmlCompositeState
+    	    UmlConcurrentState
+            UmlState
+            UmlHistory
+            UmlStateFinalStates
+            UmlStateDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowStateMachineCommand }
+    { UseObjectCommand EditStateMachineAnnotationCommand }
+}
+
+Class 0 UmlCompositeState
+{
+    { Label "Diagram References" }
+    { Image "composite_state" }
+    { OMSObjects
+        { Match "node[UmlState && node_refs[file[UmlStateDiagram]] && scope_node_id = ${parent.id} && name != '' && !items[UmlConcurrentState] && scoped_nodes[UmlState && node_refs[file[UmlStateDiagram]]]] sort by name" }
+        { Editor "ustated" }
+    }
+    { ChildObjects
+        (
+            UmlStateInTransition
+            UmlStateOutTransition
+            UmlStateInitialStates
+            UmlStateDiagramReferences
+    	    UmlCompositeState
+    	    UmlConcurrentState
+	        UmlState
+	        UmlHistory
+            UmlStateFinalStates
+        )
+    }
+    { UseObjectCommand ShowActionStateCommand }
+    { UseObjectCommand EditStateAnnotationCommand }
+}
+
+Class 0 UmlConcurrentState
+{
+    { Label "Diagram References" }
+    { Image "concurrent_subregion" }
+    { OMSObjects
+        { Match "node[UmlState && node_refs[file[UmlStateDiagram]] && scope_node_id = ${parent.id} && name != '' && items[UmlConcurrentState && value == 'True'] && scoped_nodes[UmlState && node_refs[file[UmlStateDiagram]]]] sort by name" }
+        { Editor "ustated" }
+    }
+    { ChildObjects
+        (
+            UmlStateInTransition
+            UmlStateOutTransition
+            UmlStateInitialStates
+            UmlStateDiagramReferences
+    	    UmlCompositeState
+    	    UmlConcurrentState
+	        UmlState
+	        UmlHistory
+            UmlStateFinalStates
+        )
+    }
+    { UseObjectCommand ShowActionStateCommand }
+    { UseObjectCommand EditStateAnnotationCommand }
+}
+
+Class 0 UmlState
+{
+    { Label "Diagram References" }
+    { Image "state" }
+    { OMSObjects
+        { Match "node[UmlState && node_refs[file[UmlStateDiagram]] && scope_node_id = ${parent.id} && name != '' && ! scoped_nodes[UmlState && node_refs[file[UmlStateDiagram]]]] sort by name" }
+        { Editor "ustated" }
+    }
+    { ChildObjects
+        (
+            UmlStateInTransition
+            UmlStateOutTransition
+            UmlStateRefinedState
+            UmlStateDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowActionStateCommand }
+    { UseObjectCommand EditStateAnnotationCommand }
+}
+
+Class 0 UmlHistory
+{
+    { Label "Diagram References" }
+    { Image "history" }
+    { OMSObjects
+        { Match "node[UmlHistoryState && node_refs[file[UmlStateDiagram]] && scope_node_id = ${parent.id} && ! scoped_nodes[UmlState && node_refs[file[UmlStateDiagram]]]] sort by name" }
+        { Editor "ustated" }
+    }
+    { ChildObjects
+        (
+            UmlStateInTransition
+            UmlStateOutTransition
+            UmlStateDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowHistoryCommand }
+    { UseObjectCommand EditStateAnnotationCommand }
+}
+
+Class 0 UmlStateInTransition
+{
+    { Label "Diagram References" }
+    { Image "statetransitionlink" }
+    { OMSObjects
+    	{ Match "link[UmlTransition && link_refs[file[UmlStateDiagram]] && to_node_id = ${parent.id}] sort by name" }
+        { LabelFunc "get_message_link_to_name" }
+        { Editor "ustated" }
+    }
+    { ChildObjects ( UmlStateDiagramLinkReferences ) }
+}
+
+Class 0 UmlStateOutTransition
+{
+    { Label "Diagram References" }
+    { Image "statetransitionlink" }
+    { OMSObjects
+        { Match "link[UmlTransition && link_refs[file[UmlStateDiagram]] && from_node_id = ${parent.id}] sort by name" }
+        { LabelFunc "get_message_link_from_name" }
+        { Editor "ustated" }
+    }
+    { ChildObjects ( UmlStateDiagramLinkReferences ) }
+}
+
+Class 0 UmlStateRefinedState
+{
+    { Label "Diagram References" }
+    { Image "composite_state" }
+    { OMSObjects
+        { Match "node[UmlState && id == ${parent.id} && node_refs[viewpoints[UmlRefinedState] && file[UmlStateDiagram]]] sort by name" }
+        { Editor "ustated" }
+    }
+    { ChildObjects
+        (
+	        UmlCompositeState
+    	    UmlConcurrentState
+            UmlState
+            UmlStateInitialStates
+            UmlStateFinalStates
+            UmlStateDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowActionStateCommand }
+    { UseObjectCommand EditStateAnnotationCommand }
+}
+
+Class 0 UmlStateInitialStates
+{
+    { Label "Diagram References" }
+    { Image "initial_state" }
+    { OMSObjects
+    	{ Match "node[UmlInitialState && node_refs[file[UmlStateDiagram]] && scope_node_id = ${parent.id} ] sort by name" }
+        { Editor "ustated" }
+    }
+    { ChildObjects
+        (
+            UmlStateOutTransition
+            UmlStateDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowInitialStateCommand }
+    { UseObjectCommand EditInitialStateAnnotationCommand }
+}
+
+Class 0 UmlStateFinalStates
+{
+    { Label "Diagram References" }
+    { Image "final_state" }
+    { OMSObjects
+    	{ Match "node[UmlFinalState && node_refs[file[UmlStateDiagram]] && scope_node_id = ${parent.id}] sort by name" }
+        { Editor "ustated" }
+    }
+    { ChildObjects
+        (
+            UmlStateInTransition
+            UmlStateDiagramReferences
+        )
+    }
+    { UseObjectCommand ShowFinalStateCommand }
+    { UseObjectCommand EditFinalStateAnnotationCommand }
+}
+
+Class 0 UmlStateDiagramReferences
+{
+    { Label "Diagram References" }
+    { Image "state_diagrams" }
+    { OMSObjects
+        { Match "file[UmlStateDiagram && node_refs[node_id = ${parent.id}]]" }
+        { Editor "ustated" }
+    }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlStateDiagramLinkReferences
+{
+    { Label "Diagram References" }
+    { Image "state_diagrams" }
+    { OMSObjects
+        { Match "file[UmlStateDiagram && link_refs[link_id = ${parent.id}]]" }
+        { Editor "ustated" }
+    }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlStateTableReferences
+{
+    { Label "Diagram References" }
+    { Image "state_tables" }
+    { OMSObjects
+        { Match "file[UmlStatetable && node_refs[node_id = ${parent.id}]]" }
+        { Editor "ustatet" }
+    }
+    { UseObjectCommand EditTable }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+//////////////////////////////////////////////////////////////////////////
+//classes in Deployment/Component View
+Class 0 UmlComponentSources
+{
+    { Label "Diagram References" }
+    { Image "source_component"}
+    { OMSObjects
+        { Match "node[UmlComponentSource && node_refs] sort by name" }
+        { Editor "udeploymentd" }
+    }
+    { ChildObjects ( UmlComponentPartClasses UmlComponentPartObjects UmlComponentDiagramReferences UmlDeploymentDiagramReferences ) }
+    { UseObjectCommand ShowComponentSourceCommandComponentD }
+    { UseObjectCommand EditComponentSourceAnnotationCommand }
+}
+
+Class 0 UmlComponentBinaries
+{
+    { Label "Diagram References" }
+    { Image "binary_component"}
+    { OMSObjects
+        { Match "node[UmlComponentBinary && node_refs] sort by name" }
+        { Editor "udeploymentd" }
+    }
+    { ChildObjects ( UmlComponentPartClasses UmlComponentPartObjects UmlComponentDiagramReferences UmlDeploymentDiagramReferences ) }
+    { UseObjectCommand ShowComponentBinaryCommandComponentD }
+    { UseObjectCommand ShowComponentBinaryCommandDeploymentD }
+    { UseObjectCommand EditComponentBinaryAnnotationCommand }
+}
+
+Class 0 UmlComponentExecutables
+{
+    { Label "Diagram References" }
+    { Image "executable_component"}
+    { OMSObjects
+        { Match "node[UmlComponentExecutable && node_refs] sort by name" }
+        { Editor "udeploymentd" }
+    }
+    { ChildObjects ( UmlComponentPartClasses UmlComponentPartObjects UmlComponentDiagramReferences UmlDeploymentDiagramReferences ) }
+    { UseObjectCommand ShowComponentExecutableCommandComponentD }
+    { UseObjectCommand ShowComponentExecutableCommandDeploymentD }
+    { UseObjectCommand EditComponentExecutableAnnotationCommand }
+}
+
+Class 0 UmlComponentInterfaces
+{
+    { Label "Diagram References" }
+    { Image "interface"}
+    { OMSObjects
+        { Match "node[UmlComponentInterface && node_refs] sort by name" }
+        { Editor "udeploymentd" }
+    }
+    { ChildObjects ( UmlComponentDiagramReferences UmlDeploymentDiagramReferences ) }
+    { UseObjectCommand ShowComponentInterfacesCommandComponentD }
+    { UseObjectCommand ShowComponentInterfacesCommandDeploymentD }
+    { UseObjectCommand EditComponentInterfacesAnnotationCommand }
+}
+
+Class 0 UmlComponentClasses
+{
+    { Label "Diagram References" }
+    { Image "class"}
+    { OMSObjects
+        { Match "node[UmlClass && node_refs[file[UmlComponentDiagram||UmlDeploymentDiagram]] && !in_links[UmlContains && link_refs]] sort by name" }
+        { Editor "udeploymentd" }
+    }
+    { ChildObjects ( UmlComponentDiagramReferences UmlDeploymentDiagramReferences ) }
+    // ECR 5887 { UseObjectCommand ShowClassCommandComponentD }
+    // ECR 5887 { UseObjectCommand ShowClassCommandDeploymentD }
+    { UseObjectCommand EditComponentObjectsAnnotationCommand }
+}
+
+Class 0 UmlComponentPartClasses
+{
+    { Label "Diagram References" }
+    { Image "class"}
+    { OMSObjects
+        { Match "node[UmlClass && node_refs && in_links[UmlContains && link_refs && from_node_id == ${parent.id}]] sort by name" }
+        { Editor "udeploymentd" }
+    }
+    { ChildObjects ( UmlComponentDiagramReferences UmlDeploymentDiagramReferences ) }
+    // ECR 5887 { UseObjectCommand ShowClassCommandComponentD }
+    // ECR 5887 { UseObjectCommand ShowClassCommandDeploymentD }
+    { UseObjectCommand EditComponentObjectsAnnotationCommand }
+}
+
+Class 0 UmlComponentObjects
+{
+    { Label "Diagram References" }
+    { Image "object"}
+    { OMSObjects
+        { Match "node[UmlComponentObject && node_refs && !in_links[UmlComponentComposit && link_refs]] sort by name" }
+        { Editor "udeploymentd" }
+    }
+    { ChildObjects ( UmlComponentDiagramReferences UmlDeploymentDiagramReferences ) }
+    { UseObjectCommand ShowComponentObjectsCommandComponentD }
+    { UseObjectCommand ShowComponentObjectsCommandDeploymentD }
+    { UseObjectCommand EditComponentObjectsAnnotationCommand }
+}
+
+Class 0 UmlComponentPartObjects
+{
+    { Label "Diagram References" }
+    { Image "object"}
+    { OMSObjects
+        { Match "node[UmlComponentObject && node_refs && in_links[UmlComponentComposit && link_refs && from_node_id == ${parent.id}]] sort by name" }
+        { Editor "udeploymentd" }
+    }
+    { ChildObjects ( UmlComponentDiagramReferences UmlDeploymentDiagramReferences ) }
+    // ECR 5887 { UseObjectCommand ShowClassCommandComponentD }
+    // ECR 5887 { UseObjectCommand ShowClassCommandDeploymentD }
+    { UseObjectCommand EditComponentObjectsAnnotationCommand }
+}
+
+Class 0 UmlDeploymentNodes
+{
+    { Label "Diagram References" }
+    { Image "deployment_component"}
+    { OMSObjects
+        { Match "node[UmlDeploymentNode && node_refs] sort by name" }
+        { Editor "udeploymentd" }
+    }
+    { ChildObjects ( UmlDeploymentDiagramReferences ) }
+    { UseObjectCommand ShowDeploymentNodeCommand }
+    { UseObjectCommand EditDeploymentNodeAnnotationCommand }
+}
+
+Class 0 UmlComponentDiagramReferences
+{
+    { Label "Diagram References" }
+    { Image "component_diagrams" }
+    { OMSObjects
+        { Match "file[UmlComponentDiagram && node_refs[node_id = ${parent.id}]] sort by name" }
+        { Editor "ucomponentd" }
+    }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlDeploymentDiagramReferences
+{
+    { Label "Diagram References" }
+    { Image "deployment_diagrams" }
+    { OMSObjects
+        { Match "file[UmlDeploymentDiagram && node_refs[node_id = ${parent.id}]] sort by name" }
+        { Editor "udeploymentd" }
+    }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+//Commands
+Global 0 ShowSystemCommand
+{
+    { ObjectCommand
+        { Name "ShowSystem" }
+        { Type Nowin }
+        { Label "Edit System in Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"${editor}\",\"UmlSystem\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditSystemAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditSystemAnnotation" }
+        { Label "Edit Annotation of System..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlSystem\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowUseCaseCommand
+{
+    { ObjectCommand
+        { Name "ShowUseCase" }
+        { Type Nowin }
+        { Label "Edit Use Case in Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"${editor}\",\"UmlUseCase\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditUseCaseAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditUseCaseAnnotation" }
+        { Label "Edit Annotation of Use Case..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlUseCase\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowActorCommand
+{
+    { ObjectCommand
+        { Name "ShowActor" }
+        { Type Nowin }
+        { Label "Edit Actor in Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"${editor}\",\"UmlActor\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditActorAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditActorAnnotation" }
+        { Label "Edit Annotation of Actor..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlActor\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowPackageCommand
+{
+    { ObjectCommand
+        { Name "ShowPackage" }
+        { Type Nowin }
+        { Label "Edit Package in Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"${editor}\",\"UmlPackage\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditPackageAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditActorAnnotation" }
+        { Label "Edit Annotation of Package..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlPackage\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowClassCommand
+{
+    { ObjectCommand
+        { Name "ShowClass" }
+        { Type Nowin }
+        { Label "Edit Class in Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"${editor}\",\"UmlClass\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowClassTableCommand
+{
+    { ObjectCommand
+        { Name "GoToClassTable" }
+        { Type Nowin }
+        { Label "Edit Class Table..." }
+        { QrlEvaluate "GoToClassTable(\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditClassAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditClassAnnotation" }
+        { Label "Edit Annotation of Class..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlClass\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditAttributeAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditAttributeAnnotation" }
+        { Label "Edit Annotation of Attribute..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlAttribute\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditOperationAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditOperationAnnotation" }
+        { Label "Edit Annotation of Operation..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlOperation\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowObjectCommand
+{
+    { ObjectCommand
+        { Name "ShowSeqObject" }
+        { Type Nowin }
+        { Label "Edit Object in Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"${editor}\",\"UmlObjectInstance\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditObjectAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditObjectAnnotation" }
+        { Label "Edit Annotation of Object..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlObjectInstance\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowInstanceAttributeCommand
+{
+    { ObjectCommand
+        { Name "ShowInstanceAttributeObject" }
+        { Type Nowin }
+        { Label "Edit InstanceAttribute in Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"${editor}\",\"UmlObjectInstanceAttribute\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditInstanceAttributeAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditInstanceAttributeAnnotation" }
+        { Label "Edit Annotation of InstanceAttribute..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlObjectInstanceAttribute\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowTypeCommand
+{
+    { ObjectCommand
+        { Name "ShowTypeObject" }
+        { Type Nowin }
+        { Label "Edit Type in Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"${editor}\",\"UmlType\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditTypeAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditTypeAnnotation" }
+        { Label "Edit Annotation of Type..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlType\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditCollaborationAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditCollaborationAnnotation" }
+        { Label "Edit Annotation of Collaboration..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlCollaboration\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowScenarioCommand
+{
+    { ObjectCommand
+        { Name "ShowScenarioCommand" }
+        { Type Nowin }
+        { Label "Edit Scenario in Sequence Diagram..." }
+        { QrlEvaluate "GoToAnyFile(\"${editor}\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowCollaborationCommand
+{
+    { ObjectCommand
+        { Name "ShowCollaborationCommand" }
+        { Type Nowin }
+        { Label "Edit Scenario in Collaboration Diagram..." }
+        { QrlEvaluate "GoToAnyFile(\"${editor}\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowStateMachineCommand
+{
+    { ObjectCommand
+        { Name "ShowStateMachine" }
+        { Type Nowin }
+        { Label "Edit State Machine in Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"${editor}\",\"UmlStateMachine\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditStateMachineAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditStateMachineAnnotation" }
+        { Label "Edit Annotation of State Machine..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlStateMachine\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowActivityStateMachineCommand
+{
+    { ObjectCommand
+        { Name "ShowActivityStateMachine" }
+        { Type Nowin }
+        { Label "Edit Activity State Machine in Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"${editor}\",\"UmlStateMachine\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowScenarioInstanceCommand
+{
+    { ObjectCommand
+        { Name "ShowScenarioInstance" }
+        { Type Nowin }
+        { Label "Edit Scenario Instance in Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"${editor}\",\"UmlScenarioInstance\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditScenarioInstanceAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditScenarioInstanceAnnotation" }
+        { Label "Edit Annotation of Scenario Instance..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlScenarioInstance\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowActivityActionStateCommand
+{
+    { ObjectCommand
+        { Name "ShowActivityActionState" }
+        { Type Nowin }
+        { Label "Edit Action State in Activity Diagram..." }
+        { QrlEvaluate "GoToAnyReferenceByID(\"${editor}\",\"UmlActionState\",\"${cmd.ids}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowActionStateCommand
+{
+    { ObjectCommand
+        { Name "ShowActionState" }
+        { Type Nowin }
+        { Label "Edit State in State Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"${editor}\",\"UmlState\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowHistoryCommand
+{
+    { ObjectCommand
+        { Name "ShowHistory" }
+        { Type Nowin }
+        { Label "Edit History in State Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"${editor}\",\"UmlHistoryState\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditActionStateAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditActionStateAnnotation" }
+        { Label "Edit Annotation of Action State..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlActionState\",\"${cmd.ids}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditStateAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditActionStateAnnotation" }
+        { Label "Edit Annotation of State..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlState\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowInitialStateCommand
+{
+    { ObjectCommand
+        { Name "ShowInitialState" }
+        { Type Nowin }
+        { Label "Edit Initial State in Diagram..." }
+        { QrlEvaluate "GoToAnyReferenceByID(\"${editor}\",\"UmlInitialState\",\"${cmd.ids}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditInitialStateAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditInitialStateAnnotation" }
+        { Label "Edit Annotation of Initial State..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlInitialState\",\"${cmd.ids}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowFinalStateCommand
+{
+    { ObjectCommand
+        { Name "ShowFinalState" }
+        { Type Nowin }
+        { Label "Edit Final State in Diagram..." }
+        { QrlEvaluate "GoToAnyReferenceByID(\"${editor}\",\"UmlFinalState\",\"${cmd.ids}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditFinalStateAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditFinalStateAnnotation" }
+        { Label "Edit Annotation of Final State..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlFinalState\",\"${cmd.ids}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+// Component/Deployment diags -----------------------------------------------------------
+Global 0 ShowComponentSourceCommandComponentD
+{
+    { ObjectCommand
+        { Name "ShowComponentSourceCommandComponentD" }
+        { Type Nowin }
+        { Label "Edit ComponentSource in Component Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"ucomponentd\",\"UmlComponentSource\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditComponentSourceAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditComponentSourceAnnotation" }
+        { Label "Edit Annotation of ComponentSource..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlComponentSource\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowComponentBinaryCommandDeploymentD
+{
+    { ObjectCommand
+        { Name "ShowComponentBinaryCommandDeploymentD" }
+        { Type Nowin }
+        { Label "Edit ComponentBinary in Deployment Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"udeploymentd\",\"UmlComponentBinary\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowComponentBinaryCommandComponentD
+{
+    { ObjectCommand
+        { Name "ShowComponentBinaryCommandComponentD" }
+        { Type Nowin }
+        { Label "Edit ComponentBinary in Component Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"ucomponentd\",\"UmlComponentBinary\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditComponentBinaryAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditComponentBinaryAnnotation" }
+        { Label "Edit Annotation of ComponentBinary..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlComponentBinary\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowComponentExecutableCommandComponentD
+{
+    { ObjectCommand
+        { Name "ShowComponentExecutableCommandComponentD" }
+        { Type Nowin }
+        { Label "Edit ComponentExecutable in Component Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"ucomponentd\",\"UmlComponentExecutable\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowComponentExecutableCommandDeploymentD
+{
+    { ObjectCommand
+        { Name "ShowComponentExecutableCommandDeploymentD" }
+        { Type Nowin }
+        { Label "Edit ComponentExecutable in Deployment Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"udeploymentd\",\"UmlComponentExecutable\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditComponentExecutableAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditComponentExecutableAnnotation" }
+        { Label "Edit Annotation of ComponentExecutable..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlComponentExecutable\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowComponentInterfacesCommandDeploymentD
+{
+    { ObjectCommand
+        { Name "ShowComponentInterfacesCommandDeploymentD" }
+        { Type Nowin }
+        { Label "Edit ComponentInterface in Deployement Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"udeploymentd\",\"UmlComponentInterface\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowComponentInterfacesCommandComponentD
+{
+    { ObjectCommand
+        { Name "ShowComponentInterfacesCommandComponentD" }
+        { Type Nowin }
+        { Label "Edit ComponentInterface in Component Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"ucomponentd\",\"UmlComponentInterface\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditComponentInterfacesAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditComponentInterfacesAnnotationCommand" }
+        { Label "Edit Annotation of ComponentInterfaces..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlComponentInterface\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowComponentObjectsCommandDeploymentD
+{
+    { ObjectCommand
+        { Name "ShowComponentObjectsCommandDeploymentD" }
+        { Type Nowin }
+        { Label "Edit ComponentObject in Deployment Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"udeploymentd\",\"UmlComponentObject\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowComponentObjectsCommandComponentD
+{
+    { ObjectCommand
+        { Name "ShowComponentObjectsCommandComponentD" }
+        { Type Nowin }
+        { Label "Edit ComponentObject in Component Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"ucomponentd\",\"UmlComponentObject\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditComponentObjectsAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditComponentObjectsAnnotationCommand" }
+        { Label "Edit Annotation of ComponentObjects..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlComponentObject\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowDeploymentNodeCommand
+{
+    { ObjectCommand
+        { Name "ShowDeploymentNodeCommand" }
+        { Type Nowin }
+        { Label "Edit DeploymentNode in Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"${editor}\",\"UmlDeploymentNode\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 EditDeploymentNodeAnnotationCommand
+{
+    { ObjectCommand
+        { Name "EditDeploymentNodeAnnotationCommand" }
+        { Label "Edit Annotation of DeploymentNode..." }
+        { Type Nowin }
+        { QrlEvaluate "GoToAnyAnnotByID(\"UmlDeploymentNode\",\"${cmd.ids}\");" } // ECR 7844
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+// ECR 5110 start
+//Global 1 PrintById
+//{
+//    { ObjectCommand
+//	{ Name "PrintById" }
+//	{ Label "&Print" }
+//        { QrlEvaluate "mm_print_command(\"${cmd.ids}\");" }
+//    }
+//}
+//
+//Global 1 PrintAsById
+//{
+//    { ObjectCommand
+//	{ Name "PrintAsById" }
+//	{ Label "Print As..." }
+//        { QrlEvaluate "mm_print_as_command(\"${cmd.ids}\");" }
+//    }
+//}
+
+Global 1 CopyById
+{
+    { ObjectCommand
+	//{ Name "CopyById" } //ECR 5370
+    { Name "Copy" } //ECR 5370
+	{ Label "Copy..." }
+	{ SpaceBefore True }
+//	{ ReapplyFilterAfterExec Self }
+	{ ResetAfterExec True }
+	{ ShowPropsOnExec True }
+	{ Chdir False }
+	{ SingleObject False }
+        { QrlEvaluate
+            "copy_files_by_id(\"${cmd.ids}\",\"${prop.copy_annot}\",\"${prop.force}\",\"${prop.to_proj_sys}\",\"${prop.to_name}\");"
+        }
+	{ Type Nowin }
+        { UseProperty CopyProperty }
+        { UseProperty StputilCopyAnnot }
+	{ UseProperty StputilCopyForce }
+    }
+}
+
+Global 1 DeleteById
+{
+    { ObjectCommand
+	//{ Name "DeleteById" } //ECR 5370
+    { Name "Delete" } //ECR 5370
+	{ Label "Delete" }
+//	{ ReapplyFilterAfterExec Self }
+        { QrlEvaluate "delete_files_by_id(\"${cmd.ids}\");" }
+    }
+}
+// ECR 5110 end
+
+IncludeIfExists "uml/rules/mm_tree.rules"

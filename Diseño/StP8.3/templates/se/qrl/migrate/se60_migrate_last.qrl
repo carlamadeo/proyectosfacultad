@@ -1,0 +1,150 @@
+
+// qrl script to add Lexical module annotations to migrated modules.
+
+
+//#include "qrl/include/opt_displaymark.inc"
+//#include "qrl/include/error.inc"
+//#include "qrl/update/update_files.inc"
+#include "rules/qrl/commands.inc"
+
+int
+main()
+{
+    string fi, name, cmd; 
+    list namel;
+    int i, handle;
+    node n;
+
+    fi = current_projdir() + current_system() + "/.SE_LexInclMigrate";
+
+    if (file_exists(fi))
+    {
+	if (! read_file_access(fi))
+	{
+	    print_error("ERROR: Cannot read list of names for Lexical Modules. Check permissions on <projdir>/<system>/.SE_LexInclMigrate");
+	    return 0;
+	}
+
+	namel = string_to_list(read_file(fi), "\n\t ");
+	for (i = 0; i < list_count(namel); i++)
+	{
+	    name = list_get(namel, i);
+	    n = find_by_query("node[Module && name = '${name}']");
+	    if (n != NULL)
+	    {
+		// add the annotations needed here
+		cmd = "stpem -ed ngoae -first -p " + current_projdir() + " -s " + current_system() +
+		      " -C 'AnnotEdit " + to_string(n.id) + "'" + 
+		      " -C 'NoteSelect LexicalModule'" +
+		      " -C 'ItemSelect IsLexicalModule'" +
+		      " -C 'EditorSetValue True'" +
+		      " -C FileSave -C AnnotUnload";
+//print_message(cmd);
+		system(cmd);
+
+		//handle = send_start_edit_annot(n.id);
+		//editor_send_msg(NGOAE_CLASS, OAE_CMD_NOTE_SEL + "LexicalModule", handle);
+		//editor_send_msg(NGOAE_CLASS, OAE_CMD_ITEM_SEL + "IsLexicalModule", handle);
+		//editor_send_msg(NGOAE_CLASS, OAE_CMD_ITEM_SETVAL + "True", handle);
+		//send_oae_save_update_unload_note(handle);
+
+		print_message("Added Lexical Note to module `" + name + "'.");
+	    }
+	}
+    }
+
+    migrate_pspecs();
+
+    migrate_50_array_bounds();
+
+    return 0;
+}
+
+
+
+void 
+migrate_pspecs()
+
+{
+    system("stpem -ed ngoae -first -p " + current_projdir() + " -s " + current_system() + " -C 'EditorQrlEval MigratePspecs();'");
+
+    return;
+}
+
+
+void
+migrate_50_array_bounds()
+
+{
+    list l, seql;
+    int i, j;
+    string li, ui, arr, cmd;
+    item litem, uitem;
+    note n;
+    boolean first = True;
+    node iter, seq;
+
+    // if we find a string like  description
+    //                           ...
+    //                           end pspec 
+    // cut out everything but the stuff inbetween, then run gen pspec.
+
+    l = list_select("node[Iteration]");
+    for (i = 0; i < list_count(l); i++)
+    {
+	li = "";
+	ui = "";
+        iter = list_get(l, i);
+
+	
+        litem = find_by_query("item[LowerIteration && obj_id == ${iter.id}]");
+
+        if (litem != NULL && litem.value != NULL && litem.value != "")
+	    li = litem.value;
+
+        uitem = find_by_query("item[UpperIteration && obj_id == ${iter.id}]");
+
+        if (uitem != NULL && uitem.value != NULL && uitem.value != "")
+	    ui = uitem.value;
+
+	if (li == "" && ui == "")
+	    continue;
+	else if (li == "")
+	    arr = ui;
+	else if (ui == "")
+	    arr = li;
+	else 
+	    arr = li + "-" + ui;
+    
+	// and add the note to all the sequences of the same name.  If there are more 
+        // then one, issue a warning.
+
+	seql = list_select("node[Sequence && name = '${iter.name}']");
+
+	if (first && (list_count(seql) != 0))
+	{
+	    print_message("Correcting StP/SE 5.0 style array bounds...");
+	    first = False;
+	}
+	
+	if (list_count(seql) > 1)
+	    print_message("More then one sequence named `" + iter.name + "'. Applying same named iteration's array bounds to each one.");
+
+	for (j = 0; j < list_count(seql); j++)
+	{
+	    seq = list_get(seql, j);
+	    // add the annotations needed here
+	    cmd = "stpem -ed ngoae -first -p " + current_projdir() + " -s " + current_system() +
+		  " -C 'AnnotEdit " + to_string(seq.id) + "'" + 
+		  " -C 'NoteSelect DataDefinition'" +
+		  " -C 'ItemSelect ArraySize'" +
+		  " -C 'EditorSetValue " + arr + "'" +
+		  " -C FileSave -C AnnotUnload";
+	    system(cmd);
+	}
+    }
+    if (! first)
+	print_message("Done correcting StP/SE 5.0 style array bounds.");
+
+    return;
+}

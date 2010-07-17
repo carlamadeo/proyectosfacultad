@@ -1,0 +1,155 @@
+Diagram UmlClassDiagram
+{
+    { Name "Overview" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -263 }
+    { PanY -242 }
+    { Alignment 32 }
+    { GUID "UID_422CAB36-34FB-11d6-8DB9-00500445CF96" }
+    { Summary
+        { Nodes 3 }
+        { Arcs 3 }
+    }
+}
+
+Node 2
+{
+    { Type Package }
+    { Loc -247 19 }
+    { Scale 594.00 1091.00 }
+    { LabelDims 235 91 }
+    { Label
+        { Text "Clock_Pkg" }
+    }
+    { IsIncluded True }
+    { Parent 6 }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 1480 }
+        { GUID "UID_91DD932C-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Node 3
+{
+    { Type Package }
+    { Loc 194 -28 }
+    { Scale 873.00 624.00 }
+    { LabelDims 192 91 }
+    { Label
+        { Text "Bird_pgk" }
+    }
+    { IsIncluded True }
+    { Parent 6 }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 1491 }
+        { GUID "UID_91DD932D-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Node 6
+{
+    { Type Package }
+    { Loc 0 5 }
+    { Scale 1975.00 1468.00 }
+    { LabelDims 296 91 }
+    { Label
+        { Text "CoocooClock" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 1671 }
+        { GUID "UID_91DD932E-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Arc 4
+{
+    { Type Dependency }
+    { From
+        { ID 2 }
+        { Loc -129 -164 }
+        { Offset 101 -136 }
+    }
+    { To
+        { ID 3 }
+        { Loc 20 -164 }
+        { Offset -104 -89 }
+    }
+    { Label
+        { Text "Solid_Hour" }
+    }
+}
+
+Arc 31
+{
+    { Type Contains }
+    { From
+        { ID 6 }
+        { Loc 0 0 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 2 }
+        { Loc 0 0 }
+        { Offset 0 0 }
+    }
+    { IsInclusion True }
+}
+
+Arc 33
+{
+    { Type Contains }
+    { From
+        { ID 6 }
+        { Loc 0 0 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 3 }
+        { Loc 0 0 }
+        { Offset 0 0 }
+    }
+    { IsInclusion True }
+}
+
+Link 5
+{
+    { FirstArc 4 }
+    { LastArc 4 }
+    { Object
+        { PDMType Link }
+        { MappingName DependencyMapping }
+        { ID 2387 }
+        { GUID "UID_91DD932F-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Link 32
+{
+    { FirstArc 31 }
+    { LastArc 31 }
+    { Object
+        { PDMType Link }
+        { MappingName ContainsMapping }
+        { ID 2389 }
+        { GUID "UID_91DD9330-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Link 34
+{
+    { FirstArc 33 }
+    { LastArc 33 }
+    { Object
+        { PDMType Link }
+        { MappingName ContainsMapping }
+        { ID 2388 }
+        { GUID "UID_91DD9331-6EAE-11d4-8044-00104BF16798" }
+    }
+}

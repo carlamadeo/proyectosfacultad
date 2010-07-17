@@ -1,0 +1,821 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Aonix, Inc.
+// 	Copyright (c) 1992-1998
+// 	All rights reserved
+//
+
+int false = 0;
+int true = 1;
+
+// these are internal global variables that affect the way the browse() function
+// in dps works and should only be used from within gte/dps functions
+int gte_use_internal_messages = true; 		// send browse() result internally?
+int gte_remove_temp_file = true; 		// get rid of intermediate files after done?
+int gte_autoadjust_layout = false; 		// try to make layout pretty for first time?
+int gte_append_from_current_selection = false; 	// append at end or from current selection?
+
+int unchanged = -1;
+
+int delete_duplicates = true;	// should we delete duplicates in hyperbrowse?
+
+int IDCOL = -1;	// use a global variable here since its value is static
+		// and we use it all over the place, over and over
+
+// query executes the query (from the query dialog)
+int
+query(string query, int clear, int autoadjust)
+{
+  	int count;
+  	string list_type;
+  	list list;
+
+        gte_disable_refresh();
+
+  	gte_print_message("Executing query '" + query + "'...");
+
+	// technique to check to see whether the query has a syntax error
+	// versus a query that returns no objects
+	list = NULL;
+  	list = list_select(query);
+
+  	if (list == NULL) {
+   		gte_print_error("The query '" + query + "' contains a syntax error.");
+	        gte_enable_refresh();
+    		return -1;
+  	}
+
+  	count = list_count(list);
+  	if (count == 0) {
+    		gte_print_message("No objects from query '" + query + "' were found in the repository.");
+        	if (clear) 
+    	        	gte_inittable_string("FillTable " + gte_get_table_type() + "{}");
+	        gte_enable_refresh();
+        	gte_refresh_table();
+    		return 0;
+  	}
+
+	gte_autoadjust_layout = autoadjust;
+
+	// technique to (unconditionally?) clear the table
+  	list_type = list_get_type(list, 0);
+  	if (clear) 
+    		gte_inittable_string("FillTable " + gte_get_table_type() + "{}");
+
+	// add the objects to the appl cache
+	if (list_type == "node" || list_type == "link" || list_type == "cntx" || list_type == "note" || list_type == "item") {
+	  int i;
+	  for (i = 0; i < count; i = i + 1)
+	    gte_appl_cache_add_object(list_get(list, i));
+	}
+
+	// technique to create a PDMTypesTable
+  	browse(list);
+  	browse();
+
+	gte_autoadjust_layout = false;
+
+        gte_enable_refresh();
+
+	gte_refresh_table();
+
+  	if (count == 1)
+    		gte_print_message("1 " + list_type + " object " + "was retrieved from the repository.");
+  	else
+    		gte_print_message(count + " " + list_type + " objects " + "were retrieved from the repository.");
+
+  	return count;
+}
+
+// hyperbrowse performs hypertext-like browsing (used in methods in tbr.rules)
+// this function is highly specific to the browser, 
+// and embodies strong assumptions about the browser's layout (e.g.,
+// object id's being in the same column across sections,)
+// and about the form of the query (extend[id_field=XXXXX ...])
+void
+hyperbrowse(string from_objects, string to_query, string keyfield)
+{
+  	int first_row, last_row, current_row;
+	int warping;
+
+  	// should we warp?  (this resource can dynamically change)
+  	warping = gte_get_resource_boolean("IDE.BrowserWarping", true);
+	if (warping == 0)
+               gte_save_selection_rows();
+
+ 	// measure selection in rows, but stop at section end (need homogenous semantics).
+  	first_row = gte_get_first_row_in_selected();
+  	last_row = my_min(gte_get_last_row_in_selected(),
+		    	  gte_get_last_row(gte_get_hsect(first_row)));
+
+	my_update_selected_objects_in_place(from_objects, first_row, last_row);
+
+  	if (my_hyperbrowse_1(to_query, keyfield, first_row, last_row) == 0)
+		return;
+
+	if (warping == 0)
+		gte_set_selection_from_saved_rows();
+
+	gte_refresh_table();
+
+	return;
+}
+
+// here's an example of finding the (unknown type of) annotatable object
+// referenced to by an item, note, or file
+void 
+hyperbrowse_annotatable(string from_objects, string query_where, string keyfield)
+{
+  	int first_row, last_row;
+	int warping;
+
+  	// should we warp?  (this resource can dynamically change)
+  	warping = gte_get_resource_boolean("IDE.BrowserWarping", true);
+	if (warping == 0)
+		gte_save_selection_rows();
+
+  	// measure selection in rows, but stop at section end (need homogenous semantics).
+  	first_row = gte_get_first_row_in_selected();
+  	last_row = my_min(gte_get_last_row_in_selected(),
+		    	  gte_get_last_row(gte_get_hsect(first_row)));
+
+	my_update_selected_objects_in_place(from_objects, first_row, last_row);
+
+	// since an annotatable object's annotation is not supposed to be referenced
+	// by any other annotatable object, i can stop looking when i find one
+	// (this could be changed such that if more than 1 were found,
+	// then some kind of error should be flagged because it means there's
+	// a possible inconsistency in the repository)
+	if (my_hyperbrowse_1("node" + query_where, keyfield, first_row, last_row) == 0)
+	if (my_hyperbrowse_1("link" + query_where, keyfield, first_row, last_row) == 0)
+	if (my_hyperbrowse_1("cntx" + query_where, keyfield, first_row, last_row) == 0)
+	if (my_hyperbrowse_1("file" + query_where, keyfield, first_row, last_row) == 0) {
+		gte_print_message("No related annotated object (node, link, cntx, or file) was found in the repository.");
+		return;
+	}
+
+	if (warping == 0)
+		gte_set_selection_from_saved_rows();
+
+	gte_refresh_table();
+
+  	return;	
+}
+
+// here's an example of finding all of the SE objects for a file object
+void 
+hyperbrowse_file_closure(string file_id)
+{
+  	int first_row, last_row, num_rows, count;
+  	string node_query, link_query, cntx_query;
+	int warping;
+
+  	// should we warp?  (this resource can dynamically change)
+  	warping = gte_get_resource_boolean("IDE.BrowserWarping", true);
+
+	// save the selection in order to recalculate indices
+	gte_save_selection_rows();
+
+  	// measure selection in rows, but stop at section end (need homogenous semantics)
+  	first_row = gte_get_first_row_in_selected();
+  	last_row = my_min(gte_get_last_row_in_selected(),
+		    	  gte_get_last_row(gte_get_hsect(first_row)));
+	num_rows = last_row - first_row;	// first_row + num_rows = last_row
+
+	my_update_selected_objects_in_place("file", first_row, last_row);
+
+  	count = my_hyperbrowse_1("node[node_refs[file_id == " + file_id + "]]", "FILE__ID", first_row, last_row);
+	first_row = gte_get_first_row_from_saved_rows();
+	last_row = first_row + num_rows;
+  	count = count + my_hyperbrowse_1("link[link_refs[file_id == " + file_id + "]]", "FILE__ID", first_row, last_row);
+	first_row = gte_get_first_row_from_saved_rows();
+	last_row = first_row + num_rows;
+  	count = count + my_hyperbrowse_1("cntx[cntx_refs[file_id == " + file_id + "]]", "FILE__ID", first_row, last_row);
+
+	if (count == 0) {
+		gte_print_message("No related SE objects (node, link, or cntx) were found in the repository.");
+		return;
+	}
+
+	if (warping == 0)
+		gte_set_selection_from_saved_rows();
+
+	gte_refresh_table();
+
+  	return;	
+}
+
+void
+reduce_browser()
+{
+  int first_row, last_row, num_rows, hsect;
+  string ft;
+
+  // disable refresh
+  gte_disable_refresh();
+
+  // clip the selection to a single hsect to ensure homogenous semantics
+  first_row = gte_get_first_row_in_selected();
+  last_row = my_min(gte_get_last_row_in_selected(),
+		    gte_get_last_row(gte_get_hsect(first_row)));
+  gte_set_selection_quietly(first_row, 0, last_row, gte_get_last_col());
+
+  // remember how big the selection is and what section it belongs to
+  num_rows = last_row - first_row + 1;
+  hsect = gte_get_hsect(first_row);
+
+  // copy the selection to the paste buffer
+  gte_stpem("TableElementCopy");
+
+  // clear the table
+  gte_inittable_string("FillTable " + gte_get_table_type() + "{}");
+
+  // create a destination selection with enough space for paste
+  ft = "FillTable{{Hsect{Index " + hsect + "}{Vsect{Row{Repeat " + num_rows + " }{ Cell}}}}}";
+  gte_filltable_string(ft);
+
+  gte_set_selection_quietly(gte_get_first_row(hsect), 1, gte_get_last_row(hsect), gte_get_last_col());
+
+  // paste the old saved selection
+  gte_stpem("TableElementPaste");
+  gte_stpem("BufferHideShow +v 1 -h * +h 0 " + (hsect - 1) + " " + hsect);
+
+  gte_reset_history();
+
+  gte_enable_refresh();
+  gte_refresh_table();
+}
+
+// local functions, my_<local_function_name>()...
+int 
+my_min(int x, int y)
+{	
+  	if (x < y)
+    		return x;
+  	else
+    		return y;
+}
+
+void
+my_update_selected_objects_in_place(string object_type, int first_row, int last_row)
+{
+	int current_row;
+
+  	if (IDCOL == -1)
+    		IDCOL = gte_lookup_symbol("IDCOL");
+
+	// update all of the currently selected objects to ensure consistency with repository
+	// i.e., simulate evaluation of the id mapping by overlaying a filltable onto
+	// the currently selected objects
+	//
+	// (we also have to ensure that the cursor is on the first row of the selection,
+	// because the {Index Current} attribute of filltables references it)
+	gte_append_from_current_selection = true;
+	gte_set_selection_quietly(gte_get_first_row_in_selected(), gte_get_first_col_in_selected(),
+			  	  gte_get_last_row_in_selected(), gte_get_last_col_in_selected());
+	for (current_row = first_row; current_row <= last_row; current_row = current_row + 1) {
+		browse(object_type + "[id=" + gte_get_cell_label(current_row, IDCOL) + "]");
+	}
+	browse();
+	gte_append_from_current_selection = false;
+
+	gte_refresh_selection();
+
+	return;
+}
+
+int 
+my_find_select_show_object(int id)
+{
+	int chs;
+
+  	if (IDCOL == -1)
+    		IDCOL = gte_lookup_symbol("IDCOL");
+	gte_stpem("BufferFindOpt -c -i +l +m +r");
+	if (gte_find("^" + id + "$", gte_get_first_row(), IDCOL, gte_get_last_row(), IDCOL)) {
+		gte_set_selection_quietly(gte_get_current_cell_row(), 
+				 	  gte_get_first_col(), 
+				 	  gte_get_current_cell_row(), 
+				 	  gte_get_last_col()); 
+		chs = gte_get_hsect(gte_get_current_cell_row());
+		gte_stpem("BufferHideShow +v 1 +h " + (chs - 1) + " " + chs);
+		return true;
+	}
+	return false;
+}
+
+int 
+my_find_delete_object(int id)
+{
+  	if (IDCOL == -1)
+    		IDCOL = gte_lookup_symbol("IDCOL");
+	gte_stpem("BufferFindOpt -c -i +l +m +r");
+	if (gte_find("^" + id + "$", gte_get_first_row(), IDCOL, gte_get_last_row(), IDCOL)) {
+		gte_delete_row(gte_get_current_cell_row());
+		return true;
+	}
+	return false;
+}
+
+int
+my_get_id_virtual_method(string set_type, set set, int index)
+{
+	cntx cntx;
+	cntx_ref cntx_ref;
+	file file;
+	file_hist file_hist;
+	file_lock file_lock;
+	item item;
+	link link;
+	link_ref link_ref;
+        node node;
+	node_ref node_ref;
+	note note;
+	viewpoint viewpoint;
+	int id;
+
+	if (set_type == "cntx") 	{ cntx = set_get_element(set, index);		id = cntx.id; 		} else
+	if (set_type == "cntx_ref") 	{ cntx_ref = set_get_element(set, index);	id = cntx_ref.id; 	} else
+	if (set_type == "file") 	{ file = set_get_element(set, index);		id = file.id; 		} else
+	if (set_type == "file_hist") 	{ file_hist = set_get_element(set, index);	id = file_hist.id; 	} else
+	if (set_type == "file_lock") 	{ file_lock = set_get_element(set, index);	id = file_lock.id; 	} else
+	if (set_type == "item") 	{ item = set_get_element(set, index);		id = item.id; 		} else
+	if (set_type == "link") 	{ link = set_get_element(set, index);		id = link.id; 		} else
+	if (set_type == "link_ref") 	{ link_ref = set_get_element(set, index);	id = link_ref.id; 	} else
+	if (set_type == "node") 	{ node = set_get_element(set, index);		id = node.id; 		} else
+	if (set_type == "node_ref") 	{ node_ref = set_get_element(set, index);	id = node_ref.id; 	} else
+	if (set_type == "note") 	{ note = set_get_element(set, index);		id = note.id; 		} else
+	if (set_type == "viewpoint") 	{ viewpoint = set_get_element(set, index);	id = viewpoint.id; 	} else id = 0;
+	return id;
+}
+
+// the hyperbrowse function that does the real work 
+// (i made this "local" because the callers handle a lot of good stuff
+// that shouldn't be left out and i don't want this called without that stuff)
+int
+my_hyperbrowse_1(string query, string keyfield, int first_row, int last_row)
+{
+  	int i, r, id, count, keycol, safety;
+  	int current_row, save_row;
+  	string set_type, old_key_string, new_key_string;
+  	set image_ids, temp_set;
+
+  	if (IDCOL == -1)
+    		IDCOL = gte_lookup_symbol("IDCOL");
+
+  	// determine the column that contains the id field 
+  	// which will be repeatedly substituted  
+  	keycol = gte_lookup_symbol(keyfield);
+
+  	// the one type of objects with which we'll be dealing
+	// (this is how qrl does it)
+  	i = string_find(query, 0, "[");
+  	if (i == string_length(query)) {
+     		gte_print_error("The query '" + query + "' is not of the proper form for hyperbrowse().");
+     		return 0;
+  	}
+  	set_type = string_extract(query, 0, i);
+
+  	// initialize first id and image ids
+  	old_key_string = gte_get_cell_label(first_row, keycol);
+
+	// initialize the set -- check for illegal query within the loop
+  	image_ids = set_create(set_type);
+
+  	// evaluate the query for each element of the selection
+	for (current_row = first_row; current_row <= last_row; current_row = current_row + 1) {
+
+      		// get new id
+      		new_key_string = gte_get_cell_label(current_row, keycol);
+
+      		// substitute ids in query
+      		query = string_search_and_replace(query, old_key_string, new_key_string);
+
+      		// save id
+     		old_key_string = new_key_string;
+	
+		// issue the query, and check its syntax because if there's an error
+		// we really don't want to finish because there's probably an error in
+		// the caller of this function (use same technique as above to
+		// check for syntax errors)
+		temp_set = NULL;
+  		temp_set = set_select(query);
+
+  		if (temp_set == NULL) {
+   			gte_print_error("The query '" + query + "' contains a syntax error.");
+    			return 0;
+  		}
+
+      		// intersect the results
+     		set_union(image_ids, temp_set);
+	}
+
+  	count = set_count(image_ids);
+
+	// add the objects to the appl cache
+	if (set_type == "node" || set_type == "link" || set_type == "cntx" || set_type == "note" || set_type == "item") {
+	  for (i = 0; i < count; i = i + 1)
+	    gte_appl_cache_add_object(set_get_element(image_ids, i));
+	}
+
+  	// if there are no objects, return
+    	if (count == 0) {
+		gte_print_message("No related " + set_type + " objects were found in the repository.");
+      		return 0;
+    	}
+
+  	// in the special case there is one object, look for it in the table
+    	// and we might as well update it in-place with what was retrieved from the repository
+      	if (count == 1) {
+		id = my_get_id_virtual_method(set_type, image_ids, 0);
+	  	if (my_find_select_show_object(id))  {
+
+	    		// when we delete duplicates in this case,
+	    		// we first have to "hide" the row we found because
+	      		// we want to update it in-line, as opposed to appending it,
+	    		// therefore we hide it from the find() by removing its id
+	      		if (delete_duplicates) {
+				save_row = gte_get_current_cell_row();
+				gte_filltable_string("FillTable{{Hsect{Index Current}{Vsect{Index Current}{Row{Index Current}{Cell{Index " + IDCOL + "}{Label \"\"}}}}}}");
+				for (safety = 0; safety < 10 && my_find_delete_object(id); safety = safety + 1) { } 
+				gte_set_selection_quietly(save_row, gte_get_first_col(), save_row, gte_get_last_col()); 
+				gte_goto(gte_get_current_cell_row(), gte_get_current_cell_col());
+	      		}
+	 
+	    		// update it in-line
+	      		gte_append_from_current_selection = true;
+	    		browse(set_get_element(image_ids, 0));
+	    		browse();
+	    		gte_append_from_current_selection = false;
+	    		gte_print_message("1 " + set_type + " object " +
+				          "was found and updated in the table.");
+	    		return count;
+	  	}
+	}
+
+  	// otherwise quietly remove all duplicates in set since we'll simply 
+	// collect/append the query results via browse()
+	else {
+		if (delete_duplicates)
+	      		for (i = 0; i < count; i = i + 1) {
+				id = my_get_id_virtual_method(set_type, image_ids, i);
+				for (safety = 0; safety < 10 && my_find_delete_object(id); safety = safety + 1) { } 
+	      		}
+	}
+ 
+	// append the query results via browse() 
+	// and highlight them
+	browse(image_ids);
+	browse();
+
+	// find the section we added things to by simply looking for
+	// one of the id's in IDCOL, and then get the last row in that section
+	id = my_get_id_virtual_method(set_type, image_ids, 0);
+  	gte_stpem("BufferFindOpt -c -i +l +m +r");
+  	gte_find("^" + id + "$", gte_get_first_row(), IDCOL, gte_get_last_row(), IDCOL);
+  	r = gte_get_last_row(gte_get_hsect(gte_get_current_cell_row()));
+
+
+        int visible = gte_get_border_value_visible();
+        int invisible = gte_get_border_value_invisible();
+
+  	// set the borders (we have to do the id column and the other cols separately,
+	// so that we maintain the border between them)
+    	gte_set_selection_quietly(r - (count - 1), gte_get_first_col(), r, gte_get_first_col()); 
+  	gte_set_selection_border_visibility(visible, visible, visible, visible, invisible, invisible);
+  	gte_set_selection_quietly(r - (count - 1), gte_get_first_col() + 1, r, gte_get_last_col()); 
+  	gte_set_selection_border_visibility(visible, visible, visible, visible, invisible, invisible);
+  	gte_set_selection_quietly(r - (count - 1), gte_get_first_col(), r, gte_get_last_col()); 
+
+  	// scroll the last one into view and the move to the first one
+    	// to ensure that the first one, which also contains the current cell,
+  	// is in view
+    	gte_goto(gte_get_current_cell_row() + (count - 1), gte_get_current_cell_col());
+  	gte_goto(gte_get_current_cell_row(), gte_get_current_cell_col());
+
+  	// report the findings (we might as well be neat about it)
+    	if (count == 1)
+      		gte_print_message("1 " + set_type + " object " +
+				  "was retrieved from the repository.");
+    	else
+      		gte_print_message(count + " " + set_type + " objects " +
+				  "were retrieved from the repository.");
+
+  	return count;
+}
+
+string
+TbrObjectIdIsNonZero(int hsect, int vsect, int row, int col)
+{
+  // returns a non-null value if the cell contains a positive integer value
+  
+  string label = gte_get_cell_label(gte_get_row(hsect, row), gte_get_col(vsect, col));
+  
+  if (label == "")
+    return(NULL);
+  
+  if (!string_converts(label, "int"))
+    return (NULL);
+  
+  if (to_int(label) <= 0)
+    return (NULL);
+  
+  return ("T");
+}
+
+// JED - Most of the following code was cloned from the original DOORS
+// integration
+// this function, given a guid string, finds the node, cntx, or link refs that
+// own it and navigates to them
+
+int doors_tbrhandle=0;
+boolean doors_bIsNavigationInstance = False ;
+
+
+// doors_nav_to_stp() is called by DOORS to initiate navigations
+
+void
+doors_nav_to_stp (string product, string pdmtype, string guid)
+{
+	node nodevar ;
+	link linkvar ;
+	cntx cntxvar ;
+	file filevar ;
+	const string qry_constraint = "items[${doors_annot_apptype} && value=='" +
+		guid + "']";
+	const string NodeQuery = "node [${qry_constraint} && node_refs]" ;
+	const string LinkQuery = "link [${qry_constraint} && link_refs]" ;
+	const string CntxQuery = "cntx [${qry_constraint} && cntx_refs]" ;
+
+	string curprod = environment_variable("IDE_PRODUCT");
+
+	if (curprod != product) {
+		print_error("Object with ID: " + guid + " was exported from" +
+				" StP Product '" + product + "', but StP is currently" +
+				" running '" + curprod + "'. Unable to complete the" +
+				" navigation.");
+		return;
+	}
+
+	doors_tbrhandle = editor_get_msgd_handle() ;
+	doors_bIsNavigationInstance = True ;
+
+	// reuse call setup from BrowseAndNavigate_cb() in ct/rules/qrl/rqtbl.qrl
+	list SendOff = list_create ("all", 0) ;
+
+	if (pdmtype == "node")
+	{
+		nodevar = find_by_query (NodeQuery) ;
+		if (nodevar != NULL)
+		{
+			list_append (SendOff, nodevar) ;
+			doors_REQ_Navigate (SendOff) ;
+			return ;
+		}
+	}
+	else if (pdmtype == "link")
+	{
+		linkvar = find_by_query (LinkQuery) ;
+		if (linkvar != NULL)
+		{
+			list_append (SendOff, linkvar) ;
+			doors_REQ_Navigate (SendOff) ;
+			return ;
+		}
+	}
+	else if (pdmtype == "cntx")
+	{
+		cntxvar = find_by_query (CntxQuery) ;
+		if (cntxvar != NULL)
+		{
+			list_append (SendOff, cntxvar) ;
+			doors_REQ_Navigate (SendOff) ;
+			return ;
+		}
+	}
+}
+
+void 
+doors_Quit_cb()
+{
+	string table_name = gte_table_name() ;
+	// Iconify the tbr only if the table is unnamed and is unmodified
+	if (table_name == NULL || table_name == "")
+	{
+		if (!gte_is_modified())
+		{
+			// Iconify the editor to keep subsequent navigations
+			// quicker yet make the editor itself less obtrusive
+			editor_builtin ("EditorIconify") ;
+		}
+	}
+	else
+	{
+	}
+}
+
+// Navigation functions with "REQ_" prefix are reused from the Requirement Table Editor
+
+string
+doors_REQ_FileTypeToEditor (string FileType)
+{
+   string Result ;
+
+   list List = file_editor_names (FileType) ;
+   if (list_count (List) > 0)
+   {
+      Result = list_get (List, 0) ;
+   }
+   else
+   {
+      Result = NULL ;
+   }
+   return (Result) ;
+}
+
+void
+doors_REQ_GoToReference (list ReferenceList)
+{
+
+   int FileId ;
+
+   string FileType ;
+   string FileName ;
+   string appid ;
+
+   file File ;
+
+// if (ReferenceList != NULL)
+//	message ("list_count (ReferenceList) = " + list_count (ReferenceList)) ;
+
+	if (ReferenceList != NULL && list_count (ReferenceList) > 0) {
+		string LinkOrNodeOrCntx = list_get_type (ReferenceList, 0) ;
+
+		if (LinkOrNodeOrCntx == "node_ref" || LinkOrNodeOrCntx == "link_ref" 
+			|| LinkOrNodeOrCntx == "cntx_ref") {
+			
+			if (LinkOrNodeOrCntx == "node_ref") {
+				node_ref NodeRef = list_get (ReferenceList, 0) ;
+				FileId = NodeRef.file_id ;
+				appid = NodeRef.appid ;
+			} else if (LinkOrNodeOrCntx == "link_ref") {
+				link_ref LinkRef = list_get (ReferenceList, 0) ;
+				FileId = LinkRef.file_id ;
+				appid = LinkRef.appid ;
+			} else if (LinkOrNodeOrCntx == "cntx_ref") {
+				cntx_ref CntxRef = list_get (ReferenceList, 0) ;
+				FileId = CntxRef.file_id ;
+				appid = CntxRef.appid ;
+			}
+
+			File = find_by_query ("file [${FileId}]") ;
+
+			string Editor = doors_REQ_FileTypeToEditor (File.type) ;
+
+
+			if (Editor != NULL) {
+				string msg = "EditorQrlEval";
+
+				msg += " \"NavLoadAndFindAndQuitTBR(\\\"";
+				msg += File.name;
+				msg +="\\\",\\\"";
+				msg += "" + appid;
+				msg += "\\\",";
+				msg += "" + doors_tbrhandle + ")\;\""; 
+				editor_send_msg(Editor, msg,CH_FIRST);
+			}
+		}
+	} else {
+      doors_Quit_cb() ;
+	}
+}
+
+list doors_REQ_NavigationSelectionList = list_create ("all", 0) ;
+
+void
+doors_REQ_Navigate_cb ()
+{
+   int i ;
+   int count ;
+   list SendOff = list_create ("all", 0) ;
+   int Choice = list_get (editor_selector_selected_objects(), 0) ;
+   node_ref NodeRef ;
+   link_ref LinkRef ;
+   cntx_ref CntxRef ;
+
+   if (doors_REQ_NavigationSelectionList != NULL && 
+       list_count (doors_REQ_NavigationSelectionList) > 0)
+   {
+      string LinkOrNodeOrCntx = list_get_type (doors_REQ_NavigationSelectionList, 0) ;
+
+      count = list_count (doors_REQ_NavigationSelectionList) ;
+
+      for (i=0; i< count; i=i+1)
+      {
+         if (LinkOrNodeOrCntx == "node_ref")
+         {
+	    NodeRef = list_get (doors_REQ_NavigationSelectionList, i) ;
+	    if (NodeRef.id == Choice)
+	    {
+	       list_append (SendOff, NodeRef) ;
+	       break ;
+	    }
+         }
+         else if (LinkOrNodeOrCntx == "link_ref")
+         {
+	    LinkRef = list_get (doors_REQ_NavigationSelectionList, i) ;
+	    if (LinkRef.id == Choice)
+	    {
+	       list_append (SendOff, LinkRef) ;
+	       break ;
+	    }
+         }
+         else if (LinkOrNodeOrCntx == "cntx_ref")
+         {
+	    CntxRef = list_get (doors_REQ_NavigationSelectionList, i) ;
+	    if (CntxRef.id == Choice)
+	    {
+	       list_append (SendOff, CntxRef) ;
+	       break ;
+	    }
+         }
+      }
+   }
+
+   doors_REQ_GoToReference (SendOff) ;
+}
+
+void
+doors_REQ_Navigate (list ObjectList)
+{
+   if (ObjectList != NULL && list_count (ObjectList) > 0)
+   {
+      string LinkOrNodeOrCntx = list_get_type (ObjectList, 0) ;
+      string Name ;
+      string ReferenceQuery ;
+      int Id ;
+
+      if (LinkOrNodeOrCntx == "node" || LinkOrNodeOrCntx == "link" || LinkOrNodeOrCntx == "cntx")
+      {
+         if (LinkOrNodeOrCntx == "node") 
+         {
+            node Node = list_get (ObjectList, 0) ;
+            Name = Node.name ;
+            ReferenceQuery = "node_ref [node_id == ${Node.id}]" ;
+	    Id = Node.id ;
+         }
+         else if (LinkOrNodeOrCntx == "link")
+         {
+            link Link = list_get (ObjectList, 0) ;
+            Name = Link.name ;
+            ReferenceQuery = "link_ref [link_id == ${Link.id}]" ;
+	    Id = Link.id ;
+         }
+         else if (LinkOrNodeOrCntx == "cntx")
+         {
+            cntx Cntx = list_get (ObjectList, 0) ;
+            Name = Cntx.name ;
+            ReferenceQuery = "cntx_ref [cntx_id == ${Cntx.id}]" ;
+	    Id = Cntx.id ;
+         }
+      
+	 list_clear (doors_REQ_NavigationSelectionList) ;
+         doors_REQ_NavigationSelectionList = list_select (ReferenceQuery) ;
+
+         if (list_count (doors_REQ_NavigationSelectionList) > 1)
+         {
+            int index = editor_item_selector (
+	     doors_REQ_NavigationSelectionList,           // list of possibilities 
+	     "doors_REQ_Navigate_cb();",                  // callback
+	     "Navigate to Object",                  // label
+	     True
+            ) ;
+
+         }
+         else if (list_count (doors_REQ_NavigationSelectionList) == 1)
+         {
+	    doors_REQ_GoToReference (doors_REQ_NavigationSelectionList) ;
+         }
+         else
+         {
+	    gte_print_error ("Cannot find reference for "+LinkOrNodeOrCntx+
+		" " + Name + " ("+Id+").") ;
+         }
+      }
+   }
+}
+
+void
+PDMBrowserClear()
+{
+    gte_inittable_string("FillTable " + gte_get_table_type() + "{}");
+}
+
+#include "rules/qrl/gte_qrl_std.inc"
+
+// navigating to data flows
+#include_if_exists "se/rules/qrl/dfe_navigate.inc"
+
+//  Add any user customizations to the file included below:
+#include_if_exists "user/ct/rules/qrl/user_tbr.qrl"

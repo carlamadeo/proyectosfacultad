@@ -1,0 +1,62 @@
+FileObject 1
+{
+    { Name "a667" }
+    { Type ObjectAnnotation }
+    { GUID "UID_3679FA5A-369F-11d6-AEA1-0080C88207C4" }
+}
+
+NodeObject 99999
+{
+    { Name "Pendulum" }
+    { Type UmlClass }
+    { ObjectId 517 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_378C31F1-544B-11d4-8778-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "Pendulum" }
+    { Type UmlOperation }
+    { ObjectId 1340 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_2CE1B817-369A-11d6-AEA1-0080C88207C4" }
+}
+
+NoteObject 2
+{
+    { Type UmlOperationJavaCode }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1342 }
+    { DescLine "clockwork = new Clockwork();" }
+    { DescLine "currentState = _NOTMOVING;" }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1344 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1346 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "Pendulum" }
+    { NoteId 4 }
+    { ObjectId 1347 }
+}
+

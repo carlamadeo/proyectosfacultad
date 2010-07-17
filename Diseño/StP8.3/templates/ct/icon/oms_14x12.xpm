@@ -1,0 +1,23 @@
+/* XPM */
+static char *oms_14x12[] = {
+/* width height ncolors chars_per_pixel */
+"14 12 4 1",
+/* colors */
+"` c #000000",
+"a c #2A7FFF",
+"b c #2A1FFF",
+"c c #FFFFFF",
+/* pixels */
+"ccccccc``ccccc",
+"ccccc``a``cccc",
+"cccc`aa`bb`ccc",
+"ccc`aaa`bbb`cc",
+"cc`aaa`bbbbb`c",
+"cc`aa`bbbbbb`c",
+"c`a``bbbbbb`cc",
+"c``bbbbbbbb`cc",
+"cc`bbbbbbb`ccc",
+"ccc`bbbbb`cccc",
+"cccc`bb``ccccc",
+"ccccc``ccccccc"
+};

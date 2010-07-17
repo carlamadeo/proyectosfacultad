@@ -1,0 +1,153 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Aonix
+// 	Copyright (c) 1997
+// 	All rights reserved
+//
+
+Note 801956
+{
+  { AppType UmlRoleDefinition }
+  { HelpText "The Role Definition note lets you add items that capture modeling information about one role in an association between classes." }
+  { PrintName "Role Definition" }
+  { Bounds { Min 1 } { Max 1 } }
+  { Item
+      { AppType UmlMultiplicity }
+      { HelpText "The Multiplicity item lets you indicate how many instances of a class may relate to a single instance of another class." }
+      { PrintName "Multiplicity" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "Many" }
+  }
+  { Item
+      { AppType UmlRoleNavigability }
+      { HelpText "The Role Navigability shows whether or not a relationship is can be traversed in a particular direction."}
+      { PrintName "Role Navigability" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "True" }
+  }
+  { Item
+      { AppType UmlRoleQualifier }
+      { HelpText "The Qualifiers item lets you reduce the multiplicity of a one-to-many or a many-to-many association. Each qualifier distinguishes among the set of objects at the many end (this end) of an association. More than one Qualifiers item may be entered for an association role." }
+      { PrintName "Qualifiers" }
+      { Bounds { Min 0 } }
+  }
+  { Item
+      { AppType UmlRoleIsOrdered }
+      { HelpText "The Ordered item lets you indicate that the objects at the many end of an association are explicitly ordered." }
+      { PrintName "Ordered" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "True" }
+  }
+  { Item
+      { AppType UmlAggregationType }
+      { HelpText "The Aggregation Type item lets you indicate that the role is an aggregation, and if so, whether it is a regular Aggregation or the stronger form of Composition." }
+      { PrintName "Aggregation Type" }
+      // ECR 3856 begin
+      // { Bounds { Min 0 } { Max 1 } }
+      // { InitValue "Aggregation" }
+      { Bounds { Min 1 } { Max 1 } }
+      { InitValue "None" }
+      // ECR 3856 end
+  }
+}
+
+Note 801957
+{
+  { AppType UmlRoleCxxDefinition }
+  { HelpText "The Role C++ Definition note lets you add items for an association role that are used for C++ code generation.  Remember that these items affect code for the association as it appears in the class at the other end of the association, relative to the role you are currently annotating." }
+  { PrintName "Role C++ Definition" }
+  { Bounds { Min 0 } { Max 1 } }
+  { Item
+      { AppType UmlRoleCxxVisibility }
+      { HelpText "The Visibility item lets you indicate the C++ access level of constructs used to implement associations between classes." }
+      { PrintName "Visibility" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "protected" }
+    }
+  { Item
+      { AppType UmlRoleCxxPatternFamily }
+      { HelpText "The Pattern Family item lets you specify which customizable pattern family to use in the implementation of Roles for C++ code generation.  Customizable patterns are listed, and can be configured, in the ct/qrl/include/cxx_association_patterns.inc file." }
+      { PrintName "Pattern Family" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "Default Template" }
+      { ValuesFunc "UmlCxxRolePatternFamilyValuesFunc(the_item);" }
+    }
+}
+
+Note 801958
+{
+  { AppType UmlRoleJavaDefinition }
+  { HelpText "The Role Java Definition note lets you add items for an association role that are used for C++ code generation.  Remember that these items affect code for the association as it appears in the class at the other end of the association, relative to the role you are currently annotating." }
+  { PrintName "Role Java Definition" }
+  { Bounds { Min 0 } { Max 1 } }
+  { Item
+      { AppType UmlRoleJavaVisibility }
+      { HelpText "The Visibility item lets you indicate the Java access level of constructs used to implement associations between classes." }
+      { PrintName "Visibility" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "private" }
+    } 
+  { Item
+      { AppType UmlRoleJavaInit }
+      { HelpText "The Initial Value item lets you assign an initial value to the field generated." }
+      { PrintName "Initial Value" }
+      { Bounds { Min 0 } { Max 1 } }
+      //{ InitValue "private" }
+  }
+  { Item
+      { AppType UmlRoleJavaPatternFamily }
+      { HelpText "The Pattern Family item lets you specify which customizable pattern family to use in the implementation of Roles for Java code generation.  Customizable patterns are listed, and can be configured, in the uml/qrl/code_gen/java/association_patterns.inc file." }
+      { PrintName "Pattern Family" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "Generic" }
+      { ValuesFunc "UmlJavaRolePatternFamilyValuesFunc(the_item);" }
+    } 
+}
+
+
+Note 801959
+{
+  { AppType UmlRoleIDLDefinition }
+  { HelpText "The Role IDL Definition note lets you add items for an association role that are used for IDL code generation.  Remember that these items affect code for the association as it appears in the class at the other end of the association, relative to the role you are currently annotating." }
+  { PrintName "Role IDL Definition" }
+  { Bounds { Min 0 } { Max 1 } }
+  { Item
+      { AppType UmlRoleIDLReadOnly }
+      { HelpText "The Read Only item lets you specify the read only status of the generated IDL attribute." }
+      { PrintName "Read Only" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "True" }
+  }
+  { Item
+      { AppType UmlRoleIDLPatternFamily }
+      { HelpText "The Pattern Family item lets you specify which customizable pattern family to use in the implementation of Roles for IDL code generation.  Customizable patterns are listed, and can be configured, in the uml/qrl/code_gen/idl/association_patterns.inc file." }
+      { PrintName "Pattern Family" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "Default Template" }
+      { ValuesFunc "UmlIDLRolePatternFamilyValuesFunc(the_item);" }
+    }
+}
+
+Note 801972
+{
+  { AppType UmlRoleTOOLImplementation }
+  { HelpText "The Role TOOL Implementation note lets you add items for an association role that are used for TOOL code generation.  Remember that these items affect code for the association as it appears in the class at the other end of the association, relative to the role you're currently annotating." }
+  { PrintName "Role TOOL Implementation" }
+  { Bounds { Min 0 } { Max 1 } }
+  { Item
+      { AppType UmlTOOLRolePrivilege }
+      { HelpText "The Privilege item lets you indicate the TOOL privilege of constructs used to implement associations between classes." }
+      { PrintName "Privilege" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "Public" }
+    }
+  { Item
+      { AppType UmlTOOLRoleUseLargeArray }
+      { HelpText "The Use Large Array item specifies what subclass of GenericArray to use when implementing associations with multiplicity greater that one."}
+      { PrintName "Use Large Array" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "True" }
+  }
+}
+

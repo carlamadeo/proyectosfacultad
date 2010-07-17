@@ -1,0 +1,46 @@
+Diagram UmlStereotypeDiagram
+{
+    { Name "Ada_Package_Stereotypes" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -440 }
+    { PanY -306 }
+    { Alignment 32 }
+    { GUID "UID_BC3C9819-3BFD-11d6-8192-00105A2E4732" }
+    { Summary
+        { Nodes 2 }
+        { Arcs 0 }
+    }
+}
+
+Node 4
+{
+    { Type Stereotype }
+    { Loc 0 -57 }
+    { Scale 129.00 88.00 }
+    { Label
+        { Text "generic" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName StereotypeMapping }
+        { ID 2125 }
+        { GUID "UID_C2F96703-AC11-11d4-8034-00105A2E4732" }
+    }
+}
+
+Node 5
+{
+    { Type Stereotype }
+    { Loc 0 57 }
+    { Scale 140.00 88.00 }
+    { Label
+        { Text "segment" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName StereotypeMapping }
+        { ID 2132 }
+        { GUID "UID_C2F96705-AC11-11d4-8034-00105A2E4732" }
+    }
+}

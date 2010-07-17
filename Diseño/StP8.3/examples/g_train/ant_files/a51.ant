@@ -1,0 +1,371 @@
+FileObject 1
+{
+    { Name "a51" }
+    { Type ObjectAnnotation }
+    { GUID "UID_BC255CC3-3FED-45fb-AFAF-2230BB68B305" }
+}
+
+NodeObject 99999
+{
+    { Name "weight sensors" }
+    { Type External }
+    { ObjectId 3553 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_68752CD2-660F-4d1c-A8E7-992927906A15" }
+}
+
+NodeObject 99998
+{
+    { Name "control g_train" }
+    { Type Process }
+    { ObjectId 3290 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_568D2BAB-E1BE-4138-9BBA-EBBA70597B20" }
+}
+
+LinkObject 99997
+{
+    { Name "timer pulse" }
+    { Type DataFlow }
+    { ObjectId 3554 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_462D41BA-BD24-4693-9367-50E67A835396" }
+}
+
+NoteObject 2
+{
+    { Type InterfaceRequirement }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3556 }
+    { DescLine "This signal system works with two lights. A red signal implies that a passenger is being weighed and a green signal summons a passenger on to the scales." }
+}
+
+ItemObject 3
+{
+    { Type InterfaceName }
+    { Value "timer-pulse" }
+    { NoteId 2 }
+    { ObjectId 3557 }
+}
+
+ItemObject 4
+{
+    { Type Execution }
+    { Value "Sequential" }
+    { NoteId 2 }
+    { ObjectId 3558 }
+}
+
+ItemObject 5
+{
+    { Type Synchronization }
+    { Value "fixed" }
+    { NoteId 2 }
+    { ObjectId 3559 }
+}
+
+ItemObject 6
+{
+    { Type InterruptPriority }
+    { Value "enabled" }
+    { NoteId 2 }
+    { ObjectId 3560 }
+}
+
+ItemObject 7
+{
+    { Type PriorityLevel }
+    { Value "enabled" }
+    { NoteId 2 }
+    { ObjectId 3561 }
+}
+
+NoteObject 8
+{
+    { Type InterfaceDesign }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3563 }
+}
+
+ItemObject 9
+{
+    { Type InterfaceName }
+    { Value "signal-system" }
+    { NoteId 8 }
+    { ObjectId 3564 }
+}
+
+ItemObject 10
+{
+    { Type InterfacePriority }
+    { Value "N/A" }
+    { NoteId 8 }
+    { ObjectId 3565 }
+}
+
+NoteObject 11
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3567 }
+    { DescLine "The timer pulse comes on two parts, a red signal and a green signal.  A red signal is on until a passenger is weighed.  A green signal is on until another passenger comes on to the scales." }
+}
+
+ItemObject 12
+{
+    { Type ObjectName }
+    { Value "timer pulse" }
+    { NoteId 11 }
+    { ObjectId 3568 }
+}
+
+ItemObject 13
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 11 }
+    { ObjectId 3569 }
+}
+
+NoteObject 14
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 3571 }
+    { DescLine "Standard." }
+}
+
+ItemObject 15
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 14 }
+    { ObjectId 3572 }
+}
+
+ItemObject 16
+{
+    { Type RequirementName }
+    { Value "weight-sub-system" }
+    { NoteId 14 }
+    { ObjectId 3573 }
+}
+
+ItemObject 17
+{
+    { Type RequirementDocument }
+    { Value "SSS" }
+    { NoteId 14 }
+    { ObjectId 3574 }
+}
+
+ItemObject 18
+{
+    { Type RequirementParagraph }
+    { Value "weight" }
+    { NoteId 14 }
+    { ObjectId 3575 }
+}
+
+ItemObject 19
+{
+    { Type ParagraphNumber }
+    { Value "2" }
+    { NoteId 14 }
+    { ObjectId 3576 }
+}
+
+ItemObject 20
+{
+    { Type QualificationMethod }
+    { Value "" }
+    { NoteId 14 }
+    { ObjectId 3577 }
+}
+
+ItemObject 21
+{
+    { Type QualificationLevel }
+    { Value "" }
+    { NoteId 14 }
+    { ObjectId 3578 }
+}
+
+ItemObject 22
+{
+    { Type FormalTestParagraph }
+    { Value "" }
+    { NoteId 14 }
+    { ObjectId 3579 }
+}
+
+NoteObject 23
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 3581 }
+    { DescLine "Modified." }
+}
+
+ItemObject 24
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 23 }
+    { ObjectId 3582 }
+}
+
+ItemObject 25
+{
+    { Type DocumentName }
+    { Value "SRS" }
+    { NoteId 23 }
+    { ObjectId 3583 }
+}
+
+ItemObject 26
+{
+    { Type DocumentNumber }
+    { Value "6" }
+    { NoteId 23 }
+    { ObjectId 3584 }
+}
+
+ItemObject 27
+{
+    { Type ParagraphNumber }
+    { Value "5" }
+    { NoteId 23 }
+    { ObjectId 3585 }
+}
+
+NoteObject 28
+{
+    { Type Document }
+    { Name "1" }
+    { OwnerId 99997 }
+    { ObjectId 3587 }
+}
+
+ItemObject 29
+{
+    { Type NoteKey }
+    { Value "1" }
+    { NoteId 28 }
+    { ObjectId 3588 }
+}
+
+ItemObject 30
+{
+    { Type DocumentName }
+    { Value "IDD" }
+    { NoteId 28 }
+    { ObjectId 3589 }
+}
+
+ItemObject 31
+{
+    { Type DocumentNumber }
+    { Value "1" }
+    { NoteId 28 }
+    { ObjectId 3590 }
+}
+
+ItemObject 32
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 28 }
+    { ObjectId 3591 }
+}
+
+NoteObject 33
+{
+    { Type Document }
+    { Name "2" }
+    { OwnerId 99997 }
+    { ObjectId 3593 }
+}
+
+ItemObject 34
+{
+    { Type NoteKey }
+    { Value "2" }
+    { NoteId 33 }
+    { ObjectId 3594 }
+}
+
+ItemObject 35
+{
+    { Type DocumentName }
+    { Value "SDD" }
+    { NoteId 33 }
+    { ObjectId 3595 }
+}
+
+ItemObject 36
+{
+    { Type DocumentNumber }
+    { Value "8" }
+    { NoteId 33 }
+    { ObjectId 3596 }
+}
+
+ItemObject 37
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 33 }
+    { ObjectId 3597 }
+}
+
+NoteObject 38
+{
+    { Type Document }
+    { Name "3" }
+    { OwnerId 99997 }
+    { ObjectId 3599 }
+}
+
+ItemObject 39
+{
+    { Type NoteKey }
+    { Value "3" }
+    { NoteId 38 }
+    { ObjectId 3600 }
+}
+
+ItemObject 40
+{
+    { Type DocumentName }
+    { Value "IRS" }
+    { NoteId 38 }
+    { ObjectId 3601 }
+}
+
+ItemObject 41
+{
+    { Type DocumentNumber }
+    { Value "2" }
+    { NoteId 38 }
+    { ObjectId 3602 }
+}
+
+ItemObject 42
+{
+    { Type ParagraphNumber }
+    { Value "2" }
+    { NoteId 38 }
+    { ObjectId 3603 }
+}
+

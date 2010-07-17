@@ -1,0 +1,117 @@
+FileObject 1
+{
+    { Name "a6" }
+    { Type ObjectAnnotation }
+    { GUID "UID_7CAD267C-0206-11d6-AE65-000000000000" }
+}
+
+NodeObject 99999
+{
+    { Name "Door" }
+    { Type UmlClass }
+    { ObjectId 430 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_378C31F6-544B-11d4-8778-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlClassDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1252 }
+}
+
+ItemObject 3
+{
+    { Type UmlClassIsImported }
+    { Value "False" }
+    { NoteId 2 }
+    { ObjectId 1253 }
+}
+
+ItemObject 4
+{
+    { Type UmlClassIsAbstract }
+    { Value "False" }
+    { NoteId 2 }
+    { ObjectId 1254 }
+}
+
+NoteObject 5
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1256 }
+}
+
+ItemObject 6
+{
+    { Type UmlTaggedValue }
+    { Value "pattern=singleton" }
+    { NoteId 5 }
+    { ObjectId 1257 }
+}
+
+NoteObject 7
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1259 }
+    { DescLine "The class Door is extended with an tagged value" }
+    { DescLine "\"pattern=singleton\"." }
+    { DescLine "The reason is that two other classes (Clockwork and Clockbird)" }
+    { DescLine "have associations to class Door." }
+    { DescLine "Because the coocoo watch only has one door it must be ensured " }
+    { DescLine "that the instances of Clockwork and Clockbird hold the same " }
+    { DescLine "reference to the same (single) door." }
+    { DescLine "If the codegenerator detects that tagged value it automatically" }
+    { DescLine "generates the appropriate class as singleton." }
+    { DescLine "This has some impacts for the class (marked as singleton) as well" }
+    { DescLine "as classes that hold associations to the singleton class." }
+    { DescLine "These impacts are:" }
+    { DescLine "- for the class Door:" }
+    { DescLine "  it will be generated a static instance variable of type Door," }
+    { DescLine "  it will be generated a static instance access method that returns" }
+    { DescLine "  the content of the static instance variable." }
+    { DescLine "- for classes having association to the class marked as singleton:" }
+    { DescLine "  to obtain a reference to the singleton class its static" }
+    { DescLine "  instance access method is invoked." }
+}
+
+ItemObject 8
+{
+    { Type ObjectName }
+    { Value "Door" }
+    { NoteId 7 }
+    { ObjectId 1260 }
+}
+
+ItemObject 9
+{
+    { Type UniqueID }
+    { Value "202" }
+    { NoteId 7 }
+    { ObjectId 1261 }
+}
+
+NoteObject 10
+{
+    { Type REQAssignmentNote }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1263 }
+}
+
+ItemObject 11
+{
+    { Type REQAnalysisAssignmentItem }
+    { Value "4. Door" }
+    { NoteId 10 }
+    { ObjectId 1264 }
+}
+

@@ -1,0 +1,14 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+//      sccsid[] = @(#)rme.qrl
+//      StP
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-2001
+//      All rights reserved
+//
+//////////////////////////////////////////////////////////////////////////////
+
+#include "rules/qrl/gde_qrl_std.inc"
+#include "qrl/include/files.inc"
+#include "qrl/check/rme_check.inc"
+#include "rules/qrl/rme_common.inc"

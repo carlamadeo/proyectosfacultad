@@ -1,0 +1,1833 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/Core
+//      StP/OMT
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1995
+//      All rights reserved
+//
+
+const	string	GOR_NM_DP_N = "Name";
+
+#include	"rules/qrl/dme_transition.inc"
+#include	"rules/qrl/oo_optional_dependencies.inc"
+
+
+//
+// DependentsFunc for: node OMTUseCase
+//
+
+update_dependents
+OMTUseCase_dependents(node theBase)
+{
+    update_dependents	dependents = update_dependents_create();
+    string	theBaseName = to_oms_string(theBase.name);
+    
+
+    //
+    // Dependent node objects of type OMTUseCaseParent
+    // Dependency name: Name
+    //
+    node	dep_OMTUseCaseParent;
+    const	string	dep_OMTUseCaseParent_Name_query =
+				"node[OMTUseCaseParent&name='${theBaseName}']";
+    
+    for_each_in_select(dep_OMTUseCaseParent_Name_query, dep_OMTUseCaseParent)
+    {
+	update_dependents_append(dependents, dep_OMTUseCaseParent, GOR_NM_DP_N);
+    }
+
+    // Dependent item objects of type UseCaseName
+    // Dependency name: Name
+    //
+    item        dep_UseCaseName;
+    const       string  dep_UseCaseName_query =
+                        "item[UseCaseName & value = '${theBaseName}']";
+ 
+    for_each_in_select(dep_UseCaseName_query, dep_UseCaseName)
+    {
+        update_dependents_append(dependents, dep_UseCaseName, GOR_NM_DP_N);
+    }
+ 
+    //
+    // Dependent file objects of type OMTDiagram
+    // Dependency name: UseCaseName
+    //
+    file	dep_OMTDiagram;
+    string	bname_start = theBaseName + FILE_NAME_SCOPE_SEPARATOR + "*";
+    const	string	dep_OMTDiagram_UseCaseName_query =
+				"file[OMTDiagram&&name$'${bname_start}']";
+    
+    for_each_in_select(dep_OMTDiagram_UseCaseName_query, dep_OMTDiagram)
+    {
+	update_dependents_append(dependents, dep_OMTDiagram, "UseCaseName");
+    }
+
+
+    return(dependents);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node OMTUseCase
+// Dependent Type :	OMTDiagram
+// Dependency Name:	UseCaseName
+//
+
+file
+OMTUseCase_OMTDiagram_UseCaseName_derattrs(file theDep, node oldVal, node newVal)
+{
+    file	result = theDep;
+    string	newname;
+
+    if (newVal.name != oldVal.name)
+    {
+	newname = create_new_file_in_sequence(newVal.name, theDep.type);
+	result = file_name_set(result, newname);
+    }
+
+    return(result);
+}
+
+//
+// DependentsFunc for: node OMTUseCaseParent
+//
+
+update_dependents
+OMTUseCaseParent_dependents(node theBase)
+{
+    update_dependents	dependents = update_dependents_create();
+    string	theBaseName = to_oms_string(theBase.name);
+    
+
+    //
+    // Dependent node objects of type OMTUseCase
+    // Dependency name: Name
+    //
+    node	dep_OMTUseCase;
+    const	string	dep_OMTUseCase_Name_query =
+				"node[OMTUseCase&name='${theBaseName}']";
+    
+    for_each_in_select(dep_OMTUseCase_Name_query, dep_OMTUseCase)
+    {
+	update_dependents_append(dependents, dep_OMTUseCase, GOR_NM_DP_N);
+    }
+
+
+    return(dependents);
+}
+
+//
+// DependentsFunc for: node OMTAttribute
+//
+
+update_dependents
+OMTAttribute_dependents(node theBase)
+{
+    update_dependents	dependents = update_dependents_create();
+    string	theBaseName = to_oms_string(theBase.name);
+    
+
+    //
+    // Dependent node objects of type ObjectInstanceAttribute
+    // Dependency name: Name
+    //
+    node	dep_ObjectInstanceAttribute;
+    node	theObjClassScope = NULL, theObjClass;
+    const	string	dep_ObjectInstanceAttribute_AttrInstanceInClass_query =
+	"node[ObjectInstanceAttribute&name='${theBaseName}'&scope_node[ObjectInstance&&scope_node_id = ${theObjClassScope.id}]]";
+    
+    theObjClass = find_by_query("node[${theBase.scope_node_id}]");
+    if (theObjClass != NULL)
+    {
+	string	cn = to_oms_string(theObjClass.name);
+	theObjClassScope = find_by_query("node[ObjectClassScope&&name='${cn}']");
+
+    }
+    if (theObjClassScope != NULL)
+    {
+	for_each_in_select(dep_ObjectInstanceAttribute_AttrInstanceInClass_query, dep_ObjectInstanceAttribute)
+	{
+	    update_dependents_append(dependents, dep_ObjectInstanceAttribute, GOR_NM_DP_N);
+	}
+    }
+
+
+    //
+    // Dependent link objects of type OMTDataFlow
+    // Dependent link objects of type OMTControlFlow
+    // Dependency name: Name
+    //
+    link	dep_OMTDataFlow;
+    const	string	dep_OMTDataFlow_FlowInClass_query =
+				"link[(OMTControlFlow||OMTDataFlow)&name='${theBaseName}'&scope_node_id=${theBase.scope_node_id}]";
+    
+    for_each_in_select(dep_OMTDataFlow_FlowInClass_query, dep_OMTDataFlow)
+    {
+	update_dependents_append(dependents, dep_OMTDataFlow, GOR_NM_DP_N);
+    }
+
+    return(dependents);
+}
+
+//
+// DependentsFunc for: node OMTState
+//
+
+update_dependents
+OMTState_dependents(node theBase)
+{
+    update_dependents	dependents = update_dependents_create();
+    string	theBaseName = to_oms_string(theBase.name);
+    list	l;
+
+    //
+    // Dependent file objects of type OMTStateDiagram
+    // Dependent file objects of type OMTStateTable
+    // Dependency name: StateName
+    //
+
+    file	dep_OMTStateDiagram;
+    const	string	dep_OMTStateDiagram_StateName_query =
+		"file[(OMTStateTable|OMTStateDiagram)&&${namecond}&&${refcond}]";
+    string	namecond, refcond;
+
+    namecond = "(name='"+theBaseName+"'||name$'" + theBaseName + FILE_NAME_SCOPE_SEPARATOR + "*'" +
+		"||name$'" + "*" + FILE_NAME_SCOPE_SEPARATOR +
+		theBaseName + FILE_NAME_SCOPE_SEPARATOR + "*')";
+
+    refcond = "node_refs[node_id=${theBase.id}]";
+    
+    for_each_in_select(dep_OMTStateDiagram_StateName_query, dep_OMTStateDiagram)
+    {
+	// base name change: need to convert to new format
+	if (theBase.scope_node_id == 0)
+	{
+	    update_dependents_append(dependents, dep_OMTStateDiagram, "StateName");
+	} else {
+	    l = make_scope_chain_from_filename(dep_OMTStateDiagram.name);
+	    // convert to new name format <Top>__<unique#>
+	    if (list_count(l) > 1)
+	    {
+		update_dependents_append(dependents, dep_OMTStateDiagram, "StateName");
+	    }
+	}
+    }
+
+    return(dependents);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node OMTState
+// Dependent Type :	OMTStateDiagram
+// Dependency Name:	StateName
+//
+
+file
+OMTState_OMTStateDiagram_StateName_derattrs(file theDep, node oldVal, node newVal)
+{
+    file	result = theDep;
+    list	scope_chain = list_create("node", 0);
+    node	toplevelstate;
+    string	newname;
+
+    if (theDep.name == oldVal.name)
+    {
+	result = file_name_set(result, newVal.name);
+    } else {
+	node_build_scope_chain(oldVal.id, scope_chain);
+	if (list_count(scope_chain) > 0)
+	{
+	    toplevelstate = list_get(scope_chain, 0);
+	    newname = create_new_file_in_sequence(toplevelstate.name, theDep.type);
+	    result = file_name_set(result, newname);
+	}
+    }
+
+    return(result);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node OMTState
+// Dependent Type :	OMTStateTable
+// Dependency Name:	StateName
+//
+
+file
+OMTState_OMTStateTable_StateName_derattrs(file theDep, node oldVal, node newVal)
+{
+    return(OMTState_OMTStateDiagram_StateName_derattrs(theDep, oldVal, newVal));
+}
+
+//
+// DependentsFunc for: link OMTRole
+//
+
+update_dependents
+OMTRole_dependents(link theBase)
+{
+    update_dependents	dependents = update_dependents_create();
+    string	theBaseName = to_oms_string(theBase.name);
+    
+
+    //
+    // Dependent node objects of type OMTAssociation
+    // Dependency name: RoleAssociation
+    //
+    node	dep_OMTAssociation;
+    const	string	dep_OMTAssociation_RoleAssociation_query =
+			    "node[OMTAssociation&&${theBase.to_node_id}]";
+    
+    for_each_in_select(dep_OMTAssociation_RoleAssociation_query, dep_OMTAssociation)
+    {
+	update_dependents_append(dependents, dep_OMTAssociation, "RoleAssociation");
+    }
+
+
+    return(dependents);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	link OMTRole
+// Dependent Type :	OMTAssociation
+// Dependency Name:	RoleAssociation
+//
+
+node
+OMTRole_OMTAssociation_RoleAssociation_derattrs(node theDep, link oldVal, link newVal)
+{
+    const	string	ASSOC_STR_DLM = ",";
+    node	result = theDep;
+    int		i, len, pos;
+    int		indx;
+    string	currsig = theDep.sig;
+    string	onesig, newsig = NULL;
+
+    len = string_length(currsig);
+    for(pos = 0; pos < len; pos = indx+1)
+    {
+	indx = string_find(currsig, pos, ASSOC_STR_DLM);
+	onesig = string_extract(currsig, pos, indx-pos);
+	if (onesig == oldVal.name)
+	    onesig = newVal.name;
+	if (newsig == NULL)
+	    newsig = onesig;
+	else
+	    newsig = newsig + ASSOC_STR_DLM + onesig;
+	if (indx == (len-1))
+	{
+	    if (newsig == NULL)
+		newsig = "";
+	    else
+		newsig = newsig + ASSOC_STR_DLM + "";
+	}
+    }
+
+    result = node_sig_set(result, newsig);
+
+    return(result);
+}
+
+//
+// DependentsFunc for: node OMTEvent
+//
+
+update_dependents
+OMTEvent_dependents(node theBase)
+{
+    update_dependents	dependents = update_dependents_create();
+    string	theBaseName = to_oms_string(theBase.name);
+
+    //
+    // Dependent link objects of type OMTEventLink
+    // Dependency name: Name
+    //
+    link	dep_OMTEventLink;
+    const	string	dep_OMTEventLink_Name_query =
+				"link[OMTEventLink&name='${theBaseName}']";
+    
+    for_each_in_select(dep_OMTEventLink_Name_query, dep_OMTEventLink)
+    {
+	update_dependents_append(dependents, dep_OMTEventLink, GOR_NM_DP_N);
+    }
+
+
+    return(dependents);
+}
+
+// Optional dependency variable declaration
+// Dependent link objects of type OMTTransition
+// Dependency name: GlobalEvent
+// boolean dep_OMTEventLink_OMTTransition_GlobalEvent = True;
+
+
+// Optional dependency variable declaration
+// Dependent link objects of type SimpleMessage
+// Dependent link objects of type SynchronousMessage
+// Dependent link objects of type BalkingMessage
+// Dependent link objects of type TimeoutMessage
+// Dependent link objects of type AsynchronousMessage
+// Dependency name: Name
+// boolean dep_OMTEventLink_Message_Name = True;
+
+
+
+
+//
+// DependentsFunc for: link OMTEventLink
+//
+
+update_dependents
+OMTEventLink_dependents(link theBase)
+{
+    update_dependents	dependents = update_dependents_create();
+    string	theBaseName = to_oms_string(theBase.name);
+    BoochParsedMsg      r = booch_parse_message_label(theBase.name);
+    string	nameOnly = to_oms_string(r.msg);
+    
+
+    //
+    // Dependent link objects of type OMTEventInstance
+    // Dependent link objects of type OMTOOALink
+    // Dependency name: Name
+    //
+    link	dep_OMTEventInstance;
+    const	string	dep_OMTEventInstance_Name_query =
+		    "link[(OMTEventInstance|OMTOOALink)&name='${theBaseName}']";
+    
+    for_each_in_select(dep_OMTEventInstance_Name_query, dep_OMTEventInstance)
+    {
+	update_dependents_append(dependents, dep_OMTEventInstance, GOR_NM_DP_N);
+    }
+
+
+    //
+    // Dependent link objects of type OMTTransition
+    // Dependency name: GlobalEvent
+    // Optional dependency
+    // extern boolean dep_OMTEventLink_OMTTransition_GlobalEvent
+    //
+    if (dep_OMTEventLink_OMTTransition_GlobalEvent == True)
+    {
+	link	dep_OMTTransition;
+	const		string	dep_OMTTransition_GlobalEvent_query =
+	"link[OMTTransition&items[OMTTransitionEvent&value='${theBaseName}']]";
+    
+	for_each_in_select(dep_OMTTransition_GlobalEvent_query, dep_OMTTransition)
+	{
+	    update_dependents_append(dependents, dep_OMTTransition, "GlobalEvent");
+	}
+    }
+
+
+    //
+    // Dependent link objects of type SimpleMessage
+    // Dependent link objects of type SynchronousMessage
+    // Dependent link objects of type BalkingMessage
+    // Dependent link objects of type TimeoutMessage
+    // Dependent link objects of type AsynchronousMessage
+    // Dependency name: Name
+    // Optional dependency
+    //
+    if (dep_OMTEventLink_Message_Name == True)
+    {
+	link	dep_SimpleMessage;
+	const	string	msgtypes = "(SimpleMessage|SynchronousMessage|BalkingMessage|TimeoutMessage|AsynchronousMessage)";
+	const		string	dep_SimpleMessage_Name_query =
+		    "link[${msgtypes}&(name='${nameOnly}'|name$'${nameOnly}(*')]";
+    
+	for_each_in_select(dep_SimpleMessage_Name_query, dep_SimpleMessage)
+	{
+	    update_dependents_append(dependents, dep_SimpleMessage, GOR_NM_DP_N);
+	}
+    }
+
+    return(dependents);
+}
+
+// Optional dependency variable declaration
+// Dependent node objects of type OMTEvent
+// Dependency name: TransitionEvent
+// boolean dep_OMTTransition_OMTEvent_TransitionEvent = True;
+
+// Optional dependency variable declaration
+// Dependent link objects of type OMTTransition
+// Dependency name: TransitionInSameCntx
+// boolean dep_OMTTransition_OMTTransition_TransitionInSameCntx = True;
+
+
+
+//
+// DependentsFunc for: link OMTTransition
+//
+
+
+update_dependents
+OMTTransition_dependents(link theBase)
+{
+    update_dependents	dependents = update_dependents_create();
+    string	theBaseName = to_oms_string(theBase.name);
+    OMTParsedTransition		pt = omt_parse_transition_label(theBase.name);
+
+    pt = omt_parsed_transition_for_oms(pt);
+    
+    //
+    // Dependent item objects of type OMTTransitionEvent
+    // Dependency name: TransitionEventItem
+    //
+
+    item	dep_OMTTransitionEvent;
+    const	string	dep_OMTTransitionEvent_TransitionEventItem_query =
+	    "item[OMTTransitionEvent&obj_id=${theBase.id}&value='${pt.event}']";
+    
+    for_each_in_select(dep_OMTTransitionEvent_TransitionEventItem_query, dep_OMTTransitionEvent)
+    {
+	update_dependents_append(dependents, dep_OMTTransitionEvent, "TransitionEventItem");
+    }
+
+
+
+    //
+    // Dependent item objects of type OMTTransitionAttributes
+    // Dependency name: TransisionAttributes
+    //
+    item	dep_OMTTransitionAttributes;
+    const	string	dep_OMTTransitionAttributes_Name_query =
+			"item[OMTTransitionAttributes&obj_id=${theBase.id}&value='${pt.attribs}']";
+    
+    for_each_in_select(dep_OMTTransitionAttributes_Name_query, dep_OMTTransitionAttributes)
+    {
+	update_dependents_append(dependents, dep_OMTTransitionAttributes, "TransisionAttributes");
+    }
+
+
+    //
+    // Dependent item objects of type OMTTransitionCondition
+    // Dependency name: TransitionCondition
+    //
+    item	dep_OMTTransitionCondition;
+    const	string	dep_OMTTransitionCondition_Name_query =
+				"item[OMTTransitionCondition&obj_id=${theBase.id}&value='${pt.condition}']";
+    
+    for_each_in_select(dep_OMTTransitionCondition_Name_query, dep_OMTTransitionCondition)
+    {
+	update_dependents_append(dependents, dep_OMTTransitionCondition, "TransitionCondition");
+    }
+
+
+    //
+    // Dependent item objects of type OMTTransitionAction
+    // Dependency name: TransitionAction
+    //
+    item	dep_OMTTransitionAction;
+    const	string	dep_OMTTransitionAction_Name_query =
+				"item[OMTTransitionAction&obj_id=${theBase.id}&value='${pt.action}']";
+    
+    for_each_in_select(dep_OMTTransitionAction_Name_query, dep_OMTTransitionAction)
+    {
+	update_dependents_append(dependents, dep_OMTTransitionAction, "TransitionAction");
+    }
+
+
+    //
+    // Dependent node objects of type OMTEvent
+    // Dependency name: TransitionEvent
+    // Optional dependency
+    // extern boolean dep_OMTTransition_OMTEvent_TransitionEvent
+    //
+    if (dep_OMTTransition_OMTEvent_TransitionEvent == True)
+    {
+	node	dep_OMTEvent;
+	const		string	dep_OMTEvent_TransitionEvent_query =
+				"node[OMTEvent&name='${pt.event}']";
+    
+	for_each_in_select(dep_OMTEvent_TransitionEvent_query, dep_OMTEvent)
+	{
+	    update_dependents_append(dependents, dep_OMTEvent, "TransitionEvent");
+	}
+
+	const	string	dep_global_OMTTransitionEvent_TransitionEventItem_query =
+	    "item[OMTTransitionEvent&value='${pt.event}']";
+    
+	for_each_in_select(dep_global_OMTTransitionEvent_TransitionEventItem_query, dep_OMTTransitionEvent)
+	{
+	    if (dep_OMTTransitionEvent.obj_id != theBase.id)
+	    {
+		update_dependents_append(dependents, dep_OMTTransitionEvent, "TransitionEventItem");
+	    }
+	}
+
+
+    }
+
+    //
+    // Dependent link objects of type OMTTransition
+    // Dependency name: TransitionInSameCntx
+    // Optional dependency
+    // extern boolean dep_OMTTransition_OMTTransition_TransitionInSameCntx
+    //
+    if (dep_OMTTransition_OMTTransition_TransitionInSameCntx == True)
+    {
+	link	dep_OMTTransition;
+	const		string	dep_OMTTransition_TransitionInSameCntx_query =
+	"link[OMTTransition&scope_node_id=${theBase.scope_node_id}&items[OMTTransitionEvent&value='${pt.event}']]";
+    
+	for_each_in_select(dep_OMTTransition_TransitionInSameCntx_query, dep_OMTTransition)
+	{
+	    update_dependents_append(dependents, dep_OMTTransition, "TransitionInSameCntx");
+	}
+    }
+
+    return(dependents);
+}
+
+
+//
+// Derive Attributes Function
+// Source Type	  :	link OMTEventLink
+// Dependent Type :	OMTTransition
+// Dependency Name:	GlobalEvent
+//
+
+link
+OMTEventLink_OMTTransition_GlobalEvent_derattrs(link theDep, link oldVal, link newVal)
+{
+    link	result = theDep;
+    OMTParsedTransition		pt = omt_parse_transition_label(theDep.name);
+
+    pt.event = newVal.name;
+
+    result = link_name_set(result, string_from_parsed_transition(pt));
+
+    return(result);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	link OMTTransition
+// Dependent Type :	OMTEvent
+// Dependency Name:	TransitionEvent
+//
+
+node
+OMTTransition_OMTEvent_TransitionEvent_derattrs(node theDep, link oldVal, link newVal)
+{
+    node	result = theDep;
+    OMTParsedTransition		pt = omt_parse_transition_label(newVal.name);
+
+    result = node_name_set(result, pt.event);
+
+    return(result);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	link OMTTransition
+// Dependent Type :	OMTTransitionEvent
+// Dependency Name:	TransitionEventItem
+//
+
+item
+OMTTransition_OMTTransitionEvent_TransitionEventItem_derattrs(item theDep, link oldVal, link newVal)
+{
+    item	result = theDep;
+    OMTParsedTransition		ptnew = omt_parse_transition_label(newVal.name);
+    OMTParsedTransition		ptold = omt_parse_transition_label(oldVal.name);
+
+    if (ptnew.event != ptold.event)
+    {
+	result = item_value_set(result, ptnew.event);
+    }
+
+    return(result);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	link OMTTransition
+// Dependent Type :	OMTTransitionAttributes
+// Dependency Name:	TransisionAttributes
+//
+
+item
+OMTTransition_OMTTransitionAttributes_TransisionAttributes_derattrs(item theDep, link oldVal, link newVal)
+{
+    item	result = theDep;
+    OMTParsedTransition		ptnew = omt_parse_transition_label(newVal.name);
+    OMTParsedTransition		ptold = omt_parse_transition_label(oldVal.name);
+
+    if (ptnew.attribs != ptold.attribs)
+    {
+	result = item_value_set(result, ptnew.attribs);
+    }
+
+    return(result);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	link OMTTransition
+// Dependent Type :	OMTTransitionCondition
+// Dependency Name:	TransitionCondition
+//
+
+item
+OMTTransition_OMTTransitionCondition_TransitionCondition_derattrs(item theDep, link oldVal, link newVal)
+{
+    item	result = theDep;
+    OMTParsedTransition		ptnew = omt_parse_transition_label(newVal.name);
+    OMTParsedTransition		ptold = omt_parse_transition_label(oldVal.name);
+
+    if (ptnew.condition != ptold.condition)
+    {
+	result = item_value_set(result, ptnew.condition);
+    }
+
+    return(result);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	link OMTTransition
+// Dependent Type :	OMTTransitionAction
+// Dependency Name:	TransitionAction
+//
+
+item
+OMTTransition_OMTTransitionAction_TransitionAction_derattrs(item theDep, link oldVal, link newVal)
+{
+    item	result = theDep;
+    OMTParsedTransition		ptnew = omt_parse_transition_label(newVal.name);
+    OMTParsedTransition		ptold = omt_parse_transition_label(oldVal.name);
+
+    if (ptnew.action != ptold.action)
+    {
+	result = item_value_set(result, ptnew.action);
+    }
+
+    return(result);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	link OMTTransition
+// Dependent Type :	OMTTransition
+// Dependency Name:	TransitionInSameCntx
+//
+
+link
+OMTTransition_OMTTransition_TransitionInSameCntx_derattrs(link theDep, link oldVal, link newVal)
+{
+    link	result = theDep;
+    OMTParsedTransition		ptold = omt_parse_transition_label(theDep.name);
+    OMTParsedTransition		ptnew = omt_parse_transition_label(newVal.name);
+
+    ptold.event = ptnew.event;
+
+    result = link_name_set(result, string_from_parsed_transition(ptold));
+
+    return(result);
+}
+
+// Optional dependency variable declaration
+// Dependent node objects of type OMTOperation
+// Dependency name: OpOverloaded
+// boolean dep_OMTOperation_OMTOperation_OpOverloaded = False;
+
+
+// Optional dependency variable declaration
+// Dependent link objects of type OMTTransition
+// Dependent node objects of type OMTActivity
+// Dependent node objects of type OMTAction
+// Dependency name: OpToStateModel
+// boolean dep_OMTOperation_OpToStateModel = False;
+
+
+// Optional dependency variable declaration
+// Dependent link objects of type SimpleMessage
+// Dependent link objects of type SynchronousMessage
+// Dependent link objects of type BalkingMessage
+// Dependent link objects of type TimeoutMessage
+// Dependent msgnamecntx objects of type AsynchronousMessage
+// Dependency name: MsgNameCntx
+// boolean dep_OMTOperation_MsgNameCntx = False;
+
+int	TheCurrentRenameGeneration = -1;
+
+boolean
+is_new_rename_transaction()
+{
+    if (rename_current_transaction_id() != TheCurrentRenameGeneration)
+    {
+	TheCurrentRenameGeneration = rename_current_transaction_id();
+	return(True);
+    }
+    return(False);
+}
+
+void
+reset_rename_transaction()
+{
+    TheCurrentRenameGeneration = -1;
+}
+
+
+//
+// DependentsFunc for: node OMTOperation
+//
+
+update_dependents
+OMTOperation_dependents(node theBase)
+{
+    update_dependents	dependents = update_dependents_create();
+    string	theBaseName = to_oms_string(theBase.name);
+    string	theClassName;
+    node	opClass, opState;
+    string	actual_call;
+    boolean	new_rename_op = is_new_rename_transaction();
+    const   	string  msgtypes = "(SimpleMessage|SynchronousMessage|BalkingMessage|TimeoutMessage|AsynchronousMessage)";
+    link	dep_SimpleMessage;
+
+    if (string_length(theBaseName) > 1)
+    {
+	if (string_extract(theBaseName, 0, 1) == "~")
+	{
+	    new_rename_op = True;
+	    reset_rename_transaction();
+	}
+    }
+
+
+
+    opClass = find_by_query("node[OMTClass&${theBase.scope_node_id}]");
+    if (opClass != NULL)
+    {
+	theClassName = to_oms_string(opClass.name);
+    } else {
+	theClassName = "?";
+    }
+
+
+    //
+    // Dependent file objects of type OMTFuncDiagram
+    // Dependency name: OpFMEs
+    //
+    file	dep_OMTFuncDiagram;
+    const	string	dep_OMTFuncDiagram_OpFMEs_query =
+	    "file[OMTFuncDiagram&&(${namecond})&node_refs[node_id=${theBase.id}]]";
+    string	namecond;
+
+    namecond= "name$'"+theClassName+FILE_NAME_SCOPE_SEPARATOR+theBaseName+FILE_NAME_SCOPE_SEPARATOR+"*'" +
+		"||name='"+theClassName+FILE_NAME_SCOPE_SEPARATOR+theBaseName+"'";
+
+    for_each_in_select(dep_OMTFuncDiagram_OpFMEs_query, dep_OMTFuncDiagram)
+    {
+	update_dependents_append(dependents, dep_OMTFuncDiagram, "OpFMEs");
+    }
+
+
+    //
+    // Dependent node objects of type OMTOperation
+    // Dependency name: OpOverloaded
+    // Optional dependency
+    // extern boolean dep_OMTOperation_OMTOperation_OpOverloaded
+    //
+    node	dep_OMTOperation;
+    if (dep_OMTOperation_OMTOperation_OpOverloaded == True &&
+		new_rename_op == True)
+    {
+	string	opbasename;
+	const		string	dep_OMTOperation_OpOverloaded_query =
+				    "node[OMTOperation&scope_node_id=${theBase.scope_node_id}&(name='${opbasename}'|name='~${opbasename}')]";
+
+	opbasename = theBaseName;
+	if (string_length(theBaseName) > 1)
+	{
+	    if (string_extract(theBaseName, 0, 1) == "~")
+	    {
+		opbasename = string_extract(theBaseName, 1,
+					string_length(theBaseName)-1);
+	    }
+	}
+
+	for_each_in_select(dep_OMTOperation_OpOverloaded_query, dep_OMTOperation)
+	{
+	    update_dependents_append(dependents, dep_OMTOperation, "OpOverloaded");
+	}
+    }
+
+    //
+    // Dependent link objects of type OMTTransition
+    // Dependency name: OpToStateModel
+    // Optional dependency
+    // extern boolean dep_OMTOperation_OMTTransition_OpToStateModel
+    //
+    // If we don't rename overloaded we have to match signatures
+    // if we do overloaded we only have to do this for the first operation
+    //
+    if (dep_OMTOperation_OpToStateModel == True &&
+	(dep_OMTOperation_OMTOperation_OpOverloaded == False ||
+	 new_rename_op == True))
+    {
+	link	dep_OMTTransition;
+	const		string	dep_OMTTransition_OpToStateModel_query =
+		    "link[OMTTransition&scope_node_id=${opState.id}&items[OMTTransitionAction&(value$'${theBaseName}(*'|value='${theBaseName}')]]";
+	opState = find_by_query("node[OMTState&scope_node_id=0&name='${theClassName}']");
+	OMTParsedTransition		pt;
+	if (opState != NULL)
+	{
+
+	    for_each_in_select(dep_OMTTransition_OpToStateModel_query, dep_OMTTransition)
+	    {
+		pt = omt_parse_transition_label(dep_OMTTransition.name);
+
+		if (dep_OMTOperation_OMTOperation_OpOverloaded == True ||
+		    True == oo_operation_signature_matches(theBase.sig, True, pt.action, False))
+		{
+		    update_dependents_append(dependents, dep_OMTTransition, "OpToStateModel");
+		}
+	    }
+
+
+	    //
+	    // Dependent node objects of type OMTActivity
+	    // Dependency name: OpToStateModel
+	    // Dependent node objects of type OMTAction
+	    // Dependency name: OpToStateModel
+	    // Optional dependency
+	    node	dep_OMTActivity;
+	    const		string	dep_OMTActivity_OpToStateModel_query =
+				    "node[(OMTActivity|OMTAction)&scope_node_id=${opState.id}&(name='${theBaseName}'|name$'${theBaseName}(*')]";
+
+	    for_each_in_select(dep_OMTActivity_OpToStateModel_query, dep_OMTActivity)
+	    {
+		if (dep_OMTOperation_OMTOperation_OpOverloaded == True ||
+		    True == oo_operation_signature_matches(theBase.sig, True, dep_OMTActivity.name, False))
+		{
+		    update_dependents_append(dependents, dep_OMTActivity, "OpToStateModel");
+		}
+	    }
+	}
+    }
+
+
+    //
+    // Dependent node objects of type ObjectDiagOperationScope
+    // Dependency name: Name
+    //
+    node	dep_ObjectDiagOperationScope;
+    const	string	dep_ObjectDiagOperationScope_Name_query =
+				"node[ObjectDiagOperationScope&scope_node_id=${scopeClass.id}&name='${theBaseName}']";
+    node	scopeClass = find_by_query("node[ObjectDiagClassScope&name='${theClassName}']");
+    list	scenScopes = list_create("int", 0);
+
+    if (scopeClass != NULL)
+    {
+	list_append(scenScopes, scopeClass.id);
+	for_each_in_select(dep_ObjectDiagOperationScope_Name_query, dep_ObjectDiagOperationScope)
+	{
+	    list_append(scenScopes, dep_ObjectDiagOperationScope.id);
+	    update_dependents_append(dependents, dep_ObjectDiagOperationScope, GOR_NM_DP_N);
+	}
+    }
+
+
+    //
+    // Dependent link objects of type SimpleMessage
+    // Dependent link objects of type SynchronousMessage
+    // Dependent link objects of type BalkingMessage
+    // Dependent link objects of type TimeoutMessage
+    // Dependent link objects of type AsynchronousMessage
+    // Dependency name: MsgNameCntx
+    // Optional dependency
+    // extern boolean dep_OMTOperation_MsgNameCntx
+    // Messages sent in the context of either the operation or the class
+    //
+
+    if ((dep_OMTOperation_MsgNameCntx == True && list_count(scenScopes) > 0) &&
+	(dep_OMTOperation_OMTOperation_OpOverloaded == False ||
+	     new_rename_op == True))
+    {
+
+	const		string	dep_SimpleMessage_MsgNameCntx_query =
+		"link[${msgtypes}&${scopeClassrestr}&(name='${theBaseName}'|name$'${theBaseName}(*')]";
+	string	scopeClassrestr = "(scope_node_id=" +
+			list_to_string(scenScopes, "||scope_node_id=") + ")";
+
+	for_each_in_select(dep_SimpleMessage_MsgNameCntx_query, dep_SimpleMessage)
+	{
+	    if (dep_OMTOperation_OMTOperation_OpOverloaded == True ||
+		True == oo_operation_signature_matches(theBase.sig, True, dep_SimpleMessage.name, False))
+	    {
+		update_dependents_append(dependents, dep_SimpleMessage, "MsgNameCntx");
+	    }
+	}
+    }
+
+    //
+    // Dependent link objects of type SimpleMessage
+    // Dependent link objects of type SynchronousMessage
+    // Dependent link objects of type BalkingMessage
+    // Dependent link objects of type TimeoutMessage
+    // Dependent link objects of type AsynchronousMessage
+    // Dependency name: MsgOperName
+    // Optional dependency
+    // extern boolean dep_OMTOperation_MsgOperName
+    // Messages sent to an object of the class with the same name as a rename
+    // operation of the class
+    //
+
+
+
+    if (dep_OMTOperation_MsgOperName == True && 
+	(dep_OMTOperation_OMTOperation_OpOverloaded == False ||
+	     new_rename_op == True))
+    {
+	const		string	dep_SimpleMessage_MsgOperName_query =
+		"link[${msgtypes}&to_node[scope_node_id=${ObjscopeClass.id}]&(name='${theBaseName}'|name$'${theBaseName}(*')]";
+
+
+	// mappings explained:
+	//
+	// 	Operation:	theBase
+	//  Scope class:	opClass
+	// ObjscopeClass: node[ObjectClassScope&&name='${theClassName}']
+	// messages: links with target in objects scoped to ObjscopeClass
+	//		with matching name
+		
+	node	ObjscopeClass;
+
+	ObjscopeClass = find_by_query("node[ObjectClassScope&name='${theClassName}']");
+
+	if (ObjscopeClass != NULL)
+	{
+	    for_each_in_select(dep_SimpleMessage_MsgOperName_query, dep_SimpleMessage)
+	    {
+		// message("Found matching: " + dep_SimpleMessage);
+		// message("op signature: " + theBase.sig);
+		// message("sig match: " + oo_operation_signature_matches(theBase.sig, True, dep_SimpleMessage.name, False));
+
+		if (dep_OMTOperation_OMTOperation_OpOverloaded == True ||
+		    True == oo_operation_signature_matches(theBase.sig, True, dep_SimpleMessage.name, False))
+		{
+		    update_dependents_append(dependents, dep_SimpleMessage, "MsgOperName");
+		}
+	    }
+	}
+    }
+
+    return(dependents);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node OMTOperation
+// Dependent Type :	OMTFuncDiagram
+// Dependency Name:	OpFMEs
+//
+
+file
+OMTOperation_OMTFuncDiagram_OpFMEs_derattrs(file theDep, node oldVal, node newVal)
+{
+    file	result = theDep;
+    node	classScope;
+    string	res;
+
+    // the only way we get this dependency is if the file name is still of the
+    // old syntax (class__op)
+    // in that case we just translate it into the new syntax
+
+    classScope = find_by_query("node[OMTClass&${newVal.scope_node_id}]");
+
+    if (classScope != NULL)
+    {
+	res = create_new_file_in_sequence(classScope.name, theDep.type);
+	result = file_name_set(result, res);
+    }
+
+    return(result);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node OMTOperation
+// Dependent Type :	OMTOperation
+// Dependency Name:	OpOverloaded
+//
+
+node
+OMTOperation_OMTOperation_OpOverloaded_derattrs(node theDep, node oldVal, node newVal)
+{
+    boolean     sourceIsDestructor = False;
+    boolean     dependentIsDestructor= False;
+    string      test;
+    
+    test = string_extract(newVal.name,0,1);
+    if(test == "~")
+	sourceIsDestructor = True;
+    
+    test = string_extract(theDep.name,0,1);
+    if(test == "~")
+	dependentIsDestructor = True;
+
+    if(sourceIsDestructor == dependentIsDestructor)
+	return node_name_set(theDep, newVal.name);
+    
+    if(sourceIsDestructor)
+	return node_name_set(theDep,
+			     string_extract(newVal.name,
+					    1,
+					    string_length(newVal.name) -1));
+    
+    return node_name_set(theDep,"~" + newVal.name);
+    
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node OMTClass
+// Dependent Type :	OMTOperation
+// Dependency Name:	OpConstructor
+//
+
+node
+OMTOperation_OMTClass_OpConstructor_derattrs(node theDep, node oldVal, node newVal)
+{
+    node	result = theDep;
+
+    if (theDep.name == oldVal.name)
+    {
+	result = node_name_set(result, newVal.name);
+    } else if (theDep.name == ("~" + oldVal.name))
+    {
+	result = node_name_set(result, "~" + newVal.name);
+    }
+	
+    return(result);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node OMTClass
+// Dependent Type :	OMTOperation
+// Dependency Name:	OpArgTypes
+//
+
+node
+OMTOperation_OMTClass_OpArgTypes_derattrs(node theDep, node oldVal, node newVal)
+{
+    node	result = theDep;
+    list	tokens;
+
+
+    // tokenize signature field of operation
+    // if changes -- change signature
+
+    tokens = string_to_tokens(theDep.sig, "()<>,*& \t:", "");
+    if (token_replace(tokens, oldVal.name, newVal.name))
+    {
+	// Change op name for overloaded as well!
+	if (theDep.type == "OMTOperation" && oldVal.id == theDep.scope_node_id)
+	{
+	    if (theDep.name == oldVal.name)
+	    {
+		result = node_name_set(result, newVal.name);
+	    } else if (theDep.name == ("~" + oldVal.name))
+	    {
+		result = node_name_set(result, "~" + newVal.name);
+	    }
+	}
+
+	result = node_sig_set(result, tokens_to_string(tokens));
+
+    }
+	
+    return(result);
+}
+
+
+//
+// Derive Attributes Function
+// Source Type	  :	node OMTOperation
+// Dependent Type :	OMTTransition
+// Dependency Name:	OpToStateModel
+//
+
+link
+OMTOperation_OMTTransition_OpToStateModel_derattrs(link theDep, node oldVal, node newVal)
+{
+    link	result = theDep;
+    // parse transition ...
+    OMTParsedTransition	ptold = omt_parse_transition_label(theDep.name);
+    // parse action part of transition (can have arguments)
+    BoochParsedMsg	curraction = booch_parse_message_label(ptold.action);
+
+    // replace action name by new operation name
+    curraction.msg = newVal.name;
+
+    /// reassemble action from name and attrs
+    ptold.action = booch_make_link_name_from_parsed_msg(curraction);
+    // and now assemble the whole transition label ....
+    result = link_name_set(result, string_from_parsed_transition(ptold));
+
+    return(result);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node OMTOperation
+// Dependent Type :	OMTActivity
+// Dependency Name:	OpToStateModel
+//
+
+node
+OMTOperation_OMTActivity_OpToStateModel_derattrs(node theDep, node oldVal, node newVal)
+{
+    node	result = theDep;
+    BoochParsedMsg	theMsg = booch_parse_message_label(theDep.name);
+    string	newname;
+
+    theMsg.msg = newVal.name;
+    newname = booch_make_link_name_from_parsed_msg(theMsg);
+
+    result = node_name_set(result, newname);
+
+    return(result);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node OMTOperation
+// Dependent Type :	OMTAction
+// Dependency Name:	OpToStateModel
+//
+
+node
+OMTOperation_OMTAction_OpToStateModel_derattrs(node theDep, node oldVal, node newVal)
+{
+    node	result = theDep;
+    BoochParsedMsg	theMsg = booch_parse_message_label(theDep.name);
+    string	newname;
+
+    theMsg.msg = newVal.name;
+    newname = booch_make_link_name_from_parsed_msg(theMsg);
+
+    result = node_name_set(result, newname);
+
+    return(result);
+}
+
+// Optional dependency variable declaration
+// Dependent node objects of type OMTOperation
+// Dependency name: OpConstructor
+// boolean dep_OMTClass_OMTOperation_OpConstructor = True;
+
+
+//
+// DependentsFunc for: node OMTClass
+//
+
+update_dependents
+OMTClass_dependents(node theBase)
+{
+    update_dependents	dependents = update_dependents_create();
+    string	theBaseName = to_oms_string(theBase.name);
+    
+
+    //
+    // Dependent file objects of type OMTFuncDiagram
+    // Dependency name: ClassFMEs
+    //
+    file	dep_OMTFuncDiagram;
+    const	string	dep_OMTFuncDiagram_ClassFMEs_query =
+				"file[OMTFuncDiagram&&(${namecond})]";
+    string	namecond;
+
+    namecond = "name$'"+theBaseName+FILE_NAME_SCOPE_SEPARATOR+"*'" +
+		"||name='"+theBaseName+"'";
+    
+
+    for_each_in_select(dep_OMTFuncDiagram_ClassFMEs_query, dep_OMTFuncDiagram)
+    {
+	update_dependents_append(dependents, dep_OMTFuncDiagram, "ClassFMEs");
+    }
+
+
+    //
+    // Dependent file objects of type BoochObjectDiagram
+    // Dependency name: CategoryScenarios
+    //		-> reuse here the category scenario dependency, same logic
+    //
+    file	dep_BoochObjectDiagram;
+    const	string	dep_BoochObjectDiagram_ClassScenarios_query =
+				"file[BoochObjectDiagram && (${scennamecond})]";
+    string	scennamecond;
+    
+    scennamecond= "name$'" + theBaseName + FILE_NAME_SCOPE_SEPARATOR + "*'" +
+		"||name$'" + "*" + FILE_NAME_SCOPE_SEPARATOR +
+		theBaseName + FILE_NAME_SCOPE_SEPARATOR + "*'";
+    
+    for_each_in_select(dep_BoochObjectDiagram_ClassScenarios_query, dep_BoochObjectDiagram)
+    {
+	update_dependents_append(dependents, dep_BoochObjectDiagram, "CategoryScenarios");
+    }
+
+    //
+    // Dependent file objects of type OMTClassTable
+    // Dependency name: ClassTable
+    //
+    file	dep_OMTClassTable;
+    const	string	dep_OMTClassTable_ClassTable_query =
+				"file[OMTClassTable&name='${theBaseName}']";
+    
+    for_each_in_select(dep_OMTClassTable_ClassTable_query, dep_OMTClassTable)
+    {
+	update_dependents_append(dependents, dep_OMTClassTable, "ClassTable");
+    }
+
+
+    //
+    // Dependent node objects of type OMTState
+    // Dependency name: ClassTopState
+    //
+    node	dep_OMTState;
+    const	string	dep_OMTState_ClassTopState_query =
+		    "node[OMTState&scope_node_id=0&name='${theBaseName}']";
+    
+    for_each_in_select(dep_OMTState_ClassTopState_query, dep_OMTState)
+    {
+	update_dependents_append(dependents, dep_OMTState, GOR_NM_DP_N);
+    }
+
+
+    //
+    // Dependent node objects of type OMTAssociation
+    // Dependency name: ClassUsing
+    //
+    node	dep_OMTAssociation;
+    string	dep_OMTAssociation_ClassAssoc_query;
+    const       string  assocquerybase = "node[OMTAssociation&&";
+    const       string  np1 = "(name$'*:${theBaseName},*'||name$'${theBaseName},*'";
+    const       string  np2 = "||name$'*,${theBaseName}'||name$'*,${theBaseName},*')";
+    const       string  toquery = "out_links[to_node_id=${theBase.id}]";
+    const       string  fromquery = "in_links[from_node_id=${theBase.id}]";
+    string	namerestr = np1+np2;
+
+    dep_OMTAssociation_ClassAssoc_query = assocquerybase + toquery + "&&" +
+					namerestr + "]";
+    for_each_in_select(dep_OMTAssociation_ClassAssoc_query, dep_OMTAssociation)
+    {
+	update_dependents_append(dependents, dep_OMTAssociation, "ClassUsing");
+    }
+
+    dep_OMTAssociation_ClassAssoc_query = assocquerybase + fromquery + "&&" +
+					namerestr + "]";
+    for_each_in_select(dep_OMTAssociation_ClassAssoc_query, dep_OMTAssociation)
+    {
+	update_dependents_append(dependents, dep_OMTAssociation, "ClassUsing");
+    }
+
+
+    //
+    // Dependent node objects of type OMTExclusiveGeneralization
+    // Dependent node objects of type OMTInclusiveGeneralization
+    // Dependency name: ClassGen
+    // since the class name is in a potentially long signature we can't use
+    // the oms query stuff directly, but we have to build all generalizations
+    // and filter out the ones we really need ...
+    //
+    gor_initialize_generalizations();
+    list	allGens = list_create("node", 0);
+    int		genIndx;
+    gor_find_gens_from_participant(theBaseName, allGens);
+
+    node	dep_OMTGeneralization;
+    
+    for(genIndx = list_count(allGens) -1 ; genIndx >= 0; genIndx = genIndx - 1)
+    {
+	update_dependents_append(dependents, list_get(allGens, genIndx),
+								"ClassGen");
+    }
+
+
+    //
+    // Dependent node objects of type Using
+    // Dependency name: ClassUsing
+    //
+    node	dep_Using;
+    string	dep_Using_ClassUsing_query;
+    const	string usingquerybase = "node[Using&&";
+    dep_Using_ClassUsing_query = usingquerybase + namerestr + "]";
+    
+    for_each_in_select(dep_Using_ClassUsing_query, dep_Using)
+    {
+	update_dependents_append(dependents, dep_Using, "ClassUsing");
+    }
+
+
+    node	dep_OMTOperation;
+    //
+    // Dependent node objects of type OMTOperation
+    // Dependency name: OpConstructor
+    // Optional dependency
+    // extern boolean dep_OMTClass_OMTOperation_OpConstructor
+    //
+    if (dep_OMTClass_OMTOperation_OpConstructor == True)
+    {
+	const		string	dep_OMTClass_OpConstructor_query =
+				"node[OMTOperation&scope_node_id=${theBase.id}&(name='${theBaseName}'|name='~${theBaseName}')]";
+
+	for_each_in_select(dep_OMTClass_OpConstructor_query, dep_OMTOperation)
+	{
+	    update_dependents_append(dependents, dep_OMTOperation, "OpConstructor");
+	}
+    }
+
+
+
+    //
+    // Dependent node objects of type ObjectDiagClassScope
+    // Dependent node objects of type ObjectClassScope
+    // Dependent node objects of type OMTSubsystem
+    // Dependent node objects of type OMTActorObject
+    // Dependent node objects of type Metaclass
+    // Dependent node objects of type ParameterizedClass
+    // Dependent node objects of type InstantiatedClass
+    // Dependent node objects of type ClassUtility
+    // Dependent node objects of type ParameterizedClassUtility
+    // Dependent node objects of type InstantiatedClassUtility
+    // Dependency name: Name
+    //
+    node	dep_elaboratedClasses;
+    const	string	dep_elaboratedClasses_Name_query =
+		    "node[(ObjectDiagClassScope||ObjectClassScope||OMTSubsystem||OMTActorObject|Metaclass|ParameterizedClass|InstantiatedClass|ClassUtility|ParameterizedClassUtility|InstantiatedClassUtility)&name='${theBaseName}']";
+    
+    for_each_in_select(dep_elaboratedClasses_Name_query, dep_elaboratedClasses)
+    {
+	update_dependents_append(dependents, dep_elaboratedClasses, GOR_NM_DP_N);
+    }
+
+
+
+    //
+    // Dependent link objects of type OMTObjectFlow
+    // Dependency name: Name
+    //
+    link	dep_OMTObjectFlow;
+    const	string	dep_OMTObjectFlow_Name_query =
+				"link[OMTObjectFlow&name='${theBaseName}']";
+    
+    for_each_in_select(dep_OMTObjectFlow_Name_query, dep_OMTObjectFlow)
+    {
+	update_dependents_append(dependents, dep_OMTObjectFlow, GOR_NM_DP_N);
+    }
+
+    //
+    // Dependent item objects of type OMTOperationReturnType
+    // Dependency name: OperationReturn
+    // Dependent item objects of type OMTAttributeType
+    // Dependency name: OMTAttributeType
+    //
+    item	dep_OMTOperationReturnType;
+    const	string	dep_OMTOperationReturnType_Name_query =
+			"item[(OMTAttributeType|OMTOperationReturnType)&value$'*${theBaseName}*']";
+    list	tokens;
+    
+    for_each_in_select(dep_OMTOperationReturnType_Name_query,
+				dep_OMTOperationReturnType)
+    {
+	tokens = string_to_tokens(dep_OMTOperationReturnType.value,
+								"*& \t:", "");
+	if (list_find(tokens, 0, theBaseName) < list_count(tokens))
+	{
+	    update_dependents_append(dependents, dep_OMTOperationReturnType,
+							"ItemType");
+	}
+    }
+
+    //
+    // Dependent node objects of type OMTOperation
+    // Dependency name: OpArgTypes
+    //
+    const		string	dep_OMTOperation_OpArgTypes_query =
+				"node[OMTOperation&sig$'*${theBaseName}*']";
+
+    for_each_in_select(dep_OMTOperation_OpArgTypes_query, dep_OMTOperation)
+    {
+	tokens = string_to_tokens(dep_OMTOperation.sig, "()<>,*& \t:", "");
+	if (list_find(tokens, 0, theBaseName) < list_count(tokens))
+	{
+	    update_dependents_append(dependents, dep_OMTOperation,
+							"OpArgTypes");
+	}
+    }
+
+
+    return(dependents);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node OMTClass
+// Dependent Type :	OMTFuncDiagram
+// Dependency Name:	ClassFMEs
+//
+
+file
+OMTClass_OMTFuncDiagram_ClassFMEs_derattrs(file theDep, node oldVal, node newVal)
+{
+    file	result = theDep;
+    string	newname;
+
+    if (oldVal.name != newVal.name)
+    {
+	newname = create_new_file_in_sequence(newVal.name, theDep.type);
+	result = file_name_set(result, newname);
+    }
+
+
+
+    return(result);
+}
+
+
+
+
+const	string	GOR_OMT_GEN_SIG_DLM = "/";
+//
+// Derive Attributes Function
+// Source Type	  :	node OMTClass
+// Dependent Type :	OMTExclusiveGeneralization
+// Dependent Type :	OMTInclusiveGeneralization
+// Dependency Name:	ClassGen
+//
+
+node
+OMTClass_OMTGeneralization_ClassGen_derattrs(node theDep, node oldVal, node newVal)
+{
+    node	result = theDep;
+    list	sigl = string_to_list(theDep.sig, GOR_OMT_GEN_SIG_DLM);
+    string	super, cl, newsig;
+    int		i;
+
+    if (list_count(sigl) == 0)
+    {
+	return(result);
+    }
+
+    super = list_get(sigl, 0);
+    list_delete(sigl, 0);
+    if (super == oldVal.name)
+    {
+	super = newVal.name;
+    }
+    for(i = 0; i < list_count(sigl); i = i + 1)
+    {
+	i = list_find(sigl, i, oldVal.name);
+	if (i < list_count(sigl))
+	{
+	    list_set(sigl, i, newVal.name);
+	}
+    }
+    sigl = list_sort(sigl);
+    newsig = super + GOR_OMT_GEN_SIG_DLM;
+    for(i = 0; i < list_count(sigl); i = i + 1)
+    {
+	cl = list_get(sigl, i);
+	newsig = newsig + GOR_OMT_GEN_SIG_DLM + cl + GOR_OMT_GEN_SIG_DLM;
+    }
+
+    result = node_sig_set(result, newsig);
+
+    return(result);
+}
+
+
+//
+// OMT Generalizaiton handling
+// The name of a class is embedded in the siganture of a generalization node
+// Since the signature can be longer that the max char lenght sybase allows
+// `contains' queries we have to do this the slow and painful way:
+//		Find all generalizations
+//		in Qrl go through all of them and find matching signatures
+
+
+struct	gor_omt_gen_l_tp
+{
+    node	gn;
+    string	bc;
+    string	sig;
+    list	pc;
+};
+
+
+void
+gor_gen_list_from_node_list(list l, list res)
+{
+    int		i, cnt = list_count(l);
+    node	n;
+    list	cl;
+    gor_omt_gen_l_tp gs;
+
+
+    for(i = 0; i < cnt; i = i + 1)
+    {
+	n = list_get(l, i);
+	gs.gn = n;
+	gs.sig = n.sig;
+	cl = string_to_list(n.sig, GOR_OMT_GEN_SIG_DLM);
+	if (list_count(cl) > 0)
+	{
+	    gs.bc = list_get(cl, 0);
+	    list_delete(cl, 0);
+	    gs.pc = cl;
+	} else {
+	    gs.bc = n.sig;
+	    gs.pc = list_create("string", 0);
+	}
+	list_append(res, gs);
+    }
+}
+
+
+list	gor_all_generalizations;
+
+void
+gor_initialize_generalizations()
+{
+    const	string squery = "node[${tp}]";
+    string	tp;
+
+    gor_all_generalizations = list_create("gor_omt_gen_l_tp", 0);
+
+    tp = "(OMTExclusiveGeneralization||OMTInclusiveGeneralization)";
+    gor_gen_list_from_node_list(list_select(squery), gor_all_generalizations);
+}
+
+
+void
+gor_find_gens_from_participant(string bc, list res)
+{
+    int		i, cnt, pcnt;
+    gor_omt_gen_l_tp gs;
+
+    cnt = list_count(gor_all_generalizations);
+    for(i = 0; i < cnt; i = i + 1)
+    {
+	gs = list_get(gor_all_generalizations, i);
+	pcnt = list_count(gs.pc);
+	if (pcnt > 0)
+	{
+	    if (pcnt > list_find(gs.pc, 0, bc))
+	    {
+		list_append(res, gs.gn);
+	    }
+	}
+	if (bc == gs.bc)
+	{
+	    list_append(res, gs.gn);
+	}
+    }
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node OMTClass
+// Dependent Type :	Using
+// Dependent Type :	OMTAssocioation
+// Dependency Name:	ClassUsing
+//
+
+struct	gor_assoc_endpoint
+{
+    string	class;
+    string	role;
+};
+
+node
+OMTClass_Using_ClassUsing_derattrs(node theDep, node oldVal, node newVal)
+{
+    node	result = theDep;
+    string	assocname, assocsig, classes, onename, currsig;
+    int		indx, len, pos, i;
+    list	endpoints = list_create("gor_assoc_endpoint", 0);
+    gor_assoc_endpoint	ep;
+    const       string  ASSOC_STR_DLM = ",";
+
+
+    len = string_length(theDep.name);
+    indx = string_find(theDep.name, 0, ":");
+    if (indx < len)
+    {
+	assocname = string_extract(theDep.name, 0, indx);
+	classes = "";
+    } else {
+	assocname = NULL;
+	classes = theDep.name;
+    }
+    if ((indx+1) < len)
+    {
+	classes = string_extract(theDep.name, indx+1, len-(indx+1));
+    }
+
+    len = string_length(classes);
+    for(pos = 0; pos < len; pos = indx+1)
+    {
+	indx = string_find(classes, pos, ASSOC_STR_DLM);
+	onename = string_extract(classes, pos, indx-pos);
+	if (onename == oldVal.name)
+	    onename = newVal.name;
+	ep.role = "";
+	ep.class = onename;
+	list_append(endpoints, ep);
+	if (indx == (len-1)) // shouldn't have empty classes
+	{
+	    ep.class =   "";
+	    list_append(endpoints, ep);
+	}
+    }
+
+    currsig = theDep.sig;
+    len = string_length(currsig);
+
+
+    i = 0;
+    for(pos = 0; pos < len; pos = indx+1)
+    {
+	indx = string_find(currsig, pos, ASSOC_STR_DLM);
+	onename = string_extract(currsig, pos, indx-pos);
+	if (i < list_count(endpoints))
+	{
+	    ep = list_get(endpoints, i);
+	    ep.role = onename;
+	    list_set(endpoints, i, ep);
+	} else {
+	    ep.class = "";
+	    ep.role = onename;
+	    list_append(endpoints, ep);
+	}
+	i = i + 1;
+	if (indx == (len-1))
+	{
+	    if (i < list_count(endpoints))
+	    {
+		ep = list_get(endpoints, i);
+		ep.role = "";
+		list_set(endpoints, i, ep);
+	    } else {
+		ep.class = "";
+		ep.role = "";
+		list_append(endpoints, ep);
+	    }
+	}
+    }
+
+    endpoints = list_sort_by_field(endpoints, "class");
+    if (assocname == NULL)
+    {
+	assocname = "";
+    } else {
+	assocname = assocname + ":";
+    }
+    assocsig = "";
+    for(i = 0; i < list_count(endpoints); i = i + 1)
+    {
+	ep = list_get(endpoints, i);
+	if (i > 0)
+	{
+	    assocsig = assocsig + ASSOC_STR_DLM;
+	    assocname = assocname + ASSOC_STR_DLM;
+	}
+	assocsig = assocsig + ep.role;
+	assocname = assocname + ep.class;
+    }
+
+    result = node_sig_set(result, assocsig);
+    result = node_name_set(result, assocname);
+
+    return(result);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node OMTClass
+// Dependent Type :	OMTClassTable
+// Dependency Name:	ClassTable
+//
+
+file
+OMTClass_OMTClassTable_ClassTable_derattrs(file theDep, node oldVal, node newVal)
+{
+    file	result = theDep;
+
+    if (theDep.name == oldVal.name)
+    {
+	result = file_name_set(result, newVal.name);
+    }
+
+
+    return(result);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node OMTClass
+// Dependent Type :	OMTOperationReturnType
+// Dependent Type :	OMTAttributeType
+// Dependency Name:	ItemType
+//
+
+item
+OMTClass_OMTAttrOp_Type_derattrs(item theDep, node oldVal, node newVal)
+{
+    item	result = theDep;
+    list	tokens = string_to_tokens(theDep.value, "*& \t:", "");
+
+
+    if (token_replace(tokens, oldVal.name, newVal.name))
+    {
+	result = item_value_set(result, tokens_to_string(tokens));
+    }
+
+    return(result);
+}
+
+
+//
+// DependentsFunc for: node OMTScenarioName
+//
+
+update_dependents
+OMTScenarioName_dependents(node theBase)
+{
+    update_dependents	dependents = update_dependents_create();
+    string	theBaseName = to_oms_string(theBase.name);
+    
+    //
+    // Dependent item objects of type OMTScenarioRealNameString
+    // Dependency name: Name
+    //
+
+    item	dep_OMTScenRealName;
+    const	string	dep_OMTScenRealName_query =
+	    "item[OMTScenarioRealNameString&obj_id=${theBase.id}]";
+    
+    for_each_in_select(dep_OMTScenRealName_query, dep_OMTScenRealName)
+    {
+	update_dependents_append(dependents, dep_OMTScenRealName, GOR_NM_DP_N);
+    }
+
+    return(dependents);
+}
+string OMTOperationPrintValue(node operation)
+{
+    node class = find_by_query("node[id = ${operation.scope_node_id}]");
+    if(class == NULL || operation == NULL)
+	return NULL;
+    
+    return class.name + "::" + operation.name + "(" +
+	operation.sig + ")";
+}

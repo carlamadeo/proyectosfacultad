@@ -1,0 +1,16 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Include "annotation/subtype_options.note"
+Include "annotation/subject_area.note"
+Include "annotation/foreign_key_rule_read.note"
+Include "annotation/generic_object"
+
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_subtype"

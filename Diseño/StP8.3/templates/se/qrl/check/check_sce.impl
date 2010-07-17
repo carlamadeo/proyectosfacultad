@@ -1,0 +1,559 @@
+
+// 	StP/SE
+// 	Confidential property of Aonix
+// 	Copyright (c) 1992-1999
+// 	All rights reserved
+//
+
+#include "se/qrl/check/check_common.inc"
+#include "se/qrl/include/se_utils.inc"
+#include "ct/qrl/include/files.inc"
+#include "ct/qrl/include/appids.inc"
+
+int	sceVerbose = 0;
+
+struct sceprop_tp
+{
+    int         verbose;
+    int         check_one;
+    int         check_two;
+    int         check_three;
+    int         check_four;
+    int         check_five;
+    int         check_six;
+    int         check_seven;
+    list        diaglist;
+};
+
+int	FC_ID = 0;
+
+set	ModuleSet = set_create("node");
+set	RootModuleSet = set_create("node");
+set	OffpageSet = set_create("node");
+set	GlobalSet = set_create("node");
+
+int 
+checkSceSemanticsFromSce(sceprop_tp props)
+{
+    list	nodelist = list_create("node", 0);
+    list	linklist = list_create("node", 0);
+    list	filelist;
+    file	fileobj = NULL;
+    string	files, query, message;
+
+    nodelist = gde_all_mapped_oms_nodes();
+    linklist = gde_all_mapped_oms_links();
+
+    if (list_count(nodelist) == 0)
+    {
+        print_error("Empty diagram. Semantic checks terminated.");
+        return 1;
+    }
+
+    if (list_count(props.diaglist) == 0)
+    {
+        print_error("Null diagram name. Semantic checks terminated.");
+        return 1;
+    }
+ 
+    return checkSceSemantics(props, nodelist, linklist);
+}
+
+
+//
+// The main routine for this script, which calls all the appropriate checking
+// routines.
+//
+int checkSceSemantics(sceprop_tp props, list nodelist, list linklist)
+{
+    int		i, errors = 0; 
+    node	FormalCaller;
+    string	query;
+    file	one_file;
+
+    sceVerbose = props.verbose;
+    FormalCaller = find_by_query("node[FormalCaller]");
+    if (FormalCaller != NULL)
+	FC_ID = FormalCaller.id;
+
+    print_message("Starting SCE Semantic Checking...\n");
+    print_sc_para("Starting SCE Semantic Checking...\n");
+
+    //  run semantic checks for each diagram
+    for ( i = 0; i < list_count(props.diaglist); i++)
+    {
+	one_file = list_get(props.diaglist, i);
+
+	if (file_history(one_file))
+	{
+	    print_error("File '" + one_file.name + "' must be saved to the repository before checking semantics.");
+	    print_sc_error("Sce", CurFile, "File '" + one_file.name + "' must be saved to the repository before checking semantics.");
+	    errors++;
+	}
+
+	else
+	{
+	    print_message("Checking semantics for SCE diagram '" + one_file.name + "'...\n");
+	    print_sc_para("Checking semantics for SCE diagram '" + one_file.name + "'...\n");
+
+	    if (nodelist == NULL || list_count(nodelist) == 0)
+	    {
+		query = "node[node_refs[file_id == ${one_file.id}] &&
+			    name != 'NULL']";
+		nodelist = list_select(query);
+	    }
+
+            if (linklist == NULL || list_count(linklist) == 0)
+            {
+                query = "link[link_refs[file_id == ${one_file.id}]]";
+                linklist = list_select(query);
+            }
+	     
+	    errors = errors + check_module_defs(one_file, nodelist, props.check_one);
+
+	    if (props.check_two)
+		errors = errors + check_for_pdl(one_file);
+
+	    if (props.check_three)
+		errors = errors + check_actual_param_datatype(one_file, linklist);
+
+	    if (props.check_four)
+		errors = errors + check_formal_param_datatype(one_file, linklist);
+
+	    if (props.check_five)
+		errors = errors + check_formals_match_actuals(one_file);
+
+	    if (props.check_six)
+	    {
+		errors = errors + check_for_valid_types(one_file, "modules");
+		errors = errors + check_for_valid_types(one_file, "globals");
+	    }
+
+	    if (props.check_seven)
+		errors = errors + check_offpage_connections(one_file);
+	}
+
+	if (nodelist != NULL)
+	    list_clear(nodelist);
+
+	if (linklist != NULL)
+	    list_clear(linklist);
+
+	set_clear(ModuleSet);
+	set_clear(RootModuleSet);
+	set_clear(OffpageSet);
+	set_clear(GlobalSet);
+
+    }
+
+
+    if (!errors)
+    {
+        print_message("Check SCE semantics completed with no errors.");
+        print_sc_para("Check SCE semantics completed with no errors.");
+    }
+    else if (errors == 1)
+    {
+        print_message("Check SCE semantics completed with 1 error.");
+        print_sc_para("Check SCE semantics completed with 1 error.");
+    }
+    else
+    {
+        print_message("Check SCE semantics completed with " + errors + " errors.");
+        print_sc_para("Check SCE semantics completed with " + errors + " errors.");
+    }
+
+    return errors;
+}
+
+// check_module_defs checks that each module reference has
+// a corresponding formal definition or a pdl.
+// This function always needs to be called to set up a structure
+// for other checks, but an error message only gets printed 
+// if check is true.
+
+int
+check_module_defs(file one_file, list nodelist, int check)
+{
+    int		i, errors = 0;
+    node	one_node, one_root = NULL;
+    node_ref	one_nr;
+    string	query;
+    boolean	found;
+
+    if (sceVerbose && check)
+        print_message("Checking modules for formal definitions...");
+    if (check)
+        print_sc_para("Checking modules for formal definitions...");
+
+    for ( i = 0; i < list_count(nodelist); i++)
+    {
+        one_node = list_get(nodelist, i);
+
+        found = False;
+ 
+	if (one_node.type == "Module")
+	{
+	    set_add(ModuleSet, one_node);
+
+	    // check if the module is linked directly to formalcaller node
+	    if (FC_ID != 0)
+	    {
+		query = "node[${one_node.id} && in_links[link_refs &&
+			from_node_id == ${FC_ID}]]";
+		one_root = find_by_query(query);
+ 
+		if (one_root != NULL)
+		{
+		    set_add(RootModuleSet, one_root);
+		    found = True;
+		}
+            }
+ 
+	    // check for no in_links
+	    // must check for node_refs since there could be many node objects
+	    query = "node_ref[node[${one_node.id}] && !in_link_refs]"; 
+
+	    for_each_in_select(query, one_nr)
+	    {
+		query = "node[${one_nr.node_id}]";
+		one_root = find_by_query(query);
+		set_add(RootModuleSet, one_root);
+		found = True;
+	    }
+
+	    if (found == False && check)
+	    {
+		++errors;
+		print_error("Module '" + one_node.name + 
+			    "' has no formal definition.", 
+			    node_appids(one_node, one_file));
+		print_sc_error("Sce", CurFile, "Module '" + one_node.name + 
+			    "' has no formal definition.");
+	    }
+
+	}
+
+	if (one_node.type == "Offpage")
+	    set_add(OffpageSet, one_node);
+
+	if (one_node.type == "DataModule")
+	    set_add(GlobalSet, one_node);
+    }
+
+    return errors;
+}
+
+int
+check_for_pdl(file one_file)
+{
+    int		i, errors = 0;
+    node	one_node;
+    string	query;
+
+    if (sceVerbose)
+        print_message("Checking leaf modules for PDL...");
+    print_sc_para("Checking leaf modules for PDL...");
+
+    for ( i = 0; i < set_count(ModuleSet); i++)
+    {
+        one_node = set_get_element(ModuleSet, i);
+
+	query = "note[obj_id == ${one_node.id} && ModulePDL]";
+	if (find_by_query(query) == NULL)
+	{
+	    // only report an error if the module is not a LexicalModule 
+	    query = "note[obj_id == ${one_node.id} && LexicalModule]";
+	    if (find_by_query(query) == NULL)
+	    {
+		++errors;
+		print_error("Module '" + one_node.name + "' has no PDL.", node_appids(one_node, one_file));
+		print_sc_error("Sce", CurFile, "Module '" + one_node.name + "' has no PDL.");
+	    }
+	}
+    }
+
+    return errors;
+
+}
+
+
+int
+check_actual_param_datatype(file one_file, list linklist)
+{
+    int 	i, errors = 0;     
+    string	query;
+    link	one_link;
+    cntx	one_cntx;
+
+    if (sceVerbose)
+        print_message("Checking that no actual parameters have data type annotation.");
+    print_sc_para("Checking that no actual parameters have data type annotation.");
+    for ( i = 0; i < list_count(linklist); i++)
+    {
+        one_link = list_get(linklist, i);
+
+	query = "cntx[cntx_refs && link[${one_link.id} 
+		&& from_node_id != ${FC_ID}]]";
+
+	for_each_in_select(query, one_cntx)
+	{
+	    query = "item[obj_id == ${one_cntx.id} && DataType]";
+
+	    if (find_by_query(query) != NULL)
+	    {
+		++errors;
+		print_error("Actual parameter '" + one_cntx.name + 
+			    "' cannot have a Data Type annotation.", 
+			    cntx_appids(one_cntx, one_file));
+		print_sc_error("Sce", CurFile, "Actual parameter '" + one_cntx.name + 
+			    "' cannot have a Data Type annotation.");
+	    }
+	}
+
+    }
+
+    return errors;
+}
+
+int
+check_formal_param_datatype(file one_file, list linklist)
+{
+    int         i, errors = 0;
+    string      query, type;
+    link        one_link;
+    cntx        one_cntx;
+    item	item;
+ 
+    if (sceVerbose)
+        print_message("Checking that formal parameters have valid data type annotation.");
+    print_sc_para("Checking that formal parameters have valid data type annotation.");
+    for ( i = 0; i < list_count(linklist); i++)
+    {
+        one_link = list_get(linklist, i);
+ 
+        query = "cntx[cntx_refs && link[${one_link.id}
+                && from_node_id == ${FC_ID}]]";
+ 
+	for_each_in_select(query, one_cntx)
+	{
+            query = "item[obj_id == ${one_cntx.id} && DataType]";
+	    item = find_by_query(query);
+
+	    if (item == NULL)
+            {
+                ++errors;
+                print_error("Formal parameter '" + one_cntx.name +
+                            "' must have a Data Type annotation.",
+                            cntx_appids(one_cntx, one_file));
+                print_sc_error("Sce", CurFile, "Formal parameter '" + one_cntx.name +
+                            "' must have a Data Type annotation.");
+            }
+	    else
+	    {
+		if (!IsBuiltInCType(item.value) && item.value != "")
+		{
+		    query = "node[name='${item.value}'    
+			    && node_refs[file[DseDiagram]]]";
+
+		    if (list_count(list_select(query)) == 0)
+		    {
+			type = strip_suffix(item.value);
+			type = to_oms_string(type);
+			query = "node[name='${type}'
+				&& node_refs[file[DseDiagram]]]";
+			if (list_count(list_select(query)) == 0)
+			{
+			    ++errors;
+			    print_error("'" + one_cntx.name + "' is of type '" + type + "', which is not defined on any DSE diagram.", cntx_appids(one_cntx, one_file));
+			    print_sc_error("Sce", CurFile, "'" + one_cntx.name + "' is of type '" + type + "', which is not defined on any DSE diagram.");
+			}
+		    }
+		}    
+	    }
+        }
+    }
+ 
+    return errors;
+}
+
+int
+check_formals_match_actuals(file one_file)
+{
+    int         i, errors = 0;
+    string      query, arg_str;
+    node        one_node, from_node;
+    link	one_link;
+    cntx	one_cntx;
+    int		formal_count, actual_count;
+
+    if (sceVerbose)
+        print_message("Check that each module has the same number of formal parameters as actual parameters...");
+    print_sc_para("Check that each module has the same number of formal parameters as actual parameters...");
+
+    for ( i = 0; i < set_count(ModuleSet); i++)
+    {
+	formal_count = 0;
+
+        one_node = set_get_element(ModuleSet, i);
+
+	if (checkForVarArgs(one_node.id))
+	{
+	    if (sceVerbose)
+		print_message("Module '" + one_node.name + "' is defined as having a variable number of arguments. Skipping ...");
+	    print_sc_para("Module '" + one_node.name + "' is defined as having a variable number of arguments. Skipping ...");
+	}
+
+
+	else if (set_is_member(RootModuleSet, one_node))
+	{
+	    // get all formal parameter references
+	    query = "cntx[cntx_refs && link[to_node_id == ${one_node.id} && from_node_id == ${FC_ID}]]";
+
+	    for_each_in_select(query, one_cntx)
+		++formal_count;
+
+	    query = "link[to_node_id == ${one_node.id} && from_node_id != ${FC_ID} && link_refs]";
+
+	    for_each_in_select(query, one_link)
+	    {
+		actual_count = 0;
+
+		// get all actual parameter references
+		query = "cntx[cntx_refs && link[${one_link.id}]]";
+
+		for_each_in_select(query, one_cntx)
+		    ++actual_count;
+
+		if (actual_count != formal_count)
+		{
+		    from_node = find_by_query("node[${one_link.from_node_id} && node_refs[file_id=${one_file.id}]]");
+
+		    if (from_node != NULL)
+		    {
+
+			if (formal_count == 1) arg_str = "arg";
+			else arg_str = "args";
+
+			++errors;
+			    print_error("Module '" + one_node.name + "' is expecting " + formal_count + " " + arg_str + ", but is being passed " + actual_count + " in call from " + from_node.type + " '" + from_node.name + "'.", node_appids(one_node, one_file));
+			    print_sc_error("Sce", CurFile, "Module '" + one_node.name + "' is expecting " + formal_count + " " + arg_str + ", but is being passed " + actual_count + " in call from " + from_node.type + " '" + from_node.name + "'.");
+		    }
+		}
+	    }
+	}
+    }
+
+    return errors;
+}
+
+int
+check_for_valid_types(file one_file, string type)
+{
+    int         i, errors = 0;
+    string      query, datatype, the_type;
+    node	one_node;
+    item        item;
+    set		the_set;
+ 
+    if (sceVerbose)
+        print_message("Checking that all modules and globals have valid data type annotations");
+    print_sc_para("Checking that all modules and globals have valid data type annotations");
+
+    if (type == "modules") the_set = ModuleSet;
+    else the_set = GlobalSet;
+
+    if (type == "modules") datatype = "ModuleReturnType";
+    else datatype = "DataType";
+
+    for ( i = 0; i < set_count(the_set); i++)
+    {
+        one_node = set_get_element(the_set, i);
+ 
+	query = "item[obj_id == ${one_node.id} && " + datatype + "]";
+	item = find_by_query(query);
+ 
+	if (item == NULL)
+	{
+	    ++errors;
+	    print_error(one_node.type + " '" + one_node.name +
+			"' must have a Data Type annotation.",
+			node_appids(one_node, one_file));
+	    print_sc_error("Sce", CurFile, one_node.type + " '" + one_node.name +
+			"' must have a Data Type annotation.");
+	}
+	else
+	{   
+	    if (!IsBuiltInCType(item.value) && item.value != "")
+	    {
+		query = "node[name='${item.value}'
+			&& node_refs[file[DseDiagram]]]";
+		if (list_count(list_select(query)) == 0)
+		{
+		    the_type = strip_suffix(item.value);
+		    the_type = to_oms_string(the_type);
+		    query = "node[name='${the_type}'
+			&& node_refs[file[DseDiagram]]]";
+		    if (list_count(list_select(query)) == 0)
+		    {
+			++errors;
+			print_error("'" + one_node.name + "' is of type '" + the_type + "', \nwhich is not defined on any DSE diagram.", node_appids(one_node, one_file));
+			print_sc_error("Sce", CurFile, "'" + one_node.name + "' is of type '" + the_type + "', \nwhich is not defined on any DSE diagram.");
+		    }
+		}
+            }
+        }
+    }
+
+    return errors;
+} 
+
+//
+// Checks to make sure that all connectors occur at least twice,
+// once with an incoming link and once with an outgoing link. If a
+// connector has an incoming link, then there must exist one with an
+// outgoing link.
+//
+
+int
+check_offpage_connections(file one_file)
+{
+    int 	i, errors = 0;     
+    string	query;
+    node	one_node;
+    node	out, in;
+
+    if (sceVerbose)
+        print_message("Checking all offpage connectors...");
+    print_sc_para("Checking all offpage connectors...");
+
+    for ( i = 0; i < set_count(OffpageSet); i++)
+    {
+        one_node = set_get_element(OffpageSet, i);
+
+	query = "node[${one_node.id} && in_links[link_refs]]";
+	in = find_by_query(query);
+
+	query = "node[${one_node.id} && out_links[link_refs]]";
+	out = find_by_query(query);
+
+	if (out != NULL && in == NULL)
+        {
+            print_error("Offpage connector '" + one_node.name + "' has an outlink but no matching inlink.", node_appids(one_node, one_file));
+            print_sc_error("Sce", CurFile, "Offpage connector '" + one_node.name + "' has an outlink but no matching inlink.");
+            ++errors;
+        }
+
+	if (out == NULL && in != NULL)
+        {
+            print_error("Offpage connector '" + one_node.name + "' has an inlink but no matching outlink.", node_appids(one_node, one_file));
+            print_sc_error("Sce", CurFile, "Offpage connector '" + one_node.name + "' has an inlink but no matching outlink.");
+            ++errors;
+        }
+    }    
+
+    return errors;
+
+}
+
+

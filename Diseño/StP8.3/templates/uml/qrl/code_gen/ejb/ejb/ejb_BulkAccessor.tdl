@@ -1,0 +1,39 @@
+/******************************************
+ *
+ * Template for "bulk accessor" class
+ * (sometimes calles ValueObject or 
+ * PropertyObject.
+ *
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    03/003/2001
+ ******************************************/
+
+// Erzeugt Datenzugriffklasse
+template genBulkAccessorClass(MClass)
+package [MClass:package_name];
+
+// class for bulk accessing the properties of class [MClass.name].
+// This classes must be all serializable!
+public class [MClass.name]Data implements java.io.Serializable {
+
+    // Attributes
+    [loop(MClass->MAttribute Where [MAttribute:access_methods] != "False")]
+    private [MAttribute.type] [MAttribute.name];
+    [end loop]
+    
+    // Constructor
+    public [MClass.name]Data([loop(MClass->MAttribute Where [MAttribute:access_methods] != "False"; setDelim(""); setDelim(", "))][delim()][MAttribute.type] [MAttribute.name][end loop]) {
+    [loop(MClass->MAttribute Where [MAttribute:access_methods] != "False")]
+        this.[MAttribute.name] = [MAttribute.name];
+    [end loop]
+    }
+    
+    // "get()"-Operations for the attributes
+    [loop(MClass->MAttribute Where [MAttribute:access_methods] != "False")]
+    public [MAttribute.type] get[upcase_firstchar([MAttribute.name])]() {
+        return [MAttribute.name];
+    }
+    [end loop]
+}
+end template

@@ -1,0 +1,264 @@
+FileObject 1
+{
+    { Name "a117" }
+    { Type ObjectAnnotation }
+    { GUID "UID_F20F454E-8A31-4c95-A860-A2321803D2F9" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "weight.h" }
+    { Type SEFile }
+    { ObjectId 914 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_17B44F14-793B-4a5e-91FF-4AFA4EB3A35D" }
+}
+
+NodeObject 99997
+{
+    { Name "weight" }
+    { Type Sequence }
+    { ObjectId 915 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_51F68606-6BE4-4d53-8546-620801A3F1FD" }
+}
+
+NoteObject 2
+{
+    { Type DataDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 917 }
+    { DescLine "Passenger weight." }
+}
+
+ItemObject 3
+{
+    { Type DataType }
+    { Value "integer" }
+    { NoteId 2 }
+    { ObjectId 918 }
+}
+
+ItemObject 4
+{
+    { Type SystemType }
+    { Value "False" }
+    { NoteId 2 }
+    { ObjectId 919 }
+}
+
+ItemObject 5
+{
+    { Type DataLocation }
+    { Value "-" }
+    { NoteId 2 }
+    { ObjectId 920 }
+}
+
+ItemObject 6
+{
+    { Type DataSize }
+    { Value "-" }
+    { NoteId 2 }
+    { ObjectId 921 }
+}
+
+ItemObject 7
+{
+    { Type Representation }
+    { Value "ASU" }
+    { NoteId 2 }
+    { ObjectId 922 }
+}
+
+ItemObject 8
+{
+    { Type Legality }
+    { Value "None" }
+    { NoteId 2 }
+    { ObjectId 923 }
+}
+
+ItemObject 9
+{
+    { Type Units }
+    { Value "Kgs" }
+    { NoteId 2 }
+    { ObjectId 924 }
+}
+
+ItemObject 10
+{
+    { Type Scaling }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 925 }
+}
+
+ItemObject 11
+{
+    { Type Precision }
+    { Value "100%" }
+    { NoteId 2 }
+    { ObjectId 926 }
+}
+
+ItemObject 12
+{
+    { Type Conventions }
+    { Value "US" }
+    { NoteId 2 }
+    { ObjectId 927 }
+}
+
+ItemObject 13
+{
+    { Type Frequency }
+    { Value "-" }
+    { NoteId 2 }
+    { ObjectId 928 }
+}
+
+NoteObject 14
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 930 }
+}
+
+ItemObject 15
+{
+    { Type ObjectName }
+    { Value "weight" }
+    { NoteId 14 }
+    { ObjectId 931 }
+}
+
+NoteObject 16
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 933 }
+    { DescLine "Weight of a passenger." }
+}
+
+ItemObject 17
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 16 }
+    { ObjectId 934 }
+}
+
+ItemObject 18
+{
+    { Type RequirementName }
+    { Value "weight-sub-system" }
+    { NoteId 16 }
+    { ObjectId 935 }
+}
+
+ItemObject 19
+{
+    { Type RequirementDocument }
+    { Value "g_train_specifications" }
+    { NoteId 16 }
+    { ObjectId 936 }
+}
+
+ItemObject 20
+{
+    { Type RequirementParagraph }
+    { Value "weight" }
+    { NoteId 16 }
+    { ObjectId 937 }
+}
+
+ItemObject 21
+{
+    { Type ParagraphNumber }
+    { Value "2" }
+    { NoteId 16 }
+    { ObjectId 938 }
+}
+
+ItemObject 22
+{
+    { Type QualificationMethod }
+    { Value "" }
+    { NoteId 16 }
+    { ObjectId 939 }
+}
+
+ItemObject 23
+{
+    { Type QualificationLevel }
+    { Value "" }
+    { NoteId 16 }
+    { ObjectId 940 }
+}
+
+ItemObject 24
+{
+    { Type FormalTestParagraph }
+    { Value "" }
+    { NoteId 16 }
+    { ObjectId 941 }
+}
+
+NoteObject 25
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 943 }
+}
+
+ItemObject 26
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 25 }
+    { ObjectId 944 }
+}
+
+ItemObject 27
+{
+    { Type DocumentName }
+    { Value "SDD" }
+    { NoteId 25 }
+    { ObjectId 945 }
+}
+
+ItemObject 28
+{
+    { Type DocumentNumber }
+    { Value "1" }
+    { NoteId 25 }
+    { ObjectId 946 }
+}
+
+ItemObject 29
+{
+    { Type ParagraphNumber }
+    { Value "1" }
+    { NoteId 25 }
+    { ObjectId 947 }
+}
+

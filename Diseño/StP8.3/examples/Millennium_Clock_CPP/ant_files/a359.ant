@@ -1,0 +1,93 @@
+FileObject 1
+{
+    { Name "a359" }
+    { Type ObjectAnnotation }
+    { GUID "UID_E0D93184-C886-11d5-90AA-0050045C27F0" }
+}
+
+NodeObject 99999
+{
+    { Name "PendulumIsMoving" }
+    { Type UmlUseCase }
+    { ObjectId 696 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_7A5DA1F4-AC4F-11d4-BEDC-0060971B5EE0" }
+}
+
+NoteObject 2
+{
+    { Type UmlUseCaseDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 698 }
+}
+
+ItemObject 3
+{
+    { Type UmlUseCasePrecondition }
+    { Value "Weight must be raised to higher energetic level.\nWhile sinking down it delivers the energy to move\nthe pendulum." }
+    { NoteId 2 }
+    { ObjectId 699 }
+}
+
+ItemObject 4
+{
+    { Type UmlUseCasePostcondition }
+    { Value "Pendulum stops moving if weight stops sinking." }
+    { NoteId 2 }
+    { ObjectId 700 }
+}
+
+ItemObject 5
+{
+    { Type UmlUseCaseException }
+    { Value "" }
+    { NoteId 2 }
+    { ObjectId 701 }
+}
+
+NoteObject 6
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 703 }
+}
+
+NoteObject 7
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 705 }
+    { DescLine "The movement of the pendulum from left to right" }
+    { DescLine "and vice versa needs energy that is delivered" }
+    { DescLine "by the sinking weight." }
+}
+
+ItemObject 8
+{
+    { Type ObjectName }
+    { Value "PendulumIsMoving" }
+    { NoteId 7 }
+    { ObjectId 706 }
+}
+
+NoteObject 9
+{
+    { Type REQAssignmentNote }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 708 }
+}
+
+ItemObject 10
+{
+    { Type REQAnalysisAssignmentItem }
+    { Value "2. Pendulum" }
+    { NoteId 9 }
+    { ObjectId 709 }
+}
+

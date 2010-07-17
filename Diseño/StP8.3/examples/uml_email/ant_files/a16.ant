@@ -1,0 +1,61 @@
+FileObject 1
+{
+    { Name "a16" }
+    { Type ObjectAnnotation }
+    { GUID "UID_883250FB-2666-477b-A131-AD8F19FBD1D4" }
+}
+
+NodeObject 99999
+{
+    { Name "User" }
+    { Type UmlClass }
+    { ObjectId 361 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_CFF94440-538F-11d4-8777-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "start" }
+    { Type UmlOperation }
+    { ObjectId 371 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_CFF94448-538F-11d4-8777-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlOperationCxxCode }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 373 }
+    { DescLine "// this user is logged in and now has controlchar c;char *s;for (;;){	int i = 0;	cout << \"\n\";	while ((s = menu[i++]) != NULL)		cout << s << \"\n\";	if (cin >> c == 0) { c='x'; cin.clear(); }	switch (c)	{	case 'j': case 'J': joinConf(); break;	case 'm': case 'M': currentRx->printMbx(); break;	case 'r': case 'R': currentRx->readMsg();  break;	case 's': case 'S': sendMsg();  break;	case 'o': case 'O': cout << \"Logged out\n\";				goto quit;	default: cout << c << \" not understood\n\";				break;	}}quit:	return;" }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 375 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 377 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "start" }
+    { NoteId 4 }
+    { ObjectId 378 }
+}
+

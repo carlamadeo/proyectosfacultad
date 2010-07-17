@@ -1,0 +1,29 @@
+
+FillTable TedTable 
+{
+	{ Hsect	{ Appid 2 }
+		{ NumRows 2 }
+		{ Hidden False }
+		{ NumVisRows 2 }
+		{ Vsect	{ Appid 3 }
+		{ NumCols 4 }
+		{ Hidden False }
+		{ NumVisCols 4 }
+			{ Row	{ Appid 4 }
+				{ Cell	{ Appid 5 }
+					{ Label "Maximum\nTrain-Speed" } }
+				{ Cell	{ Appid 6 }
+					{ Label "Maximum\nTrain-Weight" } }
+				{ Cell	{ Appid 7 }
+					{ Label "Destination\nPoints" } }
+				{ Cell	{ Appid 8 }
+					{ Label "Maximum\nPassengers" } } }
+			{ Row	{ Appid 9 }
+				{ Cell	{ Appid 10 }
+					{ Label "No Limit" } }
+				{ Cell	{ Appid 11 }
+					{ Label "15000 kgs" } }
+				{ Cell	{ Appid 12 }
+					{ Label "2 cities\nWash-Penn" } }
+				{ Cell	{ Appid 13 }
+					{ Label "100" } } } } } }

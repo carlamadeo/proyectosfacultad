@@ -1,0 +1,586 @@
+// This is the secured portion of the rules file.
+// Any rule or attribute at all can be placed in this portion.
+
+NodeSymbol 1 State
+{
+    { NodeMapping
+	{ AppType State }
+	{ NameIsRequired True }
+        { NameFunc se_basic_node_name_func }
+    }
+    { Cardinality
+	{ Min 1 }
+	{ AnyLinks Transition }
+    }
+//    { Navigation
+//        { Name AssignRequirementsToObject }
+//        { Label "Allocate Requirements to Object" }
+//        { FailureCmd GoToRequirementsTableFromNode }
+//    }
+//    { Navigation
+//        { ParseCondition "use_doors_integration();" }
+//        { Name DOORS }
+//        { Label "DOORS" }
+//        { FailureCmd GoToDOORSFromNode }
+//    }
+//
+}
+
+NodeSymbol 2 Comment {}
+
+NodeSymbol 3 Vertex
+{
+    { SeeThrough True }
+}
+
+NodeSymbol 4 Anchor
+{
+    { NodeMapping
+	{ AppType StartState }
+    }
+    { Cardinality
+	{ Min 1 }
+	{ Max 1 }
+	{ AnyLinks Transition }
+    }
+}
+
+LinkSymbol 10 Transition
+{
+    { Connects { From AllNonCommentNodeTypes } { To State } }
+    { Connects { From State } { To AllNonCommentNodeTypes } }
+    { LinkMapping
+	{ AppType Transition } 
+	{ NameFunc idehook_transition_name_func }
+	{ InverseMapFunc gde_no_op_inverse_link_map_func }
+    }
+}
+
+LinkSymbol 11 CommentLink
+{
+    { Connects { From Comment } { To AllNonCommentNodeTypes } }
+    { Connects { From AllNonCommentNodeTypes } { To Comment } }
+}
+
+CntxSymbol 20 EventAction
+{
+    { ParentLink Transition }
+    { RenameFunc ste_event_action_rename }
+    { SymbolicDependentsFunc event_action_depend_func }
+    { NodeMapping
+	{ MappingName EventMap }
+	{ AppType Event }
+	{ NameIsRequired True }
+	{ NameFunc idehook_transition_event_name_func }
+	{ InverseMapFunc ste_event_inverse_map_func }
+    }
+    { NodeMapping
+	{ MappingName ActionMap }
+	{ AppType Action }
+	{ NameFunc se_basic_node_name_func }
+	{ InverseMapFunc ste_action_inverse_map_func }
+	// default: use label 
+    }
+    { CntxMapping 	
+	{ MappingName ActionInstanceMap }
+	{ AppType ActionInstance } 
+	{ NameFunc idehook_event_action_names_func }
+	{ InverseMapFunc gde_no_op_inverse_cntx_map_func }
+    }
+
+    { NameCompletion
+	{ MappingName EventMap }
+	{ NameCompletionFunc se_event_action_name_completion_func } 
+    }
+}
+
+NodeSymbol 998 MultiSelectionNavigation
+{
+    { PrintName "Hook for navigations with multiselection" }
+    { Shape { Predefined Rectangle }}
+    { ReadOnly True }
+
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { FailureCmd GoToDOORSFromMulti }
+    }
+    
+}
+
+NodeSymbol 999 NoSelectionNavigation
+{
+    { PrintName "Hook for navigations without selection" }
+    { Shape { Predefined Rectangle }}
+    { ReadOnly True }
+
+    { Navigation
+        { Name DfeDiag }
+        { Label "Data Flow Diagram" }
+	{ Query "file[DfeDiagram && name = '${file}']" }
+	{ FailureCmd BackgroundDfe }
+    }
+
+    { Navigation
+        { Name DfeCspec }
+        { Label "Cspec Bar" }
+	{ Query "node_ref[node[Cspec] && file[DfeDiagram && name = '${file}']]" }
+	{ FailureCmd BackgroundCspec }
+    }
+}
+
+
+TypeSet AllNonCommentNodeTypes
+{
+  State
+  Vertex
+  Anchor
+}
+
+
+Command GoToRequirementsTableFromNode
+{
+   { Builtin "EditorQrlEvalNoSave to_requirements_table_from_node(0${node.id});" }
+}
+
+ 
+Command GoToDOORSFromNode
+{
+   { Builtin "EditorQrlEvalNoSave node_navigate_to_doors(0${node.id});" }
+}
+
+ 
+Command GoToRequirementsTableFromCntx
+{
+   { Builtin "EditorQrlEvalNoSave to_requirements_table_from_cntx(0${cntx.id});" }
+}
+ 
+ 
+Command GoToDOORSFromCntx
+{
+   { Builtin "EditorQrlEvalNoSave cntx_navigate_to_doors(0${cntx.id});" }
+}
+ 
+Command GoToDOORSFromMulti
+{
+   { Builtin "EditorQrlEvalNoSave doors_export_selected();" }
+}
+ 
+
+Command BackgroundDfe
+{
+    { PrintName "Navigate to Data Flow Diagram" }
+    { StartMessage "Navigating to Data Flow Diagram..." }
+    { SuccessMessage "Navigate to Data Flow Diagram completed."}
+    { FailureMessage "Navigate to Data Flow Diagram failed."}
+    { CheckFullName True } // no null filenames
+    //{ OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed dydfe -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"NavSteDfe(${file.id}, 0);\"'" }
+ //  }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"dydfe\",\"NavSteDfe(${file.id},0);\");" }
+}
+
+Command BackgroundCspec
+{
+    { PrintName "Navigate to Cspec Bar" }
+    { StartMessage "Navigating to Cspec Bar..." }
+    { SuccessMessage "Navigate to Cspec Bar completed."}
+    { FailureMessage "Navigate to Cspec Bar failed."}
+    { CheckFullName True } // no null filenames
+    //{ OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed dydfe -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"NavSteDfe(${file.id}, 1);\"'" }
+ //  }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"dydfe\",\"NavSteDfe(${file.id},1);\");" }
+}
+
+
+NodeSymbol State
+{
+    { PrintName "State" }
+    { Shape 
+        { Predefined Rectangle } 
+        { ToolbarImage "state" }
+    }
+//  { AutoScaleLarger True }
+    { DefaultSize 3.2 0.8 }
+}
+
+NodeSymbol Vertex
+{
+    { PrintName "Vertex" }
+    { Shape { Predefined Vertex } }
+    { ReadOnly True }
+    { CanHaveLabel False }
+}
+
+NodeSymbol Anchor
+{
+    { PrintName "Anchor" }
+    { Shape 
+        { Predefined Anchor } 
+        { ToolbarImage "anchor" }
+    }
+    { CanHaveLabel False }
+}
+
+LinkSymbol Transition
+{
+    { PrintName "Transition" }
+    { CanHaveLabel False }
+    { ToArrow True }	
+    { Uncentered True }
+}
+
+LinkSymbol CommentLink
+{
+    { PrintName "Comment Link" }
+    { Uncentered True }
+    { CanHaveLabel False }
+    { ToArrow True }
+    { Dashed True }
+}
+
+
+CntxSymbol EventAction
+{
+    { PrintName "Event/Action" }
+    { Shape 
+        { Predefined Transition } 
+        { ToolbarImage "event_action" }
+    }
+    { DefaultSize 2.0 1.0 }
+    { Navigation
+	{ UseMappings (EventMap) }
+        { Name DfeDiag }
+        { Label "Data Flow Diagram" }
+	{ Query "file[DfeDiagram && name = '${file}']" }
+	{ FailureCmd BackgroundDfe }
+    }
+
+    { Navigation
+	{ UseMappings (EventMap) }
+        { Name DfeCspec }
+        { Label "Cspec Bar" }
+	{ Query "node_ref[node[Cspec] && file[DfeDiagram && name = '${file}']]" }
+	{ FailureCmd BackgroundCspec }
+    }
+    { Navigation
+	{ UseMappings (EventMap) }
+    	{ Name StateEventMatrix }
+    	{ Label "State Event Matrix" }
+    	{ Query "file[StateEventMatrix && name == '${file}']" }
+    	{ FailureCmd CreateStateEventMatrix }
+    }
+    { Navigation
+	{ UseMappings (EventMap) }
+    	{ Name StateTransitionTable }
+    	{ Label "State Transition Table" }
+    	{ Query "file[StateTransitionTable && name == '${file}']" }
+    	{ FailureCmd CreateStateTransitionTable }
+    }
+    { Navigation
+	{ UseMappings (ActionMap) }
+	{ Name ActionLogicTable }
+	{ Label "Action in Action Logic Table" }
+        // SPR 2772
+        { TargetFunc "NavigateSteToAlt(\"${node.name}\");" }
+	{ FailureCmd CreateActionLogicTable }
+    }
+    { Navigation
+	{ UseMappings (EventMap) }
+	{ Name EventLogicTable }
+	{ Label "Event in Event Logic Table" }
+        // SPR 2772
+        { TargetFunc "NavigateSteToElt(\"${node.name}\");" }
+	{ FailureCmd CreateEventLogicTable }
+    }
+    { Navigation
+        { Name AssignRequirementsToObject }
+        { Label "Allocate &Requirements" }
+        { SpaceBefore True }
+        { Accelerator
+            { Label "Alt+Ctrl+R" }
+            { Value "Alt Ctrl<Key>R" }
+        }
+	{ UseMappings (ActionInstanceMap) }
+        { FailureCmd GoToRequirementsTableFromCntx }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { UseMappings (ActionInstanceMap) }
+        { FailureCmd GoToDOORSFromCntx }
+    }
+
+}
+
+
+TypeSet AllLinks
+{
+   Transition
+   CommentLink
+}
+
+TypeSet AllNodes 
+{
+    State
+    Comment
+    Anchor
+    Vertex
+}
+
+NodeSymbol AllNodes
+{
+    { Navigation
+        { Name DfeDiag }
+        { Label "Data Flow Diagram" }
+	{ Query "file[DfeDiagram && name = '${file}']" }
+	{ FailureCmd BackgroundDfe }
+    }
+
+    { Navigation
+        { Name DfeCspec }
+        { Label "Cspec Bar" }
+	{ Query "node_ref[node[Cspec] && file[DfeDiagram && name = '${file}']]" }
+	{ FailureCmd BackgroundCspec }
+    }
+    { Navigation
+    	{ Name StateEventMatrix }
+    	{ Label "State Event Matrix" }
+    	{ Query "file[StateEventMatrix && name == '${file}']" }
+    	{ FailureCmd CreateStateEventMatrix }
+    }
+    { Navigation
+    	{ Name StateTransitionTable }
+    	{ Label "State Transition Table" }
+    	{ Query "file[StateTransitionTable && name == '${file}']" }
+    	{ FailureCmd CreateStateTransitionTable }
+    }
+}
+
+NodeSymbol State
+{
+    { Navigation
+        { Name AssignRequirementsToObject }
+        { Label "Allocate &Requirements" }
+        { SpaceBefore True }
+        { Accelerator
+            { Label "Alt+Ctrl+R" }
+            { Value "Alt Ctrl<Key>R" }
+        }
+        { FailureCmd GoToRequirementsTableFromNode }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { FailureCmd GoToDOORSFromNode }
+    }
+
+}
+
+LinkSymbol AllLinks
+{
+    { Navigation
+        { Name DfeDiag }
+        { Label "Data Flow Diagram" }
+	{ Query "file[DfeDiagram && name = '${file}']" }
+	{ FailureCmd BackgroundDfe }
+    }
+
+    { Navigation
+        { Name DfeCspec }
+        { Label "Cspec Bar" }
+	{ Query "node_ref[node[Cspec] && file[DfeDiagram && name = '${file}']]" }
+	{ FailureCmd BackgroundCspec }
+    }
+    { Navigation
+    	{ Name StateEventMatrix }
+    	{ Label "State Event Matrix" }
+    	{ Query "file[StateEventMatrix && name == '${file}']" }
+    	{ FailureCmd CreateStateEventMatrix }
+    }
+    { Navigation
+    	{ Name StateTransitionTable }
+    	{ Label "State Transition Table" }
+    	{ Query "file[StateTransitionTable && name == '${file}']" }
+    	{ FailureCmd CreateStateTransitionTable }
+    }
+}
+
+SymbolList
+{
+    { ShowStraightArc True }
+    { ShowSpline True }
+    { OrthogonalArcsAreAllowed True }
+    { OrthogonalArcsAreDefault False }
+    { Symbols
+	(
+	    Comment
+	    State
+	    EventAction
+	    Anchor
+	)
+    }
+}
+TypeSet DOORS
+{
+	State
+	EventAction
+}
+
+Include "rules/gde_menu_bar.std"
+Include "rules/gde_accels.std"
+Include "rules/gde_edit_menu.std"
+Include "rules/se_object_rename.rules"
+Include "rules/ste.prop"
+Include "rules/comment.symbol"
+Include "rules/ste_toolbar_arc_types.rules" // ECR 3556
+Include "se/rules/feature.rule"
+
+Menu ProductMenu
+{
+    { Show False }
+    { InMenuBar False }
+}
+
+Menu DiagramContextMenu //Edit
+{
+    { MenuEntry
+        { Name CheckSemantics }
+        // ECR 7464
+        // { Builtin "EditorQrlEval checkSemantics();" }
+        { Builtin "EditorQrlEvalNoSave checkSemantics();" }
+    }
+    { MenuEntry
+        { Name CheckSemanticsSelectively }
+        { Label "Check Semantics Selectively..." }
+        { PlaceAfter CheckSemantics }
+        // ECR 7464
+        // { Builtin "EditorQrlEval checkSteSemanticsSelect();" }
+        { Builtin "EditorQrlEvalNoSave checkSteSemanticsSelect();" }
+    }
+}
+
+
+Menu MenuBarEdit
+{
+    { MenuEntry
+        { Name DeleteUnconnectedAnchors }
+        { Show True }
+        { Label "Delete Unconnected Anchors" }
+        { Builtin "EditorQrlEval DeleteUnconnectedAnchors();" }
+    }
+}
+
+Menu Navigation
+{
+    { InMenuBar True }
+// fix for spr 2789
+    { Label "&GoTo" }
+    { Pin True }
+    { GenerationFunc idehook_navigation_menu_gen_func }
+}
+
+Menu Tools
+{
+    { MenuEntry
+        { Name CheckSemantics }
+        // ECR 7464
+        // { Builtin "EditorQrlEval checkSemantics();" }
+        { Builtin "EditorQrlEvalNoSave checkSemantics();" }
+    }
+    { MenuEntry
+        { Name CheckSemanticsSelectively }
+        { Label "Check Semantics Selectively..." }
+        { PlaceAfter CheckSemantics }
+        // ECR 7464
+        // { Builtin "EditorQrlEval checkSteSemanticsSelect();" }
+        { Builtin "EditorQrlEvalNoSave checkSteSemanticsSelect();" }
+        { Accelerator
+            { Label "Alt+F7" }
+            { Value "Alt<Key>F7" }
+        }
+    }
+}
+
+Command CreateStateTransitionTable
+{
+    { PrintName "Create State Transition Table?" }
+    { StopOnFailure True }
+    { StartMessage "Executing Create State Transition Table..." }
+    { FailureMessage "Create State Transition Table failed." }
+    { SuccessMessage "Create State Transition Table completed." }
+    { CheckFullName True } // no NULL diagrams
+    //{ OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed cse -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"InitializeCseTable(${file.id}, 4);\"'" }
+ //   }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"cse\",\"InitializeCseTable(${file.id},4);\");" }
+}
+
+Command CreateStateEventMatrix
+{
+    { PrintName "Create State Event Matrix?" }
+    { StopOnFailure True }
+    { StartMessage "Executing Create State Event Matrix..." }
+    { FailureMessage "Create State Event Matrix failed." }
+    { SuccessMessage "Create State Event Matrix completed." }
+    { CheckFullName True } // no NULL diagrams
+    //{ OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed cse -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"InitializeCseTable(${file.id}, 3);\"'" }
+ //   }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"cse\",\"InitializeCseTable(${file.id},3);\");" }
+}
+
+Command CreateEventLogicTable
+{
+    { PrintName "Create Event Logic Table?" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { StartMessage "Executing Create Event Logic Table" }
+    { FailureMessage "Create Event Logic Table failed." }
+    { SuccessMessage "Create Event Logic Table completed." }
+    //{ OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed cse -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"InitializeCseTableFromSte(${file.id}, 5);\"'" }
+ //   }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"cse\",\"InitializeCseTableFromSte(${file.id},5);\");" }
+}
+
+Command CreateActionLogicTable
+{
+    { PrintName "Create Action Logic Table?" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { StartMessage "Executing Create Action Logic Table" }
+    { FailureMessage "Create Action Logic Table failed." }
+    { SuccessMessage "Create Action Logic Table completed." }
+    //{ OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed cse -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"InitializeCseTableFromSte(${file.2}, 2);\"'" }
+ //   }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"cse\",\"InitializeCseTableFromSte(${file.id},2);\");" }
+}
+
+Include "rules/default_arc_type.rules" //ECR 6469
+
+PassWord "2F304080"
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/se/rules/user_ste.rules"
+

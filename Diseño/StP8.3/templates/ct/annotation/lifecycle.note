@@ -1,0 +1,17 @@
+
+Note 870006
+
+{
+//    { ParseCondition "toolinfo_variable(\"validator\") == \"true\";" }
+    { AppType LifeCycleCategory }
+    { HelpText "Enter custom annotations for VectorCAST" }
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Life Cycle Category"}
+    { Item
+        { AppType LifeCycleName}
+        { HelpText "Set the LifeCycle process for the table." }
+        { Bounds { Min 1 } { Max 1 } }
+        { PrintName "Life Cycle" }
+        { InitValue "SystemRequirements" }
+    }
+}

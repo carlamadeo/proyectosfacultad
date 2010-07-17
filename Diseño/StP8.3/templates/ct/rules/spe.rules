@@ -1,0 +1,250 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+// This is the secured portion of the rules file.
+
+NodeSymbol 1 Phase
+{
+    { NodeMapping
+	{ AppType Phase }
+	{ NameIsRequired True }
+    }
+// $$ this fixes decomps but is probably not the optimal solution.
+    { SpaceReplacement "_" }
+    { Cardinality
+	{ Min 1 }
+	{ AnyLinks PhaseTransition }
+    }
+}
+
+NodeSymbol 2 Comment
+{
+}
+
+NodeSymbol 3 Vertex
+{
+    { SeeThrough True }
+}
+
+NodeSymbol 4 Anchor
+{
+    { NodeMapping
+	{ AppType StartPhase }
+    }
+    { Cardinality
+	{ Min 1 }
+	{ Max 1 }
+	{ AnyLinks PhaseTransition }
+    }
+}
+
+LinkSymbol 10 PhaseTransition
+{
+    { Connects { From AllNonCommentNodeTypes } { To Phase } }
+    { Connects { From Phase } { To AllNonCommentNodeTypes } }
+    { LinkMapping { AppType PhaseTransition }
+		  { NameFunc idehook_transition_name_func } 
+    }
+    { Cardinality
+	{ Min 1 }
+	{ Max 1 }
+	{ CntxSymbols EventAction }
+    }
+}
+
+LinkSymbol 11 CommentLink
+{
+    { Connects { From Comment } { To AllNonCommentNodeTypes } }
+}
+
+CntxSymbol 20 EventAction
+{
+    { ParentLink PhaseTransition }
+    { NodeMapping
+    	{ AppType Event }
+     	{ NameIsRequired True }
+    	{ NameFunc idehook_transition_event_name_func }
+    }
+    { NodeMapping
+    	{ AppType Action }
+    }
+    { CntxMapping 	
+    	{ AppType ActionInstance } 
+    	{ NameFunc idehook_event_action_names_func }
+    }
+}
+
+TypeSet AllNonCommentNodeTypes
+{
+  Phase
+  Vertex
+  Anchor
+}
+
+TypeSet AllNodeTypes
+{
+  AllNonCommentNodeTypes
+  Comment
+}
+
+Features
+{
+    { Feature "stpcore_nt" }
+    { Feature "stpcore_unix" }
+    { Feature "stpcore_any" }
+}
+
+
+NodeSymbol Phase
+{
+    { PrintName "Phase" }
+    { Shape { Predefined Rectangle } }
+    { DefaultSize 3.2 0.8 }
+    { AutoScaleLarger True }
+    { DisplayMark
+        { Name DecompMark }
+	{ Condition "file[SpeDiagram && name == '${node.name}'];"}
+        { BitmapMark "check" }
+        { Anchor LowerCenter }
+        { HAdjust Center }
+        { VAdjust Bottom }
+        { XPixelOffset 0 }
+        { YPixelOffset 0 }
+    }
+    { Navigation
+	{ Name Decomposition }
+	{ Label "Decomposition" }
+	{ Query "file[SpeDiagram && name == '${node.name}']" }
+	{ FailureCmd CreateSpeDiagram }
+    }
+}
+
+NodeSymbol Comment
+{
+    { PrintName "Comment" }
+    { Shape { Predefined Comment } }
+    { AutoScaleLarger True }
+    { AutoScaleSmaller True }
+    { CanApplyScaleCmd False }
+    { ShowTypeLabel True }
+}
+
+NodeSymbol Vertex
+{
+    { PrintName "Vertex" }
+    { Shape { Predefined Vertex } }
+    { ReadOnly True }
+    { CanHaveLabel False }
+}
+
+NodeSymbol Anchor
+{
+    { PrintName "Anchor" }
+    { Shape { Predefined Anchor } }
+    { CanHaveLabel False }
+}
+
+LinkSymbol PhaseTransition
+{
+    { PrintName "Phase Transition" }
+    { CanHaveLabel False }
+    { ToArrow True }	
+}
+
+LinkSymbol CommentLink
+{
+    { PrintName "Comment Link" }
+    { Uncentered True }
+    { ToArrow True }
+    { Dashed True }
+}
+
+CntxSymbol EventAction
+{
+    { PrintName "Event/Output" }
+    { Shape { Predefined Transition } } 
+    { DefaultSize 2.0 1.0 }
+}
+
+// This is the unsecured portion of the rules file.
+// Only a subset of the rules and attributes may be placed in this section.
+
+SymbolList
+{
+    { ShowStraightArc True }
+    { ShowSpline True }
+    { Symbols
+	(
+	    Phase
+	    EventAction
+	    Comment
+	    Anchor
+	)
+    }
+}
+
+Include "rules/gde_menu_bar.std"
+
+Menu Navigation
+{
+    { InMenuBar True }
+    { Label "&Navigation" }
+    { Pin True }
+    { GenerationFunc idehook_navigation_parent_menu_gen_func }
+}
+
+Menu MenuBarEdit
+{
+    { MenuEntry
+    	{ Name DeleteUnconnectedAnchors }
+    	{ Show True }
+    }
+}
+
+Command Parent
+{
+    { PrintName "Navigate to Parent" }
+    { StartMessage "Navigating to Parent..." }
+    { SuccessMessage "Navigate to Parent completed."}
+    { FailureMessage "Navigate to Parent failed."}
+    // ECR 7464
+    // { Builtin "EditorQrlEval SpeParent(\"${file}\");" }
+    { Builtin "EditorQrlEvalNoSave SpeParent(\"${file}\");" }
+}
+
+Command CheckSemantics
+{
+    { PrintName "Check Semantics" }
+    { StartMessage "Checking Semantics..."}
+    { SuccessMessage "Check Semantics completed." }
+    { FailureMessage "Check Semantics failed." }
+    { CheckFullName True } // prevent checking whole repository if no diag name
+    { OS 
+	// { UseOutputWindow False }
+	{ CommandLine "qrp -p ${projdir} -s ${system} -ed ${editor} -h ${ti.stpem_handle} -x files '${file}' qrl/check/spe.qrl " }
+    }
+}
+
+Command CreateSpeDiagram
+{
+    { PrintName "Create SPE Subdiagram?" }
+    { ObjectRequired True }
+    { StartMessage "Executing Create SPE Subdiagram" }
+    { FailureMessage "Create SPE Subdiagram failed." }
+    { SuccessMessage "Create SPE Subdiagram completed." }
+    { Builtin "FileSave" }
+    { Builtin "EditorQrlEval \"DecomposeSpeDiagram(\\"${node.name}\\");\"" }
+}
+
+Include "rules/gde_accels.std"
+Include "rules/gde_edit_menu.std"
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/rules/user_spe.rules"
+
+PassWord "7455092C"

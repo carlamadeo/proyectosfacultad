@@ -1,0 +1,192 @@
+FileObject 1
+{
+    { Name "a130" }
+    { Type ObjectAnnotation }
+    { GUID "UID_E869F7CB-DC31-4caf-8D4A-6A72311786EB" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "tracking_signal.h" }
+    { Type SEFile }
+    { ObjectId 1399 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_CD9CEE51-F248-4c78-B197-967490A83758" }
+}
+
+NodeObject 99997
+{
+    { Name "tracking signal" }
+    { Type Sequence }
+    { ObjectId 1400 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_97EEE476-FB5E-40c7-8C4C-CAF1A330DC15" }
+}
+
+NoteObject 2
+{
+    { Type DataDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1402 }
+    { DescLine "The tracking signal is comprised of two parts, a first pulse and a second pulse. The delay between the two pulses is used to calculate the speed of the train." }
+}
+
+ItemObject 3
+{
+    { Type SystemType }
+    { Value "False" }
+    { NoteId 2 }
+    { ObjectId 1403 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1405 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "tracking signal" }
+    { NoteId 4 }
+    { ObjectId 1406 }
+}
+
+ItemObject 6
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 4 }
+    { ObjectId 1407 }
+}
+
+NoteObject 7
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1409 }
+    { DescLine "These requirements were taken from an article in 'Electronic Design' Apr 28 1988. " }
+}
+
+ItemObject 8
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 7 }
+    { ObjectId 1410 }
+}
+
+ItemObject 9
+{
+    { Type RequirementName }
+    { Value "speed-sub-system" }
+    { NoteId 7 }
+    { ObjectId 1411 }
+}
+
+ItemObject 10
+{
+    { Type RequirementDocument }
+    { Value "g_train_specifications" }
+    { NoteId 7 }
+    { ObjectId 1412 }
+}
+
+ItemObject 11
+{
+    { Type RequirementParagraph }
+    { Value "speed" }
+    { NoteId 7 }
+    { ObjectId 1413 }
+}
+
+ItemObject 12
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 7 }
+    { ObjectId 1414 }
+}
+
+ItemObject 13
+{
+    { Type QualificationMethod }
+    { Value "" }
+    { NoteId 7 }
+    { ObjectId 1415 }
+}
+
+ItemObject 14
+{
+    { Type QualificationLevel }
+    { Value "" }
+    { NoteId 7 }
+    { ObjectId 1416 }
+}
+
+ItemObject 15
+{
+    { Type FormalTestParagraph }
+    { Value "" }
+    { NoteId 7 }
+    { ObjectId 1417 }
+}
+
+NoteObject 16
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1419 }
+}
+
+ItemObject 17
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 16 }
+    { ObjectId 1420 }
+}
+
+ItemObject 18
+{
+    { Type DocumentName }
+    { Value "SRS" }
+    { NoteId 16 }
+    { ObjectId 1421 }
+}
+
+ItemObject 19
+{
+    { Type DocumentNumber }
+    { Value "1" }
+    { NoteId 16 }
+    { ObjectId 1422 }
+}
+
+ItemObject 20
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 16 }
+    { ObjectId 1423 }
+}
+

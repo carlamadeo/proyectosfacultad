@@ -1,0 +1,84 @@
+#include "se/qrl/pdl/sce.inc"
+#include "se/qrl/pdl/c.inc"
+#include "se/qrl/pdl/ada.inc"
+#include "qrl/include/files.inc"
+#include "rules/qrl/pdl.inc"
+
+
+// initialize the external variables
+external string files = "";
+external string pdl_type = "generic";
+external string output_dir = "";
+
+template_help = "This template prints a pdl for the given module in C language format";
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// main()
+//
+///////////////////////////////////////////////////////////////////////////////
+void 
+main()
+{
+    node module;	    // Module for which the pdl is generated
+    string query;
+    list filelist;
+    file fileobj;
+    int ix, count;
+    set module_set;
+    int set_size;
+
+
+    if (files == "")
+    {
+	// if we fall into this loop, then it means that we want
+	// to generate a PDL for ALL diagrams. Rather than going
+	// thru all the diagrams and creating a pdl for all the 
+	// modules on each of these diagrams, just go thru the list
+	// of modules in the repository. This way, we don't generate a
+	// pdl for a module more than once.
+
+        query = "node[Module && notes[ModulePDL] && " +
+                "node_refs]";
+        for_each_in_select(query, module)
+	{
+            generate_pdl(module, output_dir, pdl_type, False);
+	}
+    }
+    else
+    {
+
+	// check file existence and history
+	filelist = file_list("SceDiagram", files);
+	
+	if ((count = list_count(filelist)) == 0)
+	{
+	    ide_error("No files found.");
+	    return;
+	}
+
+	module_set = set_create("node");
+
+	for (ix = 0; ix < count; ix = ix + 1)
+	{
+	    fileobj = list_get(filelist, ix);
+	    if (file_history(fileobj))
+		continue;
+     
+	    query = "node[Module && notes[ModulePDL] && " +
+		    "node_refs[file_id == ${fileobj.id}]]";
+	    for_each_in_select(query, module)
+	    {
+		set_add(module_set,module);
+	    }
+	}
+    
+	set_size = set_count(module_set);
+	for (ix = 0; ix < set_size; ix = ix + 1)
+	{
+	    module = set_get_element(module_set, ix);
+	    generate_pdl(module, output_dir, pdl_type, False);
+	}
+    }
+}

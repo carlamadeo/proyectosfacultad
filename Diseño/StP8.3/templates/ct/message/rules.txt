@@ -1,0 +1,31 @@
+%
+% 	sccsid[] = @(#)rules.txt	4.1  94/01/14
+% 	StP/Core
+% 	Confidential property of Interactive Development Environments, Inc.
+% 	Copyright (c) 1992-1993
+% 	All rights reserved
+%
+
+% Rules messages (10500-10599)
+% Rules messages (10650-10659)
+%
+% 7/24/90: changed available msg numbers due to conflict: DLW
+
+%
+% Dictionary Generation Checking Messages (10500-10549)
+10501;Parameter %s on asynchronous interrupt should not be labeled
+10502;\tSignature %s syntax error
+10503;\tSignature %s too long 
+10504;\tSignature %s parameter type error
+% Dynamic Checking Messages (10550-10599)
+% Moved object messages to object.txt (10600-10649)
+% Rules Library messages (10650-10659)
+10650;\tInternal problem with object tree; status indicators may be invalid
+10651;\tCannot connect formal links to reference units
+10652;\tA reference object cannot be the source of links
+10653;\tThis program unit includes duplicate lexically included units
+10654;\tThis program unit is global and there is already a unit with that name
+10655;\tThis program unit has no formal link
+10656;\tThis kind of object cannot have a formal link
+10657;%s %s
+10658;\tNo Name

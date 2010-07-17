@@ -1,0 +1,70 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/Core
+//      StP/Uml
+//      Confidential property of Aonix
+//      Copyright (c) 1992-1997
+//      All rights reserved
+//
+
+PropertySheet selectDiagram
+{
+    { Name selectDiagram }
+    { Label "Select Collaboration Diagram" }
+    { Properties
+	{  Qrl { QrlFile "rules/qrl/usequenced_prop.inc" } }
+	{ List
+	    { Name "ListComponentDiagrams" }
+	    { Rows	10 }
+	    { Width	50 }
+	    { Exclusive	False }
+	    { LabelAbove True }
+//	    { Event
+//		{ Type  PropEventDoubleClick }
+//		{ Callback "ApplySelection" }
+//	    }
+	    { Event
+		{ Type  DeSelectRow }
+		{ Callback "RowSelected" }
+	    }
+	    { Event
+		{ Type  SelectRow }
+		{ Callback "RowSelected" }
+	    }
+	}
+	{ Group
+	    { Name	GroupSelect }
+	    { Type Vertical }
+	    { VerticalAlign AlignLabels }
+	    { Members (ListComponentDiagrams) }
+	}
+	{ Button
+	    { Name "OK" }
+	    { Event
+		{ Type Select }
+		{ Callback "OkSelection" }
+	    }
+	}
+	{ Button
+	    { Name "Apply" }
+	    { Event
+		{ Type Select }
+		{ Callback "ApplySelection" }
+	    }
+	}
+	{ Button
+	    { Name "Cancel" }
+	    { Event
+		{ Type Select }
+		{ Callback "CancelSelection" }
+	    }
+	}
+	{ Group
+	    { Name AllGroup }
+	    { Type Vertical }
+	    { VerticalAlign Center }
+	    { Members ( GroupSelect ) }
+	}
+    }
+}
+

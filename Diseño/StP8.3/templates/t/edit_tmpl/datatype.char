@@ -1,0 +1,9 @@
+Datatype                    <DataTypeID>
+    is datatypeclass        <character>;
+    has values              <c_valueset>; /*1*/
+    has description         <description_string>;
+    has format              <data_format>;
+    has units               <data_units>;
+    has valid subdomain     <sdom_label>;
+    has invalid subdomain   <sdom_label>;
+.

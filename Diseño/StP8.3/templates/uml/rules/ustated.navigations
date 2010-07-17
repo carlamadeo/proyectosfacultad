@@ -1,0 +1,127 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+Include "rules/syms_to_rqtbl.rules.common"
+
+// Menu Navigation
+// {
+//     { InMenuBar True }
+//     { Label "&Navigation" }
+//     { Pin True }
+//     { GenerationFunc idehook_navigation_menu_gen_func }
+// }
+
+NodeSymbol StateAmbassador
+{
+    { Navigation
+	{ Name StateDefinition }
+	{ Label "Parent" }
+	{ Query "node_ref[node_id == ${node.id} && (!viewpoints[UmlScopeAmbassador]) && file[UmlStateDiagram && id != ${file.id}]]" }
+    }  
+}
+
+NodeSymbol CompositeState
+{
+    { Navigation
+	{ Name StateDefinition }
+	{ Label "Parent" }
+	{ Query "node_ref[node_id == ${node.id} && (!viewpoints[UmlScopeAmbassador] && !viewpoints[UmlRefinedState]) && file[UmlStateDiagram && id != ${file.id}]]" }
+    }  
+}
+
+TypeSet StatesWithSubDiagrams
+{
+    State
+    ConcurrentSubregion
+}
+
+TypeSet RequirementToNodeNodeSymbols
+{
+    State
+    InitialState
+    FinalState
+    CompositeState
+    StateMachine
+    ConcurrentSubregion
+    SplitControl
+    MergeControl
+    HistoryTypes
+    StateAmbassador
+    // ECR 7215
+    JunctionPoints
+}
+
+TypeSet RequirementToLinkLinkSymbols
+{
+    StateTransitionLink
+    SplitControlLink
+    MergeControlLink
+}
+
+TypeSet DOORS
+{
+    State
+    InitialState
+    FinalState
+    CompositeState
+    StateMachine
+    ConcurrentSubregion
+    SplitControl
+    MergeControl
+    HistoryTypes
+    StateAmbassador
+    StateTransitionLink
+    SplitControlLink
+    MergeControlLink
+    // ECR 7215
+    JunctionPoints
+}
+
+NodeSymbol StatesWithSubDiagrams
+{
+  { Navigation
+      { Name StateAmbassador }
+      { Label "Refine" }
+      { Query "node_ref[node_id == ${node.id} && viewpoints[UmlRefinedState]  && file[UmlStateDiagram]]" }
+      { FailureCmd RefineUmlStateDiagram }
+    }
+}
+
+NodeSymbol StatesWithTables
+{
+  { Navigation
+      { Name StateDefinition }
+      { Label "State Table" }
+      // because the state table has references for each of the state's
+      // enclosing states, the query had to be refined
+      { Query "node_ref[node_id = ${node.id} && file[UmlStateTable] && node[in_links[UmlStateTableDefinesState && link_refs]]]" }
+      { FailureCmd CreateUmlStateTable }
+    }
+}
+
+Command CreateUmlStateTable
+{
+    { PrintName "Create State Definition Table?" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { StartMessage "Executing Create State Definition Table..." }
+    { FailureMessage "Create State Definition Table failed." }
+    { SuccessMessage "Create State Definition Table completed." }
+    { Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"ustatet\",\"UmlStateTableInitialize(${node.id});\");" }
+}
+
+Command RefineUmlStateDiagram
+{
+    { PrintName "Create State Diagram?" }
+    { ObjectRequired True }
+    { StartMessage "Executing Create State Diagram ..." }
+    { FailureMessage "Create State Diagram For State failed." }
+    { SuccessMessage "Create State Diagram For State completed." }
+    { Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"ustated\",\"UmlStateDiagramInit(${node.id});\");" }
+}
+
+
+

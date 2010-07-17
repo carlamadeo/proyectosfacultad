@@ -1,0 +1,1079 @@
+
+//      StP/SE
+//      Confidential property of Aonix
+//      Copyright (c) 1992-1999
+//      All rights reserved
+ 
+DiagramType
+{
+    { SyntaxCheckFunc SceCheckSyntax }
+}
+
+NodeSymbol 1 Comment {}
+
+NodeSymbol 2 Module
+{
+    { PrintName "Module" }
+    { CanHaveLabel True }
+    { CanApplyScaleCmd True}
+    { Shape 
+        { Predefined Rectangle }
+        { ToolbarImage "module" }
+    }
+    { DefaultSize 3.2 1.0 }
+
+    { NodeMapping
+	{ MappingName LinkEnd }
+	{ AppType Module }
+	{ NameFunc se_basic_node_name_func }
+	{ Scope 
+	    { MappingName SEFileMapping }
+            { Symbol Self }
+        }
+	{ NameIsRequired True }
+    }
+    // scoping
+    { NodeMapping
+        { MappingName SEFileMapping }
+        { AppType SEFile }
+        { NameIsRequired True }
+        { Scope
+            { MappingName SEDirectoryMapping }
+            { Symbol Self }
+        }
+        { NameFunc idehook_se_file_name_func }
+	{ InverseMapFunc se_file_dir_inverse_map_rename_func }
+    }
+    { NodeMapping
+        { MappingName SEDirectoryMapping }
+        { AppType SEDirectory }
+        { NameIsRequired True }
+        { NameFunc idehook_se_directory_name_func }
+	{ InverseMapFunc se_file_dir_inverse_map_rename_func }
+    }
+    // end scoping
+    { RenameFunc se_module_rename }
+    { NameCompletion
+        { MappingName LinkEnd }
+        { NameCompletionFunc gde_ignore_scope_name_completion_func }
+    }
+    { EditAnnotation
+        { UseMappings ( LinkEnd ) }
+    }
+    { DisplayMark
+        { Name SEDirectory }
+        { CondFunc "SEDirectoryDisplayMarkCond();" }
+        { Anchor UpperRight }
+        { HAdjust Left }
+        { VAdjust Top }
+        { StringMarkFunc "se_dir_dmark(${nodesym.psymid}, True);" }
+    }
+    { DisplayMark
+        { Name SEFile }
+        { CondFunc "SEFileDisplayMarkCond();" }
+        { Anchor LowerRight }
+        { HAdjust Left }
+        { StringMarkFunc "se_file_dmark(${nodesym.psymid}, True);" }
+    }
+    { DisplayMark
+        { Name ModuleReturnType }
+    	{ ItemCond (ModuleReturnType) }
+    	{ StringMark "${annot.ModuleDefinition.ModuleReturnType}" }
+   	{ Anchor LowerRight }
+    	{ HAdjust Right }
+   	{ VAdjust Bottom }
+   	{ XPixelOffset -2 }
+   	{ YPixelOffset 2 }
+   	{ Help "Show return type" }
+    }
+    { DisplayMark
+        { Name LexicalModule }
+        { ItemCond (IsLexicalModule) }
+        { BitmapMark0 "triangle0" }
+        { BitmapMark1 "triangle1" }
+        { BitmapMark2 "triangle2" }
+        { Anchor UpperCenter }
+        { HAdjust Center }
+        { VAdjust Bottom }
+        //{ XPixelOffset 2 }
+        { YPixelOffset -3 }
+        { Help "Show Lexical Module" }
+    }
+    { DisplayMark
+	{ Name Pdl }
+	{ ItemCond (PDL) }
+	{ StringMark "p" }
+	{ Anchor LowerLeft }
+	{ HAdjust Left }
+	{ VAdjust Bottom }
+	{ XPixelOffset 2 }
+	{ YPixelOffset -1 }
+	{ Help "Has PDL" }
+    }
+    { Navigation
+	{ Name Definition }
+	{ Label "Definition" }
+        { UseMappings (LinkEnd) }
+	{ Query "node_ref[node_id = ${node.id} && in_link_refs[from_node_ref[node[FormalCaller]]]]" }
+	{ FailureCmd CreateSceDefinition }
+    }
+    { Navigation
+	{ Name References }
+	{ Label "All References" }
+        { UseMappings (LinkEnd) }
+	{ Query "node_ref[node_id = ${node.id}]" }
+    }
+    { Navigation
+	{ Name FlowChart }
+	{ Label "Flow Chart" }
+        { UseMappings (LinkEnd) }
+	{ TargetFunc "NavToFlowChart();" }
+	//{ Query "file[FceDiagram && name = '${node.name}']" }
+    }
+    { Navigation
+	{ Name Callers }
+	{ Label "Caller" }
+        { UseMappings (LinkEnd) }
+        // ignores offpage callers
+	//{ Query "node_ref[node[Module && out_links[to_node_id = ${node.id}]]]" }
+        { TargetFunc "NavToSceCaller(${node.id});" }
+    }
+    { Navigation
+	{ Name ReturnType }
+	{ Label "Return Type" }
+        { UseMappings (LinkEnd) }
+	{ TargetFunc "FindTypeDefinition(${node.id}, \"ModuleReturnType\");" }
+	{ FailureCmd CreateDseDiagramModule }
+    }
+    { Navigation
+        { Name FuncSourceCodeDef }
+        { UseMappings (LinkEnd) }
+        { Label "Source Code Definition" }
+        { TargetFunc "SEBrowseToFunctionDef(${node.id});" }
+    }
+    { Navigation
+	{ ParseCondition "is_smdb_available();" }
+        { Name FuncSourceCodeRef }
+        { UseMappings (LinkEnd) }
+        { Label "Source Code References" }
+        { TargetFunc "SEBrowseToFunctionRef(${node.id});" }
+    }
+    { Navigation
+	{ ParseCondition "is_valid_programming_env();" }
+        { Name ProgrammingEnvironment }
+        { UseMappings ( LinkEnd )}
+        { Label "Programming Environment" }
+        { FailureCmd SCEGotoProgrammingEnvironment }
+    }
+    { Navigation
+        { Name AssignRequirementsToObject }
+        { Label "Allocate &Requirements" }
+        { SpaceBefore True }
+        { Accelerator
+            { Label "Alt+Ctrl+R" }
+            { Value "Alt Ctrl<Key>R" }
+        }
+        { UseMappings ( LinkEnd ) }
+        { FailureCmd GoToRequirementsTableFromNode }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { UseMappings ( LinkEnd ) }
+        { FailureCmd GoToDOORSFromNode }
+    }
+
+}
+
+NodeSymbol 3 LibraryModule
+{
+    { PrintName	"Library Module" }
+    { Shape 
+        { Predefined LibraryModule } 
+        { ToolbarImage "library_module" }
+    }
+    { CanHaveLabel True }
+    { DefaultSize 3.2 1.0 }
+    { CanApplyScaleCmd True}
+
+    { NodeMapping
+	{ MappingName LinkEnd }
+	{ AppType LibraryModule }
+	{ NameFunc se_basic_node_name_func }
+	{ NameIsRequired True }
+    }
+    { Navigation
+        { Name LibSourceCode }
+        { UseMappings (LinkEnd) }
+        { Label "Source Code References" }
+        { TargetFunc "SEBrowseToLibRef(${node.id});" }
+    }
+    { Navigation
+	{ ParseCondition "is_valid_programming_env();" }
+        { Name ProgrammingEnvironment }
+        { UseMappings ( LinkEnd )}
+        { Label "Programming Environment" }
+        { FailureCmd SCEGotoProgrammingEnvironment }
+    }
+    { Navigation
+        { Name AssignRequirementsToObject }
+        { Label "Allocate &Requirements" }
+        { SpaceBefore True }
+        { Accelerator
+            { Label "Alt+Ctrl+R" }
+            { Value "Alt Ctrl<Key>R" }
+        }
+        { UseMappings ( LinkEnd ) }
+        { FailureCmd GoToRequirementsTableFromNode }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { UseMappings ( LinkEnd ) }
+        { FailureCmd GoToDOORSFromNode }
+    }
+
+}
+
+NodeSymbol 4 IncludedModule
+{
+    { ReadOnly True }
+    { PrintName "Included Module" }
+    { Shape { Predefined TriRectangle } }
+    { CanHaveLabel True }
+    { DefaultSize 3.2 1.0 }
+    { CanApplyScaleCmd True}
+}
+
+NodeSymbol 5 GlobalData
+{
+    { PrintName "Global Data" }
+    { Shape
+        { Predefined ArcRectangle } 
+        { ToolbarImage "global_data" }
+    }
+    { CanHaveLabel True }
+    { DefaultSize 3.2 1.0 }
+    { CanApplyScaleCmd True}
+    { NodeMapping
+	{ MappingName LinkEnd }
+	{ AppType DataModule }
+	{ Scope 
+	    { MappingName SEFileMapping }
+            { Symbol Self }
+        }
+	{ NameIsRequired True }
+	{ NameFunc se_basic_node_name_func }
+    }
+    { NodeMapping
+        { MappingName SEFileMapping }
+        { AppType SEFile }
+        { NameIsRequired True }
+        { Scope
+            { MappingName SEDirectoryMapping }
+            { Symbol Self }
+        }
+        { NameFunc idehook_se_file_name_func }
+	{ InverseMapFunc se_file_dir_inverse_map_rename_func }
+    }
+    { NodeMapping
+        { MappingName SEDirectoryMapping }
+        { AppType SEDirectory }
+        { NameIsRequired True }
+        { NameFunc idehook_se_directory_name_func }
+	{ InverseMapFunc se_file_dir_inverse_map_rename_func }
+    }
+    { NameCompletion
+        { MappingName LinkEnd }
+        { NameCompletionFunc gde_ignore_scope_name_completion_func }
+    }
+    { EditAnnotation
+        { UseMappings ( LinkEnd ) }
+    }
+    { Navigation
+	{ Name DataDefinition }
+	{ Label "Global Type" }	
+        { UseMappings (LinkEnd) }
+	{ TargetFunc "FindTypeDefinition(${node.id}, \"DataType\");" }
+	{ FailureCmd CreateDseDiagramGlobal }
+    }
+    { Navigation
+	{ Name References }
+	{ Label "All References" }
+        { UseMappings (LinkEnd) }
+	{ Query "node_ref[node_id = ${node.id}]" }
+    }
+    { Navigation
+        { Name GlobSourceCodeDef }
+        { UseMappings (LinkEnd) }
+        { Label "Source Code Definition" }
+        { TargetFunc "SEBrowseToGlobDef(${node.id});" }
+    }
+    { Navigation
+        { Name GlobSourceCodeRef }
+        { UseMappings (LinkEnd) }
+        { Label "Source Code References" }
+        { TargetFunc "SEBrowseToGlobRef(${node.id});" }
+    }
+    { Navigation
+	{ ParseCondition "is_valid_programming_env();" }
+        { Name ProgrammingEnvironment }
+        { UseMappings ( LinkEnd )}
+        { Label "Programming Environment" }
+        { FailureCmd SCEGotoProgrammingEnvironment }
+    }
+    { Navigation
+        { Name AssignRequirementsToObject }
+        { Label "Allocate &Requirements" }
+        { SpaceBefore True }
+        { Accelerator
+            { Label "Alt+Ctrl+R" }
+            { Value "Alt Ctrl<Key>R" }
+        }
+        { UseMappings ( LinkEnd ) }
+        { FailureCmd GoToRequirementsTableFromNode }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { UseMappings ( LinkEnd ) }
+        { FailureCmd GoToDOORSFromNode }
+    }
+    { DisplayMark
+        { Name SEDirectory }
+        { CondFunc "SEDirectoryDisplayMarkCond();" }
+        { Anchor UpperRight }
+        { HAdjust Left }
+        { VAdjust Top }
+        { StringMarkFunc "se_dir_dmark(${nodesym.psymid}, True);" }
+    }
+    { DisplayMark
+        { Name SEFile }
+        { CondFunc "SEFileDisplayMarkCond();" }
+        { Anchor LowerRight }
+        { HAdjust Left }
+        { StringMarkFunc "se_file_dmark(${nodesym.psymid}, True);" }
+    }
+    { DisplayMark
+        { Name GlobalReturnType }
+    	{ ItemCond (DataType) }
+    	{ StringMark "${annot.GlobalDefinition.DataType}" }
+   	{ Anchor LowerLeft }
+    	{ HAdjust Left }
+   	{ VAdjust Bottom }
+   	{ XPixelOffset 10 }
+   	{ YPixelOffset 2 }
+   	{ Help "Show global data type" }
+    }
+    { DisplayMark
+        { Name ArraySize }
+        { ItemCond (ArraySize) }
+        { StringMarkFunc "SEArraySize(\"${annot.GlobalDefinition.ArraySize}\");" }      
+        { Anchor LowerRight }
+        { HAdjust Right }
+        { VAdjust Bottom }
+        { XPixelOffset -8 }
+        { YPixelOffset -2 }
+        { Help "Show array size" }
+    }
+}
+
+NodeSymbol 6 Offpage
+{
+    { PrintName "Offpage Connector" }
+    { Shape
+        { Predefined Homeplate } 
+        { ToolbarImage "offpage_connector" }
+    }
+    { CanHaveLabel True }
+    { CanApplyScaleCmd True}
+
+    { NodeMapping
+	{ MappingName LinkEnd }
+	{ AppType Offpage }
+	{ NameIsRequired True }
+	{ NameFunc se_basic_node_name_func }
+    }
+    { Cardinality
+	{ Min 1 }
+	{ AnyLinks ModuleCall }
+//	{ AnyLinks OffpageLinks }
+    }
+    { Navigation
+        { Name ThisDiagRefs }
+	{ Label "Offpage on This Diagram" }
+        { UseMappings (LinkEnd) }
+	{ Query "node_ref[node_id == ${node.id} && file[SceDiagram && id == ${file.id}]]" }
+    }
+    { Navigation
+        { Name OtherDiagRefs }
+	{ Label "Offpage on Other Diagram" }
+        { UseMappings (LinkEnd) }
+	{ Query "node_ref[node_id == ${node.id} && file[SceDiagram && id != ${file.id}]]" }
+    }
+}
+
+// May give these context objects
+CntxSymbol 7 Selection
+{
+    { ParentLink ModuleCall }
+//    { ParentLink OffpageConnection }
+//    { ParentLink OffpageToOffpageConnection }
+}
+
+CntxSymbol 8 Iteration
+{
+    { ParentLink ModuleCall }
+//    { ParentLink OffpageConnection }
+//    { ParentLink OffpageToOffpageConnection }
+}
+
+NodeSymbol 9 Anchor
+{
+    { NodeMapping
+	{ MappingName LinkEnd }
+	{ AppType FormalCaller }
+    }
+    { Cardinality
+	{ Min 1 }
+	{ OutLinks ModuleCall }
+    }
+}
+
+NodeSymbol 10 Vertex
+{
+    { SeeThrough True }
+}
+
+CntxSymbol 11 InData
+{
+    { PrintName "Input Data" }
+    { Shape
+         { Predefined InParamData }
+         { ToolbarImage "input_data" }
+    }
+    { OrientWithArc True }
+    { CanApplyScaleCmd False}
+    { ParentLink ModuleCall }
+//    { ParentLink OffpageConnection }
+
+    { CntxMapping
+	{ AppType DataIn }
+	{ NameIsRequired	True }
+	{ NameFunc se_basic_cntx_name_func }
+    }
+}
+
+CntxSymbol 12 OutData
+{
+    { PrintName "Output Data" }
+    { Shape 
+        { Predefined OutParamData } 
+        { ToolbarImage "output_data" }
+    }
+    { OrientWithArc True }
+    { CanHaveLabel True }
+    { CanApplyScaleCmd False}
+    { ParentLink ModuleCall }
+//    { ParentLink OffpageConnection }
+
+    { CntxMapping
+	{ AppType DataOut }
+	{ NameIsRequired	True }
+	{ NameFunc se_basic_cntx_name_func }
+    }
+}
+
+CntxSymbol 13 InFlag
+{
+    { PrintName "Input Flag" }
+    { Shape
+        { Predefined InParamFlag } 
+        { ToolbarImage "input_flag" }
+    }
+    { OrientWithArc True }
+    { CanHaveLabel True }
+    { CanApplyScaleCmd False}
+    { ParentLink ModuleCall }
+//    { ParentLink OffpageConnection }
+
+    { CntxMapping
+	{ AppType ControlIn }
+	{ NameIsRequired	True }
+	{ NameFunc se_basic_cntx_name_func }
+    }
+}
+
+CntxSymbol 14 OutFlag
+{
+    { PrintName "Output Flag" }
+    { Shape
+        { Predefined OutParamFlag }
+        { ToolbarImage "output_flag" }
+    }
+    { OrientWithArc True }
+    { CanHaveLabel True }
+    { CanApplyScaleCmd False}
+    { ParentLink ModuleCall }
+//    { ParentLink OffpageConnection }
+
+    { CntxMapping
+	{ AppType ControlOut }
+	{ NameIsRequired	True }
+	{ NameFunc se_basic_cntx_name_func }
+    }
+}
+
+CntxSymbol 15 InOutData
+{
+    { PrintName "Input/Output Data" }
+    { Shape 
+        { Predefined InOutParamData }
+        { ToolbarImage "input-output_data" }
+    }
+    { OrientWithArc True }
+    { CanHaveLabel True }
+    { CanApplyScaleCmd False}
+    { ParentLink ModuleCall }
+//    { ParentLink OffpageConnection }
+
+    { CntxMapping
+	{ AppType DataInOut }
+	{ NameIsRequired	True }
+	{ NameFunc se_basic_cntx_name_func }
+    }
+}
+
+LinkSymbol 200 ModuleCall
+{
+    { PrintName "Module Call" }
+    { CanHaveLabel False }
+    { FromBottomToTop True }
+
+// fix for spr2734
+//    { Connects { From Module } { To Offpage }  }
+    { Connects { From Module } { To AllModuleTypes }  }
+//    { Connects { From AllModuleTypes } { To AllModuleTypes }  }
+    { Connects { From Anchor } { To AllModuleTypes }  }
+    { Connects { From Offpage } { To AllModuleTypes }  }
+// end of spr2734 fix
+    { LinkMapping
+	{ AppType SubprogramCall }
+	{ ToNode
+	    { MappingName LinkEnd }
+	}
+	{ FromNode
+	    { MappingName LinkEnd }
+	}
+    }
+    { DisplayMark
+        { Name AccessMode }
+        { ItemCond (AccessMode) }
+        { EndMarkFunc "SceChooseGlobalEndMark(${link.id});" }
+        { Anchor ToEnd }
+        { Help "Show access mode" }
+    }
+}
+
+LinkSymbol 16 DefaultStyle
+{
+}
+
+LinkSymbol 17 CommentLink
+{
+    { Connects { From Comment } { To AllNonCommentNodeTypes }  }
+    { Connects { From AllNonCommentNodeTypes } { To Comment }  }
+}
+
+TypeSet PreserveScaleSet
+{
+    Module
+    LibraryModule
+    IncludedModule
+    GlobalData
+    Offpage
+    Selection
+    Iteration
+}
+
+NodeSymbol PreserveScaleSet
+{
+    { PreserveScale PreserveScaleSet }
+}
+
+TypeSet AllNonCommentNodeTypes
+{
+    Module
+    LibraryModule
+    IncludedModule
+    GlobalData
+    Offpage
+    Selection
+    Iteration
+    Anchor
+    Vertex
+}
+
+TypeSet AllCntxTypes
+{
+    InData
+    OutData
+    InOutData
+    InFlag
+    OutFlag
+}
+
+TypeSet AllModuleTypes
+{
+    Module
+    LibraryModule
+    GlobalData
+    Offpage
+}
+
+TypeSet DoubleClickTypes
+{
+    Module
+    GlobalData
+    AllCntxTypes
+}
+
+NodeSymbol DoubleClickTypes
+{
+    { Methods
+        { Method
+            { Name DoubleClick }
+            { MethodFunc sce_double_click }
+        }
+    }
+}
+
+LinkSymbol 193 OffpageConnection
+{
+    { PrintName "Offpage Connection" }
+    { CanHaveLabel False }
+}
+
+NodeSymbol Selection
+{
+    { PrintName "Selection" }
+    { Shape 
+        { Predefined FilledDiamond }
+        { ToolbarImage "sceselection" }
+    }
+    { CanHaveLabel False }
+    { CanApplyScaleCmd True}
+    { DefaultSize 1.0 0.5 }
+}
+
+NodeSymbol Iteration
+{
+    { PrintName "Iteration" }
+    { Shape 
+        { Predefined Iteration } 
+        { ToolbarImage "iteration" }
+    }	
+    { CanHaveLabel False }
+    { CanApplyScaleCmd True}
+}
+
+NodeSymbol Anchor
+{
+    { PrintName "Anchor" }
+    { Shape 
+        { Predefined Anchor }
+        { ToolbarImage "anchor" }
+    }
+    { CanHaveLabel False }
+    { CanApplyScaleCmd False}
+}
+
+NodeSymbol Vertex
+{
+    { PrintName "Vertex" }
+    { Shape { Predefined Vertex } }
+    { ReadOnly True }
+    { CanHaveLabel False }
+    { CanApplyScaleCmd False}
+}
+
+LinkSymbol DefaultStyle
+{
+    { PrintName "Default Style" }
+    { Uncentered True }
+    { ToArrow False }
+    { Dashed False }
+    { Dotted False }
+    { Thick False }
+}
+
+LinkSymbol CommentLink
+{
+    { PrintName "Comment Link" }
+    { CanHaveLabel False }
+    { Uncentered True }
+    { ToArrow True }
+    { Dashed True }
+}
+
+CntxSymbol AllCntxTypes
+{
+    { Navigation
+	{ Name DataDefinition }
+	{ Label "Type Definition" }
+	{ TargetFunc "FindTypeDefinition(${cntx.id}, \"DataType\");" }
+	{ FailureCmd CreateDseDiagramParam }
+    }
+    { Navigation
+	{ ParseCondition "is_valid_programming_env();" }
+        { Name ProgrammingEnvironment }
+        { Label "Programming Environment" }
+        { FailureCmd SCEGotoProgrammingEnvironment }
+    }
+    { Navigation
+        { Name AssignRequirementsToObject }
+        { Label "Allocate &Requirements" }
+        { SpaceBefore True }
+        { Accelerator
+            { Label "Alt+Ctrl+R" }
+            { Value "Alt Ctrl<Key>R" }
+        }
+        { FailureCmd GoToRequirementsTableFromCntx }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { FailureCmd GoToDOORSFromCntx }
+    }
+    { DisplayMark 
+        { Name ParamType }
+    	{ ItemCond (DataType) }
+	{ BitmapMark "check" }
+   	{ Anchor LowerLeft }
+    	{ HAdjust Left }
+   	{ VAdjust Bottom }
+   	{ XPixelOffset 2 }
+   	{ YPixelOffset 0 }
+   	{ Help "A Parameter has a check mark if the type exists." }
+    }
+}
+
+SymbolList
+{
+    { ShowStraightArc True }
+    { ShowSpline True }
+    { Symbols
+	(
+	    Comment
+	    Module
+	    LibraryModule
+	    GlobalData
+	    Offpage
+	    InData
+	    OutData
+	    InOutData
+	    InFlag
+	    OutFlag
+	    Selection
+	    Iteration
+	    Anchor
+	)
+    }
+}
+TypeSet DOORS
+{
+	Module
+	LibraryModule
+	GlobalData
+	AllCntxTypes
+}
+
+Include "rules/gde_menu_bar.std"
+Include "rules/se_object_rename.rules"
+Include "rules/gde_accels.std"
+Include "rules/gde_edit_menu.std"
+Include "rules/sce.prop"
+Include "rules/pthing.prop"
+Include "rules/re_navigate.prop"
+Include "rules/comment.symbol"
+Include "rules/sce_toolbar_arc_types.rules" // ECR 3556
+Include "se/rules/feature.rule"
+
+Menu MenuBarEdit
+{
+    { MenuEntry
+        { Name SetSceProps }
+//fix for spr 2847 - changes the label to Properties
+        { Label "Pr&operties" }
+	{ PlaceAfter EditAnnot }
+//end of spr2847
+        { Builtin "EditorQrlEvalNoSave SCE_object_props_show();" }
+        { ActiveFunc idehook_sce_object_props_active_func }
+    }
+    { MenuEntry
+        { Name DeleteUnconnectedAnchors }
+        { Show True }
+        { Label "Delete Unconnected Anchors" }
+        { Builtin "EditorQrlEval DeleteUnconnectedAnchors();" }
+    }
+}
+ 
+
+Menu Navigation
+{
+    { InMenuBar True }
+// fix for spr 2789
+    { Label "&GoTo" }
+    { Pin True }
+    { GenerationFunc idehook_navigation_menu_gen_func }
+}
+
+Menu DiagramContextMenu //Edit
+{
+    { MenuEntry
+        { Name CheckSemantics }
+        // ECR 7464
+        // { Builtin "EditorQrlEval checkSemantics();" }
+        { Builtin "EditorQrlEvalNoSave checkSemantics();" }
+    }
+    { MenuEntry
+        { Name CheckSemanticsSelectively }
+        { Label "Check Semantics Selectively..." }
+        { PlaceAfter CheckSemantics }
+        // ECR 7464
+        // { Builtin "EditorQrlEval checkSceSemanticsSelect();" }
+        { Builtin "EditorQrlEvalNoSave checkSceSemanticsSelect();" }
+    }
+}
+
+Menu ObjectContextMenu //Edit
+{
+    { MenuEntry
+        { Name SetSceProps }
+//fix for spr 2847 - changes the label to Properties
+        { Label "Pr&operties" }
+	{ PlaceAfter EditAnnot }
+//end of spr2847
+        { Builtin "EditorQrlEvalNoSave SCE_object_props_show();" }
+        { ActiveFunc idehook_sce_object_props_active_func }
+    }
+}
+
+//Menu SCE
+Menu ProductMenu
+{
+    { InMenuBar True }
+    { Show True }
+    { Pin True }
+    { Label "&SCE" }
+    { MenuEntry
+	{ Name EditPdl }
+	{ Label "Edit PDL Note" }
+	//{ Builtin "EditorQrlEval FindOrCreatePdlNote();" }
+        // ECR 7464
+	// { Builtin "EditorQrlEval PThingEdit(1);" }
+	{ Builtin "EditorQrlEvalNoSave PThingEdit(1);" }
+	{ ActiveFunc idehook_edit_pdl_active_func }
+    }
+    { MenuEntry  
+	{ Name GeneratePDL }
+	{ Label "&Generate PDL(s)" } 
+        { Builtin "EditorQrlEvalNoSave GenerateSelectedPdls();" }
+	{ ActiveFunc idehook_gen_pdl_active_func }
+    }
+    { MenuEntry
+        { Name ViewPDL }
+        { Label "View Generated PDL" }
+        // ECR 7464
+        // { Builtin "EditorQrlEval ViewPthings(1);" }
+        { Builtin "EditorQrlEvalNoSave ViewPthings(1);" }
+        { ActiveFunc idehook_view_pdl_active_func }
+    }
+    { MenuEntry  
+	{ Name GenerateCCode }
+	{ Label "Generate &C Code..." } 
+	{ Builtin "EditorQrlEvalNoSave sce_code_generation();" }
+    }
+
+//    { Spacer }
+
+}
+
+
+//Menu Repository
+Menu Tools
+{
+    { MenuEntry
+        { Name CheckSemantics }
+        { Builtin "EditorQrlEvalNoSave checkSemantics();" }
+    }
+    { MenuEntry
+        { Name CheckSemanticsSelectively }
+	{ Label "Check Semantics Selectively..." }
+	{ PlaceAfter CheckSemantics }
+        { Builtin "EditorQrlEvalNoSave checkSceSemanticsSelect();" }
+        { Accelerator
+            { Label "Alt+F7" }
+            { Value "Alt<Key>F7" }
+        }
+    }
+}
+
+NodeSymbol 998 MultiSelectionNavigation
+{
+    { PrintName "Hook for navigations with multiselection" }
+    { Shape { Predefined Rectangle }}
+    { ReadOnly True }
+
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { FailureCmd GoToDOORSFromMulti }
+    }
+    
+}
+
+Command GoToRequirementsTableFromNode
+{
+   { Builtin "EditorQrlEvalNoSave to_requirements_table_from_node(0${node.id});" }
+}
+
+Command GoToRequirementsTableFromCntx
+{
+   { Builtin "EditorQrlEvalNoSave to_requirements_table_from_cntx(0${cntx.id});" }
+}
+
+Command GoToDOORSFromMulti
+{
+   { Builtin "EditorQrlEvalNoSave doors_export_selected();" }
+}
+ 
+Command GoToDOORSFromNode
+{
+   { Builtin "EditorQrlEvalNoSave node_navigate_to_doors(0${node.id});" }
+}
+
+ 
+Command GoToDOORSFromCntx
+{
+   { Builtin "EditorQrlEvalNoSave node_navigate_to_doors(0${cntx.id});" }
+}
+
+
+Command CreateSceDefinition
+{
+    { PrintName "Create SCE Definition?" }
+    { ObjectRequired True }
+    { StartMessage "Executing Create SCE Definition..." }
+    { FailureMessage "Create SCE Definition failed." }
+    { SuccessMessage "Create SCE Definition completed." }
+    { Builtin "EditorQrlEval CreateNewSceDefinition(0${node.id});" }
+
+}
+
+Command CreatePdl
+{
+    { PrintName "Create Module's PDL Note?" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { StartMessage "Executing Create ModulePDL Note" }
+    { FailureMessage "Create ModulePDL Note failed." }
+    { SuccessMessage "Create ModulePDL Note completed." }
+    { OS
+	{ UseOutputWindow False }
+	{ CommandLine "stpem -ed oae -first -p ${projdir} -s ${system} -C 'AnnotEdit ${node.id}' -C 'NoteAdd ModulePDL'" }
+    }
+}
+
+Command CreateDseDiagramModule
+{
+    { PrintName "Create Data Structure Diagram" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { StartMessage "Executing Create Data Structure Diagram" }
+    { FailureMessage "Create Data Structure Diagram failed." }
+    { SuccessMessage "Create Data Structure Diagram completed." }
+    //{ OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed dse -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"InitializeDseDiagramFromNode(${node.id}, 1);\"'" }
+//    }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"dse\",\"InitializeDseDiagramFromNode(${node.id},1);\");" }
+}
+
+Command CreateDseDiagramGlobal
+{
+    { PrintName "Create Data Structure Diagram" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { StartMessage "Executing Create Data Structure Diagram" }
+    { FailureMessage "Create Data Structure Diagram failed." }
+    { SuccessMessage "Create Data Structure Diagram completed." }
+    //{ OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed dse -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"InitializeDseDiagramFromNode(${node.id}, 2);\"'" }
+ //   }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"dse\",\"InitializeDseDiagramFromNode(${node.id},2);\");" }
+}
+
+Command CreateDseDiagramParam
+{
+    { PrintName "Create Data Structure Diagram" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { StartMessage "Executing Create Data Structure Diagram" }
+    { FailureMessage "Create Data Structure Diagram failed." }
+    { SuccessMessage "Create Data Structure Diagram completed." }
+    //{ OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed dse -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"InitializeDseDiagramFromCntx(${cntx.id}, 2);\"'" }
+ //   }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"dse\",\"InitializeDseDiagramFromCntx(${cntx.id},2);\");" }
+}
+
+Command SCEGotoProgrammingEnvironment
+{
+    { PrintName "Show in Programming Environment" }
+    { ObjectRequired True }
+    { StartMessage "Show object in Programming Environment ..." }
+    { FailureMessage "Failed to show object in Programming Environment" }
+    { SuccessMessage "Show object in Programming Environment completed" }
+    { Builtin "EditorQrlEvalNoSave NavigateToPE(${node.id});" }
+}
+
+DisplayMarkGroups
+{
+    //{ ContinuousDisplayMarks ( ParamType SEDirectory SEFile Pdl ModuleReturnType GlobalReturnType AccessMode LexicalModule ArraySize ) }
+    { ContinuousDisplayMarks ( ParamType Pdl ModuleReturnType GlobalReturnType AccessMode LexicalModule ArraySize ) }
+    { NoUpdateDisplayMarks ( SEDirectory SEFile ) }
+}
+
+Include "rules/default_arc_type.rules" //ECR 6469
+
+PassWord "7A9D8F3E"
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/se/rules/user_sce.rules"
+
+
+
+

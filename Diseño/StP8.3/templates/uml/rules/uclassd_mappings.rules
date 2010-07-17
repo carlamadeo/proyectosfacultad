@@ -1,0 +1,460 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+//
+
+
+// This file defines the mappings and name completion for all the symbols
+// in uclassd. No entry in this file implies that there is no mapping.
+
+//ECR 4986 regression begin - this is moved to the end of file
+// ECR 4986 start
+//NodeSymbol Interface
+//{
+//	{ NodeMapping
+//        { MappingName InterfaceMapping }
+//        { AppType UmlInterface }
+//        { NameIsRequired True }
+//        { NameFunc uml_gde_node_base_name_func }
+//    }
+//}
+// ECR 4986 end
+//ECR 4986 regression end
+
+NodeSymbol AllClassTypes
+{
+	{ NodeMapping
+        { MappingName ClassMapping }
+        { AppType UmlClass }
+        { NameFunc uml_gde_node_base_name_func }
+        { NameIsRequired True }
+    }
+	{ NameCompletion
+		{ MappingName ClassMapping }
+		{ NameCompletionFunc uclassd_class_name_completion_func }
+    }
+	{ ApplicationTag "ClassSymbol" }
+	// { SymbolicDependentsFunc uml_nary_class_deps }
+	{ ViewPoint UmlAllAggregation }
+	{ ViewPoint UmlAllGeneralization }
+	{ ViewPoint UmlAllAssociation }
+	{ ViewPoint UmlAllDependency }
+	{ ViewPoint UmlAllMembers }
+	{ RenameFunc uml_class_rename }
+}
+
+
+NodeSymbol AllPackageTypes
+{
+	{ ViewPoint UmlAllAssociation }
+	{ ViewPoint UmlAllDependency }
+	{ ViewPoint UmlAllMembers }
+}
+
+NodeSymbol Attribute
+{
+	{ NodeMapping
+		// use ClassMapping so the Contains endpoints can be specified
+		{ MappingName ClassMapping }
+		{ NameIsRequired True }
+		{ AppType UmlAttribute }
+		{ NameFunc uml_attribute_name }
+		{ InScopeLink Contains }
+		{ Scope { MappingName ClassMapping }}
+	}
+}
+
+
+NodeSymbol Operation
+{
+	{ NodeMapping
+		// use ClassMapping so the Contains endpoints can be specified
+		{ MappingName ClassMapping }
+		{ NameIsRequired True }
+		{ NameFunc uml_operation_name }
+		{ SigFunc uml_operation_signature }
+		{ InverseMapFunc uml_operation_inverse_node_map_func }
+
+		{ AppType UmlOperation }
+		{ InScopeLink Contains }
+		{ Scope { MappingName ClassMapping }}
+	}
+	{ NameCompletion
+		{ MappingName ClassMapping }
+		{ NameCompletionFunc uclassd_operation_name_completion_func }
+	}
+	{ RenameFunc uml_operation_rename }
+}
+
+
+NodeSymbol ParameterizedClass
+{
+	{ NodeMapping
+		{ MappingName ParameterizedClassMapping }
+		{ AppType UmlParameterizedClass }
+		{ NameIsRequired True }
+		// JED - TODO? { NameFunc class_name_from_qualified_name }
+	}
+	{ NameCompletion
+		{ MappingName ParameterizedClassMapping }
+	}
+}
+
+
+
+NodeSymbol InstantiatedClass
+{
+	{ NodeMapping
+		{ MappingName InstantiatedClassMapping }
+		{ AppType UmlInstantiatedClass }
+		{ NameIsRequired True }
+		{ NameFunc uml_instantiated_class_name }
+		{ SigFunc uml_instantiated_class_signature }
+		{ InverseMapFunc uml_instantiated_class_inverse_node_map_func }
+	}
+	{ NameCompletion
+		{ MappingName InstantiatedClassMapping }
+	}
+	{ NodeMapping
+        { MappingName ClassMapping }
+        { AppType UmlClass }
+        { NameIsRequired True }
+		{ NameFunc uml_instantiated_class_name }
+		{ SigFunc uml_instantiated_class_signature }
+		{ InverseMapFunc gde_no_op_inverse_node_map_func }
+    }
+}
+
+NodeSymbol NaryAssociationHub
+{
+    { NodeMapping
+        { MappingName AssociationNodeMapping }
+        { AppType UmlAssociation }
+        { NameIsRequired False }
+        { NameFunc uml_nary_association_name }
+        { SigFunc uml_nary_association_signature }
+		{ InverseMapFunc uml_association_inverse_map_func }
+    }
+	// { SymbolicDependentsFunc uml_nary_hub_deps }
+	{ NameCompletion
+		{ MappingName AssociationNodeMapping }
+		{ NameCompletionFunc uclassd_name_completion_func }
+	}
+}
+
+
+LinkSymbol Generalization
+{
+	{ LinkMapping
+		{ MappingName GeneralizationMapping }
+		{ AppType UmlGeneralization }
+		{ NameIsRequired False }
+		{ FromNode { MappingName ClassMapping } }
+		{ ToNode { MappingName ClassMapping } }
+		//ECR2653
+		// The routine retrieves the labels from the arc and
+		// fixes the invalid characters
+        { NameFunc general_arc_name_func }
+		//ECR2653
+	}
+}
+
+
+LinkSymbol Association
+{
+    { NodeMapping
+        { MappingName AssociationNodeMapping }
+        { AppType UmlAssociation }
+        { NameIsRequired False }
+        { NameFunc uml_binary_association_name }
+        { SigFunc uml_binary_association_signature }
+		{ InverseMapFunc uml_association_inverse_map_func }
+    }
+    { LinkMapping
+        { MappingName FromMapping } 
+        { AppType UmlRole }
+        { NameIsRequired False }
+		{ Scope
+			{ Symbol Self }
+			{ MappingName AssociationNodeMapping }
+		}
+        { NameFunc idehook_bach_association_from_role_name_func }
+        { FromNode { MappingName ClassMapping } { Symbol FromNode } }
+        { ToNode { MappingName AssociationNodeMapping } { Symbol Self } }
+		{ InverseMapFunc uml_from_role_link_inverse_map_func }
+    }
+    { LinkMapping
+        { MappingName ToMapping }
+        { AppType UmlRole }
+        { NameIsRequired False }
+		{ Scope
+			{ Symbol Self }
+			{ MappingName AssociationNodeMapping }
+		}
+        { NameFunc idehook_bach_association_to_role_name_func }
+        { FromNode { MappingName ClassMapping } { Symbol ToNode } }
+        { ToNode { MappingName AssociationNodeMapping } { Symbol Self } }
+		{ InverseMapFunc uml_to_role_link_inverse_map_func }
+    }
+	{ NameCompletion
+		{ MappingName AssociationNodeMapping }
+		{ NameCompletionFunc uclassd_name_completion_func }
+	}
+
+}
+
+// ECR 3856 - begin
+LinkSymbol Aggregation
+{
+    { NodeMapping
+        { MappingName AssociationNodeMapping }
+        { AppType UmlAssociation }
+        { NameIsRequired False }
+        { NameFunc uml_binary_association_name }
+        { SigFunc uml_binary_association_signature }
+		{ InverseMapFunc uml_association_inverse_map_func }
+    }
+    { LinkMapping
+        { MappingName FromMapping } 
+        { AppType UmlRole }
+        { NameIsRequired False }
+		{ Scope
+			{ Symbol Self }
+			{ MappingName AssociationNodeMapping }
+		}
+        { NameFunc idehook_bach_association_from_role_name_func }
+        { FromNode { MappingName ClassMapping } { Symbol FromNode } }
+        { ToNode { MappingName AssociationNodeMapping } { Symbol Self } }
+		{ InverseMapFunc uml_from_role_link_inverse_map_func }
+    }
+    { LinkMapping
+        { MappingName ToMapping }
+        { AppType UmlRole }
+        { NameIsRequired False }
+		{ Scope
+			{ Symbol Self }
+			{ MappingName AssociationNodeMapping }
+		}
+        { NameFunc idehook_bach_association_to_role_name_func }
+        { FromNode { MappingName ClassMapping } { Symbol ToNode } }
+        { ToNode { MappingName AssociationNodeMapping } { Symbol Self } }
+		{ InverseMapFunc uml_to_role_link_inverse_map_func }
+    }
+	{ NameCompletion
+		{ MappingName AssociationNodeMapping }
+		{ NameCompletionFunc uclassd_name_completion_func }
+	}
+}
+// ECR 3856 - end
+
+// ECR 7480 start
+LinkSymbol NavigableAssociation
+{
+    { NodeMapping
+        { MappingName AssociationNodeMapping }
+        { AppType UmlAssociation }
+        { NameIsRequired False }
+        { NameFunc uml_binary_association_name }
+        { SigFunc uml_binary_association_signature }
+		{ InverseMapFunc uml_association_inverse_map_func }
+    }
+    { LinkMapping
+        { MappingName FromMapping } 
+        { AppType UmlRole }
+        { NameIsRequired False }
+		{ Scope
+			{ Symbol Self }
+			{ MappingName AssociationNodeMapping }
+		}
+        { NameFunc idehook_bach_association_from_role_name_func }
+        { FromNode { MappingName ClassMapping } { Symbol FromNode } }
+        { ToNode { MappingName AssociationNodeMapping } { Symbol Self } }
+		{ InverseMapFunc uml_from_role_link_inverse_map_func }
+    }
+    { LinkMapping
+        { MappingName ToMapping }
+        { AppType UmlRole }
+        { NameIsRequired False }
+		{ Scope
+			{ Symbol Self }
+			{ MappingName AssociationNodeMapping }
+		}
+        { NameFunc idehook_bach_association_to_role_name_func }
+        { FromNode { MappingName ClassMapping } { Symbol ToNode } }
+        { ToNode { MappingName AssociationNodeMapping } { Symbol Self } }
+		{ InverseMapFunc uml_to_role_link_inverse_map_func }
+    }
+	{ NameCompletion
+		{ MappingName AssociationNodeMapping }
+		{ NameCompletionFunc uclassd_name_completion_func }
+	}
+}
+// ECR 7480 end
+
+LinkSymbol NaryAssociationRole
+{
+    { LinkMapping
+        { MappingName ToMapping }
+        { AppType UmlRole }
+        { NameIsRequired False }
+		{ Scope
+			{ Symbol FromNode }
+			{ MappingName AssociationNodeMapping }
+		}
+        { NameFunc idehook_bach_association_from_role_name_func }
+        { FromNode { MappingName ClassMapping } { Symbol ToNode } }
+        { ToNode { MappingName AssociationNodeMapping } { Symbol FromNode } }
+		{ InverseMapFunc uml_from_role_link_inverse_map_func }
+    }
+	{ SymbolicDependentsFunc uml_nary_link_deps }
+}
+
+
+LinkSymbol Dependency
+{
+    { LinkMapping
+        { MappingName DependencyMapping }
+        { AppType  UmlDependency }
+        { NameIsRequired False }  
+// ECR 5736 begin
+        { NameFunc general_arc_name_func }
+// ECR 5736 end
+        // JED - TODO?{ NameFunc idehook_bach_association_from_role_name_func }
+        // JED - TODO? { SigFunc booch_using_role_signature } 
+        { FromNode { Symbol FromNode } { MappingName ClassMapping } }
+        { ToNode { Symbol ToNode } { MappingName ClassMapping } } 
+        { Scope { Symbol FromNode } { MappingName ClassMapping } }
+    	// JED - TODO? { InverseMapFunc booch_using_supplier_inverse_map_func }
+    }
+}
+
+
+LinkSymbol Refines
+{
+	{ LinkMapping
+		{ MappingName RefinesMapping }
+		{ AppType UmlRefines }
+		{ NameIsRequired False }
+		{ FromNode { MappingName ClassMapping } }
+		{ ToNode { MappingName ClassMapping } }
+	}
+}
+
+
+LinkSymbol Implements
+{
+	{ LinkMapping
+		{ MappingName ImplementsMapping }
+		{ AppType UmlImplements }
+		{ NameIsRequired False }
+		{ FromNode { MappingName ClassMapping } }
+		{ ToNode { MappingName ClassMapping } }
+	}
+}
+
+
+LinkSymbol AssociationOr
+{
+}
+
+
+LinkSymbol Contains
+{
+	{ LinkMapping
+		{ MappingName ContainsMapping }
+		{ AppType UmlContains }
+		{ NameIsRequired False }
+		{ PreconditionFunc uml_should_target_node_get_contain_link }
+		{ FromNode { MappingName ClassMapping } }
+		{ ToNode { MappingName ClassMapping } }
+	}
+}
+
+
+LinkSymbol AssociationClassLink
+{
+	{ LinkMapping
+		{ MappingName AttributedAssociationMapping }
+		{ AppType UmlAssociationClassLink }
+		{ FromNode
+			{ SymbolFunc booch_attributed_association_source_symbol }
+			{ MappingName AssociationNodeMapping }
+		}
+		{ ToNode
+			{ Symbol ToNode }
+			{ MappingName ClassMapping }
+		}
+	}
+}
+
+// ECR2653
+NodeSymbol Ellipsis
+{
+	{ NodeMapping
+		// use ClassMapping so the Contains endpoints can be specified
+		{ MappingName ClassMapping }
+		{ AppType UmlEllipsis }
+		{ OutScopeLink Generalization }
+		{ Scope { MappingName ClassMapping }}
+	}
+}
+// ECR2653
+
+
+//ECR 4986 regression begin
+NodeSymbol Interface
+{
+	{ NodeMapping
+        { MappingName InterfaceMapping }
+        { AppType UmlInterface }
+        { NameIsRequired True }
+        { NameFunc uml_gde_node_base_name_func }
+    }
+    //ECR 4986 - fixed again, see log of ECR
+    { EditAnnotation
+        { UseMappings (ClassMapping) }
+    }
+    //ECR 4986 
+}
+//ECR 4986 regression end
+
+// ECR 5861 begin
+CntxSymbol RelLabelFrom
+{
+    { LinkMapping
+        { MappingName FromMapping } 
+        { AppType UmlRole }
+	{ Scope
+        	{ Symbol ParentLink }
+		{ MappingName AssociationNodeMapping }
+	}
+
+        { FromNode { MappingName ClassMapping } { SymbolFunc uml_role_fromnode_symbol } }
+        { ToNode { MappingName AssociationNodeMapping } { Symbol ParentLink } }
+
+        { NameFunc idehook_rel_label_from_role_name_func }
+	{ InverseMapFunc uml_from_role_link_inverse_map_func }
+    }
+}
+
+CntxSymbol RelLabelTo
+{
+    { LinkMapping
+        { MappingName ToMapping } 
+        { AppType UmlRole }
+	{ Scope
+        	{ Symbol ParentLink }
+		{ MappingName AssociationNodeMapping }
+	}
+
+        { FromNode { MappingName ClassMapping } { SymbolFunc uml_role_tonode_symbol } }
+        { ToNode { MappingName AssociationNodeMapping } { Symbol ParentLink } }
+
+        { NameFunc idehook_rel_label_to_role_name_func }
+	{ InverseMapFunc uml_to_role_link_inverse_map_func }
+    }
+}
+// ECR 5861 end

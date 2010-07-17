@@ -1,0 +1,46 @@
+//
+// 	StP/Core
+// 	Confidential property of Aonix
+// 	Copyright (c) 1992-1997
+// 	All rights reserved
+//
+
+//
+//	FILE:	OMTScenario.note
+//
+
+
+Note 801593
+{
+    { AppType OMTScenarioDefinition }
+    { HelpText "The Scenario Definition note lets you define what a given scenario is used for." }
+    { PrintName "Scenario Definition" }
+    { Bounds { Max 1 } }
+    { Item
+        { AppType MigrationDiagram }
+        { Bounds { Min 0 } { Max 1} }
+        { PrintName "Migration Diagram Name" }
+        { IsVisible False }
+    }
+}
+
+Note 888810
+{
+    { AppType UseCaseToObjectScenario }
+    { HelpText "The Use Case Diagram Link note holds a unique key for associating a Use Case with an Object Interaction (table or diagram) scenario." }
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Use Case Diagram Link" }
+    //{ Item
+    //    { AppType UseCaseId }
+    //    { Bounds { Min 0 } {Max 1} }
+    //    { PrintName "Use Case Id" }
+    //    { IsVisible True }
+    //}
+    { Item
+        { AppType UseCaseName }
+        { Bounds { Min 0 } { Max 1} }
+        { PrintName "Use Case Name" }
+        { IsVisible True }
+    }
+}
+

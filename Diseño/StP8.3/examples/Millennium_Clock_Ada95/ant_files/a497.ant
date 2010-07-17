@@ -1,0 +1,58 @@
+FileObject 1
+{
+    { Name "a497" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65CAC-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "Show_Clock_Behaviour" }
+    { Type UmlScenarioInstance }
+    { ObjectId 1282 }
+    { AnnotFileId 1 }
+    { Sig "ShowClockBehaviour_Show_Clock_Behaviour" }
+    { ScopeNodeId 0 }
+    { GUID "UID_6E951D6A-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1284 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1286 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Show_Clock_Behaviour" }
+    { NoteId 3 }
+    { ObjectId 1287 }
+}
+
+NoteObject 5
+{
+    { Type REQAssignmentNote }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1289 }
+}
+
+ItemObject 6
+{
+    { Type REQAnalysisAssignmentItem }
+    { Value "1. Display" }
+    { NoteId 5 }
+    { ObjectId 1290 }
+}
+

@@ -1,0 +1,44 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+//      sccsid[] = @(#)rme_gen.qrl
+//      StP/Core
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1993
+//      All rights reserved
+//
+//      Description: Run semantics checking on a given set of diagram(s).
+//      This routine is used from the command line and StP desktop.
+//
+//////////////////////////////////////////////////////////////////////////////
+
+#include "qrl/check/rme_check.inc"
+#include "qrl/include/files.inc"
+
+external string files = "";
+external_help = "The name of the rme file to generate a QRL script for.";
+
+void main()
+{
+    list filelist = file_list("RmeDiagram", files);
+
+    if (list_count(filelist) == 0)
+    {
+        message("No files found.");
+    }
+    else
+    {
+        RmeCheckSemanticsFromQrl(filelist);
+    }
+}
+
+// This function is defined here to use the standard message function.
+void out_error(string text)
+{
+    message(text);
+}
+
+// This function is defined here to use the standard message function.
+void out_message(string text)
+{
+    message(text);
+}

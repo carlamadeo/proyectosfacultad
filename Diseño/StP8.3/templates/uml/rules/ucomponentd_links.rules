@@ -1,0 +1,83 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+//
+
+Include "rules/componentDeployment_links.rules.common"
+
+// ECR 5184 start
+LinkSymbol  ClassResidence
+{
+        { Connects
+            { From sourceComponent }
+            { To Class }
+        }
+}  
+// ECR 5184 end
+
+LinkSymbol Dependency 
+{
+    { Connects 
+	{ From sourceComponent }
+	{ To interfaceComponent }
+    }
+    { Connects
+	{ From sourceComponent }
+	{ To binaryComponent }
+    }
+    { Connects
+	{ From sourceComponent }
+	{ To executableComponent }
+    }
+    { Connects
+	{ From executableComponent }
+	{ To sourceComponent }
+    }
+    { Connects
+	{ From binaryComponent }
+	{ To sourceComponent }
+    }
+    { Connects
+	{ From sourceComponent }
+	{ To sourceComponent }
+    }
+    { ReplaceSet ( none ) }
+}
+
+LinkSymbol Interface 
+{
+    { PrintName "Interface" }
+    { Uncentered True }
+    { ToArrow False}
+    { Connects 
+	{ From interfaceComponent }
+	{ To sourceComponent }
+    }
+    { ReplaceSet ( none ) }
+}
+
+LinkSymbol isComponentOf 
+{
+    { PrintName "Is Component Of" }
+    { ToArrow False}
+    { Uncentered True }
+    { CanBeInclude True }
+    { DisplayMark
+	{ Name DependencyStereotype }
+	{ ItemCond (UmlStereotype) }
+	{ StringMark "«${annot.UmlExtensibilityDefinition.UmlStereotype}»" }
+	{ Anchor LabelCenterRight }
+	{ HAdjust Center }
+	{ XPixelOffset 45 }
+	{ VAdjust Center }
+	{ Help "Dependency Stereotype" }
+    }
+    { Connects 
+	{ From sourceComponent }
+	{ To objectComponent }
+    }
+    { ReplaceSet ( none ) }
+}

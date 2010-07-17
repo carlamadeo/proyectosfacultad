@@ -1,0 +1,19 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Aonix
+// 	Copyright (c) 1997
+// 	All rights reserved
+//
+
+Include "annotation/UmlScenarioInstance.note"
+Include "annotation/UmlGenericObject"
+
+IncludeIfExists "val/annotation/validator_UmlScenarioInstance"
+
+// Added for Lifecycle desktop
+//
+IncludeIfExists "annotation/thirdparty_UmlScenarioInstance"
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_UmlScenarioInstance"

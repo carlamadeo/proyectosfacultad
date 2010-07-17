@@ -1,0 +1,58 @@
+PropertySheet ObjectRename
+{	
+	{ Name ObjectRename }
+	{ Label "Rename Object"}
+	{ OwnerActionCallback gde_object_rename_action_done }
+	{ Properties
+		{ Button
+			{ Name "OK" }
+			{ Label "Rename" }
+			{ Event
+			    { Type Select }
+			    { Callback "gde_object_rename_callback" }
+			}
+	    	}
+		{ Button
+			{ Name "Apply" }
+			{ Label "Check Impact" }
+			{ Event
+			    { Type Select }
+			    { Callback "gde_rename_check_impact_callback" }
+			}
+	    	}
+		{ Button
+			{ Name "Cancel" }
+			{ Event
+			    { Type Select }
+			    { Callback "gde_rename_cancel_callback" }
+			}
+	    	}
+		{ Message
+			{ Name "NewLabelLabel" }
+			{ Label "New Label:"}
+		}
+		{ Text
+			{ Name "NewLabel"}
+			{ MaxLength 5000}
+			{ MinLength	1}
+			{ DispLength	80}
+			{ MaxRows  5000}
+			{ DispRows      5}
+			{ VertScrollbar 1}
+		}
+		{ Footer
+			{ Name "Status" }
+			{ LeftFooter "" }
+			{ Active True }
+		}
+		{ Group
+			{ Name "All" }
+			{ Type Vertical }
+			{ Members (NewLabelLabel NewLabel)}
+			{ VerticalAlign Left}
+		}
+	}
+}
+
+
+

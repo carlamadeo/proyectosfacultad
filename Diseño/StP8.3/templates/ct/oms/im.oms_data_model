@@ -1,0 +1,253 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+ItemValType DB2DataTypeEnum
+{
+    { ChoiceType
+	{ Choice "CHAR" }
+	{ Choice "CHARACTER" }
+	{ Choice "DATE" }
+	{ Choice "DEC" }
+	{ Choice "DECIMAL" }
+	{ Choice "FLOAT" }
+	{ Choice "GRAPHIC" }
+	{ Choice "INT" }
+	{ Choice "INTEGER" }
+	{ Choice "LONG VARCHAR" }
+	{ Choice "LONG VARGRAPHIC" }
+	{ Choice "NUM" }
+	{ Choice "NUMERIC" }
+	{ Choice "SMALLINT" }
+	{ Choice "TIME" }
+	{ Choice "TIMESTAMP" }
+	{ Choice "VARCHAR" }
+	{ Choice "VARGRAPHIC" }
+    }
+}
+	
+ItemValType InformixDataTypeEnum
+{
+    { ChoiceType
+	{ Choice "BYTE" }
+	{ Choice "CHAR" }
+	{ Choice "CHARACTER" }
+	{ Choice "DATE" }
+	{ Choice "DATETIME" }
+	{ Choice "DEC" }
+	{ Choice "DECIMAL" }
+	{ Choice "DOUBLE PRECISION" }
+	{ Choice "FLOAT" }
+	{ Choice "INT" }
+	{ Choice "INTEGER" }
+	{ Choice "INTERVAL" }
+	{ Choice "MONEY" }
+	{ Choice "NUMERIC" }
+	{ Choice "REAL" }
+	{ Choice "SERIAL" }
+	{ Choice "SMALLFLOAT" }
+	{ Choice "SMALLINT" }
+	{ Choice "TEXT" }
+	{ Choice "VARCHAR" }
+    }
+}
+
+ItemValType IngresDataTypeEnum
+{
+    { ChoiceType
+	{ Choice "c" }
+	{ Choice "char" }
+	{ Choice "character" }
+	{ Choice "date" }
+	{ Choice "double precision" }
+	{ Choice "float" }
+	{ Choice "float4" }
+	{ Choice "float8" }
+	{ Choice "integer" }
+	{ Choice "integer1" }
+	{ Choice "integer2" }
+	{ Choice "integer4" }
+	{ Choice "money" }
+	{ Choice "object_key" }
+	{ Choice "real" }
+	{ Choice "smallint" }
+	{ Choice "table_key" }
+	{ Choice "text" }
+	{ Choice "varchar" }
+    }
+}
+
+ItemValType IngresStructureEnum
+{
+    { ChoiceType
+	{ Choice "btree" }
+	{ Choice "hash" }
+	{ Choice "heap" }
+	{ Choice "isam" }
+    }
+}
+
+ItemValType DateTimeIntervalEnum
+{
+    { ChoiceType
+	{ Choice "YEAR" }
+	{ Choice "MONTH" }
+	{ Choice "DAY" }
+	{ Choice "HOUR" }
+	{ Choice "MINUTE" }
+	{ Choice "SECOND" }
+	{ Choice "FRACTION" }
+    }
+}
+
+ItemValType SybaseDataTypeEnum
+{
+    { ChoiceType
+	{ Choice "binary" }
+	{ Choice "bit" }
+	{ Choice "char" }
+	{ Choice "datetime" }
+	{ Choice "decimal" } // Sybase 10 only
+	{ Choice "dec" } // Sybase 10 only
+	{ Choice "double precision" } // Sybase 10 only
+	{ Choice "float" }
+	{ Choice "identity" } // Sybase 10 only
+	{ Choice "image" }
+	{ Choice "int" }
+	{ Choice "money" }
+	{ Choice "nchar" }    // Sybase 10 only
+	{ Choice "numeric" }  // Sybase 10 only
+	{ Choice "nvarchar" } // Sybase 10 only
+	{ Choice "real" }
+	{ Choice "smalldatetime" }
+	{ Choice "smallint" }
+	{ Choice "smallmoney" }
+	{ Choice "text" }
+	{ Choice "timestamp" }
+	{ Choice "tinyint" }
+	{ Choice "varbinary" }
+	{ Choice "varchar" }
+    }
+}
+
+ItemValType OracleDataTypeEnum
+{
+    { ChoiceType
+	{ Choice "CHAR" } // Oracle 7
+	{ Choice "CHARACTER" } // Oracle 7
+	{ Choice "DATE" } // Oracle 7
+	{ Choice "DEC" }
+	{ Choice "DECIMAL" }
+	{ Choice "DOUBLE PRECISION" }
+	{ Choice "FLOAT" } // Oracle 7
+	{ Choice "INT" }
+	{ Choice "INTEGER" }
+	{ Choice "LONG" } // Oracle 7
+	{ Choice "LONG RAW" } // Oracle 7
+	{ Choice "LONG VARCHAR" }
+	{ Choice "MLSLABEL" } // Oracle 7 Trusted
+	{ Choice "NUMBER" } // Oracle 7
+	{ Choice "NUMERIC" }
+	{ Choice "RAW" } // Oracle 7
+	{ Choice "REAL" }
+	{ Choice "SMALLINT" }
+	{ Choice "VARCHAR" } // Oracle 7
+	{ Choice "VARCHAR2" } // Oracle 7
+    }
+}
+
+ItemValType LockModeEnum
+{
+    { ChoiceType
+	{ Choice "PAGE" }
+	{ Choice "ROW" }
+    }
+}
+
+ItemValType PrivilegeTypeEnum
+{
+    { ChoiceType
+	{ Choice "ALL" }
+	{ Choice "INSERT" }
+	{ Choice "DELETE" }
+	{ Choice "SELECT" }
+	{ Choice "UPDATE" }
+    }
+}
+
+ItemValType SqlActionEnum
+{
+    { ChoiceType
+	{ Choice "INSERT" }
+	{ Choice "DELETE" }
+	{ Choice "UPDATE" }
+    }
+}
+
+ItemValType CardinalityEnum
+{
+    { ChoiceType
+	{ Choice "Many" }
+	{ Choice "One" }
+	{ Choice "Any" }
+    }
+}
+
+ItemValType ExistenceEnum
+{
+    { ChoiceType
+	{ Choice "Zero" }
+	{ Choice "One" }
+	{ Choice "Any" }
+    }
+}
+
+ItemValType SchemaTableEnum
+{
+    { ChoiceType
+	{ Choice "Follow Cardinality" }
+	{ Choice "Table Always" }
+    }
+}
+
+ItemValType ForeignKeyRuleEnum
+{
+    { ChoiceType
+	{ Choice "CASCADE" }
+	{ Choice "RESTRICT" }
+	{ Choice "SET NULL" }
+    }
+}
+
+ItemValType TriggerTimingEnum
+{
+    { ChoiceType
+	{ Choice "BEFORE" }
+	{ Choice "AFTER" }
+    }
+}
+
+ItemValType SybaseOnAccessEnum
+{
+    { ChoiceType
+        { Choice "ok" }
+	{ Choice "fail" }
+	{ Choice "both" }
+	{ Choice "off" }
+    }
+}
+
+ItemValType SybaseAuditEnum
+{
+    { ChoiceType
+        { Choice "delete" }
+	{ Choice "insert" }
+	{ Choice "select" } 
+	{ Choice "update" }
+    }
+}
+

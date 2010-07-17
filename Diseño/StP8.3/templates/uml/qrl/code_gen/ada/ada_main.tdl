@@ -1,0 +1,504 @@
+//*****************************************************************************
+// $RCSfile: ada_main.tdl,v $
+// $Revision: 1.3 $
+// $Date: 2002/03/08 16:03:54 $
+// Author: Chafik Aouanet, Peter Kleiner
+//*****************************************************************************
+/*
+Contains the main routine of the Ada code generator.
+
+Generates for each class in the model:
+	 - package specification (template genSpec, defined in ada_genspec.tdl)
+	 - package body (template genBody, defined in ada_genbody.tdl)
+
+Generates the main routine of the generated application 
+(template genMain, defined below).
+
+Generates one file (./ACD_runtime/ACD_Runtime.ads) containing the base classes 'ActiveInstance' 
+and 'InactiveInstance'. Every generated class is directly or indirectly inherited
+from either 'ActiveInstance' or 'InactiveInstance'
+(template genAcdRuntimeSpec, defined below).
+
+In additions, generates files (./ACD_runtime/xxx.ad?) to support reference counts and smart pointers
+
+The mapping of metatypes and StP/Uml types is documented in the ACD description.
+*/
+
+//TBD: use default value of literal to sort enumeration type 
+//TBD: Creation Event an INITIALIZE übergeben bei SM
+//TBD: wenn parent type SM hat in CREATE und INITIALIZE EVent als Parameter und übergeben
+
+
+/*
+imports other template files
+*/
+USES ada_std;
+USES ada_genspec;
+USES ada_genbody;
+USES ada_genwith;
+USES ada_gentypes;
+USES ada_genconsdes;
+USES ada_genattr;
+USES ada_genrel;
+USES ada_genop;
+USES ada_gensm;
+USES ada_test;
+USES ada_gencom;
+USES ada_genruntime;
+
+proc main()
+
+//T	printObjects();
+//T	printAssociations();
+//T	printAllStates();
+//T	printPackagesAndClasses();
+
+	/* Initializes language specific settings. (defined in ada_std.tdl) */
+	init();
+
+//T	[Test_Collect] = TRUE;
+//T	[Test_Collect2] = TRUE;
+//T	[Test_Names] = TRUE;
+//T	[Test_SM_Map] = TRUE;
+//T	[Test_OCL] = TRUE;
+//T	[Test_TypeMapping] = TRUE;
+//T	[Test_Imports] = TRUE;
+
+//T	[Test_Prefix] = TRUE;		// Subsystem prefixes for file names
+//T	[Test_wdh] = TRUE;		// miscellaneous tests by wdh (should be removed when done)
+
+	[doInlinePragma] = FALSE;
+//	[doInlinePragma] = TRUE;
+
+	if([doCallStp] == TRUE || [doCallStp] == "True")
+		info = "Generating Code with State Debugger\n";
+		[doCallStp] = TRUE;
+	else
+		info = "Generating Code without State Debugger\n";
+		[doCallStp] = FALSE;
+	end if
+	
+	if([doRaven] == TRUE || [doRaven] == "True")
+		info = "Generating Code for Raven\n";
+		[doRaven] = TRUE;
+	else
+		info = "Generating Code for Full Ada 95\n";
+		[doRaven] = FALSE;
+	end if
+	
+	/* collect information contained in packages in the model, i.e. Ada packages
+	   and directories.
+	   partion the Class-Dependency graph such that Ada packages without
+	   cyclic dependencies can be built (defined in ada_std.tdl) */
+	collectPackages();
+	determineSubsystems();
+
+	/* provide Ada names for the MClass, MPackage, MOperation, ... in the model
+	   (defined in ada_std.tdl) */
+	deriveNames();
+
+	identifyClassOperations();
+	
+	/* Redirect output to generated file <[srcdir]"/<fileName.ext>">. 
+	   srcdir is a global variable which is provided by the code generation 
+	   dialog srcdir will be generated, if it is necessary.
+	   info redirects output to message log.
+	   out redirects output to the file, which is defined by output. */
+	   
+	if (wantCodeForRuntime())
+		/* generate all the runtime environment files which are the same for all models */
+		genRuntimeEnvironment();
+	end if
+
+	output([srcdir] "/main.ada");
+	info = "generate " getOutput() "\n";
+	/* calls the template genMain (defined in ada_main.tdl)*/
+	out = genMain();	
+	
+	/* collectPackages called above computes two new attributes called 'group'
+	   and 'packageName' for each instance of MClass. 
+	   For classes with group-Attribute '0' a single package for this class can
+	   be created. The name of this package is given by the 'packageName' attribute.
+	   For all other group values, each class with the same group value shall be collected
+	   in one package. */    
+
+	/* loop over all instances of MClass with group '0' in the model.
+	   Generate one package per class.
+	   MClass is a metaclass which represents classes in StP */
+
+	/* do not move assignment to currentGroup because include_proc relies on it.
+	   include_proc is executed upon next output - command */
+
+	loop (Instances->MClass where [MClass:group] == 0 && isTypemapping([MClass])==FALSE && [MClass].isExternal()==FALSE && isCOMInterface([MClass]) == FALSE && [MClass].wantCode())
+		/* store current class name in a global variable to avoid context clause
+		   for own package to be generated. See referTo in ada_std.tdl on how
+		   this is used */
+
+		//T info = "Generate class " [MClass.name]"="[MClass.id] "\n";
+
+		// move immediately below the output - commands below:  [currentClass] = [MClass.id];
+		if(isCOMmain([MClass]))
+  		   /* Generate a main program for the COM Class used */
+		   output([srcdir] [MClass:subSystemPath] "/" [MClass:fileName] ".ada");
+		   [currentClass] = [MClass.id];
+		   info = "generate " getOutput() "\n";
+ 		   out = genCOMmain([MClass]);
+		else
+  		   /* Generates a package spec for each instance of MClass */
+		   output([srcdir] [MClass:subSystemPath] "/" [MClass:fileName] ".ads");
+		   [currentClass] = [MClass.id];
+		   info = "generate " getOutput() "\n";
+		   appendMapFile([MClass.name],replace(getOutput(),"(\\\\)","/"));
+		   if ([MClass].isInstance())
+	              out = genInstanceSpec([MClass]);
+                   else
+                      out = genSpec([MClass]);
+                   end if
+                
+	   	   if (![MClass].isInstance())
+		      /* Generates a package body for each instance of MClass */
+		      output([srcdir] [MClass:subSystemPath] "/" [MClass:fileName] ".adb");
+		      info = "generate " getOutput() "\n";
+		      appendMapFile([MClass.name],replace(getOutput(),"(\\\\)","/"));
+	    	      out = genBody([MClass]);
+
+		      genSubunits([MClass]);
+	    	    end if
+	    	 end if			
+
+	end loop  
+		
+	/* collectPackages has created an additional 'groupList' global variable which
+	   contains all group values other than '0'. We can loop over each element of the
+	   list using the TokenSet mechanism: within the loop [TokenSet.line] refers to the
+	   individual list element, i.e. group Attribute value.
+	   The name of the package being generated is retrieved calling getPackageNameOfGroup
+	   (defined in ada_std.tdl) */
+
+	/* do not move assignment to currentGroup before output command
+	   because include_proc relies on it.
+	   And include_proc is executed implicitly upon next output - command */
+	   
+	loop(Instances->TokenSet([groupList]) where getGMC([TokenSet.line]) > 0 && wantCodeForGroup([TokenSet.line]))
+
+		/* store current group in a global variable to avoid context clause
+		   for own package to be generated. See referTo in ada_std.tdl on how
+		   this is used */
+
+		//T info = "Generate group " [TokenSet.line] "\n";
+ 
+		/* Generates a package spec for each group */
+		output([srcdir] getSubsystemPathOfGroup([TokenSet.line]) "/" getFileNameOfGroup([TokenSet.line]) ".ads");
+		info = "generate " getOutput() "\n";
+		[currentClass] = "";
+		[currentGroup] = [TokenSet.line];
+		switch(getGK([TokenSet.line]))
+		case "idl":
+		   loop(Instances->MPackage where [MPackage:group] == [TokenSet.line])
+	    	      out = genCOMLibSpec([MPackage]);
+
+   	    	      loop(MPackage->MClass->MNormalClass)
+		         /* Generates a class package spec for each Class */
+		         output([srcdir] getSubsystemPathOfGroup([TokenSet.line]) "/" getFileNameOfGroup([TokenSet.line]) "." [MNormalClass.name] ".ads");
+		         info = "generate " getOutput() "\n";
+    		   	 out = genCOMClassSpec([MNormalClass],[MPackage]);
+		         /* Generates a class package body for each Class */
+		         output([srcdir] getSubsystemPathOfGroup([TokenSet.line]) "/" getFileNameOfGroup([TokenSet.line]) "." [MNormalClass.name] ".adb");
+		         info = "generate " getOutput() "\n";
+    		   	 out = genCOMClassBody([MNormalClass],[MPackage]);
+	    	      end loop			
+
+		   end loop
+		   break;
+
+
+		default :
+	    	   out = genGroupSpec([TokenSet.line]);
+
+		   /* Generates a package body for each group */
+		   output([srcdir] getSubsystemPathOfGroup([TokenSet.line]) "/" getFileNameOfGroup([TokenSet.line]) ".adb");
+		   info = "generate " getOutput() "\n";
+	    	   out = genGroupBody([TokenSet.line]);
+
+	    	   loop(Instances->MClass where [MClass:group] == [currentGroup])
+    		   	genSubunits([MClass]);
+	    	   end loop			
+	
+	    	end switch
+	    	
+	end loop
+
+	loop (Instances->MClass where isActiveClass([MClass]) && [MClass].wantCode())
+	    if ([MClass].getTaggedValueBool("Gen_Signal_Handler", FALSE))
+		/* Generates a signal handler package spec for this class */
+		output([srcdir] [MClass:subSystemPath] "/" [MClass:fileName] "." [MClass.name] "_sig.ads");
+		[currentClass] = [MClass.id];
+		[currentGroup] = "";
+		info = "generate " getOutput() "\n";
+	    	out = genSignalSpec([MClass]);
+
+		/* Generates a signal handler package body for this class */
+		output([srcdir] [MClass:subSystemPath] "/" [MClass:fileName] "." [MClass.name] "_sig.adb");
+		info = "generate " getOutput() "\n";
+	    	out = genSignalBody([MClass]);
+	    end if
+        end loop
+
+	loop (Instances->MClass where requiresChild([MClass],"public")&& [MClass].wantCode())
+		/* Generate a public child package for attribute and relation access operations for this class */
+		output([srcdir] [MClass:subSystemPath] "/" [MClass:fileName] "." [MClass.name] "_access.ads");
+		[currentClass] = [MClass.id];
+		[currentGroup] = "";
+		info = "generate " getOutput() "\n";
+	    	out = genPublicAccessSpec([MClass]);
+
+		/* Generates the corresponding body */
+		output([srcdir] [MClass:subSystemPath] "/" [MClass:fileName] "." [MClass.name] "_access.adb");
+		info = "generate " getOutput() "\n";
+	    	out = genPublicAccessBody([MClass]);
+        end loop
+
+	loop (Instances->MClass where requiresChild([MClass],"private")&& [MClass].wantCode())
+		/* Generate a private child package for attribute and relation access operations for this class */
+		output([srcdir] [MClass:subSystemPath] "/" [MClass:fileName] "." [MClass.name] "_paccess.ads");
+		[currentClass] = [MClass.id];
+		[currentGroup] = "";
+		info = "generate " getOutput() "\n";
+	    	out = genPrivateAccessSpec([MClass]);
+
+		/* Generates the corresponding body */
+		output([srcdir] [MClass:subSystemPath] "/" [MClass:fileName] "." [MClass.name] "_paccess.adb");
+		info = "generate " getOutput() "\n";
+	    	out = genPrivateAccessBody([MClass]);
+        end loop
+
+	closeMapFile();	
+				
+	return;
+
+end proc
+
+/******************************************************************************
+generate a file for the subunit belonging to the class, if any.
+******************************************************************************/
+
+proc genSubunitsSuffix(MClass)
+// we need the class name suffix in case multiple classes with separate bodies are in one package
+   if([MClass:group] != 0)
+      return "_"[MClass.name];
+   else
+      return "";
+   end if
+end proc
+proc genSubunits(MClass)
+
+   local fileName;
+/*** wdh: use [MClass:fileName] instead of [MClass.name] for consistency ***/
+   if(isTask([MClass]) )
+      if([MClass].isSubunit() )
+	output([srcdir] [MClass:subSystemPath] "/" [MClass:fileName] genSubunitsSuffix([MClass])"_sep.adb");
+	info = "generate " getOutput() "\n";
+	out = [MClass].genTaskBodySubunit();
+     end if
+   else if(isPT([MClass]) )
+      if([MClass].isSubunit() )
+	output([srcdir] [MClass:subSystemPath] "/" [MClass:fileName] genSubunitsSuffix([MClass])"_sep.adb");
+	info = "generate " getOutput() "\n";
+	out = [MClass].genPTBodySubunit();
+      end if
+   end if end if
+   loop(MClass->MOperation where [MOperation].isSubunit())
+      output([srcdir] [MClass:subSystemPath] "/" [MClass:fileName] genSubunitsSuffix([MClass])"_" [MOperation.name] "_sep.adb");
+      info = "generate " getOutput() "\n";
+      out = genOperationSubunit([MOperation],[MClass]);
+   end loop 
+  
+end proc
+
+/******************************************************************************
+generates main.ada which contains the main routine of the application.
+This is just an example of how the main routine could look like.
+******************************************************************************/
+template genMain()
+
+[genMainPkgSpec()]
+
+[genMainPkgBody()]
+
+[/* loop over all MClasses with group '0' in the model. Import the package 
+    generated for these classes */]
+[loop (Instances->MClass where [MClass:group] == 0 && ![MClass].isExternal())]
+with [MClass:cuName];
+[end loop]
+
+[/* loop over all groups other '0' in the model. Import the package generated for
+    these groups */]
+[loop(Instances->TokenSet([groupList]) where getGMC([TokenSet.line]) > 0)]
+with [getPackageNameOfGroup([TokenSet.line])];
+[end loop]
+
+[/* Generates a marked section in the output. The content of this section can 
+be changed by the user in the generated file. These changes will not be 
+overwritten, in the following cycles of code generation */]
+[mergeOut("UDIF","additional context clauses", "")]
+with Main_Pkg;
+[if([doCallStp] == TRUE)]
+with Stp_Calls;
+[end if]
+
+procedure Main is
+[if([doCallStp] == TRUE)]
+	The_Stp_Project_Directory : constant String := "[projectdir]";
+	The_Stp_System_Name : constant String := "[system]";
+[end if]
+	[mergeOut("UDSD","StartUp Declarations", "")]
+begin
+[if([doCallStp] == TRUE)]
+	StP_Calls.Set_System (The_Stp_Project_Directory, The_Stp_System_Name);
+	StP_Calls.State_Debugger.Enter_At_Program_Start;
+[end if]
+	[mergeOut("UDSC","StartUp Code", "null;")]
+end Main;
+end template
+
+template genMainPkgSpec()
+[mark("include","include_proc")]
+with System;
+[if([doCallStp] == TRUE)]
+with Stp_Calls;
+[end if]
+
+package Main_Pkg is
+
+[/* instantiate every class with stereotype <<main>> */]
+[loop (Instances->MClass where [MClass].getStereoType() == "main")]
+	The_[MClass.name] : aliased [importClass([MClass])];
+[end loop]
+
+	Shutdown : Boolean := False; 
+     
+[if([doCallStp] == TRUE)]
+	task StpCalls_Polling is
+		pragma priority (system.priority'first);
+[   if([doRaven] != TRUE)]
+		entry Reset;
+[   end if]
+	end StpCalls_Polling; 
+
+	function DebuggerActive return Boolean renames Stp_Calls.DebuggerActive;
+	-- indicates whether State Debugger has control in order to hold cyclic activities
+[else]
+	DebuggerActive : constant Boolean := False;
+[end if]
+
+	procedure Start_Queue_Dispatcher;
+
+end Main_Pkg;
+end template
+
+template genMainPkgBody()
+
+with ACD_Runtime.Queued_Signals;
+
+[if([doRaven] == TRUE)]
+with Ada.Real_Time;
+use  Ada.Real_Time; -- To get visibility to the "+" operator.
+with Ada.Synchronous_Task_Control;
+[else]
+with Text_IO;
+with Ada.Exceptions;
+[end if]
+
+package body Main_Pkg is
+
+	package Queued_Signals renames ACD_Runtime.Queued_Signals;
+
+[if([doCallStp] == TRUE)]
+[   if([doRaven] == TRUE)]
+	task body StpCalls_Polling is
+		Next_Time : Ada.Real_Time.Time;
+		Period    : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds (1000);
+	begin
+		Next_Time := Ada.Real_Time.Clock;
+		while not Shutdown loop
+			delay until Next_Time;
+			Stp_Calls.State_Debugger.Poll;
+			Next_Time := Next_Time + Period;
+		end loop;   
+	end StpCalls_Polling;
+[   else]
+	task body StpCalls_Polling is
+	begin
+		while not Shutdown loop
+			select
+				accept Reset;
+			or
+				delay 1.0;
+				Stp_Calls.State_Debugger.Poll;
+			end select;
+		end loop;   
+	exception
+		when e:others =>       
+			text_io.put_line ("Exception in StpCalls_Polling:" & Ada.Exceptions.Exception_Name (e));
+			Shutdown := True;
+	end StpCalls_Polling;
+[   end if]
+[end if]
+
+	task Queue_Dispatcher is
+		pragma priority (system.priority'last);
+[if([doRaven] != TRUE)]
+		entry Start;
+[end if]
+	end Queue_Dispatcher;
+
+[if([doRaven] == TRUE)]
+	Queue_Dispatcher_SO : Ada.Synchronous_Task_Control.Suspension_Object;
+[end if]
+
+	task body Queue_Dispatcher is
+[if([doRaven] == TRUE)]
+		Next_Time : Ada.Real_Time.Time;
+		Period    : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Milliseconds (1000);
+	begin
+		Next_Time := Ada.Real_Time.Clock;
+		Ada.Synchronous_Task_Control.Suspend_Until_True (Queue_Dispatcher_SO);
+[else]
+	begin
+		accept Start;
+[end if]
+		while not Shutdown loop
+			begin
+				Queued_Signals.Dispatch_Signals;
+[if([doRaven] != TRUE)]
+			exception
+				when e:others =>       
+					text_io.put_line ("Exception in Dispatch_Signals:" & Ada.Exceptions.Exception_Name (e));
+[end if]
+			end;
+[if([doCallStp] == TRUE)]
+[   if([doRaven] != TRUE)]
+			StpCalls_Polling.Reset;
+[   end if]
+[end if]
+		end loop;
+[if([doRaven] != TRUE)]
+	exception
+		when e:others =>       
+			text_io.put_line ("Exception in Queue_Dispatcher:" & Ada.Exceptions.Exception_Name (e));
+			Shutdown := True;
+[end if]
+	end Queue_Dispatcher;
+
+	procedure Start_Queue_Dispatcher is
+	begin
+[if([doRaven] == TRUE)]
+		Ada.Synchronous_Task_Control.Set_True (Queue_Dispatcher_SO);
+[else]
+		Queue_Dispatcher.Start;
+[end if]
+	end Start_Queue_Dispatcher;
+ 
+end Main_Pkg;
+end template
+

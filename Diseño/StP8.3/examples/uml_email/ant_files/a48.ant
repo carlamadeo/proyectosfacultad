@@ -1,0 +1,42 @@
+FileObject 1
+{
+    { Name "a48" }
+    { Type ObjectAnnotation }
+    { GUID "UID_5FA8469C-5FA3-4974-952B-A115E6CE1B86" }
+}
+
+NodeObject 99999
+{
+    { Name "Message,Text_Object" }
+    { Type UmlAssociation }
+    { ObjectId 472 }
+    { AnnotFileId 1 }
+    { Sig ":" }
+    { ScopeNodeId 0 }
+    { GUID "UID_03906DD8-5390-11d4-8777-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 704 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 706 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Message,Text_Object" }
+    { NoteId 3 }
+    { ObjectId 707 }
+}
+

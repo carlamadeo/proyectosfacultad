@@ -1,0 +1,210 @@
+#noecho
+
+/****************************************************************************
+
+    sccsid[] = %W% %Y% %D%
+    StP/T
+    Confidential property of Interactive Development Environments, Inc.
+    Copyright (C) 1992 Programming Environments, Inc.                   
+    Copyright (C) 1993-1994 Interactive Development Environments, Inc. 
+    All rights reserved
+
+    tsdl.std:  Standard Definitions for types and constants 
+
+****************************************************************************/
+
+/*
+** predefined strings for datatype subdomain labels
+*/
+
+Constant                         as_specified
+   has internal value            "as_specified";
+   has description               "this is a valid subdomain name that "
+                                 "refers to all specified domain values".
+
+Constant                         below_bounds
+   has internal value            "below_bounds";
+   has description               "this invalid subdomain name indicates a "
+                                 "numeric item has possible values below "
+                                 "the specified minimum".
+
+Constant                         above_bounds
+   has internal value            "above_bounds";
+   has description               "this invalid subdomain name indicates a "
+                                 "indicates a numeric item has possible "
+                                 "values above the specified maximum".
+
+Constant                         out_of_bounds
+   has internal value            "out_of_bounds";
+   has description               "this invalid subdomain name indicates a "
+                                 "numeric item has possible values below "
+                                 "the specified minimum and above the "
+                                 "specified maximum".
+
+Constant                         out_of_type
+   has internal value            "out_of_type";
+   has description               "this invalid subdomain name indicates a "
+                                 "numeric item has possible character and "
+                                 "string values or that a lexical item has "
+                                 "possible integer and real values".
+
+Constant                         not_in_list
+   has internal value            "not_in_list";
+   has description               "this invalid subdomain name indicates a "
+                                 "dataitem has possible values which are  "
+                                 "not in an enumerated list specification ".
+
+Constant                         abnormal
+   has internal value            "abnormal";
+   has description               "this invalid subdomain name indicates a "
+                                 "numeric item has possible out_of_bounds "
+                                 "and out_of_type values or a lexical item "
+                                 "has possible not_in_list and out_of_type "
+                                 "values".
+
+/*
+** a Boolean datatype having a string-valued representation
+*/
+
+Constant                         TRUE_string
+   has internal value            "TRUE".
+
+Constant                         FALSE_string
+   has internal value            "FALSE".
+
+DataType                         boolean_string
+   is datatypeclass              string;
+   has values                    TRUE_string, FALSE_string;
+   has valid subdomain           as_specified;
+   has description               "a boolean datatype having a string-valued "
+                                 "representation for TRUE and FALSE".
+
+
+/*
+** a Boolean datatype having an integer-valued representation
+*/
+
+Constant                         TRUE_integer
+   has internal value            1 .
+
+Constant                         FALSE_integer
+   has internal value            0 .
+
+DataType                         boolean_integer
+   is datatypeclass              integer;
+   has values                    TRUE_integer, FALSE_integer;
+   has valid subdomain           as_specified;
+   has description               "a boolean datatype having an integer-valued "
+                                 "representation for TRUE and FALSE".
+
+/*
+** common character and string datatype definitions
+*/
+
+DataType                         PrintableASCII
+   is datatypeclass              character;
+   has values                    //[ -~]//;
+   has valid subdomain           as_specified.
+
+DataType                         Digit
+   is datatypeclass              character;
+   has values                    //[0-9]//;
+   has valid subdomain           as_specified.
+
+DataType                         Bit
+   is datatypeclass              character;
+   has values                    //[0-1]//;
+   has valid subdomain           as_specified.
+
+DataType                         Bit8string
+   is datatypeclass              character;
+   has values                    //[0-1]\{8,8\}//;
+   has valid subdomain           as_specified.
+
+DataType                         LocalPhone
+   is datatypeclass              string;
+   has values                    //[0-9]\{3,3\}-[0-9]\{4,4\}//;
+   has valid subdomain           as_specified;
+   has invalid subdomain         abnormal.
+
+DataType                         USPhone
+   is datatypeclass              string;
+   has values                    //[0-9]\{3,3\}-[0-9]\{3,3\}-[0-9]\{4,4\}//;
+   has valid subdomain           as_specified;
+   has invalid subdomain         abnormal.
+
+DataType                         ZipCode5
+   is datatypeclass              string;
+   has values                    //[0-9]\{5,5\}//;
+   has valid subdomain           as_specified;
+   has invalid subdomain         abnormal.
+
+DataType                         ZipCode9
+   is datatypeclass              string;
+   has values                    //[0-9]\{5,5\}-[0-9]\{4,4\}//;
+   has valid subdomain           as_specified;
+   has invalid subdomain         abnormal.
+
+DataType                         State_Abbreviations
+   is datatypeclass              string;
+   has values
+      "AL", "AK", "AZ", "AR", "AS", "CA", "CO", "CT",
+      "DE", "DC", "FM", "FL", "GA", "GU", "HI", "ID",
+      "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MH",
+      "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE",
+      "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "MP",
+      "OH", "OK", "OR", "PW", "PA", "PR", "RI", "SC",
+      "SD", "TN", "TX", "UT", "VT", "VA", "VI", "WA",
+      "WV", "WI", "WY";
+   has valid subdomain           as_specified;
+   has invalid subdomain         abnormal.
+
+DataType                         Date
+   is datatypeclass              string;
+#if 1
+   has values                    "$DATE$";
+#else
+   has values
+        /*reference_YYYYMMDD*/   "19921014",
+        /*first_Gregorian_date*/ "15830101",
+        /*last_Gregorian_date*/  "99991231",
+        /*leapyear_exception*/   "16000228",
+        /*non_leap_year*/        "19910228",
+        /*non_leap_year*/        "19910301",
+        /*non_leap_year*/        "19910331",
+        /*non_leap_year*/        "19910430",
+        /*non_leap_year*/        "19911225",
+        /*leap_year*/            "19920101",
+        /*leap_year*/            "19920229",
+        /*leap_year*/            "19920301",
+        /*leap_year*/            "19920331",
+        /*leap_year*/            "19920930",
+        /*leap_year*/            "19921225",
+        /*last_of_century*/      "19991231",
+        /*first_of_century*/     "20000101";
+#endif
+   has valid subdomain           as_specified;
+   has invalid subdomain         abnormal.
+
+
+DataType                         Time
+   is datatypeclass              string;
+#if 1
+   has values                    "$TIME$";
+#else
+   has values
+        /*reference_HHMMSS*/     "123456",
+        /*earliest_time_of_day*/ "000000",
+        /*latest_time_of_day*/   "235959",
+        /*low_debug*/            "000001",
+        /*morning_begin*/        "090000",
+        /*below_noon*/           "115900",
+        /*troublesome_noon*/     "120000",
+        /*above_noon*/           "120100",
+        /*afternoon_end*/        "170000",
+        /*high_debug*/           "235958";
+#endif
+   has valid subdomain           as_specified;
+   has invalid subdomain         abnormal.
+
+#echo 

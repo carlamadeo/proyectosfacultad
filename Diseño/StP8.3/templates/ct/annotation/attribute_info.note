@@ -1,0 +1,52 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Note 800003
+{
+    { AppType AttributeInfo }
+    { HelpText "The Attribute Information note lets you add items that capture modeling information about an attribute. This information is used in SQL generation." }
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Attribute Information" }
+    { Item
+	{ AppType Position }
+	{ HelpText "The Column Position item lets you override the default position of a column for SQL generation. By default, SQL generation uses the left-to-right, top-to-bottom position of attributes on the AllAttributes viewpoint to determine their order. Or, if attributes are represented in an Attribute table, it uses their top-to-bottom order in the table. Using the Column Position item allows you to override this default ordering. The value you specify for Column Position indicates the relative ordering of the column." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Column Position" }
+    }
+    { Item
+	{ AppType SqlName }
+	{ HelpText "The Column Name item specifies the name of the attribute as a database table column. " }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Column Name" }
+	{ InitValue "${sym_label}" }
+    }
+    { Item
+	{ AppType IsKey }
+	{ HelpText "The Is Key? item specifies that the attribute is a part of the entity's primary key. " }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Is Key?" }
+	{ InitValue "True" }
+    }
+    { Item
+	{ AppType IsUnique }
+	{ HelpText "The Is Unique? item specifies that the value of the attribute must be unique for the whole table. See the Uniqueness Constraint note for multi-column uniqueness constraints. " }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Is Unique?" }
+	{ InitValue "True" }
+    }
+    { Item
+	{ AppType IsRequired }
+	{ HelpText "The Is Required? item specifies that the attribute must always have a value. As a database column, it cannot be null." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Is Required?" }
+	{ InitValue "True" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_attribute_info.note"

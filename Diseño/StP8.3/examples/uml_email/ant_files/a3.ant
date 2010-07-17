@@ -1,0 +1,58 @@
+FileObject 1
+{
+    { Name "a3" }
+    { Type ObjectAnnotation }
+    { GUID "UID_A1787706-B49A-4ff4-85E1-1604BFDA35FC" }
+}
+
+NodeObject 99999
+{
+    { Name "Receiver" }
+    { Type UmlClass }
+    { ObjectId 314 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_CFF94428-538F-11d4-8777-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlClassDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 527 }
+}
+
+ItemObject 3
+{
+    { Type UmlClassIsAbstract }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 528 }
+}
+
+NoteObject 4
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 530 }
+}
+
+NoteObject 5
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 532 }
+}
+
+ItemObject 6
+{
+    { Type ObjectName }
+    { Value "Receiver" }
+    { NoteId 5 }
+    { ObjectId 533 }
+}
+

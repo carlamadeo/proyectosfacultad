@@ -1,0 +1,7 @@
+// Navigate to StP
+
+/*
+   Navigate to the StP object corresponding to the current DOORS object
+*/
+
+stp_nav_to_stp

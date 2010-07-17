@@ -1,0 +1,47 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+//  FILE: user_UmlAttribute.note
+
+Note 810051
+{
+        { AppType UmlAttributeDDLDeclarations }
+        { HelpText "DDL Declarations." }
+        { PrintName "DDL Declarations" }
+        { Bounds { Min 0 } { Max 1 } }
+
+        { Item
+                { AppType UmlAttributeIsPrimaryKey }
+                { HelpText "Defines whether the attribute is included in the key object for the component (if you set the CreateKey property for the class). If you set this property, you should also set the IsReadOnly property (key attributes must be read-only). Key attributes for parents will automatically be included in the child's key." }
+                { PrintName "Primary Key" }
+                { Bounds { Min 0 } { Max 1 } }
+                { InitValue "False" }
+        }
+
+        { Item
+                { AppType UmlAttributeLength }
+                { HelpText "Defines the string length if the attribute is of type string." }
+                { PrintName "Length" }
+                { Bounds { Min 0 } { Max 1 } }
+        }
+
+        { Item
+                { AppType UmlAttributeCopyHelper }
+                { HelpText "Defines whether the attribute is included in the copy helper for the component (if you set the CreateCopyHelper property for the class). By default, all public attributes are included in the copy helper." }
+                { PrintName "Copy Helper" }
+                { Bounds { Min 0 } { Max 1 } }
+                { InitValue "True" }
+        }
+
+        { Item
+                { AppType UmlAttributeIsIncludedInDataObject }
+                { HelpText "Defines whether the attribute is included in the data object interface for the component (if you set the CreateImplementation property for the class). By default, all attributes are included in the data object." }
+                { PrintName "Is included in data object" }
+                { Bounds { Min 0 } { Max 1 } }
+                { InitValue "True" }
+        }
+
+}
+

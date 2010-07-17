@@ -1,0 +1,685 @@
+
+//      StP/SE
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1995
+//      All rights reserved
+//
+// File: se.app.types
+
+// ECR 7464  (changed various EditorQrlEval to EditorQrlEvalNoSave)
+// To avoid conflicts with stuff in the ct version of the app.types
+// file, all type "ids" should begin with the specified range +2000.
+// For example, the Cntx type normally has a range of 100000 to 199999.
+// In this file they begin with number 102000.
+
+FileObject      402001   DecisionTable
+{
+    { Annot "annotation/decision_table" }
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\",\\\"DecisionTable\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\",\\\"DecisionTable\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",NULL,\\\"DecisionTable\\\");\\");\"" }
+    }
+    { Method
+    	{ Name  "Print" }
+	{ Cmd 	"tprint -forward_messages 0${msgd_handle} -ed cse -p ${projdir} -s ${system} -Type DecisionTable -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+}
+
+FileObject      402002   ProcessActivationTable
+{
+    { Annot "annotation/process_activation_table" }
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\",\\\"ProcessActivationTable\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\",\\\"ProcessActivationTable\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",NULL,\\\"ProcessActivationTable\\\");\\");\"" }
+    }
+    { Method
+    	{ Name  "Print" }
+	{ Cmd 	"tprint -forward_messages 0${msgd_handle} -ed cse -p ${projdir} -s ${system} -Type ProcessActivationTable -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+}
+FileObject      402003   ProcessActivationMatrix
+{
+    { Annot "annotation/process_activation_matrix" }
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\",\\\"ProcessActivationMatrix\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\",\\\"ProcessActivationMatrix\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",NULL,\\\"ProcessActivationMatrix\\\");\\");\"" }
+    }
+    { Method
+    	{ Name  "Print" }
+	{ Cmd 	"tprint -forward_messages 0${msgd_handle} -ed cse -p ${projdir} -s ${system} -Type ProcessActivationMatrix -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+}
+FileObject      402004   StateTransitionTable
+{
+    { Annot "annotation/state_transition_table" }
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\",\\\"StateTransitionTable\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\",\\\"StateTransitionTable\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",NULL,\\\"StateTransitionTable\\\");\\");\"" }
+    }
+    { Method
+    	{ Name  "Print" }
+	{ Cmd 	"tprint -forward_messages 0${msgd_handle} -ed cse -p ${projdir} -s ${system} -Type StateTransitionTable -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+}
+FileObject      402005   StateEventMatrix
+{
+    { Annot "annotation/state_event_matrix" }
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\",\\\"StateEventMatrix\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\",\\\"StateEventMatrix\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",NULL,\\\"StateEventMatrix\\\");\\");\"" }
+    }
+    { Method
+    	{ Name  "Print" }
+	{ Cmd 	"tprint -forward_messages 0${msgd_handle} -ed cse -p ${projdir} -s ${system} -Type StateEventMatrix -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+}
+FileObject      402006   EventLogicTable
+{
+    { Annot "annotation/event_logic_table" }
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\",\\\"EventLogicTable\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\",\\\"EventLogicTable\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",NULL,\\\"EventLogicTable\\\");\\");\"" }
+    }
+    { Method
+    	{ Name  "Print" }
+	{ Cmd 	"tprint -forward_messages 0${msgd_handle} -ed cse -p ${projdir} -s ${system} -Type EventLogicTable -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+}
+FileObject      402007   ActionLogicTable
+{
+    { Annot "annotation/action_logic_table" }
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\",\\\"ActionLogicTable\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\",\\\"ActionLogicTable\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"cse\\",\\"EditorQrlEvalNoSave NavToggleAndFind(\\\"${file.name}\\\",NULL,\\\"ActionLogicTable\\\");\\");\"" }
+    }
+    { Method
+    	{ Name  "Print" }
+	{ Cmd 	"tprint -forward_messages 0${msgd_handle} -ed cse -p ${projdir} -s ${system} -Type ActionLogicTable -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+}
+
+FileObject      402009   CspecTable     
+{
+    { Annot "annotation/cspec_table" }
+}
+
+
+// For some historical reason, this was originally defined in im.app.types,
+// the the number is not in the SE range. Not to worry.
+
+FileObject	400009	DfeDiagram
+{
+    { Annot "annotation/se_diagram" }
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"DfeNavigateSend(\\"dfe\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"DfeNavigateSend(\\"dfe\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"DfeNavigateSend(\\"dfe\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	// This method will always draw diagrams in demarco/yourdon style.
+	{ Name	"Print" }
+	{ Cmd 	"dprint -forward_messages 0${msgd_handle} -ed dydfe -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+    { Method 
+	{ Name	"DYPrint" }
+	{ Cmd 	"dprint -forward_messages 0${msgd_handle} -ed dydfe -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+    { Method 
+	{ Name	"GSPrint" }
+	{ Cmd 	"dprint -forward_messages 0${msgd_handle} -ed gsdfe -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+}
+
+FileObject      402011   DseDiagram
+{
+    { Annot "annotation/dse_diagram" }
+    { Update
+        { Dependency
+            { Name "DseDiagram" }
+            { DeriveAttrsFunc "diagram_derive_name_node" }
+	}
+    }
+    { Update
+        { Dependency
+            { Name "DseDiagramFlow" }
+            { DeriveAttrsFunc "diagram_derive_name_link" }
+	}
+    }
+    { Update
+        { Dependency
+            { Name "DseDiagramStore" }
+            { DeriveAttrsFunc "diagram_derive_name_node" }
+	}
+    }
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"dse\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"dse\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"dse\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method
+    	{ Name  "Print" }
+        { Cmd   "dprint -forward_messages 0${msgd_handle} -ed dse -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+}
+
+FileObject      402012   TedTable       
+{
+    { Annot "annotation/ted_table" }
+    { Method
+    	{ Name  "Print" }
+	{ Cmd 	"tprint -forward_messages 0${msgd_handle} -ed ted -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+}
+
+FileObject      402014   SceDiagram
+{
+    { Annot "annotation/sce_diagram" }
+    { Update
+        { Dependency
+            { Name "SceDiagram" }
+            { DeriveAttrsFunc "diagram_derive_name_node" }
+	}
+    }
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"sce\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"sce\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"sce\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"dprint -forward_messages 0${msgd_handle} -ed sce -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+}
+
+FileObject      402015   SteDiagram
+{
+    { Annot "annotation/ste_diagram" }
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"ste\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"ste\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"ste\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"dprint -forward_messages 0${msgd_handle} -ed ste -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+}
+
+FileObject      402016   FceDiagram
+{
+    { Annot "annotation/se_diagram" }
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"fce\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"fce\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"fce\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"dprint -forward_messages 0${msgd_handle} -ed fce -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+}
+
+FileObject      402017  RevCFile
+{
+}
+ 
+FileObject      402018 SETabularBrowser
+{
+    { Method
+        { Name  "FileNavigate" }
+        { Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"sebr\\",\\"FileLoad ${file.name}\\");\"" }
+    }
+    { Method
+        { Name  "Print" }
+        { Cmd   "tprint -forward_messages 0${msgd_handle} -ed sebr -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" }
+    }
+}
+
+CntxObject      102001   DataIn 
+{
+    { Annot "annotation/data" }
+}
+
+CntxObject      102002   DataOut
+{
+    { Annot "annotation/data" }
+}
+
+CntxObject      102003   DataInOut
+{
+    { Annot "annotation/data" }
+}
+
+CntxObject      102004   TransitionEvent {}         
+CntxObject      102005   TransitionAction {}  
+
+CntxObject      102006   ControlIn 
+{
+    { Annot "annotation/control" }
+}
+
+CntxObject      102007   ControlOut
+{
+    { Annot "annotation/control" }
+}
+
+CntxObject 102008 FlowQualifier 		{}
+
+ItemObject	502000	KeyElements		{}
+ItemObject	502001	Extern			{}
+ItemObject	502002	Usage			{}
+ItemObject	502003  Parent			{}
+ItemObject	502005	FlowType		{ { DataType "FlowTypeEnum" } } 
+ItemObject	502006	DataType		{}
+ItemObject	502007	Constraint		{}
+ItemObject	502008  AllowedValue		{} 
+ItemObject	502009  Alias			{}
+ItemObject	502010	Selector		{} 
+ItemObject	502011	SelectorType		{}
+// These next two are just here for migration purposes, and can
+// be removed in the next release.
+ItemObject	502012  LowerIteration          { { DataType "Int" } }
+ItemObject	502013	UpperIteration          { { DataType "Int" } }
+ItemObject      502014  RelativeIndex   	{ { DataType "Index" } }
+ItemObject 	502015  ProcessSpec     	{}
+ItemObject	502016	PerformanceRequirementName {} 
+ItemObject	502017	DerivedRequirementName	{} 
+ItemObject	502018	SystemState		{} 
+ItemObject	502019	QualificationMethod 	{}
+ItemObject	502020	QualificationLevel  	{} 
+ItemObject	502021	InterfaceName		{} 
+ItemObject	502022	Execution		{ { DataType "ExecutionEnum" } } 
+ItemObject	502023	Synchronization 	{} 
+ItemObject	502024	InterruptPriority   	{}
+ItemObject	502025	CommunicationProtocol 	{} 
+ItemObject	502026	Fragmentation		{} 
+ItemObject	502027	MessageFormatting   	{} 
+ItemObject	502028	ErrorControl		{} 
+ItemObject	502029	FlowControl		{} 
+ItemObject	502030	DataTransferRate    	{}
+ItemObject	502031	RoutingAddressing   	{}
+ItemObject	502032	TransmissionServices 	{}
+ItemObject	502033	StatusIdentification 	{}
+ItemObject	502034	SecurityEncryption   	{}
+ItemObject	502035	Condition	     	{}
+ItemObject	502036	Response	     	{}
+ItemObject	502037	InterfacePriority    	{} 
+ItemObject	502038	MemoryBudget	     	{}
+ItemObject	502039	ProcessingTime	     	{} 
+ItemObject	502040	DecompositionLevel   	{ { DataType "DecompLevelEnum" } }
+ItemObject	502041	DataName	     	{}
+ItemObject	502042	DataSize	     	{}
+ItemObject	502043	DataLocation	     	{}
+ItemObject	502044	Representation	     	{}
+ItemObject	502045	Units		     	{}
+ItemObject	502046	Scaling		     	{}
+ItemObject	502047	Precision	     	{}
+ItemObject	502048	Accuracy	     	{}
+ItemObject	502049	ERDiagram	     	{}
+ItemObject	502050	AccessMethod	     	{}
+ItemObject	502051	DatabaseName	     	{}
+ItemObject	502052	DatabaseUsage	 	{ { DataType "DatabaseUsageEnum" } }
+ItemObject	502053	InterruptName	     	{}
+ItemObject	502054	Source		     	{}
+ItemObject	502055	InterruptTime	     	{}
+ItemObject	502056	MinimumFrequency     	{}
+ItemObject	502057	MaximumFrequency     	{}
+ItemObject	502058	ProbableFrequency    	{}
+ItemObject	502059	TimingConditions     	{}
+ItemObject	502060	Sequencing	     	{}
+ItemObject	502061	DynamicLogic	     	{}
+ItemObject	502062	LibraryName	     	{} 
+ItemObject	502063	LibraryNumber	     	{}
+ItemObject	502064	DSDiagram	     	{}
+ItemObject	502065	MaximumSize	     	{}
+ItemObject	502066	Frequency	     	{}
+ItemObject	502067	Priority	     	{}
+ItemObject	502068	Legality	     	{}
+ItemObject	502069	Conventions	     	{}
+ItemObject	502070	DocumentName	     	{ { DataType "DocNameEnum" } }
+ItemObject	502071	DocumentNumber	     	{}
+ItemObject	502072	ParagraphNumber      	{}
+ItemObject	502073	PriorityLevel        	{} 
+ItemObject	502074	ProjectUniqueIdentifier {} 
+ItemObject	502075	FormalTestParagraph  	{}
+ItemObject	502076	PDL		     	{}
+ItemObject	502077	IncludedFile	     	{}
+ItemObject	502078	ModuleReturnType     	{}
+ItemObject	502079	VariableArguments    	{ { DataType "Boolean" } }
+// Kind is not used any longer
+// ItemObject	502080	Kind	    	     	{ { DataType "KindEnum" } }
+// Static  is not used any longer
+// ItemObject	502081	Static    	     	{ { DataType "Boolean" } }
+// LeafType is not used anymore.
+// ItemObject	502082	LeafType	     	{}
+ItemObject	502083	StorageClass         	{{ DataType "StorageClassEnum" }}
+ItemObject	502084	CodeGenId            	{ { DataType "Int" } }
+ItemObject      502085  IsLexicalModule      	{ { DataType "Boolean" } }
+ItemObject      502086  RealType	     	{}
+ItemObject      502087  AccessMode	     	{{ DataType "AccessModeEnum" }}
+ItemObject      502088  Tag	     		{}
+ItemObject	502089	ParamStorageClass       {{ DataType "ParamStorageClassEnum" }}
+ItemObject	502090	SystemType		{{ DataType "Boolean" }}
+ItemObject	502091	ArraySize		{}
+ItemObject	502092	IsMessage		{{ DataType "Boolean" }}
+
+NoteObject	802001  Flow		     	{}
+NoteObject      802002  ProcessIndex	     	{}
+NoteObject      802003  Pspec		     	{}
+NoteObject      802004  ModulePDL	     	{}
+NoteObject      802005  ModuleDefinition  	{}
+NoteObject	802006	DataDefinition	     	{}
+NoteObject	802007	StructureComponent   	{}
+NoteObject	802009	EnumDefinition   	{}
+//NoteObject	802008	Leaf 		     	{}
+NoteObject	802010	DataType	     	{}
+NoteObject	802011  PerformanceRequirement	{}
+NoteObject	802012	DerivedRequirement   	{}
+NoteObject	802013	SystemState	     	{}
+NoteObject	802014	RequirementQual	     	{}
+NoteObject	802015	InterfaceRequirement 	{}
+NoteObject	802016	CommunicationProtocol	{}
+NoteObject	802017	InitiationConditionReq	{}
+NoteObject	802018	InterfaceDesign	     	{}
+NoteObject	802019	Module 			{}
+NoteObject	802020	LocalData		{}
+NoteObject	802021	LocalDatabase	   	{}
+NoteObject	802022	ExternalDatabase   	{}
+NoteObject	802023  DatabaseReference  	{}
+NoteObject	802024	Interrupt	   	{}
+NoteObject	802025	Timing		   	{}
+NoteObject	802026	Library		   	{}
+NoteObject	802027	OtherElements	   	{}
+NoteObject	802028  Limitations	   	{}
+NoteObject	802029	DataFile	   	{}
+NoteObject	802030	DataDescription	   	{}
+NoteObject	802031	DeclarationCode	   	{}
+NoteObject	802032	Document	   	{}
+NoteObject	802033	CCodeBody	   	{}
+NoteObject	802034	ModuleComment	   	{}
+NoteObject	802035	DataStructureComment 	{}
+NoteObject      802036  LexicalModule      	{}
+NoteObject      802037  TypedefDefinition	{}
+NoteObject      802038  GlobalDefinition	{}
+NoteObject      802039  GlobalUsage		{}
+NoteObject	802040	GlobalComment	   	{}
+NoteObject	802041	ParameterDefinition   	{}
+NoteObject	802045	SEFileDefinition   	{}
+
+NodeObject      702001   External        
+{
+    { Annot "annotation/external" }
+    { Update { DependentsFunc "external_dependents"} }
+}
+
+NodeObject      702002   FlowAnchor      {}
+
+NodeObject      702003   Cspec   
+{
+    { Annot "annotation/cspec" }
+}
+
+NodeObject      702004   Selection
+{
+    { Annot "annotation/sequence" }
+    //{ Annot "annotation/selection" }
+    { Update { DependentsFunc "data_dependents"} }
+    { Update
+        { Dependency
+            { Name "DseObjectFlow" }
+            { DeriveAttrsFunc "object_derive_name_link" }
+        }
+    }
+}
+
+NodeObject      702005   Sequence
+{
+    { Annot "annotation/sequence" }
+    { Update { DependentsFunc "data_dependents"} }
+    { Update
+        { Dependency
+            { Name "DseObjectFlow" }
+            { DeriveAttrsFunc "object_derive_name_link" }
+        }
+    }    
+
+}
+
+// Readonly now
+NodeObject      702006   Iteration
+{
+    //{ Annot "annotation/sequence" }
+    { Annot "annotation/iteration" }
+    { Update { DependentsFunc "data_dependents"} }
+}
+
+NodeObject      702007   Store   
+{
+    { Annot "annotation/store" }
+    { Update { DependentsFunc "store_dependents"} }
+}
+
+NodeObject      702008   State   
+{
+    { Annot "annotation/state" }
+}
+
+NodeObject      702009   StartState {}
+NodeObject      702010   SplitFlow {}
+
+NodeObject      702011   Module
+{
+    { Annot "annotation/module" }
+    { Update { DependentsFunc "module_dependents"} }
+}
+
+NodeObject      702012   DataModule 
+{
+    { Annot "annotation/data_module" }
+}
+
+NodeObject      702013   Offpage 
+{
+    { Annot "annotation/offpage" }
+}
+
+NodeObject      702014   LibraryModule 
+{
+    { Annot "annotation/library_module" } 
+}
+
+NodeObject      702015   Enumeration
+{
+    { Annot "annotation/enum.note" }
+    { Update { DependentsFunc "data_dependents"} }
+    { Update
+        { Dependency
+            { Name "DseObjectFlow" }
+            { DeriveAttrsFunc "object_derive_name_link" }
+        }
+    }
+}
+
+NodeObject      702017   ControlCombination {}
+NodeObject      702018   ProcessCombination {}
+
+NodeObject      702019   ControlIn 
+{
+    { Update { DependentsFunc "control_in_out_dependents"} }
+}
+
+NodeObject      702020   ControlOut 
+{
+    { Update { DependentsFunc "control_in_out_dependents"} }
+}
+
+NodeObject	702021   FormalCaller {}
+NodeObject      702022   OffPageExternal {}
+NodeObject      702023   OffPageProcess  {}
+NodeObject      702024   IncludedModule	 {}
+
+NodeObject	702025   SEFile 
+{
+    { Annot "annotation/sefile" }
+}
+
+NodeObject	702026   SEDirectory {}
+
+// fce
+NodeObject      702027   SETerminal{}
+NodeObject      702028   SEVoidTerminal{}
+NodeObject      702029   SEUserCall{}
+NodeObject      702030   SELibraryCall{}
+NodeObject      702031   SEPointerCall{}
+NodeObject      702032   SEIf{}
+NodeObject      702033   SEIfElse{}
+NodeObject      702034   SEFor{}
+NodeObject      702035   SEWhile{}
+NodeObject      702036   SEUntil{}
+NodeObject      702037   SESwitch{}
+NodeObject      702038   SEStartState{}
+NodeObject      702039   SEFinalState{}
+NodeObject      702040   SEMacro{}
+NodeObject      702041   SECodeBlock{}
+
+// new objects for the DSE
+
+NodeObject      702042   Typedef
+{
+    { Annot "annotation/typedef" }
+    { Update { DependentsFunc "data_dependents"} }
+}
+
+LinkObject      602001   ControlFlow    
+{
+    { Annot "annotation/control_flow" }
+    { Update { DependentsFunc "flow_dependents"} }
+}
+
+LinkObject      602002   Transition 
+{
+    { Annot "annotation/transition" }
+}
+
+LinkObject      602003   SubprogramCall
+{
+    { Annot "annotation/subprogram_call" }
+}
+
+LinkObject      602004   LexicalInclusion 
+{
+    { Annot "annotation/lexical_inclusion" }
+}
+LinkObject      602005   ObjectAccess {}
+LinkObject      602006   OffpageConnection {}
+LinkObject      602007   Decision {}
+LinkObject      602008   ControlValue {}
+LinkObject      602009   ProcessActivation {}
+LinkObject      602010	 Definition {}
+LinkObject      602011   ActionControlDefinition {}
+LinkObject      602012   OffpageToOffpageConnection {}
+
+
+LinkObject	602999   Component {}
+LinkObject	602013   SEFlowLink {}
+
+ViewpointObject 902000   ModuleDecomposition
+{
+    { PrintName "Decomposition" }
+}
+ViewpointObject 902001   ModuleDefinition
+{
+    { PrintName "Definition" }
+}
+

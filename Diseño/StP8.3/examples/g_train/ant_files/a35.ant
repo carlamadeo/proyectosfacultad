@@ -1,0 +1,80 @@
+FileObject 1
+{
+    { Name "a35" }
+    { Type ObjectAnnotation }
+    { GUID "UID_A862962C-BC02-4f54-825D-009838323AB9" }
+}
+
+NodeObject 99999
+{
+    { Name "compute wt_no" }
+    { Type Process }
+    { ObjectId 2802 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_33EB8724-FE75-4fda-ADCB-AADA500C0413" }
+}
+
+NodeObject 99998
+{
+    { Name "accept weight" }
+    { Type Process }
+    { ObjectId 3119 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_764B1951-AC51-4e06-A970-DB9F670B6CCB" }
+}
+
+LinkObject 99997
+{
+    { Name "weight of passenger" }
+    { Type DataFlow }
+    { ObjectId 3199 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_A42B5D59-87A0-4e17-9A80-B13CB85186A4" }
+}
+
+NoteObject 2
+{
+    { Type InterfaceDesign }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3201 }
+}
+
+ItemObject 3
+{
+    { Type InterfaceName }
+    { Value "weight_of_passenger" }
+    { NoteId 2 }
+    { ObjectId 3202 }
+}
+
+ItemObject 4
+{
+    { Type InterfacePriority }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 3203 }
+}
+
+NoteObject 5
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3205 }
+    { DescLine "This is the weight of a single passenger in kg." }
+}
+
+ItemObject 6
+{
+    { Type ObjectName }
+    { Value "weight of passenger" }
+    { NoteId 5 }
+    { ObjectId 3206 }
+}
+

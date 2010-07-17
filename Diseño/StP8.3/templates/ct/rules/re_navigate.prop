@@ -1,0 +1,275 @@
+ 
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/SE
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1996
+//      All rights reserved
+//
+
+PropertySheet BrowserCodeBrowseChooser
+{
+    { Name "BrowserCodeBrowseChooser" }
+    { Label "StP: Choose Proper Code Reference" }
+    { Properties
+	{ Qrl { QrlFile "rules/qrl/re_navigate.inc" } }
+        // the chooser
+	{ List
+	    { Name "Chooser" }
+	    { Label "Choices:" }
+	    { Rows 6 }
+	    { Width 80 }
+	    { Exclusive True }
+	    { LabelAbove True }
+	    { Event
+                { Type SelectRow }
+                { Callback "REBrowserBrowseCodeSelectRow_cb" }
+            }
+	    { Event
+                { Type DoubleClickRow }
+                { Callback "REBrowserBrowseCodeDoIt_cb" }
+            }
+	}
+	{ Button
+	    { Name "OK" }
+	    { Label "Browse To Code" }
+	    { Event
+		{ Type Select }
+		{ Callback "REBrowserBrowseCodeDoIt_cb" }
+	    }
+	}
+	{ Button
+	    { Name "Apply" }
+	    { Label "Browse To Design" }
+	    { Event
+		{ Type Select }
+		{ Callback "REBrowserBrowseDesignDoIt_cb" }
+	    }
+	}
+    }
+}
+
+
+PropertySheet SimpleTextViewer
+{
+    { Name "SimpleTextViewer" }
+    { Label "StP: View Text" }
+    { Properties
+	{ Text
+	    { Name "TheText" }
+	    { Label "" }
+	    { LabelAbove True }
+	    { DispRows 20 }
+	    { DispLength 70 }
+	}
+        { Text
+ 	    { Name "TextFile" }
+ 	    { Label "" }
+ 	    { LabelAbove True }
+ 	    { HorizontalScrollBar 1 }
+ 	    { MinLength 0 }
+ 	    { DispLength 60 }
+ 	    { MaxLength 512 }
+	}
+        { Group
+	    { Name Glue }
+	    { Type Vertical }
+	    { Align Left }
+            { Members ( TextFile TheText ) }
+        }
+    }
+}
+ 
+PropertySheet TextViewBuffer
+{
+    { Name "TextViewBuffer" }
+    { Label "StP: View Code" }
+    { Properties
+        { Qrl { QrlFile "rules/qrl/re_navigate.inc" } }
+
+        { Text
+             { Name "TheTextViewBuffer" }
+             { Label "" }
+             { LabelAbove True }
+             { DispRows 24 }
+             //{ MinLength 0 }
+             { DispLength 94 }
+             //{ MaxLength 512 }
+// ECR 6840 begin
+             { Resizable ResizeAny }
+// ECR 6840 end
+        }
+
+        { Button
+            { Name "CurFile" }
+            { Label "File:" }
+            { Event
+                { Type Select }
+                { Callback "TextViewerLoad_cb" }
+            }
+        }
+ 
+        { Text
+ 	        { Name "TextFile" }
+ 	        { Label "" }
+ 	        { LabelAbove True }
+ 	        { HorizontalScrollBar 1 }
+ 	        { MinLength 0 }
+ 	        { DispLength 60 }
+ 	        { MaxLength 512 }
+            { Event
+                 { Type NewLine }
+                 { Callback "TextViewerLoad_cb" }
+            }
+        }
+
+        // ECR 3651a begin
+        { Button
+            { Name "browse_for_src_file" }
+            { Label "Choose" }
+            { Event
+                { Type Select }
+                { Callback "select_src_file_callback" }
+            }
+        }
+        // ECR 3651a end
+
+        { Button
+ 	    { Name "GoToSCE" }
+	    { Label "Design Module" }
+            { Event
+                 { Type Select }
+                 { Callback "TextViewerBrowseModule_cb" }
+            }
+        }
+        
+        { Button
+	    { Name "GoToDSE" }
+	    { Label "Design Type" }
+            { Event
+                 { Type Select }
+                 { Callback "TextViewerBrowseType_cb" }
+            }
+        }
+
+        { Group
+	    { Name TopLine }
+	    { Type Horizontal }
+	    { Align Left }
+            { Members ( CurFile TextFile TextFileSelection browse_for_src_file GoToSCE GoToDSE ) }
+        }
+
+
+        { Group
+	    { Name TViewer }
+	    { Type Vertical }
+// ECR 6840 begin
+        { Resizable ResizeAny }
+        { ChildSizePolicy ResizeAny }
+// ECR 6840 end
+	    { Align Left }
+            { Members ( TopLine TheTextViewBuffer ) }
+        }
+    }
+}
+
+
+// Object selector.  Shared by GTE and GDE editors, and used for general
+// navigation in SE and OO models
+
+PropertySheet DiagramObjectSelector
+{
+    { Name "DiagramObjectSelector" }
+    { Label "StP: Choose Diagram" }
+    { Properties
+	{ Qrl { QrlFile "rules/qrl/re_navigate.inc" } }
+        // the chooser
+	{ List
+	    { Name "Chooser" }
+	    { Label "Choices:" }
+	    { Rows 10 }
+	    { Width 80 }
+	    { Exclusive True }
+	    { LabelAbove True }
+	    { Event
+		{ Type EventDoubleClickRow }
+		{ Callback "DiagramObjectSelector_cb" }
+	    }
+	}
+	{ Button
+	    { Name "OK" }
+	    { Label "OK" }
+	    { Event
+		{ Type Select }
+		{ Callback "DiagramObjectSelector_cb" }
+	    }
+	}
+	{ Button
+	    { Name "Apply" }
+	    { Label "Apply" }
+	    { Event
+		{ Type Select }
+		{ Callback "DiagramObjectSelector_cb" }
+	    }
+	}
+	{ Button
+	    { Name "Reset" }
+	    { Label "Reset" }
+//	    { Event
+//		{ Type Select }
+//		{ Callback "SE_generic_reset_cb" }
+//	    }
+	}
+    }
+}
+
+
+PropertySheet SourceCodeDirectoryDialogue
+{
+    { Name SourceCodeDirectoryDialogue }
+    { Label "StP: Set Source Code Directory" }
+    { Properties
+        {  Qrl { QrlFile "rules/qrl/re_navigate.inc" } }
+	{ Text
+	    { Name SCDir }
+	    { Label "Source Directory:" }
+	    { MinLength 0 }
+	    { DispLength 60 }
+	    { MaxLength	200 }
+        }
+    // ECR 3651a begin
+    { Button
+        { Name "browse_for_source_dir" }
+        { Label "Choose" }
+        { Event
+            { Type Select }
+            { Callback "select_source_code_dir_callback" }
+        }
+    }
+    { Group
+        { Name "folder_group" }
+        { Label "" }
+        { Type Horizontal }
+        { Resizable ResizeAny }
+        { ChildSizePolicy ResizeWidth }
+        { LayoutPolicy ResizeAny }
+        { Align Bottom }
+        { Members ( SCDir browse_for_source_dir ) }
+    }
+    // ECR 3651a end
+	{ Button
+	    { Name "OK" }
+	    { Label "OK" }
+	    { Event
+		{ Type Select }
+		{ Callback "SourceCodeDir_cb" }
+	    }
+	}
+	{ Footer
+	    { Name Status }
+	    { RightFooter "" }
+	    { Active True }
+	}
+    }
+
+}

@@ -1,0 +1,52 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1994
+// 	All rights reserved
+//
+
+//
+//	FILE:	UmlOperation.note
+//
+
+
+Note 801936
+{
+	{ AppType UmlOperationCxxCode }
+        { HelpText "The C++ Source Code note description lets you add C++ source code for the body of the operation." }
+	{ PrintName "C++ Source Code" }
+	{ Bounds { Min 0 } { Max 1 } }
+}
+
+Note 801932
+{
+	{ AppType UmlOperationAda95Code }
+        { HelpText "The description of the Ada_95 Source Code note is where source code for the body of the operation can be entered." }
+	{ PrintName "Ada_95 Source Code" }
+	{ Bounds { Min 0 } { Max 1 } }
+}
+
+Note 801942
+{
+	{ AppType UmlOperationJavaCode }
+        { HelpText "The Java Source Code note description lets you add Java source code for the body of the operation." }
+	{ PrintName "Java Source Code" }
+	{ Bounds { Min 0 } { Max 1 } }
+}
+Note 801969
+{
+	{ AppType UmlOperationTOOLCode }
+        { HelpText "The TOOL Source Code note description lets you add TOOL source code for the body of the method." }
+	{ PrintName "TOOL Source Code" }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ Item
+		{ AppType UmlTOOLOperationCodeGenerate }
+                { HelpText "The Generate Method Body item determines whether the method's body is generated upon TOOL class code generation."}
+		{ PrintName "Generate Method Body" }
+		{ Bounds { Min 0 } { Max 1 } }
+		{ InitValue "False" }
+	}
+}
+
+

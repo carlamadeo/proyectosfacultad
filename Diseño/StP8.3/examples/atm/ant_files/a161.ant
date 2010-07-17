@@ -1,0 +1,70 @@
+FileObject 1
+{
+    { Name "a161" }
+    { Type ObjectAnnotation }
+    { GUID "UID_05D01C96-7E7B-46bd-A980-BD56CE0C7DF7" }
+}
+
+NodeObject 99999
+{
+    { Name "." }
+    { Type SEDirectory }
+    { ObjectId 202 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_7C04BDFC-AC56-11d4-BEDC-0060971B5EE0" }
+}
+
+NodeObject 99998
+{
+    { Name "Finalize_Transaction.c" }
+    { Type SEFile }
+    { ObjectId 203 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_7C04BDFF-AC56-11d4-BEDC-0060971B5EE0" }
+}
+
+NodeObject 99997
+{
+    { Name "Finalize Transaction" }
+    { Type Module }
+    { ObjectId 218 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_C091AD4F-8F65-45a3-A477-2336419BB9B5" }
+}
+
+NoteObject 2
+{
+    { Type ModuleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 220 }
+}
+
+ItemObject 3
+{
+    { Type ModuleReturnType }
+    { Value "void" }
+    { NoteId 2 }
+    { ObjectId 221 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 223 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "Finalize Transaction" }
+    { NoteId 4 }
+    { ObjectId 224 }
+}
+

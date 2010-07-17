@@ -1,0 +1,27 @@
+/* XPM */
+static char* test_type_tables_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 5 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #ffffff	c #c0c0c0",
+"o	m #000000	c #0000ff",
+/* pixels */
+"XXXXXXXXXXXXXXX.",
+"XOXO O O O O OXO",
+"XXXXXXXXXXXXXXXO",
+"X XO O O O O OXO",
+"XOX O ooooO O XO",
+"X XO ooO.ooO OXO",
+"XOX OooO.ooOO XO",
+"X XO OOO.ooO OXO",
+"XOX O OoooOOO XO",
+"X XO O ooO O OXO",
+"XOX O O OOO O XO",
+"X XO O ooO O OXO",
+"XOX O OooOO O XO",
+"X XO O OOO O OXO",
+"XXXXXXXXXXXXXXXO",
+".OOOOOOOOOOOOOOO"};

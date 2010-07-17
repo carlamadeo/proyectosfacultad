@@ -1,0 +1,38 @@
+
+
+Class 0 GenLowLevelScripts
+{
+    { Label "Generate Low-Level Test Scripts" }
+    { Image "requirements_tables" }
+    { ShowOnDesktop True }
+ { ClassCommand
+        { Name "GenLowLevelScripts" }
+	{ Label "Generate Low-Level Scripts" }
+	{ ShowPropsOnExec True }
+	{ Type Nowin }
+//	{ Command "qrp -p ${projdir} -s ${system} -t asc -o TestReadinessReport.txt lifecycle/support/verification/qrl/VerifyTestReadiness.qrl"}
+
+  }
+
+
+}
+
+
+
+Class 0 GenHighLevelScripts
+{
+    { Label "Generate High-Level Test Scripts" }
+    { Image "requirements_tables" }
+    { ShowOnDesktop True }
+ { ClassCommand
+        { Name "GenHighLevelScripts" }
+	{ Label "Generate High-Level Test Scripts" }
+	{ ShowPropsOnExec True }
+	{ Type Nowin }
+//	{ Command "qrp -p ${projdir} -s ${system} -t asc -o TestReadinessReport.txt lifecycle/support/verification/qrl/VerifyTestReadiness.qrl"}
+
+  }
+
+
+}
+

@@ -1,0 +1,194 @@
+/************************************************** 
+ * java_MAttribute.tdl
+ * -------------------
+ *
+ * Code for initialization of attributes. This in-
+ * cludes creating default values, bindings, 
+ * visibility in case those information is not in
+ * the model. Other modifiers are initialzed and
+ * normalized too.
+ * 
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    17.12.2001
+ *
+ * Copyright 2001, Aonix, San Diego
+ **************************************************/
+
+proc MAttribute.init()
+  [MAttribute].init_access();
+  [MAttribute].init_type();
+  [MAttribute].init_binding();
+  init_defval([MAttribute]);
+  [MAttribute].init_modifiers();
+  [MAttribute:derived] = is_derived([MAttribute]);
+  [MAttribute:readonly] = is_readonly([MAttribute]);
+  [MAttribute:access_methods] = has_accessors([MAttribute]);
+end proc
+
+
+// Determines visibility in three steps:
+// 1) Looks, if the general visibility from  "Analysis Items" is set.
+// 2) Looks, if the Java specific visibility from  "Java Items" is set.
+// 3) If there is still no value (perhaps for artificial attributes), take
+//    the default visibility from "java_globals.tdl",
+proc MAttribute.init_access()
+  if ([MAttribute.access:java] != "")
+    [MAttribute.access] = [MAttribute.access:java];
+  end if
+  if ([MAttribute.access] == "package private")
+    [MAttribute.access] = "";
+    return;
+  end if
+  if ([MAttribute.access] == "")
+    [MAttribute.access] = [DEF_ATTR_VISIB];
+  end if
+end proc
+
+
+// Initializes the type of an attribute.
+// 1) if necessary, types are converted according to ACD's "DataType"
+//    mechanism.
+// 2) Array types are handeled correctly (no support of multidimensional
+//    fields yet!)
+proc MAttribute.init_type()
+  local arr = "";
+  if ([MAttribute.multiplicity] != "")
+    [MAttribute:array] = "TRUE";
+    [arr] = "[]";
+  end if 
+  [MAttribute.type] = getDataType([MAttribute.type]) [arr];
+end proc
+
+
+// Normalizes the binding retrieved from IMF file for Java
+proc MAttribute.init_binding()
+  if ([MAttribute.binding] == "normal")
+    [MAttribute.binding] = "";
+  end if
+end proc
+
+
+// Sets meta property, if attribute has an defaultvalue.
+proc init_defval(MAttribute)
+  loop(MAttribute->Note->Item Where [Item.type] == "UmlAttributeDefaultValue")
+    [MAttribute:defval] = [Item.value];
+  end loop
+end proc
+
+
+// Checks, whether this attribute is derived, d.e.
+// computable from other values.
+proc is_derived(MAttribute)
+  local derived = FALSE;
+  loop(MAttribute->Note->Item Where [Item.type] == "UmlAttributeIsDerived" && [Item.value] == "True")
+    [derived] = TRUE;
+    if ([MAttribute:defval] != "")
+      info = "Warning: attribute \"" [MAttribute.name] "\" in class \"" getClassNameForAttribute([MAttribute]) "\" is derived,\n but has a default value! This default value will be ignored in initializations!\n";
+    end if
+  end loop
+  return [derived];
+end proc
+
+// Returns the class name, this attribute is member of.
+proc getClassNameForAttribute(MAttribute)
+  loop(MAttribute->MClass)
+    return [MClass.name];
+  end loop
+  return "";
+end proc
+
+// Collects all possible modifiers, an attribute can have.
+proc MAttribute.init_modifiers()
+  local modifiers;
+  loop(MAttribute->Note->Item Where [Item.type] == "UmlMemberJavaIsFinal" || 
+                                    [Item.type] == "UmlAttributeJavaIsTransient" || 
+                                    [Item.type] == "UmlAttributeJavaIsVolatile")
+    switch ([Item.type])
+      case "UmlMemberJavaIsFinal" :
+        if ([Item.value] == "True")
+          if ([modifiers] == "")
+            [modifiers] = "final";
+          else
+            [modifiers] = [modifiers] " final";
+          end if
+          [MAttribute:final] = "TRUE";
+        end if
+       break;
+      case "UmlAttributeJavaIsTransient" :
+        if ([Item.value] == "True")
+          if ([modifiers] == "")
+            [modifiers] = "transient";
+          else
+            [modifiers] = [modifiers] " transient";
+          end if
+        end if
+       break;
+      case "UmlAttributeJavaIsVolatile" :
+        if ([Item.value] == "True")
+          if ([modifiers] == "")
+            [modifiers] = "volatile";
+          else
+            [modifiers] = [modifiers] " volatile";
+          end if
+        end if
+       break;
+    end switch
+  end loop
+  [MAttribute:modifiers] = [modifiers];
+end proc
+
+
+
+proc is_readonly(MAttribute)
+  local readonly = "FALSE";
+  loop(MAttribute->TaggedValue As TG Where toLower([TG.tag]) == "readonly")
+    if (toLower([TG.value]) == "true")
+      [readonly] = "TRUE";
+    end if
+  end loop
+  return [readonly];
+end proc
+
+
+
+proc has_accessors(MAttribute) 
+  local accessors = [ACCESSOR_METHODS];
+  loop(MAttribute->TaggedValue As TG Where toLower([TG.tag]) == "accessors")
+    if (toLower([TG.value]) == "false" || toLower([TG.value]) == "true")
+      [accessors] = toUpper([TG.value]);
+    end if
+  end loop
+  return [accessors];
+end proc
+
+
+
+proc isPrimitiveJavaType(type)
+  local isPrimitive = "FALSE";
+  switch ([type])
+    case "char" :
+    case "boolean" :
+    case "byte" :
+    case "short" :
+    case "int" :
+    case "long" :
+    case "float" :
+    case "double" :
+      [isPrimitive] = "TRUE";
+     break;
+  end switch
+  return [isPrimitive];
+end proc
+
+/* Returns the base type of an array type
+ * Simply strips of everything after a '['
+ */
+tcl_proc getBaseType(type)
+  set pos [string first "\[" $type];
+  if { $pos != -1 } {
+    set ret [string range $type 0 [expr $pos-1]];
+    return $ret;
+  }
+  return $type;
+end proc

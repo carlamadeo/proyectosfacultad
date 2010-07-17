@@ -1,0 +1,71 @@
+/****************************************
+ *
+ * Generates the HomeInterface of a Bean.
+ * The HomeInterface holds the lifecycle
+ * and find operations of a bean.
+ *
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    11/20/2000
+ ***************************************/
+ 
+ 
+template genHomeInterface(MClass)
+package [MClass:package_name];
+
+// JDK
+import java.util.*;
+import java.rmi.RemoteException;
+
+// J2EE
+import javax.ejb.EJBHome;
+import javax.ejb.CreateException;
+import javax.ejb.FinderException;
+
+// Import statements from model
+[mark("import", "importStatement")]
+
+// User defined import statements
+[mergeOut("UDIMP", "user defined import statements")]
+
+
+public interface [MClass.name]Home extends javax.ejb.EJBHome {
+
+    /*******************************************************
+     * Lifecycle methods for EJB "[MClass.name]"
+     ******************************************************/
+
+    [if (getStereotype([MClass]) == [session_bean_stereo])]
+        [if ([MClass:session_type] == "Stateless")]
+    // "create()" method
+    public [MClass.name] create() throws RemoteException, CreateException;
+        [else]
+    // "create(..)" methods
+            [loop(Instances->MOperation([MClass:create_methods]))]
+                [importExceptions([MOperation:throws])]
+    public [MClass.name][remote_name_suffix] [MOperation.name]([genOpParaList([MOperation])])
+        throws CreateException, RemoteException[genExceptions([MOperation:throws])];            
+            [end loop]
+        [end if]
+    [end if]
+    [if (getStereotype([MClass]) == "EntityBean")]
+    // "create(..)" methods
+        [loop(Instances->MOperation([MClass:create_methods]))]
+            [importExceptions([MOperation:throws])]
+    public [MClass.name] [MOperation.name]([genOpParaList([MOperation])])
+        throws CreateException, RemoteException[genExceptions([MOperation:throws])];
+        [end loop]
+        
+    // Mandatory "findByPrimaryKey" method according to EJB Spec. 1.1
+    public [MClass.name] findByPrimaryKey([MClass:pk_class] pk)
+        throws FinderException, RemoteException;
+
+    // Other "findBy(..)" methods
+        [loop(Instances->MOperation([MClass:find_methods]))]
+            [importExceptions([MOperation:throws])]
+    [genOperationHeader([MOperation])] [MOperation.name]([genOpParaList([MOperation])])
+        throws FinderException, RemoteException[genExceptions([MOperation:throws])];
+        [end loop]
+    [end if]
+}
+end template

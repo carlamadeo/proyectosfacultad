@@ -1,0 +1,66 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/Core
+//      Confidential property of Aonix.
+//      Copyright (c) 1992-1996
+//      All rights reserved
+//
+
+//
+//      FILE:   TextRptOptions.note
+//
+Note 806006
+{
+    { AppType TextRptOptions }
+    { PrintName "Text Report Options" }
+    { HelpText "The Text Report Options note lets you add text paragraphs to a document. It allows you to alter the paragraph style. The text body is contained in the description text for this note. Up to 10 notes of this type can be associated with a given symbol. If more are needed, just link together additional text sections." }
+    { Bounds { Min 1 } { Max 10 } }
+    { Item
+        { AppType NoteKey }
+        { Bounds { Min 1 } { Max 1 } }
+        { PrintName "Key" }
+        { IsKey True }
+        { IsVisible False }
+        { InitValue "${unique_key}" }
+    }
+    { Item
+        { AppType ParagraphStyle }
+        { PrintName "Custom Paragraph Style" }
+        { Bounds { Min 0 } { Max 1 } }
+        { HelpText "This item allows a specific paragraph style to be applied to all the text that is contained in the description text for this note. This item overrides all other document specific paragraph styles." }
+    }
+    { Item
+        { AppType AsciiParagraphStyle }
+        { PrintName "Ascii Paragraph Style" }
+        { Bounds { Min 0 } { Max 1 } }
+        { InitValue "left" }
+        { HelpText "This item allows a specific paragraph style to be applied to all the text that is contained in the description text for this note. Choose from a list of styles. Note that the item labeled Custom Paragraph Style will override this item." }
+    }
+    { Item
+        { AppType MifParagraphStyle }
+        { PrintName "Frame Paragraph Style" }
+        { Bounds { Min 0 } { Max 1 } }
+        { InitValue "Body" }
+        { HelpText "This item allows a specific paragraph style to be applied to all the text that is contained in the description text for this note. Choose from a list of styles. Note that the item labeled Custom Paragraph Style will override this item." }
+    }
+//    { Item
+//        { AppType IleafParagraphStyle }
+//        { PrintName "Ileaf Paragraph Style" }
+//        { Bounds { Min 0 } { Max 1 } }
+//        { InitValue "para1" }
+//        { HelpText "This item allows a specific paragraph style to be applied to all the text that is contained in the description text for this note. Choose from a list of styles. Note that the item labeled Custom Paragraph Style will override this item." }
+//    }
+    { Item
+        { AppType RtfParagraphStyle }
+        { PrintName "RTF Paragraph Style" }
+        { Bounds { Min 0 } { Max 1 } }
+        { InitValue "Body" }
+        { HelpText "This item allows a specific paragraph style to be applied to all the text that is contained in the description text for this note. Choose from a list of styles. Note that the item labeled Custom Paragraph Style will override this item." }
+    }
+    { Item
+        { AppType RmeIncludeFile }
+        { PrintName "Include File" }
+        { Bounds { Min 0 } { Max 1 } }
+        { HelpText "This item allows you to include a file as the source of textual input. This text will occur after any note description text is printed. You should put the full path to the file in this item." }
+    }
+}

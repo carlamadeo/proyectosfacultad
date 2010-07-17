@@ -1,0 +1,60 @@
+// ECR 3556 start
+
+Toolbar DefaultArcType
+{
+    //ECR 6380 begin
+    //{ Position Top }
+    //{ IsFloating True }
+    { Position Left }
+    //ECR 6380 end
+    { Group
+        { Exclusive True }
+        { Entry
+            { Name "Uses" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType Uses" }
+            { HelpTip "Include" } //ECR 5849
+            { Image "uses" }
+        }
+        { Entry
+            { Name "Generalization" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType Generalization" }
+            { HelpTip "Usecase Generalization" }
+            { Image "generalization" }
+        }
+// ECR 5150 start
+        { Entry
+            { Name "Inherits" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType Inherits" }
+            { HelpTip "Actor Inheritance" }
+            { Image "inherits" }
+        }
+// ECR 5150 end
+        { Entry
+            { Name "Extends" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType Extends" }
+            { HelpTip "Extend" } // ECR 7623
+            { Image "extends" }
+        }
+        { Entry
+            { Name "Communicates" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType Communicates" }
+            { HelpTip "Communicates" }
+            { Image "communicates" }
+        }
+        { Entry
+            { Name "NoteLink" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType NoteLink" }
+            { HelpTip "Note Link" }
+            { Image "notelink" }
+        }
+    }
+}
+
+// ECR 3556 end
+

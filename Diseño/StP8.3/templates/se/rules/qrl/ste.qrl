@@ -1,0 +1,249 @@
+
+//      StP/SE
+//      Confidential property of Aonix
+//      Copyright (c) 1992-1999
+//      All rights reserved
+
+#include "rules/qrl/gde_qrl_std.inc"
+#include "rules/qrl/anchors.inc"
+#include "rules/qrl/se_rename.inc"
+#include "rules/qrl/dfe_navigate.inc"
+#include "se/qrl/check/check_ste.impl"
+#include "rules/qrl/requirements_nav.inc"
+#include "rules/qrl/doors_nav.inc"
+#include "qrl/req_trace/export_to_doors.inc"
+
+#include "rules/qrl/default_arc_type.inc" //ECR 6469
+
+const string START_STATE =  	"Anchor";
+const string TRANSITION =   	"Transition";
+
+// returns a list of dependent transition links for each
+// event/action cntx
+
+list
+event_action_depend_func(gde_mapsymbol ms)
+{
+    gde_cntx    gcntx;
+    gde_arc     garc;
+    gde_link    glink;
+    list        glinks, dependents = list_create("gde_mapsymbol", 0);
+    int         i;
+
+    gcntx = to_gde_cntx(ms);
+    garc = gde_cntx_parent(gcntx);
+
+    if (garc == NULL)
+	return NULL;
+
+    glinks = gde_arc_links(garc);
+
+    for (i = 0; i < list_count(glinks); i++)
+    {
+        glink = list_get(glinks, i);
+        list_append(dependents, to_gde_mapsymbol(glink));
+    }
+    return dependents;
+}
+
+// Initialize an ste diagram with one StartState, one unlabelled
+// State, and a link between them.
+//
+void 
+InitializeSteDiagram(int id)
+{
+    gde_node start, state;
+    int txn;
+    file f;
+
+    f = find_by_query("file[id = ${id}]");
+
+    gde_builtin("BufferClear");
+    if (list_count(gde_all_symbols()) != 0)
+    {
+        // must have pressed cancel!
+        print_error("State transition diagram initialization cancelled.");
+        return;
+    }
+
+    EditorShowOnNavReceive();
+    gde_builtin("EditorSetFileName \"" + f.name + "\"");
+
+    gde_save_state();
+    txn = gde_start_edit_transaction();
+
+    start = gde_node_create(START_STATE, 250, 50);
+    state = gde_node_create(STATE, 250, 125);
+    gde_arc_create(TRANSITION, start, state);
+
+    gde_end_edit_transaction(GDE_CMD_INSERT, txn, False);
+
+}
+
+const	string	dbl_qt = "\"";
+const	string	esc_dbl_qt = "\\\"";
+
+void
+OldFindFile(string name, string ftype, string editor)
+{
+    file result = find_by_query("file[name == '${name}' && ${ftype}]");
+    string command;
+
+    if (result == NULL)
+    	gde_print_error("No navigation target found");
+    else
+    {
+    	if (editor == "cse")
+    	    command = " -C 'EditorQrlEval " + dbl_qt + "NavToggleAndFind(" +
+			esc_dbl_qt + result.name + esc_dbl_qt +
+			", NULL," +
+			esc_dbl_qt + ftype + esc_dbl_qt + ");" + dbl_qt + "'"; 
+	else
+	    command = " -C 'EditorQrlEval " + dbl_qt + "NavLoadAndFind(" +
+			esc_dbl_qt + result.name + esc_dbl_qt +
+			", NULL);" + dbl_qt + "'";
+
+	command = "stpem -ed " + editor +
+			" -p " + current_projdir() +
+			" -s " + current_system() +
+			command;
+    	editor_system(command, NULL);
+    }
+}
+
+void
+OldFindNodeRef(string name, string ntype, string ftype, string editor)
+{
+    node_ref result = find_by_query("node_ref[node[${ntype} && name == '" + to_oms_string(name) + "'] && file[${ftype}]]");
+    file result_file;
+    string command;
+
+    if (result == NULL)
+    	gde_print_error("No navigation target found");
+    else
+    {
+    	result_file = find_by_query("file[node_refs[${result.id}]]");
+
+    	if (editor == "cse")
+    	    command = " -C 'EditorQrlEval " + dbl_qt + "NavToggleAndFind(" +
+			esc_dbl_qt + result_file.name + esc_dbl_qt +
+			"," +
+			esc_dbl_qt + result.appid + esc_dbl_qt +
+			"," +
+			esc_dbl_qt + ftype + esc_dbl_qt +
+			");" + dbl_qt + "'"; 
+	else
+	    command = " -C 'EditorQrlEval " + dbl_qt + "NavLoadAndFind(" +
+			esc_dbl_qt + result_file.name + esc_dbl_qt +
+			"," +
+			esc_dbl_qt + result.appid + esc_dbl_qt +
+			");" + dbl_qt + "'";
+	command = "stpem -ed " + editor +
+			" -p " + current_projdir() +
+			" -s " + current_system() +
+			command;
+    	editor_system(command, NULL);
+    }
+}
+
+
+
+// check semantics func for ste
+ 
+void
+checkSemantics()
+{
+    steprop_tp  props;
+ 
+    props.verbose = 0;
+ 
+    props.check_one = 1;
+    props.check_two = 1;
+    props.check_three = 1;
+    props.check_four = 1;
+    props.check_five = 1;
+    props.check_six = 1;
+ 
+    props.diaglist = file_list("SteDiagram", gde_substitute_string("${file}"));
+ 
+    checkSteSemanticsFromSte(props);
+ 
+}
+ 
+void
+checkSteSemanticsSelect()
+{
+    gde_builtin("PropertySheetShow STESemanticChecks");
+}
+
+
+
+// event/action name completion function
+
+list
+se_event_action_name_completion_func(string pattern, string label, string extent, string apptype, int scopeid)
+
+{
+    list names;
+//    string ev_part, act_part;
+//    gde_cntx gc;
+ 
+    print_error("Cannot currently use Name Completion on event/action symbols.");
+    names = list_create("string", 0);
+
+//    gc = to_gde_cntx(list_get(gde_selected_symbols(), 0));
+//    ev_part = gde_cntx_label(gc);
+//    act_part = gde_cntx_label(gc, "aux");
+//
+//    if (ev_part == pattern)
+//    {
+//    }
+//    else
+//    {
+//    }
+
+    return names;
+}
+
+// SPR 2772
+list
+NavigateSteToAlt(string name)
+
+{
+    list l;
+
+    l = list_select("node_ref[node[name=='${name}' && Action] && file[ActionLogicTable]]");
+
+    if (list_count(l) != 0)
+        return l;
+
+    l = list_select("file[ActionLogicTable && name = '${file}']");
+
+    if (list_count(l) != 0)
+        print_error("ALT found, but it does not contain action '" + name + "'.");
+
+    return l;
+}
+
+
+list
+NavigateSteToElt(string name)
+
+{
+    list l;
+
+    l = list_select("node_ref[node[name=='${name}' && Event] && file[EventLogicTable]]");
+
+    if (list_count(l) != 0)
+        return l;
+
+    l = list_select("file[EventLogicTable && name = '${file}']");
+
+    if (list_count(l) != 0)
+        print_error("ELT found, but it does not contain event '" + name + "'.");
+
+    return l;
+}
+
+//  Add any user customizations to the file included below:
+#include_if_exists "user/se/rules/qrl/user_ste.qrl"

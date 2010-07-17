@@ -1,0 +1,2389 @@
+//////////////////////////////////////////////////////////////////////
+//
+//      2167A Software Requirements Specification
+//
+//
+//      See script_help for general template comments.
+//
+//////////////////////////////////////////////////////////////////////
+
+
+#include "qrl/include/general.inc"
+#include "qrl/2167A/SRS_externals.inc"
+#include "qrl/2167A/2167A_generic_fns.inc"
+#include "qrl/2167A/2167A_formats.inc"
+#include "qrl/ted/tabgen.inc"
+#include "qrl/2167A/2167A_data_elements_external_table.inc"
+#include "qrl/include/pspec_primitive.inc"
+#include "qrl/2167A/interfaces.inc"
+
+script_help = "This report satisfies DI-MCCR-80025A, the Software Requirements 
+Specification (SRS).
+
+3.1  The SRS specifies the engineering and qualification requirements
+for a Computer Software Configuration Item (CSCI).
+
+3.2  The SRS is used by the contractor as the basis for the design and 
+formal testing of a CSCI.
+
+3.3  The SRS specifies the requirements allocated to a CSCI and enables
+the Government to assess whether the completed CSCI complies with those
+requirements.  Upon Government approval and authentication, the SRS
+becomes part of the allocated baseline.
+
+7.3  The SRS is used to provide the detailed requirements for a 
+CSCI specified in the System/Segment Specification (SSS), DI-CMAN-80008A,
+or Configuration Item Development Specification (CIDS), DI-E-3102A.
+
+7.4  The SRS may be used to specify requirements for an elaborate
+data base, such as a relational database.  Requirements for such a data
+base shall be specified in terms of a capability for which input and
+output requirements are to be interpreted as the data base contents 
+requirements.  When a database is shared by CSCIs, the requirements for
+the database shall be documented in one SRS and referenced in the SRSs
+of the sharing CSCIs.  Any CSCI unique data element requirements for a
+database shall be documented in the SRS for that CSCI.
+
+7.5  This DID supersedes DI-MCCR-80025 dated 4 June 1985.
+
+The Software through Pictures implementation of the SRS consists of a
+Query and Reporting System (QRS) program that integrates various
+graphical diagrams, dynamically generated tables, external variables
+for boiler plate and paragraphs, and literal text into a complete
+document.  A 2167A format file defines WYSIWYG-specific paragraph
+formats that will be used by this template (i.e. embedded in the
+resulting output file).
+
+There are various external variables (see SRS_externals.inc) that
+control the organization of the document as well as the information
+that is extracted from Software through Pictures.  These variables have
+been added to allow this program to generate different interpretations
+of the 2167A DIDs.
+
+Unfortunately, acheiving a single interpretation of the 2167A DIDs is
+unattainable given the tailoring that occurs from one project to
+another.  As some level of modifications will be required for this
+program, please consult the Query and Reporting System manual (QRS) for
+a description of this programming language and the Object Management
+System manual (OMS) for a description of the underlying repository.
+For most aesthetic changes, changes can be made on the WYSIWYG chosen
+by your project.  Please consult the OMS manual on how these aesthetic
+changes can be incorporated into QRS generated documents.";
+
+//
+// GLOBAL VARIABLES
+//
+
+// Caches for looking up process indices.  Now process indices
+// are combined from file names and annotations so this should
+// speed things up a bit.  Also the status of a process will
+// be cached also.
+list    ALL_PROCS,
+                ALL_PROC_IDS,
+                ALL_PROC_INDICES,
+                ALL_PROC_STATUSES;
+enum    process_status {undefined, has_pspec, has_decomp, unknown};
+int             TOTAL_PROCS;
+
+// Used to determine the direction of a interface w.r.t. CSCI
+// Should be defined in the 2167A_data_elements_external_table.inc file
+// enum         direction {input, output};
+
+
+//
+// MAIN PROGRAM
+//
+
+void
+main ()
+{
+    message ("SRS:  START");
+    if (legal_target())
+    {
+        e_GENERATION_INFO = False;
+    	initialize ();
+		    
+    	title_page ();
+    	scope_section ();
+    	applicable_documents_section ();
+    	engineering_requirements_section ();
+    	qualification_requirements_section ();
+    	preparation_for_delivery_section ();
+    	notes_section ();
+    	appendices_section ();
+    
+    	clean_up ();
+    }
+    display_fault_status ();
+    message ("SRS:  END");
+}
+
+//
+// SUPPORT FUNCTIONS
+//
+
+
+// INITIALIZE
+
+void
+initialize ()
+{
+    string      query;
+    
+    message ("SRS:  Initialize");
+    
+    // set default format
+    format(DefaultFormatFile);
+
+    // Diagram printing initialization
+    diagram_orientation_scale_set (PortraitFit);
+    diagram_caption_alignment_set (Center);
+    diagram_caption_orientation_set (Portrait);
+    diagram_caption_placement_set (Bottom);
+    diagram_caption_paragraph_format_set (FigureFormat);
+    diagram_frame_height_set (5.0);
+    diagram_frame_width_set (6.0);
+    
+    // Table printing initialization
+    table_caption_alignment_set (Center);
+    table_caption_placement_set (Bottom);
+    table_width_set (6.5);
+    table_caption_paragraph_format_set (TableTitleFormat);
+    table_cell_bold_paragraph_format_set (TableHeaderCellFormat);
+    table_cell_paragraph_format_set (TableBodyCellFormat);
+        
+    // Set up some ID lists
+    // 1. External Interfaces: Flows to or from externals
+    // 2. Internal Interfaces: Flows between processes
+    message ("        external interface list");
+    create_external_interfaces("external_interfaces", select_SRS_components, "SRS");
+    
+    message ("        internal interface list");
+    // 1/11/94 JHSIA: modified query to check for reference also
+    // 1/11/94 JHSIA: also consider control variable select_SRS_components
+    if (select_SRS_components)
+    {
+        id_list_create 
+            ("link[(DataFlow || ControlFlow) && " +
+             "from_node[Process] && to_node[Process] && " +
+             "items[DocumentName && value = 'SRS'] && link_refs]",
+             "internal_interfaces");
+    }
+    else
+    {
+        id_list_create 
+            ("link[(DataFlow || ControlFlow) && " +
+             "from_node[Process] && to_node[Process] && link_refs]",
+             "internal_interfaces");
+    }
+    
+    message ("        SRS capabilities");
+    // 1/11/94 JHSIA: modified query to check for reference also
+    if (select_SRS_components)
+        id_list_create ("node[Process && items[DocumentName && " +
+                "value = 'SRS'] && node_refs]", "SRS_capabilities");
+    else
+        id_list_create ("node[Process && node_refs]", "SRS_capabilities");
+
+    
+    // Global lists that cache information
+    message ("SRS:    global lists");
+    init_process_global_lists ();
+    //print_process_global_lists ();
+}
+
+
+// RETURN_PROCESS_STATUS_BY_ID
+//
+// Support functions for the global lists
+
+process_status
+return_process_status_by_id (int        proc_id)
+{
+    int         find_result;
+    
+    find_result = list_find (ALL_PROC_IDS, 0, proc_id);
+    if (find_result == TOTAL_PROCS)
+        return unknown;
+    else
+        return list_get (ALL_PROC_STATUSES, find_result);
+}
+
+
+// RETURN_PROCESS_INDEX_BY_ID
+//
+// Support functions for the global lists
+
+string
+return_process_index_by_id (int proc_id)
+{
+    int         find_result;
+    
+    find_result = list_find (ALL_PROC_IDS, 0, proc_id);
+    if (find_result == TOTAL_PROCS)
+            return "??";
+    else
+            return list_get (ALL_PROC_INDICES, find_result);
+}
+
+// RETURN_PROCESS_NAME_BY_ID
+//
+// Support functions for the global lists
+
+string
+return_process_name_by_id (int  proc_id)
+{
+    int         find_result;
+    
+    find_result = list_find (ALL_PROC_IDS, 0, proc_id);
+    if (find_result == TOTAL_PROCS)
+            return "??";
+    else
+            return list_get (ALL_PROCS, find_result);
+}
+
+// RETURN_PROCESS_ID_BY_INDEX
+//
+// Support functions for the global lists
+
+int
+return_process_id_by_index (string      proc_index)
+{
+    int         find_result;
+    
+    find_result = list_find (ALL_PROC_INDICES, 0, proc_index);
+    if (find_result == TOTAL_PROCS)
+            return -1;
+    else
+            return list_get (ALL_PROC_IDS, find_result);
+}
+
+void
+print_process_global_lists ()
+{
+    int         i, id;
+    
+    for (i=0; i<TOTAL_PROCS; i=i+1)
+    {
+        id = list_get(ALL_PROC_IDS, i);
+        message (return_process_name_by_id(id) + " - " +
+                return_process_index_by_id(id) + " - " +
+                return_process_status_by_id(id) + " - " +
+                return_process_id_by_index(return_process_index_by_id(id)));
+    }
+}
+
+
+
+// INIT_PROCESS_GLOBAL_LISTS
+//
+// This function initializes some global lists/caches of information
+// that is requested from the repository frequently
+
+void
+init_process_global_lists ()
+{
+    node                        one_process;
+    item                        relative_index;
+    file                        defining_diagram;
+    string                      temp_string;
+    process_status              current_proc_status;
+    
+    ALL_PROCS = list_create ("string", 0);
+    ALL_PROC_IDS = list_create ("int", 0);
+    ALL_PROC_INDICES = list_create ("string", 0);
+    ALL_PROC_STATUSES = list_create ("process_status", 0);
+    // 1/11/94 JHSIA: Verify that references also exist
+    // 1/13/94 JHSIA: Exclude Process references in CSPEC tables 
+    for_each_in_select ("node[Process && node_refs] sort by name", one_process)
+    {
+        list_append (ALL_PROCS, one_process.name);
+        list_append (ALL_PROC_IDS, one_process.id);
+        current_proc_status = undefined;
+        
+        // Get the base process index
+        defining_diagram = find_by_query 
+            ("file[DfeDiagram && node_refs[node_id=${one_process.id}]];");
+        temp_string = "";
+        if (defining_diagram == NULL)
+        {
+            display_warning ("No defining diagram for process " + 
+                    one_process.name);
+            message ("CAUSE: Probably orphaned processes");
+            temp_string = "";
+        }
+        else if ((defining_diagram.name == "top") ||
+                     (defining_diagram.name == "0"))
+        {
+            temp_string = "";
+        }
+        else
+        {
+            temp_string = defining_diagram.name + ".";
+        }
+        
+        // Get the relative process index
+        relative_index = find_by_query 
+                ("item[RelativeIndex && obj_id=${one_process.id}];");
+        if (relative_index == NULL)
+        {
+            display_warning ("No Relative Index for process " + 
+                        one_process.name);
+            message ("CAUSE: Probably orphaned processes");
+        }
+        else
+        {
+            temp_string = temp_string + relative_index.value;
+        }
+        
+    	// Assign to parallel list
+        list_append (ALL_PROC_INDICES, temp_string);
+        
+        // Determine process status
+        if (temp_string != "" && selection_count ("file[DfeDiagram && name = '${temp_string}']") > 0)
+        {
+            current_proc_status = has_decomp;
+        }
+        else if (selection_count ("note[Pspec && obj_id = ${one_process.id}]") > 0)
+        {
+            current_proc_status = has_pspec;
+        }
+        list_append (ALL_PROC_STATUSES, current_proc_status);
+    }
+    
+    TOTAL_PROCS = list_count (ALL_PROCS);
+}
+
+
+// CLEAN_UP
+//
+// This function deallocates any memory that might have been allocated
+// during the execution of this program.
+
+void
+clean_up ()
+{
+    //print_global_lists ();
+    id_list_free ("external_interfaces");
+    id_list_free ("internal_interfaces");
+    id_list_free ("SRS_capabilities");
+}
+
+
+
+// TITLE_PAGE
+//
+//
+// 10.1.1  Title page.  The title page shall contain the information identified
+// below in the indicated format:
+//
+//
+//              [Document control number and date: Volume x of y (if multi-volume)]
+//
+//                                              [Rev. indicator: date of Rev.]
+//
+//
+//
+//                                        SOFTWARE REQUIREMENTS SPECIFICATION
+//
+//                                                                      FOR THE
+//
+//                                                                [CSCI NAME]
+//
+//                                                                        OF
+//
+//                                                               [SYSTEM NAME]
+//
+//
+//
+//                                              CONTRACT NO. [contract number]
+//
+//                                         CDRL SEQUENCE NO. [CDRL number]
+//
+//                                                              Prepared for:
+//
+//                                      [Contracting Agency Name, department code]
+//
+//                                                              Prepared by:
+//
+//                                              [contractor name and address]
+//
+//
+//
+//      Authenticated by ____________________   Approved by ______________________
+//                                       (Contracting agency)                                   (Contractor)
+//
+//      Date _____________________                              Date _______________________
+//
+
+void
+title_page ()
+{
+    message ("SRS:  Title Page");
+    paragraph (TitleDocInfoFormat);
+    print_line (document_number);
+    print (document_date());
+    
+    paragraph (TitleMainFormat);
+    print_line ("SOFTWARE REQUIREMENTS SPECIFICATION");
+    print_line ("FOR THE");
+    print_line (csci_name);
+    print_line ("OF");
+    print (system_name);
+    
+    paragraph (TitlePrepInfoFormat);
+    print_line ("CONTRACT NO. " + contract_number);
+    print_line ("CDRL SEQUENCE NO. " + cdrl_number);
+    print_line ("Prepared for:");
+    print_line (contracting_agency_and_dept_code);
+    print_line ("Prepared by:");
+    print (contractor_name_and_address);
+    
+    paragraph (TitleSignaturesFormat);
+    print ("Authenticated by _______________________");
+    tab(1);
+    print_line ("(Contracting agency)");
+    print ("Date ____________________");
+    
+    paragraph (TitleSignaturesFormat);
+    print ("Approved by ____________________________");
+    tab(1);
+    print_line ("(Contractor agency)");
+    print ("Date ____________________");
+    
+    // No page needed here as the paragraph style "heading L1" is placed
+    // at the top of the page.  
+        
+}
+
+
+//
+// MAIN FUNCTIONS
+//
+
+// SCOPE_SECTION
+//
+// 10.2.3  Scope.  This section shall be numbered 1. and divided into 
+// the following paragraphs.
+//
+// 10.1.3.1  Identification.  This paragraph shall be numbered 1.1 and
+// shall contain the approved identification number, title, and if 
+// applicable, abbreviation of the CSCI and the system to which this 
+// SRS applies. 
+//
+
+void
+scope_section ()
+{
+    string      sys_abbrev      = " ";
+    string      csci_abbrev = " ";
+    
+    message ("SRS:  1. Scope ...");
+    paragraph (HeadingL1Format);
+    print ("Scope.");
+            
+    message ("SRS:    1.1. Identification ...");
+    paragraph (HeadingL2Format);
+    print ("Identification.");
+    paragraph (SubSectionBodyFormat);
+    
+    // Add the necessary delimiters around the abbreviations if in fact
+    // they exist.
+    if (system_abbreviation != "")
+            sys_abbrev = " (" + system_abbreviation + ") ";
+    else
+            display_warning ("No system abbreviation provided");
+            
+    if (csci_abbreviation != "")
+            csci_abbrev = " (" + csci_abbreviation + ") ";
+    else
+            display_warning ("No CSCI abbreviation provided");
+                
+    print ("The Software Requirements Specification establishes " +
+        "the requirements for the CSCI identified as " + csci_name + 
+        csci_abbrev + csci_number + " CSCI_Number of the " + system_name + 
+        sys_abbrev + system_number + " System.");
+        
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_1_1__Identification);
+        
+    message ("SRS:    1.2. CSCI overview ...");
+    paragraph (HeadingL2Format);
+    print ("CSCI overview.");
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_1_2__CSCI_overview);
+    
+    message ("SRS:    1.3. Document overview ...");
+    paragraph (HeadingL2Format);
+    print ("Document overview.");
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_1_3__Document_overview);
+}
+
+
+// APPLICABLE_DOCUMENTS_SECTION
+//
+// 10.1.4  Applicable documents.  This section shall be numbered 2.  
+// and divided into the following paragraphs.
+
+void
+applicable_documents_section ()
+{
+    message ("SRS:  2. Applicable documents ...");      
+    paragraph (HeadingL1Format);
+    print ("Applicable documents.");
+    
+    //
+    message ("SRS:    2.1. Government documents ...");
+    paragraph (HeadingL2Format);
+    print ("Government documents.");
+    
+    paragraph (SubSectionBodyFormat);
+    print ("The following documents of the exact issue shown form a part " +
+        "of this specification to the extent specified herein.  In the event " +
+        "of conflict between the documents referenced herein and the content " +
+        "of this specification, the contents of this specification shall be " +
+        "considered a superseding requirement.");
+    
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_2_1__Government_documents);
+        
+    paragraph (SubSectionBodyFormat);
+    print ("Copies of specifications, standards, drawings, and publications " +
+        "required by suppliers in connection with specified procurement " + 
+        "functions should be obtained from the contracting agency or as " +
+        "directed by the contracting officer.");
+        
+    //
+    message ("SRS:    2.2. Non-Government documents ...");
+    paragraph (HeadingL2Format);
+    print ("Non-Government documents.");
+    
+    paragraph (SubSectionBodyFormat);
+    print ("The following documents of the exact issue shown form a part " +
+        "of this specification to the extent specified herein.  In the " +
+        "event of conflict between the documents referenced herein and the " +
+        "content of this specification, the contents of this specification " +
+        "shall be considered a superseding requirement.");
+    
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_2_2__Non_Government_documents);
+    
+    paragraph (SubSectionBodyFormat);
+    print ("Technical society and technical association specifications " +
+        "and standards are generally available for reference from " +
+        "libraries.  They are also distributed among technical groups and " +
+        "using Federal Agencies.");
+}
+
+
+// ENGINEERING_REQUIREMENTS_SECTION
+//
+// 10.2.5  Engineering requirements.  This section shall be numbered 3.
+// and shall be divided into the following paragraphs and
+// subparagraphs to specify the engineering requirements necessary to
+// ensure proper development of the CSCI.  Requirements to be included
+// herein shall be allocated or derived from requirements established by
+// the applicable SSS, PIDS, or CIDS.
+
+void
+engineering_requirements_section ()
+{
+    message ("SRS:  3. Engineering requirements ...");  
+    paragraph (HeadingL1Format);
+    print ("Engineering requirements.");
+    
+    csci_external_interface_requirements_paragraph ();
+    csci_capability_requirements_paragraph ();
+    csci_internal_interfaces_paragraph ();
+    csci_data_element_requirements_paragraph ();
+    adaptation_requirements_paragraph ();
+    sizing_and_timing_requirements_paragraph ();
+    safety_requirements_paragraph ();
+    security_requirements_paragraph ();
+    design_constraints_paragraph ();
+    software_quality_factors_paragraph ();
+    human_performance_requirements_paragraph ();
+    requirements_traceability_paragraph ();
+}
+
+
+// CSCI_EXTERNAL_INTERFACE_REQUIREMENTS_PARAGRAPH
+//
+// 10.1.5.1  CSCI external interface requirements.  This paragraph shall be
+// numbered 3.1 and shall identify the external interfaces of the CSCI.
+// An external interface diagram may be used to aid in this description.  
+// Each external interface shall be identified by name and project_unique
+// identifier and a brief description of each interface shall be provided.
+// Any identifying documentation, such as an Interface Control Document or
+// Interface Requirements Specification, shall be referenced for each
+// interface.
+
+void
+csci_external_interface_requirements_paragraph ()
+{
+    string      query;
+    int         i, link_id;
+    link        one_link;
+    note        one_note;
+    item        one_note_item;
+    
+    message ("SRS:    3.1. CSCI external interface requirements ...");
+    paragraph (HeadingL2Format);
+    print ("CSCI external interface requirements.");
+    
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_3_1__External_interface_requirements);
+    
+    paragraph (SubSectionBodyFormat);
+    if (narrative_document)
+    {
+        print ("The external interfaces for this CSCI are as follows:");
+    }
+    else // reference document
+    {
+        print ("The External Interface diagram for this CSCI appears " +
+        "in Appendix A, at the end of this document.  The external " +
+        "interfaces for this CSCI are as follows:");
+    }
+            
+    // Now pick out the name, identifier & description of each
+    // external link
+    //PEC mod 11/17/95 print external interfaces in alpha order per rts#8102
+    for_each_in_select ("link[external_interfaces] sort by name", one_link)
+    {
+        paragraph (SubSectionBodyFormat);
+        print_line ("Interface Name:  " + one_link.name);
+        print ("Identifier:  " + find_unique_identifier(one_link.id));
+
+        print_note_description(one_link.id, SubSectionBodyFormat, "GenericObject");
+    }
+    
+    // Now include flow diagrams where external diagrams are found      
+    if (narrative_document)
+    {
+        paragraph (SubSectionBodyFormat);
+        print ("The external interfaces described above are " +
+                "detailed in the following External Flow Diagrams:");
+        include_external_interface_diagrams("External Interface Diagram");
+    }   
+}
+
+
+// CSCI_CAPABILITY_REQUIREMENTS_PARAGRAPH
+//
+// 10.1.5.2  CSCI capability requirements.  This paragraph shall be
+// numbered 3.2 and shall identify, in the subparagraphs that follow, all 
+// of the capability requirements that the CSCI must satisfy.  If the system
+// of which the CSCI is a part can exist in various system states and modes
+// as documented in the system specification, this paragraph shall identify 
+// each such state and mode and shall correlate each CSCI capability to
+// those states and modes.  A table may be used to depict this correlation.
+
+void
+csci_capability_requirements_paragraph ()
+{
+    int         process_zero_id;
+    
+    message ("SRS:    3.2. CSCI capability requirements ...");
+    paragraph (HeadingL2Format);
+    print ("CSCI capability requirements.");
+    
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_3_2__CSCI_capability_requirements);
+    
+    // Include system state table here or in Appendix
+    if (narrative_document)
+    {
+        // Necessary to avoid inclusion of undesired paragraph
+        paragraph(TableBodyCellFormat);
+        include_state_function_table ();
+    }
+    else
+    {
+        paragraph (SubSectionBodyFormat);
+        print ("The table which describes the relationship between the " +
+            "various system states and this particular CSCI appears in " +
+            "Appendix B at the end of this document.");
+    }
+    
+    // Now include all the capabilities (represented as processes)
+    process_zero_id = return_process_id_by_index("0");
+    if (process_zero_id != -1)
+    {
+        capabilities (process_zero_id, 3);
+    }
+    else
+    {
+        display_warning ("(SRS 3.2) Process 0 not found");
+    }
+}
+
+
+// CAPABILITIES
+//
+// In section 3.2, the capabilities (i.e. functionality) of the CSCI being
+// documented are defined.  In StP, capabilities equate to the processes
+// found in data flow diagrams.  Since processes are defined by process
+// specifications, control specifications and/or lower data flow diagrams,
+// this recursive procedure will utilize all these components in the
+// definition of each process.
+//
+// Since processes have an unlimited depth, this is really section 3.2.xyz
+// where xyz is the index of the process.  For example, in section 3.2.4.2
+// we would find the annotations, and pspecs associated with process 4.2.
+// We would also find the data flow diagram 4.2 and the control specification
+// defining any control bars in diagram 4.2.
+
+void
+capabilities (int capability_id, int level)
+{
+    string               query, query2;
+    note                 one_req, pspec_desc;
+    item                 one_req_name, index_item, process_index;
+    file                 defining_diagram, referencing_diagram;
+    process_status       capability_status;
+    string               capability_index, capability_name;
+    node                 one_cspec;
+    int                  paragraph_level;
+            
+    // Initialize
+    capability_status = return_process_status_by_id(capability_id);
+    capability_name = return_process_name_by_id(capability_id);
+    capability_index = return_process_index_by_id(capability_id);
+    
+    // Include the capability note description
+    print_note_description(capability_id, SubSectionBodyFormat, "GenericObject");
+    
+    // Include the requirements addressed by this capability
+    // 1. Performance Requirements
+    query = "note[obj_id = ${capability_id} && PerformanceRequirement]";
+    for_each_in_select(query, one_req)
+    {
+        paragraph (SubSectionBodyFormat);
+        
+        // get name
+        query2 = "item[note_id = ${one_req.id} && PerformanceRequirementName]";
+        one_req_name = find_by_query (query2);
+        if (one_req_name != NULL)
+        {
+            print_line ("Performance Requirements: " + one_req_name.value);
+        }
+        else
+        {
+            print_line ("Performance Requirements: ");
+            display_warning ("(SRS 3.2.-) No Performance Requirement Name " +
+                "associated with the description attached to the capability " +
+                "called " + capability_index + " " + capability_name);
+            }
+                
+        // full description
+        // 1/11/94 JHSIA: added call to strip_last_return
+        print(strip_last_return(one_req.desc));
+    }
+
+    // 2. Derived Requirements
+    query = "note[obj_id = ${capability_id} && DerivedRequirement]";
+    for_each_in_select(query, one_req)
+    {
+        paragraph (SubSectionBodyFormat);
+        
+        // get name
+        query2 = "item[note_id = ${one_req.id} && DerivedRequirementName]";
+        one_req_name = find_by_query (query2);
+        if (one_req_name != NULL)
+        {
+            print_line ("Derived Requirements: " + one_req_name.value);
+        }
+        else
+        {
+            print_line ("Derived Requirements: ");
+            display_warning ("(SRS 3.2.-) No Derived Requirement Name " +
+                "associated with the description attached to the capability " +
+                "called " +  capability_index + " " + capability_name);
+            }
+                
+        // full description
+        // 1/11/94 JHSIA: added call to strip_last_return
+        print(strip_last_return(one_req.desc));
+    }
+
+    // 3. Allocated Requirements
+    query = "note[obj_id = ${capability_id} && Requirement]";
+    for_each_in_select(query, one_req)
+    {
+        paragraph (SubSectionBodyFormat);
+        
+        // get name
+        query2 = "item[note_id = ${one_req.id} && RequirementName]";
+        one_req_name = find_by_query (query2);
+        if (one_req_name != NULL)
+        {
+            print_line ("Requirement: " + one_req_name.value);
+        }
+        else
+        {
+            print_line ("Requirements: ");
+            display_warning ("(SRS 3.2.-) No Requirement Name " +
+                    "associated with the description attached to the capability " +
+                    "called " + capability_index + " " + capability_name);
+        }
+                
+        // full description
+        // 1/11/94 JHSIA: added call to strip_last_return
+        print(strip_last_return(one_req.desc));
+    }
+    
+    // Determine decomposition status for this capability
+    if (capability_status == unknown)
+    {
+        display_error ("(SRS 3.2.-) No process status found for the process " +
+                capability_name);
+        paragraph (SubSectionBodyFormat);
+        paragraph (SubSectionTitleFormat);
+        print ("No definition found for this capability.");
+    }
+    else if (capability_status == has_pspec)
+    {
+        // 01/17/94 JHSIA: Check control external variable and include
+        //                 PSpec using the appropriate method
+        if (use_Process_Specification_Generator)
+        {
+            referencing_diagram = 
+                find_by_query ("file[DfeDiagram && " +
+                "node_refs[node_id = ${capability_id}]]");
+            if (referencing_diagram == NULL)
+            {
+                display_error ("(SRS 3.2.-) No DFD references the process " +
+                capability_name);
+                print_note_description(capability_id, SubSectionBodyFormat, 
+                    "Pspec");
+            }
+            else
+            {
+                generate_pspec_primitive 
+                    (capability_index, capability_name, 
+                     referencing_diagram.name, capability_id);
+            }
+        }
+        else
+            print_note_description(capability_id, SubSectionBodyFormat, "Pspec");
+    }
+    else if (capability_status == has_decomp)
+    {
+        defining_diagram = find_by_query 
+            ("file[DfeDiagram && name = '${capability_index}']");
+        
+        // Include the dfd (narrative only), the cspec 
+        // (narrative only) and recursively take care of any children in 
+        // their own subsection.
+        if (narrative_document)
+        {
+            // DFD
+            PrintDiagram( defining_diagram, True, "", "", "", "", 
+                "Defining Data Flow Diagram" + capability_index, "" );
+            
+            if (include_Real_Time_Analysis)
+            {
+                query = 
+                    "node[CSpec && node_refs[file_id=${defining_diagram.id}]]";
+                for_each_in_select (query, one_cspec)
+                {
+                    include_one_cspec(one_cspec.name);
+                }
+            }
+        }
+                
+        // Now recursively repeat this section for all children
+        query = "item[RelativeIndex && node[Process && " +
+                " node_refs[file[${defining_diagram.id}]]]]" +
+                " sort by value";
+
+        for_each_in_select (query, process_index)
+        {
+            if (capability_index == "0")
+                message ("SRS:    3.2." + process_index.value + 
+                        " CSCI capability requirements ...");
+            else
+                message ("SRS:    3.2." + capability_index + "." +
+                        process_index.value + " CSCI capability requirements ...");
+
+	    paragraph_level = level;
+	    if (level > MAX_HEADING_LEVELS) {
+		paragraph_level = MAX_HEADING_LEVELS;
+	    }
+            paragraph (HeadingLFormat + paragraph_level);
+
+            print (return_process_name_by_id(process_index.obj_id) + 
+                " capability (" + 
+                find_unique_identifier(process_index.obj_id) + ")");
+                                    
+            capabilities (process_index.obj_id, level + 1);
+        }
+    }
+    else //if (capability_status == undefined)
+    {
+        display_warning ("Process " + capability_index + " has no definition");
+        paragraph (SubSectionBodyFormat);
+        paragraph (SubSectionTitleFormat);
+        print ("No definition found for this capability.");
+    }
+}
+
+
+// INCLUDE_ONE_CSPEC
+//
+
+void
+include_one_cspec (string cspec_name)
+{
+    file    one_std;
+    
+    // Find a cspec table, if none then display a warning since cspecs are
+    // incomplete unless at least 1 table exists
+    if (selection_count("file[CspecTable && name = '${cspec_name}']") > 0)
+    {
+        include_cspec_table (cspec_name, "DecisionTable", 
+            "Decision Table for CSpec " + cspec_name);
+        include_cspec_table (cspec_name, "ProcessActivationTable", 
+                "Process Activation Table for CSpec " + cspec_name);
+        include_cspec_table (cspec_name, "ProcessActivationMatrix", 
+                "Process Activation Matrix for CSpec " + cspec_name);
+        include_cspec_table (cspec_name, "EventLogicTable", 
+                "Event Logic Table for CSpec " + cspec_name);
+        include_cspec_table (cspec_name, "StateTransitionTable", 
+                "State Transition Table for CSpec " + cspec_name);
+        include_cspec_table (cspec_name, "StateEventMatrix", 
+                "State Event Matrix for CSpec " + cspec_name);
+        include_cspec_table (cspec_name, "ActionLogicTable", 
+                "Action Logic Table for CSpec " + cspec_name);
+    }
+    else
+        display_warning ("No cspec table found for cspec " + cspec_name);
+    
+    // Find a state transition diagram
+    one_std = find_by_query ("file[SteDiagram && name='${cspec_name}']");
+    if (one_std != NULL)
+    {
+        message ("      .." + "SteDiagram");
+        PrintDiagram( one_std, True, "", "", "", "", 
+            "State Transition Diagram for CSpec " + cspec_name, "" );
+    }   
+}
+
+
+// include_cspec_table
+//
+
+void
+include_cspec_table (string cspec_name, string table_type, string caption)
+{
+    file        one_table;
+    
+    one_table = find_by_query ("file[${table_type} && name='${cspec_name}']");
+    if (one_table != NULL)
+    {
+        message ("      .." + table_type);
+        file_print (one_table, caption);
+    }
+}
+
+
+// CSCI_INTERNAL_INTERFACES_PARAGRAPH
+//
+// 10.1.5.3  CSCI internal interfaces.  This paragraph shall be numbered 3.3
+// and shall identify the interfaces between the capabilities identified above.
+// Each internal interface shall be identified by name and project-unique
+// identifier and a brief description of each interface shall be provided,
+// including a summary of the information transmitted over the interface.
+// Internal interface diagrams depicting data flow, control flow, and
+// other relevant information may be used to aid in this description.
+
+// The DIDs can be interpretted in various ways.  This template interprets
+// an internal interface between capabilities as any flow that doesn't
+// go to and from an anchor.  Because flow names aren't
+// the only identifying attributes of a flow, we must also include other
+// identifying attributes such as source, destination and the diagram they
+// are found in.  Rather than achieving this by adding repetitive information,
+// we chose to organize the flows by the originating flow diagrams.
+
+void
+csci_internal_interfaces_paragraph ()
+{
+    string  query;
+    link    internal_interface;
+    file    one_fd;
+    
+    message ("SRS:    3.3. CSCI internal interfaces ...");
+    paragraph (HeadingL2Format);
+    print ("CSCI internal interfaces.");
+
+	// 01/31/94 JHSIA: Changed external variable name to be consistent
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_3_3__CSCI_internal_interfaces);
+    
+    // A little intro paragraph
+    paragraph ();
+    if (narrative_document)
+    {
+        print ("The following figures depicts the interfaces between all " +
+                "capabilities of this CSCI.  Information listing all the " +
+                "internal interfaces and any descriptions that has been " +
+                "provided for that interface will follow each diagram.");
+    }
+    else
+    {    
+        print ("The figures depicting the interfaces between all the " +
+        "capabilities of this CSCI appear in Appendix A at the end " +
+        "of this document.  The following information lists all the " +
+        "internal interfaces and any description that has been provided " +
+        "for that interface.");
+    }
+
+    for_each_in_select ("file[DfeDiagram && name != 'top'] sort by name", 
+                                            one_fd)
+    {
+        // include actual flow diagrams for narrative documents
+        if (narrative_document)
+        {
+            PrintDiagram( one_fd, True, "", "", "", "", "Internal Interface Diagram ", "" );
+        }
+        else
+        {
+            // 1/11/94 JHSIA: "removed paragraph ();"
+            paragraph (SubSectionTitleFormat);
+            print ("Internal Interfaces for Diagram " + one_fd.name);
+        }
+        
+        query = "link[link_refs[file_id=${one_fd.id}] && " +
+                "internal_interfaces] sort by name";
+        for_each_in_select (query, internal_interface)
+        {
+            // 1/11/94 JHSIA: added SubSectionBody argument to paragraph call
+            paragraph (SubSectionBodyFormat);
+            print_line ("Interface Name: " + internal_interface.name);
+            print("Identifier: " + 
+                    find_unique_identifier (internal_interface.id));
+            print_note_description(internal_interface.id, SubSectionBodyFormat,
+                    "GenericObject");
+        }
+    }
+}
+
+
+// CSCI_DATA_ELEMENT_REQUIREMENTS_PARAGRAPH
+//
+// 10.1.5.4  CSCI data element requirements.  This paragraph shall be
+// numbered 3.4 and shall specify the information identified below, as
+// applicable.  
+//
+// a.  For data elements internal to the CSCI:
+//
+//      (1) Assign a project-unique identifier to the data element
+//      (2) Provide a brief description of the data element
+//      (3) Identify the units of measure required for the data element,
+//          such as seconds, meters, kilohertz, etc.
+//      (4) Identify the limit/range of values required for the data 
+//      element ( for constants provide the actual value)
+//      (5) Identify the accuracy required for the data element.
+//      (6) Identify the precision or resolution required for the data
+//      element in terms of significant digits
+//      (7) For data elements of the CSCI's internal interfaces:
+//          o identify the interface by name and project-unique identifier
+//          o identify the source capability of the data element by name
+//                and project-unique identifier
+//          o identify the destination capability of the data element by
+//                name and project-unique identifier.
+//
+// b.  For data elements of the CSCI's external interfaces:
+//
+//      (1) Identify the data elements by project-unique identifier
+//      (2) Identify the interface by name and project-unique identifier
+//  (3) Identify the source or destination capability, as applicable,
+//              by name and project_unique identifier.
+//      (4) Reference the Interface Requirements Specification in which
+//              the interface is specified.
+
+void
+csci_data_element_requirements_paragraph ()
+{
+    message ("SRS:    3.4. CSCI data element requirements ...");
+    paragraph (HeadingL2Format);
+    print ("CSCI data element requirements.");
+    
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_3_4__CSCI_data_element_requirements);        
+    
+    if (narrative_document)
+    {
+        // Necessary to avoid inclusion of undesired paragraph
+        paragraph(TableBodyCellFormat);
+
+        include_data_elements_table ();
+        include_data_elements_external_table (SRS, 
+                "CSCI Data Element External Requirements Table");
+    }
+    else
+    {
+        paragraph ();
+        print ("Appendix B contains the tables which provide a " +
+                "description for each of the data elements internal to " +
+                "this CSCI as well as describing the data elements external " +
+                "to this CSCI.");
+    }
+}
+
+
+// ADAPTATION_REQUIREMENTS_PARAGRAPH
+//
+// 10.1.5.5  Adaptation requirements.  This paragraph shall be numbered 3.5
+// and shall be divided into the following subparagraphs to specify the
+// requirements for adapting the CSCI to site-unique conditions and to
+// changes in the system environment.
+
+void
+adaptation_requirements_paragraph ()
+{
+    message ("SRS:    3.5. Adaptation requirements ...");
+    paragraph (HeadingL2Format);
+    print ("Adaptation requirements.");
+    installation_dependent_data_subparagraph ();
+    operational_parameters_subparagraph ();
+}
+
+
+// INSTALLATION_DEPENDENT_DATA_SUBPARAGRAPH
+//
+// 10.1.5.5.1  Installation Dependent Data.  This subparagraph shall be 
+// numbered 3.5.1 and shall describe the site-unique data required by each
+// installation.  Examples of such data are: site latitude and longitude,
+// radar ranges and areas of coverage, and prescribed safety limits.  
+// In addition, the subparagraph shall identify the CSCI capabilities
+// in which these data are used. 
+ 
+void
+installation_dependent_data_subparagraph ()
+{
+    message ("SRS:    3.5.1. Installation dependent data ...");
+    paragraph (HeadingL3Format);
+    print ("Installation dependent data.");
+
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_3_5_1__Installation_dependent_data); 
+    
+    if (narrative_document)
+    {
+        // Necessary to avoid inclusion of undesired paragraph
+        paragraph(TableBodyCellFormat);
+
+        include_installation_dependent_data_table ();
+    }
+    else
+    {
+        paragraph (SubSectionBodyFormat);
+        print ("Appendix B contains the table which provide the " +
+                "installation dependent data CSCI.");
+    }   
+}
+
+
+// OPERATIONAL_PARAMETERS_SUBPARAGRAPH
+//
+// 10.1.5.5.2  Operational Parameters.  This subparagraph shall be numbered 
+// 3.5.2 and shall describe parameters required by the CSCI that may vary
+// within a specified range according to operational needs.
+// Examples of such data are:  allowed trajectory deviations, navigation set
+// model number, airplane performance characteristics,
+// interaction/isolation of sorties, and missile performance
+// characteristics.  This subparagraph shall identify the
+// CSCI capabilities in which these data are used.  
+
+void
+operational_parameters_subparagraph ()
+{
+    message ("SRS:    3.5.2. Operational parameters ...");
+    paragraph (HeadingL3Format);
+    print ("Operational parameters.");
+
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_3_5_2__Operational_parameters);
+    
+    if (narrative_document)
+    {
+        // Necessary to avoid inclusion of undesired paragraph
+        paragraph(TableBodyCellFormat);
+
+        include_operational_parameters_data_usage_table ();
+    }
+    else
+    {
+        paragraph (SubSectionBodyFormat);
+        print ("Appendix B contains the table which provide the " +
+                "operational parameters for this CSCI.");
+    }   
+}
+
+
+// SIZING_AND_TIMING_REQUIREMENTS_PARAGRAPH
+
+void
+sizing_and_timing_requirements_paragraph ()
+{
+    message ("SRS:    3.6. Sizing and timing requirements ...");
+    paragraph (HeadingL2Format);
+    print ("Sizing and timing requirements.");
+
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_3_6__Sizing_and_timing_requirements);
+}
+
+
+// SAFETY_REQUIREMENTS_PARAGRAPH
+
+void
+safety_requirements_paragraph ()
+{
+    message ("SRS:    3.7. Safety requirements ...");
+    paragraph (HeadingL2Format);
+    print ("Safety requirements.");
+
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_3_7__Safety_requirements);
+}
+
+
+// SECURITY_REQUIREMENTS_PARAGRAPH
+
+void
+security_requirements_paragraph ()
+{
+    message ("SRS:    3.8. Security requirements ...");
+    paragraph (HeadingL2Format);
+    print ("Security requirements.");
+
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_3_8__Security_requirements);
+}
+
+
+// DESIGN_CONSTRAINTS_PARAGRAPH
+
+void
+design_constraints_paragraph ()
+{
+    message ("SRS:    3.9. Design constraints ...");
+    paragraph (HeadingL2Format);
+    print ("Design constraints.");
+
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_3_9__Design_constraints);
+}
+
+
+// SOFTWARE_QUALITY_FACTORS_PARAGRAPH
+
+void
+software_quality_factors_paragraph ()
+{
+    message ("SRS:    3.10. Software quality factors ...");
+    paragraph (HeadingL2Format);
+    print ("Software quality factors.");
+
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_3_10__Software_quality_factors);
+}
+
+
+// HUMAN_PERFORMANCE_REQUIREMENTS_PARAGRAPH
+
+void
+human_performance_requirements_paragraph ()
+{
+    message ("SRS:    3.11. Human performance/human engineering requirements ...");
+    paragraph (HeadingL2Format);
+    print ("Human performance/human engineering requirements.");
+
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_3_11__Human_performance_and_human_engineering_requirements);
+}
+
+
+// REQUIREMENTS_TRACEABILITY_PARAGRAPH
+//
+// 10.1.5.12 Requirements traceability. This paragraph shall be numbered
+// 3.12 and shall contain a mapping of the engineering requirements 
+// in this specification to the requirements applicable to this CSCI in 
+// the SSS, PIDS, or CIDS.  This paragraph shall also provide a mapping of
+// the allocation of the CSCI requirements from the SSS, PIDS, or CIDS to
+// the engineering requirements in this specification. 
+
+void
+requirements_traceability_paragraph ()
+{
+    message ("SRS:    3.12. Requirements traceability ...");
+    paragraph (HeadingL2Format);
+    print ("Requirements traceability.");
+
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_3_12__Requirements_traceability);
+    
+    if (narrative_document)
+    {
+        // Necessary to avoid inclusion of undesired paragraph
+        paragraph(TableBodyCellFormat);
+    
+        include_requirements_traceability_table ();
+    }
+    else
+    {
+        paragraph (SubSectionBodyFormat);
+        print ("Appendix B contains the table which provide the " +
+                "requirements traceability for this CSCI.");
+    }   
+}
+
+
+// QUALIFICATION_REQUIREMENTS_SECTION
+//
+// 10.1.6  Qualification requirements
+//
+// This section shall be numbered 4.  and shall be divided into the following
+// paragraphs to specify the qualification methods and any special qualification
+// requirements necessary to establish that the CSCI satisfies the requirements
+// of sections 3 and 5.
+
+void
+qualification_requirements_section ()
+{
+    message ("SRS:  4. Qualification requirements ...");        
+    paragraph (HeadingL1Format);
+    print ("Qualification requirements.");
+        
+    qualification_methods_paragraph ();
+    special_qualification_requirements_paragraph ();
+}
+
+
+// QUALIFICATION_METHODS_PARAGRAPH
+
+void
+qualification_methods_paragraph ()
+{
+    message ("SRS:    4.1. Qualification methods ..."); 
+    paragraph (HeadingL2Format);
+    print ("Qualification methods.");
+
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_4_1__Qualification_methods);
+    
+    if (narrative_document)
+    {
+        // Necessary to avoid inclusion of undesired paragraph
+        paragraph(TableBodyCellFormat);
+
+        include_qualification_cross_reference_table ();
+    }
+    else
+    {
+        paragraph (SubSectionBodyFormat);
+        print ("Appendix B contains the table which provide the " +
+                "qualification method information for this CSCI.");
+    }   
+}
+
+
+// SPECIAL_QUALIFICATION_REQUIREMENTS_PARAGRAPH
+
+void
+special_qualification_requirements_paragraph ()
+{
+    message ("SRS:    4.2. Special qualification requirements ...");    
+    paragraph (HeadingL2Format);
+    print ("Special qualification requirements.");
+
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_4_2__Special_qualification_requirements);
+}
+
+
+// PREPARATION_FOR_DELIVERY_SECTION
+//
+// 10.2.7  Preparation for delivery
+//
+// This section shall be numbered 5.  and specify the type and
+// characteristics of the delivery media for the CSCI (e.g., 8 track
+// magnetic tape 1600 BPI, 150 megabyte disk).  In addition, this section
+// shall specify the labeling, packaging, handling, and classification
+// marking requirements for the media, including the CSCI name and project- 
+// unique identifier.  Any unique delivery requirements shall also be 
+// specified in this section.
+
+void
+preparation_for_delivery_section ()
+{
+    message ("SRS:  5. Preparation for delivery ...");  
+    paragraph (HeadingL1Format);
+    print ("Preparation for delivery.");
+
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_5__Preparation_for_delivery);
+}
+
+
+// NOTES_SECTION
+
+void
+notes_section ()
+{
+    message ("SRS:  6. Notes ...");     
+    paragraph (HeadingL1Format);
+    print ("Notes.");
+
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_6__Notes);
+
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_6__Abbreviations);
+}
+
+
+// APPENDICES_SECTION
+
+void
+appendices_section ()
+{       
+    // Narrative vs Reference flag will determine the appendices to
+    // be included
+    
+    //PEC mod 9/22/95 changed if statement
+    if (narrative_document)
+    {
+    }
+    else
+    {
+        message ("SRS:  Appendix A");
+        paragraph (AppendixL1StartFormat);
+        print ("SRS figures and support tables.");
+        appendix_A_subsection ();
+        
+        message ("SRS:  Appendix B");
+        paragraph (AppendixL1Format);
+        print ("SRS tables.");
+        appendix_B_subsection ();
+    }
+}
+
+
+// APPENDIX_A_SUBSECTION
+//
+// All SRS figures/diagrams should be included here.
+
+void
+appendix_A_subsection ()
+{
+    paragraph (AppendixL2Format);
+    print ("CSCI external interface requirements");
+    paragraph (SubSectionBodyFormat);
+    print ("The external interfaces for this CSCI are diagrammed within " +
+            "the following diagram(s):");
+    message ("      .. external interface diagrams");
+    include_external_interface_diagrams ("External Interface Diagram");
+
+    paragraph (AppendixL2Format);
+    print ("CSCI internal interfaces");
+    paragraph (SubSectionBodyFormat);
+    print ("The internal interfaces for this CSCI are diagrammed within " +
+            "the following diagrams:");
+    message ("      .. internal interface diagrams");
+    include_internal_interface_diagrams ();
+    
+    if (include_Real_Time_Analysis)
+    {
+        paragraph (AppendixL2Format);
+        print ("Capability control specifications");
+        paragraph (SubSectionBodyFormat);
+        print ("The control specifications, that support the interface " +
+                "diagrams printed earlier in this appendix, follow:");
+    	message ("      .. control specifications");
+        include_all_cspecs ();
+    }
+}
+
+
+// INCLUDE_INTERNAL_INTERFACE_DIAGRAMS
+//
+// Prints out all flow diagrams that contain at least one internal flow.
+// Internal flows are defined as one that neither originates nor terminates
+// at an anchor.
+
+void
+include_internal_interface_diagrams ()
+{
+    file        one_fd;
+    string      query;
+    
+    // Include all flow diagrams where an internal flow is found.
+    query = "file[DfeDiagram && (name != 'top') && " +
+            "link_refs [link [internal_interfaces]]] sort by name";
+    for_each_in_select (query, one_fd)
+    {
+        PrintDiagram( one_fd, True, "", "", "", "", "Internal Interface Diagram ", "" );
+    }
+}
+
+
+// INCLUDE_ALL_CSPECS
+//
+// All control specification related tables, matrices & diagrams will be
+// included in this section.
+
+void
+include_all_cspecs ()
+{
+    node        one_cspec;
+    
+    // 1/11/94 JHSIA: changed query to only include CSpecs with references
+    for_each_in_select ("node[CSpec && node_refs] sort by name", one_cspec)
+    {
+        include_one_cspec(one_cspec.name);
+    }
+}
+
+
+//      APPENDIX_B_SUBSECTION
+
+void
+appendix_B_subsection ()
+{
+	// 01/31/94 JHSIA: Changed case of titles
+    paragraph (AppendixL2Format);
+    print ("CSCI capability table");
+    paragraph(TableBodyCellFormat);
+    include_state_function_table ();
+
+    paragraph (AppendixL2Format);
+    print ("CSCI data elements");
+    paragraph(TableBodyCellFormat);
+    include_data_elements_table ();
+    include_data_elements_external_table (SRS, 
+            "CSCI Data Element External Requirements Table");
+
+    paragraph (AppendixL2Format);
+    print ("Adaptation requirements tables");
+    paragraph(TableBodyCellFormat);
+    include_installation_dependent_data_table ();
+    include_operational_parameters_data_usage_table ();
+
+    paragraph (AppendixL2Format);
+    print ("Requirements traceability");
+    paragraph(TableBodyCellFormat);
+    include_requirements_traceability_table ();
+
+    paragraph (AppendixL2Format);
+    print ("Qualification requirements");
+    paragraph(TableBodyCellFormat);
+    include_qualification_cross_reference_table ();
+}
+
+
+// INCLUDE_STATE_FUNCTION_TABLE
+//
+// For all processes that have the system state annotation, this
+// procedure will create a matrix where each columns will represent
+// a capability/process and each row will represent a state.  Each 
+// row/column intersection will indicate if a capability is active in 
+// a given state.
+
+void
+include_state_function_table ()
+{
+    list                        all_procs,
+                                    proc_state_list;
+    string                      query,
+                                    current_state,
+                                    table_type_prefix = "StateFnTab",
+                                    table_type;
+    set                         temp_set,
+                                    state_set,
+                                    all_states;
+    item                        one_state;
+    int                         total_table_groups, 
+                                    table_group, 
+                                    column_number,
+                                    total_columns_in_group,
+                                    column_per_page = 6,
+                                    i, 
+                                    j,
+                                    num_cells;
+    node                        current_proc;
+    boolean                     debug = False;
+
+    
+    message ("       ..CSCI capability table");
+
+    // Create a list of all processes that possess system state attributes
+    query = "node[Process && items[SystemState]] sort by name";
+    all_procs = list_select (query);
+    
+    // Create a set of all unique states
+    all_states = set_create("string");
+    for_each_in_select ("item[SystemState && node[Process]] sort by value", one_state)
+    {
+            if (debug)
+                    message ("adding state " + one_state.value);
+            set_add (all_states, one_state.value);
+    }
+    
+    // Create a list of states parallel to the all_procs list
+    proc_state_list = list_create("set", list_count(all_procs));
+    for (i = 0; i < list_count(all_procs); i = i + 1)
+    {
+            current_proc = list_get(all_procs, i);
+            if (debug)
+                    message ("process: " + current_proc.name);
+            temp_set = set_create ("string");
+            query = "item[SystemState && obj_id = ${current_proc.id}]";
+            for_each_in_select (query, one_state)
+            {
+                    if (debug)
+                            message ("adding state " + one_state.value);
+                    set_add (temp_set, one_state.value);
+            }
+            
+            list_set (proc_state_list, i, set_copy(temp_set));
+            set_clear (temp_set);
+    }
+    
+    // Now that all necessary info is added, just generate the table
+    // in 1 or more parts depending on the number of processes (i.e. columns)
+    total_table_groups = set_count(all_states) / column_per_page;
+    if (total_table_groups * column_per_page < set_count(all_states))
+            total_table_groups = total_table_groups + 1;
+    
+    if (debug)
+            message ("total table groups = " + total_table_groups);
+
+    // For every Table Group do a set of columns
+    column_number = 0;
+    for (table_group = 1; table_group <= total_table_groups; 
+            table_group = table_group + 1)
+    {
+            // determine the number of columns of data for this group
+            if (table_group < total_table_groups)
+                    total_columns_in_group = column_per_page;
+            else
+                    total_columns_in_group = set_count(all_states) - column_number;
+            if (debug)
+            {
+                    message ("Group: " + table_group);
+                    message ("# of columns: " + total_columns_in_group);
+            }
+
+            // Create table & initialize column size
+            table_type = table_type_prefix + table_group;
+            define_table_format (table_type, "");
+            define_table_cell(table_type, 200);
+            for (i = column_number; i < (column_number + total_columns_in_group); 
+                     i = i + 1)
+            {
+                    define_table_cell(table_type, 150);
+            }           
+            
+            // Initialize column header format and content
+    	    define_table_header_span(table_type, 1, BOLD, Center, "");
+            for (i = column_number; i < (column_number + total_columns_in_group); 
+                     i = i + 1)
+            {
+                    current_state = set_get_element(all_states, i);
+                    if (debug)
+                            message ("Column header: " + current_state);
+            define_table_header_span(table_type, 1, BOLD, Center,
+                    current_state);
+            }
+            
+            // set up body format
+    num_cells = define_table_body_cells(table_type, STANDARD, Center);
+    define_table_border(table_type, HEADER, 1, RIGHT, Thick,
+            Solid, Single, Visible);
+    define_table_border(table_type, BODY, 1, RIGHT, Thick,
+            Solid, Single, Visible);
+//              define_table_border(table_type, BODY, 0, TOP, Thick, Solid, Single, Visible);
+// TODO: need bold border below header row
+//      define_table_border(table_type, HEADER, 1, BOTTOM, Thick,
+//              Solid, Single, Visible);
+
+            // prepare for filling table
+            generate_table_header(table_type);
+            generate_table_body_start(table_type);
+            
+            // Fill in Table
+        for (j = 0; j < list_count(all_procs); j = j + 1)
+        {
+            // Print current process name
+            current_proc = list_get (all_procs, j);
+            if (debug)
+                message ("Row header: " + current_proc.name);
+            generate_body_cell(table_type, current_proc.name);
+            
+            // find the set of states that this process is active in 
+            state_set = list_get (proc_state_list, j);
+                
+            for (i = column_number; 
+                i < (column_number + total_columns_in_group); 
+                i = i + 1)
+            {
+                current_state = set_get_element(all_states, i);
+                if (set_is_member (state_set, current_state))
+                {
+                    if (debug)
+                            message (" member");
+                    generate_body_cell(table_type, "x");
+                }
+                else
+                {
+                    if (debug)
+                            message (" ~member");
+                    generate_body_cell(table_type, "");
+                }
+            }
+        }
+            
+        generate_table_body_end(table_type);
+        generate_table_finish(table_type);
+	//PEC mod 9/28/95 changing caption so it's unique for each
+	//table group per rts #6854
+        define_table_caption(table_type, "CSCI Capability Table " + table_group);
+        output_table(table_type);    
+            
+        column_number = column_number + total_columns_in_group;
+    }
+    
+    // free memory
+    list_clear (all_procs);
+    set_clear (all_states);
+    list_clear (proc_state_list);
+}
+
+
+// INCLUDE_DATA_ELEMENTS_TABLE
+//
+// This function generates a table for internal interfaces
+
+void
+include_data_elements_table ()
+{
+    list                interface_children;
+    set                 unique_internal_interfaces,
+                        all_elements,
+                        temp_set;
+    int                 i,
+                        j;
+    link                one_interface;
+    string              table_type,
+                        table_type2,
+                        interface_name,
+                        query,
+                        desc_string,
+                        element_name;
+    note                element_desc;
+    boolean             debug = False;
+    node                one_node;
+    
+    message ("       ..CSCI data elements requirements table");
+    
+    //
+    // Create various parallel lists and sets needed to generate this
+    // table
+    
+    // create a set of internal interfaces based solely on name
+    unique_internal_interfaces = set_create ("string");
+    for_each_in_select ("link[internal_interfaces] sort by name", one_interface)
+    {
+        set_add (unique_internal_interfaces, one_interface.name);
+    }
+    
+    // create a list parallel to unique_internal_interfaces containing
+    // sets.  Each set contains the elements that are part of the 
+    // corresponding interface (i.e. data flow).  As each set is returned
+    // add this to a set of all elements.
+    interface_children = list_create ("set", 0);
+    temp_set = set_create("string");
+    all_elements = set_create ("string");
+    for (i=0; i<set_count(unique_internal_interfaces); i=i+1)
+    {
+        interface_name = set_get_element(unique_internal_interfaces, i);
+        temp_set = get_interface_elements(interface_name);
+        list_append (interface_children, set_copy(temp_set));
+        set_union (all_elements, temp_set);
+        set_clear (temp_set);
+    }   
+    
+    //
+    // Create table 1 with element name - description
+    // Create table 2 with element name - various data related attributes
+    
+    // initialize table 1
+    if (debug)
+            message("init table 1");
+    table_type = "data_elements_tab1";
+    define_table_format (table_type, "");
+    define_table_cell(table_type, 200);
+    define_table_cell(table_type, 900);
+    define_table_header_span(table_type, 1, BOLD, Center, "Name");
+    define_table_header_span(table_type, 1, BOLD, Center, "Description");
+    //PEC mod 9/28/95 changed to left justified per rts #6854
+    define_table_body_cells(table_type, STANDARD, Left);
+    generate_table_header(table_type);
+    generate_table_body_start(table_type);
+
+    // initialize table 2
+    if (debug)
+            message("init table 2");
+    table_type2 = "data_elements_tab2";
+    define_table_format (table_type2, "");
+    define_table_cell(table_type2, 200);
+    define_table_cell(table_type2, 200);
+    define_table_cell(table_type2, 200);
+    define_table_cell(table_type2, 200);
+    define_table_cell(table_type2, 200);
+    define_table_header_span(table_type2, 1, BOLD, Center, "Name");
+    define_table_header_span(table_type2, 1, BOLD, Center, "Units of Measure");
+    define_table_header_span(table_type2, 1, BOLD, Center, "Limit/Range");
+    define_table_header_span(table_type2, 1, BOLD, Center, "Accuracy");
+    //PEC mod 9/28/95 changing header text per rts #6854
+    define_table_header_span(table_type2, 1, BOLD, Center, 
+            "Precision/Resolution");
+    define_table_body_cells(table_type2, STANDARD, Center);
+    generate_table_header(table_type2);
+    generate_table_body_start(table_type2);
+            
+    // extract the data description and attributes for each element to fill
+    // both table 1 and 2
+    for (i=0; i<set_count(all_elements); i=i+1)
+    {
+        element_name = set_get_element(all_elements, i);
+        if (debug)
+            message("tab1: name =>" + element_name);
+        generate_body_cell(table_type, element_name);
+        generate_body_cell(table_type2, element_name);
+        
+        // note description for table 1 (note object for table 2)
+        element_desc = find_by_query ("note[DataDefinition && " +
+            "node[name='${element_name}']]");
+        
+        if (element_desc == NULL)
+        {
+            display_warning ("No Data Definition annotation found for " +
+                "the data element called " + element_name);
+            if (debug)
+                message("tab1: desc =>nothing");
+            generate_body_cell(table_type, "");
+            generate_body_cell(table_type2, "");
+            generate_body_cell(table_type2, "");
+            generate_body_cell(table_type2, "");
+            generate_body_cell(table_type2, "");
+        }
+        else
+        {
+            desc_string = strip_last_return(element_desc.desc);
+            if (debug)
+                message("tab1: desc =>" + desc_string);
+            if (string_length(desc_string) == 0)
+                display_warning 
+                        ("No Data Definition annot description found for " +
+                        "the data element called " + element_name);
+            
+            generate_body_cell
+                (table_type, string_search_and_replace(desc_string, "\n", 
+                "\\n"));
+                    
+            // note items for table 2
+            generate_body_cell(table_type2, 
+                get_note_item(element_desc.id, "Units"));
+            generate_body_cell(table_type2, 
+                get_note_item(element_desc.id, "Constraint"));
+            generate_body_cell(table_type2, 
+                get_note_item(element_desc.id, "Accuracy"));
+            generate_body_cell(table_type2, 
+                get_note_item(element_desc.id, "Precision"));
+        }
+    }
+    
+    // complete and output the tables 1 & 2 (in that order)
+    generate_table_body_end(table_type);
+    generate_table_finish(table_type);
+    define_table_caption(table_type, 
+            "CSCI Data Element Requirements Table (1 of 3)");
+    output_table(table_type);   
+    generate_table_body_end(table_type2);
+    generate_table_finish(table_type2);
+    define_table_caption(table_type2, 
+            "CSCI Data Element Requirements Table (2 of 3)");
+    output_table(table_type2);    
+                            
+    //
+    // Create table 3 with element name - interface - interface description
+    
+    // initialize table 3
+    if (debug)
+            message("init table 3");
+    table_type = "data_elements_tab3";
+    define_table_format (table_type, "");
+    define_table_cell(table_type, 200);
+    define_table_cell(table_type, 300);
+    define_table_cell(table_type, 200);
+    define_table_cell(table_type, 200);
+    define_table_cell(table_type, 200);
+    define_table_header_span(table_type, 1, BOLD, Center, "Name");
+    define_table_header_span(table_type, 1, BOLD, Center, "Interface name");
+    define_table_header_span(table_type, 1, BOLD, Center, "Interface ID");
+    define_table_header_span(table_type, 1, BOLD, Center, "Source Capability");
+    define_table_header_span(table_type, 1, BOLD, Center, 
+            "Destination Capability");
+    define_table_body_cells(table_type, STANDARD, Center);
+    generate_table_header(table_type);
+    generate_table_body_start(table_type);
+    
+    // For all elements
+    for (i=0; i<set_count(all_elements); i=i+1)
+    {
+        element_name = set_get_element(all_elements, i);
+        
+        // look for unique interfaces that are parents
+        for (j=0; j<list_count(interface_children); j=j+1)
+        {
+            temp_set = list_get(interface_children, j);
+            if (set_is_member (temp_set, element_name))
+            {
+                interface_name = 
+                        set_get_element (unique_internal_interfaces, j);
+                query = "link[internal_interfaces && name = " +
+                                "'${interface_name}']"; 
+                for_each_in_select (query, one_interface)
+                {
+                    if (debug)
+                    {
+                        message("tab3: name =>" + element_name);
+                        message("tab3: int/name =>" + interface_name);
+                        message("tab3: ident =>" + 
+                        find_unique_identifier(one_interface.id));
+                    }
+                    generate_body_cell(table_type, element_name);
+                    generate_body_cell(table_type, interface_name);
+                    generate_body_cell(table_type, 
+                    find_unique_identifier(one_interface.id));
+                    
+                    // source of element
+                    one_node = find_by_query 
+                            ("node[out_links[id=${one_interface.id}]]");
+                    if (one_node != NULL)
+                    {
+                        if (debug)
+                                message("tab3: source =>" + one_node.name);
+                        generate_body_cell(table_type, one_node.name);
+                    }
+                    else
+                    {
+                        if (debug)
+                                message("tab3: source => none");
+                        generate_body_cell(table_type, "");
+                        display_warning ("No definition for the flow " +
+                                one_interface.name);
+                    }
+                    
+                    // destination of element
+                    one_node = find_by_query 
+                            ("node[in_links[id=${one_interface.id}]]");
+                    if (one_node != NULL)
+                    {
+                        if (debug)
+                                message("tab3: dest =>" + one_node.name);
+                        generate_body_cell(table_type, one_node.name);
+                    }
+                    else
+                    {
+                        if (debug)
+                                message("tab3: dest => none");
+                        generate_body_cell(table_type, "");
+                        display_warning ("No definition for the flow " +
+                                one_interface.name);
+                    }
+                }        
+            }   
+        }
+    }   
+    
+    // complete and output the tables 3 
+    generate_table_body_end(table_type);
+    generate_table_finish(table_type);
+    define_table_caption(table_type, 
+            "CSCI Data Element Requirements Table (3 of 3)");
+    output_table(table_type);   
+    
+    // free lists/sets
+    set_clear(unique_internal_interfaces); 
+    set_clear(all_elements); 
+    list_clear(interface_children); 
+}
+
+
+
+// INCLUDE_INSTALLATION_DEPENDENT_DATA_TABLE
+
+void
+include_installation_dependent_data_table ()
+{
+    message ("       ..installation dependent data table");
+    
+    if (string_length(SECTION_3_5_1__Installation_dependent_data_table_filename)
+            == 0)
+    {
+        display_warning ("No filename provided for the installation " +
+                "dependent data table");
+    }
+    else
+    {
+        include_ted_table 
+            (SECTION_3_5_1__Installation_dependent_data_table_filename,
+             "Installation dependent data table");
+    }
+}
+
+
+// INCLUDE_OPERATIONAL_PARAMETERS_DATA_USAGE_TABLE
+//
+
+void
+include_operational_parameters_data_usage_table ()
+{
+    message ("       ..operation parameters data usage table");
+    
+    if (string_length(SECTION_3_5_2__Operational_parameters_data_table_filename)
+            == 0)
+    {
+        display_warning ("No filename provided for the operation " +
+            "parameters data usage table");
+    }
+    else
+    {
+        include_ted_table 
+            (SECTION_3_5_2__Operational_parameters_data_table_filename,
+             "Operation parameters data usage table");
+    }
+}
+
+// INCLUDE_TED_TABLE
+//
+
+void
+include_ted_table (string table_name, string caption)
+{
+    string              query;
+    file                ted_file;
+    
+    ted_file = find_by_query ("file[TedTable && name = '${table_name}']");
+    if (ted_file != NULL)
+    {
+        file_print (ted_file, caption);
+    }
+    else
+    {
+        display_error ("No Table Editor File called " + table_name +
+            " was found");
+    }
+}
+
+
+// INCLUDE_REQUIREMENTS_TRACEABILITY_TABLE
+
+void
+include_requirements_traceability_table ()
+{
+    string              table_type,
+                        capability_index,
+                        query,
+                        srs_paragraph_number;
+    boolean             debug = False;
+    link                interface_link;
+    item                one_req_item;
+    node                capability_node;
+    
+    message ("       ..requirements traceability table");
+    
+    // initialize table
+    if (debug)
+            message("init table");
+    table_type = "req_trace_tab";
+    define_table_format (table_type, "");
+    define_table_cell(table_type, 200);
+    define_table_cell(table_type, 200);
+    define_table_cell(table_type, 200);
+    define_table_cell(table_type, 300);
+    define_table_cell(table_type, 200);
+    define_table_header_span(table_type, 1, BOLD, Center, 
+            "SRS\\nRequirement\\nName");
+    define_table_header_span(table_type, 1, BOLD, Center, 
+            "SRS\\nParagraph\\nNumber");
+    define_table_header_span(table_type, 1, BOLD, Center, 
+            "SSS\\nParagraph\\nName");
+    define_table_header_span(table_type, 1, BOLD, Center, 
+            "SSS\\nRequirement\\nName");
+    define_table_header_span(table_type, 1, BOLD, Center, 
+            "SSS\\nParagraph\\nNumber");
+    define_table_body_cells(table_type, STANDARD, Center);
+    generate_table_header(table_type);
+    generate_table_body_start(table_type);
+    
+    // for external interfaces, create a row of requirements allocated
+    if (debug)
+            message ("interfaces");
+    //PEC mod 11/17/95 print external interfaces in alpha order per rts#8102
+    for_each_in_select ("link[external_interfaces] sort by name", interface_link)
+    {
+        if (debug)
+                message ("  " + interface_link.name);
+                
+        // look for allocated SSS requirements
+        query = "item[RequirementDocument && obj_id=${interface_link.id} " +
+        "&& value='SSS']";
+        id_list_create (query, "SSS_requirements");
+        query = "item[SSS_requirements]";
+        
+        // check if any exist
+        if (selection_count(query) == 0)
+        {
+            display_warning ("No SSS requirements allocated to the external " +
+                    "interface called " + interface_link.name);
+                    
+            // at least one row in table is needed - even without reqs
+            generate_body_cell (table_type, interface_link.name);
+            generate_body_cell (table_type, "3.1");
+            generate_body_cell (table_type, "");
+            generate_body_cell (table_type, "");
+            generate_body_cell (table_type, "");
+        }
+        else
+        {
+            for_each_in_select (query, one_req_item)
+            {
+                if (debug)
+                        message ("    " + get_note_item 
+                                (one_req_item.note_id, "RequirementName"));
+                                
+                generate_body_cell (table_type, interface_link.name);
+                generate_body_cell (table_type, "3.1");
+                generate_body_cell (table_type, get_note_item 
+                        (one_req_item.note_id, "RequirementParagraph"));
+                generate_body_cell (table_type, get_note_item 
+                        (one_req_item.note_id, "RequirementName"));                             
+                generate_body_cell (table_type, get_note_item 
+                        (one_req_item.note_id, "ParagraphNumber"));                             
+            }
+        }
+        id_list_free ("SSS_requirements");
+    }
+    
+    // for all processes or selected processes, ... same as previous ...
+    
+    if (debug)
+        message ("processes");
+    for_each_in_select ("node[SRS_capabilities] sort by name", capability_node)
+    {
+        if (debug)
+            message ("  " + capability_node.name);
+                
+        // look for allocated SSS requirements
+        query = "item[RequirementDocument && obj_id=${capability_node.id} " +
+            "&& value='SSS']";
+        id_list_create (query, "SSS_requirements");
+        query = "item[SSS_requirements]";
+        
+        // get the SRS paragraph number
+        // assume that capability was found in 3.2.<process index>
+        capability_index = return_process_index_by_id (capability_node.id);
+        if (capability_index == "0")
+            srs_paragraph_number = "3.2";
+        else
+            srs_paragraph_number = "3.2." + capability_index;
+        
+        // check if any exist
+        if (selection_count(query) == 0)
+        {
+            display_warning ("No SSS requirements allocated to the " +
+                    "capability called " + capability_node.name);
+                    
+            // at least one row in table is needed - even without reqs
+            generate_body_cell (table_type, capability_node.name);
+            generate_body_cell (table_type, srs_paragraph_number);
+            generate_body_cell (table_type, "");
+            generate_body_cell (table_type, "");
+            generate_body_cell (table_type, "");
+        }
+        else
+        {
+            for_each_in_select (query, one_req_item)
+            {
+                if (debug)
+                    message ("    " + get_note_item 
+                                (one_req_item.note_id, "RequirementName"));
+                generate_body_cell (table_type, capability_node.name);
+                generate_body_cell (table_type, srs_paragraph_number);
+                generate_body_cell (table_type, get_note_item
+                    (one_req_item.note_id, "RequirementParagraph"));
+                generate_body_cell (table_type, get_note_item 
+                    (one_req_item.note_id, "RequirementName"));                         
+                generate_body_cell (table_type, get_note_item 
+                    (one_req_item.note_id, "ParagraphNumber"));                         
+            }
+        }
+        id_list_free ("SSS_requirements");
+    }
+    
+    // complete and output table
+    generate_table_body_end(table_type);
+    generate_table_finish(table_type);
+    define_table_caption(table_type, "Requirements Traceability Table");
+    output_table(table_type);   
+}
+
+
+// INCLUDE_QUALIFICATION_CROSS_REFERENCE_TABLE
+
+void
+include_qualification_cross_reference_table ()
+{
+    string              table_type,
+                        capability_index,
+                        query1, query2,
+                        req_desc_string,
+                        srs_paragraph_number;
+    boolean             debug = False;
+    note                req_desc_note;
+    item				req_name;
+    node                capability_node;
+    link				interface_link;
+    list		list1, list2, iter_list;
+    int			i,j;
+    
+    message ("       ..qualification cross reference table");
+    
+    // initialize table
+    if (debug)
+            message("init table");
+    table_type = "qual_cross_reference";
+    define_table_format (table_type, "");
+    define_table_cell(table_type, 330);
+    define_table_cell(table_type, 220);
+    define_table_cell(table_type, 220);
+    define_table_cell(table_type, 220);
+    define_table_cell(table_type, 220);
+    define_table_cell(table_type, 220);
+    define_table_header_span(table_type, 1, BOLD, Center, 
+            "Requirement\\nName");
+    define_table_header_span(table_type, 1, BOLD, Center, 
+            "Requirement\\nParagraph");
+    define_table_header_span(table_type, 1, BOLD, Center, 
+            "Description");
+    define_table_header_span(table_type, 1, BOLD, Center, 
+            "Qualification\\nMethod");
+    define_table_header_span(table_type, 1, BOLD, Center, 
+            "Qualification\\nLevel");
+    define_table_header_span(table_type, 1, BOLD, Center, 
+            "Formal\\nTest\\nParagraph");
+    define_table_body_cells(table_type, STANDARD, Center);
+    generate_table_header(table_type);
+    generate_table_body_start(table_type);
+    
+    // Create a row for each requirement allocated
+    // PEC mod 9/22/95 break up query to handle nodes & links separately
+    query1 = "item[RequirementName  && node[SRS_capabilities]] " +
+    		"sort by value";
+    query2 = "item[RequirementName && link[external_interfaces]] " +
+    		"sort by value";
+    list1=list_select(query1);
+    list2=list_select(query2);
+
+    for(i=0;i<2;i++)
+    {
+	if (i==0)
+	   iter_list=list1;
+	else
+	   iter_list=list2;
+    
+     for(j=0;j<list_count(iter_list);j++)
+     {
+	req_name=list_get(iter_list,j);
+        if (debug)
+            message ("  .." + req_name.value);
+            
+        // Find the Node this requirement is attached to
+        capability_node = NULL;
+        interface_link = NULL;
+	if (i==0)
+           capability_node = 
+        	find_by_query ("node[Process && id=${req_name.obj_id}]");
+	else
+           interface_link = 
+        	find_by_query ("link[(DataFlow || ControlFlow) && " +
+        		"id=${req_name.obj_id}]");
+        if ((interface_link == NULL) && (capability_node == NULL))
+        {
+        	display_error ("The Note Item RequirementName is attached to a " +
+        		"non-existent object with id of " + req_name.obj_id);
+        	continue;
+        }
+        
+        // Warn if no requirement name field
+        if (string_length(req_name.value) == 0)
+        	display_warning ("Empty Requirement Name attached to an object " +
+        		"with an id of " + req_name.obj_id);
+        
+        // Get paragraph number from process index or ...
+        if (capability_node != NULL)
+        {
+       		capability_index = return_process_index_by_id (capability_node.id);
+        	if (capability_index == "0")
+            	srs_paragraph_number = "3.2";
+        	else
+            	srs_paragraph_number = "3.2." + capability_index;
+        }
+        else
+        	srs_paragraph_number = "3.1";
+        
+        // Get requirement description
+        req_desc_note = find_by_query ("note[id=${req_name.note_id}]");
+        if (req_desc_note == NULL)
+        {
+       		req_desc_string = "";
+        	display_error ("No Requirement Note of id " + req_name.note_id +
+        		" found for a RequirementName item");
+        }
+        else if (string_length(req_desc_note.desc) == 0)
+        {
+       		req_desc_string = "";
+        	display_warning ("Empty Requirement Note description of id " + 
+        		req_name.note_id);
+        }
+        else
+        	req_desc_string = strip_last_return(req_desc_note.desc);
+        	
+        	
+        generate_body_cell (table_type, req_name.value);
+        generate_body_cell (table_type, srs_paragraph_number);
+        generate_body_cell (table_type, req_desc_string);
+        generate_body_cell (table_type, get_note_item
+			(req_name.note_id, "QualificationMethod"));
+		generate_body_cell (table_type, get_note_item 
+			(req_name.note_id, "QualificationLevel"));
+		generate_body_cell (table_type, get_note_item 
+			(req_name.note_id, "FormalTestParagraph"));
+     } //end j loop
+    }  //end i loop
+    
+    // complete and output table
+    generate_table_body_end(table_type);
+    generate_table_finish(table_type);
+    define_table_caption(table_type, "Qualification Cross Reference Table");
+    output_table(table_type);   
+}
+

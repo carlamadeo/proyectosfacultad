@@ -1,0 +1,53 @@
+
+/*  This utility replaces Process cell labels which contain process indexes
+    with the name of the process which has that index.
+    Customers who have 4.2D tables they are migrating to 5.0 can run this
+    utility after the sysmigration to avoid Process reference errors in 
+    the Cspec Table Semantic Checks.    
+
+    This utility must start up a cse editor to run, but no user interaction
+    is required.
+*/
+
+void
+main()
+{
+    string query, command = "", command_str = "";
+    file table;
+    int i = 0;
+
+    /* Get any cse table which references a process */
+    query = "file[(ProcessActivationTable || ProcessActivationMatrix || ActionLogicTable) && node_refs[node[Process]]]";
+
+    for_each_in_select(query, table)
+    {    	    
+	command = " -C 'EditorSetFileName " + table.name + "'"
+		  + " -C 'TableToggleType " + table.type + "'"
+		  + " -C 'EditorQrlEval \"AdjustProcessCells(\\\"" + table.name + "\\\");\"'"
+		  + " -C 'FileSave' ";
+
+	if (i < 20)
+	{
+	    command_str += command;
+	    i++;
+	}
+	else
+	{
+	    command_str = "stpem -ed cse -first -p " + current_projdir() + " -s " + current_system() + " " + command_str;
+	    system(command_str);
+	    command_str = command;
+	    i = 0;
+	}
+    }
+
+    if (command == "")
+    {
+    	print_message("No cse tables need updating.");
+    	return;
+    }
+    
+    command_str = "stpem -ed cse -first -p " + current_projdir() + " -s " + current_system() + " " + command_str + " -C EditorQuit";
+    system(command_str);
+
+    return;
+}

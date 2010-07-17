@@ -1,0 +1,67 @@
+%
+% 	sccsid[] = @(#)dispdef.txt	4.1  94/01/14
+% 	StP/Core
+% 	Confidential property of Interactive Development Environments, Inc.
+% 	Copyright (c) 1992-1993
+% 	All rights reserved
+%
+
+% Display definition program, messages 300-499
+% File dispdef.c
+300;Usage: dispdef [-p <projdir>] [-s <system>] -O <objid> {-O <objid>} [-xref] [-annot] [-complete [-names_only]] [-o <outfile>]
+% File edit_dd_explain.c
+301;Must have Data Dictionary open to give a definition
+302;Unable to map selected object to Data Dictionary
+303;Display definition
+304;Unable to execute Display Definition command
+305;Unable to open output file: %s\n
+306;No objects in Data Dictionary
+307;%.*s (%s)%.*s%s\n
+308;.....................................................................
+309;Object id %s was not a positive integer number
+310;N/A
+311;Internal error occurred while adding object id to set
+312;Unable to open Data Dictionary with read and write access
+313;Unable to obtain OML handle to complete object set
+314;\t%s diagram \"%s\" (%ld)
+315;%s %s %s
+316;\tReferences:\n
+317;\tReferenced by:\n
+318;\t\t%s %s.%s (%ld) with %s link\n
+319;\t\t%s %s.%s (%ld) by %s link\n
+320;\tContains members:\n
+321;\tMember of types:\n
+322;\t\t%s %s.%s (%ld)\n
+323;\t\t%s %s.%s (%ld)\n
+324;\tLink originates at:\n\t\t%s %s.%s (%ld)\n
+325;\tLink terminates at:\n\t\t%s %s.%s (%ld)\n
+326;\tAssociated Parameters:\n
+327;\t\t%s: %s (%ld)\n
+328;\tLocated on %s link (%ld)\n
+329;\tLink originates at:\n\t\t%s %s.%s (%ld)\n
+330;\tLink terminates at:\n\t\t%s %s.%s (%ld)\n
+331;Object %ld of unknown class, cannot display definition\n
+332;Object %ld has unknown status, cannot display definition\n
+333;Name: %s Object ID: %ld\n
+334;\tScope: %s\n
+335;Defined
+336;Predefined
+337;Used
+338;\t%s as %s 
+339;\t%s as
+340;in\n
+341;diagram \"%s\" in %s
+342;Unable to cross-reference, unknown class of object
+343;Unable to obtain OML handle to base collection for display
+344;\t\t\tin
+345;Unable to obtain count of objects from OML handle
+346;%s diagram %s (%ld)\n\n
+347;\tCreated on %s %s, %s at %s:%s:%s by %s\n
+348;\tModified on %s %s, %s at %s:%s:%s by %s\n
+349;\tDictionary generated on %s %s, %s at %s:%s:%s by %s\n
+350;Internal error--attempt to display diagram as object
+351;\t\t%s link\n
+352;%s diagram \"%s\" (%ld)
+353;\tType:  %s\n\t%s as %s 
+354;Cannot display object %ld; must be positive integer
+355;Unknown

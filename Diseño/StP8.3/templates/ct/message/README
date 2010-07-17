@@ -1,0 +1,120 @@
+sccsid = %W% %Y% %D%; Copyright (C) IDE 1984-1990
+
+How to change/add messages:
+
+	1) Edit the Makefile to set 
+	    LIBDIR=
+	   and
+	    BINDIR=
+	   to the locations appropriate for your system
+
+	2) Copy the messages you want to change into a file
+	   called
+	    user_msgs.txt
+	   If is important that you use that name so your messages
+	   so messages with identical numbers overwrite system defined
+	   messages.
+	
+	3) Change the messages as you like:
+	   A Message has the following format
+		msg-no ; msg-text
+	   The msg-no is the number of the message. 
+	   The semicolon (;) delimits the message number from the message
+	   text.
+	   msg-text is the text of the message.
+	   This text can contain all backslash escapes like
+		\n	newline
+		\t	Tab character
+		\nnn	Ascii character with octal representation nnn
+	    The message text is most likeley to contain format information
+	    for UNIX-C print routines. Those formats start with a %
+	    character. Unless you understand those DO NOT CHANGE the
+	    number or sequence of format strings.
+	    The programs do NOT check those strings and program
+	    faults are most likely to occur if you change a
+		%d	(digit) format
+	    int a
+		%s	(string) format.
+	    You may of course change field length and precision
+	    as described in you C-manual.
+
+	    A message should never be longer than 128 characters.
+	    It will be truncated otherwise.
+
+	4) After you have made the changes you wanted you need to create
+	   a new message file from the ascii text files.
+	   To do that you should run make.
+	   It will update the existing message file and add the messages
+	   defined in the 
+		user_msgs.txt
+	   file.
+	   The resulting msg file is written into the LIB directory
+	   you specified in step 1.
+	   CAUTION:
+	    Do NOT run this command while any tools accessing the
+	    msg file are running!
+	   It will automatically create a new msg_file from all the ascii
+	   text in the directory you designated as you LIB directory
+	   (see step 1).
+
+	   The output of the command should look about like this:
+
+	       ../bin/msg_to_file -v -u -o ../lib/msg_file -i user_msgs.txt
+	       2152 messages copied from msg file to tmp
+	       Input file user_msgs.txt
+	       2152 messages written to msg file
+	       Length [  0.. 16]:   678
+	       Length [ 16.. 32]:   660
+	       Length [ 32.. 48]:   450
+	       Length [ 48.. 64]:   237
+	       Length [ 64.. 80]:    87
+	       Length [ 80.. 96]:    37
+	       Length [ 96..112]:     3
+	       Length [112..128]:     0
+	   
+	   Numbers and file locations can vary of course.
+
+
+	5) You can test whether the changes you made are really part
+	   of your message file.
+	   If you changed for example message
+		2022;.pp\n.ps+2\n%s%s%s\n.ps -2\n.sp 2\n
+	   the message that is used to print the name of the diagram
+	   if you print a dfe diagram to
+		2022;.PP\n.ps+5\n%s%s%s\n.ps -5\n.sp 3\n
+	   You can type
+		toolloc -m 2022
+	   and the output should look like this:
+		.PP
+		.ps+5
+		%s%s%s
+		.ps -5
+		.sp 3
+	   Remember, the \n character is translated into a newline, so
+	   the message actually has 5 lines.
+
+	   If you are not satisfied with the result, just go back to step 3.
+
+	6) In case some of the tools behave strangely after you
+	   changed any messages. We would like you to reinstall
+	   the original messages.
+	   To do this you should rename your message file to user_msgs.TXT
+		mv user_msgs.txt user_msgs.TXT
+	   Remove the current message file:
+		rm LIBDIR/msg_file
+	   where LIBDIR is again the directory you specified in step 1
+	   Run make again and then try the same thing that gave you problems
+	   before. If it doesn't happen the some of your messages might
+	   have string format errors (see step 3).
+	   After you corrected any errors copy the user_msgs.TXT file back to
+	   user_msgs.txt and execute make again.
+	   If the problem still happens call our friendly tech support at
+	   (415) 555-1212, or try (415) 543-0900.
+
+PP, 9/18/86
+
+
+
+
+
+

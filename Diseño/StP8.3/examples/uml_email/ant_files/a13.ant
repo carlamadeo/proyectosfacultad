@@ -1,0 +1,61 @@
+FileObject 1
+{
+    { Name "a13" }
+    { Type ObjectAnnotation }
+    { GUID "UID_91E89723-F12C-424d-AAA8-9434C70CF4A2" }
+}
+
+NodeObject 99999
+{
+    { Name "MailSystem" }
+    { Type UmlClass }
+    { ObjectId 333 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_CFF94412-538F-11d4-8777-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "delete_user_or_conf" }
+    { Type UmlOperation }
+    { ObjectId 343 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_CFF94419-538F-11d4-8777-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlOperationCxxCode }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 345 }
+    { DescLine "char buf[bufsize];cout << \"Type the name of the user or conference to delete: \";cin >> buf;User* oldUser;Conference* oldConf;if ((oldUser = findUser(buf)) != NULL) {	users.remove(oldUser);	delete oldUser;}else if ((oldConf=findConf(buf)) != NULL){	conferences.remove(oldConf);	delete oldConf;}else 	cout << buf << \" is not a user or conference\n\";" }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 347 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 349 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "delete_user_or_conf" }
+    { NoteId 4 }
+    { ObjectId 350 }
+}
+

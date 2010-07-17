@@ -1,0 +1,146 @@
+/****************************************************
+ *
+ * Entry-Point for EJB-Codegeneration. This class
+ * serves as the interface between "acd_code_gen.qrl"
+ * and the actual code generating classes
+ *
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    11/18/2000
+ *
+ * History:
+ * ===================================================
+ * DATE        WHO      CHANGE
+ * ---------------------------------------------------
+ * 20/02/2002  Lippert  Prepared selective codegeneration
+ ****************************************************/
+
+USES ejb_std;
+USES ejb_globals;
+USES wls_globals;
+
+USES ejb/ejb_AllEjb;
+USES deploy/ejb_DeploymentDescriptor;
+USES deploy/wls/wls_DeploymentDescriptor;
+USES util/ejb_MPackage;
+
+/******************************************************************************
+This is the entry procedure of the java code generator.
+******************************************************************************/
+proc main()
+	
+	// defines the structure of user defined block id strings 
+	// (defined in java_std.tdl)
+	init();	
+	
+	// initialize external and/or global variables 
+	// (defined in "ejb_Globals.tdl").
+	initGlobals();
+	switch ([ejb_server])
+		case "wls" :
+			initWlsGlobals();
+		  break;
+	end switch
+	
+	if ([class_id_list] == "")
+	gen_model();		
+	else
+	  [class_id_list_nl] = convertWhitespaceToNewline([class_id_list]);
+		gen_classes();
+	end if
+		
+		
+/* Generate DeploymentDescriptor(s) and Makefiles
+
+*/
+    prepareDeplPackages();
+    genGenericDeploymentDescriptor(); // always built
+    
+    switch ([ejb_server])
+    	case "wls" :
+    	  // only built, when EJB code for the _whole_ model was created.
+        if ([class_id_list] == "")
+    		genWlsBuildfiles();
+    		end if
+    		genWlsDeploymentDescriptor();
+    	  break;
+    end switch
+    
+    // only built, when EJB code for the _whole_ model was created.
+    if ([class_id_list] == "")
+        genBuildFiles();
+    end if 
+end proc
+
+
+
+/*	code is to be generated for a list of 1 - n classes
+*/
+proc gen_classes()
+  // note: classes must always be initialized, whether or not
+  // they are generated!
+  loop(Instances->MClass Where (!hasLoop(MClass->MDataType))) 
+		// exclude classes from generation when annotated as external
+		if ([exclusions] == "True" && classIsExternal([MClass]))
+			// don't generate
+		end if
+
+		if (hasLoop(MClass->EnclosingClass->MNested))
+			// don't generate files for inner classes
+		else
+		    initClass([MClass]);
+		end if
+	end loop
+	
+	
+	loop(Instances->MClass([class_id_list]) Where (!hasLoop(MClass->MDataType))) 
+		// exclude classes from generation when annotated as external
+		if ([exclusions] == "True" && classIsExternal([MClass]))
+			// don't generate
+		end if
+
+		if (hasLoop(MClass->EnclosingClass->MNested))
+			// don't generate files for inner classes
+		else
+			info = "gen_classes - for Class: " [MClass.name] "\n";
+			[current_class] = [MClass.id]; // sets current class
+			genEJBClasses([MClass]);
+		end if	
+	end loop	
+end proc
+
+/*	code is to be generated for the whole model
+*/
+proc gen_model()
+    loop(Instances->MClass Where (!hasLoop(MClass->MDataType)))
+		// exclude classes from generation when annotated as external
+		if (hasLoop(MClass->EnclosingClass->MNested))
+			// don't generate files for inner classes		
+		else
+			if ([exclusions] == "True" && classIsExternal([MClass]))
+				// do nothing
+			else
+	            initClass([MClass]);
+			end if
+		end if
+	end loop
+	
+	loop(Instances->MClass Where (!hasLoop(MClass->MDataType)))
+		// exclude classes from generation when annotated as external
+		if (hasLoop(MClass->EnclosingClass->MNested))
+			// don't generate files for inner classes		
+		else
+			if ([exclusions] == "True" && classIsExternal([MClass])=="True")
+				// do nothing
+			else
+				info = "gen_model for Class: " [MClass.name] "\n";
+				[current_class] = [MClass.id]; // sets current class
+				genEJBClasses([MClass]);
+			end if
+		end if
+	end loop
+end proc
+
+
+
+

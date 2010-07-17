@@ -1,0 +1,141 @@
+
+#noecho
+
+/**************************************************************************
+
+      sccsid[] = %W% %Y% %D%
+      StP/T
+      Confidential property of Interactive Development Environments, Inc.
+      Copyright (c) 1994
+      All rights reserved
+
+      stp.std: Default data types for StP data definitions
+
+**************************************************************************/
+
+Datatype			TInteger
+    is datatypeclass		integer;
+    has value range minimum	-32768;
+    has value range maximum	32767;
+    has value range resolution   1;
+    has valid subdomain		"as_specified";
+    has invalid subdomain        "abnormal"
+.
+
+Datatype			ReturnType
+    is datatypeclass		integer;
+    has value range minimum	-32768;
+    has value range maximum	32767;
+    has value range resolution   1;
+    has valid subdomain		"as_specified";
+    has invalid subdomain        "abnormal"
+.
+
+Datatype			int
+    is datatypeclass		integer;
+    has value range minimum	-32768;
+    has value range maximum	32767;
+    has value range resolution   1;
+    has valid subdomain		"as_specified";
+    has invalid subdomain        "abnormal"
+.
+
+Datatype			short_int
+    is datatypeclass		integer;
+    has value range minimum	-32768;
+    has value range maximum	32767;
+    has value range resolution   1;
+    has valid subdomain		"as_specified";
+    has invalid subdomain        "abnormal"
+.
+
+Datatype			long_int
+    is datatypeclass		integer;
+    has value range minimum	-32768;
+    has value range maximum	32767;
+    has value range resolution   1;
+    has valid subdomain		"as_specified";
+    has invalid subdomain        "abnormal"
+.
+
+Datatype			unsigned_int
+    is datatypeclass		integer;
+    has value range minimum	0;
+    has value range maximum	65535;
+    has value range resolution   1;
+    has valid subdomain		"as_specified";
+    has invalid subdomain        "abnormal"
+.
+
+Datatype			TReal
+    is datatypeclass		real;
+    has value range minimum	-1.0E6;
+    has value range maximum	1.0E6;
+    has value range resolution   1.0E-6;
+    has valid subdomain		"as_specified";
+    has invalid subdomain        "abnormal"
+.
+
+Datatype			float
+    is datatypeclass		real;
+    has value range minimum	-1.0E6;
+    has value range maximum	1.0E6;
+    has value range resolution   1.0E-6;
+    has valid subdomain		"as_specified";
+    has invalid subdomain        "abnormal"
+.
+
+Datatype			double
+    is datatypeclass		real;
+    has value range minimum	-1.0E6;
+    has value range maximum	1.0E6;
+    has value range resolution   1.0E-6;
+    has valid subdomain		"as_specified";
+    has invalid subdomain        "abnormal"
+.
+
+Datatype			TString
+    is datatypeclass		string;
+    has values			//[ --]\{1,36\}//;
+    has valid subdomain		"as_specified";
+    has invalid subdomain        "abnormal"
+.
+
+Datatype			TChar
+    is datatypeclass		character;
+    has values			//[a-zA-Z]//;
+    has valid subdomain		"as_specified";
+    has invalid subdomain        "abnormal"
+.
+
+Datatype			char
+    is datatypeclass		character;
+    has values			//[a-zA-Z]//;
+    has valid subdomain		"as_specified";
+    has invalid subdomain        "abnormal"
+.
+
+Datatype			unsigned_char
+    is datatypeclass		character;
+    has values			//[a-zA-Z]//;
+    has valid subdomain		"as_specified";
+    has invalid subdomain        "abnormal"
+.
+
+
+/* TRUE, FALSE, and UNKNOWN constants */
+
+Constant TRUE
+    has internal value "TRUE";
+.
+
+Constant FALSE
+    has internal value "FALSE";
+.
+
+Constant UNKNOWN
+    has internal value "UNKNOWN";
+.
+
+#echo
+

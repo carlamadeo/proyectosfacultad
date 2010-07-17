@@ -1,0 +1,66 @@
+FileObject 1
+{
+    { Name "a6" }
+    { Type ObjectAnnotation }
+    { GUID "UID_DE9B13D7-5E1C-43f3-BCBA-56AFB4162478" }
+}
+
+NodeObject 99999
+{
+    { Name "Transfer" }
+    { Type UmlClass }
+    { ObjectId 358 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_47881FD1-0F47-11d5-8C6D-000000000000" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 518 }
+}
+
+ItemObject 3
+{
+    { Type UmlStereotype }
+    { Value "SessionBean" }
+    { NoteId 2 }
+    { ObjectId 519 }
+}
+
+ItemObject 4
+{
+    { Type UmlTaggedValue }
+    { Value "ejb_SessionType=Stateful" }
+    { NoteId 2 }
+    { ObjectId 520 }
+}
+
+ItemObject 5
+{
+    { Type UmlTaggedValue }
+    { Value "ejb_TransactionAware=True" }
+    { NoteId 2 }
+    { ObjectId 521 }
+}
+
+NoteObject 6
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 523 }
+}
+
+ItemObject 7
+{
+    { Type ObjectName }
+    { Value "Transfer" }
+    { NoteId 6 }
+    { ObjectId 524 }
+}
+

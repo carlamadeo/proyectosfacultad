@@ -1,0 +1,188 @@
+FileObject 1
+{
+    { Name "a3" }
+    { Type ObjectAnnotation }
+    { GUID "UID_A3CAD05F-6DA4-4d6c-887C-8A1B3C0BD55A" }
+}
+
+NodeObject 99999
+{
+    { Name "process weight" }
+    { Type Process }
+    { ObjectId 616 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_3BAE28C0-F70C-4cb5-96C8-5EBEAA42699E" }
+}
+
+NoteObject 2
+{
+    { Type SystemState }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 3070 }
+}
+
+ItemObject 3
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 2 }
+    { ObjectId 3071 }
+}
+
+ItemObject 4
+{
+    { Type SystemState }
+    { Value "steady" }
+    { NoteId 2 }
+    { ObjectId 3072 }
+}
+
+NoteObject 5
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 3074 }
+    { DescLine "This process computes the number of passengers on the train and the weight of all these passengers." }
+}
+
+ItemObject 6
+{
+    { Type ObjectName }
+    { Value "process weight" }
+    { NoteId 5 }
+    { ObjectId 3075 }
+}
+
+ItemObject 7
+{
+    { Type Author }
+    { Value "ide" }
+    { NoteId 5 }
+    { ObjectId 3076 }
+}
+
+ItemObject 8
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 5 }
+    { ObjectId 3077 }
+}
+
+NoteObject 9
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 3079 }
+    { DescLine "Standard." }
+}
+
+ItemObject 10
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 9 }
+    { ObjectId 3080 }
+}
+
+ItemObject 11
+{
+    { Type RequirementName }
+    { Value "weight-sub-system" }
+    { NoteId 9 }
+    { ObjectId 3081 }
+}
+
+ItemObject 12
+{
+    { Type RequirementDocument }
+    { Value "SSS" }
+    { NoteId 9 }
+    { ObjectId 3082 }
+}
+
+ItemObject 13
+{
+    { Type RequirementParagraph }
+    { Value "weight" }
+    { NoteId 9 }
+    { ObjectId 3083 }
+}
+
+ItemObject 14
+{
+    { Type ParagraphNumber }
+    { Value "2" }
+    { NoteId 9 }
+    { ObjectId 3084 }
+}
+
+ItemObject 15
+{
+    { Type QualificationMethod }
+    { Value "Test I" }
+    { NoteId 9 }
+    { ObjectId 3085 }
+}
+
+ItemObject 16
+{
+    { Type QualificationLevel }
+    { Value "B-" }
+    { NoteId 9 }
+    { ObjectId 3086 }
+}
+
+ItemObject 17
+{
+    { Type FormalTestParagraph }
+    { Value "16" }
+    { NoteId 9 }
+    { ObjectId 3087 }
+}
+
+NoteObject 18
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 3089 }
+}
+
+ItemObject 19
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 18 }
+    { ObjectId 3090 }
+}
+
+ItemObject 20
+{
+    { Type DocumentName }
+    { Value "SRS" }
+    { NoteId 18 }
+    { ObjectId 3091 }
+}
+
+ItemObject 21
+{
+    { Type DocumentNumber }
+    { Value "4" }
+    { NoteId 18 }
+    { ObjectId 3092 }
+}
+
+ItemObject 22
+{
+    { Type ParagraphNumber }
+    { Value "16" }
+    { NoteId 18 }
+    { ObjectId 3093 }
+}
+

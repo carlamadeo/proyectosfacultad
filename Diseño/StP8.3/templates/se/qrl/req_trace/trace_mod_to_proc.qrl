@@ -1,0 +1,129 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/Core
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1993
+//      All rights reserved
+//
+
+//////////////////////////////////////////////////////////////////////
+//
+//      trace_mod_to_proc
+//
+//
+//      See script_help for general template comments.
+//
+//////////////////////////////////////////////////////////////////////
+
+#include "qrl/include/se_report_formats.inc"
+
+script_help = "This report shows the requirements mapping between processes and modules.  This is when a module has a Requirement note with a Requirement Name item value that is the same as a process name.  To establish traceability you need to put a Requirement note and Requirement Name item with the name of the process on the module.  The report is ordered by module.
+
+This report also lists those modules that do not match processes.";
+
+
+list no_match_list;
+
+//
+// main()
+//
+
+void
+main()
+{
+    // set default format
+    format(DefaultFormatFile);
+
+    paragraph (SectionFormat);
+    ide_warning("Module Traceability Report ...");
+    print("Module Traceability Report");
+    paragraph (SeparatorFormat); print("");
+    
+    no_match_list = list_create("string",0);
+    ide_warning("    1. Modules Satisfying a Process Requirement ...");
+    paragraph (SectionFormat);
+    print("Modules Satisfying a Process Requirement");
+
+    paragraph (Object1Format);
+    print ("Module");
+    tab(1);
+    print ("Process");
+    do_trace ();
+
+    paragraph (SeparatorFormat); print("");
+    ide_warning("    2. Modules Not Satisfying a Process Requirement ...");
+    paragraph (SectionFormat);
+    print ("Modules Not Satisfying a Process Requirement");
+    paragraph (SeparatorFormat);
+    print_no_match_list();
+    list_clear(no_match_list);
+    message("Module Traceability Report completed.");
+}
+
+
+//
+// do_trace()
+//
+// Retrieve all the modules from the data dictionary.  Get the requirement
+// name note items from each module, and find out whether there are any
+// processes that match each note item value.  If there is a match 
+// print a message showing that the module meetssthe process requirement.  
+// Otherwise, if there is no match add the name of this module to the
+// "no_match_list" which will be printing out later on.
+
+void
+do_trace ()
+{
+    string query;
+    boolean found;
+    node one_mod;
+    node one_process;
+    item one_item;
+
+    query = "node[Module] sort by name";
+    for_each_in_select(query, one_mod)
+    {
+        found = False;
+    
+	query = "item[RequirementName && note[Requirement && " +
+	    "obj_id == ${one_mod.id}]]";
+	for_each_in_select(query, one_item)
+        {
+	    query = "node[Process && name == '${one_item.value}']";
+	    one_process = find_by_query(query);
+	    if (one_process != NULL)
+            {
+		paragraph (SeparatorFormat);
+		print(one_mod.name);
+		tab(1);
+		print(one_process.name);
+		found = True;
+            }
+        }
+        
+        if (found == False)
+        {
+	    list_append(no_match_list, one_mod.name);
+        }
+    }
+}
+
+
+
+//
+// print_no_match_list()
+//
+
+void
+print_no_match_list()
+{
+    int i;
+    int count;
+
+    count = list_count(no_match_list);
+    for (i=0; i < count; i = i + 1)
+    {
+	paragraph (SeparatorFormat);
+	print(list_get(no_match_list,i));
+    }
+}

@@ -1,0 +1,87 @@
+FileObject 1
+{
+    { Name "a49" }
+    { Type ObjectAnnotation }
+    { GUID "UID_E235185C-6874-4728-8861-86291C2ABBF7" }
+}
+
+NodeObject 99999
+{
+    { Name "Message,Text_Object" }
+    { Type UmlAssociation }
+    { ObjectId 472 }
+    { Sig ":" }
+    { ScopeNodeId 0 }
+    { GUID "UID_03906DD8-5390-11d4-8777-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "Text_Object" }
+    { Type UmlClass }
+    { ObjectId 709 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_CFF9443F-538F-11d4-8777-00C04F8DEC45" }
+}
+
+LinkObject 99997
+{
+    { Name "" }
+    { Type UmlRole }
+    { ObjectId 710 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_03906DD7-5390-11d4-8777-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlRoleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 712 }
+}
+
+ItemObject 3
+{
+    { Type UmlRoleNavigability }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 713 }
+}
+
+ItemObject 4
+{
+    { Type UmlAggregationType }
+    { Value "None" }
+    { NoteId 2 }
+    { ObjectId 714 }
+}
+
+NoteObject 5
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 716 }
+}
+
+NoteObject 6
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 718 }
+}
+
+ItemObject 7
+{
+    { Type ObjectName }
+    { Value "" }
+    { NoteId 6 }
+    { ObjectId 719 }
+}
+

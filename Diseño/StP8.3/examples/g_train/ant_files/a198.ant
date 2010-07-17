@@ -1,0 +1,79 @@
+FileObject 1
+{
+    { Name "a198" }
+    { Type ObjectAnnotation }
+    { GUID "UID_172F75C2-DD29-4993-AD86-53D66AACC621" }
+}
+
+NodeObject 99999
+{
+    { Name "time" }
+    { Type Store }
+    { ObjectId 2728 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_02CB5AB6-8F7C-4be7-8913-58F954DBB4E9" }
+}
+
+NodeObject 99998
+{
+    { Name "read pulse" }
+    { Type Process }
+    { ObjectId 2739 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_67582A44-DDD7-45f7-B6BF-F9EE30D788AC" }
+}
+
+LinkObject 99997
+{
+    { Name "time" }
+    { Type DataFlow }
+    { ObjectId 2793 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_B92F7CAF-9B1C-4f05-BACB-AE1D9E03F294" }
+}
+
+NoteObject 2
+{
+    { Type InterfaceDesign }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2795 }
+}
+
+ItemObject 3
+{
+    { Type InterfaceName }
+    { Value "time" }
+    { NoteId 2 }
+    { ObjectId 2796 }
+}
+
+ItemObject 4
+{
+    { Type InterfacePriority }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 2797 }
+}
+
+NoteObject 5
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2799 }
+}
+
+ItemObject 6
+{
+    { Type ObjectName }
+    { Value "time" }
+    { NoteId 5 }
+    { ObjectId 2800 }
+}
+

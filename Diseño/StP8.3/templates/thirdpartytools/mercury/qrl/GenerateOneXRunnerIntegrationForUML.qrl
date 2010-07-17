@@ -1,0 +1,676 @@
+external string use_case_name;
+external string TDSeparator = ";";
+
+
+// Constants used by the data file
+
+const string begincomment = "#  " ;
+const string endcomment = "";
+const string indent = "    ";
+const string halfindent = "  ";
+
+
+#include "qrl/tsdl_extract.inc"
+#include "qrl/basic_textract_dt.inc"
+#include "qrl/include/error.inc"
+
+#include "val/qrl/include/table.inc"
+#include "val/qrl/include/TConfig.inc"
+#include "val/qrl/include/TUseCase.inc"
+#include "val/qrl/include/GenerateDataForUML.inc"
+
+  list ScenarioList;
+
+  string OUTPUTPATH = current_projdir() + current_system() + "/test_files/";
+  string SORACLESDIR = OUTPUTPATH + "SCRIPT_ORACLES/";
+  string ORACLESDIR = OUTPUTPATH + "ORACLES/";
+
+  string TESTDATA="";
+  string OUTPUTTEXT="";
+  string OUTPUTDIR;
+
+  boolean FIRSTTEST=True;
+  string DATANAMES="";
+
+//  const string SEPARATOR = "#";
+//  const string SEPARATOR2 = "@";
+
+
+  string SCRIPTDIR  = current_projdir() + current_system() + "/testscpt_files/mercury/";
+
+  set ACTORSET;
+
+void 
+main ()
+{
+
+  string scriptfile;
+  string test_unit_id;
+
+  string filetext;
+
+  string path;
+  string inputfile;
+  list testcaselist;
+
+  if (TDSeparator == "TAB")
+    TDSeparator = "\t";
+
+  MakeDir (SCRIPTDIR);
+
+  SCRIPTDIR = SCRIPTDIR + "/" + use_case_name;
+  MakeDir (SCRIPTDIR);
+
+
+  ACTORSET = GetActors(use_case_name);
+
+  test_unit_id = Get_T_test_unit_id(use_case_name, "");
+
+  ScenarioList = GetScenarioList(use_case_name);
+
+
+  OUTPUTDIR = OUTPUTPATH + test_unit_id;
+
+  path = OUTPUTDIR + "/UseCaseTestScripts";
+  inputfile = path + "/testcases.rpt";
+
+  if (!CheckForSDF(OUTPUTDIR, "TDDB"))
+    {
+      message ("TDDB for " + test_unit_id + " does not exist.");
+      return;
+    }
+
+  FormatTestCaseData(test_unit_id);
+
+
+
+  if (CheckForSDF(path, "testcases.rpt"))
+     filetext = read_file (inputfile);
+  else
+    {
+      message ("testcases.rpt for " + test_unit_id + " does not exist.");
+      return;
+    }
+
+  testcaselist = string_to_list(filetext, "\n");
+
+  message ("");
+  message ("");
+  message ("Generating scripts for Use Case: " + use_case_name);
+
+  PrintScenarioTestCases(testcaselist, use_case_name);
+
+ 
+}
+
+
+void
+PrintScenarioTestCases(list testcaselist, string use_case_name)
+{
+
+
+  int i,count;
+  string testcase;
+  list textlist;
+  list actiondata;
+  string  action, pastaction, exercises, testunitid;
+  int testid=0;
+  list validlist;
+//  list testcasesummary;
+  int j,count2;
+  boolean firstaction = False;
+
+
+  validlist = list_create("string",0);
+
+  string testcasedata;
+  list testcaseinfo;
+
+
+  count = list_count(testcaselist);
+
+  firstaction = True;
+
+  for (i=0;i<count;i++)
+    {
+
+      testcasedata = list_get(testcaselist,i);
+
+      testcaseinfo = string_to_list(testcasedata, " ");
+
+      action = list_get(testcaseinfo, 0);
+      testcase = list_get(testcaseinfo, 1);
+
+      if (i==0)
+         pastaction = action;
+
+      if (pastaction != action)
+        {
+
+           PrintCases(validlist, pastaction, use_case_name);
+
+           list_clear(validlist);
+           firstaction = False;
+        }
+
+
+      list_append (validlist, testcase);
+      pastaction = action;
+    }
+
+
+   PrintCases(validlist, action, use_case_name);
+
+
+}
+
+
+
+void
+PrintCases(list validlist, string action, string use_case_name)
+{
+   int count2,j;
+   int testid; 
+   string scriptfile;
+   string scriptpath;
+   string datafile;
+
+   string testunitid;
+
+   string testcase;
+
+   message ("  Scenario: " + action);
+
+   count2 = list_count(validlist);
+
+   FIRSTTEST = True;
+   DATANAMES = "";
+
+   testid=0;
+   for (j=0;j<count2;j++)
+     {
+       testcase = list_get(validlist,j);
+
+       message ("    " + testcase);
+
+       FormatTestCase (testcase , ++testid, use_case_name);
+
+       FIRSTTEST = False;
+     }
+
+
+   scriptpath = SCRIPTDIR + "/" + action;
+
+   MakeDir(scriptpath);
+
+   datafile = scriptpath + "/data.txt";
+
+   TESTDATA = DATANAMES + "Status\n" + TESTDATA;
+
+   WriteFileText(datafile, TESTDATA);
+
+   TESTDATA = "";
+
+}
+
+void 
+FormatTestCase (string testcase, int testid, string use_case_name)
+{
+
+  string st;
+  int i,count;
+  set probeset;
+  list actiondata;
+  string  action, exercises, testunitid;
+
+
+  list testcasedata;
+  boolean done=False;
+  string exboolean;
+
+  string path, inputfile, filetext;
+
+  testcasedata = GetTestCaseData (testcase);
+
+  action = list_get(testcasedata, 0);
+  exercises = list_get(testcasedata, 1);
+  testunitid = list_get(testcasedata, 2);
+
+
+  if (exercises == "INVALID" )
+    exboolean = "FALSE";
+  else
+    exboolean = "TRUE";
+
+
+  count = 3;
+
+  if ( list_get(testcasedata, count) != "PROBES")
+    done = True;
+
+  while (!done )
+    {
+      ++count;
+      st = list_get ( testcasedata, count);
+      st = string_search_and_replace(st,"invalid", "Exception");
+      st = string_search_and_replace(st,"valid ", "");
+      
+      ++count;
+
+      if (list_get(testcasedata,count) != "PROBES" )
+        done = True;
+    }
+
+
+
+  FormatTestData (testcasedata, count);
+
+
+  TESTDATA = TESTDATA + exboolean + "\n";
+
+
+}
+
+
+
+list
+GetTestCaseData (string testcase)
+{
+
+  list textlist;
+
+  string path, inputfile, filetext;
+
+  path = OUTPUTDIR + "/UseCaseTestScripts";
+  inputfile = path + "/" + testcase;
+
+
+
+  if (CheckForSDF(path, testcase))
+     filetext = read_file (inputfile);
+  else
+     {
+       message (testcase + " does not exist.");
+       return;
+     }
+
+  textlist = string_to_list(filetext,"\n");
+
+  return (textlist);
+
+}
+
+void
+FormatTestData(list testcasedata, int count)
+{
+  string st;
+  boolean done = False;
+
+  int currentstep = 0;
+  int nextstep = 1;
+  string steptype;
+  string command;
+  string steptext = "";
+  string description = "";
+  string dataitem, datavalue;
+  list tmplist;
+
+  if (count >= list_count(testcasedata))
+    done = True;
+
+  while (!done)
+    {
+       st = list_get(testcasedata,count);
+
+       if ( st == "INPUTEVENT" )
+         {
+            ++count;
+
+            st = list_get(testcasedata,count);
+
+            tmplist = string_to_list(st, " ");
+
+//            if (FIRSTTEST)
+//               DATANAMES = DATANAMES + list_get(tmplist,1) + TDSeparator;
+
+//            TESTDATA =  TESTDATA + list_get(tmplist,3) + TDSeparator;
+           
+
+ 
+         }
+       else if ( st == "DATAIN" )
+         {
+
+           ++count;
+           dataitem = list_get(testcasedata, count);
+           ++count;
+           datavalue = list_get(testcasedata, count);
+
+           if (FIRSTTEST)
+               DATANAMES = DATANAMES + dataitem + TDSeparator;
+
+           TESTDATA =  TESTDATA + datavalue + TDSeparator;
+
+         }
+
+       else if ( st == "OUTPUTEVENT" )
+         {
+            ++count;
+         }
+       else if ( st == "NORESULTS" )
+         {
+            ++count;
+         }
+       else if ( st == "GENERATEDRESULTS" )
+         {
+            ++count;
+            command = list_get(testcasedata, count);
+
+            tmplist = string_to_list(command, " ");
+
+//            if (FIRSTTEST)
+//              DATANAMES = DATANAMES + list_get(tmplist,0) + TDSeparator;
+
+//            TESTDATA =  TESTDATA + PrintExpectedResults(command) + TDSeparator;
+
+         }
+         
+       ++count;
+       if (count >= list_count(testcasedata))
+          done = True;
+    }
+
+
+}
+
+
+
+string
+PrintExpectedResults(string command)
+{
+  string tmp;
+  string dataitem, datavalue, datavalue1;
+  string datatype, datatypename;
+  list tmplist2;
+
+  string sysdir = current_projdir() + current_system() + "/";
+
+//
+// Fix to remove ' from the expected result program - 5/11/98
+// and to add /" in place of "
+//
+//
+  tmp = string_search_and_replace (command, "\"", "@@@");
+  command = string_search_and_replace (tmp, "@@@", "\\\"");
+//
+//
+
+  system ("sh -c '" + SORACLESDIR + command + "'   > " + sysdir + "output");
+
+  if(write_file_access(sysdir + "output"))
+    {
+      
+//      OUTPUTTEXT = OUTPUTTEXT + "\n" + begincomment + halfindent + "Expected Result" + endcomment;
+      
+      datavalue = read_file(sysdir + "output");
+
+//      OUTPUTTEXT = OUTPUTTEXT + "\n" + begincomment + indent + string_search_and_replace ( datavalue , "\n", endcomment+ "\n" +begincomment+indent) + endcomment;
+ 
+      system ("rm " + sysdir + "output");
+
+    }
+  else
+    {
+      datavalue = "UNKNOWN";
+    }
+
+
+  datavalue = string_search_and_replace ( datavalue , "\n","");
+
+  return (datavalue);
+}
+
+
+
+void
+PrintFixedResults(string event_id)
+{
+
+  string query = "note [expectedoutput && obj_id == ${event_id}]";
+  note notevar;
+  string tmp;
+
+  notevar = find_by_query(query);
+
+  if (notevar != NULL)
+    {
+      tmp = string_search_and_replace ( notevar.desc, "\n", "\n"+begincomment+indent );
+  
+// These comments will be removed once we have a real integrations.
+//
+//      TESTDATA =  TESTDATA + tmp + TDSeparator;
+//
+
+//     OUTPUTTEXT = OUTPUTTEXT + "\n" + begincomment + halfindent + "Expected Fixed Result" + endcomment;
+
+//      OUTPUTTEXT = OUTPUTTEXT + "\n" + begincomment + indent + tmp + endcomment;
+
+    }
+
+}
+
+
+
+string
+contains_probedata(string st, set probeset)
+{
+  list st1, st2;
+  string data;
+
+  st1 = string_to_list(st, "<");
+  st2 = string_to_list(list_get(st1, 1), ">");
+  data = list_get(st2,0);
+
+
+
+  if (set_is_member (probeset, data + SEPARATOR + "valid" ) )
+    return ("validprobe");
+  else if (set_is_member (probeset, data + SEPARATOR + "invalid" ) )
+    return ("invalidprobe");
+  else 
+    return ("not_in_set");
+
+}
+
+
+
+string
+EventName(string st)
+{
+  list st1, st2;
+  string data;
+
+  st1 = string_to_list(st, "<");
+  st2 = string_to_list(list_get(st1, 1), ">");
+  data = list_get(st2,0);
+
+  return (data);
+
+}
+
+
+
+
+
+void
+PrintInputCorrelation(string st)
+{
+  string tmp, dataitem, datavalue, datavalue1;
+  list tmplist, tmplist2;
+  string datatype, datatypename;
+
+  tmplist = string_to_list (st, ">");
+  tmplist = string_to_list (list_get(tmplist,0), "<");
+
+  dataitem = list_get(tmplist,0);
+
+  tmplist = string_to_list (st, " ");
+
+  list_delete(tmplist,0);
+  list_delete(tmplist,0);
+
+  datavalue = list_to_string(tmplist," ");
+
+  TESTDATA =  TESTDATA + StripTheQuotes(datavalue) + TDSeparator;
+
+}
+
+
+
+
+void
+PrintEventCorrelation(string st)
+{
+  string tmp, dataitem, datavalue;
+  list tmplist;
+
+
+  tmplist = string_to_list (st, ">");
+  tmplist = string_to_list (list_get(tmplist,0), "<");
+
+  dataitem = list_get(tmplist,1);
+
+
+//  TESTDATA = TESTDATA + dataitem + TDSeparator;
+
+}
+
+string
+StripTheQuotes(string datavalue)
+{
+  string tmp;
+
+  tmp = string_search_and_replace(datavalue, "\"", "");
+
+  return (tmp);
+}
+
+string
+DetermineOutputEvent(string st)
+{
+  string tmp, dataitem, datavalue;
+  list tmplist;
+
+  tmplist = string_to_list (st, ">");
+  tmplist = string_to_list (list_get(tmplist,0), "<");
+
+  return ( list_get(tmplist,1) );
+
+}
+
+
+
+
+void
+PrintRequirements (string use_case_name, string action)
+{
+  string test_unit_id;
+  int j, count2;
+  node scenario;
+  node nodevar;
+  string query = "node[UmlUseCase && name=='${use_case_name}']";
+
+
+  nodevar = find_by_query(query);
+
+//  OUTPUTTEXT = OUTPUTTEXT + "\n";
+//  OUTPUTTEXT = OUTPUTTEXT + "TEST.NOTES\n";
+//  OUTPUTTEXT = OUTPUTTEXT + "\n";
+
+//  ListRequirements( "Use Case", nodevar.id, use_case_name);
+
+
+
+  count2 = list_count (ScenarioList);
+  for (j=0;j<count2;j=j+1)
+    {
+      scenario = list_get(ScenarioList,j);
+
+      if (action == scenario.name )
+          ListRequirements( "Scenario", scenario.id, scenario.name);
+    }
+
+
+
+//  OUTPUTTEXT = OUTPUTTEXT + "\n";
+//  OUTPUTTEXT = OUTPUTTEXT + "TEST.END_NOTES\n";
+//  OUTPUTTEXT = OUTPUTTEXT + "\n";
+}
+
+
+void
+ListRequirements(string rqttype, int id, string name)
+{
+
+  string query;
+  int i,count;
+  item itemvar1, itemvar2;
+  note notevar;
+  list itemlist;
+  string rqts="";
+  string ReqType="";
+
+  string cell1, cell2, cell3;
+
+  string q1 = "item[REQAnalysisAssignmentItem && ${id} == obj_id]";
+
+  string q2 = "note [REQDefinitionNote && node[REQRequirement && " +
+               "name=='${itemvar1.value}'] ]";
+  string q3 = "item [REQInformalNameItem && note_id==${notevar.id}]";
+
+  itemlist = list_select(q1);
+
+  count = list_count (itemlist);
+
+
+  if (count == 0)
+    {
+      OUTPUTTEXT = OUTPUTTEXT + "\n" + begincomment + "There are no allocated " + rqttype + " Requirements."  + endcomment;
+      OUTPUTTEXT = OUTPUTTEXT + "\n";
+      return;
+    }
+  else
+    {
+      OUTPUTTEXT = OUTPUTTEXT + "\n" + begincomment + "There are " + count + " allocated " + rqttype + " Requirements."  + endcomment;
+      OUTPUTTEXT = OUTPUTTEXT + "\n";
+    }
+
+  for (i=0;i<count;i++)
+    {
+      itemvar1 = list_get(itemlist, i);
+      cell1 = itemvar1.value;
+
+      notevar = find_by_query(q2);
+
+      if (notevar != NULL)
+         {
+           itemvar2 = find_by_query(q3);
+           cell2 = itemvar2.value;
+           cell3 = notevar.desc;
+         }
+      else
+         {
+           cell2 = "";
+           cell3 = "NO DESCRIPTION";
+         }
+        
+
+      OUTPUTTEXT = OUTPUTTEXT + begincomment + "Requirement: " + cell1 + "; " + cell2  + endcomment;
+      OUTPUTTEXT = OUTPUTTEXT + "\n" + begincomment + cell3  + endcomment;
+      OUTPUTTEXT = OUTPUTTEXT + "\n\n";
+ 
+    }
+
+
+}
+

@@ -1,0 +1,51 @@
+FileObject 1
+{
+    { Name "a68" }
+    { Type ObjectAnnotation }
+    { GUID "UID_40D4E838-358D-4e50-9A7B-52FC1C7A332F" }
+}
+
+NodeObject 99999
+{
+    { Name "Initiate Transaction" }
+    { Type Process }
+    { ObjectId 243 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_7C04BFE7-AC56-11d4-BEDC-0060971B5EE0" }
+}
+
+NoteObject 2
+{
+    { Type Pspec }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 245 }
+    { DescLine "The Initiate Transaction process validates the customer PIN." }
+}
+
+ItemObject 3
+{
+    { Type ProcessSpec }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 246 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 248 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "Initiate Transaction" }
+    { NoteId 4 }
+    { ObjectId 249 }
+}
+

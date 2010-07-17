@@ -1,0 +1,294 @@
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//      StP/SE
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1995
+//      All rights reserved
+//
+// t.prop: DSE property sheet definitions for T
+//
+//////////////////////////////////////////////////////////////////////////////
+
+
+
+PropertySheet TDialog
+{
+    { Name "TObjectDialog" }
+    { Label "Data Structure Editor: Edit StP/T Object Properties" }
+    { Properties
+        { Qrl { QrlFile "qrl/properties/t_props.inc" } }
+
+        { Text
+	    { Name "TObjName" }
+	    { Label "Name: " }
+	    { MinLength 0 }
+	    { DispLength 30 }
+	    { MaxLength 512 }
+	}
+ 
+        { Choice
+            { Name "Type" }
+            { Label "Type:" }
+            { Type AbbrMenu }
+            { ChoiceItem
+                { Name Unspecified }
+                { Label "unspecified" }
+            }
+            { ChoiceItem
+                { Name Integer }
+                { Label "integer" }
+            }
+            { ChoiceItem
+                { Name  Real }
+                { Label "real" }
+            }
+            { ChoiceItem
+                { Name Character }
+                { Label "character" }
+            }
+            { ChoiceItem
+                { Name String }
+                { Label "string" }
+                { Init On }
+            }
+            { ChoiceItem
+                { Name Boolean }
+                { Label "boolean" }
+            }
+	    { Event
+	        { Type Select }
+	        { Callback "TSetActivation_cb" }
+	    }
+        }
+
+        { Text
+	    { Name "FalseValue" }
+	    { Label "False Value: " }
+	    { MinLength 0 }
+	    { DispLength 30 }
+	    { MaxLength 512 }
+	}
+
+        { Text
+	    { Name "TrueValue" }
+	    { Label "True Value: " }
+	    { MinLength 0 }
+	    { DispLength 30 }
+	    { MaxLength 512 }
+	}
+
+        { Text
+	    { Name "UnknownValue" }
+	    { Label "Unknown Value: " }
+	    { MinLength 0 }
+	    { DispLength 30 }
+	    { MaxLength 512 }
+	}
+
+        { Text
+	    { Name "MinimumValue" }
+	    { Label "Minimum Value: " }
+	    { MinLength 0 }
+	    { DispLength 30 }
+	    { MaxLength 512 }
+	}
+
+        { Text
+	    { Name "MaximumValue" }
+	    { Label "Maximum Value: " }
+	    { MinLength 0 }
+	    { DispLength 30 }
+	    { MaxLength 512 }
+	}
+
+        { Text
+	    { Name "Resolution" }
+	    { Label "Resolution: " }
+	    { MinLength 0 }
+	    { DispLength 30 }
+	    { MaxLength 512 }
+	}
+
+	{ Text
+	    { Name "StringValues" }
+	    { Label "Allowed Value(s):" }
+	    { LabelAbove True }
+	    { DispRows 3 }
+	    { MinLength 0 }
+	    { DispLength 42 }
+	    { MaxLength 512 }
+	}
+
+        { Choice
+            { Name "InvalidSubDomain" }
+            { Label "Invalid SubDomain:" }
+            { Type AbbrMenu }
+            { ChoiceItem
+                { Name Abnormal }
+                { Label "Abnormal" }
+		{ Init On }
+            }
+            { ChoiceItem
+                { Name OutOfBounds }
+                { Label "OutOfBounds" }
+            }
+            { ChoiceItem
+                { Name  BelowBounds }
+                { Label "BelowBounds" }
+            }
+            { ChoiceItem
+                { Name AboveBounds }
+                { Label "AboveBounds" }
+            }
+            { ChoiceItem
+                { Name OutOfType }
+                { Label "OutOfType" }
+                { Init On }
+            }
+            { ChoiceItem
+                { Name NotInList }
+                { Label "NotInList" }
+            }
+            { ChoiceItem
+                { Name None }
+                { Label "None" }
+            }
+        }
+
+        { Text
+	    { Name "Units" }
+	    { Label "Test Units: " }
+	    { MinLength 0 }
+	    { DispLength 30 }
+	    { MaxLength 512 }
+	}
+
+        { Text
+	    { Name "Format" }
+	    { Label "Format: " }
+	    { MinLength 0 }
+	    { DispLength 30 }
+	    { MaxLength 512 }
+	}
+
+        //{ Group
+            //{ Name Line3Right }
+            //{ Type Vertical }
+            //{ Align Labels }
+            //{ Members ( InvalidSubDomain Units Format ) }
+	//}
+
+        //{ Group
+            //{ Name Line3 }
+            //{ Type Horizontal }
+            //{ Members ( StringValues Line3Right ) }
+        //}
+
+        { Choice
+             { Name "MultiObjectMode" }
+             { Label "" }
+             { Type CheckBox }
+             { ChoiceItem
+                 { Label "Apply to Multiple Selection" }
+                 { Init Off }
+                 { Event
+                     { Type DeSelect }
+                     { Callback "TUnSetMultiMode_cb" }
+                 }
+                 { Event
+                     { Type Select }
+                     { Callback "TSetMultiMode_cb" }
+                 }
+            }
+        }
+
+	{ Space 
+	    { Name Space1 }
+	}
+
+	{ Space 
+	    { Name Space2 }
+	}
+
+	{ Space 
+	    { Name Space3 }
+	}
+
+	{ Space 
+	    { Name Space4 }
+	}
+
+	{ Space 
+	    { Name Space5 }
+	}
+
+	{ Space 
+	    { Name Space6 }
+	}
+
+	{ Group
+	    { Name LeftCol }
+	    { Type Vertical }
+	    { Align Labels }
+	    { Members ( TObjName Space1 FalseValue TrueValue UnknownValue Space2 StringValues Space3 ) }
+	}
+
+	{ Group
+	    { Name RightCol }
+	    { Type Vertical }
+	    { Align Labels }
+	    { Members ( Type Space4 MinimumValue MaximumValue Resolution Space5 InvalidSubDomain Units Format Space6 ) }
+	}
+
+        { Group
+            { Name MostOfIt }
+            { Type Horizontal }
+            { Members ( LeftCol RightCol ) }
+        }
+
+	{ Group
+	    { Name TheWholeTThing }
+	    { Type Vertical }
+	    { Align Center }
+	    { Members ( MostOfIt MultiObjectMode ) }
+	}
+
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "TObjectDialog_Apply" }
+            }
+        }
+        { Button
+            { Name "Apply" }
+            { Event
+                { Type Select }
+                { Callback "TObjectDialog_Apply" }
+            }
+        }
+        { Button
+            { Name "Reset" }
+            { Label "Reset" }
+            { Event
+                { Type Select }
+                { Callback "TObjectDialog_Reset" }
+            }
+        }
+        { Button
+            { Name "Cancel" }
+            { Label "Cancel" }
+        }
+        { Button
+            { Name "Help" }
+            { Label "Help" }
+        }
+        { Footer
+            { Name "Status" }
+            { LeftFooter "" }
+            { Active True }
+        }
+    }
+}
+

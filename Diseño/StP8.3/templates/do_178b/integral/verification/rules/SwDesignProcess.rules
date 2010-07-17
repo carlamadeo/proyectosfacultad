@@ -1,0 +1,20 @@
+
+
+Class 0 SwDesignVerification
+{
+    { ParseCondition "(toolinfo_variable(\"ComponentModeler_5_3_5\") == \"True\");" }
+    { Label "Verification (Model)" }
+    { Image "component_diagrams" }
+    { ShowOnDesktop True }
+ { ClassCommand
+        { Name "VerifyTestReadiness" }
+	{ Label "Verify Test Readiness" }
+	{ ShowPropsOnExec True }
+	{ Type Nowin }
+	{ Command "qrp -p ${projdir} -s ${system} -t asc -o TestReadinessReport.txt lifecycle/support/verification/qrl/VerifyTestReadiness.qrl"}
+
+  }
+
+
+}
+

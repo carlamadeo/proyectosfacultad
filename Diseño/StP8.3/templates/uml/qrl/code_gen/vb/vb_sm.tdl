@@ -1,0 +1,99 @@
+//*****************************************************************************
+// S t a t e M a c h i n e  T e m p l a t e
+//*****************************************************************************
+/*
+Generates the state machine for each active instance of meta type MClass.
+genStateMachine is called by MClass.genClass (defined in vb_genbody.tdl).
+*/
+template genStateMachine(MClass)
+Private Sub Class_Initialize()
+private currentState As Byte
+
+[/* An attribute for each event a state can receive is generated and initialized
+    getCount returns a number that is increased by addCount (defined in std.tdl) */]
+[loop(MClass->ReceiveEvent;
+setText("' events /////////////////////////////////////////////////////////////////"),
+setCount(0);addCount(1))]
+[getText()]
+public new_[ReceiveEvent.name] As Byte
+new_[ReceiveEvent.name] = [getCount()]
+[end loop]
+
+[/* An attribute for each state is generated and initialized
+    getCount returns a number that is increased by addCount (defined in std.tdl) */]
+[loop(MClass->MStatemachine->MState;
+setText("' states /////////////////////////////////////////////////////////////////"),
+setCount(0);addCount(1))]
+[getText()]
+public new_[MState.name] As Byte 
+new_[MState.name] = [getCount()]
+[end loop]
+End Sub
+' Event taker functions /////////////////////////////////////////////////
+[/* public virtual void takeEvent(byte objEvent)
+ objEvent is false? below we always ask. */]
+public Sub takeEvent(ev As Byte)
+
+	[/* handle each possible state, currentState holds the current state
+	    of the state machine */]
+	Select Case currentState
+	[loop(MClass->MStatemachine->MState)]
+		[/* the state machine is in state MState now. Accept all events
+		    legal for this state */]
+	Case new_[MState.name]
+		Select Case ev
+		[loop(MState->ToState->MTransition->TriggerEvent) ]
+		Case new_[TriggerEvent.name]
+		[/* TriggerEvent is a legal event in state MState, causing a
+		    transition to state ToState. Update currentState and
+		    call action procedure for ToState */]
+			currentState = new_[ToState.name]
+			call [ToState.name]Action
+		[end loop]
+		Case Else
+		[/* An illegal event has been used. For now we just put
+		    an error message */]
+		    msgBox "Wrong event occurred"
+		
+		End Select ' end event switch for state [MState.name]
+		
+	[end loop]
+	End Select ' end state switch	
+End Sub
+
+[/*Public Function [MClass.name] classEvent(objEvent As Byte)*/]
+Public Function classEvent(objEvent As Byte)
+
+	[MClass.name] newInstance = null
+
+	Select Case(objEvent) 
+	[/* accept each event (TriggerEvent) which causes a transition from an
+	    instance of MCreationState to some other state (ToState) */]
+	[loop(MClass->MStatemachine->MState->MCreationState->ToState->MTransition->TriggerEvent)]
+	case new_[TriggerEvent.name]
+		[/* for this event create a new instance of MClass
+		    and send the event to that instance */]
+		newInstance = New [MClass.name]
+		newInstance.takeEvent(objEvent)
+
+	[end loop]
+	Case Else	
+		[/* An illegal event has been used. For now we just put
+		    an error message */]
+		MsgBox "illegal create event" 
+
+	End Select
+	classEvent = newInstance
+
+End Function
+
+[loop(MClass->MStatemachine->MState->MNormalState;
+setText("' State action functions ////////////////////////////////////////////////"))]
+[getText()]
+Private Sub [MState.name]Action()
+
+	[mergeOut("UDAC::" getUniqueId([MState]) "Action","action code")]
+End Sub
+
+[end loop]
+end template

@@ -1,0 +1,513 @@
+FileObject 1
+{
+    { Name "a143" }
+    { Type ObjectAnnotation }
+    { GUID "UID_552EDB59-8D41-496d-B6B2-C509A3F5A4BA" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "read_odd_pulses.c" }
+    { Type SEFile }
+    { ObjectId 2151 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_E9E4B778-7DE4-43f0-860E-F03401A6F0D8" }
+}
+
+NodeObject 99997
+{
+    { Name "read odd pulses" }
+    { Type Module }
+    { ObjectId 2152 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_2E735D29-E9BA-4bc0-BEB0-3922E6BBE8F5" }
+}
+
+NoteObject 2
+{
+    { Type ModulePDL }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2154 }
+    { DescLine "read_odd_pulses(time_1,done)" }
+    { DescLine "        (" }
+    { DescLine "           if PULSE then" }
+    { DescLine "                ( time_1 = read(clock))" }
+    { DescLine "           done = TRUE;" }
+    { DescLine "           count_pulse(done);" }
+    { DescLine "           time(time_1);" }
+    { DescLine "        )" }
+}
+
+ItemObject 3
+{
+    { Type PDL }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 2155 }
+}
+
+NoteObject 4
+{
+    { Type ModuleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2157 }
+}
+
+ItemObject 5
+{
+    { Type ModuleReturnType }
+    { Value "int" }
+    { NoteId 4 }
+    { ObjectId 2158 }
+}
+
+ItemObject 6
+{
+    { Type CodeGenId }
+    { Value "11" }
+    { NoteId 4 }
+    { ObjectId 2159 }
+}
+
+NoteObject 7
+{
+    { Type Module }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2161 }
+    { DescLine "This module accepts all odd pulses (i.e: first pulse," }
+    { DescLine "third pulse etc.) and stores this information in a " }
+    { DescLine "time store. The module 'calculate_delay' reads this" }
+    { DescLine "value whenever it needs to calculate the delay." }
+}
+
+ItemObject 8
+{
+    { Type MemoryBudget }
+    { Value "2 WORDS" }
+    { NoteId 7 }
+    { ObjectId 2162 }
+}
+
+ItemObject 9
+{
+    { Type ProcessingTime }
+    { Value "1 second" }
+    { NoteId 7 }
+    { ObjectId 2163 }
+}
+
+NoteObject 10
+{
+    { Type LocalData }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 2165 }
+    { DescLine "Odd Pulses." }
+}
+
+ItemObject 11
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 10 }
+    { ObjectId 2166 }
+}
+
+ItemObject 12
+{
+    { Type DataName }
+    { Value "Time-Info" }
+    { NoteId 10 }
+    { ObjectId 2167 }
+}
+
+ItemObject 13
+{
+    { Type DataSize }
+    { Value "N/A" }
+    { NoteId 10 }
+    { ObjectId 2168 }
+}
+
+ItemObject 14
+{
+    { Type DataType }
+    { Value "Integer" }
+    { NoteId 10 }
+    { ObjectId 2169 }
+}
+
+ItemObject 15
+{
+    { Type Representation }
+    { Value "Standard" }
+    { NoteId 10 }
+    { ObjectId 2170 }
+}
+
+ItemObject 16
+{
+    { Type Constraint }
+    { Value "None" }
+    { NoteId 10 }
+    { ObjectId 2171 }
+}
+
+ItemObject 17
+{
+    { Type Units }
+    { Value "Seconds" }
+    { NoteId 10 }
+    { ObjectId 2172 }
+}
+
+ItemObject 18
+{
+    { Type Precision }
+    { Value "100 %" }
+    { NoteId 10 }
+    { ObjectId 2173 }
+}
+
+ItemObject 19
+{
+    { Type Accuracy }
+    { Value "N/A" }
+    { NoteId 10 }
+    { ObjectId 2174 }
+}
+
+NoteObject 20
+{
+    { Type LocalDatabase }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 2176 }
+    { DescLine "No Note Description." }
+}
+
+ItemObject 21
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 20 }
+    { ObjectId 2177 }
+}
+
+ItemObject 22
+{
+    { Type ERDiagram }
+    { Value "Enabled" }
+    { NoteId 20 }
+    { ObjectId 2178 }
+}
+
+ItemObject 23
+{
+    { Type AccessMethod }
+    { Value "Direct" }
+    { NoteId 20 }
+    { ObjectId 2179 }
+}
+
+NoteObject 24
+{
+    { Type DatabaseReference }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 2181 }
+}
+
+ItemObject 25
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 24 }
+    { ObjectId 2182 }
+}
+
+ItemObject 26
+{
+    { Type DatabaseName }
+    { Value "time_1" }
+    { NoteId 24 }
+    { ObjectId 2183 }
+}
+
+ItemObject 27
+{
+    { Type DatabaseUsage }
+    { Value "Both" }
+    { NoteId 24 }
+    { ObjectId 2184 }
+}
+
+NoteObject 28
+{
+    { Type Interrupt }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 2186 }
+    { DescLine "No Note Description" }
+}
+
+ItemObject 29
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 28 }
+    { ObjectId 2187 }
+}
+
+ItemObject 30
+{
+    { Type InterruptName }
+    { Value "Set" }
+    { NoteId 28 }
+    { ObjectId 2188 }
+}
+
+ItemObject 31
+{
+    { Type Source }
+    { Value "Sensors" }
+    { NoteId 28 }
+    { ObjectId 2189 }
+}
+
+ItemObject 32
+{
+    { Type InterruptPriority }
+    { Value "Fixed" }
+    { NoteId 28 }
+    { ObjectId 2190 }
+}
+
+ItemObject 33
+{
+    { Type Response }
+    { Value "Immediate" }
+    { NoteId 28 }
+    { ObjectId 2191 }
+}
+
+ItemObject 34
+{
+    { Type InterruptTime }
+    { Value "10 Seconds" }
+    { NoteId 28 }
+    { ObjectId 2192 }
+}
+
+ItemObject 35
+{
+    { Type MinimumFrequency }
+    { Value "Unknown" }
+    { NoteId 28 }
+    { ObjectId 2193 }
+}
+
+ItemObject 36
+{
+    { Type MaximumFrequency }
+    { Value "N/A" }
+    { NoteId 28 }
+    { ObjectId 2194 }
+}
+
+ItemObject 37
+{
+    { Type ProbableFrequency }
+    { Value "N/A" }
+    { NoteId 28 }
+    { ObjectId 2195 }
+}
+
+NoteObject 38
+{
+    { Type Timing }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2197 }
+    { DescLine "Critical. Because all pulses have to be timed exactly." }
+}
+
+ItemObject 39
+{
+    { Type TimingConditions }
+    { Value "fixed" }
+    { NoteId 38 }
+    { ObjectId 2198 }
+}
+
+ItemObject 40
+{
+    { Type Sequencing }
+    { Value "none" }
+    { NoteId 38 }
+    { ObjectId 2199 }
+}
+
+ItemObject 41
+{
+    { Type DynamicLogic }
+    { Value "N/A" }
+    { NoteId 38 }
+    { ObjectId 2200 }
+}
+
+NoteObject 42
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2202 }
+    { DescLine ",.St steady" }
+}
+
+ItemObject 43
+{
+    { Type ObjectName }
+    { Value "read odd pulses" }
+    { NoteId 42 }
+    { ObjectId 2203 }
+}
+
+ItemObject 44
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 42 }
+    { ObjectId 2204 }
+}
+
+NoteObject 45
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 2206 }
+    { DescLine "This partially fulfills the requirement that there be a speed monitoring" }
+    { DescLine "system on the gravity train." }
+}
+
+ItemObject 46
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 45 }
+    { ObjectId 2207 }
+}
+
+ItemObject 47
+{
+    { Type RequirementName }
+    { Value "speed-sub-system" }
+    { NoteId 45 }
+    { ObjectId 2208 }
+}
+
+ItemObject 48
+{
+    { Type RequirementDocument }
+    { Value "g_train_specifications" }
+    { NoteId 45 }
+    { ObjectId 2209 }
+}
+
+ItemObject 49
+{
+    { Type RequirementParagraph }
+    { Value "speed" }
+    { NoteId 45 }
+    { ObjectId 2210 }
+}
+
+ItemObject 50
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 45 }
+    { ObjectId 2211 }
+}
+
+ItemObject 51
+{
+    { Type QualificationMethod }
+    { Value "" }
+    { NoteId 45 }
+    { ObjectId 2212 }
+}
+
+ItemObject 52
+{
+    { Type QualificationLevel }
+    { Value "" }
+    { NoteId 45 }
+    { ObjectId 2213 }
+}
+
+ItemObject 53
+{
+    { Type FormalTestParagraph }
+    { Value "" }
+    { NoteId 45 }
+    { ObjectId 2214 }
+}
+
+NoteObject 54
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 2216 }
+}
+
+ItemObject 55
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 54 }
+    { ObjectId 2217 }
+}
+
+ItemObject 56
+{
+    { Type DocumentName }
+    { Value "SDD" }
+    { NoteId 54 }
+    { ObjectId 2218 }
+}
+
+ItemObject 57
+{
+    { Type DocumentNumber }
+    { Value "1" }
+    { NoteId 54 }
+    { ObjectId 2219 }
+}
+
+ItemObject 58
+{
+    { Type ParagraphNumber }
+    { Value "7" }
+    { NoteId 54 }
+    { ObjectId 2220 }
+}
+

@@ -1,0 +1,98 @@
+FileObject 1
+{
+    { Name "a301" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65BE6-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "ShowClockBehaviour" }
+    { Type UmlUseCase }
+    { ObjectId 766 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_A5C11F74-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlUseCaseDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 768 }
+}
+
+ItemObject 3
+{
+    { Type UmlUseCasePrecondition }
+    { Value "" }
+    { NoteId 2 }
+    { ObjectId 769 }
+}
+
+ItemObject 4
+{
+    { Type UmlUseCasePostcondition }
+    { Value "" }
+    { NoteId 2 }
+    { ObjectId 770 }
+}
+
+ItemObject 5
+{
+    { Type UmlUseCaseException }
+    { Value "" }
+    { NoteId 2 }
+    { ObjectId 771 }
+}
+
+NoteObject 6
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 773 }
+}
+
+NoteObject 7
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 775 }
+    { DescLine "The following behaviour is visible to the user:" }
+    { DescLine "- each quarter of an hour is shown," }
+    { DescLine "  represented by a graphical interface." }
+    { DescLine "- each solid hour the door opens," }
+    { DescLine "- each solid hour the clockbird is crying " }
+    { DescLine "  during daytime the coocoo," }
+    { DescLine "  at night the owl." }
+    { DescLine "- after the bird cried the door closes." }
+}
+
+ItemObject 8
+{
+    { Type ObjectName }
+    { Value "ShowClockBehaviour" }
+    { NoteId 7 }
+    { ObjectId 776 }
+}
+
+NoteObject 9
+{
+    { Type REQAssignmentNote }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 778 }
+}
+
+ItemObject 10
+{
+    { Type REQAnalysisAssignmentItem }
+    { Value "1. Display" }
+    { NoteId 9 }
+    { ObjectId 779 }
+}
+

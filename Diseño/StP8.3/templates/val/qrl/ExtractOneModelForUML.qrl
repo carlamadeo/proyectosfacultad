@@ -1,0 +1,1355 @@
+external string use_case_name;
+
+#include "qrl/tsdl_extract.inc"
+#include "qrl/basic_textract_dt.inc"
+#include "qrl/include/error.inc"
+
+#include "val/qrl/include/TConfig.inc"
+#include "val/qrl/include/TUseCase.inc"
+#include "val/qrl/include/val_string_globals.inc"
+
+
+  string OUTPUTPATH = current_projdir() + current_system() + "/test_files/";
+  string OUTPUTDIR;
+  string FILETEXT;
+
+  boolean EVENTCONDITION;
+  boolean DATACONDITION;
+  boolean TESTEXHAUSITIVE;
+  set TESTEXHAUSITIVESET;
+  set EVENTCONDITIONSET;
+  set DATACONDITIONSET;
+  set ALLDATAITEMS;
+
+  set DataItemsDataTypes;
+  set ExhaustiveTest;
+  set FixedValueSet;
+ 
+  string PRODUCES;
+
+void 
+main ()
+{
+
+  string sysdir = current_projdir() + current_system() + "/";
+//  system ("date > " + sysdir + "start");
+
+  list ACTORLIST;
+
+  list ScenarioList;
+  int count1, i;
+  int count2, j;
+  string test_unit_id, scenario_name;
+  node scenario;
+  int scenario_id;
+  set DataTypes;
+  string ActorIDs;
+
+  DataItemsDataTypes = set_create ("string");
+  ALLDATAITEMS = set_create ("string");
+
+  ExhaustiveTest = set_create ("string");
+  FixedValueSet = set_create ("string");
+  TESTEXHAUSITIVESET = set_create ("string");
+  DATACONDITIONSET = set_create ("string");
+  EVENTCONDITIONSET = set_create ("string");
+
+  list InputEvents, OutputEvents;
+
+
+  ACTORLIST = GetActorList(use_case_name);
+  if (list_count(ACTORLIST) == 0)
+    {
+      message ("This Use Case has no Actor interactions.");
+      message ("The Extraction Process has been terminated.");
+      return;
+    }
+
+
+  ScenarioList = GetScenarioList(use_case_name);
+
+
+
+  if (list_count(ScenarioList) == 0)
+    {
+      message ("This Use Case has no Scenarios.");
+      message ("The Extraction Process has been terminated.");
+      return;
+    }
+
+  ActorIDs = GetActorIDList(use_case_name);
+  set_clear(DataItemsDataTypes);
+
+  test_unit_id = Get_T_test_unit_id(use_case_name, "");
+
+  OUTPUTDIR = OUTPUTPATH + test_unit_id;
+  message ("Generating SDF for Use Case: " + use_case_name); 
+
+
+
+
+
+  Build_SPacket_Statement(use_case_name, test_unit_id);
+  Build_Include_File_Reference(use_case_name);
+
+  Remove_T_Databases(OUTPUTDIR);
+
+
+  Build_Dataitem_Set(ActorIDs );
+
+
+  InputEvents = list_create ("string", 0);
+  OutputEvents = list_create ("string", 0);
+
+  count2 = list_count (ScenarioList);
+
+  for (j=0;j<count2;j=j+1)
+    {
+      DATACONDITION = False;
+      EVENTCONDITION = False;
+      TESTEXHAUSITIVE = False;
+
+      set_clear(TESTEXHAUSITIVESET);
+      set_clear(DATACONDITIONSET);
+      set_clear(EVENTCONDITIONSET);
+
+      scenario = list_get(ScenarioList,j);
+      scenario_name = RemoveSpaces(scenario.name);
+      scenario_id = scenario.id;
+
+
+      list_clear(InputEvents);
+      list_clear(OutputEvents);
+
+      InputEvents = GetInputEvents("Input", scenario_id, ActorIDs);
+      OutputEvents = GetOutputEvents("Output", scenario_id, ActorIDs);
+
+      if (list_count (InputEvents) == 0 || list_count(OutputEvents) == 0)
+        {
+          message ("  No Action sentence will be created for Scenario " + scenario_name + ".");
+          message ("    Scenarios must have a minimum of one input event and one output event");
+          message ("    from an Actor interaction.");
+        }
+      else
+        {
+          message ("  Generating Action sentence for Scenario: " + scenario_name );
+
+
+          Build_Action_Statement(scenario_name, scenario_id, InputEvents, OutputEvents);
+
+          if (EVENTCONDITION == True)
+            print_event_condition_statement (EVENTCONDITIONSET, scenario_name );
+
+          if (DATACONDITION == True)
+            print_data_condition_statement (DATACONDITIONSET, scenario_name );
+        }
+
+    }
+
+  message ("");
+
+
+  DataTypes = Build_Dataitem_Statements(DataItemsDataTypes);
+  Build_Datatype_Statements(DataTypes);
+  Build_Footer();
+  WriteFileText (OUTPUTDIR, FILETEXT);
+//      message ( FILETEXT);
+  FILETEXT = "";
+
+
+ //  system ("date > " + sysdir + "stop");
+
+//   AddTime("ExtractModel", OUTPUTDIR );
+
+}
+
+
+void
+Build_SPacket_Statement(string name, string TestUnitID)
+{
+  FILETEXT =  ("S_packet " + TestUnitID + ";\n");
+  FILETEXT = FILETEXT + "  has subject \"" +
+     Get_T_SPacketSubject (name, "UmlUseCase") + "\";\n";
+  FILETEXT = FILETEXT + "  has description \"" + 
+     Get_T_SPacketDescription (name, "UmlUseCase") + "\";\n.\n\n";
+}
+
+void
+Build_Include_File_Reference(string name)
+{
+  FILETEXT = FILETEXT +  Get_Include_File_Reference();
+  FILETEXT = FILETEXT +  Get_T_Include_Files (name, "UmlUseCase");
+  FILETEXT = FILETEXT +  "\n\n";
+}
+
+void
+Build_Action_Statement( string scenario_name, int scenario_id,
+                 list InputEvents, list OutputEvents)
+{
+
+  
+  print_action_header ( scenario_name);
+
+  PRODUCES = "";
+  print_uses_data (InputEvents);
+
+
+  print_produces_data (OutputEvents, PRODUCES);
+
+  print_acts_only_if(scenario_name, scenario_id, InputEvents);
+
+//  print_satisfies(scenario_id);
+//  print_is_selected_by(scenario_id);
+//  print_is_concluded_on(scenario_id);
+
+
+  print_is_tested_exhaustively (EVENTCONDITIONSET, TESTEXHAUSITIVESET);
+
+  print_end_action();
+
+}
+
+void
+print_action_header(  string scenario_name )
+{
+  FILETEXT = FILETEXT +  ("Action " +  scenario_name + "\n");
+
+  FILETEXT = FILETEXT +  ("   is actiontype internal;\n\n" );
+
+}
+
+/*
+void
+print_acts_only_if ( string scenario_name, int scenario_id, list eventlist)
+{
+  int i,count;
+
+  string acts_only_if = "";
+//  string acts_only_if =  print_scenario_acts_only_if(scenario_id);
+
+  acts_only_if = print_event_acts_only_if(acts_only_if, eventlist);
+
+  if (EVENTCONDITION || DATACONDITION || acts_only_if != "" )
+    FILETEXT = FILETEXT +  ("   acts only if\n     (\n");
+  else
+    return;
+
+  if (acts_only_if != "")
+    {
+      FILETEXT = FILETEXT +  acts_only_if;
+
+      if (EVENTCONDITION || DATACONDITION)
+        FILETEXT = FILETEXT +  " &&\n";
+    }
+
+  if (EVENTCONDITION && DATACONDITION)
+    {
+      FILETEXT = FILETEXT +  "       " + scenario_name + "_EVENTS &&\n";
+      FILETEXT = FILETEXT +  "       " + scenario_name + "_DATA";
+    }
+  else if (EVENTCONDITION )
+    {
+      FILETEXT = FILETEXT +  "       " + scenario_name + "_EVENTS";
+    }
+  else if (DATACONDITION )
+    {
+      FILETEXT = FILETEXT +  "       " + scenario_name + "_DATA";
+    }
+
+  FILETEXT = FILETEXT +  "\n     );\n\n";
+
+}
+*/
+
+
+void
+print_acts_only_if ( string scenario_name, int scenario_id, list eventlist)
+{
+  int i,count;
+
+  string acts_only_if = "";
+
+  acts_only_if = print_event_acts_only_if(acts_only_if, eventlist);
+
+  if ( DATACONDITION || acts_only_if != "" )
+    FILETEXT = FILETEXT +  ("   acts only if\n     (\n");
+  else
+    return;
+
+  if (acts_only_if != "")
+    {
+      FILETEXT = FILETEXT +  acts_only_if;
+
+      if (DATACONDITION)
+        FILETEXT = FILETEXT +  " &&\n";
+    }
+
+  if (DATACONDITION )
+    {
+      FILETEXT = FILETEXT +  "       " + scenario_name + "_DATA";
+    }
+
+  FILETEXT = FILETEXT +  "\n     );\n\n";
+
+}
+
+
+
+void
+print_event_condition_statement (set eventnames, string scenario_name )
+{
+  int i,count;
+
+
+  count = set_count(eventnames);
+
+
+  for(i=0;i<count;i=i+1)
+    {
+       if (i==0)
+         {
+           FILETEXT = FILETEXT +  ("condition\n");
+           FILETEXT = FILETEXT +  ("  "+ scenario_name + "_EVENTS\n");
+           FILETEXT = FILETEXT +  ("  is true if (\n");
+         }
+
+       FILETEXT =  FILETEXT +  "       " + set_get_element(eventnames,i) + 
+           " == did_occur";
+
+       if (i<count-1)
+          FILETEXT = FILETEXT +  " &&\n";
+
+    }
+
+  FILETEXT = FILETEXT + " );\n.\n\n";
+}
+
+
+void
+print_data_condition_statement (set datanames, string scenario_name )
+{
+  int i,count;
+
+
+  count = set_count(datanames);
+
+  if (count  == 0)
+     return;
+
+
+  for(i=0;i<count;i=i+1)
+    {
+       if (i==0)
+         {
+           FILETEXT = FILETEXT +  ("condition\n");
+           FILETEXT = FILETEXT +  ("  "+ scenario_name + "_DATA\n");
+           FILETEXT = FILETEXT +  ("  is true if (\n");
+         }
+
+       FILETEXT =  FILETEXT +  "       " + set_get_element(datanames,i) + 
+           " as_specified";
+
+       if (i<count-1)
+          FILETEXT = FILETEXT +  " &&\n";
+
+    }
+
+  FILETEXT = FILETEXT + " );\n.\n\n";
+}
+
+void
+print_satisfies ( int scenario_id )
+{
+  int i,count;
+  note notevar;
+  list TNote;
+  item itemvar;
+
+  string q = "item [TSatisfies && obj_id == ${scenario_id}]";
+
+  itemvar = find_by_query(q);
+
+  if (itemvar != NULL)
+    {
+      FILETEXT = FILETEXT +  ("  satisfies\n");
+      FILETEXT = FILETEXT +  ("     " + itemvar.value);
+      FILETEXT = FILETEXT + (";\n\n");
+    }
+}
+
+
+string
+print_scenario_acts_only_if ( int scenario_id )
+{
+  int i,count;
+  note notevar;
+  list TNote;
+  item itemvar;
+  list itemlist;
+  string tmp = "";
+
+  string q = "item [TActsOnlyIf && obj_id == ${scenario_id}]";
+
+  itemlist = list_select(q);
+
+  count = list_count(itemlist);
+
+  for (i=0; i<count; i++)
+    {
+       itemvar = list_get(itemlist,i);
+       tmp = tmp  +  "       " + itemvar.value;
+
+       if (i < count-1)
+         tmp = tmp +  " &&\n";
+    }
+
+
+  return (tmp);
+}
+
+
+string
+print_event_acts_only_if ( string tmp, list inputevents )
+{
+  int i,count;
+  int j,count1;
+  note notevar;
+  list TNote;
+  item itemvar;
+  list itemlist;
+
+  link_ref linkrefvar;
+  string q = "item [UmlConstraintItem && obj_id == ${linkrefvar.link_id}]";
+
+
+  count = list_count(inputevents);
+
+  for (i=0; i<count; i=i+1)
+    {
+       linkrefvar = list_get(inputevents, i);
+
+       itemlist = list_select(q);
+
+       count1 = list_count(itemlist);
+
+       for (j=0; j<count1; j++)
+         {
+
+            if (tmp != "")
+              tmp = tmp +  " &&\n";
+            else
+              tmp = "";
+
+            itemvar = list_get(itemlist,j);
+            tmp = tmp  +  "       " + itemvar.value;
+
+         }
+    }
+
+  return (tmp);
+}
+
+
+
+void
+print_is_selected_by ( int scenario_id )
+{
+  int i,count;
+  note notevar;
+  list TNote;
+  item itemvar;
+
+  string q = "item [TIsSelectedBy && obj_id == ${scenario_id}]";
+
+  itemvar = find_by_query(q);
+
+  if (itemvar != NULL)
+    {
+      FILETEXT = FILETEXT +  ("  is selected by\n");
+      FILETEXT = FILETEXT +  ("     " + itemvar.value);
+      FILETEXT = FILETEXT + (";\n\n");
+    }
+}
+
+
+
+void
+print_is_concluded_on ( int scenario_id )
+{
+  int i,count;
+  note notevar;
+  list TNote;
+  item itemvar;
+
+  string q = "item [TIsConcludedOn && obj_id == ${scenario_id}]";
+
+  itemvar = find_by_query(q);
+
+  if (itemvar != NULL)
+    {
+      FILETEXT = FILETEXT +  ("  is concluded on\n");
+      FILETEXT = FILETEXT +  ("     " + itemvar.value);
+      FILETEXT = FILETEXT + (";\n\n");
+    }
+}
+
+
+
+/*
+void
+print_is_tested_exhaustively ( set eventset, set dataset )
+{
+  int i,count;
+  int j,count2;
+  string event;
+
+  count = set_count (eventset);
+  count2 = set_count (dataset);
+
+
+  if (count > 0 || count2 > 0 )
+    {
+      FILETEXT = FILETEXT +  "   is tested exhaustively on dataitem\n";
+    }
+  for (i=0; i<count; i=i+1)
+    {
+      event = set_get_element(eventset, i);
+      FILETEXT = FILETEXT +  "     " + event;
+      if (i < count - 1)
+        FILETEXT = FILETEXT + (",\n");
+    }
+
+  if (count2 > 0)
+    FILETEXT = FILETEXT + (",\n");
+
+  for (i=0; i<count2; i=i+1)
+    {
+      FILETEXT = FILETEXT +  "     " + set_get_element(dataset, i);
+      if (i < count2 - 1)
+        FILETEXT = FILETEXT + (",\n");
+    }
+
+  if (count > 0 || count2 > 0 )
+    {
+      FILETEXT = FILETEXT + (";\n\n");
+    }
+       
+}
+*/
+
+
+void
+print_is_tested_exhaustively ( set eventset, set dataset )
+{
+  int i,count;
+  int j,count2;
+  string event;
+
+  count = set_count (eventset);
+  count2 = set_count (dataset);
+
+
+  if (count2 > 0 )
+    {
+      FILETEXT = FILETEXT +  "   is tested exhaustively on dataitem\n";
+ 
+      for (i=0; i<count2; i=i+1)
+        {
+          FILETEXT = FILETEXT +  "     " + set_get_element(dataset, i);
+          if (i < count2 - 1)
+            FILETEXT = FILETEXT + (",\n");
+        }
+  
+      FILETEXT = FILETEXT + (";\n\n");
+    }
+}
+
+
+
+void
+print_uses_data ( list inputevents)
+{
+
+  int event_id, i,count;
+  string eventname, fromclass, toclass, actionname;
+  link_ref linkrefvar;
+  string event;
+
+  FILETEXT = FILETEXT +  ("   uses dataitem\n");
+
+  count = list_count(inputevents);
+
+  for (i=0; i<count; i=i+1)
+    {
+       linkrefvar = list_get(inputevents, i);
+       event = GetEventName(linkrefvar.link_id);
+
+       eventname = StripData(event);
+
+       EVENTCONDITION = True;
+       set_add (EVENTCONDITIONSET, eventname);
+
+       event_id = GetEventID(linkrefvar.link_id);
+
+       set_add ( ALLDATAITEMS, eventname);
+       set_add (DataItemsDataTypes, eventname + SEPARATOR + 
+                     "EVENT" + SEPARATOR2 + "input_event_type");
+
+       if (i>0)
+          FILETEXT = FILETEXT + ",\n";
+
+       FILETEXT = FILETEXT + "     " + eventname;
+
+       GetUsesData(event);
+    }
+
+  FILETEXT = FILETEXT + ";\n\n";
+
+}
+
+
+void
+GetUsesData ( string event)
+{
+  int i,count;
+  note notevar;
+  list TNote, notelist;
+  item itemvar,itemvar2,itemvar4;
+  string returndata;
+
+  int l1,l2;
+
+  l1 = string_find(event, 0, "(");
+
+  if (l1 == string_length(event) )
+     return;
+
+  string data;
+  list datalist;
+
+
+  l1 = string_find(event, 0, ":");
+
+  if (l1 < string_length(event) )
+     {
+       if (PRODUCES == "")
+          PRODUCES = string_extract( event, 0, l1 );
+       else
+          PRODUCES = PRODUCES + "," + string_extract( event, 0, l1 );
+     }
+
+  l2 = string_find(event, 0, "(");
+
+  event = string_extract( event,l2+1,string_length(event)-(l2+1) );
+
+  event = string_search_and_replace(event, ")", "");
+
+
+  datalist = string_to_list(event, ",");
+
+  count = list_count(datalist);
+
+  for (i=0;i<count;i++)
+    {
+      data = list_get(datalist,i);
+      if (!set_is_member ( FixedValueSet, RemoveSpaces(data)) )
+         {
+           DATACONDITION = True;
+           set_add ( DATACONDITIONSET, RemoveSpaces(data));
+         }
+      set_add ( ALLDATAITEMS, RemoveSpaces(data));
+
+      FILETEXT = FILETEXT +  (",\n         " + RemoveSpaces(data));
+
+      if (set_is_member(ExhaustiveTest, RemoveSpaces(data) ))
+           set_add ( TESTEXHAUSITIVESET,  RemoveSpaces(data));
+    }
+
+}
+
+
+
+void
+print_produces_data ( list outputevents, string produces)
+{
+
+  list EventList;
+  int event_id, i,count;
+  string eventname, fromclass, toclass, actionname;
+  link_ref linkrefvar;
+  string event;
+
+  count = list_count(outputevents);
+
+
+  if (count >0)
+     FILETEXT = FILETEXT +  ("   produces dataitem\n");
+
+
+  for (i=0; i<count; i=i+1)
+    {
+       linkrefvar = list_get(outputevents, i);
+       event = GetEventName(linkrefvar.link_id);
+
+       eventname = StripData(event);
+       event_id = GetEventID(linkrefvar.link_id);
+
+       set_add ( ALLDATAITEMS, eventname);
+       set_add (DataItemsDataTypes, eventname + SEPARATOR + 
+                     "FIXED" + SEPARATOR2 + "did_occur");
+
+       if (i>0)
+          FILETEXT = FILETEXT + ",\n";
+
+       FILETEXT = FILETEXT + "     " + eventname;
+       GetProducesData(event);
+    }
+
+   if (produces != "")
+      GetProducesData("(" + produces + ")");
+
+   if (count > 0) 
+     FILETEXT = FILETEXT + ";\n\n";
+}
+
+
+void
+GetProducesData ( string event)
+{
+  int i,count;
+  note notevar, notevar0;
+
+  list TNote, notelist;
+  item itemvar;
+  int l1,l2;
+
+  l1 = string_find(event, 0, "(");
+
+  if (l1 == string_length(event) )
+     return;
+
+  string data;
+  list datalist;
+
+  event = string_extract( event,l1+1,string_length(event)-(l1+1) );
+
+  event = string_search_and_replace(event, ")", "");
+
+
+  datalist = string_to_list(event, ",");
+
+  count = list_count(datalist);
+
+  for (i=0;i<count;i++)
+    {
+      data = list_get(datalist,i);
+      set_add ( ALLDATAITEMS, RemoveSpaces(data));
+
+      FILETEXT = FILETEXT +  (",\n         " + RemoveSpaces(data));
+    }
+
+
+
+}
+
+
+
+void
+print_end_action()
+{
+
+  FILETEXT = FILETEXT + (".\n\n\n");
+
+}
+
+
+void
+Build_Dataitem_Set(string ids)
+{
+  list dataitems;
+  int i,count;
+  note notevar, notevar0;
+  item itemvar1, itemvar3, itemvar4, itemvar5, itemvar6;
+  string default="UNSPECIFIED" + SEPARATOR2 + "UNSPECIFIED";
+  string typename= default;
+ 
+  string q1 = "note [TestDataItem && obj_id == ${id}] sort by name";
+  string q2 = "item [TDataItemName && note_id == ${notevar.id}]";
+  string q3 = "item [TFixedValue && note_id == ${notevar.id}]";
+  string q4 = "item [TDataType && note_id == ${notevar.id}]";
+  string q5 = "item [TDataTypeName && note_id == ${notevar.id}]";
+  string q6 = "item [TExhaustiveTest && note_id == ${notevar.id}]";
+ 
+  list idlist;
+  int j, idcount;
+  string id;
+  
+  ids = string_search_and_replace(ids," || ",":");
+  idlist = string_to_list(ids,":");
+ 
+  idcount = list_count(idlist);
+ 
+  dataitems = list_create("note",0);
+ 
+  for (j=0;j<idcount;j=j+1)
+    {
+      id = list_get(idlist,j);
+      for_each_in_select(q1, notevar)
+        {
+          list_append(dataitems, notevar);
+        }
+    }
+ 
+  count = list_count(dataitems);
+ 
+  for (i=0;i<count;i=i+1)
+    {
+      notevar = list_get(dataitems,i);
+ 
+ 
+      itemvar1 = find_by_query(q2);
+ 
+      itemvar3 = find_by_query(q3);
+      itemvar4 = find_by_query(q4);
+      itemvar5 = find_by_query(q5);
+      itemvar6 = find_by_query(q6);
+ 
+      if (itemvar3 != NULL)
+        {
+           typename = "FIXED" + SEPARATOR2 + itemvar3.value;
+           set_add (FixedValueSet,  RemoveSpaces(itemvar1.value) );
+        }
+ 
+      else if (itemvar4 != NULL)
+        {
+           typename = "DEFINED" + SEPARATOR2 + itemvar4.value;
+        }
+ 
+      else if (itemvar5 != NULL)
+        {
+           typename = "DEFINED" + SEPARATOR2 + itemvar5.value;
+        }
+ 
+ 
+      set_add (DataItemsDataTypes, RemoveSpaces(itemvar1.value) + SEPARATOR + typename);
+ 
+      if (itemvar6 != NULL)
+         set_add (ExhaustiveTest,  RemoveSpaces(itemvar1.value) );
+ 
+    }
+}
+
+
+set
+Build_Dataitem_Statements(set DataItemsDataTypes)
+{
+  list listvar, datatypelist;
+  string stringvar;
+  string dataitem, datatypestring, datatype, datatypetype;
+  int i,count;
+  set DataTypes;
+
+  DataTypes = set_create ("string");
+
+  count = set_count(DataItemsDataTypes);
+
+  for (i=0;i<count;i=i+1)
+    {
+      stringvar = set_get_element(DataItemsDataTypes,i);
+
+      listvar = string_to_list(stringvar, SEPARATOR );
+      dataitem = list_get(listvar,0);
+
+      if ( !set_is_member (ALLDATAITEMS, dataitem))
+         continue;
+
+      datatypestring = list_get(listvar,1);
+
+      datatypelist = string_to_list(datatypestring, SEPARATOR2);
+      datatypetype = list_get(datatypelist,0);
+      datatype = list_get(datatypelist,1);
+
+      if (datatypetype != "EVENT" && datatypetype != "UNSPECIFIED"
+                  && datatypetype != "FIXED")
+        set_add (DataTypes, datatype);
+
+      if (datatypetype == "UNSPECIFIED")
+        {
+          FILETEXT = FILETEXT +  ("Dataitem " + dataitem + ";\n");
+          FILETEXT = FILETEXT +  
+               ("   has placeholder value \"" + datatype + "\";\n");
+          FILETEXT = FILETEXT +  (".\n\n");
+        }
+      else if (datatypetype == "FIXED")
+        {
+          FILETEXT = FILETEXT +  ("Dataitem " + dataitem + ";\n");
+          FILETEXT = FILETEXT +  
+               ("   has fixed value \"" + datatype + "\";\n");
+          FILETEXT = FILETEXT +  (".\n\n");
+        }
+      else
+        {
+          FILETEXT = FILETEXT +  ("Dataitem " + dataitem + ";\n");
+          FILETEXT = FILETEXT +  
+               ("   is an instance of datatype " + datatype + ";\n");
+          FILETEXT = FILETEXT +  (".\n\n");
+        }
+    }
+
+  return (DataTypes);
+
+}
+
+void
+Build_Datatype_Statements(set datatypes)
+{
+  int i,count;
+  string datatypename;
+  node nodevar;
+  item itemvar;
+
+  string q1 = "node [TTestType && name == '${datatypename}']";
+  string q2 = "item [TDataTypeClass && obj_id == ${nodevar.id}]";
+
+  count = set_count (datatypes);
+
+  for (i=0;i<count;i=i+1)
+    {
+      datatypename = set_get_element(datatypes,i);
+      nodevar = find_by_query(q1);
+
+      if (nodevar != NULL)
+        {
+          itemvar = find_by_query(q2);
+
+          if (itemvar != NULL)
+            {
+              if (itemvar.value == "integer" || itemvar.value == "real")
+                Build_IntegerReal_TypeDef(datatypename, itemvar.value, nodevar.id);
+              else if (itemvar.value == "string")
+                Build_String_TypeDef(datatypename, itemvar.value, nodevar.id);
+              //else if (itemvar.value == "boolean")
+              //  Build_Boolean_TypeDef(datatypename, itemvar.value, nodevar.id);
+              //else if (itemvar.value == "character")
+              //  Build_Character_TypeDef(datatypename, itemvar.value, nodevar.id);
+              else
+                {
+                  message ("  WARNING: " + datatypename + 
+                      " is not defined in an StP type table");
+                }
+            }
+          else
+            {
+              message ("  WARNING: " + datatypename + " is not defined in an StP type table");
+            }
+
+        }
+      else
+        {
+           message ("  WARNING: " + datatypename + " is not defined in an StP type table");
+        }
+
+    }
+}
+
+void
+Build_IntegerReal_TypeDef(string datatypename, string name, int id)
+{
+  item itemvar;
+  list itemlist;
+  int i,count;
+
+  string q1 = "item [TMinimumValue && obj_id == ${id}]";
+  string q2 = "item [TMaximumValue && obj_id == ${id}]";
+  string q3 = "item [TResolution && obj_id == ${id}]";
+  string q4 = "item [TTestValue && obj_id == ${id}]";
+  string q5 = "item [TInvalidSubdomain && obj_id == ${id}]";
+
+
+  FILETEXT = FILETEXT +  ("DataType " + datatypename + ";\n");
+  FILETEXT = FILETEXT +  ("  is datatypeclass " + name  + ";\n");
+
+  itemvar = find_by_query(q1);
+  if (itemvar != NULL)
+    {
+      FILETEXT = FILETEXT +  ("  has value range minimum " + itemvar.value  + ";\n");
+    }
+
+  itemvar = find_by_query(q2);
+  if (itemvar != NULL)
+    {
+      FILETEXT = FILETEXT +  ("  has value range maximum " + itemvar.value  + ";\n");
+    }
+
+  itemvar = find_by_query(q3);
+  if (itemvar != NULL)
+    {
+      FILETEXT = FILETEXT +  ("  has value range resolution " + itemvar.value  + ";\n");
+    }
+
+  itemlist = list_select(q4);
+  count = list_count(itemlist);
+  for (i=0;i<count;i=i+1 )
+    {
+      if (i==0)
+         FILETEXT = FILETEXT +  ("  has values ");
+
+      itemvar = list_get(itemlist, i);
+
+      FILETEXT = FILETEXT +  (itemvar.value);
+
+      if (i < count - 1)
+         FILETEXT = FILETEXT + (",\n             ");
+      else 
+         FILETEXT = FILETEXT + (";\n");
+    }
+
+  FILETEXT = FILETEXT +  ("\n  has valid subdomain as_specified;\n");
+
+  itemvar = find_by_query(q5);
+  if (itemvar != NULL)
+    {
+      if (itemvar.value != "None")
+         {
+           FILETEXT = FILETEXT +  ("  has invalid subdomain ");
+           FILETEXT = FILETEXT +  (GetInvalidSubdomain(itemvar.value)  + ";\n");
+         }
+    }
+  FILETEXT = FILETEXT +  (".\n\n");
+
+}
+
+
+ 
+void
+Build_String_TypeDef(string datatypename, string name, int id)
+{
+  item itemvar;
+  list itemlist;
+  int i,count;
+ 
+  string q4 = "item [TTestValue && obj_id == ${id}]";
+  string q5 = "item [TInvalidSubdomain && obj_id == ${id}]";
+ 
+  string tmp;
+ 
+ 
+  FILETEXT = FILETEXT +  ("DataType " + datatypename + ";\n");
+  FILETEXT = FILETEXT +  ("  is datatypeclass " + name  + ";\n");
+ 
+  itemlist = list_select(q4);
+  count = list_count(itemlist);
+  for (i=0;i<count;i=i+1 )
+    {
+      if (i==0)
+         FILETEXT = FILETEXT +  ("  has values ");
+ 
+      itemvar = list_get(itemlist, i);
+ 
+ 
+      if (string_find(itemvar.value, 0, "//") == 0)
+        tmp = itemvar.value;
+      else
+        tmp = "\"" + itemvar.value + "\"";
+ 
+      FILETEXT = FILETEXT +  (tmp);
+ 
+      if (i < count - 1)
+         FILETEXT = FILETEXT + (",\n             ");
+      else
+         FILETEXT = FILETEXT + (";\n");
+    }
+ 
+  FILETEXT = FILETEXT +  ("\n  has valid subdomain as_specified;\n");
+ 
+  itemvar = find_by_query(q5);
+  if (itemvar != NULL)
+    {
+      if (itemvar.value != "None")
+         {
+           FILETEXT = FILETEXT +  ("  has invalid subdomain ");
+           FILETEXT = FILETEXT +  (GetInvalidSubdomain(itemvar.value)  + ";\n");
+         }
+    }
+  FILETEXT = FILETEXT +  (".\n\n");
+ 
+}
+
+
+void
+Build_Boolean_TypeDef(string datatypename, string name, int id)
+{
+  item itemvar;
+  list itemlist;
+  int i,count;
+
+  string q1 = "item [TTrueValue && obj_id == ${id}]";
+  string q2 = "item [TFalseValue && obj_id == ${id}]";
+  string q3 = "item [TUnknownValue && obj_id == ${id}]";
+  string q4 = "item [TTestValue && obj_id == ${id}]";
+  string q5 = "item [TInvalidSubdomain && obj_id == ${id}]";
+
+
+  FILETEXT = FILETEXT +  ("DataType " + datatypename + ";\n");
+  FILETEXT = FILETEXT +  ("  is datatypeclass " + name  + ";\n");
+
+  itemvar = find_by_query(q1);
+  if (itemvar != NULL)
+    {
+      FILETEXT = FILETEXT +  ("  has True value " + itemvar.value  + ";\n");
+    }
+
+  itemvar = find_by_query(q2);
+  if (itemvar != NULL)
+    {
+      FILETEXT = FILETEXT +  ("  has False value " + itemvar.value  + ";\n");
+    }
+
+  itemvar = find_by_query(q3);
+  if (itemvar != NULL)
+    {
+      FILETEXT = FILETEXT +  ("  has Unknown value " + itemvar.value  + ";\n");
+    }
+
+  itemlist = list_select(q4);
+  count = list_count(itemlist);
+  for (i=0;i<count;i=i+1 )
+    {
+      if (i==0)
+         FILETEXT = FILETEXT +  ("  has values ");
+
+      itemvar = list_get(itemlist, i);
+
+      FILETEXT = FILETEXT +  (itemvar.value);
+
+      if (i < count - 1)
+         FILETEXT = FILETEXT + (",\n             ");
+      else 
+         FILETEXT = FILETEXT + (";\n");
+    }
+
+  FILETEXT = FILETEXT +  ("\n  has valid subdomain as_specified;\n");
+
+  itemvar = find_by_query(q5);
+  if (itemvar != NULL)
+    {
+      if (itemvar.value != "None")
+         {
+           FILETEXT = FILETEXT +  ("  has invalid subdomain ");
+           FILETEXT = FILETEXT +  (GetInvalidSubdomain(itemvar.value)  + ";\n");
+         }
+    }
+  FILETEXT = FILETEXT +  (".\n\n");
+}
+
+
+void
+Build_Character_TypeDef(string datatypename, string name, int id)
+{
+  item itemvar;
+  list itemlist;
+  int i,count;
+
+  string q1 = "item [TMinimumValue && obj_id == ${id}]";
+  string q2 = "item [TMaximumValue && obj_id == ${id}]";
+  string q3 = "item [TResolution && obj_id == ${id}]";
+  string q4 = "item [TTestValue && obj_id == ${id}]";
+  string q5 = "item [TInvalidSubdomain && obj_id == ${id}]";
+
+
+  FILETEXT = FILETEXT +  ("DataType " + datatypename + ";\n");
+  FILETEXT = FILETEXT +  ("  is datatypeclass " + name  + ";\n");
+
+  itemvar = find_by_query(q1);
+  if (itemvar != NULL)
+    {
+      FILETEXT = FILETEXT +  ("  has value range minimum " + itemvar.value  + ";\n");
+    }
+
+  itemvar = find_by_query(q2);
+  if (itemvar != NULL)
+    {
+      FILETEXT = FILETEXT +  ("  has value range maximum " + itemvar.value  + ";\n");
+    }
+
+  itemvar = find_by_query(q3);
+  if (itemvar != NULL)
+    {
+      FILETEXT = FILETEXT +  ("  has value range resolution " + itemvar.value  + ";\n");
+    }
+
+  itemlist = list_select(q4);
+  count = list_count(itemlist);
+  for (i=0;i<count;i=i+1 )
+    {
+      if (i==0)
+         FILETEXT = FILETEXT +  ("  has values ");
+
+      itemvar = list_get(itemlist, i);
+
+      FILETEXT = FILETEXT +  (itemvar.value);
+
+      if (i < count - 1)
+         FILETEXT = FILETEXT + (",\n             ");
+      else 
+         FILETEXT = FILETEXT + (";\n");
+    }
+
+  FILETEXT = FILETEXT +  ("\n  has valid subdomain as_specified;\n");
+
+  itemvar = find_by_query(q5);
+  if (itemvar != NULL)
+    {
+      if (itemvar.value != "None")
+         {
+           FILETEXT = FILETEXT +  ("  has invalid subdomain ");
+           FILETEXT = FILETEXT +  (GetInvalidSubdomain(itemvar.value)  + ";\n");
+         }
+    }
+  FILETEXT = FILETEXT +  (".\n\n");
+
+}
+
+
+void
+Build_Unspecified_TypeDef(string datatypename)
+{
+  FILETEXT = FILETEXT +  ("DataType " + datatypename + ";\n");
+  FILETEXT = FILETEXT +  ("  is datatypeclass unspecified;\n");
+  FILETEXT = FILETEXT +  ("  has placeholder value \"UNSPECIFIED\";\n");
+  FILETEXT = FILETEXT +  ("  has valid subdomain as_specified;\n");
+  FILETEXT = FILETEXT +  (".\n\n");
+}
+
+void
+Build_Footer()
+{
+  FILETEXT = FILETEXT + ("\n\npe_mark\n\n");
+}
+
+string
+GetInvalidSubdomain(string name)
+{
+
+  if (name == "NotInList")
+    return ("not_in_list");
+  else if (name == "OutOfType")
+    return ("out_of_type");
+  else if (name == "AboveBounds")
+    return ("above_bounds");
+  else if (name == "BelowBounds")
+    return ("below_bounds");
+  else if (name == "OutOfBounds")
+    return ("out_of_bounds");
+  else if (name == "Abnormal")
+    return ("abnormal");
+
+}
+
+
+void
+WriteFileText (string OUTPUTDIR, string FILETEXT)
+{
+  string outputfile = OUTPUTDIR + "/sdf";
+
+  if(write_file_access(OUTPUTDIR))
+     write_file (outputfile, FILETEXT);
+
+  else
+    {
+      message ( "*mkdir " + OUTPUTDIR + "*");
+      system ("mkdir '" + OUTPUTDIR + "'");
+      if(write_file_access(outputfile))
+         message ("File not available for writing");
+      else 
+         write_file (outputfile, FILETEXT);
+
+    }
+}
+
+
+string
+GetEventName( int link_id)
+{
+  link linkvar;
+  item itemvar;
+  string name;
+
+  string query2 = "link [ id == ${link_id} ]";
+
+  linkvar = find_by_query (query2);
+
+
+  if (linkvar == NULL)
+     return (NULL);
+
+
+  return (RemoveSpaces(linkvar.name));
+
+}
+
+
+int
+GetEventID( int link_id)
+{
+  link linkvar;
+  string query = "link [ id == ${link_id} ]";
+
+  linkvar = find_by_query (query);
+
+  if (linkvar == NULL)
+    return (0);
+  else 
+    return (linkvar.id);
+
+
+}
+
+
+
+list
+GetInputEvents(string type, int scenario_id, string actorids)
+{
+ 
+  string linkref_query, noderef_query;
+  node_ref nr;
+
+  if (actorids == "")
+      actorids = "0";
+
+  noderef_query = "node_ref [node_id == ${scenario_id} ] ";
+
+  nr = find_by_query (noderef_query);
+
+  linkref_query = "link_ref [ file_id == ${nr.file_id} && 
+           link [ UmlSimpleMessage   &&
+           from_node[${actorids}] ] ] sort by ycoord";
+
+  return ( list_select (linkref_query) );
+
+}
+
+
+list
+GetOutputEvents(string type, int scenario_id, string actorids)
+{
+ 
+  string linkref_query, noderef_query;
+  node_ref nr;
+
+  if (actorids == "")
+      actorids = "0";
+
+  noderef_query = "node_ref [node_id == ${scenario_id} ] ";
+
+  nr = find_by_query (noderef_query);
+
+  linkref_query = "link_ref [ file_id == ${nr.file_id} && 
+           link [ UmlSimpleMessage   &&
+           to_node[${actorids}] ] ] sort by ycoord";
+
+  return ( list_select (linkref_query) );
+
+}
+
+

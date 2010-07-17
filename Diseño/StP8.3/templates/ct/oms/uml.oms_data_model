@@ -1,0 +1,95 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/Unified
+//      StP/OO
+//	StP Core
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1996
+//      All rights reserved
+//
+// sccsid:  %W% %Y% %D%; Copyright (C) IDE 1984-1995
+
+ItemValType UmlVisibilityEnum
+{
+	{ ChoiceType
+		{ Choice "private" }
+		{ Choice "protected" }
+		{ Choice "public" }
+	}
+}	
+
+ItemValType UmlClassAda95TypePrivacyEnum
+{
+	{ ChoiceType
+		{ Choice "public" }
+		{ Choice "private extension" }
+		{ Choice "tagged private" }
+		{ Choice "private" }
+		{ Choice "implementation" }
+	}
+}	
+
+ItemValType UmlAda95VisibilityEnum
+{
+	{ ChoiceType
+		{ Choice "public" }
+		{ Choice "private" }
+		{ Choice "implementation" }
+	}
+}
+
+ItemValType UmlJavaVisibilityEnum
+{
+	{ ChoiceType
+		{ Choice "public" }
+		{ Choice "private" }
+		{ Choice "protected" }
+		{ Choice "package private" }
+	}
+}	
+
+ItemValType UmlAggregationEnum
+{
+	{ ChoiceType
+        // ECR 3856 begin
+		{ Choice "None" }
+        // ECR 3856 end
+		{ Choice "Aggregation" }
+		{ Choice "Composition" }
+	}
+}
+
+ItemValType UmlMessageDirectionEnum
+{
+	{ ChoiceType
+		{ Choice "Activation" }
+		{ Choice "Return" }
+	}
+}	
+
+ItemValType UmlTOOLClassComponentPrivacyEnum
+{
+  { ChoiceType
+      { Choice "public" }
+      { Choice "private" }
+  }
+}	
+
+ItemValType UmlTOOLClassPropertyEnum
+{
+  { ChoiceType
+      { Choice "Allowed" }
+      { Choice "Disallowed" }
+      { Choice "IsDefault" }
+  }
+}	
+
+ItemValType UmlTOOLOperationKindEnum
+{
+  { ChoiceType
+      { Choice "Method" }
+      { Choice "Event" }
+      { Choice "EventHandler" }
+  }
+}	
+

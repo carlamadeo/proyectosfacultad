@@ -1,0 +1,1316 @@
+//
+// CSE table definitions
+//
+
+//
+// combinational machines begin here
+//
+
+TableType 101 DecisionTable
+{ 
+  { Label "Decision Table" } 
+  { SyntaxCheckFunc DecisionTableCheckSyntax }
+  { Initialize 
+    { Secured
+    	{ ControlHsect 1 }
+        { ControlInVsect 1 }
+        { ControlOutVsect 2 } 
+        { ControlQualifierHsect 3 } }
+    { Unsecured 
+        // ECR 7268 - Put { M 1 } (instead of { M 2 } to get just 1 column 
+        // in Control Out section when creating a decision table 
+    	{ M 1 } { N 2 } } }
+  { TopBorder { Thickness Thick } }
+  { LeftBorder { Thickness Thick } }
+  { BottomBorder { Thickness Thick } } 
+  { RightBorder { Thickness Thick } }
+  { HsectBorder { Double True } }
+  // { EmptyBorder { Visible False } }
+
+  { Hsect 
+      { Label "Controls" }
+      { Frozen True }
+      //{ Scrollbar False }
+      { Vsect 
+    	  { Label "Control Ins" }
+	  { NumCols M }
+	  { Row 
+	      { Cell 
+		  { ReadOnly True }
+		  { Hspan True }
+		  { Shading Shade2 }
+                  { Bold True }
+		  { Label "Control In" } 
+		}
+	    }
+	  { Row 
+	      { Cell 
+		  { RepeatToEnd True }
+		  { Shading Shade1 }
+                  { Bold True }
+		  { Type ControlInCell } } } }
+      { Vsect 
+    	  { Label "Control Outs" }
+	  { NumCols M }
+	  { Row
+	      { Cell 
+	          { ReadOnly True }
+		  { Shading Shade2 }
+                  { Bold True }
+		  { Hspan True }
+		  { Label "Control Out" } 
+		}
+	    }
+	  { Row
+	      { Cell 
+		  { RepeatToEnd True }
+		  { Shading Shade1 }
+                  { Bold True }
+		  { Type ControlOutCell } } } } }
+
+  { Hsect 
+      { Label "Combinations" }
+      { NumRows N }
+      { Vsect 
+	  { Row
+	      { RepeatToEnd True }
+	      { Type ControlInRow }
+	      { Cell
+		  { RepeatToEnd True }
+		  { Type ControlValueCell } } } }
+      { Vsect 
+	  { Row
+	      { RepeatToEnd True }
+	      { Type ControlOutRow }
+	      { Cell
+		  { RepeatToEnd True }
+		  { Type ControlValueCell } } } } } 
+
+  // Qualification section
+  { Hsect 
+      //{ Label "Control Qualifiers" }
+      { Label "Unused" }
+      { Frozen True }
+      //ECR 7268 - change { ReadOnly True } for { ReadOnly False } to permit
+      //to remove columns in decision table
+      { ReadOnly False }
+      { Hidden True }
+      { NumRows 1 }
+      { NumVisRows 0 }
+      { Vsect 
+    	  //{ Label "Control In Qualifiers" }
+    	  { Label "Unused" }
+	  { NumCols M }
+	  { Row 
+	      { Cell 
+		  { RepeatToEnd True }
+		  { Type ControlInQualifierCell } } } }
+      { Vsect 
+    	  //{ Label "Control Out Qualifiers" }
+    	  { Label "Unused" }
+	  { NumCols M }
+	  { Row
+	      { Cell 
+		  { RepeatToEnd True }
+		  { Type ControlOutQualifierCell } } } } } } 
+
+TableType 102 ProcessActivationTable
+{ 
+  { Label "Process Activation Table" } 
+  { SyntaxCheckFunc ProcessActivationTableCheckSyntax }
+  { Initialize 
+    { Secured
+    	{ ControlHsect 1 }
+        { ControlInVsect 1 } 
+    	{ ProcessVsect 2 }
+    	{ ProcessRow 2 } 
+        { ControlQualifierHsect 3 } }
+    { Unsecured
+    	{ M 2 } { N 2 } } }
+  { TopBorder { Thickness Thick } }
+  { LeftBorder { Thickness Thick } }
+  { BottomBorder { Thickness Thick } } 
+  { RightBorder { Thickness Thick } }
+  { HsectBorder { Double True } }
+
+  { Hsect 
+      { Label "Controls" }
+      // ECR 7268 due to bug on "Delete Cells" option, I discovered this one and 
+      // correct it by adding the Frozen option to avoid removing label in this table
+      { Frozen True }
+      { Vsect 
+      	  { Label "Control Ins" }
+	  { NumCols M }
+	  { Row 
+	      { Cell 
+		  { ReadOnly True }
+		  { Hspan True }
+		  { Shading Shade2 }
+                  { Bold True }
+		  { Label "Control In" } 
+		}
+	    }
+	  { Row 
+	      { Cell 
+		  { RepeatToEnd True }
+		  { Shading Shade1 }
+                  { Bold True }
+		  { Type ControlInCell } } } }
+      { Vsect 
+      	  { Label "Processes" }
+	  { NumCols M }
+	  { Row
+	      { Cell 
+		  { ReadOnly True }
+		  { Hspan True }
+		  { Shading Shade2 }
+                  { Bold True }
+		  { Label "Activate Processes" } 
+	      }
+	    }
+	  { Row
+	      { Cell 
+		  { RepeatToEnd True }
+		  { Shading Shade1 }
+                  { Bold True }
+		  { Type ProcessCell } } } } }
+
+  { Hsect 
+      { Label "Combinations" }
+      { NumRows N }
+      { Vsect 
+	  { Row
+	      { RepeatToEnd True }
+	      { Type ControlInRow }
+	      { Cell
+		  { RepeatToEnd True }
+		  { Type ControlValueCell } } } }
+      { Vsect 
+	  { Row
+	      { RepeatToEnd True }
+	      { Cell
+		  { RepeatToEnd True }
+		  { Type ProcessTableProcessActivationCell } } } } } 
+
+  // Qualification section
+  { Hsect 
+      { Label "Control Qualifiers" }
+      { Label "Unused" }
+      { Frozen True }
+      //ECR 7268 - change { ReadOnly True } for { ReadOnly False } to permit
+      //to remove columns in Process Activation table
+      { ReadOnly False }
+      //{ Scrollbar False }
+      { Hidden True }
+      { NumRows 1 }
+      { NumVisRows 0 }
+      { Vsect 
+    	  { Label "Control In Qualifiers" }
+	  { NumCols M }
+	  { Row 
+	      { Cell 
+		  { RepeatToEnd True }
+		  { Type ControlInQualifierCell } } } } } }
+
+CellType 101 ControlInCell
+{
+  { Semantics
+     { NodeMapping
+	  { MappingName ActivationMap }
+	  { MappingName ControlMap }
+	  { MappingName ControlInMap }
+	  { MappingName ControlSpecMap }
+	  { Name 
+              { LabelFunc SE_table_label_func } }
+	  { Precondition { LabelSelector Label } }
+	  { Signature 
+              { Required False }
+	      { LabelFunc cse_qualify_label_func } }
+	  { Type ControlIn } } }
+    { ValidValues
+	{ LabelFunc "control_in_value_choice_func();" }
+	{ DoCheck False }
+    }
+    { RenameFunc cspec_control_in_out_rename }
+}
+
+CellType 102 ControlOutCell
+{
+  { Semantics
+      { NodeMapping
+	  { MappingName ControlMap }
+	  { MappingName ControlSpecMap }
+	  { Name 
+              { LabelFunc SE_table_label_func } }
+	  { Signature 
+              { Required False }
+	      { LabelFunc cse_qualify_label_func } }
+	  { Precondition { LabelSelector Label } }
+	  { Type ControlOut } } } 
+    { ValidValues
+	{ LabelFunc "control_out_value_choice_func();" }
+	{ DoCheck False }
+    }
+	{ RenameFunc cspec_control_in_out_rename }
+}
+
+CellType 103 ProcessCell
+{
+  { Semantics
+      { NodeMapping
+	  { MappingName ProcessMap }
+	  { MappingName ControlSpecMap }
+	  { Name 
+              { LabelFunc SE_table_label_func } }
+	  { Precondition { LabelSelector Label } }
+	  { Type Process } } }
+    { Methods
+	{ Navigation 
+	    { Name Process }
+	    { Label "Process on Data Flow Diagram" }
+	    { MappingName ProcessMap }
+	    { Query "node_ref[node_id == ${node.id} && file[DfeDiagram]]" }
+	 } 
+    } 
+    { ValidValues
+	{ LabelFunc "process_value_choice_func();" }
+	{ DoCheck False }
+    }
+}
+
+RowType 101 ControlInRow
+{
+  { Semantics 
+      { NodeMapping
+	  { MappingName ControlCombinationMap }
+	  { MappingName ControlSpecMap }
+	  { MappingName CombinationMap }
+	  { Name
+	      { LabelSelector Id } }
+	  { Type ControlCombination } } } }
+
+RowType 102 ControlOutRow
+{
+  { Semantics 
+      { NodeMapping
+	  { MappingName ControlCombinationMap }
+	  { MappingName ControlSpecMap }
+	  { Name
+	      { LabelSelector Id } }
+	  { Type ControlCombination } }
+      { LinkMapping
+	  { MappingName DecisionMap }
+	  { Type Decision } 
+	  { FromNode
+	      { MappingName ControlCombinationMap }
+	      { Row 
+		  { Hsect HSECT } 
+		  { Vsect 1 }
+		  { Row ROW } } }
+	  { ToNode
+	      { MappingName ControlCombinationMap }
+	      { Row 
+		  { Hsect HSECT } 
+		  { Vsect 2 }
+		  { Row ROW } } } } } }
+
+
+CellType 104 ControlValueCell
+{
+  { Semantics
+      { LinkMapping
+	  { MappingName ControlValueMap }
+	  { MappingName ControlSpecMap }
+	  { Name 
+              { LabelFunc SE_table_label_func } }
+	  { Precondition { LabelSelector Label } }
+	  { Type ControlValue } 
+	  { FromNode
+	      { MappingName ControlMap }
+	      { Cell 
+		  { Hsect 1 } 
+		  { Vsect VSECT }
+		  { Row 2 }
+		  { Col COL } } }
+	  { ToNode
+	      { MappingName ControlCombinationMap }
+	      { Row 
+		  { Hsect HSECT } 
+		  { Vsect VSECT }
+		  { Row ROW } } } } } 
+    { ValidValues
+	{ LabelFunc "control_value_item_choice_func();" }
+	{ DoCheck False }
+    }
+}
+
+CellType 105 ProcessActivationCell
+{
+  { Semantics
+      { LinkMapping
+	  { MappingName ProcessActivationMap }
+	  { MappingName ControlSpecMap }
+	  { Name 
+              { LabelFunc SE_table_label_func } }
+	  // precond. not in 5.1
+	  { Precondition { LabelSelector Label } }
+	  { Type ProcessActivation } 
+	  { FromNode
+	      { MappingName CombinationMap }
+		{ Row 
+		  { Hsect HSECT } 
+		  { Vsect VSECT } 
+		  { Row ROW } } }
+	  { ToNode
+	      { MappingName ProcessMap }
+		{ Cell 
+		  { Hsect 1 } 
+		  { Vsect VSECT }
+		  { Row 2 }
+		  { Col COL } } } } }
+
+    { ValidValues
+	{ LabelFunc "default_value_choice_func();" }
+        { DoCheck False }
+    }
+}
+
+CellType 106 ProcessTableProcessActivationCell
+{
+  { Semantics
+      { LinkMapping
+	  { MappingName ProcessActivationMap }
+	  { MappingName ControlSpecMap }
+	  { Name 
+              { LabelFunc SE_table_label_func } }
+	  // precond. not in 5.1
+	  { Precondition { LabelSelector Label } }
+	  { Type ProcessActivation } 
+	  { FromNode
+	      { MappingName CombinationMap }
+		{ Row 
+		  { Hsect HSECT } 
+		  { Vsect 1 } 
+		  { Row ROW } } }
+	  { ToNode
+	      { MappingName ProcessMap }
+		{ Cell 
+		  { Hsect 1 } 
+		  { Vsect VSECT }
+		  { Row 2 }
+		  { Col COL } } } } } }
+
+TableType 103 ProcessActivationMatrix
+{ 
+  { Label "Process Activation Matrix" } 
+  { SyntaxCheckFunc ProcessActivationMatrixCheckSyntax }
+  { Initialize 
+      { Secured 
+	  { ActivateProcessHsect 1 }  
+	  { ControlHsect 2 }
+	  { ControlInVsect 1 }
+	  { ProcessVsect 2 } 
+    	  { ProcessRow 2 } 
+	  { ControlQualifierVsect 3 } } 
+      { Unsecured
+	  { N 3 } } }
+  { TopBorder { Thickness Thick } }
+  { LeftBorder { Thickness Thick } }
+  { BottomBorder { Thickness Thick } } 
+  { RightBorder { Thickness Thick } }
+  { HsectBorder { Double True } }
+  { Hsect 
+      { Label "Processes" }
+      // ECR 7268 due to bug on "Delete Cells" option, I discovered this one and 
+      // correct it by adding the Frozen option to avoid removing label in this table
+      { Frozen True}
+
+      { Vsect 
+      	  { Label "Control Ins" }
+	  { ReadOnly True }
+          // ECR 7268 due to bug on "Delete Cells" option, 
+          // I discovered this one and correct it by adding 
+          // the Frozen option to avoid adding "ControlIn" columns in this table
+          { Frozen True}
+	  { Row 
+	      { Cell 
+		  { ReadOnly True }
+		  { Vspan True }
+		  { Shading Shade2 }
+                  { Bold True }
+		  { Label "Control In" } } } }
+      { Vsect 
+      	  { Label "Process Activations" }
+	  { NumCols N }
+	  { Row
+	      { Cell
+	          { ReadOnly True }
+		  { Hspan True }
+		  { Shading Shade2 }
+                  { Bold True }
+		  { Label "Activate Processes" } } }
+ 	  { Row
+	      { Cell 
+		  { Shading Shade1 }
+                  { Bold True }
+		  { RepeatToEnd True }
+		  { Type ProcessCell } } } }
+      { Vsect 
+      	  //{ Label "Control In Qualifiers" }
+      	  { Label "Unused" }
+          { Hidden True }
+          { Frozen True }
+	  { ReadOnly True }
+	  { NumCols 1 } 
+	  { NumVisCols 0 } 
+	  { Row 
+	      { Cell 
+	          { ReadOnly True }
+		  { Vspan True }
+		  { Shading Shade2 }
+                  { Bold True }
+		  //{ Label "Qualifiers" } 
+		  { Label "Unused" } } } } }
+
+  { Hsect 
+      { Label "Control Ins/Combinations" }
+      { NumRows N }
+      { Vsect 
+	  { Row 
+	      { RepeatToEnd True }
+	      { Cell
+		  { Shading Shade1 }
+                  { Bold True }
+		  { Type ControlInCell } } } }
+      { Vsect 
+	  { Row 
+	      { RepeatToEnd True }
+	      { Type ProcessRow }
+	      { Cell
+		  { RepeatToEnd True }
+		  { Type ProcessActivationCell } } } } 
+      { Vsect 
+      	  { Label "Control In Qualifiers" }
+      	  { Label "Unused" }
+          { Hidden True }
+          { Frozen True }
+          //ECR 7268 - change { ReadOnly True } for { ReadOnly False } to permit
+          //to remove columns in Process Activation Matrix
+          { ReadOnly False }
+	  { NumCols 1 } 
+	  { NumVisCols 0 } 
+	  { Row 
+              { RepeatToEnd True }
+	      { Cell 
+                  { Type ControlInQualifierCell } } } } } }
+
+RowType 103 ProcessRow
+{
+  { Semantics 
+      { NodeMapping
+	  { MappingName ProcessCombinationMap }
+	  { MappingName ControlSpecMap }
+	  { MappingName CombinationMap }
+	  { Name
+	      { LabelSelector Id } }
+	  { Type ProcessCombination } }
+      { LinkMapping
+	  { MappingName DefinitionMap }
+	  { Type Definition } 
+	  { FromNode
+	      { MappingName ActivationMap }
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect 1 }
+		  { Row ROW }
+		  { Col 1 } } }
+	  { ToNode
+	      { MappingName ProcessCombinationMap }
+	      { Row 
+		  { Hsect HSECT } 
+		  { Vsect VSECT }
+		  { Row ROW } } } } } }
+
+//
+// sequential machines begin here 
+//
+
+TableType 104 StateTransitionTable
+{ 
+  { Label "State Transition Table" } 
+  { SyntaxCheckFunc StateTransitionTableCheckSyntax }
+  { Initialize 
+      { Secured 
+	  { STTHsect 2 }
+	  { STTVsect 1 }
+	  { STTCurrentStateCol 1 }
+	  { STTEventCol 2 }
+	  { STTActionCol 3 }
+          { STTNextStateCol 4 } }
+      { Unsecured
+	  { N 3 } } }
+
+  { HsectBorder { Double True } }
+  { TopBorder { Thickness Thick } }
+  { BottomBorder { Thickness Thick } }
+  { LeftBorder { Thickness Thick } }
+  { RightBorder { Thickness Thick } }
+  // { EmptyBorder { Visible False } }
+  { Hsect 
+      { Label "Headers" }
+      { Shading Shade1 }
+      { Frozen True }
+      { ReadOnly True }
+      //{ Scrollbar False }            
+      { Vsect 
+    	  { Label "Data" }
+	  { Frozen True }
+	  { Row 
+	      { Cell 
+                  { Bold True }
+		  { Label "Current\nState" } }
+	      { Cell 
+                  { Bold True }
+		  { Label "Event" } }
+	      { Cell 
+                  { Bold True }
+		  { Label "Action" } }
+	      { Cell 
+                  { Bold True }
+		  { Label "Next\nState" } } } } }
+  { Hsect 
+      { Label "Data" }
+      { NumRows N }
+      { Vsect 
+	  { Label "Data" }
+	  { Row { RepeatToEnd True }
+	    { Cell 
+		{ Type CurrentStateCell } }
+	    { Cell 
+		{ Type EventCell } }
+	    { Cell 
+		{ Type ActionCell } }
+	    { Cell 
+		{ Type NextStateCell } } } } } }
+
+CellType 107 CurrentStateCell
+{
+    { Semantics
+	{ NodeMapping
+	    { MappingName StateMap }
+	    { MappingName SteMap }
+	    { MappingName ControlSpecMap }
+	    { Name
+                { LabelFunc SE_table_label_func } }
+	    { Precondition { LabelSelector Label } }
+	    { Type State } } 
+    }
+    { Methods
+	{ Navigation 
+	    { Name State }
+	    { Label "State on State Transition Diagram" }
+	    { MappingName StateMap }
+	    { Query "node_ref[node_id == ${node.id} && file[SteDiagram]]" }
+	}
+    }
+    { ValidValues
+	{ LabelFunc "state_value_choice_func();" }
+	{ DoCheck False }
+    }
+}
+
+CellType 108 EventCell
+{
+    { Semantics
+	{ NodeMapping
+	    { MappingName EventMap }
+	    { MappingName SteMap }
+	    { MappingName ControlSpecMap }
+            { InverseMapFunc se_event_inverse_map_func }
+	    { Name 
+                { LabelFunc SE_table_label_func } }
+	    { Precondition { LabelSelector Label } }
+	    { Type Event } } } 
+    { ValidValues
+	{ LabelFunc "event_value_choice_func();" }
+	{ DoCheck False }
+    }
+}
+
+CellType 109 ActionCell
+{
+    { Semantics
+	{ NodeMapping
+	    { MappingName ActionMap }
+	    { MappingName ActivationMap }
+	    { MappingName SteMap }
+	    { MappingName ControlSpecMap }
+	    { Name
+                { LabelFunc SE_table_label_func }
+		{ Required False } }
+	    { Precondition { LabelSelector Label } }
+	    { Type Action } } }
+    { ValidValues
+	{ LabelFunc "action_value_choice_func();" }
+	{ DoCheck False }
+    }
+}
+ 
+CellType 110 NextStateCell
+{
+  { Semantics
+      { NodeMapping
+	  { MappingName NextStateMap }
+	  { MappingName SteMap }
+	  { MappingName ControlSpecMap }
+	  { Name
+              { LabelFunc SE_table_label_func } }
+	  { Precondition { LabelSelector Label } }
+	  { Type State } 
+	}
+      { LinkMapping 
+	  { MappingName Transition }
+	  { Type Transition }
+	  { InverseMapFunc se_no_op_link_map_func } 
+	  { Name 
+              { LabelFunc SE_table_label_func } 
+	      { Cell
+		  { Hsect STTHsect } 
+		  { Vsect STTVsect }
+		  { Row ROW }
+		  { Col STTEventCol } } }
+	  { FromNode
+	      { MappingName StateMap }
+	      { Cell 
+		  { Hsect STTHsect } 
+		  { Vsect STTVsect }
+		  { Row ROW }
+		  { Col STTCurrentStateCol } } }
+	  { ToNode
+	      { MappingName NextStateMap }
+	      { Cell 
+		  { Hsect STTHsect } 
+		  { Vsect STTVsect }
+		  { Row ROW }
+		  { Col STTNextStateCol } } } 
+	}
+      { CntxMapping 
+	  { MappingName ActionInstanceMap }
+	  { Name { LabelFunc stt_action_instance_name } }
+	  { Type ActionInstance }
+	  { InverseMapFunc se_no_op_cntx_map_func } 
+	  { Link 
+	      { MappingName Transition }
+	      { Cell
+		  { Hsect STTHsect } 
+		  { Vsect STTVsect }
+		  { Row ROW }
+		  { Col COL } } } } } 
+    { ValidValues
+	{ LabelFunc "state_value_choice_func();" }
+	{ DoCheck False }
+    }
+}
+
+
+TableType 105 StateEventMatrix
+{ 
+  { Label "State Event Matrix" } 
+  { SyntaxCheckFunc StateEventMatrixCheckSyntax }
+  { Initialize 
+      { Secured 
+	  { SEMEventHsect 1 }
+	  { SEMEventVsect 2 }
+	  { SEMStateActionHsect 2 }
+	  { SEMStateVsect 1 }
+	  { SEMActionVsect 2 } }
+      { Unsecured
+	  { N 3 } } }
+  { TopBorder { Thickness Thick } }
+  { LeftBorder { Thickness Thick } }
+  { BottomBorder { Thickness Thick } } 
+  { RightBorder { Thickness Thick } }
+  { HsectBorder { Double True } }
+
+  { Hsect 
+      { Label "Events" }
+      // ECR 7268 due to bug on "Delete Cells" option, I discovered this one and 
+      // correct it by adding the Frozen option to avoid removing label in this table
+      { Frozen True}
+
+      { Vsect 
+    	  { Label "States" }
+      // ECR 7268 due to bug on "Delete Cells" option, I discovered this one and 
+      // correct it by adding the Frozen option to avoid adding "State" columns in this table
+      { Frozen True}
+
+	  { Row 
+	      { Cell 
+		  { Vspan True }
+		  { Shading Shade2 }
+                  { Bold True }
+		  { ReadOnly True } 
+		  { Label "State" } } } }
+      { Vsect 
+    	  { Label "Events" }
+	  { NumCols N }
+	  { Row 
+	      { Cell 
+		  { Hspan True } 
+		  { Shading Shade2 }
+                  { Bold True }
+		  { ReadOnly True } 
+		  { Label "Event" } } }
+	  { Row
+	      { Cell
+		  { RepeatToEnd True }
+		  { Shading Shade1 }
+                  { Bold True }
+		  { Type EventCell } } } } }
+  { Hsect 
+      { Label "States/Combinations" }
+      { Vsect 
+	  { Row 
+              { RepeatToEnd True }
+	      { Cell
+		  { Shading Shade1 }
+                  { Bold True }
+		  { Type CurrentStateCell } } } }
+      { Vsect
+	  { NumCols N }
+	  { Row
+              { RepeatToEnd True }
+	      { Cell 
+		  { RepeatToEnd True }
+		  { Type ActionAndNextStateCell }
+                  { Splitting Horizontal }
+		  { InteriorBorder { Pattern Dotted } } } } } } }
+
+
+CellType 111 ActionAndNextStateCell
+{ { Semantics
+      { NodeMapping
+	  { MappingName ActionMap }
+	  { MappingName SteMap }
+	  { MappingName ControlSpecMap }
+	  { Name
+	      { LabelSelector Label1 } }
+	  { Precondition { LabelSelector Label1 } }
+	  { Type Action } }
+      { NodeMapping
+	  { MappingName NextStateMap }
+	  { Name
+	      { LabelSelector Label2 } }
+	  { Precondition { LabelSelector Label2 } }
+	  { Type State } }
+      { LinkMapping 
+	  { MappingName Transition }
+	  { Type Transition }
+	  { InverseMapFunc se_no_op_link_map_func } 
+	  { Name 
+              { LabelFunc SE_table_label_func }
+	      { Cell
+		  { Hsect 1 } 
+		  { Vsect VSECT }
+		  { Row 2 }
+		  { Col COL } } }
+	  { FromNode
+	      { MappingName StateMap }
+	      { Cell 
+		  { Hsect HSECT } 
+		  { Vsect 1 }
+		  { Row ROW }
+		  { Col 1 } } }
+	  { ToNode
+	      { MappingName NextStateMap }
+	      { Cell 
+		  { Hsect HSECT } 
+		  { Vsect VSECT }
+		  { Row ROW }
+		  { Col COL } } } }
+      { CntxMapping 
+	  { MappingName ActionInstanceMap }
+	  { Name 
+	  { LabelFunc sem_action_instance_name } 
+          { InverseMapFunc se_no_op_cntx_map_func } }
+	  { Type ActionInstance }
+	  { Link 
+	      { MappingName Transition }
+	      { Cell
+		  { Hsect HSECT } 
+		  { Vsect VSECT }
+		  { Row ROW }
+		  { Col COL } } } } } }
+
+
+TableType 106 EventLogicTable
+{ 
+  { Label "Event Logic Table" } 
+  { SyntaxCheckFunc EventLogicTableCheckSyntax }
+  { Initialize 
+    { Secured
+    	{ ControlHsect 1 }
+        { ControlInVsect 1 } 
+        { EventVsect 2 } 
+        { ControlQualifierHsect 3 } }
+    { Unsecured 
+      	{ M 2 } { N 2 } } }
+  { TopBorder { Thickness Thick } }
+  { LeftBorder { Thickness Thick } }
+  { BottomBorder { Thickness Thick } } 
+  { RightBorder { Thickness Thick } }
+  { HsectBorder { Double True } }
+
+  { Hsect 
+      { Label "Controls" }
+      // ECR 7268 due to bug on "Delete Cells" option, I discovered this one and 
+      // correct it by adding the Frozen option to avoid removing label in this table
+      { Frozen True}
+
+      { Vsect 
+    	  { Label "Control Ins" }
+	  { NumCols M }
+	  { Row
+	      { Cell 
+		  { Hspan True }
+		  { Shading Shade2 }
+                  { Bold True }
+                  // ECR 7268 due to bug on "Delete Cells" option, 
+                  // I discovered this one and correct it by 
+                  // adding the ReadOnly option to keep the label in this table
+                  { ReadOnly True}
+		  { Label "Control In" } } }
+	  { Row
+	      { Cell
+		  { RepeatToEnd True }
+		  { Shading Shade1 }
+                  { Bold True }
+		  { Type ControlInCell } } } }
+      { Vsect 
+    	  { Label "Events" }
+	  { NumCols N }
+	  { Row 
+	      { Cell 
+		  { Hspan True }
+		  { Shading Shade2 }
+                  { Bold True }
+                  // ECR 7268 due to bug on "Delete Cells" option, 
+                  // I discovered this one and correct it by adding
+                  // the ReadOnly option to keep the label in this table
+                  { ReadOnly True}
+		  { Label "Event" } } }
+	  { Row
+	      { Cell
+		  { RepeatToEnd True }
+		  { Shading Shade1 }
+                  { Bold True }
+		  { Type EventCell } } } } }
+
+  { Hsect 
+      { Label "Combinations" }
+      { NumRows N }
+      { Vsect 
+	  { Row 
+	      { RepeatToEnd True }
+	      { Type ControlInRow }
+	      { Cell 
+		  { RepeatToEnd True }
+		  { Type ControlValueCell } } } }
+      { Vsect 
+	  { Row 
+	      { RepeatToEnd True }
+	      { Cell 
+		  { RepeatToEnd True }
+		  { Type EventDefinitionCell } } } } } 
+
+  // Qualification section
+  { Hsect
+      //{ Label "Control Qualifiers" }
+      { Label "Unused" }
+      { Frozen True }
+      //ECR 7268 - change { ReadOnly True } for { ReadOnly False } to permit
+      //to remove columns in Event Logic table
+      { ReadOnly False }
+      { Hidden True }
+      { NumRows 1 }
+      { NumVisRows 0 }
+      { Vsect
+          //{ Label "Control In Qualifiers" }
+          { Label "Unused" }
+          { NumCols M }
+          { Row
+              { Cell
+                  { RepeatToEnd True }
+                  { Type ControlInQualifierCell } } } } } } 
+
+
+CellType 112 EventDefinitionCell
+{
+  { Semantics 
+      { LinkMapping
+	  { MappingName DefinitionMap }
+	  { MappingName ControlSpecMap }
+	  { Name 
+	      { LabelSelector Label } }
+	  { Precondition { LabelSelector Label } }
+	  { Type Definition } 
+	  { FromNode
+	      { MappingName EventMap }
+	      { Cell
+		  { Hsect 1 } 
+		  { Vsect VSECT }
+		  { Row 2 } 
+		  { Col COL } } }
+	  { ToNode
+	       { MappingName ControlCombinationMap }
+	       { Row 
+		   { Hsect HSECT } 
+		   { Vsect 1 }
+		   { Row ROW } } } } } 
+
+    { ValidValues
+	{ LabelFunc "default_value_choice_func();" }
+        { DoCheck False }
+    }
+
+}
+
+TableType 107 ActionLogicTable
+{ 
+  { Label "Action Logic Table" }
+  { SyntaxCheckFunc ActionLogicTableCheckSyntax }
+  { Initialize 
+      { Secured 
+    	  { ControlHsect 1 }
+	  { ProcessVsect 2 }
+	  { ALTControlOutVsect 3 } 
+	  //{ ControlOutVsect 3 } 
+    	  { ProcessRow  2 } 
+          { ControlQualifierHsect 3 } }
+      { Unsecured
+	  { M 2 } { N 2 } } }
+  { TopBorder { Thickness Thick } }
+  { LeftBorder { Thickness Thick } }
+  { BottomBorder { Thickness Thick } } 
+  { RightBorder { Thickness Thick } }
+  { HsectBorder { Double True } }
+
+  { Hsect 
+      { Label "Controls" }
+      // ECR 7268 due to bug on "Delete Cells" option, I discovered this one and 
+      // correct it by adding the Frozen option to avoid removing label in this table
+      { Frozen True}
+      { Vsect 
+	  { ReadOnly True } 
+    	  { Label "Actions" }
+	  //{ NumCols 1 }
+	  //{ NumVisCols 1 }
+
+          // ECR 7268 due to bug on "Delete Cells" option, 
+          // I discovered this one and correct it by adding 
+          // the Frozen option to avoid adding "Action" columns in this table
+          { Frozen True}
+	  { Row
+	      { Cell 
+		  { Vspan True }
+		  { Shading Shade2 }
+                  { Bold True }
+		  { Label "Action" } } } }
+      { Vsect 
+    	  { Label "Processes" }
+	  { NumCols M }
+	  { Row 
+	      { Cell 
+		  { Hspan True }
+	          { ReadOnly True } 
+		  { Shading Shade2 }
+                  { Bold True }
+		  { Label "Activate Processes" } } }
+	  { Row 
+	      { Cell 
+		  { RepeatToEnd True }
+		  { Shading Shade1 }
+                  { Bold True }
+		  { Type ProcessCell } } } }
+      { Vsect 
+    	  { Label "Control Outs" }
+	  { NumCols N }
+	  { Row
+	      { Cell 
+		  { Hspan True }
+	          { ReadOnly True } 
+		  { Shading Shade2 }
+                  { Bold True }
+		  { Label "Control Out" } } }
+	  { Row 
+	      { Cell 
+		  { RepeatToEnd True }
+		  { Shading Shade1 }
+                  { Bold True }
+		  { Type ControlOutCell } } } } }
+
+  { Hsect 
+      { Label "Combinations" }
+      { NumRows N }
+      { Vsect 
+	  { Row 
+	      { RepeatToEnd True }
+	      { Cell 
+		  { Shading Shade1 }
+                  { Bold True }
+		  { Type ActionCell } } } }
+      { Vsect 
+	  { Row 
+	      { RepeatToEnd True }
+	      { Type ProcessRow }
+	      { Cell 
+		  { RepeatToEnd True }
+		  { Type ProcessActivationCell } } } }
+      { Vsect 
+	  { Row 
+	      { RepeatToEnd True }
+	      { Type ActionRow }
+	      { Cell 
+		  { RepeatToEnd True }
+		  { Type ControlValueCell } } } } } 
+
+  // Qualification section
+  { Hsect
+      //{ Label "Control Qualifiers" }
+      { Label "Unused" }
+      { Frozen True }
+      { ReadOnly True }
+      //{ Scrollbar False }
+      { Hidden True }
+      { NumRows 1 }
+      { NumVisRows 0 }
+      { Vsect
+          //{ Label "Control In Qualifiers" }
+          { Label "Unused" }
+          { Row
+              { Cell
+                  { RepeatToEnd True }
+                  { Type ControlInQualifierCell } } } } } }
+
+RowType 104 ActionRow
+{
+  { Semantics 
+      { NodeMapping
+	  { MappingName ControlCombinationMap }
+	  { MappingName ControlSpecMap }
+	  { Name
+	      { LabelSelector Id } }
+	  { Type ControlCombination } }
+      { LinkMapping
+	  { MappingName DefinitionMap }
+	  { Type ActionControlDefinition } 
+	  { FromNode
+	      { MappingName ActionMap }
+	      { Cell 
+		  { Hsect HSECT } 
+		  { Vsect 1 }
+		  { Row ROW }
+		  { Col 1 } } }
+	  { ToNode
+	      { MappingName ControlCombinationMap }
+	      { Row 
+		  { Hsect HSECT } 
+		  { Vsect VSECT }
+		  { Row ROW } } } } } }
+
+TypeSet StateTransitionTypes
+{
+    CurrentStateCell
+    ActionCell
+    EventCell
+    NextStateCell
+    ActionAndNextStateCell
+}
+
+CellType StateTransitionTypes
+{
+    { Methods
+    	{ Navigation
+    	    { Name SteDiagram }
+    	    { Label "State Transition Diagram" }
+    	    { MappingName SteMap }
+    	    { Query "file[SteDiagram && name == '${file}']" }
+	    { FailureCmd CreateSteDiagram }
+    	}
+    }
+}
+
+Command CreateSteDiagram
+{
+    { PrintName "Create State Transition Diagram?" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { StartMessage "Executing Create State Transition Diagram" }
+    { FailureMessage "Create State Transition Diagram failed." }
+    { SuccessMessage "Create State Transition Diagram completed." }
+    //{ OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed ste -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"InitializeSteDiagram(${file.id});\"'" }
+ //   }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"ste\",\"InitializeSteDiagram(${file.id});\");" }
+}
+
+Command CreateDseDiagram
+{
+    { PrintName "Create Data Structure Diagram?" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { StartMessage "Executing Create Data Structure Diagram" }
+    { FailureMessage "Create Data Structure Diagram failed." }
+    { SuccessMessage "Create Data Structure Diagram completed." }
+    //{ OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed dse -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"InitializeDseDiagramFromId(${node.id});\"'" }
+ //   }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"dse\",\"InitializeDseDiagramFromId(${node.id});\");"}
+}
+
+TypeSet AllTypes
+{
+    StateTransitionTypes
+    ControlInCell
+    ControlOutCell
+    ProcessCell
+    ControlValueCell
+    ProcessActivationCell
+    ProcessTableProcessActivationCell
+    EventDefinitionCell
+}
+
+CellType AllTypes
+{
+    { Methods
+    	{ Navigation
+    	    { Name ControlSpec }
+    	    { Label "Cspec Bar on Data Flow Diagram" }
+    	    { MappingName ControlSpecMap }
+    	    { Query "node_ref[node[Cspec] && file[DfeDiagram && name == '${file}']]" }
+    	}
+    }
+}
+
+TypeSet ControlCells
+{
+    ControlInCell
+    ControlOutCell
+}
+
+
+
+CellType ControlCells
+{
+    { Methods
+	{ Navigation 
+	    { Name DataDefinition }
+	    { Label "Data Definition" }
+	    { MappingName ControlMap }
+	    { TargetFunc "CseFindDataDefinition(\"${node.name}\");" }
+	    { FailureCmd CreateDseDiagram }
+    	} 
+    }
+}
+
+Include "rules/gte_menu_bar.std"
+Include "rules/gte_annot_menu.std"
+Include "rules/se_object_rename.rules"
+Include "ct/rules/re_navigate.prop"
+Include "se/rules/feature.rule"
+
+
+Menu MenuBarEdit
+{
+    { MenuEntry
+	{ Label "Edit &Cspec Group Annotation..." }
+	{ Builtin "FileGroupAnnotEdit" }
+	{ PlaceAfter FileAnnotEdit }
+    }
+// fix for bug 2461 
+//Menu Options
+    { MenuEntry
+	{ Name TableType }
+	{ Label "&Table Type..." }
+	{ Builtin "TableTypePropsShow" }
+//	{ PlaceAfter Editor }
+    }
+}
+
+Include "rules/gte_edit_menu.std"
+
+Menu ProductMenu
+{
+    { Show False }
+    { InMenuBar False }
+}
+
+
+//Menu Repository
+Menu Tools
+{
+
+    { MenuEntry  
+        { Name CheckSemantics }
+	{ Label "Check Table &Semantics" } 
+        { Builtin "EditorQrlEval \"checkCseSemanticsFromCse(\\"${file}\\", \\"${file.type}\\");\"" }
+    }
+    { MenuEntry  
+        { Name CheckCspecSemantics }
+	{ PlaceAfter CheckSemantics }
+	{ Label "&Check Cspec Semantics" }
+        { Builtin "EditorQrlEval \"checkCseSemanticsFromCse(\\"${file}\\", \\"cspec\\");\"" }
+    }
+
+    { Spacer 
+        { Name CseSpacer1 } 
+	{ PlaceAfter CheckCspecSemantics }
+    }
+
+    { MenuEntry  
+        { Name SetColumnValues }
+	{ PlaceAfter CseSpacer1 }
+	{ Label "Set Column &Values from Data Definition" }
+	{ Builtin "EditorQrlEval \"SetColumnValues();\"" }
+	{ ActiveFunc idehook_set_column_values_active_func }
+    }
+//    { MenuEntry
+//        { Name QualifyControl }
+//	{ PlaceAfter SetColumnValues }
+//        { Label "&Qualify Control" }
+//	{ Builtin "EditorQrlEval \"QualifyCell();\"" }
+//        { ActiveFunc idehook_cse_qualify_active_func }
+//    }
+
+    { Spacer 
+        { Name CseSpacer2 } 
+	{ PlaceAfter SetColumnValues }
+    }
+}
+
+Menu Navigation
+{
+    { InMenuBar True }
+// fix for spr 2789 - change the label
+    { Label "&GoTo" }
+    { Pin True }
+    { GenerationFunc idehook_table_methods_main_generation_func_by_type }
+    { Tag "Navigation" }
+}
+
+//ECR 3792 begin
+Menu NavigationSubmenu
+{
+    { GenerationFunc idehook_table_methods_main_generation_func_by_type }
+    { Tag "Navigation" }
+
+}
+//ECR 3792 end
+
+
+IncludeIfExists "user/se/rules/user_cse.rules"
+
+PassWord "EA2A2E41"
+

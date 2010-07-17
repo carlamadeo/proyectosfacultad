@@ -1,0 +1,28 @@
+/* XPM */
+static char* flow_chart_diagrams_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 6 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #000000	c #ffff00",
+"o	m #000000	c #808080",
+"x	m #ffffff	c #c0c0c0",
+/* pixels */
+"................",
+"................",
+"................",
+"XXXXXX....XXXX..",
+"XOOOOXo..XOOOOX.",
+"X x xXXXXX x xXo",
+"XXXXXXo...XXXXoo",
+".ooXooo....oXoo.",
+"...Xo.......Xo..",
+"XXXXXX....XXXX..",
+"XOOOOXXXXXOOOOX.",
+"X x xXo..X x xXo",
+"XXXXXXo...XXXXoo",
+".oooooo....oooo.",
+"................",
+"................"};

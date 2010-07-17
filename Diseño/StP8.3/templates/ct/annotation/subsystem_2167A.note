@@ -1,0 +1,19 @@
+//
+//	FILE:	subsystem_2167A.note
+//
+
+Note 801580
+{
+	{ AppType 2167AMappingNote }
+        { HelpText "The 2167A mapping for the subsystem."}
+	{ PrintName "2167A Mapping"}
+	{ Bounds { Min 0 } { Max 1 } }
+	{ Item
+		{ AppType OMTSubsystem2167AMappingItem }
+                { HelpText "Maps the Subsystem to a 2167A element." }
+		{ PrintName "Mapping" }
+		{ InitValue "CSCI" }
+		{ IsKey True}
+		{ Bounds { Min 1 } { Max 1 } }
+	}
+}

@@ -1,0 +1,26 @@
+/* XPM */
+static char* find_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 4 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #ffffff	c #c0c0c0",
+/* pixels */
+"................",
+"...XXX...XXX....",
+"...X X...X X....",
+"...XXX...XXX....",
+"..XXXXX.XXXXX...",
+"..X XXX.X XXX...",
+".XXXXXXXXXXXXX..",
+"XX XXXOXX XXXXX.",
+"XX XXXOXX XXXXX.",
+"XX XXXXXX XXXXX.",
+"XXXXXXX.XXXXXXX.",
+"X XXX.....X XXX.",
+"X XXX.....X XXX.",
+"XXXXX.....XXXXX.",
+"................",
+"................"};

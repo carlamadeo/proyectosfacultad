@@ -1,0 +1,25 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Note 800108
+{
+    { AppType TriggerColumn }
+    { HelpText "The In Trigger note lets you add items for declaring in which Update Trigger a column appears." }
+    { PrintName "In Trigger" }
+    { Bounds { Min 0 } }
+    { Item
+	{ AppType DbmsObjectName }
+	{ HelpText "The Trigger Name item names the Update Trigger to which the object being annotated belongs. The value of this item should be the name of the Trigger specified for the corresponding entity (see the Trigger Name item under the Trigger note)." }
+	{ PrintName "Trigger Name" }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ IsKey True }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_trigger_column.note"

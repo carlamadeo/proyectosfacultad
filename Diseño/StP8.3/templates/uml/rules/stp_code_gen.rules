@@ -1,0 +1,2850 @@
+//
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+
+// common property sheets
+
+Global 1 ImplementTypesAndInterfaces
+{
+    { Properties
+        { Choice
+            { Name "types_and_interfaces_choice" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "types_and_interfaces_choice_item" }
+                { Label "Generate Code for Types/Interfaces" }
+                { OnValue "-x generate_types_and_interfaces 'True'" }
+                { OffValue "-x generate_types_and_interfaces 'False'" }
+                { Init On }
+                { Activation
+                    { Target "type_attributes_choice" }
+                    { On Activate }
+                }
+                { Activation
+                    { Target "type_attributes_choice" }
+                    { Off InActivate }
+                }
+            }
+        }
+        { Choice
+            { Name "type_attributes_choice" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "type_attributes_choice_item" }
+                { Label "Generate Type Attributes" }
+                { OnValue "-x generate_type_attributes 'True'" }
+                { OffValue "-x generate_type_attributes 'False'" }
+                { Init On }
+            }
+        }
+        { Group
+            { Name "types_and_interfaces_group" }
+            { Type Vertical }
+            { VerticalSpacing 1 }
+            { HorizontalAlign AlignLabels }
+            { Members ( types_and_interfaces_choice type_attributes_choice) }
+        }
+    }
+}
+
+Global 1 Comments
+{
+    { Properties
+        { Choice
+            { Name "comments" }
+            { Label "Generate Comments for:" }
+            { Type CheckBox }
+            { Orientation Vertical }
+            // ECR 5846 { Resizable ResizeAny }
+            { ChoiceItem
+                { Name "class_comment" }
+                { Label "Classes" }
+                { OnValue " -x comment_classes 'True' " }
+                { OffValue " -x comment_classes 'False' " }
+                { Init Off }
+            }
+            { ChoiceItem
+                { Name "attr_comment" }
+                { Label "Attributes" }
+                { OnValue " -x comment_attributes 'True' " }
+                { OffValue " -x comment_attributes 'False' " }
+                { Init Off }
+            }
+            { ChoiceItem
+                { Name "op_comment" }
+                { Label "Operations" }
+                { OnValue " -x comment_operations 'True' " }
+                { OffValue " -x comment_operations 'False' " }
+                { Init Off }
+            }
+        }
+    }
+}
+
+Global 1 FormatComments
+{
+    { Properties
+        { Choice
+            { Name "format_comments" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "format_comments" }
+                { Label "Format to:" }
+                { OnValue "-x format_comments 'True'" }
+                { OffValue "-x format_comments 'False'" }
+                { Init Off }
+                { Activation
+                    { Target "format_comments_line_length" }
+                    { On Activate }
+                }
+                { Activation
+                    { Target "format_comments_line_length" }
+                    { Off InActivate }
+                }
+            }
+        }
+        { Text
+            { Name "format_comments_line_length" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 4 }
+            { DispLength 4 }
+            { InitVal "80" }
+            { Resizable ResizeNone }
+        }
+        { Message
+            { Name "format_comments_characters" }
+            { Label " characters per line" }
+        }
+        { Group
+            { Name "format_comments_group" }
+            { VerticalAlign AlignCenter }
+            { Type Horizontal }
+            { HorizontalSpacing 0 }
+            { Members ( format_comments format_comments_line_length format_comments_characters ) }
+        }
+    }
+}
+
+Global 1 ExcludeExternal
+{
+    { Properties
+        { Choice
+            { Name "exclusions" }
+            { Type CheckBox }
+            { Orientation Vertical }
+            { Resizable ResizeAny }
+            { ChoiceItem
+                { Name "external" }
+                { Label "Ignore Classes Annotated As External" }
+                { OnValue " || (UmlClassIsImported & value='True') " }
+                { OffValue "" }
+                { Init On }
+            }
+        }
+    }
+}
+
+Global 1 ExcludeExternalPackageAndClass
+{
+    { Properties
+        { Choice
+            { Name "exclusions" }
+            { Label "Ignore External:" }
+            { Type CheckBox }
+            { Orientation Vertical }
+            { Resizable ResizeAny }
+            { ChoiceItem
+                { Name "package" }
+                { Label "Packages" }
+                { OnValue " || (UmlPackageIsImported & value='True') " }
+                { OffValue "" }
+                { Init On }
+            }
+            { ChoiceItem
+                { Name "class" }
+                { Label "Classes" }
+                { OnValue " || (UmlClassIsImported & value='True') " }
+                { OffValue "" }
+                { Init On }
+            }
+        }
+    }
+}
+
+// C++ property sheets
+
+Global 1 CxxDefaultOutputDirAndFileObjectsProperty
+{
+    { Properties
+        { Text
+            { Name "output_dir" }
+            { Label "Directory:" }
+            { Resizable ResizeAny}
+            { Type Text }
+            { MinLength 0 }
+            { MaxLength 300 }
+            { DispLength 60 }
+            { InitVal "${projdir}${system}/src_files" }
+        }
+        // ECR 3651
+        { Button
+            { Name "browse_for_output_dir" }
+            { Label "Choose" }
+            { Event
+                { Type Select }
+                { Callback "select_output_dir_callback" }
+            }
+        }
+        { Group
+            { Name "folder_group" }
+            { Label "" }
+            { Type Horizontal }
+            //ECR 6007 begin
+            //{ Resizable ResizeAny }
+            //{ ChildSizePolicy ResizeWidth }
+            //{ LayoutPolicy ResizeAny }
+            { HorizontalAlign AlignLabels }
+            //ECR 6007 end
+            { Members ( output_dir browse_for_output_dir ) }
+        }
+        // ECR 3651
+        { Choice
+            { Name "file_per_class" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "cc" }
+                { Label "One File Name Per Class" }
+                { OnValue "-x file_per_class 'True'" }
+                { OffValue "-x file_per_class 'False'" }
+                { Init On }
+                { Activation
+                    { Target "use_packages_in_filenames" }
+                    { On Activate }
+                }
+                { Activation
+                    { Target "use_packages_in_filenames" }
+                    { Off InActivate }
+                }
+                { Activation
+                    { Target "output_file" }
+                    { On InActivate }
+                }
+                { Activation
+                    { Target "output_file" }
+                    { Off Activate }
+                }
+                { Activation
+                    { Target "keep_old_classes" }
+                    { On InActivate }
+                }
+                { Activation
+                    { Target "keep_old_classes" }
+                    { Off Activate }
+                }
+            }
+        }
+        { Choice
+            { Name "use_packages_in_filenames" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "use_packages_in_filenames" }
+                { Label "Use Package Names in File Names" }
+                { OnValue "-x use_packages_in_filenames 'True'" }
+                { OffValue "-x use_packages_in_filenames 'False'" }
+                { Init Off }
+            }
+        }
+        { Text
+            { Name "output_file" }
+            { Label "File Name:" }
+            { Resizable ResizeWidth }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 100 }
+            { DispLength 15 }
+            { InitVal "" }
+        }
+        { Choice
+            { Name "keep_old_classes" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "keep_old_classes" }
+                { Label "Preserve Code From Other Classes" }
+                { OnValue "-x keep_old_classes 'True'" }
+                { OffValue "-x keep_old_classes 'False'" }
+                { Init Off }
+            }
+        }
+        { Group
+            { Name "output_file_subgroup1" }
+            { Type Vertical }
+            { VerticalSpacing 1 }
+            { HorizontalAlign AlignLabels }
+            { Resizable ResizeWidth }
+            { ChildSizePolicy ResizeWidth }
+            { Members ( file_per_class output_file ) }
+        }
+        { Group
+            { Name "output_file_subgroup2" }
+            { Type Vertical }
+            { VerticalSpacing 1 }
+            { HorizontalAlign AlignLabels }
+            { Resizable ResizeWidth }
+            { ChildSizePolicy ResizeWidth }
+            { Members (  use_packages_in_filenames keep_old_classes ) }
+        }
+        { Group
+            { Name "output_file_group" }
+            { Type Horizontal }
+            { HorizontalSpacing 20 }
+            { VariableColumn "0" }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeAny }
+            { HorizontalAlign AlignLabels }
+            { Members ( output_file_subgroup1 output_file_subgroup2 ) }
+        }
+    }
+}
+
+Global 1 CXXHeaderImplementationFileExtension
+{
+    { Properties
+        { Text
+            { Name "cxxheader" }
+            { Label "Interface (Header) File Extension:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".h" }
+            { Resizable ResizeNone }
+        }
+        { Text
+            { ParseCondition "!is_windows_platform();" }
+            { Name "cxximplementation" }
+            { Label "Implementation (Body) File Extension:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".C" }
+            { Resizable ResizeNone }
+        }
+        { Text
+            { ParseCondition "is_windows_platform();" }
+            { Name "cxximplementation" }
+            { Label "Implementation (Body) File Extension:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".cpp" }
+            { Resizable ResizeNone }
+        }
+        { Choice
+            { Name "cxxinlinechoice" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "cxxinlineinclass" }
+                { Label "Place Inline Functions Within Class Declaration" }
+                { OnValue "-x inlines_in_class 'True'" }
+                { OffValue "-x inlines_in_class 'False'" }
+                { Init Off }
+                { Activation
+                    { Target "cxxinline" }
+                    { On InActivate }
+                }
+                { Activation
+                    { Target "cxxinline" }
+                    { Off Activate }
+                }
+            }
+        }
+        { Text
+            { Name "cxxinline" }
+            { Label "Inline Functions File Extension:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".h" }
+            { Resizable ResizeNone }
+        }
+        { Group
+            { Name "inline_group" }
+            { Type Vertical }
+            { VerticalSpacing 1 }
+            { Resizable ResizeNone }
+            { HorizontalAlign AlignLabels }
+            { Members ( cxxinlinechoice cxxinline ) }
+        }
+    }
+}
+
+Global 1 CXXImplementAssociations
+{
+    { Properties
+        { Choice
+            { Name "implement_associations_using" }
+            { Label "For Associations Use Pattern Family:" }
+            { Type AbbrMenu }
+            { ChoiceItem
+                { Label "Default Template" }
+                { Value "-x implement_associations_using_pattern_family 'Default Template'" }
+            }
+            { ChoiceItem
+                { Label "Pointer/Instance" }
+                { Value "-x implement_associations_using_pattern_family 'Pointer/Instance'" }
+            }
+        }
+        { Group
+            { Name "associations" }
+            { Type Horizontal }
+            { HorizontalAlign AlignLabels }
+            { Members ( implement_associations_using ) }
+        }
+    }
+}
+
+//
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+
+// common property sheets
+
+Global 1 ImplementTypesAndInterfaces
+{
+    { Properties
+        { Choice
+            { Name "types_and_interfaces_choice" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "types_and_interfaces_choice_item" }
+                { Label "Generate Code for Types/Interfaces" }
+                { OnValue "-x generate_types_and_interfaces 'True'" }
+                { OffValue "-x generate_types_and_interfaces 'False'" }
+                { Init On }
+                { Activation
+                    { Target "type_attributes_choice" }
+                    { On Activate }
+                }
+                { Activation
+                    { Target "type_attributes_choice" }
+                    { Off InActivate }
+                }
+            }
+        }
+        { Choice
+            { Name "type_attributes_choice" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "type_attributes_choice_item" }
+                { Label "Generate Type Attributes" }
+                { OnValue "-x generate_type_attributes 'True'" }
+                { OffValue "-x generate_type_attributes 'False'" }
+                { Init On }
+            }
+        }
+        { Group
+            { Name "types_and_interfaces_group" }
+            { Type Vertical }
+            { Align Left }
+            { VerticalSpacing 1 }
+            { HorizontalAlign AlignLabels }
+            { Members ( types_and_interfaces_choice type_attributes_choice) }
+        }
+    }
+}
+
+Global 1 Comments
+{
+    { Properties
+        { Choice
+            { Name "comments" }
+            { Label "Generate Comments for:" }
+            { Type CheckBox }
+            { Orientation Vertical }
+            // ECR 5846 { Resizable ResizeAny }
+            { ChoiceItem
+                { Name "class_comment" }
+                { Label "Classes" }
+                { OnValue " -x comment_classes 'True' " }
+                { OffValue " -x comment_classes 'False' " }
+                { Init Off }
+            }
+            { ChoiceItem
+                { Name "attr_comment" }
+                { Label "Attributes" }
+                { OnValue " -x comment_attributes 'True' " }
+                { OffValue " -x comment_attributes 'False' " }
+                { Init Off }
+            }
+            { ChoiceItem
+                { Name "op_comment" }
+                { Label "Operations" }
+                { OnValue " -x comment_operations 'True' " }
+                { OffValue " -x comment_operations 'False' " }
+                { Init Off }
+            }
+        }
+    }
+}
+
+Global 1 FormatComments
+{
+    { Properties
+        { Choice
+            { Name "format_comments" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "format_comments" }
+                { Label "Format to:" }
+                { OnValue "-x format_comments 'True'" }
+                { OffValue "-x format_comments 'False'" }
+                { Init Off }
+                { Activation
+                    { Target "format_comments_line_length" }
+                    { On Activate }
+                }
+                { Activation
+                    { Target "format_comments_line_length" }
+                    { Off InActivate }
+                }
+            }
+        }
+        { Text
+            { Name "format_comments_line_length" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 4 }
+            { DispLength 4 }
+            { InitVal "80" }
+            { Resizable ResizeNone }
+        }
+        { Message
+            { Name "format_comments_characters" }
+            { Label " characters per line" }
+        }
+        { Group
+            { Name "format_comments_group" }
+            { VerticalAlign AlignCenter }
+            { Type Horizontal }
+            { HorizontalSpacing 0 }
+            { Members ( format_comments format_comments_line_length format_comments_characters ) }
+        }
+    }
+}
+
+Global 1 ExcludeExternal
+{
+    { Properties
+        { Choice
+            { Name "exclusions" }
+            { Type CheckBox }
+            { Orientation Vertical }
+            { Resizable ResizeAny }
+            { ChoiceItem
+                { Name "external" }
+                { Label "Ignore Classes Annotated As External" }
+                { OnValue " || (UmlClassIsImported & value='True') " }
+                { OffValue "" }
+                { Init On }
+            }
+        }
+    }
+}
+
+Global 1 ExcludeExternalPackageAndClass
+{
+    { Properties
+        { Choice
+            { Name "exclusions" }
+            { Label "Ignore External:" }
+            { Type CheckBox }
+            { Orientation Vertical }
+            { Resizable ResizeAny }
+            { ChoiceItem
+                { Name "package" }
+                { Label "Packages" }
+                { OnValue " || (UmlPackageIsImported & value='True') " }
+                { OffValue "" }
+                { Init On }
+            }
+            { ChoiceItem
+                { Name "class" }
+                { Label "Classes" }
+                { OnValue " || (UmlClassIsImported & value='True') " }
+                { OffValue "" }
+                { Init On }
+            }
+        }
+    }
+}
+
+// C++ property sheets
+
+Global 1 CxxDefaultOutputDirAndFileObjectsProperty
+{
+    { Properties
+        { Text
+            { Name "output_dir" }
+            { Label "Directory:" }
+            { Resizable ResizeAny}
+            { Type Text }
+            { MinLength 0 }
+            { MaxLength 300 }
+            { DispLength 60 }
+            { InitVal "${projdir}${system}/src_files" }
+        }
+        // ECR 3651
+        { Button
+            { Name "browse_for_output_dir" }
+            { Label "Choose" }
+            { Event
+                { Type Select }
+                { Callback "select_output_dir_callback" }
+            }
+        }
+        { Group
+            { Name "folder_group" }
+            { Label "" }
+            { Type Horizontal }
+            //ECR 6007 begin
+            //{ Resizable ResizeAny }
+            //{ ChildSizePolicy ResizeWidth }
+            //{ LayoutPolicy ResizeAny }
+            { HorizontalAlign AlignLabels }
+            //ECR 6007 end
+            { Members ( output_dir browse_for_output_dir ) }
+        }
+        // ECR 3651
+        { Choice
+            { Name "file_per_class" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "cc" }
+                { Label "One File Name Per Class" }
+                { OnValue "-x file_per_class 'True'" }
+                { OffValue "-x file_per_class 'False'" }
+                { Init On }
+                { Activation
+                    { Target "use_packages_in_filenames" }
+                    { On Activate }
+                }
+                { Activation
+                    { Target "use_packages_in_filenames" }
+                    { Off InActivate }
+                }
+                { Activation
+                    { Target "output_file" }
+                    { On InActivate }
+                }
+                { Activation
+                    { Target "output_file" }
+                    { Off Activate }
+                }
+                { Activation
+                    { Target "keep_old_classes" }
+                    { On InActivate }
+                }
+                { Activation
+                    { Target "keep_old_classes" }
+                    { Off Activate }
+                }
+            }
+        }
+        { Choice
+            { Name "use_packages_in_filenames" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "use_packages_in_filenames" }
+                { Label "Use Package Names in File Names" }
+                { OnValue "-x use_packages_in_filenames 'True'" }
+                { OffValue "-x use_packages_in_filenames 'False'" }
+                { Init Off }
+            }
+        }
+        { Text
+            { Name "output_file" }
+            { Label "File Name:" }
+            { Resizable ResizeAny }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 100 }
+            { DispLength 15 }
+            { InitVal "" }
+        }
+        { Choice
+            { Name "keep_old_classes" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "keep_old_classes" }
+                { Label "Preserve Code From Other Classes" }
+                { OnValue "-x keep_old_classes 'True'" }
+                { OffValue "-x keep_old_classes 'False'" }
+                { Init Off }
+            }
+        }
+        { Group
+            { Name "output_file_subgroup1" }
+            { Type Vertical }
+            { VerticalSpacing 1 }
+            { HorizontalAlign AlignLabels }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { Members ( file_per_class output_file ) }
+        }
+        { Group
+            { Name "output_file_subgroup2" }
+            { Type Vertical }
+            { VerticalSpacing 1 }
+            { HorizontalAlign AlignLabels }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { Members (  use_packages_in_filenames keep_old_classes ) }
+        }
+        { Group
+            { Name "output_file_group" }
+            { Type Horizontal }
+            { HorizontalSpacing 20 }
+            { VariableColumn "0" }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { Members ( output_file_subgroup1 output_file_subgroup2 ) }
+        }
+    }
+}
+
+Global 1 CXXHeaderImplementationFileExtension
+{
+    { Properties
+        { Text
+            { Name "cxxheader" }
+            { Label "Interface (Header) File Extension:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".h" }
+            { Resizable ResizeNone }
+        }
+        { Text
+            { ParseCondition "!is_windows_platform();" }
+            { Name "cxximplementation" }
+            { Label "Implementation (Body) File Extension:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".C" }
+            { Resizable ResizeNone }
+        }
+        { Text
+            { ParseCondition "is_windows_platform();" }
+            { Name "cxximplementation" }
+            { Label "Implementation (Body) File Extension:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".cpp" }
+            { Resizable ResizeNone }
+        }
+        { Choice
+            { Name "cxxinlinechoice" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "cxxinlineinclass" }
+                { Label "Place Inline Functions Within Class Declaration" }
+                { OnValue "-x inlines_in_class 'True'" }
+                { OffValue "-x inlines_in_class 'False'" }
+                { Init Off }
+                { Activation
+                    { Target "cxxinline" }
+                    { On InActivate }
+                }
+                { Activation
+                    { Target "cxxinline" }
+                    { Off Activate }
+                }
+            }
+        }
+        { Text
+            { Name "cxxinline" }
+            { Label "Inline Functions File Extension:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".h" }
+            { Resizable ResizeNone }
+        }
+        { Group
+            { Name "inline_group" }
+            { Type Vertical }
+            { VerticalSpacing 1 }
+            { Resizable ResizeNone }
+            { HorizontalAlign AlignLabels }
+            { Members ( cxxinlinechoice cxxinline ) }
+        }
+    }
+}
+
+Global 1 CXXImplementAssociations
+{
+    { Properties
+        { Choice
+            { Name "implement_associations_using" }
+            { Label "For Associations Use Pattern Family:" }
+            { Type AbbrMenu }
+            { ChoiceItem
+                { Label "Default Template" }
+                { Value "-x implement_associations_using_pattern_family 'Default Template'" }
+            }
+            { ChoiceItem
+                { Label "Pointer/Instance" }
+                { Value "-x implement_associations_using_pattern_family 'Pointer/Instance'" }
+            }
+        }
+        { Group
+            { Name "associations" }
+            { Type Horizontal }
+            { Members ( implement_associations_using ) }
+        }
+    }
+}
+
+//
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+
+// common property sheets
+
+Global 1 ImplementTypesAndInterfaces
+{
+    { Properties
+        { Choice
+            { Name "types_and_interfaces_choice" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "types_and_interfaces_choice_item" }
+                { Label "Generate Code for Types/Interfaces" }
+                { OnValue "-x generate_types_and_interfaces 'True'" }
+                { OffValue "-x generate_types_and_interfaces 'False'" }
+                { Init On }
+                { Activation
+                    { Target "type_attributes_choice" }
+                    { On Activate }
+                }
+                { Activation
+                    { Target "type_attributes_choice" }
+                    { Off InActivate }
+                }
+            }
+        }
+        { Choice
+            { Name "type_attributes_choice" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "type_attributes_choice_item" }
+                { Label "Generate Type Attributes" }
+                { OnValue "-x generate_type_attributes 'True'" }
+                { OffValue "-x generate_type_attributes 'False'" }
+                { Init On }
+            }
+        }
+        { Group
+            { Name "types_and_interfaces_group" }
+            { Type Vertical }
+            { Align Left }
+            { VerticalSpacing 1 }
+            { HorizontalAlign AlignLabels }
+            { Members ( types_and_interfaces_choice type_attributes_choice) }
+        }
+    }
+}
+
+Global 1 Comments
+{
+    { Properties
+        { Choice
+            { Name "comments" }
+            { Label "Generate Comments for:" }
+            { Type CheckBox }
+            { Orientation Vertical }
+            // ECR 5846 { Resizable ResizeAny }
+            { ChoiceItem
+                { Name "class_comment" }
+                { Label "Classes" }
+                { OnValue " -x comment_classes 'True' " }
+                { OffValue " -x comment_classes 'False' " }
+                { Init Off }
+            }
+            { ChoiceItem
+                { Name "attr_comment" }
+                { Label "Attributes" }
+                { OnValue " -x comment_attributes 'True' " }
+                { OffValue " -x comment_attributes 'False' " }
+                { Init Off }
+            }
+            { ChoiceItem
+                { Name "op_comment" }
+                { Label "Operations" }
+                { OnValue " -x comment_operations 'True' " }
+                { OffValue " -x comment_operations 'False' " }
+                { Init Off }
+            }
+        }
+    }
+}
+
+Global 1 FormatComments
+{
+    { Properties
+        { Choice
+            { Name "format_comments" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "format_comments" }
+                { Label "Format to:" }
+                { OnValue "-x format_comments 'True'" }
+                { OffValue "-x format_comments 'False'" }
+                { Init Off }
+                { Activation
+                    { Target "format_comments_line_length" }
+                    { On Activate }
+                }
+                { Activation
+                    { Target "format_comments_line_length" }
+                    { Off InActivate }
+                }
+            }
+        }
+        { Text
+            { Name "format_comments_line_length" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 4 }
+            { DispLength 4 }
+            { InitVal "80" }
+            { Resizable ResizeNone }
+        }
+        { Message
+            { Name "format_comments_characters" }
+            { Label " characters per line" }
+        }
+        { Group
+            { Name "format_comments_group" }
+            { VerticalAlign AlignCenter }
+            { Type Horizontal }
+            { HorizontalSpacing 0 }
+            { Members ( format_comments format_comments_line_length format_comments_characters ) }
+        }
+    }
+}
+
+Global 1 ExcludeExternal
+{
+    { Properties
+        { Choice
+            { Name "exclusions" }
+            { Type CheckBox }
+            { Orientation Vertical }
+            { Resizable ResizeAny }
+            { ChoiceItem
+                { Name "external" }
+                { Label "Ignore Classes Annotated As External" }
+                { OnValue " || (UmlClassIsImported & value='True') " }
+                { OffValue "" }
+                { Init On }
+            }
+        }
+    }
+}
+
+Global 1 ExcludeExternalPackageAndClass
+{
+    { Properties
+        { Choice
+            { Name "exclusions" }
+            { Label "Ignore External:" }
+            { Type CheckBox }
+            { Orientation Vertical }
+            { Resizable ResizeAny }
+            { ChoiceItem
+                { Name "package" }
+                { Label "Packages" }
+                { OnValue " || (UmlPackageIsImported & value='True') " }
+                { OffValue "" }
+                { Init On }
+            }
+            { ChoiceItem
+                { Name "class" }
+                { Label "Classes" }
+                { OnValue " || (UmlClassIsImported & value='True') " }
+                { OffValue "" }
+                { Init On }
+            }
+        }
+    }
+}
+
+// C++ property sheets
+
+Global 1 CxxDefaultOutputDirAndFileObjectsProperty
+{
+    { Properties
+        { Text
+            { Name "output_dir" }
+            { Label "Directory:" }
+            { Resizable ResizeAny}
+            { Type Text }
+            { MinLength 0 }
+            { MaxLength 300 }
+            { DispLength 60 }
+            { InitVal "${projdir}${system}/src_files" }
+        }
+        // ECR 3651
+        { Button
+            { Name "browse_for_output_dir" }
+            { Label "Choose" }
+            { Event
+                { Type Select }
+                { Callback "select_output_dir_callback" }
+            }
+        }
+        { Group
+            { Name "folder_group" }
+            { Label "" }
+            { Type Horizontal }
+            //ECR 6007 begin
+            //{ Resizable ResizeAny }
+            //{ ChildSizePolicy ResizeWidth }
+            //{ LayoutPolicy ResizeAny }
+            { HorizontalAlign AlignLabels }
+            //ECR 6007 end
+            { Members ( output_dir browse_for_output_dir ) }
+        }
+        // ECR 3651
+        { Choice
+            { Name "file_per_class" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "cc" }
+                { Label "One File Name Per Class" }
+                { OnValue "-x file_per_class 'True'" }
+                { OffValue "-x file_per_class 'False'" }
+                { Init On }
+                { Activation
+                    { Target "use_packages_in_filenames" }
+                    { On Activate }
+                }
+                { Activation
+                    { Target "use_packages_in_filenames" }
+                    { Off InActivate }
+                }
+                { Activation
+                    { Target "output_file" }
+                    { On InActivate }
+                }
+                { Activation
+                    { Target "output_file" }
+                    { Off Activate }
+                }
+                { Activation
+                    { Target "keep_old_classes" }
+                    { On InActivate }
+                }
+                { Activation
+                    { Target "keep_old_classes" }
+                    { Off Activate }
+                }
+            }
+        }
+        { Choice
+            { Name "use_packages_in_filenames" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "use_packages_in_filenames" }
+                { Label "Use Package Names in File Names" }
+                { OnValue "-x use_packages_in_filenames 'True'" }
+                { OffValue "-x use_packages_in_filenames 'False'" }
+                { Init Off }
+            }
+        }
+        { Text
+            { Name "output_file" }
+            { Label "File Name:" }
+            { Resizable ResizeAny }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 100 }
+            { DispLength 15 }
+            { InitVal "" }
+        }
+        { Choice
+            { Name "keep_old_classes" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "keep_old_classes" }
+                { Label "Preserve Code From Other Classes" }
+                { OnValue "-x keep_old_classes 'True'" }
+                { OffValue "-x keep_old_classes 'False'" }
+                { Init Off }
+            }
+        }
+        { Group
+            { Name "output_file_subgroup1" }
+            { Type Vertical }
+            { VerticalSpacing 1 }
+            { HorizontalAlign AlignLabels }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { Members ( file_per_class output_file ) }
+        }
+        { Group
+            { Name "output_file_subgroup2" }
+            { Type Vertical }
+            { VerticalSpacing 1 }
+            { HorizontalAlign AlignLabels }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { Members (  use_packages_in_filenames keep_old_classes ) }
+        }
+        { Group
+            { Name "output_file_group" }
+            { Type Horizontal }
+            { HorizontalSpacing 20 }
+            { VariableColumn "0" }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { Members ( output_file_subgroup1 output_file_subgroup2 ) }
+        }
+    }
+}
+
+Global 1 CXXHeaderImplementationFileExtension
+{
+    { Properties
+        { Text
+            { Name "cxxheader" }
+            { Label "Interface (Header) File Extension:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".h" }
+            { Resizable ResizeNone }
+        }
+        { Text
+            { ParseCondition "!is_windows_platform();" }
+            { Name "cxximplementation" }
+            { Label "Implementation (Body) File Extension:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".C" }
+            { Resizable ResizeNone }
+        }
+        { Text
+            { ParseCondition "is_windows_platform();" }
+            { Name "cxximplementation" }
+            { Label "Implementation (Body) File Extension:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".cpp" }
+            { Resizable ResizeNone }
+        }
+        { Choice
+            { Name "cxxinlinechoice" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "cxxinlineinclass" }
+                { Label "Place Inline Functions Within Class Declaration" }
+                { OnValue "-x inlines_in_class 'True'" }
+                { OffValue "-x inlines_in_class 'False'" }
+                { Init Off }
+                { Activation
+                    { Target "cxxinline" }
+                    { On InActivate }
+                }
+                { Activation
+                    { Target "cxxinline" }
+                    { Off Activate }
+                }
+            }
+        }
+        { Text
+            { Name "cxxinline" }
+            { Label "Inline Functions File Extension:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".h" }
+            { Resizable ResizeNone }
+        }
+        { Group
+            { Name "inline_group" }
+            { Type Vertical }
+            { VerticalSpacing 1 }
+            { Resizable ResizeNone }
+            { HorizontalAlign AlignLabels }
+            { Members ( cxxinlinechoice cxxinline ) }
+        }
+    }
+}
+
+Global 1 CXXImplementAssociations
+{
+    { Properties
+        { Choice
+            { Name "implement_associations_using" }
+            { Label "For Associations Use Pattern Family:" }
+            { Type AbbrMenu }
+            { ChoiceItem
+                { Label "Default Template" }
+                { Value "-x implement_associations_using_pattern_family 'Default Template'" }
+            }
+            { ChoiceItem
+                { Label "Pointer/Instance" }
+                { Value "-x implement_associations_using_pattern_family 'Pointer/Instance'" }
+            }
+        }
+        { Group
+            { Name "associations" }
+            { Type Horizontal }
+            { Members ( implement_associations_using ) }
+        }
+    }
+}
+
+// Bug 14312 Added option for user to turn off namespace generation.
+//      Code change begin.
+
+Global 1 CXXImplementNamespaces
+{
+    { Properties
+        { Choice
+            { Name "namespace_choice" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "namespace_choice_item" }
+                { Label "Generate Packages into C++ Namespaces" }
+                // --- START PATCH ECR 5025 ---
+                { OnValue "-x x_generate_namespace  'True'" }
+                { OffValue "-x x_generate_namespace  'False'" }
+                // --- END PATCH ECR 5025 ---
+                { Init On }
+            }
+        }
+        { Group
+            { Name "namespace_group" }
+            { Type Vertical }
+            { VerticalSapcing 1 }
+            { Resizable ResizeNone }
+            { HorizontalAlign AlignLabels }
+            { Members ( namespace_choice ) }
+        }
+    }
+}
+// Bug 14312. Code change end.
+
+Global 1 GenerateCXXCodeClass
+{
+    { ClassCommand
+        { Name "GenerateCXXCodeClass" }
+        { Label "Generate C++ Code..." }
+        { Command "" }
+        { UseProperty CxxDefaultOutputDirAndFileObjectsProperty }
+        { UseProperty CXXHeaderImplementationFileExtension }
+        { UseProperty ImplementTypesAndInterfaces }
+        { UseProperty CXXImplementAssociations }
+        { UseProperty CXXImplementNamespaces }
+        { UseProperty ExcludeExternal }
+        { UseProperty Comments }
+        { UseProperty FormatComments }
+        { Properties
+            { Group
+                { Name "Options1" }
+                { Label "Output File:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+                // ECR 3651
+                { Members ( folder_group output_file_group ) }
+            }
+            { Group
+                { Name "Options2" }
+                { Label "File Extensions:" }
+                { Type Vertical }
+                { Resizable ResizeWidth }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeWidth }
+                { HorizontalAlign AlignLabels }
+                { Members (cxxheader cxximplementation inline_group ) }
+            }
+            { Group
+                { Name "Options3" }
+                { Label "Code Options:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+
+                // Bug 14312 (Carlos Lin). Added option for user to
+                // turn off namespace generation.
+                { Members ( types_and_interfaces_group namespace_group associations exclusions ) }
+                // Bug 14312 Code change end.
+
+            }
+            { Group
+                { Name "Options4" }
+                { Label "Comments:" }
+                { Type Horizontal }
+                { VariableColumn "0" }
+                { Align Top }
+                { Members ( comments format_comments_group ) }
+            }
+            { TopGroup
+                { Align Left }
+                { Members ( Options1 Options2 Options3 Options4 ) }
+            }
+        }
+    }
+}
+
+Global 1 GenerateCXXCodeObjects
+{
+    { ObjectCommand
+        { Name "GenerateCXXCodeObjects" }
+// ECR 5356 begin
+        { ShowOnMenuExpr "is_qrl_code_gen_enabled();" }
+// ECR 5356 end
+        { Label "Generate C++ Code..." }
+        { Command "" }
+        { Chdir False }
+        { SingleObject False }
+        { SpaceBefore True }
+        { UseProperty CxxDefaultOutputDirAndFileObjectsProperty }
+        { UseProperty CXXHeaderImplementationFileExtension }
+        { UseProperty ImplementTypesAndInterfaces }
+        { UseProperty CXXImplementAssociations }
+        { UseProperty CXXImplementNamespaces }
+        { UseProperty ExcludeExternal }
+        { UseProperty Comments }
+        { UseProperty FormatComments }
+        { Properties
+            { Group
+                { Name "Options1" }
+                { Label "Output File:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+                // ECR 3651
+                { Members ( folder_group output_file_group ) }
+            }
+            { Group
+                { Name "Options2" }
+                { Label "File Extensions:" }
+                { Type Vertical }
+                { Resizable ResizeWidth }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeWidth }
+                { HorizontalAlign AlignLabels }
+                { Members (cxxheader cxximplementation inline_group ) }
+            }
+            { Group
+                { Name "Options3" }
+                { Label "Code Options:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+
+                // Bug 14312 Code change begin.
+                { Members ( types_and_interfaces_group namespace_group associations exclusions ) }
+            }
+                // Bug 14312 Code change end.
+
+            { Group
+                { Name "Options4" }
+                { Label "Comments:" }
+                { Type Horizontal }
+                { VariableColumn "0" }
+                { Align Top }
+                { Members ( comments format_comments_group ) }
+            }
+            { TopGroup
+                { Align Left }
+                { Members ( Options1 Options2 Options3 Options4 ) }
+            }
+        }
+    }
+}
+
+// Java property sheets
+
+Global 1 JavaDefaultOutputDirAndFileObjectsProperty
+{
+    { Properties
+        { Text
+            { Name "output_dir" }
+            { Label "Directory:" }
+            { Resizable ResizeAny}
+            { Type Text }
+            { MinLength 0 }
+            { MaxLength 300 }
+            { DispLength 60 }
+            { InitVal "${projdir}${system}/src_files" }
+        }
+        // ECR 3651
+        { Button
+            { Name "browse_for_output_dir" }
+            { Label "Choose" }
+            { Event
+                { Type Select }
+                { Callback "select_output_dir_callback" }
+            }
+        }
+        { Group
+            { Name "folder_group" }
+            { Label "" }
+            { Type Horizontal }
+            //ECR 6007 begin
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { LayoutPolicy ResizeAny }
+            { HorizontalAlign AlignLabels }
+            //ECR 6007 end
+            { Members ( output_dir browse_for_output_dir ) }
+        }
+        // ECR 3651
+        { Choice
+            { Name "file_per_class" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "cc" }
+                { Label "One File Name Per Class" }
+                { OnValue "-x file_per_class 'True'" }
+                { OffValue "-x file_per_class 'False' -x file_name '${prop.output_file}'" }
+                { Init On }
+                { Activation
+                    { Target "output_file" }
+                    { On InActivate }
+                }
+                { Activation
+                    { Target "output_file" }
+                    { Off Activate }
+                }
+                { Activation
+                    { Target "keep_old_classes" }
+                    { On InActivate }
+                }
+                { Activation
+                    { Target "keep_old_classes" }
+                    { Off Activate }
+                }
+            }
+        }
+        { Text
+            { Name "output_file" }
+            { Label "File Name:" }
+            { Resizable ResizeWidth }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 100 }
+            { DispLength 20 }
+            { InitVal "" }
+        }
+        { Choice
+            { Name "keep_old_classes" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "keep_old_classes" }
+                { Label "Preserve Code From Other Classes" }
+                { OnValue "-x keep_old_classes 'True'" }
+                { OffValue "-x keep_old_classes 'False'" }
+                { Init Off }
+            }
+        }
+        { Group
+            { Name "file_per_class_subgroup" }
+            { Type Vertical }
+            { VerticalSpacing 1 }
+            { HorizontalAlign AlignLabels }
+            { Resizable ResizeWidth }
+            { ChildSizePolicy ResizeWidth }
+            { Members ( file_per_class output_file ) }
+        }
+        { Group
+            { Name "output_file_group" }
+            { Type Horizontal }
+            { HorizontalSpacing 20 }
+            { Align Bottom }
+            { VariableColumn "0" }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeAny }
+            { HorizontalAlign AlignLabels }
+            { Members ( file_per_class_subgroup keep_old_classes ) }
+        }
+    }
+}
+
+Global 1 JavaHeaderImplementationFileExtension
+{
+    { Properties
+        { Text
+            { Name "javaextension" }
+            { Label "Java Output File Extension:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".java" }
+            { Resizable ResizeNone }
+        }
+    }
+}
+
+Global 1 JavaComments
+{
+    { Properties
+        { Choice
+            { Label "Generate Comments For:" }
+            { Name "java_comments" }
+            { Type CheckBox }
+            { Orientation Vertical }
+            { ChoiceItem
+                { Name "class_comment" }
+                { Label "Classes" }
+                { OnValue " -x comment_classes 'True' " }
+                { OffValue " -x comment_classes 'False' " }
+                { Init Off }
+            }
+            { ChoiceItem
+                { Name "attr_comment" }
+                { Label "Fields" }
+                { OnValue " -x comment_attributes 'True' " }
+                { OffValue " -x comment_attributes 'False' " }
+                { Init Off }
+            }
+            { ChoiceItem
+                { Name "op_comment" }
+                { Label "Methods" }
+                { OnValue " -x comment_operations 'True' " }
+                { OffValue " -x comment_operations 'False' " }
+                { Init Off }
+            }
+        }
+    }
+}
+
+Global 1 JavaImplementAssociations
+{
+    { Properties
+        { Choice
+            { Name "implement_associations_using" }
+            { Label "For Associations Use Pattern Family:" }
+            { Type AbbrMenu }
+            { ChoiceItem
+                { Label "Generic" }
+                { Value "-x implement_associations_using_pattern_family 'Generic'" }
+            }
+            { ChoiceItem
+                { Label "Instance" }
+                { Value "-x implement_associations_using_pattern_family 'Instance'" }
+            }
+        }
+        { Group
+            { Name "associations" }
+            { Type Vertical }
+            { HorizontalAlign AlignLabels }
+            { Members ( implement_associations_using ) }
+        }
+    }
+}
+
+Global 1 GenerateJavaCodeObjects
+{
+    { ObjectCommand
+        { Name "GenerateJavaCodeObjects" }
+// ECR 5356 begin
+        { ShowOnMenuExpr "is_qrl_code_gen_enabled();" }
+// ECR 5356 end
+        { Label "Generate Java Code..." }
+        { Command "" }
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty JavaDefaultOutputDirAndFileObjectsProperty }
+        { UseProperty JavaHeaderImplementationFileExtension }
+        { UseProperty JavaImplementAssociations }
+        { UseProperty ExcludeExternal }
+        { UseProperty JavaComments }
+        { UseProperty FormatComments }
+        { Properties
+            { Group
+                { Name "Options1" }
+                { Label "Output File:" }
+                { Type Vertical }
+                //ECR 6007 begin
+                //{ Resizable ResizeAny }
+                { ChildSizePolicy ResizeNone }
+                { LayoutPolicy ResizeNone }
+                //ECR 6007 end
+                { HorizontalAlign AlignLabels }
+                // ECR 3651
+                { Members ( folder_group output_file_group ) }
+            }
+            { Group
+                { Name "Options2" }
+                { Label "File Extensions:" }
+                { Type Vertical }
+                { Resizable ResizeWidth }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeWidth }
+                { HorizontalAlign AlignLabels }
+                { Members ( javaextension ) }
+            }
+            { Group
+                { Name "Options3" }
+                { Label "Code Options:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+                { Members ( associations exclusions ) }
+            }
+            { Group
+                { Name "Options4" }
+                { Label "Comments:" }
+                { Type Horizontal }
+                { VariableColumn "0" }
+                { Align Top }
+                { Members ( java_comments format_comments_group ) }
+            }
+            { TopGroup
+                { Align Left }
+                { Members ( Options1 Options2 Options3 Options4 ) }
+            }
+        }
+    }
+}
+
+Global 1 GenerateJavaCodeClass
+{
+    { ClassCommand
+        { Name "GenerateJavaCodeClass" }
+        { Label "Generate Java Code..." }
+        { Command "" }
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty JavaDefaultOutputDirAndFileObjectsProperty }
+        { UseProperty JavaHeaderImplementationFileExtension }
+        { UseProperty JavaImplementAssociations }
+        { UseProperty ExcludeExternal }
+        { UseProperty JavaComments }
+        { UseProperty FormatComments }
+        { Properties
+            { Group
+                { Name "Options1" }
+                { Label "Output File:" }
+                { Type Vertical }
+                //ECR 6007 begin
+                //{ Resizable ResizeAny }
+                { ChildSizePolicy ResizeNone }
+                { LayoutPolicy ResizeNone }
+                //ECR 6007 end
+                { HorizontalAlign AlignLabels }
+                // ECR 3651
+                { Members ( folder_group output_file_group ) }
+            }
+            { Group
+                { Name "Options2" }
+                { Label "File Extensions:" }
+                { Type Vertical }
+                { Resizable ResizeWidth }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeWidth }
+                { HorizontalAlign AlignLabels }
+                { Members ( javaextension ) }
+            }
+            { Group
+                { Name "Options3" }
+                { Label "Code Options:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+                { Members ( associations exclusions ) }
+            }
+            { Group
+                { Name "Options4" }
+                { Label "Comments:" }
+                { Type Horizontal }
+                { VariableColumn "0" }
+                { Align Top }
+                { Members ( java_comments format_comments_group ) }
+            }
+            { TopGroup
+                { Align Left }
+                { Members ( Options1 Options2 Options3 Options4 ) }
+            }
+        }
+    }
+}
+
+// IDL property sheets
+
+Global 1 IDLDefaultOutputDirAndFileObjectsProperty
+{
+    { Properties
+        { Text
+            { Name "output_dir" }
+            { Label "Directory:" }
+            { Resizable ResizeWidth}
+            { Type Text }
+            { MinLength 0 }
+            { MaxLength 300 }
+            { DispLength 60 }
+            { InitVal "${projdir}${system}/src_files" }
+        }
+        // ECR 3651
+        { Button
+            { Name "browse_for_output_dir" }
+            { Label "Choose" }
+            { Event
+                { Type Select }
+                { Callback "select_output_dir_callback" }
+            }
+        }
+        { Group
+            { Name "folder_group" }
+            { Label "" }
+            { Type Horizontal }
+            //ECR 6007 begin
+            //{ Resizable ResizeAny }
+            //{ ChildSizePolicy ResizeWidth }
+            //{ LayoutPolicy ResizeAny }
+            { HorizontalAlign AlignLabels }
+            //ECR 6007 end
+            { Members ( output_dir browse_for_output_dir ) }
+        }
+        // ECR 3651
+        { Choice
+            { Name "file_per_class" }
+            { Type CheckBox }
+            { Resizable ResizeNone }
+            { ChoiceItem
+                { Name "cc" }
+                { Label "One File Name Per Class" }
+                { OnValue "-x file_per_class 'True'" }
+                { OffValue "-x file_per_class 'False'" }
+                { Init On }
+                { Activation
+                    { Target "output_file" }
+                    { On InActivate }
+                }
+                { Activation
+                    { Target "output_file" }
+                    { Off Activate }
+                }
+                { Activation
+                    { Target "keep_old_classes" }
+                    { On InActivate }
+                }
+                { Activation
+                    { Target "keep_old_classes" }
+                    { Off Activate }
+                }
+            }
+        }
+        { Text
+            { Name "output_file" }
+            { Label "File Name:" }
+            { Resizable ResizeWidth }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 100 }
+            { DispLength 30 }
+            { InitVal "" }
+        }
+        { Choice
+            { Name "keep_old_classes" }
+            { Type CheckBox }
+            { Resizable ResizeNone }
+            { ChoiceItem
+                { Name "keep_old_classes" }
+                { Label "Preserve Class Code" }
+                // { Label "Preserve Code From Other Classes" }
+                { OnValue "-x keep_old_classes 'True'" }
+                { OffValue "-x keep_old_classes 'False'" }
+                { Init Off }
+            }
+        }
+        { Group
+            { Name "file_per_class_subgroup" }
+            { Type Vertical }
+            { VerticalSpacing 1 }
+            { HorizontalAlign AlignLabels }
+            //ECR 6007 begin
+            { Resizable ResizeNone }
+            { ChildSizePolicy ResizeNone }
+            //ECR 6007 end
+            { Members ( file_per_class output_file ) }
+        }
+        { Group
+            { Name "output_file_group" }
+            { Type Horizontal }
+            { HorizontalSpacing 20 }
+            { VariableColumn "0" }
+            { Resizable ResizeWidth }
+            { ChildSizePolicy ResizeWidth }
+            { HorizontalAlign AlignLabels }
+            { Members ( file_per_class_subgroup keep_old_classes ) }
+        }
+    }
+}
+
+Global 1 IDLHeaderImplementationFileExtension
+{
+    { Properties
+        { Text
+            { Name "idlheader" }
+            { Label "IDL Output File Extension:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".idl" }
+            { Resizable ResizeNone }
+        }
+    }
+}
+
+Global 1 GenerateIDLCodeClass
+{
+    { ClassCommand
+        { Name "GenerateIDLCodeClass" }
+        { Label "Generate IDL Code..." }
+        { Command "" }
+        { UseProperty IDLDefaultOutputDirAndFileObjectsProperty }
+        { UseProperty IDLHeaderImplementationFileExtension }
+        { UseProperty ImplementTypesAndInterfaces }
+        { UseProperty ExcludeExternal }
+        { UseProperty Comments }
+        { UseProperty FormatComments }
+        { Properties
+            { Group
+                { Name "Options1" }
+                { Label "Output File:" }
+                { Type Vertical }
+                //ECR 6007 begin
+                // { Resizable ResizeAny }
+                { ChildSizePolicy ResizeNone }
+                { LayoutPolicy ResizeNone }
+                //ECR 6007 begin
+                { HorizontalAlign AlignLabels }
+                // ECR 3651
+                { Members ( folder_group output_file_group ) }
+            }
+            { Group
+                { Name "Options2" }
+                { Label "File Extensions:" }
+                { Type Vertical }
+                { Resizable ResizeWidth }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeWidth }
+                { HorizontalAlign AlignLabels }
+                { Members ( idlheader ) }
+            }
+            { Group
+                { Name "Options3" }
+                { Label "Code Options:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+                { Members ( types_and_interfaces_group exclusions ) }
+            }
+            { Group
+                { Name "Options4" }
+                { Label "Comments:" }
+                { Type Horizontal }
+                { VariableColumn "0" }
+                { Resizable ResizeWidth }
+                { ChildSizePolicy ResizeNone }
+                { HorizontalAlign AlignLabels }
+                { Members ( comments format_comments_group ) }
+            }
+            { TopGroup
+                { Align Left }
+                { Members ( Options1 Options2 Options3 Options4 ) }
+            }
+        }
+    }
+}
+
+Global 1 GenerateIDLCodeObjects
+{
+    { ObjectCommand
+        { Name "GenerateIDLCodeObjects" }
+// ECR 5356 begin
+        { ShowOnMenuExpr "is_qrl_code_gen_enabled();" }
+// ECR 5356 end
+        { Label "Generate IDL Code..." }
+        { Command "" }
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty IDLDefaultOutputDirAndFileObjectsProperty }
+        { UseProperty IDLHeaderImplementationFileExtension }
+        { UseProperty ImplementTypesAndInterfaces }
+        { UseProperty ExcludeExternal }
+        { UseProperty Comments }
+        { UseProperty FormatComments }
+        { Properties
+            { Group
+                { Name "Options1" }
+                { Label "Output File:" }
+                { Type Vertical }
+                //ECR 6007 begin
+                // { Resizable ResizeAny }
+                { ChildSizePolicy ResizeNone }
+                { LayoutPolicy ResizeNone }
+                //ECR 6007 begin
+                { HorizontalAlign AlignLabels }
+                // ECR 3651
+                { Members ( folder_group output_file_group ) }
+            }
+            { Group
+                { Name "Options2" }
+                { Label "File Extensions:" }
+                { Type Vertical }
+                { Resizable ResizeWidth }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeWidth }
+                { HorizontalAlign AlignLabels }
+                { Members ( idlheader ) }
+            }
+            { Group
+                { Name "Options3" }
+                { Label "Code Options:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+                { Members ( types_and_interfaces_group exclusions ) }
+            }
+            { Group
+                { Name "Options4" }
+                { Label "Comments:" }
+                { Type Horizontal }
+                { VariableColumn "0" }
+                { Align Top }
+                { Members ( comments format_comments_group ) }
+            }
+            { TopGroup
+                { Align Left }
+                { Members ( Options1 Options2 Options3 Options4 ) }
+            }
+        }
+    }
+}
+
+// TOOL property sheets
+
+Global 1 TOOLDefaultOutputDirAndFileObjectsProperty
+{
+    { Properties
+        { Text
+            { Name "output_dir" }
+            { Label "Directory:" }
+            { Resizable ResizeAny}
+            { Type Text }
+            { MinLength 0 }
+            { MaxLength 300 }
+            { DispLength 60 }
+            { InitVal "${projdir}${system}/src_files" }
+        }
+        // ECR 3651
+        { Button
+            { Name "browse_for_output_dir" }
+            { Label "Choose" }
+            { Event
+                { Type Select }
+                { Callback "select_output_dir_callback" }
+            }
+        }
+        { Group
+            { Name "folder_group" }
+            { Label "" }
+            { Type Horizontal }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { LayoutPolicy ResizeAny }
+            { Align Bottom }
+            { Members ( output_dir browse_for_output_dir ) }
+        }
+        // ECR 3651
+        { Choice
+            { Name "file_per_class" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "cc" }
+                { Label "One File Name Per Class" }
+                { OnValue "-x file_per_class 'True'" }
+                { OffValue "-x file_per_class 'False'" }
+                { Init On }
+                { Activation
+                    { Target "output_file" }
+                    { On InActivate }
+                }
+                { Activation
+                    { Target "output_file" }
+                    { Off Activate }
+                }
+            }
+        }
+        { Text
+            { Name "output_file" }
+            { Label "File Name:" }
+            { Resizable ResizeAny }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 100 }
+            { DispLength 20 }
+            { InitVal "" }
+        }
+        { Group
+            { Name "output_file_group" }
+            { Type Vertical }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { HorizontalAlign AlignLabels }
+            { VerticalSpacing 1 }
+            { Members (file_per_class output_file) }
+        }
+    }
+}
+
+Global 1 TOOLHeaderImplementationFileExtension
+{
+    { Properties
+        { Text
+            { Name "toolheader" }
+            { Label "TOOL Output File Extension:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".cex" }
+            { Resizable ResizeNone }
+        }
+    }
+}
+
+Global 1 TOOL3xProperty
+{
+    { Properties
+        { Choice
+            { Name "imp_tool_3x_rel" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "tool_3x_release" }
+                { Label "Generate Code For Release 2.x" }
+                { OffValue "-x tool_3x_release 'True'" }
+                { OnValue "-x tool_3x_release 'False'" }
+                { Init Off }
+            }
+        }
+        { Group
+            { Name "imp_tool_3x_rel_gp" }
+            { Type Vertical }
+            { Members ( imp_tool_3x_rel ) }
+        }
+    }
+}
+
+
+Global 1 TOOLGenerateBodies
+{
+    { Properties
+        { Choice
+            { Name "tool_generate_bodies" }
+            { Label "Generate Method Bodies:" }
+            { Type AbbrMenu }
+            { ChoiceItem
+                { Label "None" }
+                { Value "-x generate_bodies 'None'" }
+                { Activation
+                    { Target "tool_generate_default_bodies" }
+                    { On InActivate }
+                }
+            }
+            { ChoiceItem
+                { Label "All" }
+                { Value "-x generate_bodies 'All'" }
+                { Activation
+                    { Target "tool_generate_default_bodies" }
+                    { On Activate }
+                }
+            }
+            { ChoiceItem
+                { Label "Use Annotation" }
+                { Value "-x generate_bodies 'UseAnnotation'" }
+                { Activation
+                    { Target "tool_generate_default_bodies" }
+                    { On Activate }
+                }
+            }
+        }
+        { Choice
+            { Name "tool_generate_default_bodies" }
+            { Label "Generate Default Method Bodies:" }
+            { Type CheckBox }
+        { Orientation Vertical }
+            { ChoiceItem
+                { Label "Init" }
+                { OnValue " -x generate_default_init_method_bodies True " }
+                { OffValue " -x generate_default_init_method_bodies False " }
+                { Init Off}
+            }
+            { ChoiceItem
+                { Label "Display" }
+                { OnValue " -x generate_default_display_method_bodies True " }
+                { OffValue " -x generate_default_display_method_bodies False " }
+                { Init Off}
+            }
+        }
+        { Group
+            { Name "tool_generate_bodies_group" }
+            { Type Vertical }
+            { Align Labels }
+            { Members ( tool_generate_bodies tool_generate_default_bodies ) }
+        }
+    }
+}
+
+Global 1 GenerateTOOLCodeClass
+{
+    { ClassCommand
+        { Name "GenerateTOOLCodeClass" }
+        { Label "Generate TOOL Code..." }
+        { Command "" }
+        { UseProperty TOOLDefaultOutputDirAndFileObjectsProperty }
+        { UseProperty TOOLHeaderImplementationFileExtension }
+        { UseProperty ImplementTypesAndInterfaces }
+        { UseProperty TOOL3xProperty }
+        { UseProperty ExcludeExternal }
+        { UseProperty TOOLGenerateBodies }
+        { Properties
+            { Group
+                { Name "Options1" }
+                { Label "Output File:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+                // ECR 3651
+                { Members ( folder_group output_file_group ) }
+            }
+            { Group
+                { Name "Options2" }
+                { Label "File Extensions:" }
+                { Type Vertical }
+                { Resizable ResizeWidth }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeWidth }
+                { HorizontalAlign AlignLabels }
+                { Members ( toolheader ) }
+            }
+            { Group
+                { Name "Options3" }
+                { Label "Code Options:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+                { Members ( types_and_interfaces_group imp_tool_3x_rel_gp exclusions tool_generate_bodies_group ) }
+            }
+            { TopGroup
+                { Align Left }
+                { Members ( Options1 Options2 Options3 ) }
+            }
+        }
+    }
+}
+
+Global 1 GenerateTOOLCodeObjects
+{
+    { ObjectCommand
+        { Name "GenerateTOOLCodeObjects" }
+// ECR 5356 begin
+        { ShowOnMenuExpr "is_qrl_code_gen_enabled();" }
+// ECR 5356 end
+        { Label "Generate TOOL Code..." }
+        { Command "" }
+        { UseProperty TOOLDefaultOutputDirAndFileObjectsProperty }
+        { UseProperty TOOLHeaderImplementationFileExtension }
+        { UseProperty ImplementTypesAndInterfaces }
+        { UseProperty TOOL3xProperty }
+        { UseProperty ExcludeExternal }
+        { UseProperty TOOLGenerateBodies }
+        { Properties
+            { Group
+                { Name "Options1" }
+                { Label "Output File:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+                // ECR 3651
+                { Members ( folder_group output_file_group ) }
+            }
+            { Group
+                { Name "Options2" }
+                { Label "File Extensions:" }
+                { Type Vertical }
+                { Resizable ResizeWidth }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeWidth }
+                { HorizontalAlign AlignLabels }
+                { Members ( toolheader ) }
+            }
+            { Group
+                { Name "Options3" }
+                { Label "Code Options:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+                { Members ( types_and_interfaces_group imp_tool_3x_rel_gp exclusions tool_generate_bodies_group ) }
+            }
+            { TopGroup
+                { Align Left }
+                { Members ( Options1 Options2 Options3 ) }
+            }
+        }
+    }
+}
+
+// Ada95 property sheets
+
+Global 1 Ada95DefaultOutputDirAndFileObjectsProperty
+{
+    { Properties
+        { Text
+            { Name "output_dir" }
+            { Label "Directory:" }
+            { Resizable ResizeWidth}
+            { Type Text }
+            { MinLength 0 }
+            { MaxLength 300 }
+            { DispLength 60 }
+            { InitVal "${projdir}${system}/src_files" }
+        }
+        // ECR 3651
+        { Button
+            { Name "browse_for_output_dir" }
+            { Label "Choose" }
+            { Event
+                { Type Select }
+                { Callback "select_output_dir_callback" }
+            }
+        }
+        { Group
+            { Name "folder_group" }
+            { Label "" }
+            { Type Horizontal }
+            //ECR 6007 begin
+            //{ Resizable ResizeAny }
+            //{ ChildSizePolicy ResizeWidth }
+            //{ LayoutPolicy ResizeAny }
+            { HorizontalAlign AlignLabels }
+            //ECR 6007 end
+            { Members ( output_dir browse_for_output_dir ) }
+        }
+        // ECR 3651
+        { Choice
+            { Name "file_per_package" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "file_per_package" }
+                { Label "One File Name Per Package" }
+                { OnValue "-x file_per_package 'True'" }
+                { OffValue "-x file_per_package 'False'" }
+                { Init On }
+                { Activation
+                    { Target "output_file" }
+                    { On InActivate }
+                }
+                { Activation
+                    { Target "output_file" }
+                    { Off Activate }
+                }
+                { Activation
+                    { Target "keep_old_packages" }
+                    { On InActivate }
+                }
+                { Activation
+                    { Target "keep_old_packages" }
+                    { Off Activate }
+                }
+                { Activation
+                    { Target "use_component" }
+                    { On Activate }
+                }
+                { Activation
+                    { Target "use_component" }
+                    { Off InActivate }
+                }
+                { Activation
+                    { Target "ada_generated_base_group" }
+                    { On Activate }
+                }
+                { Activation
+                    { Target "ada_generated_base_group" }
+                    { Off InActivate }
+                }
+            }
+        }
+        { Choice
+            { Name "use_component" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "use_component_for_files" }
+                { Label "Use Package Component for File Name" }
+                { OnValue "-x use_component 'True'" }
+                { OffValue "-x use_component 'False'" }
+                { Init Off }
+            }
+        }
+        { Choice
+            { Name "ada_file_name_base" }
+            { Label "File Name Base:" }
+            { Type AbbrMenu }
+            { ChoiceItem
+                { Label "Package Name" }
+                { Value "-x ada_file_name_base 'Package Name'" }
+            }
+            { ChoiceItem
+                { Label "Full Ada Unit Name" }
+                { Value "-x ada_file_name_base 'Full Ada Unit Name'" }
+                { Init On }
+            }
+        }
+        { Choice
+            { Name "generated_file_name_case" }
+            { Label "Case:" }
+            { Type AbbrMenu }
+            { ChoiceItem
+                { Label "As Is" }
+                { Value "-x generated_file_name_case 'As Is'" }
+                { Init On }
+            }
+            { ChoiceItem
+                { Label "Lower" }
+                { Value "-x generated_file_name_case 'Lower'" }
+            }
+            { ChoiceItem
+                { Label "Upper" }
+                { Value "-x generated_file_name_case 'Upper'" }
+            }
+        }
+        { Text
+            { Name "output_file" }
+            { Label "File Name:" }
+            { Type Text }
+            { Resizable ResizeWidth }
+            { MinLength 1 }
+            { MaxLength 100 }
+            { DispLength 28 }
+            { InitVal "" }
+        }
+        { Choice
+            { Name "keep_old_packages" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "keep_old_packages" }
+                { Label "Preserve Code From Other Packages" }
+                { OnValue "-x keep_old_packages 'True'" }
+                { OffValue "-x keep_old_packages 'False'" }
+                { Init Off }
+            }
+        }
+        { Group
+            { Name "ada_output_file_subgroup1" }
+            { Type Vertical }
+            { VerticalSpacing 1 }
+            { HorizontalAlign AlignLabels }
+            { Resizable ResizeWidth }
+            { ChildSizePolicy ResizeWidth }
+            { Members ( file_per_package output_file ) }
+        }
+        { Group
+            { Name "ada_output_file_subgroup2" }
+            { Type Vertical }
+            { VerticalSpacing 1 }
+            { HorizontalAlign AlignLabels }
+            { Resizable ResizeWidth }
+            { ChildSizePolicy ResizeWidth }
+            { Members ( use_component keep_old_packages ) }
+        }
+        { Group
+            { Name "ada_output_file_subgroup3" }
+            { Type Horizontal }
+            { HorizontalSpacing 20 }
+            { VariableColumn "0" }
+            { HorizontalAlign AlignLabels }
+            { Resizable ResizeWidth }
+            { ChildSizePolicy ResizeWidth }
+            { Members ( ada_output_file_subgroup1 ada_output_file_subgroup2 ) }
+        }
+        { Group
+            { Name "ada_generated_base_group" }
+            { Type Horizontal }
+            { HorizontalSpacing 20 }
+            { HorizontalAlign AlignLabels }
+            { Members ( ada_file_name_base generated_file_name_case) }
+        }
+        { Group
+            { Name "ada_output_file_group" }
+            { Type Vertical }
+            { ChildSizePolicy ResizeWidth }
+            { VerticalSpacing 1 }
+            { HorizontalAlign AlignLabels }
+            { Resizable ResizeAny }
+            { Members ( ada_output_file_subgroup3 ada_generated_base_group ) }
+        }
+    }
+}
+
+Global 1 Ada95FileExtension
+{
+    { Properties
+        { Message
+            { Name "ada_gen_spec_msg" }
+            { Label "Generate (with File Extension):" }
+        }
+        { Choice
+            { Name "ada_generate_spec" }
+            { Type CheckBox }
+            { ChoiceItem
+            { Name "ada_generate_spec" }
+            { Label "Pkg Specs" }
+            { OnValue "-x generate_interface_files 'True'" }
+            { OffValue "-x generate_interface_files 'False'" }
+                { Init On }
+                    { Activation
+                        { Target "adapkgspec" }
+                        { On Activate }
+                    }
+                    { Activation
+                        { Target "adapkgspec" }
+                        { Off InActivate }
+                    }
+            }
+        }
+        { Choice
+            { Name "ada_generate_body" }
+            { Label "" }
+            { Type CheckBox }
+            { ChoiceItem
+            { Name "ada_generate_body" }
+            { Label "Pkg Bodies" }
+            { OnValue "-x generate_implementation_files 'True'" }
+            { OffValue "-x generate_implementation_files 'False'" }
+                { Init On }
+                    { Activation
+                        { Target "adapkgbody" }
+                        { On Activate }
+                    }
+                    { Activation
+                        { Target "adapkgbody" }
+                        { Off InActivate }
+                    }
+            }
+        }
+        { Choice
+            { Name "ada_generate_subunit" }
+            { Label "" }
+            { Type CheckBox }
+            { ChoiceItem
+            { Name "ada_generate_subunit" }
+            { Label "Subunits" }
+            { OnValue "-x generate_operation_files 'True'" }
+            { OffValue "-x generate_operation_files 'False'" }
+                { Init On }
+                    { Activation
+                        { Target "adasubunit" }
+                        { On Activate }
+                    }
+                    { Activation
+                        { Target "adasubunit" }
+                        { Off InActivate }
+                    }
+            }
+        }
+        { Text
+            { Name "adapkgspec" }
+            { Label "" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".ads" }
+            { Resizable ResizeNone }
+        }
+        { Text
+            { Name "adapkgbody" }
+            { Label "" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".adb" }
+            { Resizable ResizeNone }
+        }
+        { Text
+            { Name "adasubunit" }
+            { Label "" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".adu" }
+            { Resizable ResizeNone }
+        }
+        { Group
+            { Name "ada_generate_checkboxes" }
+            { Type RowCol }
+            { Rows 3 }
+            { Columns 2 }
+            { Members (ada_generate_spec adapkgspec ada_generate_body adapkgbody ada_generate_subunit adasubunit) }
+        }
+        { Group
+            { Name "ada_generate_group" }
+            { Type Horizontal }
+            { Members ( ada_gen_spec_msg ada_generate_checkboxes) }
+        }
+    }
+}
+
+Global 1 Ada95Operations
+{
+    { Properties
+        { Choice
+            { Name "ada_operations" }
+            { Orientation Vertical }
+            { Label "For Operations:" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "ada_subprograms_use_subunits" }
+                { Label "Use Subunits" }
+                { OnValue "-x ada_subprograms_use_subunits 'True'" }
+                { OffValue "-x ada_subprograms_use_subunits 'False'" }
+                { Init Off }
+            }
+            { ChoiceItem
+                { Name "ada_subprograms_null_code" }
+                { Label "Generate Null Code" }
+                { OnValue " -x ada_subprograms_use_null_code 'True'" }
+                { OffValue " -x ada_subprograms_use_null_code 'False'" }
+                { Init Off }
+            }
+        }
+    }
+}
+
+Global 1 Ada95ImplementAssociations
+{
+    { Properties
+        { Choice
+            { Name "ada_implement_associations" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "ada_implement_associations" }
+                { Label "Implement Association/Aggregation/Composition" }
+                { OnValue "-x ada_implement_associations 'True'" }
+                { OffValue "-x ada_implement_associations 'False'" }
+                { Init On }
+            }
+        }
+    }
+}
+
+Global 1 Ada95ClassType
+{
+    { Properties
+        { Choice
+            { Name "ada_root_class_type_privacy" }
+            { Label "Root Class Type Privacy:" }
+            { Type AbbrMenu }
+            { ChoiceItem
+                { Label "Public" }
+                { Value "-x ada_root_class_type_privacy 'public'" }
+            }
+            { ChoiceItem
+                { Label "Tagged Private   " }
+                { Value "-x ada_root_class_type_privacy 'tagged private'" }
+                { Init On }
+            }
+            { ChoiceItem
+                { Label "Private" }
+                { Value "-x ada_root_class_type_privacy 'private'" }
+            }
+            { ChoiceItem
+                { Label "Implementation" }
+                { Value "-x ada_root_class_type_privacy 'implementation'" }
+            }
+        }
+        { Choice
+            { Name "ada_root_class_options" }
+            { Label "" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "ada_class_type_is_limited" }
+                { Label "Limited" }
+                { OnValue "-x ada_class_type_is_limited 'True'" }
+                { OffValue "-x ada_class_type_is_limited 'False'" }
+                { Init Off }
+            }
+        }
+        { Choice
+            { Name "ada_subclass_type_privacy" }
+            { Label "Subclass Type Privacy:" }
+            { Type AbbrMenu }
+            { ChoiceItem
+                { Label "Public" }
+                { Value "-x ada_subclass_type_privacy 'public'" }
+            }
+            { ChoiceItem
+                { Label "Private Extension" }
+                { Value "-x ada_subclass_type_privacy 'private extension'" }
+                { Init On }
+            }
+            { ChoiceItem
+                { Label "Tagged Private" }
+                { Value "-x ada_subclass_type_privacy 'tagged private'" }
+            }
+            { ChoiceItem
+                { Label "Private" }
+                { Value "-x ada_subclass_type_privacy 'private'" }
+            }
+            { ChoiceItem
+                { Label "Implementation" }
+                { Value "-x ada_subclass_type_privacy 'implementation'" }
+            }
+        }
+        { Group
+            { Name "ada_root_class_type_group" }
+            { Type Horizontal }
+            { HorizontalSpacing 20 }
+            { HorizontalAlign AlignLabels }
+            { Members ( ada_root_class_type_privacy ada_root_class_options ) }
+        }
+
+    }
+}
+
+Global 1 Ada95AccessTypes
+{
+    { Properties
+        { Choice
+            { Name "ada_access_types" }
+            { Orientation Vertical }
+            { Label "Generate Access Type For:" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "ada_gen_class_access_type" }
+                { Label "Class Type" }
+                { OnValue "-x ada_gen_class_access_type 'True'" }
+                { OffValue "-x ada_gen_class_access_type 'False'" }
+                { Init On }
+            }
+            { ChoiceItem
+                { Name "ada_gen_classwide_access_type" }
+                { Label "Class-Wide Type" }
+                { OnValue " -x ada_gen_classwide_access_type 'True'" }
+                { OffValue " -x ada_gen_classwide_access_type 'False'" }
+                { Init On }
+            }
+        }
+    }
+}
+
+Global 1 GenerateAda95CodeClass
+{
+    { ClassCommand
+        { Name "GenerateAda95CodeClass" }
+        { Label "Generate Ada 95 Code..." }
+        { Command "" }
+        { UseProperty Ada95DefaultOutputDirAndFileObjectsProperty }
+        { UseProperty Ada95FileExtension }
+        { UseProperty Ada95ClassType}
+        { UseProperty Ada95AccessTypes}
+        { UseProperty Ada95ImplementAssociations }
+        { UseProperty Ada95Operations }
+        { UseProperty ExcludeExternalPackageAndClass }
+        { UseProperty Comments }
+        { UseProperty FormatComments }
+        { Properties
+            { Group
+                { Name "GenAccessOperationExternal" }
+                { Type Horizontal }
+                //ECR 6007 begin
+                { Resizable ResizeNone }
+                //ECR 6007 end
+                { HorizontalAlign AlignLabels }
+                { Members ( ada_access_types ada_operations exclusions  ) }
+            }
+            { Group
+                { Name "Options1" }
+                { Label "Output File:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+                // ECR 3651
+                { Members ( folder_group ada_output_file_group ) }
+            }
+            { Group
+                { Name "Options2" }
+                { Label "File Extensions:" }
+                { Type Vertical }
+                { Resizable ResizeWidth }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeWidth }
+                { HorizontalAlign AlignLabels }
+                { Members ( ada_generate_group ) }
+            }
+            { Group
+                { Name "Options3" }
+                { Label "Code Options:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+                { Members ( ada_root_class_type_group ada_subclass_type_privacy ada_implement_associations GenAccessOperationExternal ) }
+            }
+            { Group
+                { Name "Options4" }
+                { Label "Comments:" }
+                { Type Horizontal }
+                { VariableColumn "0" }
+                { Align Top }
+                { Members ( comments format_comments_group ) }
+            }
+            { TopGroup
+                { Align Left }
+                { Members ( Options1 Options2 Options3 Options4 ) }
+            }
+        }
+    }
+}
+
+Global 1 GenerateAda95CodeObjects
+{
+    { ObjectCommand
+        { Name "GenerateAda95CodeObjects" }
+// ECR 5356 begin
+        { ShowOnMenuExpr "is_qrl_code_gen_enabled();" }
+// ECR 5356 end
+        { Label "Generate Ada 95 Code..." }
+        { Command "" }
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty Ada95DefaultOutputDirAndFileObjectsProperty }
+        { UseProperty Ada95FileExtension }
+        { UseProperty Ada95ClassType}
+        { UseProperty Ada95AccessTypes}
+        { UseProperty Ada95ImplementAssociations }
+        { UseProperty Ada95Operations }
+        { UseProperty ExcludeExternalPackageAndClass }
+        { UseProperty Comments }
+        { UseProperty FormatComments }
+        { Properties
+            { Group
+                { Name "GenAccessOperationExternal" }
+                { Type Horizontal }
+                //ECR 6007 begin
+                { Resizable ResizeNone }
+                { HorizontalAlign AlignLabels }
+                //ECR 6007 end
+                { Members ( ada_access_types ada_operations exclusions  ) }
+            }
+            { Group
+                { Name "Options1" }
+                { Label "Output File:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+                // ECR 3651
+                { Members ( folder_group ada_output_file_group ) }
+            }
+            { Group
+                { Name "Options2" }
+                { Label "File Extensions:" }
+                { Type Vertical }
+                { Resizable ResizeWidth }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeWidth }
+                { HorizontalAlign AlignLabels }
+                { Members ( ada_generate_group ) }
+            }
+            { Group
+                { Name "Options3" }
+                { Label "Code Options:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+                { Members ( ada_root_class_type_group ada_subclass_type_privacy ada_implement_associations GenAccessOperationExternal ) }
+            }
+            { Group
+                { Name "Options4" }
+                { Label "Comments:" }
+                { Type Horizontal }
+                { VariableColumn "0" }
+                { Align Top }
+                { Members ( comments format_comments_group ) }
+            }
+            { TopGroup
+                { Align Left }
+                { Members ( Options1 Options2 Options3 Options4 ) }
+            }
+        }
+    }
+}

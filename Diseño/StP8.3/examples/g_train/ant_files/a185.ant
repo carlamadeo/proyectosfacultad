@@ -1,0 +1,101 @@
+FileObject 1
+{
+    { Name "a185" }
+    { Type ObjectAnnotation }
+    { GUID "UID_145E4E31-E2C2-4775-84D3-DDF169E73102" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "screen_display.c" }
+    { Type SEFile }
+    { ObjectId 603 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_7766590F-8612-4167-BCD4-E5AF4ED99F27" }
+}
+
+NodeObject 99997
+{
+    { Name "screen display" }
+    { Type Module }
+    { ObjectId 604 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_7F7413AB-59BE-485e-BB8E-43FB551F3B01" }
+}
+
+NodeObject 99996
+{
+    { Name "" }
+    { Type FormalCaller }
+    { ObjectId 2522 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_9B6F2467-4C1B-4512-BF8C-1535D2BB0E84" }
+}
+
+LinkObject 99995
+{
+    { Name "" }
+    { Type SubprogramCall }
+    { ObjectId 2523 }
+    { Sig "" }
+    { ToNodeId 99997 }
+    { FromNodeId 99996 }
+    { GUID "UID_594031CF-E10B-4915-B17C-30E263773905" }
+}
+
+CntxObject 99994
+{
+    { Name "number of passengers" }
+    { Type DataIn }
+    { ObjectId 2720 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { LinkId 99995 }
+    { GUID "UID_70823388-518D-4f64-9D3D-D2C55FA2D3F8" }
+}
+
+NoteObject 2
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99994 }
+    { ObjectId 2722 }
+}
+
+ItemObject 3
+{
+    { Type ObjectName }
+    { Value "number of passengers" }
+    { NoteId 2 }
+    { ObjectId 2723 }
+}
+
+NoteObject 4
+{
+    { Type ParameterDefinition }
+    { Name "" }
+    { OwnerId 99994 }
+    { ObjectId 2725 }
+}
+
+ItemObject 5
+{
+    { Type DataType }
+    { Value "int" }
+    { NoteId 4 }
+    { ObjectId 2726 }
+}
+

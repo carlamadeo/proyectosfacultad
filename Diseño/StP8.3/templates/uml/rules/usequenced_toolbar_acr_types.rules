@@ -1,0 +1,66 @@
+// ECR 3556 start
+
+Toolbar DefaultArcType
+{
+    //ECR 6380 begin
+    //{ Position Top }
+    //{ IsFloating True }
+    { Position Left }
+    //ECR 6380 end
+    { Group
+        { Exclusive True }
+        { Entry
+            { Name "SimpleMessage" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType SimpleMessage" }
+            { HelpTip "Simple Message" }
+            { Image "simplemessage" }
+        }
+        { Entry
+            { Name "SynchronousMessage" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType SynchronousMessage" }
+            { HelpTip "Synchronous Message" }
+            { Image "synchronousmessage" }
+        }
+        { Entry
+            { Name "BalkingMessage" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType BalkingMessage" }
+            { HelpTip "Balking Message" }
+            { Image "balkingmessage" }
+        }
+        { Entry
+            { Name "TimeoutMessage" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType TimeoutMessage" }
+            { HelpTip "Timeout Message" }
+            { Image "timeoutmessage" }
+        }
+        { Entry
+            { Name "AsynchronousMessage" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType AsynchronousMessage" }
+            { HelpTip "Asynchronous Message" }
+            { Image "asynchronousmessage" }
+        }
+        { Entry
+            { Name "ReturnMessage" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType ReturnMessage" }
+            { HelpTip "Return Message" }
+            { Image "returnmessage" }
+        }
+        { Entry
+            { Name "NoteLink" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType NoteLink" }
+            { HelpTip "Note Link" }
+            { Image "notelink" }
+        }
+    }
+}
+
+// ECR 3556 end
+
+

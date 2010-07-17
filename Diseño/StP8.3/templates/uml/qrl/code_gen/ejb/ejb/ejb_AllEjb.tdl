@@ -1,0 +1,222 @@
+/*****************************************************
+ *
+ * Main Codegeneration functions for EJB
+ *
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    11/18/2000
+ *
+ * History:
+ * ===================================================
+ * DATE        WHO      CHANGE
+ * ---------------------------------------------------
+ * 20/02/2002  Lippert  Prepare for selective 
+ *                      codegeneration
+ ****************************************************/
+
+USES ejb_std;
+
+USES ejb/ejb_EntityBean;
+USES ejb/ejb_SessionBean;
+USES ejb/ejb_HomeInterface;
+USES ejb/ejb_RemoteInterface;
+USES ejb/ejb_PrimaryKeyClass;
+USES ejb/ejb_BulkAccessor;
+USES ejb/ejb_NormalJava;
+
+USES make/ejb_Makefile;
+USES make/wls_Buildfile;
+
+USES util/ejb_MClass;
+
+
+// Prepares and initiates the generation
+// of all EJB related classes.
+proc initClass(MClass)
+    genPackageHierarchy([MClass]);
+    genSuperClassName([MClass]);
+    setAttributeDefaults([MClass]);
+    attributeCount([MClass]);
+    createAttributesFromRefs([MClass]);
+    
+    if (getStereotype([MClass]) == [entity_bean_stereo])
+        [MClass].genAccessMethodsList();
+        prepareEntityProperties([MClass]);
+        if ([MClass:persistence] == "Container")
+            prepareAttributeCMP([MClass]);
+        end if
+        genPKAttributes([MClass]);
+        genPKAttributesList([MClass]);
+        genPKAttributesWithTypeList([MClass]);
+        preparePKClassName([MClass]);
+    end if
+    
+    if (getStereotype([MClass]) == [session_bean_stereo])
+        prepareSessionProperties([MClass]);
+    end if
+    
+    setOperationDefaults([MClass]);
+    operationCount([MClass]);
+    extractMethods([MClass]);
+    genFinderReturntype([MClass]);
+end proc
+
+
+
+// Generates the EJBs according to the bean type
+proc genEJBClasses(MClass)
+    local stereotype       = "";
+    local entitybean_name  = "";
+    local sessionbean_name = "";
+    local home_name        = "";
+    local remote_name      = "";
+    local primkey_name     = "";
+    local dataclass_name   = "";
+    local normalclass_name = "";
+    local exception_name   = "";
+    
+    [stereotype] = getStereotype([MClass]);
+    switch ([stereotype])
+    case [entity_bean_stereo] :
+    case [session_bean_stereo] :
+        if (getStereotype([MClass]) == [entity_bean_stereo])
+            [entitybean_name] = [source_dir] "/" [MClass:dir_name] [MClass.name] [bean_name_suffix] [java_fileextension];
+            output([entitybean_name]);
+            out = genEntityBean([MClass]);
+            if ([MClass:gen_pk_class] == "True")
+                [primkey_name] = [source_dir] "/" [MClass:dir_name] [MClass.name] [pk_name_suffix] [java_fileextension];
+                output([primkey_name]);
+                out = genPrimaryKeyClass([MClass]);
+            end if
+            if ([MClass:bulk_accessors] == "True")
+                [dataclass_name] = [source_dir] "/" [MClass:dir_name] [MClass.name] [vo_name_suffix] [java_fileextension];
+                output([dataclass_name]);
+                out = genBulkAccessorClass([MClass]);
+            end if
+        end if 
+        if (getStereotype([MClass]) == [session_bean_stereo])
+            [sessionbean_name] = [source_dir] "/" [MClass:dir_name] [MClass.name] [bean_name_suffix] [java_fileextension];
+            output([sessionbean_name]);
+            out = genSessionBean([MClass]);
+        end if
+        [remote_name] = [source_dir] "/" [MClass:dir_name] [MClass.name] [java_fileextension];
+        [home_name] = [source_dir] "/" [MClass:dir_name] [MClass.name] [home_name_suffix] [java_fileextension];
+        output([home_name]);
+        out = genHomeInterface([MClass]);
+        output([remote_name]);
+        out = genRemoteInterface([MClass]);
+        break;
+    case "Exception":
+        [exception_name] = [source_dir] "/" [MClass:dir_name] [MClass.name] [java_fileextension];
+        output([exception_name]);
+        out = genExceptionClass([MClass]);
+        break;
+    case [datasource_stereo]: // do nothing
+        break;
+    default:
+        [normalclass_name] = [source_dir] "/" [MClass:dir_name] [MClass.name] [java_fileextension];
+        output([normalclass_name]);
+        out = genNormalJavaClass([MClass]);
+        break;
+    end switch
+end proc
+
+
+
+proc genGenericDeploymentDescriptor()
+    if ([package_mode] == "toplevel")
+      if ([class_id_list] == "")
+        loop(Instances->MPackage Where !hasLoop(MPackage->Domain))
+            output([MPackage:depldesc_name]);
+            out = genDeploymentDescriptor([MPackage]);
+        end loop
+      else
+        loop(Instances->MPackage Where !hasLoop(MPackage->Domain) && [MPackage:marked])
+          output([MPackage:depldesc_name]);
+          out = genDeploymentDescriptor([MPackage]);
+        end loop
+      end if
+    end if
+end proc
+
+
+
+proc genWlsDeploymentDescriptor()
+	local wls_cmpdepl_name = "";
+
+    if ([package_mode] == "toplevel")
+      if ([class_id_list] == "")
+        loop(Instances->MPackage Where !hasLoop(MPackage->Domain))
+            output([MPackage:wls_depl_name]);
+            out = genWlsEJB_JAR_XML([MPackage]);
+            loop(MPackage->MClass)
+            	if (getStereotype([MClass]) == [entity_bean_stereo] && [MClass:persistence] == "Container")
+            		[wls_cmpdepl_name] = [MPackage:classes_name] "/META-INF/weblogic-cmp-rdbms-" [MClass.name] "-jar.xml";
+            		output([wls_cmpdepl_name]);
+            		out = genWlsRDBMS_JAR_XML([MClass]);
+            	end if
+            end loop
+            loop(Instances->MPackage([MPackage:descendants]) As SubPack)
+        		loop(SubPack->MClass)
+            		if (getStereotype([MClass]) == [entity_bean_stereo] && [MClass:persistence] == "Container")
+        				[wls_cmpdepl_name] = [MPackage:classes_name] "/META-INF/weblogic-cmp-rdbms-" [MClass.name] "-jar.xml";
+            			output([wls_cmpdepl_name]);
+            			out = genWlsRDBMS_JAR_XML([MClass]);
+            		end if
+        		end loop
+    		end loop
+        end loop
+      else
+        loop(Instances->MPackage Where !hasLoop(MPackage->Domain) && [MPackage:marked])
+          output([MPackage:wls_depl_name]);
+          out = genWlsEJB_JAR_XML([MPackage]);
+          loop(MPackage->MClass Where [MClass:marked])
+            if (getStereotype([MClass]) == [entity_bean_stereo] && [MClass:persistence] == "Container")
+              [wls_cmpdepl_name] = [MPackage:classes_name] "/META-INF/weblogic-cmp-rdbms-" [MClass.name] "-jar.xml";
+              output([wls_cmpdepl_name]);
+            	out = genWlsRDBMS_JAR_XML([MClass]);
+            end if
+          end loop
+          loop(Instances->MPackage([MPackage:descendants]) As SubPack)
+            loop(SubPack->MClass Where [MClass:marked])
+              if (getStereotype([MClass]) == [entity_bean_stereo] && [MClass:persistence] == "Container")
+                [wls_cmpdepl_name] = [MPackage:classes_name] "/META-INF/weblogic-cmp-rdbms-" [MClass.name] "-jar.xml";
+                  output([wls_cmpdepl_name]);
+                  out = genWlsRDBMS_JAR_XML([MClass]);
+              end if
+            end loop
+    		  end loop
+        end loop
+      end if
+    end if
+end proc
+
+
+
+proc genBuildFiles()
+    local makefile_nt = [make_dir]"/makefile_nt.bat";
+    local makefile_unix = [make_dir]"/makefile.unix";
+    
+    output([makefile_nt]);
+    out = genMakefileNT();
+    output([makefile_unix]);
+    out = genMakefileUnix();
+    
+    if ([package_mode] == "toplevel")
+      if ([class_id_list] == "")
+        loop(Instances->MPackage Where !hasLoop(MPackage->Domain))
+        output([MPackage:pack_name]"/build.bat");
+        out = genBuildFileNT([MPackage]);
+        output([MPackage:pack_name]"/build.sh");
+        out = genBuildFileUnix([MPackage]);
+        end loop
+      else
+        loop(Instances->MPackage Where !hasLoop(MPackage->Domain) && [MPackage:marked])
+          output([MPackage:pack_name]"/build.bat");
+          out = genBuildFileNT([MPackage]);
+          output([MPackage:pack_name]"/build.sh");
+          out = genBuildFileUnix([MPackage]);
+        end loop
+      end if
+    end if
+end proc

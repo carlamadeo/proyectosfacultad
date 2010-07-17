@@ -1,0 +1,50 @@
+FileObject 1
+{
+    { Name "a20" }
+    { Type ObjectAnnotation }
+    { GUID "UID_5E10CE91-C577-4ec9-AD5A-1A6ED9D0C677" }
+}
+
+NodeObject 99999
+{
+    { Name "ListInput" }
+    { Type UmlClass }
+    { ObjectId 416 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_03906D96-5390-11d4-8777-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlClassDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 418 }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 420 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 422 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "ListInput" }
+    { NoteId 4 }
+    { ObjectId 423 }
+}
+

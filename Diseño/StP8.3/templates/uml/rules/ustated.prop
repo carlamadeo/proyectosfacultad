@@ -1,0 +1,129 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+
+Include "rules/extensibility.prop"
+// ECR 3786 Start
+Include "uml/rules/action_state_transition.prop"
+// ECR 3786 End
+
+PropertySheet UmlState_ps
+{
+    { Name "UmlState_ps" }
+    {Label "Properties"} {UseProperty UmlObjectDescriptionButton}
+    { UseProperty UmlNameProp }
+    { UseProperty UmlExtensibilityProps }
+    { UseProperty UmlBottomButtons }
+    { OwnerActionCallback UmlState_ps_ActionDone } // ECR 6880
+    { Properties
+        { Qrl { QrlFile "rules/qrl/ustated.ps.qrl" } }
+// ECR 6926 begin
+//        { Space
+//            { Name Sp1 }
+//        }
+//        { Space
+//            { Name Sp2 }
+//        }
+//        { Group
+//            { Name RightGroup }
+//            { Type Vertical }
+//            { ResizePolicy ResizeNone }
+//            { HorizontalAlign AlignLabels }
+//            { Members ( Sp1
+//                        ObjectName ObjectDescription
+//                        Sp2
+//                        Extensibility ) }
+//        }
+        { Group
+            { Name NameGroup }
+            { Label "Object" }
+            { Type Vertical }
+            { VerticalSpacing 5 }
+            { Resizable ResizeWidth }
+            { HorizontalAlign AlignLabels }
+            { Members ( ObjectName 
+                        ObjectDescription ) }
+        }
+        { TopGroup
+            { Align Left }
+            { Members ( NameGroup
+                        Extensibility ) }
+        }
+// ECR 6926 end
+    }
+}
+
+PropertySheet UmlStateLink_ps
+{
+    { Name "UmlStateLink_ps" }
+    {Label "Properties"} {UseProperty UmlObjectDescriptionButton}
+// ECR 3786 Start
+//    { UseProperty UmlNameProp }
+    { UseProperty UmlTransitionObjectName }
+    { UseProperty UmlStateTransitionObjectName }
+// ECR 3786 End
+    { UseProperty UmlExtensibilityProps }
+    { UseProperty UmlBottomButtons }
+    { OwnerActionCallback UmlStateLink_ps_ActionDone } // ECR 6880
+    { Properties
+        { Qrl { QrlFile "rules/qrl/ustated.ps.qrl" } }
+// ECR 6926 begin
+//        { Space
+//            { Name Sp1 }
+//        }
+//        { Space
+//            { Name Sp2 }
+//        }
+// ECR 3786 Start
+//        { Group
+//            { Name NameFromToGroup }
+//            { Type Vertical }
+//            { HorizontalAlign AlignLabels }
+//            { ResizePolicy ResizeNone }
+//            { Members ( Sp1 ObjectName ObjectDescription Sp2 StateTransitionObjectName ) }
+//        }
+//        { TopGroup
+//            { Align Left }
+//            { Members ( NameFromToGroup Extensibility ) }
+//        }
+//        { Group
+//            { Name NameFromToGroup }
+//            { Type Vertical }
+//            { HorizontalAlign AlignLabels }
+//            { ResizePolicy ResizeNone }
+//            { Members ( Sp1 ObjectName ObjectDescription Sp2 StateTransitionObjectName ) }
+//        }
+        { Group
+            { Name NameGroup }
+            { Label "Link" }
+            { Type Vertical }
+            { VerticalSpacing 5 }
+            { Resizable ResizeWidth }
+            { HorizontalAlign AlignLabels }
+            { Members ( ObjectName 
+                        ObjectDescription ) }
+        }
+        { TopGroup
+            { Align Left }
+            { Members ( NameGroup 
+                        StateTransitionObjectName 
+                        Extensibility ) }
+        }
+// ECR 6926 end
+//        { Group
+//            { Name RightGroup }
+//            { Type Vertical }
+//            { ResizePolicy ResizeNone }
+//            { HorizontalAlign AlignLabels }
+//            { Members ( Sp1
+//                        ObjectName ObjectDescription
+//                        Sp2
+//                        Extensibility ) }
+//        }
+// ECR 3786 End
+    }
+}
+

@@ -1,0 +1,101 @@
+FileObject 1
+{
+    { Name "a179" }
+    { Type ObjectAnnotation }
+    { GUID "UID_1176543B-9F11-430d-BD69-65295F694CA6" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "calculate_speed.c" }
+    { Type SEFile }
+    { ObjectId 2021 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_E67259D1-6E39-4244-BEBD-841C20CD3139" }
+}
+
+NodeObject 99997
+{
+    { Name "calculate speed" }
+    { Type Module }
+    { ObjectId 2022 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_B860C5A9-2744-4cf5-9896-A17899C193D0" }
+}
+
+NodeObject 99996
+{
+    { Name "" }
+    { Type FormalCaller }
+    { ObjectId 2522 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_9B6F2467-4C1B-4512-BF8C-1535D2BB0E84" }
+}
+
+LinkObject 99995
+{
+    { Name "" }
+    { Type SubprogramCall }
+    { ObjectId 2730 }
+    { Sig "" }
+    { ToNodeId 99997 }
+    { FromNodeId 99996 }
+    { GUID "UID_1B07350B-0251-4683-8CFC-0739414D5206" }
+}
+
+CntxObject 99994
+{
+    { Name "num pulses" }
+    { Type DataOut }
+    { ObjectId 2731 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { LinkId 99995 }
+    { GUID "UID_5C27899D-E882-4e1c-A742-0685F8F6AD66" }
+}
+
+NoteObject 2
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99994 }
+    { ObjectId 2733 }
+}
+
+ItemObject 3
+{
+    { Type ObjectName }
+    { Value "num pulses" }
+    { NoteId 2 }
+    { ObjectId 2734 }
+}
+
+NoteObject 4
+{
+    { Type ParameterDefinition }
+    { Name "" }
+    { OwnerId 99994 }
+    { ObjectId 2736 }
+}
+
+ItemObject 5
+{
+    { Type DataType }
+    { Value "int" }
+    { NoteId 4 }
+    { ObjectId 2737 }
+}
+

@@ -1,0 +1,79 @@
+FileObject 1
+{
+    { Name "a36" }
+    { Type ObjectAnnotation }
+    { GUID "UID_029013FF-588E-40bd-A189-3FC17054A5C2" }
+}
+
+NodeObject 99999
+{
+    { Name "" }
+    { Type FlowAnchor }
+    { ObjectId 1992 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_A0EA4F97-6DBC-4703-9E61-888B955B2352" }
+}
+
+NodeObject 99998
+{
+    { Name "compute wt_no" }
+    { Type Process }
+    { ObjectId 2802 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_33EB8724-FE75-4fda-ADCB-AADA500C0413" }
+}
+
+LinkObject 99997
+{
+    { Name "green pulse" }
+    { Type DataFlow }
+    { ObjectId 3208 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_5F6195B2-D5A1-4977-9658-07BC4B8D9D73" }
+}
+
+NoteObject 2
+{
+    { Type InterfaceDesign }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3210 }
+}
+
+ItemObject 3
+{
+    { Type InterfaceName }
+    { Value "green pulse" }
+    { NoteId 2 }
+    { ObjectId 3211 }
+}
+
+ItemObject 4
+{
+    { Type InterfacePriority }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 3212 }
+}
+
+NoteObject 5
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3214 }
+}
+
+ItemObject 6
+{
+    { Type ObjectName }
+    { Value "green pulse" }
+    { NoteId 5 }
+    { ObjectId 3215 }
+}
+

@@ -1,0 +1,104 @@
+<HTML><HEAD><TITLE>Tcl Built-In Commands - regexp manual page</TITLE></HEAD><BODY>
+<DL>
+<DD><A HREF="regexp.htm#M2" NAME="L826">NAME</A>
+<DL><DD>regexp - Match a regular expression against a string</DL>
+<DD><A HREF="regexp.htm#M3" NAME="L827">SYNOPSIS</A>
+<DL>
+<DD><B>regexp </B>?<I>switches</I>? <I>exp string </I>?<I>matchVar</I>? ?<I>subMatchVar subMatchVar ...</I>?
+</DL>
+<DD><A HREF="regexp.htm#M4" NAME="L828">DESCRIPTION</A>
+<DL>
+<DD><A HREF="regexp.htm#M5" NAME="L829"><B>-nocase</B></A>
+<DD><A HREF="regexp.htm#M6" NAME="L830"><B>-indices</B></A>
+<DD><A HREF="regexp.htm#M7" NAME="L831"><B>-expanded</B></A>
+<DD><A HREF="regexp.htm#M8" NAME="L832"><B>-line</B></A>
+<DD><A HREF="regexp.htm#M9" NAME="L833"><B>-linestop</B></A>
+<DD><A HREF="regexp.htm#M10" NAME="L834"><B>-lineanchor</B></A>
+<DD><A HREF="regexp.htm#M11" NAME="L835"><B>-about</B></A>
+<DD><A HREF="regexp.htm#M12" NAME="L836"><B>--</B></A>
+</DL>
+<DD><A HREF="regexp.htm#M13" NAME="L837">SEE ALSO</A>
+<DD><A HREF="regexp.htm#M14" NAME="L838">KEYWORDS</A>
+</DL><HR>
+<H3><A NAME="M2">NAME</A></H3>
+regexp - Match a regular expression against a string
+<H3><A NAME="M3">SYNOPSIS</A></H3>
+<B>regexp </B>?<I>switches</I>? <I>exp string </I>?<I>matchVar</I>? ?<I>subMatchVar subMatchVar ...</I>?<BR>
+<H3><A NAME="M4">DESCRIPTION</A></H3>
+Determines whether the regular expression <I>exp</I> matches part or
+all of <I>string</I> and returns 1 if it does, 0 if it doesn't.
+(Regular expression matching is described in the <B><A HREF="../TclCmd/re_syntax.htm">re_syntax</A></B>
+reference page.)
+<P>
+If additional arguments are specified after <I>string</I> then they
+are treated as the names of variables in which to return
+information about which part(s) of <I>string</I> matched <I>exp</I>.
+<I>MatchVar</I> will be set to the range of <I>string</I> that
+matched all of <I>exp</I>.  The first <I>subMatchVar</I> will contain
+the characters in <I>string</I> that matched the leftmost parenthesized
+subexpression within <I>exp</I>, the next <I>subMatchVar</I> will
+contain the characters that matched the next parenthesized
+subexpression to the right in <I>exp</I>, and so on.
+<P>
+If the initial arguments to <B>regexp</B> start with <B>-</B> then
+they are treated as switches.  The following switches are
+currently supported:
+<P>
+<DL>
+<P><DT><A NAME="M5"><B>-nocase</B></A><DD>
+Causes upper-case characters in <I>string</I> to be treated as
+lower case during the matching process.
+<P><DT><A NAME="M6"><B>-indices</B></A><DD>
+Changes what is stored in the <I>subMatchVar</I>s. 
+Instead of storing the matching characters from <I>string</I>,
+each variable
+will contain a list of two decimal strings giving the indices
+in <I>string</I> of the first and last characters in the matching
+range of characters.
+<P><DT><A NAME="M7"><B>-expanded</B></A><DD>
+Enables use of the expanded regular expression syntax where
+whitespace and comments are ignored.  This is the same as specifying
+the <B>(?x)</B> embedded option (see METASYNTAX, below).
+<P><DT><A NAME="M8"><B>-line</B></A><DD>
+Enables newline-sensitive matching.  By default, newline is a
+completely ordinary character with no special meaning.  With this
+flag, `[^' bracket expressions and `.' never match newline, `^'
+matches an empty string after any newline in addition to its normal
+function, and `$' matches an empty string before any newline in
+addition to its normal function.  This flag is equivalent to
+specifying both <B>-linestop</B> and <B>-lineanchor</B>, or the
+<B>(?n)</B> embedded option (see METASYNTAX, below).
+<P><DT><A NAME="M9"><B>-linestop</B></A><DD>
+Changes the behavior of `[^' bracket expressions and `.' so that they
+stop at newlines.  This is the same as specifying the <B>(?p)</B>
+embedded option (see METASYNTAX, below).
+<P><DT><A NAME="M10"><B>-lineanchor</B></A><DD>
+Changes the behavior of `^' and `$' (the ``anchors'') so they match the
+beginning and end of a line respectively.  This is the same as
+specifying the <B>(?w)</B> embedded option (see METASYNTAX, below).
+<P><DT><A NAME="M11"><B>-about</B></A><DD>
+Instead of attempting to match the regular expression, returns a list
+containing information about the regular expression.  The first
+element of the list is a subexpression count.  The second element is a
+list of property names that describe various attributes of the regular
+expression. This switch is primarily intended for debugging purposes.
+<P><DT><A NAME="M12"><B>--</B></A><DD>
+Marks the end of switches.  The argument following this one will
+be treated as <I>exp</I> even if it starts with a <B>-</B>.
+<P></DL>
+<P>
+If there are more <I>subMatchVar</I>'s than parenthesized
+subexpressions within <I>exp</I>, or if a particular subexpression
+in <I>exp</I> doesn't match the string (e.g. because it was in a
+portion of the expression that wasn't matched), then the corresponding
+<I>subMatchVar</I> will be set to ``<B>-1 -1</B>'' if <B>-indices</B>
+has been specified or to an empty string otherwise.
+
+<H3><A NAME="M13">SEE ALSO</A></H3>
+<B><A HREF="../TclCmd/re_syntax.htm">re_syntax</A></B>
+<H3><A NAME="M14">KEYWORDS</A></H3>
+<A href="../Keywords/M.htm#match">match</A>, <A href="../Keywords/R.htm#regular expression">regular expression</A>, <A href="../Keywords/S.htm#string">string</A>
+<HR><PRE>
+<A HREF="../copyright.htm">Copyright</A> &#169; 1998 Sun Microsystems, Inc.
+<A HREF="../copyright.htm">Copyright</A> &#169; 1995-1997 Roger E. Critchlow Jr.</PRE>
+</BODY></HTML>

@@ -1,0 +1,61 @@
+FileObject 1
+{
+    { Name "a666" }
+    { Type ObjectAnnotation }
+    { GUID "UID_0DA66C26-3697-11d6-AEA1-0080C88207C4" }
+}
+
+NodeObject 99999
+{
+    { Name "Door" }
+    { Type UmlClass }
+    { ObjectId 430 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_378C31F6-544B-11d4-8778-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "Door" }
+    { Type UmlOperation }
+    { ObjectId 1331 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_2CE1BDB2-369A-11d6-AEA1-0080C88207C4" }
+}
+
+NoteObject 2
+{
+    { Type UmlOperationJavaCode }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1333 }
+    { DescLine "display = new Display();" }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1335 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1337 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "Door" }
+    { NoteId 4 }
+    { ObjectId 1338 }
+}
+

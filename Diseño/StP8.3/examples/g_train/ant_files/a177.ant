@@ -1,0 +1,101 @@
+FileObject 1
+{
+    { Name "a177" }
+    { Type ObjectAnnotation }
+    { GUID "UID_277A1285-1823-4e4d-87D2-6E60F3E5B739" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "find_loc.c" }
+    { Type SEFile }
+    { ObjectId 1651 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_BD30139B-878D-4438-8CD1-758022AF75CB" }
+}
+
+NodeObject 99997
+{
+    { Name "find_loc" }
+    { Type Module }
+    { ObjectId 1652 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_6F0C66E9-BCE1-4037-92E3-007335019A77" }
+}
+
+NodeObject 99996
+{
+    { Name "" }
+    { Type FormalCaller }
+    { ObjectId 2522 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_9B6F2467-4C1B-4512-BF8C-1535D2BB0E84" }
+}
+
+LinkObject 99995
+{
+    { Name "" }
+    { Type SubprogramCall }
+    { ObjectId 2713 }
+    { Sig "" }
+    { ToNodeId 99997 }
+    { FromNodeId 99996 }
+    { GUID "UID_7C681657-1E09-433e-A224-0985DF1A99D9" }
+}
+
+CntxObject 99994
+{
+    { Name "num pulses" }
+    { Type DataIn }
+    { ObjectId 2714 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { LinkId 99995 }
+    { GUID "UID_2665052B-91B5-48a2-8719-01C9C6F6D963" }
+}
+
+NoteObject 2
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99994 }
+    { ObjectId 2716 }
+}
+
+ItemObject 3
+{
+    { Type ObjectName }
+    { Value "num pulses" }
+    { NoteId 2 }
+    { ObjectId 2717 }
+}
+
+NoteObject 4
+{
+    { Type ParameterDefinition }
+    { Name "" }
+    { OwnerId 99994 }
+    { ObjectId 2719 }
+}
+
+ItemObject 5
+{
+    { Type DataType }
+    { Value "int" }
+    { NoteId 4 }
+    { ObjectId 2720 }
+}
+

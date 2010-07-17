@@ -1,0 +1,52 @@
+FileObject 1
+{
+    { Name "a360" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65C16-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "Pendulum" }
+    { Type UmlObjectClassScope }
+    { ObjectId 922 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_A91134AC-6EAE-11d4-8044-00104BF16798" }
+}
+
+NodeObject 99998
+{
+    { Name "" }
+    { Type UmlObjectInState }
+    { ObjectId 923 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_224624ED-CE14-11d5-A046-0010A4B8EFF8" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 925 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 927 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "" }
+    { NoteId 3 }
+    { ObjectId 928 }
+}
+

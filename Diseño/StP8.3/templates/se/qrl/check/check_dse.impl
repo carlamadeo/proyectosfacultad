@@ -1,0 +1,276 @@
+
+// 	StP/SE
+// 	Confidential property of Aonix
+// 	Copyright (c) 1992-1999
+// 	All rights reserved
+//
+
+#include "ct/qrl/include/files.inc"
+#include "ct/qrl/include/appids.inc"
+#include "qrl/check/check_common.inc"
+
+const string    DIAGRAM_FILE_TYPE = "DseDiagram";
+int    		dseVerbose = 0;
+
+list    AllDiagrams = list_create("file", 0);
+
+
+int 
+checkDseSemanticsFromQrp(string files, int verbose, int check_one, int check_two)
+{
+    int	errors = 0;
+
+    dseVerbose = verbose;
+
+    AllDiagrams = file_list(DIAGRAM_FILE_TYPE, files);
+
+    errors = errors + check_file_history();
+
+    errors = errors + dse_check(NULL, check_one, check_two);
+
+    return errors;
+}
+
+
+int 
+checkDseSemanticsFromDse(int verbose, int check_one, int check_two)
+{
+    int		errors = 0;
+    list	all_nodes_list = list_create("node", 0);
+    list	filelist;
+    file	fileobj = NULL;
+    list	nodelist;
+    string	files, query, message;
+
+    dseVerbose = verbose;
+
+    all_nodes_list = gde_all_mapped_oms_nodes();
+
+    if (list_count(all_nodes_list) == 0)
+    {
+        print_message("Empty diagram. Semantic checks terminated.");
+        return 1;
+    }
+
+    files = gde_diagram_name();
+    if (str_no_val(files))
+    {
+        print_error("Save the diagram before running Check Semantics.");
+        return 1;
+    }
+
+    AllDiagrams = file_list(DIAGRAM_FILE_TYPE, files);
+ 
+    query = "file[DseDiagram && name = '${files}']";
+    fileobj = find_by_query(query);
+ 
+    if (fileobj == NULL || file_history(fileobj))
+    {
+        print_message("File '" + files + "' must be saved to the repository before checking semantics.");
+        return 1;
+    }  
+ 
+    errors = dse_check(all_nodes_list, check_one, check_two);
+    list_clear(AllDiagrams);
+
+    return errors;
+}
+
+
+//
+// The main routine for this script, which calls all the appropriate checking
+// routines.
+//
+int dse_check(list nodelist, int check_one, int check_two)
+{
+    int		i, errors = 0; 
+    string	query;
+    int		node_count = 0;
+    file	one_file;
+
+    if (nodelist != NULL)
+	node_count = list_count(nodelist);
+
+    print_message("Starting DSE Semantic Checking...");
+    print_sc_para("Starting DSE Semantic Checking...");
+
+    //  run semantic checks for each diagram
+    for ( i = 0; i < list_count(AllDiagrams); i++)
+    {
+	one_file = list_get(AllDiagrams, i);
+        CurFile = one_file.name;
+
+	print_message("Checking semantics for DSE diagram '" + one_file.name + "'...");
+	print_sc_para("Checking semantics for DSE diagram '" + one_file.name + "'...");
+
+	if (node_count == 0)
+	{
+	    query = "node[node_refs[file_id=${one_file.id}] &&
+			    name!='NULL']";
+	    nodelist = list_select(query);
+	}
+	 
+	if (check_one)
+	    errors += check_leaf_datatype(one_file, nodelist);
+
+	if (check_two)
+	    errors += check_non_leaf_datatype(one_file, nodelist);
+
+    }
+
+    if (!errors)
+    {
+        print_message("Check DSE semantics completed with no errors.");
+        print_sc_para("Check DSE semantics completed with no errors.");
+    }
+    else if (errors == 1)
+    {
+        print_message("Check DSE semantics completed with 1 error.");
+        print_sc_para("Check DSE semantics completed with 1 error.");
+    }
+    else
+    {
+        print_message("Check DSE semantics completed with " + errors + " errors.");
+        print_sc_para("Check DSE semantics completed with " + errors + " errors.");
+    }
+
+    return errors;
+}
+
+
+//
+// Check that all primitive sequences and selections 
+// have a valid DataType annotation.
+//
+
+int
+check_leaf_datatype(file fileobj, list nodelist)
+{
+    int		i, errors = 0;	
+    string	query;  
+    node	one_node, parent;
+    item	item;
+    link	link;
+
+    if (dseVerbose)
+    {
+	print_message("Checking for valid DataType Annotation on all typedefs and leaf sequences/selections...");
+	print_sc_para("Checking for valid DataType Annotation on all typedefs and leaf sequences/selections...");
+    }
+
+    for (i = 0; i < list_count(nodelist); i++)
+    {
+	one_node = list_get(nodelist, i);
+
+	query = "link[from_node_id = ${one_node.id} && link_refs]";
+	link = find_by_query(query);
+
+	if (link == NULL)
+	{
+	    query = "node[${one_node.scope_node_id} && node_refs]";
+	    parent = find_by_query(query);
+
+	    if (parent == NULL || parent.type != "Enumeration")
+	    {
+		query = "item[obj_id=${one_node.id}&& DataType]";
+		item = find_by_query(query);
+	    
+		if (item == NULL)
+		{
+		    if (one_node.type == "Sequence" ||
+			one_node.type == "Selection" ||
+			one_node.type == "Typedef")
+		    {
+			++errors;
+			print_error(one_node.type + " '" + one_node.name + "' does not have a DataType Annotation.", node_appids(one_node, fileobj));
+			print_sc_error("Dse", CurFile, one_node.type + " '" + one_node.name + "' does not have a DataType Annotation.");
+		    }
+		}
+		else
+		{
+		    if (!IsBuiltInCType(item.value) && item.value != "")
+		    {
+			query = "node[name='${item.value}' 
+				&& node_refs[file[DseDiagram]]]";
+			if (list_count(list_select(query)) == 0)
+			{
+			    ++errors;
+			    print_error("'" + one_node.name + "' is of type '" + item.value + "', which is not defined on any DSE diagram.", node_appids(one_node, fileobj));
+			    print_sc_error("Dse", CurFile, "'" + one_node.name + "' is of type '" + item.value + "', which is not defined on any DSE diagram.");
+			}
+		    }
+		}
+	    }
+	}
+    }
+
+    return errors;
+}
+
+
+
+//
+// Checks that no non-primitive data elements have a 
+// DataType annotation.
+//
+
+int
+check_non_leaf_datatype(file fileobj, list nodelist)
+{
+    int		i, errors = 0;		
+    string	query;
+    node	one_node;
+    item	item;
+
+    if (dseVerbose)
+	print_message("Checking for non-leaf elements with a DataType ...");
+
+    for(i = 0; i < list_count(nodelist); i = i + 1)
+    {
+	one_node = list_get(nodelist, i);
+
+	query = "node[${one_node.id} && out_links[link_refs]]";
+
+	one_node = find_by_query(query);
+
+	if (one_node != NULL)
+	{
+            query = "item[obj_id=${one_node.id} && DataType]";
+            item = find_by_query(query);
+
+	    if (item != NULL)
+	    {
+    		++errors;
+		print_error(one_node.type + " '" + one_node.name + "' cannot have both a DataType annotation and children.", node_appids(one_node, fileobj));
+		print_sc_error("Dse", CurFile, one_node.type + " '" + one_node.name + "' cannot have both a DataType annotation and children.");
+	    }
+	}
+    }
+
+    return errors;
+}
+
+int
+check_file_history()
+{
+    int   i, errors = 0;
+    file  diag;
+    string query;
+
+    // check histories to warn about an unrepsync'd file
+
+    for (i = 0; i<(list_count(AllDiagrams)); i++)
+    {
+        diag = list_get(AllDiagrams, i);
+        if (file_history(diag))
+        {
+            return ++errors;
+            list_delete(AllDiagrams, i);
+        }
+
+    }
+
+    return errors;
+
+}
+

@@ -1,0 +1,39 @@
+FileObject 1
+{
+    { Name "a800" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65D1E-34FB-11d6-8DB9-00500445CF96" }
+}
+
+FileObject 99999
+{
+    { Name "Clockwork__2" }
+    { Type UmlStateTable }
+    { ObjectId 434 }
+    { AnnotFileId 1 }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1503 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1505 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Clockwork__2" }
+    { NoteId 3 }
+    { ObjectId 1506 }
+}
+

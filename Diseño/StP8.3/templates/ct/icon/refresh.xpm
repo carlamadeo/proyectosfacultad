@@ -1,0 +1,28 @@
+/* XPM */
+static char* refresh_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 6 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #000000	c #808080",
+"o	m #ffffff	c #c0c0c0",
+"x	m #000000	c #0000ff",
+/* pixels */
+"................",
+"................",
+".XXXXXXXXXXXXXX.",
+".XO...........X.",
+".XXXXXXXXXXXXXX.",
+".XO.X         X.",
+".XO.X  oxx x  X.",
+".XO.X ox  xx  X.",
+".XO.X x  xxx  X.",
+".XO.X         X.",
+".XO.X xxx  x  X.",
+".XO.X xx  xo  X.",
+".XO.X x xxo   X.",
+".XO.X         X.",
+".XXXXXXXXXXXXXX.",
+"................"};

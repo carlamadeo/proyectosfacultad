@@ -1,0 +1,298 @@
+FileObject 1
+{
+    { Name "a128" }
+    { Type ObjectAnnotation }
+    { GUID "UID_18C78592-7AB3-4e7c-9856-5995E2DC61FB" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "timer_pulse.h" }
+    { Type SEFile }
+    { ObjectId 1305 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_BD43AC4F-4857-4933-B951-419796827A29" }
+}
+
+NodeObject 99997
+{
+    { Name "timer pulse" }
+    { Type Sequence }
+    { ObjectId 1306 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_4E6F20A9-3E7B-455c-8FE6-353560E6DB82" }
+}
+
+NodeObject 99996
+{
+    { Name "red pulse" }
+    { Type Sequence }
+    { ObjectId 1325 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99997 }
+    { GUID "UID_3A3E4688-DF46-4d4c-901A-0494370369ED" }
+}
+
+NoteObject 2
+{
+    { Type DataDefinition }
+    { Name "" }
+    { OwnerId 99996 }
+    { ObjectId 1327 }
+    { DescLine "The red signal indicates that a passenger is in the process of being weighed and is present until a passenger is completely weighed." }
+}
+
+ItemObject 3
+{
+    { Type DataType }
+    { Value "boolean" }
+    { NoteId 2 }
+    { ObjectId 1328 }
+}
+
+ItemObject 4
+{
+    { Type Constraint }
+    { Value "none" }
+    { NoteId 2 }
+    { ObjectId 1329 }
+}
+
+ItemObject 5
+{
+    { Type DataLocation }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1330 }
+}
+
+ItemObject 6
+{
+    { Type DataSize }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1331 }
+}
+
+ItemObject 7
+{
+    { Type Representation }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1332 }
+}
+
+ItemObject 8
+{
+    { Type Legality }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1333 }
+}
+
+ItemObject 9
+{
+    { Type Units }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1334 }
+}
+
+ItemObject 10
+{
+    { Type Scaling }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1335 }
+}
+
+ItemObject 11
+{
+    { Type Precision }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1336 }
+}
+
+ItemObject 12
+{
+    { Type Accuracy }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1337 }
+}
+
+ItemObject 13
+{
+    { Type Conventions }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1338 }
+}
+
+ItemObject 14
+{
+    { Type Frequency }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1339 }
+}
+
+ItemObject 15
+{
+    { Type Priority }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1340 }
+}
+
+NoteObject 16
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99996 }
+    { ObjectId 1342 }
+}
+
+ItemObject 17
+{
+    { Type ObjectName }
+    { Value "red pulse" }
+    { NoteId 16 }
+    { ObjectId 1343 }
+}
+
+ItemObject 18
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 16 }
+    { ObjectId 1344 }
+}
+
+NoteObject 19
+{
+    { Type Requirement }
+    { Name "1" }
+    { OwnerId 99996 }
+    { ObjectId 1346 }
+    { DescLine "These requirements were taken from an article in 'Electronic Design' Apr 28 1988. The article outlines a model for the design of a realtime system for a an underground transportation system." }
+}
+
+ItemObject 20
+{
+    { Type NoteKey }
+    { Value "1" }
+    { NoteId 19 }
+    { ObjectId 1347 }
+}
+
+ItemObject 21
+{
+    { Type RequirementName }
+    { Value "weight-sub-system" }
+    { NoteId 19 }
+    { ObjectId 1348 }
+}
+
+ItemObject 22
+{
+    { Type RequirementDocument }
+    { Value "g_train_specifications" }
+    { NoteId 19 }
+    { ObjectId 1349 }
+}
+
+ItemObject 23
+{
+    { Type RequirementParagraph }
+    { Value "speed" }
+    { NoteId 19 }
+    { ObjectId 1350 }
+}
+
+ItemObject 24
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 19 }
+    { ObjectId 1351 }
+}
+
+ItemObject 25
+{
+    { Type QualificationMethod }
+    { Value "" }
+    { NoteId 19 }
+    { ObjectId 1352 }
+}
+
+ItemObject 26
+{
+    { Type QualificationLevel }
+    { Value "" }
+    { NoteId 19 }
+    { ObjectId 1353 }
+}
+
+ItemObject 27
+{
+    { Type FormalTestParagraph }
+    { Value "" }
+    { NoteId 19 }
+    { ObjectId 1354 }
+}
+
+NoteObject 28
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99996 }
+    { ObjectId 1356 }
+}
+
+ItemObject 29
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 28 }
+    { ObjectId 1357 }
+}
+
+ItemObject 30
+{
+    { Type DocumentName }
+    { Value "SRS" }
+    { NoteId 28 }
+    { ObjectId 1358 }
+}
+
+ItemObject 31
+{
+    { Type DocumentNumber }
+    { Value "1" }
+    { NoteId 28 }
+    { ObjectId 1359 }
+}
+
+ItemObject 32
+{
+    { Type ParagraphNumber }
+    { Value "24" }
+    { NoteId 28 }
+    { ObjectId 1360 }
+}
+

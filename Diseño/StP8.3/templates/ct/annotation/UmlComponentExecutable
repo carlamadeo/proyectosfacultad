@@ -1,0 +1,12 @@
+//
+// 	StP/Core
+// 	Confidential property of Aonix
+// 	Copyright (c) 2000
+// 	All rights reserved
+//
+
+Include "annotation/UmlComponentExecutable.note"
+Include "annotation/UmlGenericObject"
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_UmlComponentExecutable"

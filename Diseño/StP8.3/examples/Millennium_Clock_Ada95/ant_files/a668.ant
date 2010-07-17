@@ -1,0 +1,39 @@
+FileObject 1
+{
+    { Name "a668" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65CF1-34FB-11d6-8DB9-00500445CF96" }
+}
+
+FileObject 99999
+{
+    { Name "types" }
+    { Type UmlClassDiagram }
+    { ObjectId 392 }
+    { AnnotFileId 1 }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1451 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1453 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "types" }
+    { NoteId 3 }
+    { ObjectId 1454 }
+}
+

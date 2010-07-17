@@ -1,0 +1,1590 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="TEMPLATEBASE" content="Users Guide WebWorks Template">
+<meta name="LASTUPDATED" content="01/24/02 09:18:29">
+<title>Chapter 6 </title>
+</head>
+
+<body link="#0066CC" vlink="#800080" text="#000000" alink="#FF0000" bgcolor="#FFFFFF"
+background="graphics/backgrnd.gif">
+
+<p><img src="graphics/FLEX-lm.gif" align="left"
+alt="FLEXlm icon"> </p>
+
+<table width="331" border="0" align="right" cellpadding="0" cellspacing="0">
+  <tr>
+    <td><a href="TOC.htm#TOC"><img src="graphics/navtoc.gif" width="84" height="23"
+    border="0" alt="TOC"> </a></td>
+    <td><a href="chap5.htm"><img src="graphics/navprev.gif" width="80" height="23"
+    border="0" alt="PREV"> </a></td>
+    <td><a href="chap7.htm"><img src="graphics/navnext.gif" width="83" height="23"
+    border="0" alt="NEXT"> </a></td>
+    <td><a href="IX.htm"><img src="graphics/navidx.gif" width="84" height="23"
+    border="0" alt="INDEX"> </a></td>
+  </tr>
+</table>
+
+<p><br clear="all">
+</p>
+
+<hr align="left">
+
+<blockquote>
+<h2>
+  <a name="895217"> </a>Chapter 6 
+</h2>
+
+
+<h2>
+  <a name="917057"> </a>	 License Administration Tools
+</h2><hr>
+
+
+<p>
+  <a name="907563"> </a>FLEX<em>lm</em> provides utilities for the license administrator to help manage the licensing activities on the network. These utilities are:
+</p>
+
+<ul>
+
+
+  <li ><a name="907565"> </a><a href="chap6.htm#895344"><code>lmborrow</code></a> - Supports license borrowing.
+  <li ><a name="911601"> </a><a href="chap6.htm#911638"><code>lmdiag</code></a> - Diagnoses license checkout problems. 
+  <li ><a name="895233"> </a><a href="chap6.htm#895403"><code>lmdown</code></a> - Gracefully shuts down all license daemons (both <code>lmgrd</code> and all vendor daemons) on the license server node (or on all three nodes in the case of three-server redundant servers). 
+  <li ><a name="895244"> </a><a href="chap6.htm#910473"><code>lmhostid</code></a> - Reports the hostid of a system. 
+  <li ><a name="895248"> </a><a href="chap6.htm#895542"><code>lminstall</code></a> - Converts license files between different formats. 
+  <li ><a name="907607"> </a><a href="chap6.htm#895571"><code>lmnewlog</code></a> - Moves existing report log information to a new file name and starts a new report log file with existing file name. Requires a v7.1+ vendor daemon.
+  <li ><a name="907611"> </a><a href="chap6.htm#897833"><code>lmpath</code></a> - Allows users direct control over license file settings. Requires v7.0+ applications.
+  <li ><a name="907615"> </a><a href="chap6.htm#907579"><code>lmremove</code></a> - Releases a hung license to the pool of free licenses.
+  <li ><a name="898156"> </a><a href="chap6.htm#895623"><code>lmreread</code></a> - Causes the license daemon to reread the license file and start any new vendor daemons. Requires v8.0 <code>lmreread</code>.
+  <li ><a name="895260"> </a><a href="chap6.htm#895655"><code>lmstat</code></a> - Displays the status of a license server. 
+  <li ><a name="895264"> </a><a href="chap6.htm#895698"><code>lmswitch</code></a> - Controls debug log location and size. Requires v8.0+ vendor daemon.
+  <li ><a name="907246"> </a><a href="chap6.htm#907588"><code>lmswitchr</code></a> - Switches the report log to a new file name.
+  <li ><a name="895271"> </a><a href="chap6.htm#895731"><code>lmver</code></a> - Reports the FLEX<em>lm</em> version of a library or binary file. 
+</ul>
+
+<p>
+  <a name="902019"> </a>This chapter also contains command-line syntax for <code>lmgrd</code>.
+</p>
+
+
+<h3>
+  <a name="895278"> </a>6.1	 Running Administration Tools
+</h3>
+
+
+<p>
+  <a name="902002"> </a>All FLEX<em>lm</em> utility programs (except <code>lmgrd</code>) are packaged as a single executable called <code>lmutil</code>. <code>lmutil</code> can either be installed as the individual commands (either by creating links to the individual command names, or making copies of <code>lmutil</code> as the individual command names), or the commands can be run as <code>lmutil</code> <code><em>command</em></code>, for example,<code> lmutil</code> <code>lmstat</code>, or <code>lmutil</code> <code>lmdown</code>. On Windows systems, the <code>lmutil</code> <code><em>command</em></code> forms of the commands are available. There is also a graphical user interface for these commands on Windows-see <a href="chap6.htm#895751">Section 6.17, "License Administration Tools-LMTOOLS for Windows."</a>
+</p>
+
+
+<h3>
+  <a name="902013"> </a>6.2	 Universal lmutil Arguments
+</h3>
+
+
+<p>
+  <a name="902006"> </a>The following are valid arguments for most <code>lmutil</code> utilities:
+</p>
+
+
+<p>
+  <a name="895299"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="895285"> </a><code>-c </code><code><em>license_file_path<br></em></code></td>
+    <td><a name="895287"> </a>Most <code>lmutil</code> utilities need to know the <br>path to the license file. This can be <br>specified with a <code>-c <br></code><code><em>license_file_path</em></code> argument, or by <br>setting the <code>LM_LICENSE_FILE</code> <br>environment variable. Otherwise, the <br>default location is used. Version 7.0+ <br>utilities also honor all <br><code><em>VENDOR</em></code><code>_LICENSE_FILE</code> environment <br>variables. Some utilities can take more <br>than one license file path in a license-<br>file list separated by colons on UNIX <br>and semi-colons on Windows.<br></td>
+  </tr>
+  <tr>
+    <td><a name="898094"> </a><code>-v<br></code></td>
+    <td><a name="898096"> </a>Prints the FLEX<em>lm</em> version of the utility.<br></td>
+  </tr>
+  <tr>
+    <td><a name="895292"> </a><code>-verbose<br></code></td>
+    <td><a name="895294"> </a>Prints longer description for all errors <br>found. The output from the utilities may <br>be harder to read with this option, but is <br>useful for diagnostics. (v6.0+ only)<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="895300"> </a>
+</p>
+
+
+<h3>
+  <a name="895344"> </a>6.3	 lmborrow
+</h3>
+
+
+<p>
+  <a name="907641"> </a><code>lmborrow</code> supports borrowing of licenses with the BORROW attribute and must be run on the machine where licenses will or have been borrowed. It sets <code>LM_BORROW</code> in either the registry (Windows) or in <code>$HOME/.flexlmrc</code> (UNIX). 
+</p>
+
+
+<p>
+  <a name="909871"> </a>To initiate borrowing, the user can run <code>lmborrow</code> from the command line or through LMTOOLS:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="907642"> </a><CODE>lmborrow {<code><em>vendor </em></code>| all} <code><em>enddate</em></code> [<code><em>time</em></code>] </CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="909229"> </a>where:
+</p>
+
+
+<p>
+  <a name="909249"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="909232"> </a><code><em>vendor<br></em></code></td>
+    <td><a name="909234"> </a>The vendor daemon name that serves <br>the licenses to be borrowed, or <code>all</code> <br>specifies all vendor daemons in that <br>license server.<br></td>
+  </tr>
+  <tr>
+    <td><a name="909236"> </a><code><em>enddate</em></code><code> [</code><code><em>time</em></code><code>]<br></code></td>
+    <td><a name="909238"> </a>Date the license is to be returned in <br><code><em>dd</em></code><code>-</code><code><em>mmm</em></code><code>-</code><code><em>yyyy</em></code> format. <code><em>time</em></code> is <br>optional and is specified in 24-hour <br>format (<code>hh:mm</code>) in the client's local <br>time. If <code><em>time</em></code> is unspecified, the <br>checkout lasts until the end of the <br>given end date.<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="909250"> </a>
+</p>
+
+
+<p>
+  <a name="907644"> </a>For example:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="907645"> </a><CODE>lmborrow xyzd 20-aug-2001 13:00</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="907646"> </a>To borrow licenses for the desired vendor, <em>on the same day and the same machine</em> that the user runs <code>lmborrow</code>, run the application(s) to check out the license(s). If you run the application(s) more than once that day, no duplicate licenses are borrowed. No licenses are borrowed if the application is run on a day different than the date borrowing was to be initiated. 
+</p>
+
+
+<p>
+  <a name="910997"> </a>To print information about features borrowed on a machine:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="910998"> </a><CODE>lmborrow -status</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="910999"> </a>This is useful for finding out which features have been borrowed while the machine is disconnected from the network.
+</p>
+
+
+<p>
+  <a name="911012"> </a>To clear the <code>LM_BORROW</code> setting in the registry or <code>$HOME/.flexlmrc</code>:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="911000"> </a><CODE>lmborrow -clear</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="911013"> </a>Clearing the <code>LM_BORROW</code> setting will prevent any more licenses from being borrowed. A user might run <code>lmborrow -clear</code> after he has borrowed licenses for features that will be used offline if-before disconnecting from the network-he wants to run an application that checks out additional features served by <code><em>vendor</em></code> that should not be borrowed. Clearing <code>LM_BORROW</code> does <em>not</em> clear borrowing information for already-borrowed licenses.
+</p>
+
+
+<h3>
+  <a name="911638"> </a>6.4	 lmdiag
+</h3>
+
+
+<p>
+  <a name="895376"> </a><code>lmdiag</code> allows 	you to diagnose problems when you cannot check out a license.
+</p>
+
+
+<p>
+  <a name="895377"> </a>Usage is:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895378"> </a><CODE>lmdiag [-c <code><em>license_file_list</em></code>] [-n] [<code><em>feature</em></code>[:<code><em>keyword</em></code>=<code><em>value</em></code>]]</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="895379"> </a>where:
+</p>
+
+
+<p>
+  <a name="895393"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="895382"> </a><code>-c </code><code><em>license_file_list<br></em></code></td>
+    <td><a name="895384"> </a>Diagnose the specified file(s).<br></td>
+  </tr>
+  <tr>
+    <td><a name="895386"> </a><code>-n<br></code></td>
+    <td><a name="895388"> </a>Run in non-interactive mode; <code>lmdiag</code> <br>will not prompt for any input in this <br>mode. In this mode, extended <br>connection diagnostics are not <br>available.<br></td>
+  </tr>
+  <tr>
+    <td><a name="895390"> </a><code><em>feature<br></em></code></td>
+    <td><a name="895392"> </a>Diagnose this feature only.<br></td>
+  </tr>
+  <tr>
+    <td><a name="898207"> </a><code><em>keyword=value<br></em></code></td>
+    <td><a name="898211"> </a>If a license file contains multiple lines <br>for a particular feature, you can select <br>a particular line for <code>lmdiag</code> to report <br>on. For example:<br><a name="898212"> </a>lmdiag f1:HOSTID=12345678<br><a name="898209"> </a>will attempt a checkout on the line <br>with the hostid "12345678." <code><em>keyword</em></code> <br>can be one of the following: <br>VERSION, HOSTID, EXPDATE, <br>KEY, VENDOR_STRING, ISSUER<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="895394"> </a>
+</p>
+
+
+<p>
+  <a name="895395"> </a>If no <code><em>feature</em></code> is specified, <code>lmdiag</code> will operate on all features in the license file(s) in your list. <code>lmdiag</code> will first print information about the license, then attempt to check out each license. If the checkout succeeds, <code>lmdiag</code> will indicate this. If the checkout fails, <code>lmdiag</code> will give you the reason for the failure. If the checkout fails because <code>lmdiag</code> cannot connect to the license server, then you have the option of running "extended connection diagnostics." 
+</p>
+
+
+<p>
+  <a name="895396"> </a>These extended diagnostics attempt to connect to each port on the license server node, and can detect if the port number in the license file is incorrect. <code>lmdiag</code> will indicate each port number that is listening, and if it is an <code>lmgrd</code> process, <code>lmdiag</code> will indicate this as well. If <code>lmdiag</code> finds the vendor daemon for the feature being tested, then it will indicate the correct port number for the license file to correct the problem. 
+</p>
+
+
+<p>
+  <a name="895400"> </a>See also <a href="chap9.htm#896119">Section B.2, "FLEXLM_DIAGNOSTICS."</a>
+</p>
+
+
+<h3>
+  <a name="895403"> </a>6.5	 lmdown
+</h3>
+
+
+<p>
+  <a name="895404"> </a>The <code>lmdown</code> utility allows for the graceful shutdown of all license daemons (both <code>lmgrd</code> and all vendor daemons) on all nodes. 
+</p>
+
+
+<p>
+  <a name="895406"> </a>Usage is:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895407"> </a><CODE>lmdown -c <code><em>license_file_list</em></code> [-vendor <code><em>vendor</em></code>] [-q] [-all] </CODE>
+     <dt> <a name="909136"> </a><CODE>[-force]</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="895408"> </a>where:
+</p>
+
+
+<p>
+  <a name="895427"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="895411"> </a><code>-c <br></code><code><em>license_file_list<br></em></code></td>
+    <td><a name="895413"> </a>Use the specified license file(s). Note that <br>specifying <code>-c </code><code><em>license_file_list</em></code> is <br>always recommended with <code>lmdown</code> <br></td>
+  </tr>
+  <tr>
+    <td><a name="895415"> </a><code>-vendor </code><code><em>vendor<br></em></code></td>
+    <td><a name="895417"> </a>Shut down only this vendor daemon. <br><code>lmgrd</code> will always continue running if <br>this option is specified. Requires v6.0 <br><code>lmdown</code> and <code>lmgrd</code> (the vendor daemon <br>can be any version).<br></td>
+  </tr>
+  <tr>
+    <td><a name="895420"> </a><code>-q<br></code></td>
+    <td><a name="895422"> </a>Don't prompt or print a header. Otherwise <br><code>lmdown</code> asks "Are you sure? [y/n]: ."<br></td>
+  </tr>
+  <tr>
+    <td><a name="895424"> </a><code>-all<br></code></td>
+    <td><a name="895426"> </a>If multiple servers are specified, <br>automatically shuts down all of them. <br>Otherwise, only one is shutdown. <code>-q</code> is <br>implied with <code>-all</code>. (v7.0+)<br></td>
+  </tr>
+  <tr>
+    <td><a name="908368"> </a><code>-force<br></code></td>
+    <td><a name="908370"> </a>If licenses are borrowed, <code>lmdown</code> will run <br>only from the machine where the license <br>server is running, and then only if the user <br>adds <code>-force</code>. (All components v8.0+)<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="895428"> </a>
+</p>
+
+
+<p>
+  <a name="915501"> </a>You may want to protect the execution of<font  face="Times New Roman" size="2"> </font><code>lmdown</code>, since shutting down the servers causes users to lose their licenses. See the <code>-local</code>, <code>-2 -p</code>, or <code>-x</code> options in <a href="chap6.htm#906387">Section 6.6, "lmgrd,"</a> for details about securing access to <code>lmdown</code>.
+</p>
+
+
+<p>
+  <a name="895432"> </a>If <code>lmdown</code> encounters more than one server (for example if <code>-c</code> specifies a directory with many <code>*.lic</code> files), a choice of license servers to shut down is presented.
+</p>
+
+
+<p>
+  <a name="906393"> </a><HR WIDTH=75%><FONT COLOR=RED>Note:	 On UNIX, do <em>not</em> use <code>kill -9</code> to shut down the license servers. On Windows, if you must use the Task Manager to kill the FLEX<em>lm</em> service, be sure to end the <code>lmgrd</code> process first, then all the vendor daemon processes.</FONT><HR WIDTH=75%>
+</p>
+
+
+<p>
+  <a name="895434"> </a>To stop and restart a single vendor daemon, use<code> lmdown -vendor </code><code><em>vendor</em></code>, then use <code>lmreread -vendor </code><code><em>vendor</em></code> to restart the vendor daemon.
+</p>
+
+
+<p>
+  <a name="898400"> </a>When shutting down a three-server redundant license server, there is a one-minute delay before the servers shut down. <code>lmdown</code> will shut down all three license servers of a set of redundant license servers. If you need to shut down one of a set of redundant license servers (not recommended because you are left with two points of failure), you must kill both the <code>lmgrd</code> and vendor daemon processes on that license server machine.
+</p>
+
+
+<p>
+  <a name="906384"> </a>See also <a href="chap6.htm#895623">Section 6.12, "lmreread."</a>
+</p>
+
+
+<h3>
+  <a name="906387"> </a>6.6	 lmgrd
+</h3>
+
+
+<p>
+  <a name="895446"> </a><code>lmgrd</code> is the main daemon program for FLEX<em>lm</em>. When you invoke <code>lmgrd</code>, it looks for a license file which contains information about vendors and features. On UNIX systems, it is strongly recommended that <code>lmgrd</code> be run as a non-privileged user (not root).
+</p>
+
+
+<p>
+  <a name="895448"> </a>Usage is:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895449"> </a><CODE>lmgrd [-c <code><em>license_file_list</em></code>] [-l <code><em>debug_log_path</em></code>] </CODE>
+    <dl>
+       <dt> <a name="895450"> </a><CODE>[-2 -p] [-local] [-nfs_log] [-x lmdown] [-x lmremove] [-z ] [-v] </CODE>
+    </dl>
+  </dl>
+</dl>
+
+<p>
+  <a name="895452"> </a>where:
+</p>
+
+
+<p>
+  <a name="895492"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="895455"> </a><code>-c </code><code><em>license_file_list<br></em></code></td>
+    <td><a name="895457"> </a>Use the specified license file(s).<br></td>
+  </tr>
+  <tr>
+    <td><a name="895459"> </a><code>-l </code><code><em>debug_log_path<br></em></code></td>
+    <td><a name="895461"> </a>Write debugging information to file <br><code><em>debug_log</em></code>. This option uses the letter <br><code>l</code>, not the numeral 1.<br></td>
+  </tr>
+  <tr>
+    <td><a name="895467"> </a><code>-2 -p<br></code></td>
+    <td><a name="895469"> </a>Restricts usage of <code>lmdown</code>, <code>lmreread</code>, <br>and <code>lmremove</code> to a FLEX<em>lm</em> <br>administrator who is by default root. If <br>there a UNIX group called "lmadmin," <br>then use is restricted to only members <br>of that group. If root is not a member <br>of this group, then root does not have <br>permission to use any of the above <br>utilities. If <code>-2 -p</code> is used when <br>starting <code>lmgrd</code>, no user on Windows <br>can shut down the license server with <br><code>lmdown</code>.<br></td>
+  </tr>
+  <tr>
+    <td><a name="909123"> </a><code>-local<br></code></td>
+    <td><a name="909125"> </a>Restricts the <code>lmdown</code> command to be <br>run only from the same machine where <br><code>lmgrd</code> is running. <br></td>
+  </tr>
+  <tr>
+    <td><a name="905656"> </a><code>-nfs_log<br></code></td>
+    <td><a name="905658"> </a>It is not recommended to write a <br>debug log to an NFS-mounted or PC <br>network-mounted disk. If you choose <br>to write to a mounted disk and the <br>speed of the license server is too slow, <br>you can use this flag to cache debug <br>info before it is written out (when <br>approximately 1kb of data is reached). <br></td>
+  </tr>
+  <tr>
+    <td><a name="895477"> </a><code>-x lmdown<br></code></td>
+    <td><a name="895479"> </a>Disable the <code>lmdown</code> command (no user <br>can run <code>lmdown</code>). If <code>lmdown</code> is <br>disabled, you will need to stop <code>lmgrd</code> <br>via <code>kill </code><code><em>pid</em></code> (UNIX) or stop the <br><code>lmgrd</code> and vendor daemon processes <br>through the Windows Task Manager <br>or Windows service. On UNIX, be <br>sure the <code>kill</code> command does not have <br>a <code>-9</code> argument. (v4.0+ <code>lmgrd</code>)<br></td>
+  </tr>
+  <tr>
+    <td><a name="895481"> </a><code>-x lmremove<br></code></td>
+    <td><a name="895483"> </a>Disable the <code>lmremove</code> command (no <br>user can run <code>lmremove</code>). (v4.0+ <br><code>lmgrd</code>)<br></td>
+  </tr>
+  <tr>
+    <td><a name="895485"> </a><code>-z<br></code></td>
+    <td><a name="895487"> </a>Run in foreground. The default <br>behavior is to run in the background. <br>If <code>-l </code><code><em>debug_log_path</em></code> is present, <br>then no windows are used, but if no <code>-<br>l</code> argument specified, separate <br>windows are used for <code>lmgrd</code> and each <br>vendor daemon.<br></td>
+  </tr>
+  <tr>
+    <td><a name="895489"> </a><code>-v<br></code></td>
+    <td><a name="895491"> </a>Prints <code>lmgrd</code> version number and <br>copyright and exits.<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="895493"> </a>
+</p>
+
+
+<h4>
+  <a name="910003"> </a>6.6.1	 Managing Debug Log Output
+</h4>
+
+
+<p>
+  <a name="910005"> </a>A license server always generates debug log output. Some of the debug log output describes events specific to <code>lmgrd</code> and some of the debug log output describes events specific to each vendor daemon. As <code>lmgrd</code> and its vendor daemons run for a period of time, the volume of this output can become quite large. As it gets older, the value of the debug log output decreases; therefore, it may be necessary for you to separate old debug log output from current output so you can either archive or delete the old output.
+</p>
+
+
+<p>
+  <a name="910007"> </a>For performance, it is suggested that each debug log file be a on disk that is local to the machine that is running <code>lmgrd</code> and its vendor daemons. However, if the debug log file must be on a mounted disk and you find that the license server is too slow, you can start <code>lmgrd</code> with the <code>-nfs_log</code> option to improve performance.
+</p>
+
+
+<p>
+  <a name="910009"> </a>See <a href="chap13.htm#916158">Appendix F, "The Debug Log File,"</a> for a description of the debug log output format.
+</p>
+
+
+<h5>
+  <a name="910011"> </a>Capturing Debug Log Output for a License Server
+</h5>
+
+
+<p>
+  <a name="910012"> </a>By default, <code>lmgrd</code> and the vendor daemons it manages write debug log output to standard out. To put this debug log output in a file, you can either redirect the output of the license server to a file or start <code>lmgrd</code> with the <code>-l </code><code><em>debug_log_path</em></code> option.
+</p>
+
+
+<h5>
+  <a name="910014"> </a>Capturing Debug Log Output for a Particular Vendor Daemon
+</h5>
+
+
+<p>
+  <a name="910015"> </a>The debug log output from different vendor daemons in the same license server can be written to their own files (v8.0+ vendor daemon). There are two ways to do this:
+</p>
+
+<ul>
+
+
+  <li ><a name="910017"> </a>Add the DEBUGLOG line to the options file for each vendor daemon. See <a href="chap5.htm#907125">Section 5.2.2, "DEBUGLOG,"</a> for more details.
+  <li ><a name="910018"> </a>Invoke <code>lmswitch</code> on the vendor daemon. See <a href="chap6.htm#895698">Section 6.14, "lmswitch,"</a> for more details.
+</ul>
+
+<p>
+  <a name="910020"> </a>Even if you redirect the debug log output for every vendor daemon managed by a particular <code>lmgrd</code>, that <code>lmgrd</code> will still write its own debug log output to standard out.
+</p>
+
+
+<h5>
+  <a name="910031"> </a>Redirecting Debug Log Output for a Running Vendor Daemon
+</h5>
+
+
+<p>
+  <a name="910032"> </a>The debug log output for a particular vendor daemon can be redirected to a different file. There are two ways to do this:
+</p>
+
+<ul>
+
+
+  <li ><a name="910034"> </a>Change the DEBUGLOG line to the options file for the vendor daemon and reread its option file by invoking <code>lmreread</code>. See <a href="chap5.htm#907125">Section 5.2.2, "DEBUGLOG,"</a> for more details.
+  <li ><a name="910035"> </a>Invoke <code>lmswitch</code> on the vendor daemon. See <a href="chap6.htm#895698">Section 6.14, "lmswitch,"</a> for more details.
+</ul>
+
+<h5>
+  <a name="910037"> </a>Limiting Debug Log Output for a Vendor Daemon
+</h5>
+
+
+<p>
+  <a name="910038"> </a>By default, debug log output contains all events. To limit the events that are logged for a particular vendor daemon, add a NOLOG line to the options file of that vendor daemon. See <a href="chap5.htm#894748">Section 5.2.13, "NOLOG,"</a> for more details. One of the reasons you may want to limit the events that are logged is to reduce the size of the debug log output.
+</p>
+
+
+<h4>
+  <a name="910043"> </a>6.6.2	 Managing Report Log Output
+</h4>
+
+
+<p>
+  <a name="910045"> </a>Report log output is written by a vendor daemon; <code>lmgrd</code> does not write to a report log. However, a vendor daemon does not write report log output by default. Report log output is not human readable and is only used by the SAM<em>report</em> and FLEX<em>bill</em> products. Therefore, unless you are using either of these two GLOBE<em>trotter</em> products (or intend to use them in the future), there is no reason to enable report logging. As a vendor daemon runs for a period of time, report log output can become quite large. Therefore, it may be necessary to move report log output into different files over time, each file containing license activity over a particular period of time. 
+</p>
+
+
+<p>
+  <a name="910453"> </a>Because of a report log's format, standard file compression tools can significantly reduce the size of a report log file when it is no longer being written. 
+</p>
+
+
+<p>
+  <a name="910047"> </a>To avoid corruption and for performance, it is suggested that each vendor daemon write to its own report log file on a disk that is local to the machine that is running the vendor daemon. 
+</p>
+
+
+<h5>
+  <a name="910051"> </a>Enabling Report Log Output for a Vendor Daemon
+</h5>
+
+
+<p>
+  <a name="910052"> </a>There are two ways to enable report logging for a particular vendor daemon either before or after starting the license server.
+</p>
+
+<ul>
+
+
+  <li ><a name="910054"> </a>Add the REPORTLOG line to the options file for that vendor daemon. See <a href="chap5.htm#894762">Section 5.2.14, "REPORTLOG,"</a> for more details.
+  <li ><a name="910055"> </a>Invoke <code>lmswitchr</code> on the vendor daemon. See <a href="chap6.htm#907588">Section 6.15, "lmswitchr,"</a> for  more details.
+  <li ><a name="913094"> </a>Invoke <code>lmnewlog</code> on the vendor daemon. Requires a v7.1+ vendor daemon. See <a href="chap6.htm#895571">Section 6.9, "lmnewlog,"</a> for more details.
+</ul>
+
+<h5>
+  <a name="910057"> </a>Redirecting Report Log Output for a Vendor Daemon
+</h5>
+
+
+<p>
+  <a name="910467"> </a>The report log output for a particular vendor daemon can be moved into separate files, each file representing activity over a period of time. There are three ways in which to do this whether the vendor daemon is running or not:
+</p>
+
+<ul>
+
+
+  <li ><a name="910468"> </a>You can change the REPORTLOG line in the vendor daemon's options file and reread its option file by invoking <code>lmreread</code> (v8.0+ vendor daemon).
+  <li ><a name="910469"> </a>Invoke <code>lmswitchr</code> on the vendor daemon. See <a href="chap6.htm#907588">Section 6.15, "lmswitchr,"</a> for more details.
+  <li ><a name="910470"> </a>Invoke <code>lmnewlog</code> on the vendor daemon. Requires a v7.1+ vendor daemon. See <a href="chap6.htm#895571">Section 6.9, "lmnewlog,"</a> for more details.
+</ul>
+
+<h3>
+  <a name="910473"> </a>6.7	 lmhostid
+</h3>
+
+
+<p>
+  <a name="895498"> </a>The <code>lmhostid</code> utility reports the hostid of a any machine whose platform is supported by FLEX<em>lm</em>. The default hostid type is displayed for a platform, unless an optional hostid type is specified and supported by that platform.
+</p>
+
+
+<p>
+  <a name="895499"> </a>Usage is:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895500"> </a><CODE><code>lmhostid [-n] [</code><code><em>type</em></code>]</CODE>
+    <dl>
+       <dt> <a name="895501"> </a>where <code><em>type</em></code> is one of:
+       <dt> <a name="898227"> </a><code>[-internet] </code>(optional on all platforms) 
+       <dt> <a name="898224"> </a><code>[-vsn] [-flexid] </code>
+
+<p>
+  <a name="895534"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="895509"> </a><code>-n<br></code></td>
+    <td><a name="895511"> </a>No header is printed, only the hostid is printed.<br></td>
+  </tr>
+  <tr>
+    <td><a name="898229"> </a><code>-internet<br></code></td>
+    <td><a name="898231"> </a>IP address in <code>###.###.###.###</code> format.<br></td>
+  </tr>
+  <tr>
+    <td><a name="895513"> </a><code>-vsn<br></code></td>
+    <td><a name="895515"> </a>Volume Serial Number of the Windows <code>C:\</code> <br>drive.<br></td>
+  </tr>
+  <tr>
+    <td><a name="895517"> </a><code>-flexid<br></code></td>
+    <td><a name="895522"> </a>GLOBE<em>trotter</em> dongle-based hostid. (Windows)<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="895535"> </a>
+</p>
+
+    </dl>
+  </dl>
+</dl>
+
+<p>
+  <a name="898241"> </a>The output of this command looks as follows:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="898242"> </a><CODE>lmhostid - Copyright (c) 1989, 1997 Globetrotter Software, Inc.</CODE>
+     <dt> <a name="898243"> </a><CODE>The FLEXlm hostid of this machine is "69021c89"</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="895539"> </a>See also <a href="chap8.htm#916173">Appendix A, "Hostids for FLEXlm-Supported Machines."</a>
+</p>
+
+
+<h3>
+  <a name="895542"> </a>6.8	 lminstall
+</h3>
+
+
+<p>
+  <a name="895544"> </a>Introduced in v6.0, <code>lminstall</code> is designed primarily for typing in decimal format licenses to generate a readable format license file.
+</p>
+
+
+<p>
+  <a name="895545"> </a>Usage is:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895546"> </a><CODE>lminstall [-i <code><em>in_lic_file</em></code> ] [-maxlen <code><em>n</em></code>] [-e <code><em>err_file</em></code>]\</CODE>
+    <dl>
+       <dt> <a name="895547"> </a><CODE>[-o <code><em>out_lic_file</em></code>] \</CODE>
+       <dt> <a name="899967"> </a><CODE>[-overfmt {2 | 3 | 4 | 5 | 5.1 | 6 | 7 | 7.1 | 8}] [-odecimal]</CODE>
+    </dl>
+  </dl>
+</dl>
+
+<p>
+  <a name="895549"> </a>Normally, to convert from decimal to readable format, <code>lminstall</code> is used with no arguments; you are prompted for the name of the output license file. The default file name is today's date in <code><em>yyyymmdd</em></code><code>.lic</code> format. The file should be moved to the application's default license file directory, if specified by the software vendor. Otherwise, use the <code>LM_LICENSE_FILE</code> or <code><em>VENDOR</em></code><code>_LICENSE_FILE</code> environment variables to specify the directory where the <code>*.lic</code> files are located.
+</p>
+
+
+<p>
+  <a name="895553"> </a>Decimal format input is verified by a checksum of each line.
+</p>
+
+
+<p>
+  <a name="895554"> </a>To finish entering, type <code>q</code> on a line by itself or enter two blank lines.
+</p>
+
+
+<p>
+  <a name="895555"> </a>When an input file is specified with no output file specified, output goes to stdout; if neither input nor output file is specified, <code>lminstall</code> assumes that input will come from stdin and prompts the user for an output file name. 
+</p>
+
+
+<p>
+  <a name="895557"> </a><code>lminstall</code> can also be used to convert licenses from readable to decimal format, and between different versions of FLEX<em>lm</em> license formats.
+</p>
+
+
+<p>
+  <a name="895561"> </a>To convert from readable to decimal:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895562"> </a><CODE>lminstall -i <code><em>in_lic_file</em></code> -o <code><em>out_lic_file</em></code> -odecimal</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="898825"> </a>To convert to FLEX<em>lm</em> v5.1 format:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="898826"> </a><CODE>lminstall -i <code><em>in_lic_file</em></code> -o <code><em>out_lic_file</em></code> -overfmt 5.1</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="898827"> </a>To enforce a maximum line length of, for example, 50 characters:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="898247"> </a><CODE>lminstall -maxlen 50</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="898246"> </a>Conversion errors are reported as necessary and can be written to a file by specifying <code>-e </code><code><em>err_file</em></code>. <code>lminstall</code> has a limit of 1000 lines of input.
+</p>
+
+
+<h3>
+  <a name="895571"> </a>6.9	 lmnewlog
+</h3>
+
+
+<p>
+  <a name="897839"> </a>The<font  face="Times New Roman" size="2"> </font><code>lmnewlog</code> utility switches the report log file by moving the existing report log information to a new file, then starting a new report log with the original report log file name. If you rotate report logs with <code>lmnewlog</code> instead of <code>lmswitchr</code>, you will not have to change the file name in the REPORTLOG line of the vendor's options file. Requires a v7.1+ vendor daemon.
+</p>
+
+
+<p>
+  <a name="897840"> </a>Usage is:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="897841"> </a><CODE>lmnewlog [-c <code><em>license_file_list</em></code>] <code><em>feature renamed_report_log</em></code></CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="897842"> </a>or:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="897844"> </a><CODE>lmnewlog [-c <code><em>license_file_list</em></code>] <code><em>vendor renamed_report_log</em></code></CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="897845"> </a>where:
+</p>
+
+
+<p>
+  <a name="897863"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="897848"> </a><code>-c </code><code><em>license_file_list<br></em></code></td>
+    <td><a name="897850"> </a>Use the specified license file(s).<br></td>
+  </tr>
+  <tr>
+    <td><a name="897852"> </a><code><em>feature<br></em></code></td>
+    <td><a name="897854"> </a>Any feature in this license file.<br></td>
+  </tr>
+  <tr>
+    <td><a name="897856"> </a><code><em>vendor<br></em></code></td>
+    <td><a name="897858"> </a>Vendor daemon in this license file.<br></td>
+  </tr>
+  <tr>
+    <td><a name="897860"> </a><code><em>renamed_report_log<br></em></code></td>
+    <td><a name="897862"> </a>New file path where existing report <br>log information is to be moved.<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="897864"> </a>
+</p>
+
+
+<h3>
+  <a name="897833"> </a>6.10	 lmpath
+</h3>
+
+
+<p>
+  <a name="911736"> </a>The <code>lmpath</code> utility allows direct control over FLEX<em>lm</em> license path settings. It can be used to add to, override, or get the current license path settings. Requires a v7.0+ application.
+</p>
+
+
+<p>
+  <a name="908134"> </a><HR WIDTH=75%><FONT COLOR=RED>Note:	 <code>lmpath</code> works by setting the FLEX<em>lm</em> registry entry on Windows or <code>$HOME/.flexlmrc</code> on UNIX.</FONT><HR WIDTH=75%>
+</p>
+
+
+<p>
+  <a name="911779"> </a>To add a license file or license-file list to the current license-file list for one or all vendor daemons, use:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="911780"> </a><CODE>lmpath -add {<code><em>vendor</em></code> | all} <code><em>license_file_list </em></code></CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="911786"> </a>To override the existing license-file list for one or all vendor daemons, use:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="911782"> </a><CODE>lmpath -override {<code><em>vendor</em></code> | all} <code><em>license_file_list </em></code></CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="911783"> </a>where <code><em>vendor</em></code> is the vendor daemon name (or type <code>all</code> for all vendors), and <code><em>license_file_list</em></code> is a colon-separated list on UNIX and a semi-colon-separated list on Windows. 
+</p>
+
+
+<p>
+  <a name="911796"> </a>If you try to add a path that is in the current license-file list, no changes will be made to the list. 
+</p>
+
+
+<p>
+  <a name="911794"> </a>To display the current license path settings, use:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="907707"> </a><CODE>lmpath -status</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="908020"> </a>You will see, for example:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="907805"> </a><CODE>lmpath - Copyright (C) 1989-2001 Globetrotter Software, Inc.</CODE>
+     <dt> <a name="907709"> </a><CODE>Known Vendors:</CODE>
+     <dt> <a name="907710"> </a><CODE>_____________</CODE>
+     <dt> <a name="907712"> </a><CODE>demo:   ./counted.lic:./uncounted.lic</CODE>
+     <dt> <a name="907713"> </a><CODE>_____________</CODE>
+     <dt> <a name="907715"> </a><CODE>Other Vendors:</CODE>
+     <dt> <a name="907716"> </a><CODE>______________</CODE>
+     <dt> <a name="907718"> </a><CODE>/usr/local/flexlm/licenses/license.lic</CODE>
+     <dt> <a name="907719"> </a><CODE></CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="907720"> </a>Note that where the path is set to a directory, all the <code>*.lic</code> files are listed separately. 
+</p>
+
+
+<h3>
+  <a name="907579"> </a>6.11	 lmremove
+</h3>
+
+
+<p>
+  <a name="895572"> </a><code>lmremove</code> is needed only when a client node crashes, because that's the only condition where a license is not automatically freed immediately (v6.0+ applications will usually free these licenses automatically within three minutes to two hours). The <code>lmremove</code> utility allows you to remove a single user's license for a specified feature. If the application is active, it will re-checkout the license shortly after it is freed by <code>lmremove</code>. 
+</p>
+
+
+<p>
+  <a name="895573"> </a>Usage is:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895574"> </a><CODE>lmremove [-c <code><em>license_file_list</em></code>] <code><em>feature user user_host display</em></code></CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="895575"> </a>or
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895576"> </a><CODE>lmremove [-c <code><em>license_file_list</em></code>] -h <code><em>feature server_host port handle</em></code></CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="895577"> </a>where:
+</p>
+
+
+<p>
+  <a name="895607"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="895580"> </a><code>-c </code><code><em>license_file_list<br></em></code></td>
+    <td><a name="895582"> </a>Specify license file(s).<br></td>
+  </tr>
+  <tr>
+    <td><a name="895584"> </a><code><em>feature<br></em></code></td>
+    <td><a name="895586"> </a>Name of the feature checked out by the <br>user.<br></td>
+  </tr>
+  <tr>
+    <td><a name="895588"> </a><code><em>user<br></em></code></td>
+    <td><a name="895590"> </a>Name of the user whose license you are <br>removing, as reported by <code>lmstat -a</code>.<br></td>
+  </tr>
+  <tr>
+    <td><a name="895592"> </a><code><em>user_host<br></em></code></td>
+    <td><a name="895594"> </a>Name of the host the user is logged into, <br>as reported by <code>lmstat -a</code>.<br></td>
+  </tr>
+  <tr>
+    <td><a name="895596"> </a><code><em>display<br></em></code></td>
+    <td><a name="895598"> </a>Name of the display where the user is <br>working, as reported by <code>lmstat -a</code>.<br></td>
+  </tr>
+  <tr>
+    <td><a name="902440"> </a><code><em>server_host<br></em></code></td>
+    <td><a name="902442"> </a>Name of the host on which the license <br>server is running.<br></td>
+  </tr>
+  <tr>
+    <td><a name="895600"> </a><code><em>port<br></em></code></td>
+    <td><a name="895602"> </a>Port number where the license server is <br>running, as reported by <code>lmstat -a</code>.<br></td>
+  </tr>
+  <tr>
+    <td><a name="895604"> </a><code><em>handle<br></em></code></td>
+    <td><a name="895606"> </a>License handle, as reported by <code>lmstat <br>-a</code>.<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="895608"> </a>
+</p>
+
+
+<p>
+  <a name="895609"> </a>The <code><em>user</em></code><em>, </em><code><em>user_host</em></code><em>, </em><code><em>display</em></code><em>, </em><code><em>server_host, port</em></code><em>,</em> and <code><em>handle</em></code><em> </em>information must be obtained from the output of <code>lmstat -a</code>.
+</p>
+
+
+<p>
+  <a name="895610"> </a><code>lmremove</code> removes all instances of <code><em>user</em></code> on <code><em>user_host</em></code> and <code><em>display</em></code> from usage of <code><em>feature</em></code>. If the optional <code>-c </code><code><em>license_file_list</em></code> is specified, the indicated file(s) is used as the license file. You should protect the execution of <code>lmremove</code><font  face="Times New Roman" size="2">, </font>because removing a user's license can be disruptive. See the <code>-x</code> or <code>-2 -p</code> options in <a href="chap6.htm#906387">Section 6.6, "lmgrd,"</a> for details about securing access to <code>lmremove</code>.
+</p>
+
+
+<p>
+  <a name="895614"> </a>The <code>-h</code> variation uses the <code><em>server_host</em></code>, <code><em>port</em></code>, and license <code><em>handle</em></code>, as reported by <code>lmstat -a</code>. Consider this example <code>lmstat -a</code> output:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895615"> </a><CODE>joe nirvana /dev/ttyp5 (v1.000) (cloud9/7654 102), start Fri 10/29 18:40</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="895616"> </a>In this example, the user is "joe," the user host is "nirvana," the display is "/dev/typp5," the server host is "cloud9," the port is "7654," and the license handle is "102." 
+</p>
+
+
+<p>
+  <a name="905259"> </a>To remove this license, issue one of the following commands:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895619"> </a><CODE>lmremove f1 joe nirvana /dev/ttyp5</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="902465"> </a>or
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="902471"> </a><CODE>lmremove -h f1 cloud9 7654 102</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="902773"> </a>When removing by handle, if licenses are grouped as duplicates, all duplicate licenses will also be removed. If license lingering is set and <code>lmremove</code> is used to reclaim the license, <code>lmremove</code> will start, but not override, the license's linger time. 
+</p>
+
+
+<h3>
+  <a name="895623"> </a>6.12	 lmreread
+</h3>
+
+
+<p>
+  <a name="895625"> </a>The<font  face="Times New Roman" size="2"> </font><code>lmreread</code> utility causes the license daemon to reread the license file and start any new vendor daemons that have been added. In addition, all running daemons will be signaled to reread the license file and their end-user options files for changes in feature licensing information or option settings. 
+</p>
+
+
+<p>
+  <a name="912473"> </a>A v8.0+ vendor daemon will reread the path to its option file and will reread its options file as a result of <code>lmreread</code>. <code>lmreread</code> will also allow server machine host names to be reread, but still cannot be used to change server port numbers. 
+</p>
+
+
+<p>
+  <a name="912469"> </a>If the optional vendor daemon name is specified, only the named daemon will reread the license file and its end-user options file (in this case, <code>lmgrd</code> will not reread the license file).
+</p>
+
+
+<p>
+  <a name="895627"> </a>Usage is:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895628"> </a><CODE>lmreread [-c <code><em>license_file_list</em></code>] [-vendor <code><em>vendor</em></code>] [-all]</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="895629"> </a>where:
+</p>
+
+
+<p>
+  <a name="895643"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="895632"> </a><code>-c </code><code><em>license_file_list<br></em></code></td>
+    <td><a name="895634"> </a>Use the specified license file(s).<br></td>
+  </tr>
+  <tr>
+    <td><a name="895636"> </a><code>-vendor </code><code><em>vendor<br></em></code></td>
+    <td><a name="895638"> </a>Only this one vendor daemon should <br>reread the license file. <code>lmgrd</code> will <br>restart the vendor daemon if <br>necessary. Requires v6.0+ <code>lmreread</code> <br>and <code>lmgrd</code> (the vendor daemon can be <br>any version).<br></td>
+  </tr>
+  <tr>
+    <td><a name="895640"> </a><code>-all<br></code></td>
+    <td><a name="895642"> </a>If more than one <code>lmgrd</code> is specified, <br>instructs all <code>lmgrd</code>s to reread. <br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="895644"> </a>
+</p>
+
+
+<p>
+  <a name="895645"> </a>You may want to protect the execution of <code>lmreread</code>. See the <code>-2 -p</code> and <code>-x</code> options in <a href="chap6.htm#906387">Section 6.6, "lmgrd,"</a> for details about securing access to <code>lmreread</code>.
+</p>
+
+
+<p>
+  <a name="895650"> </a>To stop and restart a single vendor daemon, use <code>lmdown -vendor </code><code><em>vendor</em></code>, then use <code>lmreread -vendor </code><code><em>vendor</em></code>, which restarts the vendor daemon.
+</p>
+
+
+<p>
+  <a name="895651"> </a><HR WIDTH=75%><FONT COLOR=RED>Note:	 If you use the <code>-c </code><code><em>license_file_list</em></code> option, the license file(s) specified will be read by <code>lmreread</code>, not by <code>lmgrd</code>; <code>lmgrd</code> rereads the file it read originally. </FONT><HR WIDTH=75%>
+</p>
+
+
+<h3>
+  <a name="895655"> </a>6.13	 lmstat
+</h3>
+
+
+<p>
+  <a name="895656"> </a>The <code>lmstat</code> utility helps you monitor the status of all network licensing activities, including:
+</p>
+
+<ul>
+
+
+  <li ><a name="898269"> </a>Daemons that are running
+  <li ><a name="898270"> </a>Users of individual features
+  <li ><a name="898271"> </a>Users of features served by a specific vendor daemon
+  <li ><a name="908414"> </a>BORROW licenses borrowed 
+</ul>
+
+<p>
+  <a name="898285"> </a><code>lmstat</code> prints information that it receives from the license server, therefore it will not return any information about users of node-locked uncounted or DEMO licenses, unless the server's license file includes the node-locked licenses and the client is not reading the license file (via <code>@</code><code><em>host</em></code>, <code><em>port</em></code><code>@</code><code><em>host</em></code> or USE_SERVER). Queued users and licenses shared due to duplicate grouping are also not returned by <code>lmstat</code>. 
+</p>
+
+
+<p>
+  <a name="895657"> </a>Usage is:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895658"> </a><CODE>lmstat [-a] [-A] [-c <code><em>license_file_list</em></code>] [-f [<code><em>feature</em></code>]] </CODE>
+    <dl>
+       <dt> <a name="895659"> </a><CODE>[-S [<code><em>vendor</em></code>]] </CODE>
+    </dl>
+  </dl>
+</dl>
+
+<p>
+  <a name="895660"> </a>where:
+</p>
+
+
+<p>
+  <a name="895695"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="895663"> </a><code>-a<br></code></td>
+    <td><a name="895665"> </a>Display all information about.<br></td>
+  </tr>
+  <tr>
+    <td><a name="895667"> </a><code>-A<br></code></td>
+    <td><a name="895669"> </a>List all active licenses.<br></td>
+  </tr>
+  <tr>
+    <td><a name="895671"> </a><code>-c </code><code><em>license_file_list<br></em></code></td>
+    <td><a name="895673"> </a>Use the specified license file(s).<br></td>
+  </tr>
+  <tr>
+    <td><a name="895675"> </a><code>-f [</code><code><em>feature</em></code>]<br></td>
+    <td><a name="895678"> </a>List users of <code><em>feature</em></code>.<br></td>
+  </tr>
+  <tr>
+    <td><a name="895684"> </a><code>-S [</code><code><em>vendor</em></code><code>]<br></code></td>
+    <td><a name="895686"> </a>List all users of <code><em>vendor</em></code>'s features.<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="902585"> </a>
+</p>
+
+
+<p>
+  <a name="915508"> </a><code>lmremove</code> requires the output of<code> lmstat -a</code>. The output of <code>lmstat -a</code> looks similar to:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="902419"> </a><CODE>License server status: 27000@myhost1</CODE>
+     <dt> <a name="902420"> </a><CODE>License file(s) on myhost: <code><em>install_dir</em></code>/flexlm/v8.1/sun4_u5/counted.lic:</CODE>
+     <dt> <a name="902421"> </a><CODE>myhost: license server UP (MASTER) v8.1</CODE>
+     <dt> <a name="906977"> </a><CODE>Vendor daemon status (on myhost1):</CODE>
+     <dt> <a name="902423"> </a><CODE></CODE>
+     <dt> <a name="902424"> </a><CODE>demo: UP v8.1</CODE>
+     <dt> <a name="902425"> </a><CODE>Feature usage info:</CODE>
+     <dt> <a name="902426"> </a><CODE>Users of f1:  (Total of 4 licenses available)</CODE>
+     <dt> <a name="902432"> </a><CODE>  "f1" v1.0, vendor: demo</CODE>
+     <dt> <a name="902433"> </a><CODE>  floating license</CODE>
+     <dt> <a name="902434"> </a><CODE>    daniel myhost2 19.16.18.26 (v1.0) (myhost1/27000 102), start Fri          5/3 7:29</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="902476"> </a>where:
+</p>
+
+
+<p>
+  <a name="902480"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="902490"> </a>daniel<br></td>
+    <td><a name="902492"> </a><code><em>user<br></em></code></td>
+    <td><a name="902544"> </a>User name.<br></td>
+  </tr>
+  <tr>
+    <td><a name="902494"> </a>myhost2<br></td>
+    <td><a name="902496"> </a><code><em>user_host<br></em></code></td>
+    <td><a name="902546"> </a>Host where user is running.<br></td>
+  </tr>
+  <tr>
+    <td><a name="902498"> </a>19.16.18.26<br></td>
+    <td><a name="902500"> </a><code><em>display<br></em></code></td>
+    <td><a name="902548"> </a>Display where user is running.<br></td>
+  </tr>
+  <tr>
+    <td><a name="902625"> </a>v1.0<br></td>
+    <td><a name="902627"> </a><code><em>version<br></em></code></td>
+    <td><a name="902629"> </a>Version of feature.<br></td>
+  </tr>
+  <tr>
+    <td><a name="902502"> </a>myhost1<br></td>
+    <td><a name="902504"> </a><code><em>server_host<br></em></code></td>
+    <td><a name="902550"> </a>Host where license server is <br>running.<br></td>
+  </tr>
+  <tr>
+    <td><a name="902510"> </a>27000<br></td>
+    <td><a name="902512"> </a><code><em>port<br></em></code></td>
+    <td><a name="902552"> </a>Port on <code><em>server_host</em></code> where <br>license server is running.<br></td>
+  </tr>
+  <tr>
+    <td><a name="902506"> </a>102<br></td>
+    <td><a name="902508"> </a><code><em>handle<br></em></code></td>
+    <td><a name="902554"> </a>License handle.<br></td>
+  </tr>
+  <tr>
+    <td><a name="902637"> </a>start Fri 5/3 <br>7:29<br></td>
+    <td><a name="902639"> </a><code><em>checkout_ti<br>me<br></em></code></td>
+    <td><a name="902641"> </a>Time that this license was checked <br>out.<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="902484"> </a>
+</p>
+
+
+<p>
+  <a name="902579"> </a><HR WIDTH=75%><FONT COLOR=RED>Note:	 <code>lmstat -a</code><em> </em>is a potentially expensive command. With many active users, this can generate a lot of network activity, and therefore should not be used too often.</FONT><HR WIDTH=75%>
+</p>
+
+
+<h3>
+  <a name="895698"> </a>6.14	 lmswitch
+</h3>
+
+
+<p>
+  <a name="908147"> </a>The<font  face="Times New Roman" size="2"> </font><code>lmswitch</code> utility switches the debug log file written by a particular vendor daemon by closing the existing debug log for that vendor daemon and starting a new debug log for that vendor daemon with a new file name. It will also start a new debug log file written by that vendor daemon if one does not already exist. Requires a v8.0+ vendor daemon.
+</p>
+
+
+<p>
+  <a name="908207"> </a>Usage is:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="908151"> </a><CODE>lmswitch [-c <code><em>license_file_list</em></code>] <code><em>vendor</em></code> <code><em>new_debug_log</em></code></CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="908251"> </a>where:
+</p>
+
+
+<p>
+  <a name="908269"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="908254"> </a><code>-c </code><code><em>license_file_list<br></em></code></td>
+    <td><a name="908256"> </a>Use the specified license file(s).<br></td>
+  </tr>
+  <tr>
+    <td><a name="908262"> </a><code><em>vendor<br></em></code></td>
+    <td><a name="908264"> </a>Vendor daemon in this license file.<br></td>
+  </tr>
+  <tr>
+    <td><a name="908266"> </a><code><em>new_debug_log<br></em></code></td>
+    <td><a name="908268"> </a>Path to new debug log file.<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="908270"> </a>
+</p>
+
+
+<p>
+  <a name="908153"> </a>By default, debug log output from <code>lmgrd</code> and all vendor daemons started by that <code>lmgrd</code> get written into the same debug file. <code>lmswitch</code> allows companies to keep separate log files for different vendors and control the size of their debug log file. 
+</p>
+
+
+<p>
+  <a name="910244"> </a>If debug log output is not already directed to a separate file for this vendor daemon, <code>lmswitch</code> tells the vendor daemon to start writing its debug log output to a file, <code><em>new_debug_log</em></code>. If this vendor daemon is already writing to its own debug log, <code>lmswitch</code> tells the vendor daemon to close its current debug log file and start writing its debug log output to <code><em>new_debug_log</em></code>. The effect of <code>lmswitch</code> continues only until the vendor daemon is shut down or (as of v8.0) its options file is reread via <code>lmreread</code>. When the vendor daemon is restarted or its options file is reread, it will look for a DEBUGLOG line in the options file to determine whether or not to write its debug log output into its own file and, if so, what file to write. 
+</p>
+
+
+<h5>
+  <a name="908346"> </a>See Also:
+</h5>
+
+<ul>
+
+
+  <li ><a name="908350"> </a><a href="chap5.htm#907125">Section 5.2.2, "DEBUGLOG"</a>
+</ul>
+
+<h3>
+  <a name="907588"> </a>6.15	 lmswitchr
+</h3>
+
+
+<p>
+  <a name="895699"> </a>The<font  face="Times New Roman" size="2"> </font><code>lmswitchr</code> utility switches the report log file by closing the existing report log and starting a new report log with a new file name. It will also start a new report log file if one does not already exist. 
+</p>
+
+
+<p>
+  <a name="895700"> </a>Usage is:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895701"> </a><CODE>lmswitchr [-c <code><em>license_file_list</em></code>] <code><em>feature new_report_log</em></code></CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="895702"> </a>or with v5.0+ vendor daemon:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895704"> </a><CODE>lmswitchr [-c <code><em>license_file_list</em></code>] <code><em>vendor new_report_log</em></code></CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="895705"> </a>where:
+</p>
+
+
+<p>
+  <a name="895723"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="895708"> </a><code>-c </code><code><em>license_file_list<br></em></code></td>
+    <td><a name="895710"> </a>Use the specified license file(s).<br></td>
+  </tr>
+  <tr>
+    <td><a name="895712"> </a><code><em>feature<br></em></code></td>
+    <td><a name="895714"> </a>Any feature in this license file.<br></td>
+  </tr>
+  <tr>
+    <td><a name="895716"> </a><code><em>vendor<br></em></code></td>
+    <td><a name="895718"> </a>Vendor daemon in this license file.<br></td>
+  </tr>
+  <tr>
+    <td><a name="895720"> </a><code><em>new_report_log<br></em></code></td>
+    <td><a name="895722"> </a>Path to new report log file.<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="895724"> </a>
+</p>
+
+
+<p>
+  <a name="910235"> </a>If report logging is not enabled for the vendor daemon, <code>lmswitchr</code> tells it to start writing its report log output to <code><em>new_report_log</em></code>. If report logging is already enabled for the vendor daemon, <code>lmswitchr</code> tells the vendor daemon to close its report log file and start writing its new report log output to <code><em>new_report_log</em></code>. The effect of <code>lmswitchr</code> continues only until the vendor daemon is shut down or (as of v8.0), its options file is reread via <code>lmreread</code>. When the vendor daemon is restarted or its options file is reread, it will look for a REPORTLOG line in the options file to determine whether or not to write report log output to a file and, if so, what file to write.
+</p>
+
+
+<h5>
+  <a name="910709"> </a>See Also:
+</h5>
+
+<ul>
+
+
+  <li ><a name="910713"> </a><a href="chap6.htm#895571">Section 6.9, "lmnewlog"</a>
+</ul>
+
+<h3>
+  <a name="895731"> </a>6.16	 lmver
+</h3>
+
+
+<p>
+  <a name="895735"> </a>The <code>lmver</code> utility reports the FLEX<em>lm</em> version of a library or binary file.
+</p>
+
+
+<p>
+  <a name="895736"> </a>Usage is:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895737"> </a><CODE>lmver <code><em>filename</em></code></CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="895741"> </a>where <code><em>filename</em></code> is the name of an executable file built with FLEX<em>lm</em>.
+</p>
+
+
+<p>
+  <a name="895742"> </a>For example if you have an application called "spell," type:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895743"> </a><CODE>lmver spell</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="895744"> </a>Alternatively, on UNIX systems, you can use the following commands to get the FLEX<em>lm</em> version of a binary:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895748"> </a><CODE>strings <code><em>filename</em></code> | grep Copy</CODE>
+  </dl>
+</dl>
+
+<h3>
+  <a name="895751"> </a>6.17	 License Administration Tools-LMTOOLS for Windows
+</h3>
+
+
+<p>
+  <a name="895752"> </a>For the 32-bit Windows platforms, an LMTOOLS program is provided. 
+</p>
+
+
+<p>
+  <a name="895756"> </a>With LMTOOLS, you can start, stop and configure FLEX<em>lm</em> license servers, get system information, including hostids, get server status, and more.
+</p>
+
+
+<p>
+  <a name="895757"> </a>LMTOOLS has two modes in which to configure a license server:
+</p>
+
+<ul>
+
+
+  <li ><a name="895758"> </a>Configuration using a license file
+  <li ><a name="895759"> </a>Configuration using services
+</ul>
+
+<h4>
+  <a name="895760"> </a>6.17.1	 Configuration Using License File
+</h4>
+
+
+<p>
+  <a name="895761"> </a>Operations are performed on a particular license file. In this mode, you cannot start the <code>lmgrd</code> process, but you can do everything else. In the first tab, you need to select a license file.
+</p>
+
+
+<h4>
+  <a name="895762"> </a>6.17.2	 Configuration Using Services
+</h4>
+
+
+<p>
+  <a name="895763"> </a>Operations are performed on a service, which allows starting <code>lmgrd</code> processes. On NT/2000, you configure a Windows Service. On Windows 95/98, you configure a FLEX<em>lm</em> service that behaves similarly to a Windows service. 
+</p>
+
+
+<p>
+  <a name="911037"> </a>To configure a license server as a service, you must have Administrator privileges:
+</p>
+
+<ol type="1">
+
+
+  <li  value="1"><a name="911038"> </a>Run LMTOOLS.
+  <li  value="2"><a name="911039"> </a>Click the Configuration using Services radio button, then click the Config Services tab.
+  <li  value="3"><a name="911040"> </a>In the Service Name, type the name of the service that you want to define, for example, Myvendor License Manager.
+  <li  value="4"><a name="911041"> </a>In the Path to the lmgrd.exe file field, enter or browse to <code>lmgrd.exe</code> for this license server.
+  <li  value="5"><a name="911042"> </a>In the Path to the license file field, enter or browse to the license file for this license server.
+  <li  value="6"><a name="911043"> </a>In the Path to the debug log file, enter or browse to the debug log file that this license server writes.
+  <li  value="7"><a name="911044"> </a>To make this license server a Windows service, check the Use Services check box (otherwise, it will be a FLEX<em>lm</em> service).
+  <li  value="8"><a name="911048"> </a>If the license server is a Windows service, it will start on boot if the Start Server at Power Up check box is checked.
+
+<p>
+  <a name="911052"> </a><img src="graphics/myvendor.gif" align="center" border="0" hspace="0" vspace="0">
+
+</p>
+
+
+<p>
+  <a name="911053"> </a>
+</p>
+
+  <li  value="9"><a name="911054"> </a>To save the new Myvendor License Manager service, click the Save Service button. From now on, when this machine is rebooted, this license server will start automatically as a Windows service.
+</ol>
+</blockquote>
+
+<hr>
+
+<table width="380" align="right" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align=left width="215"><em>FLEXlm  End Users Guide</em>
+  </tr>
+    <td align=left width="165"><em>February 2002</em></td>
+</table>
+
+<table width="331" border="0" align="left" cellpadding="0" cellspacing="0">
+  <tr>
+    <td><a href="TOC.htm#TOC"><img src="graphics/navtoc.gif" width="84" height="23"
+    border="0" alt="TOC"> </a></td>
+    <td><a href="chap5.htm"><img src="graphics/navprev.gif" width="80" height="23"
+    border="0" alt="PREV"> </a></td>
+    <td><a href="chap7.htm"><img src="graphics/navnext.gif" width="83" height="23"
+    border="0" alt="NEXT"> </a></td>
+    <td><a href="IX.htm"><img src="graphics/navidx.gif" width="84" height="23"
+    border="0" alt="INDEX"> </a></td>
+  </tr>
+</table>
+</body>
+</html>

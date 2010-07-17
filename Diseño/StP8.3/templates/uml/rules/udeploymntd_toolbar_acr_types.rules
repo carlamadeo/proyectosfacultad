@@ -1,0 +1,60 @@
+// ECR 3556 start
+
+Toolbar DefaultArcType
+{
+    //ECR 6380 begin
+    //{ Position Top }
+    //{ IsFloating True }
+    { Position Left }
+    //ECR 6380 end
+    { Group
+        { Exclusive True }
+        { Entry
+            { Name "Dependency" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType Dependency" }
+            { HelpTip "Dependency" }
+            { Image "dependency" }
+        }
+        { Entry
+            { Name "Interface" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType Interface" }
+            { HelpTip "Interface" }
+            { Image "interface" }
+        }
+        { Entry
+            { Name "isComponentOf" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType isComponentOf" }
+            { HelpTip "Is Component Of" }
+            { Image "iscomponentof" }
+        }
+        { Entry
+            { Name "deploys" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType deploys" }
+            { HelpTip "Deploys" }
+            { Image "deploys" }
+        }
+        // ECR 5435 start
+        { Entry
+            { Name "Communicates" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType Communicates" }
+            { HelpTip "Communicates" }
+            { Image "communicates" }
+        }
+        // ECR 5435 end
+        { Entry
+            { Name "NoteLink" }
+	    { Type Toggle }
+            { Builtin "SetDefaultArcType NoteLink" }
+            { HelpTip "Note Link" }
+            { Image "notelink" }
+        }
+    }
+}
+
+// ECR 3556 end
+

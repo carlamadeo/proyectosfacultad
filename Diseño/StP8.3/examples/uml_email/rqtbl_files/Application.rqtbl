@@ -1,0 +1,388 @@
+
+FillTable REQTable 
+{
+	{ GUID "UID_AD03AEC8-069C-4178-BD7C-6E0CAF19DDC0" }
+	{ Hsect	{ Appid 2 }
+		{ NumRows 1 }
+		{ Hidden True }
+		{ NumVisRows 1 }
+		{ Vsect	{ Appid 3 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 34 }
+				{ Cell	{ Appid 37 }
+					{ Label "Subsystem: Application" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99B0-538F-11d4-8777-00C04F8DEC45" } }
+					{ ObjectCache { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 602 }  } { Object { PDMType node } { MappingName RequirementSubsystem } { ID 802 } { GUID "UID_E94A4878-AC51-11d4-BEDC-0060971B5EE0" }  } } } } }
+		{ Vsect	{ Appid 4 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 35 }
+				{ Cell	{ Appid 38 }
+					 } } }
+		{ Vsect	{ Appid 5 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 36 }
+				{ Cell	{ Appid 39 }
+					 } } } }
+	{ Hsect	{ Appid 6 }
+		{ NumRows 1 }
+		{ Hidden True }
+		{ NumVisRows 1 }
+		{ Vsect	{ Appid 7 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 40 }
+				{ Cell	{ Appid 43 }
+					 } } }
+		{ Vsect	{ Appid 8 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 41 }
+				{ Cell	{ Appid 44 }
+					 } } }
+		{ Vsect	{ Appid 9 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 42 }
+				{ Cell	{ Appid 45 }
+					
+					{ ObjectCache  } } } } }
+	{ Hsect	{ Appid 10 }
+		{ NumRows 1 }
+		{ Hidden True }
+		{ NumVisRows 1 }
+		{ Vsect	{ Appid 11 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 46 }
+				{ Cell	{ Appid 49 }
+					 } } }
+		{ Vsect	{ Appid 12 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 47 }
+				{ Cell	{ Appid 50 }
+					 } } }
+		{ Vsect	{ Appid 13 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 48 }
+				{ Cell	{ Appid 51 }
+					 } } } }
+	{ Hsect	{ Appid 14 }
+		{ NumRows 1 }
+		{ Hidden True }
+		{ NumVisRows 1 }
+		{ Vsect	{ Appid 15 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 52 }
+				{ Cell	{ Appid 55 }
+					 } } }
+		{ Vsect	{ Appid 16 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 53 }
+				{ Cell	{ Appid 56 }
+					 } } }
+		{ Vsect	{ Appid 17 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 54 }
+				{ Cell	{ Appid 57 }
+					 } } } }
+	{ Hsect	{ Appid 18 }
+		{ NumRows 1 }
+		{ Hidden False }
+		{ NumVisRows 1 }
+		{ Vsect	{ Appid 19 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 58 }
+				{ Cell	{ Appid 61 }
+					 } } }
+		{ Vsect	{ Appid 20 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 59 }
+				{ Cell	{ Appid 62 }
+					 } } }
+		{ Vsect	{ Appid 21 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 60 }
+				{ Cell	{ Appid 63 }
+					 } } } }
+	{ Hsect	{ Appid 22 }
+		{ NumRows 10 }
+		{ Hidden False }
+		{ NumVisRows 10 }
+		{ Vsect	{ Appid 23 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 82 }
+				{ Cell	{ Appid 85 }
+					{ Label "1.0;\nUser" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99B1-538F-11d4-8777-00C04F8DEC45" } }
+					{ Vspan 4 }
+					{ ObjectCache  { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 605 }  } { Object { PDMType node } { MappingName ParentRequirement } { ID 803 } { GUID "UID_E94A487B-AC51-11d4-BEDC-0060971B5EE0" }  } } } }
+			{ Row	{ Appid 88 }
+				{ Cell	{ Appid 91 }
+					{ Label "1.0;\nUser" }
+					 } }
+			{ Row	{ Appid 94 }
+				{ Cell	{ Appid 97 }
+					{ Label "1.0;\nUser" }
+					 } }
+			{ Row	{ Appid 154 }
+				{ Cell	{ Appid 157 }
+					{ Label "1.0;\nUser" }
+					 } }
+			{ Row	{ Appid 100 }
+				{ Cell	{ Appid 103 }
+					{ Label "2.0;\nConf" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99B6-538F-11d4-8777-00C04F8DEC45" } }
+					{ Vspan 3 }
+					{ ObjectCache  { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 656 }  } { Object { PDMType node } { MappingName ParentRequirement } { ID 828 } { GUID "UID_E94A48A2-AC51-11d4-BEDC-0060971B5EE0" }  } } } }
+			{ Row	{ Appid 106 }
+				{ Cell	{ Appid 109 }
+					{ Label "2.0;\nConf" }
+					 } }
+			{ Row	{ Appid 160 }
+				{ Cell	{ Appid 163 }
+					{ Label "2.0;\nConf" }
+					 } }
+			{ Row	{ Appid 118 }
+				{ Cell	{ Appid 121 }
+					{ Label "3.0;\nSend" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99BA-538F-11d4-8777-00C04F8DEC45" } }
+					{ ObjectCache  { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 695 }  } { Object { PDMType node } { MappingName ParentRequirement } { ID 847 } { GUID "UID_E94A48C0-AC51-11d4-BEDC-0060971B5EE0" }  } } } }
+			{ Row	{ Appid 124 }
+				{ Cell	{ Appid 127 }
+					{ Label "4.0;\nRead" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99BC-538F-11d4-8777-00C04F8DEC45" } }
+					{ Vspan 2 }
+					{ ObjectCache  { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 710 }  } { Object { PDMType node } { MappingName ParentRequirement } { ID 854 } { GUID "UID_E94A48CC-AC51-11d4-BEDC-0060971B5EE0" }  } } } }
+			{ Row	{ Appid 130 }
+				{ Cell	{ Appid 133 }
+					{ Label "4.0;\nRead" }
+					 } } }
+		{ Vsect	{ Appid 24 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 83 }
+				{ Cell	{ Appid 86 }
+					{ Label "1.1;\nCreateUser" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99B2-538F-11d4-8777-00C04F8DEC45" } }
+					{ ObjectCache { Object { PDMType note } { MappingName Link2UniqueIDMapping } { ID 617 }  } { Object { PDMType note } { MappingName Link1UniqueIDMapping } { ID 615 }  } { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 613 }  } { Object { PDMType item } { MappingName REQInformalNameItem } { ID 809 }  } { Object { PDMType link } { MappingName REQCurrentRequirementIdentifier } { ID 806 } { GUID "UID_E94A4884-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType link } { MappingName ReqParent } { ID 805 } { GUID "UID_E94A4881-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType node } { MappingName LeafRequirement } { ID 804 } { GUID "UID_E94A487E-AC51-11d4-BEDC-0060971B5EE0" }  } } } }
+			{ Row	{ Appid 89 }
+				{ Cell	{ Appid 92 }
+					{ Label "1.2;\nLogin" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99B3-538F-11d4-8777-00C04F8DEC45" } }
+					{ ObjectCache { Object { PDMType note } { MappingName Link2UniqueIDMapping } { ID 629 }  } { Object { PDMType note } { MappingName Link1UniqueIDMapping } { ID 627 }  } { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 625 }  } { Object { PDMType item } { MappingName REQInformalNameItem } { ID 815 }  } { Object { PDMType link } { MappingName REQCurrentRequirementIdentifier } { ID 812 } { GUID "UID_E94A488D-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType link } { MappingName ReqParent } { ID 811 } { GUID "UID_E94A488A-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType node } { MappingName LeafRequirement } { ID 810 } { GUID "UID_E94A4887-AC51-11d4-BEDC-0060971B5EE0" }  } } } }
+			{ Row	{ Appid 95 }
+				{ Cell	{ Appid 98 }
+					{ Label "1.3;\nLogout" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99B4-538F-11d4-8777-00C04F8DEC45" } }
+					{ ObjectCache { Object { PDMType note } { MappingName Link2UniqueIDMapping } { ID 641 }  } { Object { PDMType note } { MappingName Link1UniqueIDMapping } { ID 639 }  } { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 637 }  } { Object { PDMType item } { MappingName REQInformalNameItem } { ID 821 }  } { Object { PDMType link } { MappingName REQCurrentRequirementIdentifier } { ID 818 } { GUID "UID_E94A4896-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType link } { MappingName ReqParent } { ID 817 } { GUID "UID_E94A4893-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType node } { MappingName LeafRequirement } { ID 816 } { GUID "UID_E94A4890-AC51-11d4-BEDC-0060971B5EE0" }  } } } }
+			{ Row	{ Appid 155 }
+				{ Cell	{ Appid 158 }
+					{ Label "1.4;\nDeleteUser" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99B5-538F-11d4-8777-00C04F8DEC45" } }
+					{ ObjectCache { Object { PDMType note } { MappingName Link2UniqueIDMapping } { ID 653 }  } { Object { PDMType note } { MappingName Link1UniqueIDMapping } { ID 651 }  } { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 649 }  } { Object { PDMType item } { MappingName REQInformalNameItem } { ID 827 }  } { Object { PDMType link } { MappingName REQCurrentRequirementIdentifier } { ID 824 } { GUID "UID_E94A489F-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType link } { MappingName ReqParent } { ID 823 } { GUID "UID_E94A489C-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType node } { MappingName LeafRequirement } { ID 822 } { GUID "UID_E94A4899-AC51-11d4-BEDC-0060971B5EE0" }  } } } }
+			{ Row	{ Appid 101 }
+				{ Cell	{ Appid 104 }
+					{ Label "2.1;\nCreateConf" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99B7-538F-11d4-8777-00C04F8DEC45" } }
+					{ ObjectCache { Object { PDMType note } { MappingName Link2UniqueIDMapping } { ID 668 }  } { Object { PDMType note } { MappingName Link1UniqueIDMapping } { ID 666 }  } { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 664 }  } { Object { PDMType item } { MappingName REQInformalNameItem } { ID 834 }  } { Object { PDMType link } { MappingName REQCurrentRequirementIdentifier } { ID 831 } { GUID "UID_E94A48AB-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType link } { MappingName ReqParent } { ID 830 } { GUID "UID_E94A48A8-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType node } { MappingName LeafRequirement } { ID 829 } { GUID "UID_E94A48A5-AC51-11d4-BEDC-0060971B5EE0" }  } } } }
+			{ Row	{ Appid 107 }
+				{ Cell	{ Appid 110 }
+					{ Label "2.2;\nJoinConf" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99B8-538F-11d4-8777-00C04F8DEC45" } }
+					{ ObjectCache { Object { PDMType note } { MappingName Link2UniqueIDMapping } { ID 680 }  } { Object { PDMType note } { MappingName Link1UniqueIDMapping } { ID 678 }  } { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 676 }  } { Object { PDMType item } { MappingName REQInformalNameItem } { ID 840 }  } { Object { PDMType link } { MappingName REQCurrentRequirementIdentifier } { ID 837 } { GUID "UID_E94A48B4-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType link } { MappingName ReqParent } { ID 836 } { GUID "UID_E94A48B1-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType node } { MappingName LeafRequirement } { ID 835 } { GUID "UID_E94A48AE-AC51-11d4-BEDC-0060971B5EE0" }  } } } }
+			{ Row	{ Appid 161 }
+				{ Cell	{ Appid 164 }
+					{ Label "2.3;\nDeleteConf" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99B9-538F-11d4-8777-00C04F8DEC45" } }
+					{ ObjectCache { Object { PDMType note } { MappingName Link2UniqueIDMapping } { ID 692 }  } { Object { PDMType note } { MappingName Link1UniqueIDMapping } { ID 690 }  } { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 688 }  } { Object { PDMType item } { MappingName REQInformalNameItem } { ID 846 }  } { Object { PDMType link } { MappingName REQCurrentRequirementIdentifier } { ID 843 } { GUID "UID_E94A48BD-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType link } { MappingName ReqParent } { ID 842 } { GUID "UID_E94A48BA-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType node } { MappingName LeafRequirement } { ID 841 } { GUID "UID_E94A48B7-AC51-11d4-BEDC-0060971B5EE0" }  } } } }
+			{ Row	{ Appid 119 }
+				{ Cell	{ Appid 122 }
+					{ Label "3.1;\nSendMsg" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99BB-538F-11d4-8777-00C04F8DEC45" } }
+					{ ObjectCache { Object { PDMType note } { MappingName Link2UniqueIDMapping } { ID 707 }  } { Object { PDMType note } { MappingName Link1UniqueIDMapping } { ID 705 }  } { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 703 }  } { Object { PDMType item } { MappingName REQInformalNameItem } { ID 853 }  } { Object { PDMType link } { MappingName REQCurrentRequirementIdentifier } { ID 850 } { GUID "UID_E94A48C9-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType link } { MappingName ReqParent } { ID 849 } { GUID "UID_E94A48C6-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType node } { MappingName LeafRequirement } { ID 848 } { GUID "UID_E94A48C3-AC51-11d4-BEDC-0060971B5EE0" }  } } } }
+			{ Row	{ Appid 125 }
+				{ Cell	{ Appid 128 }
+					{ Label "4.1;\nViewCont" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99BD-538F-11d4-8777-00C04F8DEC45" } }
+					{ ObjectCache { Object { PDMType note } { MappingName Link2UniqueIDMapping } { ID 722 }  } { Object { PDMType note } { MappingName Link1UniqueIDMapping } { ID 720 }  } { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 718 }  } { Object { PDMType item } { MappingName REQInformalNameItem } { ID 860 }  } { Object { PDMType link } { MappingName REQCurrentRequirementIdentifier } { ID 857 } { GUID "UID_E94A48D5-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType link } { MappingName ReqParent } { ID 856 } { GUID "UID_E94A48D2-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType node } { MappingName LeafRequirement } { ID 855 } { GUID "UID_E94A48CF-AC51-11d4-BEDC-0060971B5EE0" }  } } } }
+			{ Row	{ Appid 131 }
+				{ Cell	{ Appid 134 }
+					{ Label "4.2;\nReadMsg" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99BE-538F-11d4-8777-00C04F8DEC45" } }
+					{ ObjectCache { Object { PDMType note } { MappingName Link2UniqueIDMapping } { ID 734 }  } { Object { PDMType note } { MappingName Link1UniqueIDMapping } { ID 732 }  } { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 730 }  } { Object { PDMType item } { MappingName REQInformalNameItem } { ID 866 }  } { Object { PDMType link } { MappingName REQCurrentRequirementIdentifier } { ID 863 } { GUID "UID_E94A48DE-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType link } { MappingName ReqParent } { ID 862 } { GUID "UID_E94A48DB-AC51-11d4-BEDC-0060971B5EE0" }  } { Object { PDMType node } { MappingName LeafRequirement } { ID 861 } { GUID "UID_E94A48D8-AC51-11d4-BEDC-0060971B5EE0" }  } } } } }
+		{ Vsect	{ Appid 25 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 84 }
+				{ Cell	{ Appid 87 }
+					{ Label "The sys admin shall have the capability to\ncreate new users in the system by name." }
+					
+					{ ObjectCache { Object { PDMType note } { MappingName REQDefinitionNote } { ID 808 }  } } } }
+			{ Row	{ Appid 90 }
+				{ Cell	{ Appid 93 }
+					{ Label "Users shall be able to log into the system\nby entering their name." }
+					
+					{ ObjectCache { Object { PDMType note } { MappingName REQDefinitionNote } { ID 814 }  } } } }
+			{ Row	{ Appid 96 }
+				{ Cell	{ Appid 99 }
+					{ Label "Users shall be able to log out of the system." }
+					
+					{ ObjectCache { Object { PDMType note } { MappingName REQDefinitionNote } { ID 820 }  } } } }
+			{ Row	{ Appid 156 }
+				{ Cell	{ Appid 159 }
+					{ Label "The sys admin shall have the capability to delete\nusers from the system by specifying thier name." }
+					
+					{ ObjectCache { Object { PDMType note } { MappingName REQDefinitionNote } { ID 826 }  } } } }
+			{ Row	{ Appid 102 }
+				{ Cell	{ Appid 105 }
+					{ Label "The sys admin shall have the capability to\ncreate new conferences in the system by name." }
+					
+					{ ObjectCache { Object { PDMType note } { MappingName REQDefinitionNote } { ID 833 }  } } } }
+			{ Row	{ Appid 108 }
+				{ Cell	{ Appid 111 }
+					{ Label "Any user of the email system shall have the\ncapability to join a conference." }
+					
+					{ ObjectCache { Object { PDMType note } { MappingName REQDefinitionNote } { ID 839 }  } } } }
+			{ Row	{ Appid 162 }
+				{ Cell	{ Appid 165 }
+					{ Label "The sys admin shall have the capability\nto delete existing conferences by name." }
+					
+					{ ObjectCache { Object { PDMType note } { MappingName REQDefinitionNote } { ID 845 }  } } } }
+			{ Row	{ Appid 120 }
+				{ Cell	{ Appid 123 }
+					{ Label "Users of the email system shall have the \ncapability to send messages to another\nuser or to a conference." }
+					
+					{ ObjectCache { Object { PDMType note } { MappingName REQDefinitionNote } { ID 852 }  } } } }
+			{ Row	{ Appid 126 }
+				{ Cell	{ Appid 129 }
+					{ Label "Users of the email system shall have the\ncapability to view the headers of messages\nin their mailbox or the mailbox of a conference." }
+					
+					{ ObjectCache { Object { PDMType note } { MappingName REQDefinitionNote } { ID 859 }  } } } }
+			{ Row	{ Appid 132 }
+				{ Cell	{ Appid 135 }
+					{ Label "Users of the email system shall have the\ncapability to read a specific message they select\nfrom their mailbox or the mailbox of a conference." }
+					
+					{ ObjectCache { Object { PDMType note } { MappingName REQDefinitionNote } { ID 865 }  } } } } } }
+	{ Hsect	{ Appid 26 }
+		{ NumRows 1 }
+		{ Hidden True }
+		{ NumVisRows 1 }
+		{ Vsect	{ Appid 27 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 70 }
+				{ Cell	{ Appid 73 }
+					 } } }
+		{ Vsect	{ Appid 28 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 71 }
+				{ Cell	{ Appid 74 }
+					 } } }
+		{ Vsect	{ Appid 29 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 72 }
+				{ Cell	{ Appid 75 }
+					 } } } }
+	{ Hsect	{ Appid 30 }
+		{ NumRows 4 }
+		{ Hidden True }
+		{ NumVisRows 1 }
+		{ Vsect	{ Appid 31 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 136 }
+				{ Cell	{ Appid 139 }
+					{ Label "4.0;\nRead" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99BC-538F-11d4-8777-00C04F8DEC45" } }
+					{ ObjectCache { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 710 }  } { Object { PDMType item } { MappingName REQInformalNameItem } { ID 869 }  } { Object { PDMType node } { MappingName ParentRequirement } { ID 854 } { GUID "UID_E94A48CC-AC51-11d4-BEDC-0060971B5EE0" }  } } } }
+			{ Row	{ Appid 142 }
+				{ Cell	{ Appid 145 }
+					{ Label "3.0;\nSend" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99BA-538F-11d4-8777-00C04F8DEC45" } }
+					{ ObjectCache { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 695 }  } { Object { PDMType item } { MappingName REQInformalNameItem } { ID 872 }  } { Object { PDMType node } { MappingName ParentRequirement } { ID 847 } { GUID "UID_E94A48C0-AC51-11d4-BEDC-0060971B5EE0" }  } } } }
+			{ Row	{ Appid 148 }
+				{ Cell	{ Appid 151 }
+					{ Label "2.0;\nConf" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99B6-538F-11d4-8777-00C04F8DEC45" } }
+					{ ObjectCache { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 656 }  } { Object { PDMType item } { MappingName REQInformalNameItem } { ID 875 }  } { Object { PDMType node } { MappingName ParentRequirement } { ID 828 } { GUID "UID_E94A48A2-AC51-11d4-BEDC-0060971B5EE0" }  } } } }
+			{ Row	{ Appid 76 }
+				{ Cell	{ Appid 79 }
+					{ Label "1.0;\nUser" }
+					{ PropertyList { UniqueIdProp "UID_CC1C99B1-538F-11d4-8777-00C04F8DEC45" } }
+					{ ObjectCache { Object { PDMType note } { MappingName NodeUniqueIDMapping } { ID 605 }  } { Object { PDMType item } { MappingName REQInformalNameItem } { ID 878 }  } { Object { PDMType node } { MappingName ParentRequirement } { ID 803 } { GUID "UID_E94A487B-AC51-11d4-BEDC-0060971B5EE0" }  } } } } }
+		{ Vsect	{ Appid 32 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 137 }
+				{ Cell	{ Appid 140 }
+					{ Label "Users of the email system shall have the\ncapability to read messages they have received." }
+					
+					{ ObjectCache { Object { PDMType note } { MappingName REQDefinitionNote } { ID 868 }  } } } }
+			{ Row	{ Appid 143 }
+				{ Cell	{ Appid 146 }
+					{ Label "Users of the email system shall have the\ncapability to send messages" }
+					
+					{ ObjectCache { Object { PDMType note } { MappingName REQDefinitionNote } { ID 871 }  } } } }
+			{ Row	{ Appid 149 }
+				{ Cell	{ Appid 152 }
+					{ Label "The email system shall have conferences which\npertain to a common topic." }
+					
+					{ ObjectCache { Object { PDMType note } { MappingName REQDefinitionNote } { ID 874 }  } } } }
+			{ Row	{ Appid 77 }
+				{ Cell	{ Appid 80 }
+					{ Label "The email system shall support users." }
+					
+					{ ObjectCache { Object { PDMType note } { MappingName REQDefinitionNote } { ID 877 }  } } } } }
+		{ Vsect	{ Appid 33 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 138 }
+				{ Cell	{ Appid 141 }
+					 } }
+			{ Row	{ Appid 144 }
+				{ Cell	{ Appid 147 }
+					 } }
+			{ Row	{ Appid 150 }
+				{ Cell	{ Appid 153 }
+					 } }
+			{ Row	{ Appid 78 }
+				{ Cell	{ Appid 81 }
+					 } } } } }

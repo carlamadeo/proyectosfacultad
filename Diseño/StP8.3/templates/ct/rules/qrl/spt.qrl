@@ -1,0 +1,37 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+string
+action_instance_name(int hsect, int vsect, int row, int col)
+{
+  string event, action;
+
+  event
+    = gte_get_cell_label(gte_get_row(hsect, row), 
+			 gte_get_col(vsect, gte_lookup_symbol("EVENT_COL")));
+  action
+    = gte_get_cell_label(gte_get_row(hsect, row), 
+			 gte_get_col(vsect, gte_lookup_symbol("ACTION_COL")));
+  
+  if (event == NULL)
+    return(NULL);
+
+  if (action == NULL)
+    return(action);
+
+  return(event + "/" + action);
+}
+
+int
+spt_check_syntax()
+{
+    int errors = 0;
+    return errors;
+}
+
+#include "rules/qrl/gte_qrl_std.inc"

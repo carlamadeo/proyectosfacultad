@@ -1,0 +1,51 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/T
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1994
+//      All rights reserved
+
+// StP/Validator
+
+
+Category CatModel
+{ 
+    { ShowOnDesktop True }
+    { ParseCondition "is_validator_available(\"integrated\");" }
+    { Group
+         (
+             TestTypes
+          )
+    }
+}
+ 
+
+Category CatValidator
+{
+    { ShowOnDesktop True }
+    { ParseCondition "is_validator_available(\"integrated\") && toolinfo_variable(\"SRI\") != \"True\";" }
+    { Label "Validation" }
+    { Group
+         (
+             Validator
+             ValidatorCustom
+          )
+    }
+}
+
+Category CatValidator
+{
+    { ShowOnDesktop True }
+    { ParseCondition "is_validator_available(\"integrated\") && toolinfo_variable(\"SRI\") == \"True\";" }
+    { Label "Validation" }
+    { Group
+         (
+             Validator
+             STW
+             ValidatorCustom
+          )
+    }    
+}
+
+
+

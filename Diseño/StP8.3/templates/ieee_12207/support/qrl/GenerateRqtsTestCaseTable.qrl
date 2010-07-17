@@ -1,0 +1,263 @@
+#include "val/qrl/include/table.inc"
+
+  const int width_1 = 200;
+  const int width_2 = 400;
+  const int width_3 = 400;
+  const int width_4 = 400;
+  const int width_5 = 200;
+
+  const string coltitle1 = "Requirement ID";
+  const string coltitle2 = "Short Description";
+  const string coltitle3 = "Use Case";
+  const string coltitle4 = "Scenario";
+  const string coltitle5 = "Test Cases";
+
+  struct component
+    {
+      string objects;
+      string names;
+    };
+
+void
+main ()
+{
+  print_message ("Start Report Generation");
+
+  format ("ValidatorDocuments.rtf");
+
+  string caption;
+
+  string q = "file [REQTable] sort by name";
+  list filelist = list_select(q);
+  file filevar;
+  int i;
+  int count = list_count(filelist);
+
+  for (i=0;i<count;i++)
+    {
+      filevar = list_get(filelist,i);
+      paragraph ("Heading 4");
+      print ("Requirements Table: " + filevar.name);
+
+      caption = "Software Requirements Test Cases";
+      PrintTraceabilityTable (filevar.id, filevar.name, caption);
+    }
+}
+
+void
+PrintTraceabilityTable (int id, string name, string caption)
+{
+  string q = "node [REQRequirement && in_links[REQCurrentRequirementIdentifier] && node_refs[file[${id}]]]";
+
+  list nodelist = list_select(q);
+  node nodevar;
+
+  int i;
+  int count = list_count(nodelist);
+
+  InitializeTable();
+
+
+  for (i=0;i<count;i++)
+    {
+      nodevar = list_get(nodelist,i);
+
+      GetModelComponents(nodevar);
+
+    }
+
+
+  End_Table();
+
+  print_table(name, caption);
+
+  print_message (name + " Table Printed");
+
+
+}
+
+
+string
+GetItem(string typename, int id)
+{
+   string q = "item[${typename} && obj_id==${id}]";
+
+   item itemvar = find_by_query (q);
+
+   if (itemvar == NULL)
+     return ("unspecified");
+   else
+     {
+       if (itemvar.value == "")
+         return ("unspecified");
+       else
+         return (itemvar.value);
+     }
+}
+
+
+
+void
+GetModelComponents(node REQ)
+{
+  string q = "node [UmlScenarioInstance && node_refs && items[REQAnalysisAssignmentItem && value == '${REQ.name}' ]]";
+  list nodelist = list_select(q);
+  node nodevar;
+
+  int count = list_count(nodelist);
+  int i;
+
+  string c1,c2,c3,c4,c5;
+
+  string str="unspecified";
+
+  if (count == 0)
+    {
+
+      c1 = REQ.name;
+      c2 = GetItem("REQInformalNameItem", REQ.id);
+      c3 = "unspecified";
+      c4 = "unspecified";
+      c5 = "unspecified";
+
+      PrintTableRow(c1, c2, c3, c4, c5);
+      return;
+    }
+
+  for (i=0;i<count;i++)
+    {
+      nodevar = list_get(nodelist,i);
+      
+      c1 = REQ.name;
+      c2 = GetItem("REQInformalNameItem", REQ.id);
+      c3 = GetItem("UmlParentNameItem", nodevar.id);
+      c4 = nodevar.name;
+      c5 = GetTestCaseInfo(c3, nodevar.name);
+
+      PrintTableRow(c1, c2, c3, c4, c5);
+    }
+}
+
+
+
+
+string
+GetTestCaseInfo(string use_case_name, string scenario_name)
+{
+
+    list testcases;
+    string rawtestcases;
+    string pdir = current_projdir();
+    string sys = current_system();
+    string fname = pdir + sys + "/test_files/" + use_case_name + 
+               "/UseCaseTestScripts/scenario.rpt";
+
+    if (file_exists(fname) )
+      {
+        testcases = list_create ("string",0);
+        rawtestcases = read_file(fname);
+        rawtestcases = string_search_and_replace(rawtestcases, "\r", "");
+        list_clear (testcases);
+        testcases = string_to_list(rawtestcases, "\n");
+        return (GetTestCases(testcases, scenario_name) );
+      }
+    else
+      return ("No Test Cases");
+}
+
+
+string
+GetTestCases(list testcases, string scenario_name)
+{
+
+  int i;
+
+  int count = list_count (testcases);
+  string lastscenario = "";
+  boolean first = False;
+  string firsttc = "";
+  string lasttc = "";
+  string testcase;
+  list testcaseparts;
+  string scenario;
+  string test;
+
+  for (i=0;i<count;i++)
+    {
+      testcase = list_get(testcases, i);
+      testcaseparts = string_to_list(testcase, ":");
+      scenario = list_get(testcaseparts,0);
+      test =  list_get(testcaseparts,1);
+
+      if (scenario_name == scenario && !first)
+        {
+          first = True;
+          firsttc = test;
+        }
+      if (lastscenario != scenario && first)
+        {
+          lasttc = test;
+        }
+
+      lastscenario = scenario;
+      
+    }
+
+  lasttc = test;
+
+  return (firsttc + " - " + lasttc);
+}
+
+
+
+
+void
+PrintTableRow( string c1, string c2, string c3, string c4, string c5 )
+{
+
+      Begin_Row();
+
+      Make_Cell(width_1, NULL, NULL, NULL, NULL, NULL, c1 );
+      Make_Cell(width_2, NULL, NULL, NULL, NULL, NULL, c2 );
+      Make_Cell(width_3, NULL, NULL, NULL, NULL, NULL, c3 );
+      Make_Cell(width_4, NULL, NULL, NULL, NULL, NULL, c4 );
+      Make_Cell(width_5, NULL, NULL, NULL, NULL, NULL, c5 );
+
+      End_Row();
+
+}
+
+
+
+void 
+InitializeTable()
+{
+
+
+   table_caption_placement_set(Top);
+   table_width_set(6.5);
+
+   table_caption_paragraph_format_set ("TableTitle");
+   table_cell_bold_paragraph_format_set ("CellBody");
+   table_cell_paragraph_format_set ("CellBodyleft");
+
+
+   // create title bar
+
+   Begin_Table(5);
+
+   Begin_Row();
+
+   Make_Cell(width_1, NULL, "Shade0", NULL, NULL, NULL, coltitle1);
+   Make_Cell(width_2, NULL, "Shade0", NULL, NULL, NULL, coltitle2);
+   Make_Cell(width_3, NULL, "Shade0", NULL, NULL, NULL, coltitle3);
+   Make_Cell(width_4, NULL, "Shade0", NULL, NULL, NULL, coltitle4);
+   Make_Cell(width_5, NULL, "Shade0", NULL, NULL, NULL, coltitle5);
+
+   End_Row();
+
+}
+
+
+
+

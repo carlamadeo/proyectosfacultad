@@ -1,0 +1,64 @@
+FileObject 1
+{
+    { Name "a661" }
+    { Type ObjectAnnotation }
+    { GUID "UID_965CDCF9-060B-11d6-AE72-0080C88207C4" }
+}
+
+NodeObject 99999
+{
+    { Name "Weight" }
+    { Type UmlClass }
+    { ObjectId 402 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_378C31FE-544B-11d4-8778-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "run" }
+    { Type UmlOperation }
+    { ObjectId 1304 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_6F3DBABC-060A-11d6-AE72-0080C88207C4" }
+}
+
+NoteObject 2
+{
+    { Type UmlOperationJavaCode }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1306 }
+    { DescLine "takeEvent(_RAISE);" }
+    { DescLine "while(hasEnergy(10)) {" }
+    { DescLine "  takeEvent(_SINK);" }
+    { DescLine "}" }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1308 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1310 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "run" }
+    { NoteId 4 }
+    { ObjectId 1311 }
+}
+

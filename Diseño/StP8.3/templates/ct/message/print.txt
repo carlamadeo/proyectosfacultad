@@ -1,0 +1,144 @@
+%
+% 	sccsid[] = @(#)print.txt	4.1  94/01/14
+% 	StP/Core
+% 	Confidential property of Interactive Development Environments, Inc.
+% 	Copyright (c) 1992-1993
+% 	All rights reserved
+%
+
+% File prtpic.c
+1300;Could not figure out what symbols to generate
+1301;Program name needs to be either adpic/erpic/dspic
+% File prtpost.c
+1302;Could not figure out what symbols to generate
+1303;Program name needs to be either adpost/erpost/dspost
+% dfpic
+2020;Usage:  %s [-] [-h] [-b] [-n] [-p proj_dir] [-s system] %.3sfile [%.3sfile]
+2021;.bp\n
+2022;.PP\n.ps+2\n%s%s%s\n.ps -2\n.sp 2\n
+2023;: level 
+2024;\n%s%s%s\n\n
+2025;.PP\n.ps+2\n%s%s%s\n.ps -2\n.sp 2\n
+2026;.sp\n\\s+2%s\\s-2\n.sp\n
+2027;\n%s\n
+2028;.ps +2\n\t%s\n.ps -2\n
+2029;\t%s\n\n
+2030;.PP\n.ps +2\n%s\n.ps -2\n
+2031;\n\n%s\n\n
+% dfpost
+2032;Usage:  %s [-] [-h] [-b] [-n] [-p proj_dir] [-s system] %.3sfile [%.3sfile]
+% mif.c
+2033;%s %f\n
+2034;Page width cannot be greater than maximum.  Reset to mif_max_wid = 
+2035;Page height cannot be greater than maximum.  Reset to mif_max_ht = 
+%
+% dfmif.c - scmif.c - tdmif.c
+2036;No diagram name given
+% Comments for Encapsulated PostScript Files
+2037;%%!PS-Adobe-2.0 EPSF-2.0\n
+2038;%%%%BoundingBox: %f %f %f %f\n
+2039;%%%%Pages: %d\n
+2040;%%%%Title: %s\n
+2041;%%%%Creator: %s\n
+2042;%%%%CreationDate: %s %s\n
+2043;%%%%DocumentFonts: %s %s\n
+2044;%%%%EndComments\n
+% dfe_pic_messages
+1304;.nf\n.ps 10\n.sp 2\n.nr PS 10\n
+1305;\n\n
+1306;.sp 2\n
+1307;\n\n
+1308;\\fB\\s+2Processes\\s-2\\fP\n.sp .2\n
+1309;\nProcesses\n\n
+1310;\t\\s+2%s\\s-2
+1311;\t%s
+1312;\ (%s)\n
+1313;\t\t
+1314;\n\t    %s\n
+1315;.sp 2\n
+1316;\n\n
+1317;\\fB\\s+2Data Stores\\s-2\\fP\n.sp .2\n
+1318;\nData Stores\n\n
+1319;\t\\s+2%s\\s-2
+1320;\t%s
+1321;\ (%s)\n
+1322;\t\t
+1323;\n\t    %s\n
+1324;.sp 2\n
+1325;\n\n
+1326;\\fB\\s+2Data Flows\\s-2\\fP\n.sp .2\n
+1327;\nData Flows\n\n
+1328;\t\\s+2%s\\s-2\n
+1329;\t%s\n
+1330;\t\t
+1331;.sp 2\n
+1332;\n\n
+1333;\\fB\\s+2Data Sources and Sinks\\s-2\\fP\n.sp .2\n
+1334;\nData Sources and Sinks\n\n
+1335;\t\\s+2%s\\s-2
+1336;\t%s
+1337;\ (%s)\n
+1338;\t\t
+1339;.sp 2\n
+1340;\n\n
+1341;\\fB\\s+2Control Specifications\\s-2\\fP\n.sp .2\n
+1342;\nControl Specifications\n\n
+1343;\t\\s+2%s\\s-2\n
+1344;\t%s\n
+1345;\t\t
+1346;.sp 2\n
+1347;\n\n
+% more messages for ste pic ...
+2000;\\fB\\s+2States\\s-2\\fP\n.sp .2\n
+2001;\nStates\n\n
+2002;\t\\s+2%s\\s-2\n
+2003;\t%s\n
+2004;\t\t
+2005;.sp 2\n
+2006;\n\n
+2007;\\fB\\s+2State Transitions\\s-2\\fP\n.sp .2\n
+2008;\nState Transitions\n\n
+2009;\t\\s+2%s\\s-2
+2010;\t%s
+2011;\t\\s+2%s\\s-2
+2012;\t%s
+2013;.sp .5\n
+2014;\n
+2015;\t\\s+2%s\\s-2\n
+2016;\t%s\n
+2017;\t\t
+2018;.sp 2\n
+2019;\n\n
+% pctpic
+2501;Usage:  pctpic [-] [-l] [-m|-M]  pctfile [pctfile] ...
+2502;.sp\n\\s+2%s\\s-2\n.sp\n
+2503;.nf\n.sp 2\n
+2504;\n\n
+2505;.sp 2\n
+2506;\n\n
+2507;.sp 1.5\n
+2508;\n
+2509;%s\n
+2510;\t
+% pctpost
+2511;Usage:  pctpost [-h] [-b] [-] pctfile [pctfile] ...
+% tdpic
+2512;.sp\n\\s+2%s\\s-2\n.sp\n
+% scpic
+2513;.sp\n\\s+2%s\\s-2\n.sp\n
+% pic -- start of a diagram
+2515;.PS\n.ft R\n.ps %d\n.vs %d\nscale = %.3f\ncirclerad = %.3fi\nboxwid = %.3fi\nboxht = %.3fi\n
+% end of a diagram
+2514;.ps\n.vs\n.ft\n.PE\n
+2517;Usage:  %s [-] [leaf_args] [-p proj_dir] [-s system] [-n] %.3sfile [%.3sfile]
+2518;Program name needs to be either adleaf/dslead/erleaf
+2519;Could not open FrameMaker MIF preamble file %.80s
+2520;Check your mif_pre ToolInfo variable
+2521;Error: Could not open DPS PostScript preamble file: %s
+2522;Error: Could not open DPS FrameMaker preamble file: %s
+2523;Error: Could not open DPS Interleaf preamble file: %s
+2524;Error: Could not open DPS Ditroff preamble file: %s
+2525;Error: Could not open DPS Ascii preamble file: %s
+2526;Line exceeds %d chars, truncated text: page %d, line %d
+% Back to docgen messages here
+2555;Could not open script file '%s' during merge.

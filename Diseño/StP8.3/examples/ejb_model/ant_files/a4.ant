@@ -1,0 +1,58 @@
+FileObject 1
+{
+    { Name "a4" }
+    { Type ObjectAnnotation }
+    { GUID "UID_F41E68A4-D7EE-40cc-BD10-658B85D161E8" }
+}
+
+NodeObject 99999
+{
+    { Name "Transaction" }
+    { Type UmlClass }
+    { ObjectId 475 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_41F11F90-0B6F-11d5-8C6A-000000000000" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 477 }
+}
+
+ItemObject 3
+{
+    { Type UmlStereotype }
+    { Value "SessionBean" }
+    { NoteId 2 }
+    { ObjectId 478 }
+}
+
+ItemObject 4
+{
+    { Type UmlTaggedValue }
+    { Value "ejb_SessionType=Stateful" }
+    { NoteId 2 }
+    { ObjectId 479 }
+}
+
+NoteObject 5
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 481 }
+}
+
+ItemObject 6
+{
+    { Type ObjectName }
+    { Value "Transaction" }
+    { NoteId 5 }
+    { ObjectId 482 }
+}
+

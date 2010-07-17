@@ -1,0 +1,1849 @@
+
+//      StP/SE
+//      Confidential property of Aonix
+//      Copyright (c) 1999
+//      All rights reserved
+
+#include "qrl/include/general.inc"
+#include "qrl/check/dfe_semantics_common.inc"
+#include "qrl/check/newbalance.inc"
+#include "qrl/check/check_common.inc"
+
+// Nobjects_tp
+//
+// holds all the objects that were mapped from the diagram being checked.
+// Minimizes queries since most relationships can be deduced from these
+// object collections.  Each list contains cnode_tp structs.
+
+struct Nobjects_tp
+{
+    list	dflows;		// DataFlow cnode_tp's
+    list	cflows;		// ControlFlow cnode_tp's
+    list        processes;	// Process cnode_tp's
+    list        cspecs;		// Cspec cnode_tp's
+    list        stores;		// Store cnode_tp's
+    list        splits;		// SplitFlow cnode_tp's
+    list        externals;	// External cnode_tp's
+    list        offpages;	// offpage cnode_tp's
+};
+
+
+struct opts_tp
+{
+    file	file;		// the file being checked
+    int		decomp;		// parent/decomp check
+    int 	balance;	// store balance check
+    int         internalproc;   // internal process check
+    int         splitflows;     // split/merge flow check
+    int		pspec;		// check for pspec/decomposition
+    int		cspec;		// check for cspec table/std
+    int 	verbose;
+};
+
+// lots of debugging messages
+//boolean _SC_Debug = True;   
+boolean _SC_Debug = False; 
+
+// Just a few messages
+//boolean __DbgS = True;
+boolean __DbgS = False;
+
+list Forest;
+int Fid;
+
+int __DfeErrors;  // used to record misc. errors as we go
+
+// DataTypes
+
+list AllDataDefsById;
+list AllDataDefsByName;
+list AllDataDefsByScopeNodeId;
+list AllTypeItems;
+int NumDDs;
+set DoneTypes;
+int SC_INCR=60;
+boolean SkipBalance;
+boolean QuickTypes;
+list ParentStores;
+
+// main entry point to dfe semantic checking.
+
+int
+DfeCheckSemanticsNow(list files, int balance, int decomp, int pspec, int cspec, int internalproc, int splitflows, int verbose)
+
+{
+    opts_tp  options;
+    Nobjects_tp  objects;
+    int i, errors = 0;
+    string s;
+
+    // populate options struct
+
+    options.balance = balance;
+    options.decomp = decomp;
+    options.internalproc = internalproc;
+    options.splitflows = splitflows;
+    options.pspec = pspec;
+    options.cspec = cspec;
+    options.verbose = verbose;
+
+    // Debug??
+    s = environment_variable("DebugSemantics"); 
+    if (str_has_val(s) && s == "1")
+        __DbgS = True;
+    if (str_has_val(s) && s == "2")
+    {
+        __DbgS = True;
+        _SC_Debug = True;
+    }
+    
+        
+    __DbgSMytime = __DbgSStarttime = 0;
+    if (__DbgS) 
+        print_error("Starting Check Semantics: " + TIM());
+
+    for (i = 0; i < list_count(files); i++)
+    {
+	options.file = list_get(files, i);
+	print_message("Checking semantics for DFE diagram '" + options.file.name + "'...");
+	print_sc_para("Checking semantics for DFE diagram '" + options.file.name + "'...");
+        CurFile = options.file.name;
+
+	if (file_history(options.file))
+	{
+	    errors++;
+	    print_message("Semantic check failed.");
+	    print_sc_para("Semantic check failed.");
+	} 
+        else
+	{
+	    objects = DfeSemanticsInitStructures(options);
+
+            if (__DbgS) 
+                print_error("Done Init: " + TIM());
+
+	    if (objects != NULL)
+		errors += DfeCheckEverything(options, objects);
+            else 
+                errors = __DfeErrors;
+
+            if (__DbgS)
+                print_error("Check Semantics Complete: " + TIMTOTAL() + " seconds total.");
+	}
+        print_sc_para("");
+    }
+
+    if (!errors)
+    {
+	print_message("Check DFE semantics completed with no errors.");
+	print_sc_para("Check DFE semantics completed with no errors.");
+    }
+    else if (errors == 1)
+    {
+	print_message("Check DFE semantics completed with 1 error.");
+	print_sc_para("Check DFE semantics completed with 1 error.");
+    }
+    else
+    {
+	print_message("Check DFE semantics completed with " + errors + " errors.");
+	print_sc_para("Check DFE semantics completed with " + errors + " errors.");
+    }
+    print_sc_para("");
+
+    return errors;
+}
+
+
+
+Nobjects_tp 
+DfeSemanticsInitStructures(opts_tp options)
+
+{
+    Nobjects_tp  objects;
+    cnode_tp    cnode;
+    item        item;
+    node        node;
+    link        link;
+    string      query;
+    int         i, j, elem, err;
+    list nodes, links;
+    boolean timetogo = False;
+
+    DoneTypes = set_create("string");
+    SkipBalance = False;
+
+    __DfeErrors = 0;
+    objects.dflows = list_create("cnode_tp", 0);
+    objects.cflows = list_create("cnode_tp", 0);
+    objects.processes = list_create("cnode_tp", 0);
+    objects.cspecs = list_create("cnode_tp", 0);
+    objects.stores = list_create("cnode_tp", 0);
+    objects.splits = list_create("cnode_tp", 0);
+    objects.externals = list_create("cnode_tp", 0);
+    objects.offpages = list_create("cnode_tp", 0);
+
+    nodes = list_select("node[node_refs[file_id == ${options.file.id}]]");
+    links = list_select("link[link_refs[file_id == ${options.file.id}]]");
+
+    if (str_has_val(toolinfo_variable("dfe_sc_skip_types")))
+        QuickTypes = True;
+    else
+        QuickTypes = False;
+
+    if (_SC_Debug)
+    {
+        print_error("nodes: " + list_count(nodes));
+        print_error("links: " + list_count(links));
+    }
+
+    if (list_count(nodes) == 0 && list_count(links) == 0)
+	return NULL;
+
+    // Get data definitions, to avoid going to repository many times.
+    // Building of forest utilizes this information.
+
+    if (__DbgS) 
+        print_error("Starting Queries: " + TIM());
+    AllDataDefsByName = list_select("node[Sequence || Selection || Enumeration && node_refs] sort by name");
+    NumDDs = list_count(AllDataDefsByName);
+    AllDataDefsByScopeNodeId = list_select("node[Sequence || Selection || Enumeration && node_refs] sort by scope_node_id");
+    AllTypeItems = list_select("item[DataType]");
+
+
+    // sort by id returns a cursor error on Sybase 11.5, so use the slower qrl sort routine
+    // instead.
+    AllDataDefsById = list_sort_all(AllDataDefsByName, "SortByIntIdFunc"); 
+    //AllDataDefsById = list_select("node[Sequence || Selection || Enumeration && node_refs] sort by id");
+    if (__DbgS) 
+        print_error("Done Queries: " + TIM());
+
+    // Verify sort
+    if (_SC_Debug) 
+    {
+        int previd = -1;
+        print_error("Checking assertion of sort order");
+        for (i=0; i<NumDDs; i++)
+        {
+	    node = list_get(AllDataDefsById, i);
+            if (node.id < previd)
+                print_error("Assertion failed for: " + node.name + "(" + node.id + ")");
+            previd = node.id;
+        }
+    }
+
+    Forest = list_create("ds_elem_tp", 0);
+    Fid = 0;
+
+    for (i=0; i<list_count(links); i++)
+    {
+	link = list_get(links, i);
+	cnode.link = link;
+        cnode.node = NULL;
+
+	if (link.type == "DataFlow")
+	    list_append(objects.dflows, cnode);
+        else if (link.type == "ControlFlow")
+	    list_append(objects.cflows, cnode);
+
+        err = GetDataStructure(options, cnode, False, False); 
+        if (err == -1)
+        {
+            __DfeErrors ++;
+            timetogo = True;
+        }
+        else
+            __DfeErrors += err;
+    }
+
+    for (i = 0; i < list_count(nodes); i++)
+    {
+	node = list_get(nodes, i);
+	cnode.node = node;
+        cnode.link = NULL;
+
+	if (node.type == "Process")
+	{
+	    item = find_by_query("item[RelativeIndex && obj_id == ${node.id}]");
+            if (item == NULL || str_no_val(item.value))
+            {
+                print_warning("Process '" + node.name + "' has no relative index. Skipping it.");
+                continue;
+            }
+           
+	    cnode.pindex = item.value;
+
+	    if (options.file.name == "top")
+		cnode.decompname = "0";
+	    else if (options.file.name == "0")
+		cnode.decompname = cnode.pindex;
+	    else
+		cnode.decompname = options.file.name + "." + cnode.pindex;
+
+	    list_append(objects.processes, cnode);
+	    cnode.pindex = NULL;
+	    cnode.decompname = NULL;
+	} 
+        else if (node.type == "Store")
+	{
+	    list_append(objects.stores, cnode);
+            err = GetDataStructure(options, cnode, True, True); 
+            if (err == -1)
+            {
+                __DfeErrors ++;
+                timetogo = True;
+            }
+            else
+                __DfeErrors += err;
+	} 
+        else if (node.type == "Cspec")
+	{
+	    cnode.decompname = options.file.name;
+	    list_append(objects.cspecs, cnode);
+	    cnode.decompname = NULL;
+	} 
+        else if (node.type == "External")
+	    list_append(objects.externals, cnode);
+        else if (node.type == "SplitFlow")
+	    list_append(objects.splits, cnode);
+        else if (node.type == "FlowAnchor")
+	    list_append(objects.offpages, cnode);
+        else if (node.type == "OffPageProcess")
+	    list_append(objects.offpages, cnode);
+        else if (node.type == "OffPageExternal")
+	    list_append(objects.offpages, cnode);
+    }
+    if (timetogo)
+        return NULL; 
+    return objects;
+}
+
+
+
+// check all objects based on options values
+
+int
+DfeCheckEverything(opts_tp options, Nobjects_tp objects)
+{
+    int	      i, errors = 0;
+    cnode_tp  cnode;
+
+    if (options.pspec)
+    {
+	if (options.verbose)
+        {
+	    print_message("Checking for decompositions and Pspecs...");
+	    print_sc_para("Checking for decompositions and Pspecs...");
+        }
+	 
+	for (i = 0; i < list_count(objects.processes); i++)
+	{
+	    cnode = list_get(objects.processes, i);
+	    errors += DfeCheckPspec(options.file, cnode);
+
+	    if (cnode.haspspec)
+		errors += DfeCheckControlIns(options.file, cnode, objects.cflows);
+	}
+    }
+
+    if (options.cspec)
+    {
+	if (options.verbose)
+        {
+	    print_message("Checking for Control Spec tables/diagrams...");
+	    print_sc_para("Checking for Control Spec tables/diagrams...");
+        }
+
+	for (i = 0; i < list_count(objects.cspecs); i++)
+	{
+	    cnode = list_get(objects.cspecs, i);
+	    errors += DfeCheckCspec(options.file, cnode);
+	}
+    }
+
+    if (__DbgS) 
+        print_error("Done Cspec check: " + TIM());
+
+    if (options.decomp && ! SkipBalance)
+    {
+        if (options.verbose)
+        {
+            print_message("Checking balance between Parent and Decomposition diagrams ...");
+            print_sc_para("Checking balance between Parent and Decomposition diagrams ...");
+        }
+
+        errors += DfeCheckParentAndDecomposition(options, objects);
+    }
+
+    if (__DbgS) 
+        print_error("Done Decomp check: " + TIM());
+
+    if (options.balance && ! SkipBalance)
+    {
+        if (! options.decomp)
+        {
+            print_error("Cannot run Store balance check without Parent balance check.  Skipping Store balance check.");
+            print_sc_para("Cannot run Store balance check without Parent balance check.  Skipping Store balance check.");
+        }
+        else
+        {
+            if (options.verbose)
+            {
+                print_message("Checking Store balance ...");
+                print_sc_para("Checking Store balance ...");
+            }
+            errors += DfeCheckStores(options, objects);
+        }
+    }
+
+    if (__DbgS) 
+        print_error("Done Balance check: " + TIM());
+
+    if (options.internalproc && ! SkipBalance)
+    {
+        if (!options.decomp)
+        {
+            print_error("Cannot run Process balance check without Parent balance check.  Skipping Process balance check.");
+            print_sc_para("Cannot run Process balance check without Parent balance check.  Skipping Process balance check.");
+        }
+        else
+        {
+            if (options.verbose)
+            {
+                print_message("Checking Process balance ...");
+                print_sc_para("Checking Process balance ...");
+            }
+
+            errors += DfeCheckProcessesOrSplits(options, objects, True);
+        }
+    }
+
+    if (__DbgS) 
+        print_error("Done Process check: " + TIM());
+
+    if (options.splitflows && ! SkipBalance)
+    {
+        if (!options.decomp)
+        {
+            print_error("Cannot run Splitflow balance check without Parent balance check.  Skipping Splitflow balance check.");
+            print_sc_para("Cannot run Splitflow balance check without Parent balance check.  Skipping Splitflow balance check.");
+        }
+        else
+        {
+            if (options.verbose)
+            {
+                print_message("Checking Split Flow balance ...");
+                print_sc_para("Checking Split Flow balance ...");
+            }
+
+            errors += DfeCheckProcessesOrSplits(options, objects, False);
+        }
+    }
+
+    if (__DbgS) 
+        print_error("Done Split Flow check: " + TIM());
+
+    if (__DbgS) 
+        print_error("Done All checks: " + TIM());
+
+    return errors + __DfeErrors;
+}
+
+
+
+// take a list of data_tp's and return their appids
+
+list
+NAppidsFromDataList(list errs, file file)
+{
+    list     result;
+    int      i;
+    data_tp  d;
+
+    for (i = 0; i < list_count(errs); i++)
+    {
+	d = list_get(errs, i);
+
+	if (i == 0)
+	{
+	    result = link_appids(d.parent, file);
+	} else
+	{
+	    list_concatenate(result, link_appids(d.parent, file));
+	}
+    }
+    return(result);
+}
+
+
+
+
+// print errors based on balance result
+
+int
+PrintDecompBalanceErrors(opts_tp options, list l, string whichway, string target1, string target2)
+{
+    int      i, errors = 0;
+    inout_tp io;
+
+    for (i=0; i<list_count(l); i++)
+    {
+        io = list_get(l, i);
+        if (io.errstatus == 4)
+        {
+            errors++;
+            print_error("Flow '" + io.name + "' flows " + whichway + " " + target1 + ", but does not flow " + whichway + " " + target2 + ".");
+            print_sc_error("Dfe", CurFile, "Flow '" + io.name + "' flows " + whichway + " " + target1 + ", but does not flow " + whichway + " " + target2 + ".");
+        }
+        else if (io.errstatus == 2)
+        {
+            errors++;
+            print_error("Could not resolve ambiguous flow '" + io.name + "' in " + target1 + ". Correct model in Data Structure Diagram and recheck.");
+            print_sc_error("Dfe", CurFile, "Could not resolve ambiguous flow '" + io.name + "' in " + target1 + ". Correct model in Data Structure Diagram and recheck.");
+        }
+        else if (io.errstatus == 3)
+        {
+            errors++;
+            print_error("Flow '" + io.name + "' flows " + whichway + " " + target1 + ", but some or all of it's constituent elements do not flow " + whichway + " " + target2 + ".");
+            print_sc_error("Dfe", CurFile, "Flow '" + io.name + "' flows " + whichway + " " + target1 + ", but some or all of it's constituent elements do not flow " + whichway + " " + target2 + ".");
+        }
+        else if (io.errstatus == 10)
+        {
+            errors++;
+            print_error("Processing Error with Flow '" + io.name + "' in " + target1 + ".");
+            print_sc_error("Dfe", CurFile, "Processing Error with Flow '" + io.name + "' in " + target1 + ".");
+        }
+    }
+    return errors;
+}
+
+
+
+
+int
+PrintStoreBalanceErrors(opts_tp options, string name, list l, string whichway, string otherway)
+
+{
+    int i, errors = 0;
+    inout_tp io;
+
+    for (i=0; i<list_count(l); i++)
+    {
+        io = list_get(l, i);
+        if (io.errstatus == 4)
+        {
+            errors++;
+            print_error("Flow '" + io.name + "' flows " + whichway + " Store '" + name + "', but does not flow " + otherway + " Store.");
+            print_sc_error("Dfe", CurFile, "Flow '" + io.name + "' flows " + whichway + " Store '" + name + "', but does not flow " + otherway + " Store.");
+        }
+        else if (io.errstatus == 2)
+        {
+            errors++;
+            print_error("Could not resolve ambiguous flow '" + io.name + "'. Correct model in Data Structure Diagram and recheck.");
+            print_sc_error("Dfe", CurFile, "Could not resolve ambiguous flow '" + io.name + "'. Correct model in Data Structure Diagram and recheck.");
+        }
+        else if (io.errstatus == 3)
+        {
+            errors++;
+            print_error("Flow '" + io.name + "' flows " + whichway + " Store '" + name + "', but some or all of it's constituent elements do not flow " + otherway + " Store.");
+            print_sc_error("Dfe", CurFile, "Flow '" + io.name + "' flows " + whichway + " Store '" + name + "', but some or all of it's constituent elements do not flow " + otherway + " Store.");
+        }
+        else if (io.errstatus == 10)
+        {
+            errors++;
+            print_error("Processing Error with Flow '" + io.name + "' near Store '" + name + "'.");
+            print_sc_error("Dfe", CurFile, "Processing Error with Flow '" + io.name + "' near Store '" + name + "'.");
+        }
+    }
+    return errors;
+}
+
+
+int
+PrintProcessOrSplitFlowBalanceErrors(opts_tp options, string name, list l, string whichway, string otherway, string p_or_s)
+
+{
+    int i, errors = 0;
+    inout_tp io;
+
+    for (i=0; i<list_count(l); i++)
+    {
+        io = list_get(l, i);
+        if (io.errstatus == 4)
+        {
+            errors++;
+            print_error("Flow '" + io.name + "' flows " + whichway + " " + p_or_s + " '" + name + "', but does not flow " + otherway + " " + p_or_s + ".");
+            print_sc_error("Dfe", CurFile, "Flow '" + io.name + "' flows " + whichway + " " + p_or_s + " '" + name + "', but does not flow " + otherway + " " + p_or_s + ".");
+        }
+        else if (io.errstatus == 2)
+        {
+            errors++;
+            print_error("Could not resolve ambiguous flow '" + io.name + "'. Correct model in Data Structure Diagram and recheck.");
+            print_sc_error("Dfe", CurFile, "Could not resolve ambiguous flow '" + io.name + "'. Correct model in Data Structure Diagram and recheck.");
+        }
+        else if (io.errstatus == 3)
+        {
+            errors++;
+            print_error("Flow '" + io.name + "' flows " + whichway + " " + p_or_s + " '" + name + "', but some or all of it's constituent elements do not flow " + otherway + " " + p_or_s + ".");
+            print_sc_error("Dfe", CurFile, "Flow '" + io.name + "' flows " + whichway + " " + p_or_s + " '" + name + "', but some or all of it's constituent elements do not flow " + otherway + " " + p_or_s + ".");
+        }
+        else if (io.errstatus == 10)
+        {
+            errors++;
+            print_error("Processing Error with Flow '" + io.name + "' near " + p_or_s + " '" + name + "'.");
+            print_sc_error("Dfe", CurFile, "Processing Error with Flow '" + io.name + "' near " + p_or_s + " '" + name + "'.");
+        }
+    }
+    return errors;
+}
+
+
+// Main driving routine that calls balance functions between a single parent process and 
+// the flows into and out of a decomposition diagram.
+int
+DfeCheckParentAndDecomposition(opts_tp options, Nobjects_tp objects)
+
+{
+    string fname, pindex, s, storename;
+    int i, j, errors;
+    cnode_tp cnode, flowcnode;
+    file file;
+    node process, store;
+    list parentins = list_create("inout_tp", 0), parentouts = list_create("inout_tp", 0), 
+         decompins = list_create("inout_tp", 0), decompouts = list_create("inout_tp", 0);
+    link link;
+    list links;
+    inout_tp io;
+
+    if (options.file.name == "top")
+    {
+	return 0;
+    }
+    if (options.file.name == "0")
+    {
+	fname = "top";
+	pindex = "0";
+    } else
+    {
+	j = string_length(options.file.name);
+
+	for(i = j - 1; i >= 0; i--)
+	{
+	    s = string_extract(options.file.name, i, 1);
+
+	    if (s == ".")
+	    {
+		break;
+	    }
+	}
+	if (i < 0)
+	{
+	    pindex = options.file.name;
+	    fname = "0";
+	} else
+	{
+	    pindex = string_extract(options.file.name, i + 1, j - i - 1);
+	    fname = string_extract(options.file.name, 0, i);
+	}
+    }
+    file = find_by_query("file[DfeDiagram && name == '${fname}']");
+
+    if (file != NULL)
+	process = find_by_query("node[Process && node_refs[file_id == ${file.id}] && items[RelativeIndex && value == '${pindex}']]");
+
+    if (file == NULL || process == NULL)
+    {
+	print_error("Parent Process does not exist.");
+	print_sc_error("Dfe", CurFile, "Parent Process does not exist.");
+	return 1;
+    }
+
+    links = list_select("link[link_refs[file_id==${file.id}] && (to_node_id==${process.id} || from_node_id == ${process.id})]");
+    ParentStores = list_select("node[Store && node_refs[file_id==${file.id}]]");
+
+    // set up in and out lists for the single parent process
+    for (i = 0; i < list_count(links); i++)
+    {
+	link = list_get(links, i);
+        io.name = link.name;
+
+        // Make sure the Forest includes these guys.  It will if the 
+        // diagrams balance
+        cnode.link = link;
+        cnode.node = NULL;
+        errors = GetDataStructure(options, cnode, False, False); 
+        if (errors == -1)
+        {
+            __DfeErrors++;
+            return 0;
+        }
+        else
+            __DfeErrors += errors;
+
+	if (link.type == "DataFlow")
+            io.kind = 0;
+	else
+            io.kind = 1;
+
+        io.errstatus = 0;
+        io.possibilities = list_create("int", 0);
+        // to_node_id means that it is an in link (into process)
+        if (link.to_node_id == process.id)
+        {
+            io.store = NULL;
+            for (j=0; j<list_count(ParentStores); j++)
+            {
+                store = list_get(ParentStores, j);
+                if (link.from_node_id == store.id)
+                {
+                    io.store = store.name;
+                    break;
+                }
+            }
+            GetIOPList(io.possibilities, link.name);
+            list_append(parentins, io);
+        }
+        else
+        {
+            io.store = NULL;
+            for (j=0; j<list_count(ParentStores); j++)
+            {
+                store = list_get(ParentStores, j);
+                if (link.to_node_id == store.id)
+                {
+                    io.store = store.name;
+                    break;
+                }
+            }
+            GetIOPList(io.possibilities, link.name);
+            list_append(parentouts, io);
+        }
+    }
+
+    // set up in and out lists for the decomp diagram
+    for (i=0; i<list_count(objects.offpages); i++)
+    {
+	cnode = list_get(objects.offpages, i);
+        GetFlowsFromOffpage(objects.dflows, decompouts, decompins, cnode.node.id, 0);
+        GetFlowsFromOffpage(objects.cflows, decompouts, decompins, cnode.node.id, 1);
+    }
+    for (i=0; i<list_count(objects.stores); i++)
+    {
+	cnode = list_get(objects.stores, i);
+        GetFlowsFromStores(objects.dflows, decompouts, decompins, cnode.node, 0);
+        GetFlowsFromStores(objects.cflows, decompouts, decompins, cnode.node, 1);
+    }
+
+    if (_SC_Debug)
+    {
+        print_error("About to balance decomp, Forest:");
+        dump_forest(Forest, 0);
+    }
+
+    // Now just check the lists against each other
+
+    CheckFlowBalance(parentins, decompins, "in", 1);
+
+    errors = 0;
+    errors += PrintDecompBalanceErrors(options, parentins, "into", "Parent Process", "Decomposition Diagram");
+    errors += PrintDecompBalanceErrors(options, decompins, "into", "Decomposition Diagram", "Parent Process");
+
+    CheckFlowBalance(parentouts, decompouts, "out", 1);
+
+    errors += PrintDecompBalanceErrors(options, parentouts, "out of", "Parent Process", "Decomposition Diagram");
+    errors += PrintDecompBalanceErrors(options, decompouts, "out of", "Decomposition Diagram", "Parent Process");
+
+    return errors;
+}
+
+
+
+void
+GetFlowsFromOffpage(list objl, list ol, list il, int id, int kind)
+
+{
+    int j;
+    cnode_tp flowcnode;
+    inout_tp io;
+
+    for (j=0; j<list_count(objl); j++)
+    {
+        flowcnode = list_get(objl, j);
+        // from_node_id means it is an in link (from offpage into diagram)
+        if (flowcnode.link.from_node_id == id)
+        {
+            io.name = flowcnode.link.name;
+            io.kind = kind;
+            io.errstatus = 0;
+            io.store = NULL;
+            io.possibilities = list_create("int", 0);
+            GetIOPList(io.possibilities, flowcnode.link.name);
+            list_append(il, io);
+        }
+        else if (flowcnode.link.to_node_id == id)
+        {
+            io.name = flowcnode.link.name;
+            io.kind = kind;
+            io.errstatus = 0;
+            io.store = NULL;
+            io.possibilities = list_create("int", 0);
+            GetIOPList(io.possibilities, flowcnode.link.name);
+            list_append(ol, io);
+        }
+    }
+    return;
+}
+
+
+
+void
+GetFlowsFromStores(list objl, list ol, list il, node n, int kind)
+
+{
+    int j;
+    cnode_tp flowcnode;
+    inout_tp io;
+
+    for (j=0; j<list_count(objl); j++)
+    {
+        flowcnode = list_get(objl, j);
+        // from_node_id means it is an in link (from offpage into diagram)
+        if (flowcnode.link.from_node_id == n.id)
+        {
+            io.name = flowcnode.link.name;
+            io.kind = kind;
+            io.errstatus = 0;
+            io.store = n.name;
+            io.possibilities = list_create("int", 0);
+            GetIOPList(io.possibilities, flowcnode.link.name);
+            list_append(il, io);
+        }
+        else if (flowcnode.link.to_node_id == n.id)
+        {
+            io.name = flowcnode.link.name;
+            io.kind = kind;
+            io.errstatus = 0;
+            io.store = n.name;
+            io.possibilities = list_create("int", 0);
+            GetIOPList(io.possibilities, flowcnode.link.name);
+            list_append(ol, io);
+        }
+    }
+    return;
+}
+
+
+
+// For each store NOT utilized on the parent diagram, check that inflows == outflows.
+// Uses the ParentStores list created in the Decomp check to thin out the list
+// of stores to check.
+
+int
+DfeCheckStores(opts_tp options, Nobjects_tp objects)
+
+{
+    string fname, pindex, s, name;
+    int i, j, errors = 0;
+    cnode_tp cnode, flowcnode;
+    file file;
+    node st;
+    list storeins, storeouts;
+    inout_tp io, storeio;
+    boolean skipme;
+
+    if (_SC_Debug)
+        print_error("Processing " + list_count(objects.stores) + " store(s).");
+
+    if (list_count(objects.stores) == 0)
+        return 0;
+
+    // In order to make the machinery work properly, fully evaluate a store and its ins
+    // and outs, print errors, then go on to the next.
+
+    for (i = 0; i < list_count(objects.stores); i++)
+    {
+        skipme = False;
+        storeins = list_create("inout_tp", 0); 
+        storeouts = list_create("inout_tp", 0); 
+
+	cnode = list_get(objects.stores, i);
+        storeio.name = cnode.node.name;
+        name = storeio.name;
+
+        // first check to see if it is on the ParentStore list. If so, skip it.
+        for (j=0; j<list_count(ParentStores); j++)
+        {
+            st = list_get(ParentStores, j);
+            if (st.name == name)
+            {
+                skipme = True;
+                break;
+            }
+        }
+
+        storeio.errstatus = 0;
+        storeio.store = NULL;
+        storeio.possibilities = list_create("int", 0);
+        GetIOPList(storeio.possibilities, cnode.node.name);
+        if (list_count(storeio.possibilities) > 1)
+        {
+            print_error("Store '" + storeio.name + "' in decomposition diagram is ambiguous. Skipping Store Balance check.");
+            print_sc_error("Dfe", CurFile, "Store '" + storeio.name + "' in decomposition diagram is ambiguous. Skipping Store Balance check.");
+            skipme = True;
+            __DfeErrors++;
+            continue;
+        }
+
+        if (list_count(storeio.possibilities) == 0)
+        {
+// ECR 6893 begin
+            //print_error("Store '" + storeio.name + "' in decomposition diagram has no data definition. Not including it in Balance check.");
+            print_error("Store '" + storeio.name + "' in decomposition diagram has no data definition. Not including it in Balance check.", CnodeAppids(cnode, True, options.file));
+// ECR 6893 end
+            print_sc_error("Dfe", CurFile, "Store '" + storeio.name + "' in decomposition diagram has no data definition. Not including it in Balance check.");
+            __DfeErrors++;
+            continue;
+        }
+
+        if (skipme)
+            continue;
+
+        // storeins and storeouts entry
+        for (j=0; j<list_count(objects.dflows); j++)
+        {
+            flowcnode = list_get(objects.dflows, j);
+            // from_node_id means it is an in link (from the store into diagram)
+            if (flowcnode.link.from_node_id == cnode.node.id)
+            {
+                io.name = flowcnode.link.name;
+                io.kind = 0;
+                io.errstatus = 0;
+                io.store = name;
+                io.possibilities = list_create("int", 0);
+                GetIOPList(io.possibilities, flowcnode.link.name);
+                list_append(storeouts, io);
+            }
+            else if (flowcnode.link.to_node_id == cnode.node.id)
+            {
+                io.name = flowcnode.link.name;
+                io.kind = 0;
+                io.errstatus = 0;
+                io.store = name;
+                io.possibilities = list_create("int", 0);
+                GetIOPList(io.possibilities, flowcnode.link.name);
+                list_append(storeins, io);
+            }
+        }
+
+        for (j=0; j<list_count(objects.cflows); j++)
+        {
+            flowcnode = list_get(objects.cflows, j);
+            // from_node_id means it is an in link (from offpage into diagram)
+            if (flowcnode.link.from_node_id == cnode.node.id)
+            {
+                io.name = flowcnode.link.name;
+                io.kind = 1;
+                io.errstatus = 0;
+                io.store = name;
+                io.possibilities = list_create("int", 0);
+                GetIOPList(io.possibilities, flowcnode.link.name);
+                list_append(storeouts, io);
+            }
+            else if (flowcnode.link.to_node_id == cnode.node.id)
+            {
+                io.name = flowcnode.link.name;
+                io.kind = 1;
+                io.errstatus = 0;
+                io.store = name;
+                io.possibilities = list_create("int", 0);
+                GetIOPList(io.possibilities, flowcnode.link.name);
+                list_append(storeins, io);
+            }
+        }
+
+        // Now just check the lists against each other
+
+        CheckFlowBalance(storeins, storeouts, "in", 2);
+        errors += PrintStoreBalanceErrors(options, name, storeins, "into", "out of");
+        errors += PrintStoreBalanceErrors(options, name, storeouts, "out of", "into");
+
+        errors += CheckStoreMembership(storeio, storeins, storeouts);
+    }
+
+    return errors;
+}
+
+
+
+
+int
+DfeCheckProcessesOrSplits(opts_tp options, Nobjects_tp objects, boolean isproc)
+
+{
+    string pindex, s, name;
+    int i, j, errors = 0;
+    cnode_tp cnode, flowcnode;
+    file file;
+    node process;
+    list ins, outs;
+    list whichl;
+    inout_tp io;
+    string ident;
+
+    if (_SC_Debug)
+    {
+        if (isproc)
+            print_error("Processing " + list_count(objects.processes) + " processe(s).");
+        else
+            print_error("Processing " + list_count(objects.splits) + " splitflow(s).");
+    }
+
+    // if just one process, we have checked enough
+    if (isproc && (list_count(objects.processes) == 1))
+        return 0;
+
+    if (isproc)
+    {
+        whichl = objects.processes;
+        ident = "Process";
+    }
+    else
+    {
+        whichl = objects.splits;
+        ident = "SplitFlow";
+    }
+
+    // In order to make the machinery work properly, fully evaluate a process or 
+    // split and its ins and outs, print errors, then go on to the next.
+
+    for (i = 0; i < list_count(whichl); i++)
+    {
+        ins = list_create("inout_tp", 0); 
+        outs = list_create("inout_tp", 0); 
+
+	cnode = list_get(whichl, i);
+        name = cnode.node.name;
+
+        // ins and outs entrys
+        for (j=0; j<list_count(objects.dflows); j++)
+        {
+            flowcnode = list_get(objects.dflows, j);
+            // from_node_id means it is an in link (from offpage into diagram)
+            if (flowcnode.link.from_node_id == cnode.node.id)
+            {
+                io.name = flowcnode.link.name;
+                io.kind = 0;
+                io.errstatus = 0;
+                io.store = GetStoreName(objects.stores, flowcnode.link.to_node_id);
+                io.possibilities = list_create("int", 0);
+                GetIOPList(io.possibilities, flowcnode.link.name);
+                list_append(outs, io);
+            }
+            else if (flowcnode.link.to_node_id == cnode.node.id)
+            {
+                io.name = flowcnode.link.name;
+                io.kind = 0;
+                io.errstatus = 0;
+                io.store = GetStoreName(objects.stores, flowcnode.link.from_node_id);
+                io.possibilities = list_create("int", 0);
+                GetIOPList(io.possibilities, flowcnode.link.name);
+                list_append(ins, io);
+            }
+        }
+
+        for (j=0; j<list_count(objects.cflows); j++)
+        {
+            flowcnode = list_get(objects.cflows, j);
+            // from_node_id means it is an in link (from offpage into diagram)
+            if (flowcnode.link.from_node_id == cnode.node.id)
+            {
+                io.name = flowcnode.link.name;
+                io.kind = 1;
+                io.errstatus = 0;
+                io.store = GetStoreName(objects.stores, flowcnode.link.to_node_id);
+                io.possibilities = list_create("int", 0);
+                GetIOPList(io.possibilities, flowcnode.link.name);
+                list_append(outs, io);
+            }
+            else if (flowcnode.link.to_node_id == cnode.node.id)
+            {
+                io.name = flowcnode.link.name;
+                io.kind = 1;
+                io.errstatus = 0;
+                io.store = GetStoreName(objects.stores, flowcnode.link.from_node_id);
+                io.possibilities = list_create("int", 0);
+                GetIOPList(io.possibilities, flowcnode.link.name);
+                list_append(ins, io);
+            }
+        }
+
+        // do the checking
+
+        CheckFlowBalance(ins, outs, "in", 3);
+        errors += PrintProcessOrSplitFlowBalanceErrors(options, name, ins, "into", "out of", ident);
+        errors += PrintProcessOrSplitFlowBalanceErrors(options, name, outs, "out of", "into", ident);
+    }
+
+    return errors;
+}
+
+
+
+
+// Input and Output flow list structure
+
+struct inout_tp
+
+{
+    string name;        // name of the flow, store, etc
+    int kind;           // 0 = flow, 1 = control, 2 = store
+    int errstatus; // 0 = not visited 
+                   // 1 = visited, ok, 
+                   // 2 = visited, ambiguous
+                   // 3 = visited, partially (or not at all) in other
+                   // 4 = visited, not in other list
+                   // 10 = internal problem
+    list possibilities; // list of possible ds_elem_tp objects, stored as global forest indexes
+    string store;  // store that this guy is connected to;
+};
+
+
+
+
+// Basic Data structure for creating Forest
+
+struct ds_elem_tp
+
+{
+    node n;
+    list branches;
+    boolean visited;  // used for balancing only
+    int fid;          // To efficiently find multiple io elements in tree
+    int parent_fid;   // To help go up the tree
+};
+
+
+int 
+GetDataStructure(opts_tp opt, cnode_tp cnode, boolean isnode, boolean isstore)
+
+{
+    string name;
+    list datal;
+    boolean isNode;
+    string type;
+
+    if (!(opt.decomp || opt.balance))
+        return 0;
+
+    if (isnode)
+    {
+        name = cnode.node.name;
+        type = cnode.node.type;
+    }
+    else
+    {
+        name = cnode.link.name;
+        type = cnode.link.type;
+    }
+
+    if (set_is_member(DoneTypes, name))
+        return 0;
+    else
+        set_add(DoneTypes, name);
+
+    datal = FindDefsByName(name, False);
+
+    if (isstore && list_count(datal) > 1)
+    {
+        print_error("Store '" + cnode.node.name + "' is ambiguous. Skipping all balance checks.");
+        print_sc_error("Dfe", CurFile, "Store '" + cnode.node.name + "' is ambiguous. Skipping all balance checks.");
+        SkipBalance = True;
+        return 1;
+    }
+
+    // take care of missing data element error messages straight away
+    if (list_count(datal) == 0)
+    {
+        print_error(type + " '" + name + "' has no data definition.", CnodeAppids(cnode, isnode, opt.file));
+        print_sc_error("Dfe", CurFile, type + " '" + name + "' has no data definition.");
+        return 1;
+    }
+
+    if (! InsertInForest(datal))
+        return -1;
+    return 0;
+}
+
+
+
+// A Forest is a list of trees, where each tree starts with a root data structure,
+// and children are represented as lists of trees. 
+//
+// For each list of things to be inserted, check to be sure it is not already
+// in the forest, and if not, build a new tree, and add it to the forest.  This 
+// use up as many Data Structures as needed.
+//
+// This forest supports defining types either all together on a single diagram, 
+// or using the type mechanism, or using the by-name and scope reference 
+// mechanism in DSE.
+// When using the type mechanism, a type annotation cannot point to a sequence
+// which has a type annotation, there must be at least one more level to be considered.
+//
+// Cycles or complex data will be checked after 30 levels of recursion.
+//
+// The only place the repository needs to be revisited is if a leaf node contains a 
+// type, which points to more children. In addition to other things, we check these
+// for cycles.  Similarly if a leaf node is a reference to the continuation of the type
+// elsewhere.
+//
+// All serious problems building the forest result in the semantic check to fail.
+
+boolean 
+InsertInForest(list nodel)
+
+{
+    int i;
+    node n;
+    ds_elem_tp tree;
+    boolean rc = True;
+
+    for (i=0; i<list_count(nodel); i++)
+    {
+        n = list_get(nodel, i);
+        if (InForestAlready(Forest, n))
+            continue;
+
+        tree = BuildIndividualTree(n); 
+        if (tree == NULL)
+            rc = False;
+        else
+        {
+            tree.parent_fid = -1;
+            list_append(Forest, tree);
+        }
+    }
+    return rc;
+}
+
+
+
+// Walk through the forest, and see if this guy is already there
+
+boolean
+InForestAlready(list subforest, node n)
+
+{
+    ds_elem_tp rootelem, elem;
+    int i;
+    
+    if (subforest == NULL)
+        return False;
+
+    for (i=0; i<list_count(subforest); i++)
+    {
+        rootelem = list_get(subforest, i);
+        if (rootelem.n.id == n.id)
+            return True;
+        else 
+            if (rootelem.branches != NULL && 
+                InForestAlready(rootelem.branches, n))
+                return True;
+    }
+    return False;
+}
+
+
+
+// Still need to go to the roots and do the type thing.
+
+ds_elem_tp
+BuildIndividualTree(node n)
+
+{
+    ds_elem_tp parent, tmpparent;
+
+    // Up to the root
+    parent.n = n;
+    while(True)
+    {
+        tmpparent.n = FindDefById(parent.n.scope_node_id);
+        if (tmpparent.n == NULL)
+            break;
+        else
+            parent = tmpparent;
+    }
+
+    // OK, now we have the parent, build the tree downward
+
+    if (! DoBuildIndividualTree(parent, 1))
+        return NULL;
+    return parent;
+}
+
+
+
+boolean
+DoBuildIndividualTree(ds_elem_tp tree, int level)
+
+{
+    int i; 
+    boolean rc = True;
+    ds_elem_tp branch;
+    list datal;
+    node n;
+
+    if (level > 30)
+    {
+        print_error("Cycles found in DSE definition involving element with id '" + tree.n.id + "' or DSE hierarchy > 30.  Correct and rerun semantic checks.");
+        print_sc_error("Dfe", CurFile, "Cycles found in DSE definition involving element with id '" + tree.n.id + "' or DSE hierarchy > 30.  Correct and rerun semantic checks.");
+        return False;
+    }
+
+    tree.branches = FindDefsByScopeId(tree.n.id);
+    tree.fid = Fid++;
+ 
+    // At a leaf??
+    if (list_count(tree.branches) == 0)
+        tree.branches = GetTypeItemTreeBranches(tree.n);
+
+    for (i=0; i<list_count(tree.branches); i++)
+    {
+        branch = list_get(tree.branches, i);
+        branch.parent_fid = tree.fid;
+        rc = DoBuildIndividualTree(branch, level + 1);
+        list_set(tree.branches, i, branch);
+    }
+    return rc;
+}
+
+        
+
+list
+GetTypeItemTreeBranches(node n)
+
+{
+    item itm;
+    list datal;
+    node n2;
+    int i;
+    boolean msg = True;
+    ds_elem_tp elem;
+    list l = list_create("ds_elem_tp", 0);
+
+    itm = FindTypeItemByNodeId(AllTypeItems, n.id);
+
+    if (itm == NULL || str_no_val(itm.value))
+        return list_create("ds_elem_tp", 0);
+
+    // Add to the done types, but even if it was already done, add to the forest again,
+    // otherwise ambiguous types will not work in all cases.
+    if (! set_is_member(DoneTypes, itm.value))
+        set_add(DoneTypes, itm.value);
+    else
+        msg = False;
+
+    datal = FindDefsByName(itm.value, True);
+
+    if (list_count(datal) == 0)
+    {
+        if (msg && ! PrimitiveSounding(itm.value))
+        {
+            print_error("Warning: DSE leaf node '" + n.name + "' has a type annotation, but no corresponding structure. Type annotation ignored.");
+            print_sc_error("Dfe", CurFile, "DSE leaf node '" + n.name + "'  has a type annotation, but no corresponding structure. Type annotation ignored.");
+        }
+    }
+    else if (list_count(datal) > 1)
+    {
+        if (msg)
+        {
+            print_error("Warning: DSE leaf node '" + n.name + "'  has a type annotation, and more then one corresponding structure. Type annotation ignored.");
+            print_sc_error("Dfe", CurFile, "DSE leaf node '" + n.name + "'  has a type annotation, and more then one corresponding structure. Type annotation ignored.");
+        }
+    }
+    else 
+    {
+        n2 = list_get(datal, 0);
+        // 7/15 This skips a level, which is a problem if there are no children,
+        // but just another type.  However, it is much quicker, so control with a 
+        // ToolInfo variable
+        if (QuickTypes)
+            return FindDefsByScopeId(n2.id);
+        else
+        {
+            elem.n = n2;
+            list_append(l, elem);
+        }
+    }
+    return l;
+}
+
+
+
+
+list __Priml = string_to_list("int integer char character str string real float boolean bool", " ");
+
+boolean 
+PrimitiveSounding(string s)
+
+{
+    if (list_find(__Priml, 0, to_lower(s)) != list_count(__Priml))
+        return True;
+    return False;
+}
+
+
+
+node 
+FindDefById(int id)
+
+{
+    int i; 
+    node n;
+
+    for (i=0; i<NumDDs; i+=SC_INCR)
+    {
+        n = list_get(AllDataDefsById, i);
+
+        if (n.id == id)
+            return n;
+        if (n.id > id)
+            break;
+    }
+
+    if (i >= SC_INCR)
+        i -= SC_INCR;
+
+    for (; i<NumDDs; i++)
+    {
+        n = list_get(AllDataDefsById, i);
+
+        if (n.id == id)
+            return n;
+        if (n.id > id)
+            break;
+    }
+
+    return NULL;
+}
+
+
+
+list 
+FindDefsByName(string name, boolean rootonly)
+
+{
+    int i; 
+    node n;
+    list retl = list_create("node", 0);
+    string nname;
+
+    if (JetRepository())
+        name = to_lower(to_oms_string(name));
+
+    for (i=0; i<NumDDs; i+=SC_INCR)
+    {
+        n = list_get(AllDataDefsByName, i);
+        if (JetRepository())
+            nname = to_lower(n.name);
+        else 
+            nname = n.name;
+
+        if (nname >= name)
+            break;
+    }
+
+    // A little different from the one above because this is a list, not a single,
+    // and we do not want to miss elements that are in the middle of a SC_INCR.
+
+    if (i >= SC_INCR)
+        i -= SC_INCR;
+
+    for (; i<NumDDs; i++)
+    {
+        n = list_get(AllDataDefsByName, i);
+        if (JetRepository())
+            nname = to_lower(n.name);
+        else 
+            nname = n.name;
+
+        if (nname == name)
+        {
+            if (rootonly && (FindDefById(n.scope_node_id) != NULL))
+                continue;
+            list_append(retl, n);
+        }
+        if (nname > name)
+            break;
+    }
+
+    return retl;
+}
+
+
+
+
+list 
+FindDefsByScopeId(int id)
+
+{
+    int i;
+    node n;
+    list branches = list_create("ds_elem_tp", 0); 
+    ds_elem_tp branch;
+    list nl;
+
+    for (i=0; i<NumDDs; i+=SC_INCR)
+    {
+        n = list_get(AllDataDefsByScopeNodeId, i);
+        if (n.scope_node_id >= id)
+            break;
+    }
+
+    if (i >= SC_INCR)
+        i -= SC_INCR;
+
+    for (; i<NumDDs; i++)
+    {
+        n = list_get(AllDataDefsByScopeNodeId, i);
+        if (n.scope_node_id == id)
+        {
+            branch.n = n;
+            branch.branches = list_create("ds_elem_tp", 0);
+            list_append(branches, branch);
+        }
+        if (n.scope_node_id > id)
+            break;
+    }
+    return branches;
+}
+
+
+
+// Since fid's are assigned in the order the tree is made,
+// A short cut of skipping along branches works nicely to traverse
+// the trees here.
+
+ds_elem_tp
+FindBranchByFid(list f, int id)
+
+{
+    ds_elem_tp branch, nextbranch;
+    int i;
+
+    if (id == -1)
+        return NULL;
+
+    for (i=0; i<list_count(f); i++)
+    {
+        branch = list_get(f, i);
+        if (i+1 < list_count(f))
+        {
+            while (i+1 < list_count(f))
+            {
+                nextbranch = list_get(f, i+1);
+                if (nextbranch.fid > id)
+                    break;
+                else
+                {
+                    branch = nextbranch;
+                    i++;
+                }
+            }
+        }
+
+        if (branch.fid == id)
+            return branch;
+        else 
+        {
+           branch = FindBranchByFid(branch.branches, id);
+           if (branch != NULL)
+               return branch;
+        }
+    }
+    return NULL;
+}
+
+
+
+boolean
+ChildBranch(ds_elem_tp child, ds_elem_tp parent)
+
+{
+    while (child.parent_fid != -1)
+    {
+        if (child.parent_fid == parent.fid)
+            return True;
+        child = FindBranchByFid(Forest, child.parent_fid);
+    }
+    return False;
+}
+
+
+
+void
+MarkVisited(ds_elem_tp t)
+
+{
+    ds_elem_tp elem;
+    int i;
+
+    t.visited = True;
+  
+    for (i=0; i<list_count(t.branches); i++)
+    {
+        elem = list_get(t.branches, i);
+        MarkVisited(elem);
+        list_set(t.branches, i, elem);
+    }
+
+    return;
+}
+
+void
+MarkUnVisited(ds_elem_tp t)
+
+{
+    ds_elem_tp elem;
+    int i;
+
+    t.visited = False;
+  
+    for (i=0; i<list_count(t.branches); i++)
+    {
+        elem = list_get(t.branches, i);
+        MarkUnVisited(elem);
+        list_set(t.branches, i, elem);
+    }
+
+    return;
+}
+
+
+boolean
+AllMarkedVisited(ds_elem_tp t)
+
+{
+    ds_elem_tp elem;
+    int i;
+    boolean rc = True;
+
+    if (! t.visited)
+        return False;
+  
+    for (i=0; i<list_count(t.branches); i++)
+    {
+        elem = list_get(t.branches, i);
+        rc = AllMarkedVisited(elem);
+        if (! rc)
+            return rc;
+    }
+
+    return rc;
+}
+
+boolean
+MarkVisitedIfExists(ds_elem_tp t, int fid)
+
+{
+    ds_elem_tp elem;
+    int i;
+    boolean rc = False;
+
+    if (t.fid == fid)
+    {
+        if (_SC_Debug)
+            print_error("Calling MarkVisited on: " + t.n.name);
+        MarkVisited(t);
+        return True;
+    }
+  
+    for (i=0; i<list_count(t.branches); i++)
+    {
+        elem = list_get(t.branches, i);
+        rc = MarkVisitedIfExists(elem, fid);
+        list_set(t.branches, i, elem);
+        if (rc)
+            break;
+    }
+
+    return rc;
+}
+
+
+boolean
+MarkCompletedParentsVisited(list branches)
+
+{
+    ds_elem_tp elem;
+    int i;
+    boolean all_visited = True;
+ 
+    for (i=0; i<list_count(branches); i++)
+    {
+        elem = list_get(branches, i);
+
+        if (list_count(elem.branches) != 0)
+        {
+            if (! MarkCompletedParentsVisited(elem.branches))
+                return False;
+        }    
+        else 
+        {
+            if (! elem.visited)
+                return False;
+        }
+    }
+
+    // else set all these branches to visited
+    for (i=0; i<list_count(branches); i++)
+    {
+        elem = list_get(branches, i);
+        if (! elem.visited)
+        {
+            elem.visited = True;
+            list_set(branches, i, elem);
+        }
+    }
+
+    return True;
+}
+
+
+void
+dumptree(ds_elem_tp t, int level)
+
+{
+    ds_elem_tp elem;
+    int i;
+
+    print_message(level + ": " + t.n.name + " (" + t.n.id + "), fid: " + t.fid + ", " + t.visited);
+  
+    for (i=0; i<list_count(t.branches); i++)
+    {
+        elem = list_get(t.branches, i);
+        dumptree(elem, level + 1);
+    }
+
+    return;
+}
+
+
+
+
+void
+dump_forest(list f, int level)
+
+{
+    ds_elem_tp elem;
+    int i;
+
+    for (i=0; i<list_count(f); i++)
+    {
+        elem = list_get(f, i);
+        print_message(level + ": " + elem.n.name + "(" + elem.n.id + "), fid: " + elem.fid + " parent_fid: " + elem.parent_fid);
+        dump_forest(elem.branches, level + 1);
+    }
+
+    return;
+}
+
+
+
+item
+FindTypeItemByNodeId(list l, int id)
+
+{
+    item itm;
+    int i;
+
+    for (i=0; i<list_count(l); i++)
+    {
+        itm = list_get(l, i);
+        if (itm.obj_id == id)
+            return itm;
+    }
+    return NULL;
+}
+
+
+
+void 
+GetIOPList(list outl, string name)
+
+{
+    if (JetRepository())
+        name = to_lower(to_oms_string(name));
+
+    GetIOPossibilityList(outl, Forest, name);
+    return;
+}
+
+
+
+
+void
+GetIOPossibilityList(list outl, list subforest, string name)
+
+{
+
+    ds_elem_tp rootelem, elem;
+    string nname;
+    int i;
+
+    for (i=0; i<list_count(subforest); i++)
+    {
+        rootelem = list_get(subforest, i);
+
+        if (JetRepository())
+            nname = to_lower(rootelem.n.name);
+        else 
+            nname = rootelem.n.name;
+
+        if (nname == name)
+            list_append(outl, rootelem.fid);
+
+        if (rootelem.branches != NULL && list_count(rootelem.branches) > 0)
+           GetIOPossibilityList(outl, rootelem.branches, name);
+    }
+    return;
+}
+
+
+
+
+
+string 
+GetStoreName(list l, int id)
+
+{
+    cnode_tp cn;
+    int i;
+
+    for (i=0; i<list_count(l); i++)
+    {
+        cn = list_get(l, i);
+        if (cn.node.id == id)
+            return cn.node.name;
+    }
+    return NULL;
+}
+
+
+
+// build the AllDataDefsById structure
+
+int
+SortByIntIdFunc(list l, int i1, int i2)
+
+{
+    node n1, n2;
+
+    n1 = list_get(l, i1);
+    n2 = list_get(l, i2);
+
+    if (n1.id > n2.id)
+        return 1;
+    else
+        return -1;
+}
+    
+

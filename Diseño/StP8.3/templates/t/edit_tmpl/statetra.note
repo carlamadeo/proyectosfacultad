@@ -1,0 +1,6 @@
+State Transition notes:
+
+<description_string> must be the name of a constant of subtype stringlong
+   or double-quoted text "...".
+In the "goes from first" clause, the state must be of subtype action.
+In the "goes to second" clause, the state must be of subtype action.

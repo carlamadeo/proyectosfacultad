@@ -1,0 +1,353 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="TEMPLATEBASE" content="Users Guide WebWorks Template">
+<meta name="LASTUPDATED" content="01/24/02 09:18:22">
+<title>Chapter 4 </title>
+</head>
+
+<body link="#0066CC" vlink="#800080" text="#000000" alink="#FF0000" bgcolor="#FFFFFF"
+background="graphics/backgrnd.gif">
+
+<p><img src="graphics/FLEX-lm.gif" align="left"
+alt="FLEXlm icon"> </p>
+
+<table width="331" border="0" align="right" cellpadding="0" cellspacing="0">
+  <tr>
+    <td><a href="TOC.htm#TOC"><img src="graphics/navtoc.gif" width="84" height="23"
+    border="0" alt="TOC"> </a></td>
+    <td><a href="chap3.htm"><img src="graphics/navprev.gif" width="80" height="23"
+    border="0" alt="PREV"> </a></td>
+    <td><a href="chap5.htm"><img src="graphics/navnext.gif" width="83" height="23"
+    border="0" alt="NEXT"> </a></td>
+    <td><a href="IX.htm"><img src="graphics/navidx.gif" width="84" height="23"
+    border="0" alt="INDEX"> </a></td>
+  </tr>
+</table>
+
+<p><br clear="all">
+</p>
+
+<hr align="left">
+
+<blockquote>
+<h2>
+  <a name="894210"> </a>Chapter 4 
+</h2>
+
+
+<h2>
+  <a name="916065"> </a>	 Selecting Server Nodes
+</h2><hr>
+
+
+<p>
+  <a name="894213"> </a>This chapter helps you decide which nodes to use as license server nodes. 
+</p>
+
+
+<h3>
+  <a name="894215"> </a>4.1	 Resources Used by the Server
+</h3>
+
+
+<p>
+  <a name="894216"> </a>This section discusses the resources used by the license server. When you select a server node, you may need to take into account the system limits on these resources. For small numbers of licenses (under about 100), most of these items should not be a problem on any workstation.
+</p>
+
+
+<h4>
+  <a name="894217"> </a>4.1.1	 Sockets
+</h4>
+
+
+<p>
+  <a name="894219"> </a>When using TCP, a single vendor daemon can support as many users as the per-process system limit for file descriptors, which ranges from 256 on SunOS 4.x to 4000 on DEC Alpha. When no more file descriptors are available to a daemon, additional vendor daemons are spawned to allow for extra file descriptors, though this is not recommended. When using UDP, there is no limit to the number of end users per vendor daemon process, because they can share a single socket in the vendor daemon (UDP has other drawbacks, and TCP is preferred). If there are more than 250 concurrent clients from a SunOS vendor daemon, it may be a good idea to move the server to a different OS, since all other OSs support more file descriptors. If there are more than 1000 concurrent clients being supported by a single vendor daemon, then it's probably good to split the license file into more than one file, from different servers, to lighten the networking traffic (which will require the vendor to agree to issue new licenses). Clients can check out licenses from multiple servers using a license-file list via the <code>LM_LICENSE_FILE</code> environment variable.
+</p>
+
+
+<p>
+  <a name="894223"> </a>Each client connected to a license server uses one socket. The total number of sockets used by the license server programs is slightly larger than the total number of simultaneous clients.
+</p>
+
+
+<p>
+  <a name="894226"> </a>On older SCO systems, the default number of sockets may be set fairly low; if you choose to run a server on such a machine, you may need to reconfigure your kernel to have more sockets.
+</p>
+
+
+<p>
+  <a name="894227"> </a>The number of sockets available for Windows 95 clients is about 60. In general, NT is preferred for server systems, where there is no such limit, and the operating system is better designed for server processes.
+</p>
+
+
+<h4>
+  <a name="894229"> </a>4.1.2	 CPU Time
+</h4>
+
+
+<p>
+  <a name="894230"> </a>For small numbers of clients, the license servers use very little CPU time. The servers might have only a few seconds of CPU time after many days.
+</p>
+
+
+<p>
+  <a name="894231"> </a>For a large number of clients (who are each exchanging heartbeat messages with the server), or for high checkout/checkin activity levels (hundreds per second), the amount of CPU time consumed by the server may start to become significant, although, even here, CPU usage is normally not high. In this case, you may need to ensure that the server machine you select will have enough CPU cycles to spare.
+</p>
+
+
+<p>
+  <a name="894235"> </a><HR WIDTH=75%><FONT COLOR=RED>Note:	 GLOBE<em>trotter</em> Software has rarely encountered a situation where CPU cycles were an issue.</FONT><HR WIDTH=75%>
+</p>
+
+
+<h4>
+  <a name="894236"> </a>4.1.3	 Disk Space
+</h4>
+
+
+<p>
+  <a name="909986"> </a>The only output files created by the license servers are the debug and report log files. The report log files are used to generate accurate usage reports by SAM<em>report</em>. These log files contain one line for each checkout and one line for each checkin. If you have a lot of license activity, these log files will grow very large. You will need to consider where to put these files and how often to delete or prune them. The license administrator can opt not to log messages to the debug log file if disk space is at a premium. See <a href="chap6.htm#910003">Section 6.6.1, "Managing Debug Log Output,"</a> and <a href="chap6.htm#910043">Section 6.6.2, "Managing Report Log Output,"</a> for more details.
+</p>
+
+
+<p>
+  <a name="909982"> </a>Note that the log files should be local files on the server machine(s) to avoid networking dependencies.
+</p>
+
+
+<h4>
+  <a name="894263"> </a>4.1.4	 Memory
+</h4>
+
+
+<p>
+  <a name="894267"> </a>The FLEX<em>lm</em> daemons use little memory. On SunOS, <code>lmgrd</code> uses approximately2 MB and the vendor daemons use approximately 2 MB each, although memory usage increases in the vendor daemon with the size of the license file and the number of concurrent users.
+</p>
+
+
+<h4>
+  <a name="894269"> </a>4.1.5	 Network Bandwidth
+</h4>
+
+
+<p>
+  <a name="894274"> </a>FLEX<em>lm</em> sends relatively small amounts of data across the network. Each transaction, such as a checkout or checkin, is typically satisfied with less than 1 KB of data transferred. This means that FLEX<em>lm</em> licensing can be effectively run over slow networks (such as dial-up SLIP lines) for small numbers of clients.
+</p>
+
+
+<p>
+  <a name="894278"> </a>For a large number of clients (hundreds), each of which will be exchanging heartbeat messages with the vendor daemon, the network bandwidth used may start to become significant. In this case you should run client and server on the same local area network, which may require splitting licenses between two files for two servers. Users can use a license-file list in the <code>LM_LICENSE_FILE</code> environment variable to have effective access to both servers.
+</p>
+
+
+<p>
+  <a name="894285"> </a>In high-traffic networks, with FLEX<em>lm</em> clients older than v5, you may also want to avoid setting <code>LM_LICENSE_FILE</code> to a <code><em>port</em></code><code>@</code><code><em>host</em></code> address. Instead, the license administrator should place a copy of the license file in a file system local to the application. See <a href="chap2.htm#893127">Section 2.1, "Specifying Location of the License File."</a> 
+</p>
+
+
+<h3>
+  <a name="894292"> </a>4.2	 Remote Mounted Disks
+</h3>
+
+
+<p>
+  <a name="894297"> </a>GLOBE<em>trotter</em> Software recommends that you do not use remote mounted disks when you run the license server. In other words, it is recommended that <code>lmgrd</code>, the vendor daemons, the license file, and the debug and report log files are all on locally mounted disks. If any of these files is on a remote mounted disk, you double the points of failure which could lead to a temporary loss of all of your licenses. When all files are mounted locally, the licenses will be available as long as the server machine is up; but when the files are on a different machine, then the loss of either the license server machine or the file server machine will cause the licenses to be unavailable.
+</p>
+
+
+<h3>
+  <a name="894300"> </a>4.3	 Redundant License Servers
+</h3>
+
+
+<p>
+  <a name="899056"> </a>If all the end-user data is on a single file server, then there is no need for redundant license servers, and GLOBE<em>trotter</em> Software recommends the use of a single server node for the FLEX<em>lm</em> daemons. If the end user's data is split among two or more server nodes and work is still possible when one of these nodes goes down or off the network, then multiple server nodes can be employed. In all cases, an effort should be made to select stable systems as server nodes; in other words, do not pick systems that are frequently rebooted or shut down for one reason or another. Redundant license server nodes can be any supported server nodes-it is not required that they be the same architecture or operating system.
+</p>
+
+
+<p>
+  <a name="894304"> </a>FLEX<em>lm</em> supports two methods of redundancy: redundancy via a license-file list in the <code>LM_LICENSE_FILE</code> environment variable and a set of three redundant license servers.
+</p>
+
+
+<p>
+  <a name="898994"> </a>With <code>LM_LICENSE_FILE</code> list redundancy, each one of a group of license servers serves a subset of the total licenses. The end user sets <code>LM_LICENSE_FILE</code> to a list of license files, where each license file refers to one of the license servers. The application then tries each server in the list, in order, until it succeeds or gets to the end of the list.
+</p>
+
+
+<p>
+  <a name="894308"> </a>With three-server redundancy, if any two of the three license servers are up and running (two out of three license servers is referred to as a <em>quorum</em>), the system is functional and hands out its total complement of licenses.
+</p>
+
+
+<p>
+  <a name="914904"> </a>See also <a href="chap3.htm#894128">Section 3.2, "Using LM_LICENSE_FILE License-File List."</a>
+</p>
+
+
+<h4>
+  <a name="914907"> </a>4.3.1	 Redundancy via License-File List 
+</h4>
+
+
+<p>
+  <a name="914908"> </a>This is best explained by example. If ten licenses are desired for both "f1" and "f2," the vendor would issue two sets of licenses with a count of 5 for each of "f1" and "f2." The server nodes (unlike three-server redundancy) can be physically distant. 
+</p>
+
+
+<p>
+  <a name="905232"> </a>The license files would look like:
+</p>
+
+
+<p>
+  <a name="899006"> </a>License 1 for "chicago"
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="899007"> </a><CODE>SERVER chicago 17007ea8 1700</CODE>
+     <dt> <a name="899008"> </a><CODE>DAEMON xyzd /etc/mydaemon</CODE>
+     <dt> <a name="899009"> </a><CODE>FEATURE f1 xyzd 1.000 01-jan-2005 5 26C7DD9C0186 </CODE>
+     <dt> <a name="899010"> </a><CODE>FEATURE f2 xyzd 1.000 01-jan-2005 5 8CE46C57041D </CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="899011"> </a>License 2 for "tokyo"
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="899012"> </a><CODE>SERVER tokyo 17a07e08 1700</CODE>
+     <dt> <a name="899013"> </a><CODE>DAEMON xyzd /etc/mydaemon</CODE>
+     <dt> <a name="899014"> </a><CODE>FEATURE f1 xyzd 1.000 01-jan-2005 5 16BE40E1D98D </CODE>
+     <dt> <a name="899015"> </a><CODE>FEATURE f2 xyzd 1.000 01-jan-2005 5 6DB6F3E402DF </CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="899019"> </a>The user in Chicago could set <code>LM_LICENSE_FILE</code> to: 
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="899020"> </a><CODE>1700@chicago:1700@tokyo </CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="899024"> </a>The user in Tokyo could set <code>LM_LICENSE_FILE</code> to: 
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="899025"> </a><CODE>1700@tokyo:1700@chicago</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="899026"> </a>Remember to separate the license file names with a colon (" : ") on UNIX and with a semicolon (" ; ") on Windows. The application attempts the first server in the list, and if that fails for any reason, the second server is tried. 
+</p>
+
+
+<h4>
+  <a name="894320"> </a>4.3.2	 Three-Server Redundancy
+</h4>
+
+
+<p>
+  <a name="899069"> </a>These three-server redundant servers should have excellent communications and should be on the same subnet. Often this means that the three servers should be located physically close to each other. This form of redundancy requires that the servers exchange heartbeats periodically, and poor communications can cause poor performance. You should never configure redundant servers with slow communications or dial-up links.
+</p>
+
+
+<p>
+  <a name="894332"> </a>Three-server redundancy does not provide load-balancing. Use <code>LM_LICENSE_FILE</code> list instead for this type of redundancy. This is because with three-server redundancy, only one of the three servers is "master," capable of issuing licenses. Since all clients must contact the "master," all clients must have reliable networking to a single node.
+</p>
+
+
+<h4>
+  <a name="894361"> </a>4.3.3	 Comparing Three-Server to License-File List
+</h4>
+
+
+<h5>
+  <a name="894362"> </a>Are there any drawbacks to using the license-file list for redundancy?
+</h5>
+
+
+<p>
+  <a name="894363"> </a>Yes. By default, once a <em>license job</em> has successfully checked out a license from one host, all subsequent checkouts must be satisfied from the same host. If the application requires more than one license, this could result in a license denial when the license is available on another server. An application can bypass this restriction if it is coded with the use of multiple FLEX<em>lm</em> license jobs. Only your application vendor can tell you if their application is programmed in this manner.
+</p>
+
+
+<p>
+  <a name="894367"> </a>If the application supports license queueing, all licenses are only queued from the first host on the list.
+</p>
+
+
+<p>
+  <a name="894368"> </a>Finally, if one server becomes unavailable, some licenses will be unavailable.
+</p>
+
+
+<h5>
+  <a name="894369"> </a>When is it recommended to use a license-file list for redundancy rather than three-server redundant servers? 
+</h5>
+
+<ul>
+
+
+  <li ><a name="894370"> </a>When there's less system administration available to monitor license servers. 
+  <li ><a name="894371"> </a>When load-balancing is needed for clients located far apart, e.g., London and Tokyo. You can make servers available locally, with remote servers available as backup.
+  <li ><a name="894372"> </a>License-file list is more forgiving if you lose quorum.
+  <li ><a name="894373"> </a>License-file list is not limited to three servers (any number will work). 
+  <li ><a name="894374"> </a>Clients do not require reliable networking to a single node with license-file list, so this is recommended where networking itself requires redundancy.
+</ul>
+
+<h3>
+  <a name="894376"> </a>4.4	 Counted vs. Uncounted Licenses
+</h3>
+
+
+<p>
+  <a name="894377"> </a>The license file determines whether a license server is needed. If all the FEATURE (or INCREMENT) lines have a license count of 0 (unlimited) or "uncounted" (FLEX<em>lm</em> v6 or later only), then no server is needed. This type of license is called uncounted. Alternatively, if any FEATURE lines have a non-zero license count, then a server is required to count those licenses. If a vendor wants to use FLEX<em>lm</em> without a server, they must issue uncounted licenses.
+</p>
+
+
+<p>
+  <a name="894387"> </a>With FLEX<em>lm</em> v5 or later, the license server can serve uncounted licenses as well. This is done so that the report log file will include transactions for all license requests, which can then be reported on by SAM<em>report</em>. To do this, include a SERVER line in the license file, and put the USE_SERVER line immediately after the SERVER line. The vendor daemon will serve the uncounted licenses, and the USE_SERVER line indicates to applications that they will be authorized by the server.
+</p>
+
+
+<p>
+  <a name="894392"> </a>
+</p>
+</blockquote>
+
+<hr>
+
+<table width="380" align="right" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align=left width="215"><em>FLEXlm  End Users Guide</em>
+  </tr>
+    <td align=left width="165"><em>February 2002</em></td>
+</table>
+
+<table width="331" border="0" align="left" cellpadding="0" cellspacing="0">
+  <tr>
+    <td><a href="TOC.htm#TOC"><img src="graphics/navtoc.gif" width="84" height="23"
+    border="0" alt="TOC"> </a></td>
+    <td><a href="chap3.htm"><img src="graphics/navprev.gif" width="80" height="23"
+    border="0" alt="PREV"> </a></td>
+    <td><a href="chap5.htm"><img src="graphics/navnext.gif" width="83" height="23"
+    border="0" alt="NEXT"> </a></td>
+    <td><a href="IX.htm"><img src="graphics/navidx.gif" width="84" height="23"
+    border="0" alt="INDEX"> </a></td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,28 @@
+Process 1.3: calculate speed
+Pspec generated from the data flow diagram "1" of the "g_train" system of the
+"/usr3/home/MogulMaster/jhsia/Development/strand_5.0/lab/" projdir at 01/17/94
+18:01:48 by jhsia@professor
+
+
+This process has 2 data flows:
+    delay, speed of train
+
+input data flows
+    delay : DataFlow
+
+output data flows
+    speed of train : DataFlow
+
+This process has 0 control flows
+description
+
+This process computes the speed of the train. The value of the delay it gets
+from process 1.2 is used to calculate the speed.
+
+Speed of g_train = distance between sensors / delay
+
+Note : The distance between the sensors is fixed. (5 Km)
+
+
+end pspec
+

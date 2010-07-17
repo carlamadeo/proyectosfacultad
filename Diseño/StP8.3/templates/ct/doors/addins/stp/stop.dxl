@@ -1,0 +1,16 @@
+// Stop the DXL server
+
+/*
+   Stop the DXL server
+
+*/
+
+if (platform == "WIN32") {
+	ack "It is only necessary to stop a DXL server under UNIX"
+	halt
+} else {
+    string syscmnd, dxlSocket
+    dxlSocket = getenv ("DXLSOCKET2")
+    syscmnd = "rm " dxlSocket
+    system (syscmnd, stpDoneCB)
+}

@@ -1,0 +1,297 @@
+FileObject 1
+{
+    { Name "a132" }
+    { Type ObjectAnnotation }
+    { GUID "UID_18D6D6F5-07A7-421a-8ABF-B07C4E1FDC06" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "tracking_signal.h" }
+    { Type SEFile }
+    { ObjectId 1399 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_CD9CEE51-F248-4c78-B197-967490A83758" }
+}
+
+NodeObject 99997
+{
+    { Name "tracking signal" }
+    { Type Sequence }
+    { ObjectId 1400 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_97EEE476-FB5E-40c7-8C4C-CAF1A330DC15" }
+}
+
+NodeObject 99996
+{
+    { Name "second pulse" }
+    { Type Sequence }
+    { ObjectId 1462 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99997 }
+    { GUID "UID_D3D6E983-8DAB-4192-8C03-CD97F60E94D1" }
+}
+
+NoteObject 2
+{
+    { Type DataDefinition }
+    { Name "" }
+    { OwnerId 99996 }
+    { ObjectId 1464 }
+    { DescLine "The second pulse and every even numbered pulse will be referred to as second pulse." }
+}
+
+ItemObject 3
+{
+    { Type DataType }
+    { Value "boolean" }
+    { NoteId 2 }
+    { ObjectId 1465 }
+}
+
+ItemObject 4
+{
+    { Type Constraint }
+    { Value "none" }
+    { NoteId 2 }
+    { ObjectId 1466 }
+}
+
+ItemObject 5
+{
+    { Type DataLocation }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1467 }
+}
+
+ItemObject 6
+{
+    { Type DataSize }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1468 }
+}
+
+ItemObject 7
+{
+    { Type Representation }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1469 }
+}
+
+ItemObject 8
+{
+    { Type Legality }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1470 }
+}
+
+ItemObject 9
+{
+    { Type Units }
+    { Value "none" }
+    { NoteId 2 }
+    { ObjectId 1471 }
+}
+
+ItemObject 10
+{
+    { Type Scaling }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1472 }
+}
+
+ItemObject 11
+{
+    { Type Precision }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1473 }
+}
+
+ItemObject 12
+{
+    { Type Accuracy }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1474 }
+}
+
+ItemObject 13
+{
+    { Type Conventions }
+    { Value "US" }
+    { NoteId 2 }
+    { ObjectId 1475 }
+}
+
+ItemObject 14
+{
+    { Type Frequency }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1476 }
+}
+
+ItemObject 15
+{
+    { Type Priority }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1477 }
+}
+
+NoteObject 16
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99996 }
+    { ObjectId 1479 }
+}
+
+ItemObject 17
+{
+    { Type ObjectName }
+    { Value "second pulse" }
+    { NoteId 16 }
+    { ObjectId 1480 }
+}
+
+ItemObject 18
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 16 }
+    { ObjectId 1481 }
+}
+
+NoteObject 19
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99996 }
+    { ObjectId 1483 }
+}
+
+ItemObject 20
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 19 }
+    { ObjectId 1484 }
+}
+
+ItemObject 21
+{
+    { Type RequirementName }
+    { Value "sensor sub-system" }
+    { NoteId 19 }
+    { ObjectId 1485 }
+}
+
+ItemObject 22
+{
+    { Type RequirementDocument }
+    { Value "g train specifications" }
+    { NoteId 19 }
+    { ObjectId 1486 }
+}
+
+ItemObject 23
+{
+    { Type RequirementParagraph }
+    { Value "speed" }
+    { NoteId 19 }
+    { ObjectId 1487 }
+}
+
+ItemObject 24
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 19 }
+    { ObjectId 1488 }
+}
+
+ItemObject 25
+{
+    { Type QualificationMethod }
+    { Value "" }
+    { NoteId 19 }
+    { ObjectId 1489 }
+}
+
+ItemObject 26
+{
+    { Type QualificationLevel }
+    { Value "" }
+    { NoteId 19 }
+    { ObjectId 1490 }
+}
+
+ItemObject 27
+{
+    { Type FormalTestParagraph }
+    { Value "" }
+    { NoteId 19 }
+    { ObjectId 1491 }
+}
+
+NoteObject 28
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99996 }
+    { ObjectId 1493 }
+}
+
+ItemObject 29
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 28 }
+    { ObjectId 1494 }
+}
+
+ItemObject 30
+{
+    { Type DocumentName }
+    { Value "SRS" }
+    { NoteId 28 }
+    { ObjectId 1495 }
+}
+
+ItemObject 31
+{
+    { Type DocumentNumber }
+    { Value "1" }
+    { NoteId 28 }
+    { ObjectId 1496 }
+}
+
+ItemObject 32
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 28 }
+    { ObjectId 1497 }
+}
+

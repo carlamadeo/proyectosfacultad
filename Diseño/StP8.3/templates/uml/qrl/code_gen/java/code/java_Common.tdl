@@ -1,0 +1,120 @@
+/************************************************** 
+ * java_Common.tdl
+ * ---------------
+ *
+ * Common templates and procedures which are
+ * shared by Java classes, interfaces and 
+ * exceptions.
+ * 
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    20.10.2001
+ *
+ * Copyright 2001, Aonix, San Diego
+ **************************************************/
+
+
+
+/* Package- and import-Statements.
+ * Consists mainly of "mark"-sections. 
+ * The actual information comes from the
+ * various "insert"-Statements connected 
+ * to the particular "mark"-sections.
+ */
+template MClass.gen_preface()
+[gen_java_header([MClass])]
+[mark("package","package_proc")]
+^
+[mark("import", "import_proc")]
+[mark("depends", "depends_proc")]
+[mergeOut("UDIS::"[MClass.guid], "---- additional import statements")]
+^
+[if ([MClass:exception])]
+[loop(MClass->MNormalClass)]
+[gen_exception([MNormalClass])]
+[end  loop]
+[else]
+[[MClass].gen_body()]
+[end if]
+end template
+
+
+
+/* Template for file metadata and 
+ * copyright information. Can and
+ * should be edited by the user!
+ */
+template gen_java_header(MClass)
+/***************************************************
+ * [MClass.name][JAVA_EXTENSION]
+ * [string_repeat([MClass.name][JAVA_EXTENSION], "-")]
+ *
+ * Author:  [AUTHOR]
+ * Company: [COMPANY]
+ * Date:    [date()]
+ *
+ * Copyright (c), 2001, [COMPANY]
+ **************************************************/    
+end template
+
+
+
+/* Generates a package-statement. Appears at the
+ * approbiate "mark" section.
+ */
+proc MClass.package_proc()
+  if ([MClass:package_name] != "")
+    return "package " [MClass:package_name] ";\n";
+  end if
+end proc
+
+
+
+/* Generates a JavaDoc-Comment for the 
+ * particular model element. The actual information
+ * must come from the description of that element.
+ */
+template genJavaDocComment(MElement)
+  [if (hasLoop(MElement->Note Where [Note.type] == "GenericObject" && [Note.description] != ""))]
+/**
+    [loop(MElement->Note Where [Note.type] == "GenericObject")]
+      [loop(Instances->TokenSet([Note.description]))]
+ * [TokenSet.line]
+      [end loop]
+    [end loop]
+ */
+  [end if]
+end template
+
+
+/* Generates an "extends"-clause for both classes
+ * and interfaces. Imports the SuperClass type(s),
+ * if they reside in other packages.
+ */
+proc genBaseClass(MClass)
+  local bcl;
+  loop(MClass->SuperClass; setDelim(""); setDelim(", "))
+    insert("import", [SuperClass.id]);
+    [bcl] = [bcl] delim() [SuperClass.name];
+  end loop
+  if ([bcl] != "")
+    [bcl] = " extends " [bcl];
+  end if
+  return [bcl];
+end proc
+
+
+/* Generates "import"-statements for classes and
+ * packages, to which the current class has
+ * a dependency. In the case of packages, all
+ * classes of that package are imported via
+ * wildcard ('*').
+ */
+proc genClassDependencies(MClass)
+  loop(MClass->Supplier->MClass As DepClass)
+    insert("depends", [DepClass.id]);
+  end loop
+  loop(MClass->Supplier->MPackage)
+    insert("depends", [MPackage.id]);
+  end loop
+end proc

@@ -1,0 +1,659 @@
+Diagram UmlUseCaseDiagram
+{
+    { Name "ThisSystem" }
+    { Format "1.6" }
+    { Scale 0.83 }
+    { PanX -220 }
+    { PanY -436 }
+    { Alignment 32 }
+    { GUID "UID_49C151E5-34FB-11d6-8DB9-00500445CF96" }
+    { Summary
+        { Nodes 12 }
+        { Arcs 15 }
+    }
+}
+
+Node 1
+{
+    { Type System }
+    { Loc 106 12 }
+    { Scale 1460.00 1498.00 }
+    { Label
+        { Text "Black forest coocoo watch" }
+    }
+    { DynamicSegments
+        { Segment
+            { Type Line }
+            { Style Solid }
+            { Fill None }
+            { Loc -293 -300 }
+            { End -293 296 }
+        }
+        { Segment
+            { Type Line }
+            { Style Solid }
+            { Fill None }
+            { Loc -293 296 }
+            { End 288 296 }
+        }
+        { Segment
+            { Type Line }
+            { Style Solid }
+            { Fill None }
+            { Loc 288 -300 }
+            { End 288 296 }
+        }
+        { Segment
+            { Type Line }
+            { Style Solid }
+            { Fill None }
+            { Loc -293 -300 }
+            { End 288 -300 }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 759 }
+        { GUID "UID_A5C11F70-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Node 2
+{
+    { Type Actor }
+    { Loc -366 106 }
+    { Scale 128.00 64.00 }
+    { Label
+        { Text "Watch administrator" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 986 }
+        { GUID "UID_A5C11F71-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Node 3
+{
+    { Type UseCase }
+    { Loc -39 259 }
+    { Scale 509.00 90.00 }
+    { Label
+        { Text "RaiseWeight" }
+    }
+    { IsIncluded True }
+    { Parent 1 }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 719 }
+        { GUID "UID_A5C11F72-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Node 10
+{
+    { Type Actor }
+    { Loc -365 -77 }
+    { Scale 128.00 64.00 }
+    { Label
+        { Text "Watch user" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 979 }
+        { GUID "UID_6E951D6B-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Node 15
+{
+    { Type UseCase }
+    { Loc -49 -229 }
+    { Scale 647.00 90.00 }
+    { Label
+        { Text "ShowClockBehaviour" }
+    }
+    { IsIncluded True }
+    { Parent 1 }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 766 }
+        { GUID "UID_A5C11F74-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Node 20
+{
+    { Type UseCase }
+    { Loc -32 132 }
+    { Scale 436.00 90.00 }
+    { Label
+        { Text "SetTime" }
+    }
+    { IsIncluded True }
+    { Parent 1 }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 734 }
+        { GUID "UID_A5C11F75-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Node 41
+{
+    { Type UseCase }
+    { Loc 268 -228 }
+    { Scale 632.00 90.00 }
+    { Label
+        { Text "ClockworkIsRunning" }
+    }
+    { IsIncluded True }
+    { Parent 271 }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 781 }
+        { GUID "UID_A5C11F76-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Node 58
+{
+    { Type UseCase }
+    { Loc 216 157 }
+    { Scale 597.00 90.00 }
+    { Label
+        { Text "ForceClockToRun" }
+    }
+    { IsIncluded True }
+    { Parent 271 }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 895 }
+        { GUID "UID_A5C11F77-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Node 83
+{
+    { Type UseCase }
+    { Loc -31 30 }
+    { Scale 604.00 90.00 }
+    { Label
+        { Text "PendulumIsMoving" }
+    }
+    { IsIncluded True }
+    { Parent 1 }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 907 }
+        { GUID "UID_A5C11F78-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Node 139
+{
+    { Type Note }
+    { Loc 246 -15 }
+    { Scale 752.00 331.00 }
+    { Label
+        { Text "PendulumIsMoving" }
+        { Text " has no Scenario" }
+    }
+}
+
+Node 254
+{
+    { Type UseCase }
+    { Loc 54 -119 }
+    { Scale 619.00 133.00 }
+    { Label
+        { Text "ClockBirdBehaviour" }
+        { Text "AtTotalSolarEclipse" }
+    }
+    { IsIncluded True }
+    { Parent 1 }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 1287 }
+        { GUID "UID_A5C11F79-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Node 271
+{
+    { Type Package }
+    { Loc 0 6 }
+    { Scale 2489.00 2416.00 }
+    { LabelDims 259 91 }
+    { Label
+        { Text "uc_Coocoo" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 1682 }
+        { GUID "UID_06FEF821-B4C9-11d4-9EB9-0010A4B8EFF8" }
+    }
+}
+
+Arc 8
+{
+    { Type Communicates }
+    { From
+        { ID 2 }
+        { Loc -338 119 }
+        { Offset -5 -2 }
+    }
+    { To
+        { ID 3 }
+        { Loc -85 247 }
+        { Offset -15 3 }
+    }
+}
+
+Arc 25
+{
+    { Type Communicates }
+    { From
+        { ID 2 }
+        { Loc -336 115 }
+        { Offset -1 8 }
+    }
+    { To
+        { ID 20 }
+        { Loc -119 132 }
+        { Offset 1 5 }
+    }
+}
+
+Arc 39
+{
+    { Type Communicates }
+    { From
+        { ID 10 }
+        { Loc -337 -92 }
+        { Offset -1 -3 }
+    }
+    { To
+        { ID 15 }
+        { Loc -73 -214 }
+        { Offset 8 1 }
+    }
+}
+
+Arc 77
+{
+    { Type Inherits }
+    { From
+        { ID 2 }
+        { Loc -365 75 }
+        { Offset 1 -4 }
+    }
+    { To
+        { ID 10 }
+        { Loc -365 -46 }
+        { Offset 0 -1 }
+    }
+}
+
+Arc 48
+{
+    { Type Uses }
+    { From
+        { ID 41 }
+        { Loc 142 -228 }
+        { Offset 1 0 }
+    }
+    { To
+        { ID 15 }
+        { Loc 79 -228 }
+        { Offset 80 1 }
+    }
+}
+
+Arc 112
+{
+    { Type Communicates }
+    { From
+        { ID 10 }
+        { Loc -335 -68 }
+        { Offset -2 -1 }
+    }
+    { To
+        { ID 83 }
+        { Loc -74 16 }
+        { Offset 13 3 }
+    }
+}
+
+Arc 259
+{
+    { Type Extends }
+    { From
+        { ID 41 }
+        { Loc 242 -213 }
+        { Offset 12 -3 }
+    }
+    { To
+        { ID 254 }
+        { Loc 100 -143 }
+        { Offset -8 2 }
+    }
+}
+
+Arc 270
+{
+    { Type Uses }
+    { From
+        { ID 3 }
+        { Loc 8 247 }
+        { Offset 0 9 }
+    }
+    { To
+        { ID 58 }
+        { Loc 172 171 }
+        { Offset -8 -2 }
+    }
+}
+
+Arc 400
+{
+    { Type Contains }
+    { From
+        { ID 271 }
+        { Loc 0 6 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 41 }
+        { Loc 267 -235 }
+        { Offset 0 0 }
+    }
+    { IsInclusion True }
+}
+
+Arc 402
+{
+    { Type Contains }
+    { From
+        { ID 271 }
+        { Loc 0 6 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 58 }
+        { Loc 216 157 }
+        { Offset 0 0 }
+    }
+    { IsInclusion True }
+}
+
+Arc 408
+{
+    { Type Contains }
+    { From
+        { ID 1 }
+        { Loc 106 12 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 254 }
+        { Loc 54 -120 }
+        { Offset 0 0 }
+    }
+    { IsInclusion True }
+}
+
+Arc 410
+{
+    { Type Contains }
+    { From
+        { ID 1 }
+        { Loc 106 12 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 83 }
+        { Loc -31 30 }
+        { Offset 0 0 }
+    }
+    { IsInclusion True }
+}
+
+Arc 412
+{
+    { Type Contains }
+    { From
+        { ID 1 }
+        { Loc 106 12 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 20 }
+        { Loc -32 132 }
+        { Offset 0 0 }
+    }
+    { IsInclusion True }
+}
+
+Arc 414
+{
+    { Type Contains }
+    { From
+        { ID 1 }
+        { Loc 106 12 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 15 }
+        { Loc -49 -229 }
+        { Offset 0 0 }
+    }
+    { IsInclusion True }
+}
+
+Arc 416
+{
+    { Type Contains }
+    { From
+        { ID 1 }
+        { Loc 106 12 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 3 }
+        { Loc -39 259 }
+        { Offset 0 0 }
+    }
+    { IsInclusion True }
+}
+
+Link 9
+{
+    { FirstArc 8 }
+    { LastArc 8 }
+    { Object
+        { PDMType Link }
+        { MappingName InteractionMapping }
+        { ID 3009 }
+        { GUID "UID_A5C11F83-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Link 26
+{
+    { FirstArc 25 }
+    { LastArc 25 }
+    { Object
+        { PDMType Link }
+        { MappingName InteractionMapping }
+        { ID 3008 }
+        { GUID "UID_A5C11F82-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Link 40
+{
+    { FirstArc 39 }
+    { LastArc 39 }
+    { Object
+        { PDMType Link }
+        { MappingName InteractionMapping }
+        { ID 3012 }
+        { GUID "UID_A5C11F86-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Link 78
+{
+    { FirstArc 77 }
+    { LastArc 77 }
+    { Object
+        { PDMType Link }
+        { MappingName InheritsMapping }
+        { ID 3007 }
+        { GUID "UID_A5C11F81-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Link 49
+{
+    { FirstArc 48 }
+    { LastArc 48 }
+    { Object
+        { PDMType Link }
+        { MappingName UsesMapping }
+        { ID 3014 }
+        { GUID "UID_A5C11F88-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Link 113
+{
+    { FirstArc 112 }
+    { LastArc 112 }
+    { Object
+        { PDMType Link }
+        { MappingName InteractionMapping }
+        { ID 3011 }
+        { GUID "UID_A5C11F85-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Link 260
+{
+    { FirstArc 259 }
+    { LastArc 259 }
+    { Object
+        { PDMType Link }
+        { MappingName ExtendsMapping }
+        { ID 3013 }
+        { GUID "UID_A5C11F87-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Link 271
+{
+    { FirstArc 270 }
+    { LastArc 270 }
+    { Object
+        { PDMType Link }
+        { MappingName UsesMapping }
+        { ID 3010 }
+        { GUID "UID_A5C11F84-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Link 401
+{
+    { FirstArc 400 }
+    { LastArc 400 }
+    { Object
+        { PDMType Link }
+        { MappingName ComponentMapping }
+        { ID 3016 }
+        { GUID "UID_06FEF833-B4C9-11d4-9EB9-0010A4B8EFF8" }
+    }
+}
+
+Link 403
+{
+    { FirstArc 402 }
+    { LastArc 402 }
+    { Object
+        { PDMType Link }
+        { MappingName ComponentMapping }
+        { ID 3015 }
+        { GUID "UID_06FEF834-B4C9-11d4-9EB9-0010A4B8EFF8" }
+    }
+}
+
+Link 409
+{
+    { FirstArc 408 }
+    { LastArc 408 }
+    { Object
+        { PDMType Link }
+        { MappingName ComponentMapping }
+        { ID 3006 }
+        { GUID "UID_06FEF822-B4C9-11d4-9EB9-0010A4B8EFF8" }
+    }
+}
+
+Link 411
+{
+    { FirstArc 410 }
+    { LastArc 410 }
+    { Object
+        { PDMType Link }
+        { MappingName ComponentMapping }
+        { ID 3005 }
+        { GUID "UID_A5C11F7C-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Link 413
+{
+    { FirstArc 412 }
+    { LastArc 412 }
+    { Object
+        { PDMType Link }
+        { MappingName ComponentMapping }
+        { ID 3004 }
+        { GUID "UID_A5C11F7F-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Link 415
+{
+    { FirstArc 414 }
+    { LastArc 414 }
+    { Object
+        { PDMType Link }
+        { MappingName ComponentMapping }
+        { ID 3003 }
+        { GUID "UID_A5C11F80-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Link 417
+{
+    { FirstArc 416 }
+    { LastArc 416 }
+    { Object
+        { PDMType Link }
+        { MappingName ComponentMapping }
+        { ID 3002 }
+        { GUID "UID_A5C11F7A-6EAE-11d4-8044-00104BF16798" }
+    }
+}

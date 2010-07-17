@@ -1,0 +1,58 @@
+//*****************************************************************************
+// $RCSfile: com_main.tdl,v $
+// $Revision: 1.2 $
+// $Date: 2001/06/15 02:11:22 $
+// Author: Oliver Maus
+//*****************************************************************************
+
+/*
+Contains the main routine of the com code generator.
+
+Calls for each class in the model the procedure genClass.
+
+The mapping of metatypes and StP/Uml types is documented in the ACD manual.
+*/
+/*
+PREREQUISITES:
+You need uuidgen.exe to generate the UUID's from command line.
+uuidgen.exe is shipped with Microsoft Developer Studio.
+Add the path to uuidgen.exe to your PATH environment variable.
+Make sure you have a directory \Temp on same drive where StP is located or 
+adopt the second paramter in call of exec_system and tcl_proc get_uuid 
+in com_std.tdl 
+*/
+
+/*
+import other template files
+*/
+USES com_genInterface;
+USES com_genClass;
+USES com_std;
+
+
+/******************************************************************************
+This is the entry procedure of the com generator.
+******************************************************************************/
+proc main()
+
+	/* For each MClass a variable is defined that holds the id of the
+	   package it belongs to.
+	   In the procedure genClass (called below)
+	   these variable(s) will be used for generating the appropriate
+	   package statement.
+	   This uses the insert/mark mechanism as described in the documentation
+	*/
+	loop(Instances->MPackage->MClass)
+		[Class_[MClass.name]] = [MPackage.id];
+	end loop
+	
+	/* defines the structure of user defined block id strings 
+	   (defined in com_std.tdl)*/
+	init();		
+
+	/* each metamodel type MClass is passed to the procedure startGen
+		which can be found in com_genClass.tdl */
+	loop(Instances->MClass Where (!hasLoop(MClass->MDataType)))
+		[MClass].startGen([MClass]);
+	end loop	
+end proc

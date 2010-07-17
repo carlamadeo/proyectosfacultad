@@ -1,0 +1,726 @@
+/******************************************************
+ * java_MNormalClass.tdl
+ * ---------------------
+ *
+ * Initialzes a class. In addition, methods for
+ * creation of model elements at runtime (meta
+ * creation) are located in this file.
+ *
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    20.10.2001
+ *
+ * Copyright 2001, Aonix, San Diego
+ *****************************************************/
+
+
+/* Initializes all important modeling artefacts
+ * of a class, like visibility, modifier and
+ * invokes initialization of attributes and
+ * operations.
+ */
+proc MNormalClass.init()
+  [MNormalClass].initExternal();
+  if (toLower([MNormalClass.stereotype]) == "exception")
+    [MNormalClass:exception] = "TRUE";
+  end if
+  init_classvisib([MNormalClass]);
+  [MNormalClass].init_modifiers();
+  [MNormalClass].initPackageAndDir();
+  loop(MNormalClass->MAttribute)
+    [MAttribute].init();
+  end loop
+  loop(MNormalClass->MOperation)
+    if ([MOperation.name] == [MNormalClass.name])
+      [MOperation:ctor] = "TRUE";
+    end if
+    [MOperation].init();
+  end loop
+  if ([SET_CLASS_ABSTRACT] && hasLoop(MNormalClass->MOperation Where [MOperation:abstract]))
+    if (! [MNormalClass:abstract])
+      if ([MNormalClass:modifiers] == "")
+        [MNormalClass:modifiers] = "abstract";
+      else
+        [MNormalClass:modifiers] = "abstract " [MNormalClass:modifiers];
+      end if
+    end if
+    [MNormalClass:abstract] = "TRUE";
+  end if
+end proc
+
+
+/* Creates at runtime new model elements.
+ * Elements like attributes (from associations) and methods (from
+ * attributes are created in such a way, that they are indistinguishable
+ * from modeled elements. This way we can treat e.g. associations
+ * _exactly_ the same way as real attributes. We can even create
+ * accessor methods for them (again, by runtime creation element creation)
+ *
+ * This is the only way, how we can _mix_ patterns without looking in
+ * thousand places for code changes.
+ */
+proc MNormalClass.createMetaElements()
+  createAttributesFromAssocs([MNormalClass]);
+  if ([CREATE_FULL_CTOR])
+    [CREATE_DEF_CTOR] = TRUE;
+  end if
+  if ([CREATE_DEF_CTOR])
+    createDefaultConstructor([MNormalClass]);
+  end if
+  if ([CREATE_FULL_CTOR])
+    createFullConstructor([MNormalClass]);
+  end if
+  if ([CREATE_FINALIZER])
+    createFinalizer([MNormalClass]);
+  end if
+  createInterfaceMethodsImpl([MNormalClass]);
+  if ([CREATE_ABSTRACT_IMPL])
+    createAbstractMethodsImpl([MNormalClass]);
+  end if
+  createAccessorMethods([MNormalClass]);
+  createPatterns([MNormalClass]);
+  // if Exception, create additional Constructor + attribute.
+  if ([MNormalClass:exception])
+    createExceptionElements([MNormalClass]);
+  end if
+  // Important: In case of selective generation, users 
+  // should't have select to select the inner classes, 
+  // just to create the metaElements!
+  loop(MNormalClass->NestedClass)
+    [NestedClass].createMetaElements();
+  end loop
+end proc
+
+
+// Concatenates all modifiers, a class has,
+// and appends that string as a MetaProperty
+// to that class. Some other MetaProperties
+// are also initialized.
+proc MNormalClass.init_modifiers()
+  local modifiers;
+  loop(MNormalClass->Note->Item Where [Item.type] == "UmlClassJavaIsFinal" ||
+                                      [Item.type] == "UmlClassIsAbstract" ||
+                                      [Item.type] == "UmlClassJavaIsStaticClass")
+    switch([Item.type])
+      case "UmlClassJavaIsFinal" :
+        if ([Item.value] == "True")
+          if ([modifiers] == "")
+            [modifiers] = "final";
+          else
+            [modifiers] = [modifiers] " final";
+          end if
+        end if
+       break;
+      case "UmlClassIsAbstract" :
+        if ([Item.value] == "True")
+          if ([modifiers] == "")
+            [modifiers] = "abstract";
+          else
+            [modifiers] = [modifiers] " abstract";
+          end if
+          [MNormalClass:abstract] = "TRUE";
+        end if
+       break;
+      case "UmlClassJavaIsStaticClass" :
+        if ([Item.value] == "True")
+          if ([modifiers] == "")
+            [modifiers] = "static";
+          else
+            [modifiers] = [modifiers] " static";
+          end if
+        end if
+       break;
+    end switch
+  end loop
+  [MNormalClass:modifiers] = [modifiers];
+end proc
+
+
+// Creates attributes from references.
+// Pretty lengthy and complicated because it not
+// only has to look after normal associations but also
+// after association classes and whether the current
+// class is an association class itself.
+//
+// Note that a normal class can have both normal associations
+// and association class(es) and a association class can have
+// associations itself (but not recursivly a association class, 
+// only normal associations!).
+//
+// This procedure obeys multiplcity and navigability of associations.
+// If an association is unidirectional, only in the class at the "tail" 
+// of the association, an attribute is created. Association classes
+// are broken up in two associations, where the multiplicity of
+// the roles is mutually exchanged.
+proc createAttributesFromAssocs(MClass)
+  local ref_name = "";
+  local mult = "";
+
+  loop(MClass->Role As FromRole->MAssociation->MAssociationEnd As ToRole->MClass As Partner Where [FromRole.id] != [ToRole.id])
+    // If this class _has_ an AssociationClass
+    if (hasAssocClass([MAssociation]))
+      loop(MAssociation->AssociationClass As AC)
+        if (checkNavigability([FromRole], [ToRole]))
+          [ref_name] = string_decapitalize([AC.name]);
+          if (! hasLoop(MClass->MAttribute Where [MAttribute.name] == [ref_name]))
+            [mult] = getJavaMultiplicity([ToRole]);
+            metaCreate(MAttribute As refAttr);
+            [refAttr.name] = [ref_name];
+            if ([mult] == "One")
+              [refAttr.type] = [AC.name];
+            end if
+            if ([mult] == "Fix" || [mult] == "Range")
+              [refAttr.type] = [AC.name] "[]";
+            end if
+            if ([mult] == "Many")
+              insert("import", "java.util.*");
+              [refAttr.type] = [DEF_COLL_CLASS];
+            end if
+            [refAttr.guid] = [AC.guid] "-assoc";
+            [refAttr.binding] = "";
+            [refAttr.access] = getRoleVisib([ToRole]);
+            [refAttr:readonly] = "FALSE";
+            [refAttr:access_methods] = has_accessors([refAttr]);
+            [refAttr:derived] = FALSE;
+            metaInsert([MClass], MAttribute, [refAttr]);
+          else
+            info = "Cannot create attribute \"" [ref_name] "\", because it is already modeled in class \"" [MClass.name] "\" manually!\n";
+          end if
+        end if
+      end loop
+    else
+      if (checkNavigability([FromRole], [ToRole]))
+        if ([ToRole.name] == "" || [ToRole.name] == [Partner.name])
+          [ref_name] = string_decapitalize([Partner.name]);
+        else
+          [ref_name] = [ToRole.name];
+        end if
+        if (! hasLoop(MClass->MAttribute Where [MAttribute.name] == [ref_name]))
+          [mult] = getJavaMultiplicity([ToRole]);
+          metaCreate(MAttribute As refAttr);
+          [refAttr.name] = [ref_name];
+          if ([mult] == "One")
+            [refAttr.type] = [Partner.name];
+          end if
+          if ([mult] == "Fix" || [mult] == "Range")
+            [refAttr.type] = [Partner.name] "[]";
+          end if
+          if ([mult] == "Many")
+            insert("import", "java.util.*");
+            [refAttr.type] = getCollClass([ToRole]);
+          end if
+          [refAttr.guid] = [ToRole.guid] "-assoc";
+          [refAttr.binding] = "";
+          [refAttr.access] = getRoleVisib([ToRole]);
+          [refAttr:readonly] = "FALSE";
+          [refAttr:access_methods] = has_accessors([refAttr]);
+          [refAttr:derived] = FALSE;
+          metaInsert([MClass], MAttribute, [refAttr]);
+        else
+          info = "Cannot create attribute \"" [ref_name] "\", because it is already modeled in class \"" [MClass.name] "\" manually!\n";
+        end if
+      end if
+    end if
+  end loop
+   
+  // If this class _is_ itself an AssociationClass
+  if (isAssocClass([MClass]))
+    local partner_one;
+    local partner_two;
+
+    // get the partner classes
+    loop(MClass->MAssociation->MAssociationEnd->MClass As Partner)
+      if ([partner_one] != "")
+        [partner_two] = [Partner.id];
+      else
+        [partner_one] = [Partner.id];
+      end if
+    end loop
+
+    // Check the navigability of the association between the partner class
+    // and write it to a variable.
+    loop(Instances->MClass([partner_one]) As P1)
+      loop(Instances->MClass([partner_two]) As P2)
+        loop(P1->Role As FromRole->MAssociation->MAssociationEnd As ToRole->MClass As Partner Where [FromRole.id] != [ToRole.id] && [Partner.id] == [P2.id])
+          if (checkNavigability([FromRole], [ToRole]))
+            ["create_"[ToRole.id]"_"[MClass.id]] = TRUE;
+          end if
+        end loop
+        loop(P2->Role As FromRole->MAssociation->MAssociationEnd As ToRole->MClass As Partner Where [FromRole.id] != [ToRole.id] && [Partner.id] == [P1.id])
+          if (checkNavigability([FromRole], [ToRole]))
+            ["create_"[ToRole.id]"_"[MClass.id]] = TRUE;
+          end if
+        end loop
+      end loop
+    end loop
+
+    // Create the attributes. In case of an AssociationClass
+    // multiplicity is always one!
+    loop(MClass->MAssociation->MAssociationEnd->MClass As Partner)
+      if (["create_"[MAssociationEnd.id]"_"[MClass.id]])
+        if ([MAssociationEnd.name] == "" || [MAssociationEnd.name] == [Partner.name])
+          [ref_name] = string_decapitalize([Partner.name]);
+        else
+          [ref_name] = [MAssociationEnd.name];
+        end if
+        if (! hasLoop(MClass->MAttribute Where [MAttribute.name] == [ref_name]))
+          metaCreate(MAttribute As refAttr);
+          [refAttr.name] = [ref_name];
+          [refAttr.type] = [Partner.name];
+          [refAttr.guid] = [MAssociationEnd.guid] "-assoc";
+          [refAttr.binding] = "";
+          [refAttr.access] = getRoleVisib([MAssociationEnd]);
+          [refAttr:readonly] = "FALSE";
+          [refAttr:access_methods] = has_accessors([refAttr]);
+          [refAttr:derived] = FALSE;
+          metaInsert([MClass], MAttribute, [refAttr]);
+        else
+          info = "Cannot create attribute \"" [ref_name] "\", because it is already modeled in class \"" [MClass.name] "\" manually!\n";
+        end if
+      end if
+    end loop
+  end if
+end proc
+
+
+/* Creates a default constructor, d.e. a parameterless
+ * constructor, if no such constructor is modelled.
+ */
+proc createDefaultConstructor(MClass)
+  if (! hasLoop(MClass->MOperation Where ([MOperation.name] == [MClass.name] && ! hasLoop(MOperation->OpPara))))
+    metaCreate(MOperation As def_ctor);
+    [def_ctor.name] = [MClass.name];
+    [def_ctor.guid] = [MClass.guid] "-def-ctor";
+    [def_ctor.binding] = "";
+    [def_ctor.returnType] = "void";
+    if (hasPattern([MClass], "singleton"))
+      [def_ctor.access] = "private";
+    else
+      if ([MClass:abstract])
+        [def_ctor.access] = "protected";
+      else
+        [def_ctor.access] = [DEF_CTOR_VISIB];
+      end if
+    end if
+    metaInsert([MClass], MOperation, [def_ctor]);
+    metaCreate(MAnnotNote As def_ctor_note);
+    [def_ctor_note.type] = "GenericObject";
+    [def_ctor_note.description] = "Default constructor";
+    metaInsert([def_ctor], Note, [def_ctor_note]);
+    if (hasLoop(MClass->MStatemachine))
+      metaCreate(MAnnotNote As def_ctor_code);
+      [def_ctor_code.type] = "UmlOperationJavaCode";
+      if (hasPattern([MClass], "statetable"))
+        [def_ctor_code.description] = STP_ConstructorCode([MClass]);
+      else
+        [def_ctor_code.description] = SM_ConstructorCode([MClass]);
+      end if
+      metaInsert([def_ctor], Note, [def_ctor_code]);
+    end if
+  end if
+end proc
+
+
+/* Creates a full constructor, d.e. a constructor, that
+   initializes all non-static, non-derived attributes of
+   this instance.
+ */
+proc createFullConstructor(MClass)
+  if (! hasLoop(MClass->MOperation Where ([MOperation.name] == [MClass.name] && getCtorAttrTypeName([MClass]) == getOpParas([MOperation]))))
+    metaCreate(MOperation As full_ctor);
+    [full_ctor.name] = [MClass.name];
+    [full_ctor.guid] = [MClass.guid] "-full-ctor";
+    [full_ctor.binding] = "";
+    [full_ctor.returnType] = "void";
+    // if class is singleton, do _not_ create a public constructor
+    if (hasPattern([MClass], "singleton"))
+      [full_ctor.access] = "private";
+    else
+      if ([MClass:abstract])
+        [full_ctor.access] = "protected";
+      else
+        [full_ctor.access] = [DEF_CTOR_VISIB];
+      end if
+    end if
+    metaInsert([MClass], MOperation, [full_ctor]);
+    metaCreate(MAnnotNote As full_ctor_note);
+    [full_ctor_note.type] = "GenericObject";
+    >>
+    This constructor initializes all instance attributes,
+    which are not derived. Furthermore <code>final</code>
+    attributes with a default value aren't initialized either.
+    >> [full_ctor_note.description]
+    metaInsert([full_ctor], Note, [full_ctor_note]);
+    loop(MClass->MAttribute Where [MAttribute.binding] == "" && ! [MAttribute:derived])
+      if (! [MAttribute:final] || ([MAttribute:final] && [MAttribute:defval] == ""))
+        metaCreate(MOperationPara As full_ctor_para);
+        [full_ctor_para.name] = [MAttribute.name];
+        [full_ctor_para.type] = [MAttribute.type];
+        metaInsert([full_ctor], OpPara, [full_ctor_para]);
+      end if
+    end loop
+    metaCreate(MAnnotNote As full_ctor_code);
+    [full_ctor_code.type] = "UmlOperationJavaCode";
+    >>
+    [loop(MClass->MAttribute Where [MAttribute.binding] == "" && ! [MAttribute:derived])]
+      [if (! [MAttribute:final] || ([MAttribute:final] && [MAttribute:defval] == ""))]
+    this.[MAttribute.name] = [MAttribute.name];
+      [end if]
+    [end loop]
+    >> [full_ctor_code.description]
+    metaInsert([full_ctor], Note, [full_ctor_code]);
+  end if
+end proc 
+
+proc getCtorAttr(MClass)
+  local retval="";
+  loop(MClass->MAttribute Where [MAttribute.binding] == "" && ! [MAttribute:derived]; setDelim(""); setDelim(", "))
+    if (! [MAttribute:final] || ([MAttribute:final] && [MAttribute:defval] == ""))
+      [retval] = [retval] delim() [MAttribute.name];
+    end if
+  end loop
+  return [retval];
+end proc
+
+proc getCtorAttrTypeName(MClass)
+  local retval="";
+  loop(MClass->MAttribute Where [MAttribute.binding] == "" && ! [MAttribute:derived]; setDelim(""); setDelim(", "))
+    if (! [MAttribute:final] || ([MAttribute:final] && [MAttribute:defval] == ""))
+      [retval] = [retval] delim() [MAttribute.type] " " [MAttribute.name];
+    end if
+  end loop
+  return [retval];
+end proc
+
+
+/* Create a finalizer ("destructor" in Java).
+ * This method gets called before the object
+ * is garbage collected.
+ */
+proc createFinalizer(MClass)
+  if (! hasLoop(MClass->MOperation Where ([MOperation.name] == "finalize" && ! hasLoop(MOperation->OpPara))))
+    metaCreate(MOperation As final_op);
+    [final_op.name] = "finalize";
+    [final_op.guid] = [MClass.guid] "-finalizer";
+    [final_op.binding] = "";
+    [final_op.access] = "protected";
+    [final_op.returnType] = "void";
+    metaInsert([MClass], MOperation, [final_op]);
+    metaCreate(MAnnotNote As final_op_note);
+    [final_op_note.type] = "GenericObject";
+    >>
+    Called before this object gets garbage collected, 
+    d.e. destroyed.
+    
+    Overrides {@link java.lang.Object#finalize()}.
+    >> [final_op_note.description]
+    metaCreate(MAnnotNote As final_op_code);
+    [final_op_code.type] = "UmlOperationJavaCode";
+    >>
+    try { super.finalize(); } 
+    catch(Throwable t) { return; }
+    finally { return; }
+    >> [final_op_code.description]
+    metaInsert([final_op], Note, [final_op_code]);
+  end if
+end proc
+
+
+// Creates method implementation from methods
+// found in all interfaces this class implements.
+proc createInterfaceMethodsImpl(MClass)
+    local impl_list;
+    loop(MClass->Implement)
+      [impl_list] = [impl_list] " " getIdListRec(Implement->SuperClass->MInterface) " " [Implement.id];
+    end loop
+    loop(Instances->MInterface([impl_list]) As Ifc)
+      loop(Ifc->MOperation As IfcOp)
+        if (! hasLoop(MClass->MOperation As TOp Where ([TOp.name] == [IfcOp.name] && getOpParas([TOp]) == getOpParas([IfcOp]))))
+          metaCreate(MOperation As impl_op);
+          [impl_op.name] = [IfcOp.name];
+          [impl_op.guid] = [IfcOp.guid] "-impl";
+          [impl_op.returnType] = [IfcOp.returnType];
+          [impl_op.access] = "public"; // must be public!
+          [impl_op.binding] = "";  // must not be static!
+          metaInsert([MClass], MOperation, [impl_op]);
+          loop(IfcOp->OpPara)
+            metaCreate(MOperationPara as impl_para);
+            [impl_para.name] = [OpPara.name];
+            [impl_para.type] = [OpPara.type];
+            metaInsert([impl_op], OpPara, [impl_para]);
+          end loop
+          loop(IfcOp->Note->Item Where [Item.type] == "UmlOperationThrows")
+            [impl_op:throws] = [IfcOp:throws];
+          end loop
+          metaCreate(MAnnotNote As impl_op_note);
+          [impl_op_note.type] = "GenericObject";
+          >>
+          Implements method <code>[IfcOp.name]([getOpParasTypes([IfcOp])])</code> 
+          [if ([Ifc:package_name] != "")]
+          from interface <code>[Ifc:package_name].[Ifc.name]</code>.
+          [else]
+          from interface <code>[Ifc.name]</code>.
+          [end if]
+          
+          [if ([Ifc:package_name] != "")]
+          @see [Ifc:package_name].[Ifc.name]#[IfcOp.name]([getOpParasTypes([IfcOp])])
+          [else]
+          @see [Ifc.name]#[IfcOp.name]([getOpParasTypes([IfcOp])])
+          [end if]
+          >> [impl_op_note.description]
+          metaInsert([impl_op], Note, [impl_op_note]);
+        end if
+      end loop
+    end loop
+end proc
+
+
+
+// creates method implementations from all abstract
+// methods found in an (abstract!) superclass.
+// The class itself must not abstract, because otherwise
+// it would not be clear, whether this class should have
+// only non-abstract methods or not!
+proc createAbstractMethodsImpl(MClass)
+  if ([MClass:abstract])
+    return;
+  end if
+  loop(MClass->SuperClass)
+    if ([SuperClass:abstract])
+      loop(SuperClass->MOperation As SuperOp Where [SuperOp:abstract])
+        if (! hasLoop(MClass->MOperation Where [MOperation.name] == [SuperOp.name] && getOpParas([MOperation]) == getOpParas([SuperOp])))
+          metaCreate(MOperation as impl_op);
+          [impl_op.name] = [SuperOp.name];
+          [impl_op.guid] = [SuperOp.guid] "-impl";
+          [impl_op.binding] = "";
+          [impl_op.access] = [SuperOp.access];
+          [impl_op.returnType] = [SuperOp.returnType];
+          metaInsert([MClass], MOperation, [impl_op]);
+          loop(SuperOp->OpPara)
+            metaCreate(MOperationPara as impl_para);
+            [impl_para.name] = [OpPara.name];
+            [impl_para.type] = [OpPara.type];
+            metaInsert([impl_op], OpPara, [impl_para]);
+          end loop
+          loop(SuperOp->Note->Item Where [Item.type] == "UmlOperationThrows")
+            [impl_op:throws] = [SuperOp:throws];
+          end loop
+          metaCreate(MAnnotNote As impl_op_note);
+          [impl_op_note.type] = "GenericObject";
+          >>
+          Implements method <code>[SuperOp.name]([getOpParasTypes([SuperOp])])</code> 
+          [if ([SuperClass:package_name] != "")]
+          from abstract class <code>[SuperClass:package_name].[SuperClass.name]</code>.
+          [else]
+          from abstract class <code>[SuperClass.name]</code>.
+          [end if]
+          
+          [if ([SuperClass:package_name] != "")]
+          @see [SuperClass:package_name].[SuperClass.name]#[SuperOp.name]([getOpParasTypes([SuperOp])])
+          [else]
+          @see [SuperClass.name]#[SuperOp.name]([getOpParasTypes([SuperOp])])
+          [end if]
+          >> [impl_op_note.description]
+          metaInsert([impl_op], Note, [impl_op_note]);
+        end if
+      end loop
+    end if
+  end loop
+end proc
+
+
+// Creates accessor methods (getter/setter)
+// from attributes. The attributes can both
+// be modelled or created at runtime.
+proc createAccessorMethods(MNormalClass)
+  loop(MNormalClass->MAttribute Where [MAttribute.binding] != "static" && ! [MAttribute:final])
+    if ([MAttribute:access_methods])
+      if (! [MAttribute:readonly] && ! hasLoop(MNormalClass->MOperation Where [MOperation.name] == "set" string_capitalize([MAttribute.name]) && getOpParas([MOperation]) == [MAttribute.type]" "[MAttribute.name]))
+        metaCreate(MOperation as set_op); // accessor operation
+        [set_op.name] = "set" string_capitalize([MAttribute.name]);
+        [set_op.guid] = [MAttribute.guid] "-setter";
+        [set_op.binding] = "";
+        [set_op.access] = "public"; // must be "public" ?!?
+        [set_op.returnType] = "void";
+        metaInsert([MNormalClass], MOperation, [set_op]);
+        metaCreate(MOperationPara as set_para);
+        [set_para.name] = [MAttribute.name];
+        [set_para.type] = [MAttribute.type];
+        metaInsert([set_op], OpPara, [set_para]);
+        metaCreate(MAnnotNote As set_op_code);
+        [set_op_code.type] = "UmlOperationJavaCode";
+        [set_op_code.description] = "this." [MAttribute.name] " = " [MAttribute.name] ";";
+        metaInsert([set_op], Note, [set_op_code]);
+        metaCreate(MAnnotNote as set_op_note);
+        [set_op_note.type] = "GenericObject";
+        >>
+        Automatically generated <code>set</code>-method 
+        from attribute <code>[MAttribute.name]</code>.
+        
+        @param [MAttribute.name] Sets this instance's 
+           <code>[MAttribute.name]</code> to a new value.
+        @see #get[string_capitalize([MAttribute.name])]()
+        >> [set_op_note.description] 
+        metaInsert([set_op], Note, [set_op_note]);
+      end if
+      if (! hasLoop(MNormalClass->MOperation
+            Where [MOperation.name] == "get" string_capitalize([MAttribute.name])))
+        metaCreate(MOperation as get_op); // accessor operation
+        [get_op.name] = "get" string_capitalize([MAttribute.name]);
+        [get_op.guid] = [MAttribute.guid] "-getter";
+        [get_op.binding] = "";
+        [get_op.access] = "public";
+        [get_op.returnType] = [MAttribute.type];
+        metaInsert([MNormalClass], MOperation, [get_op]);
+        metaCreate(MAnnotNote As get_op_code);
+        [get_op_code.type] = "UmlOperationJavaCode";
+        [get_op_code.description] = "return " [MAttribute.name] ";";
+        metaInsert([get_op], Note, [get_op_code]);
+        metaCreate(MAnnotNote as get_op_note);
+        [get_op_note.type] = "GenericObject";
+        >>
+        Automatically generated <code>get()</code>-method 
+        from attribute <code>[MAttribute.name]</code>.
+        
+        @return This instance's <code>[MAttribute.name]</code>.
+        @see #set[string_capitalize([MAttribute.name])]([MAttribute.type])
+        >> [get_op_note.description]
+        metaInsert([get_op], Note, [get_op_note]);
+      end if
+    end if
+  end loop
+end proc
+
+
+/* Create an additional constructor (with one parameter
+ * and the approbiate attribute for a exception class.
+ *
+ * Example: public InsufficientBalanceException(String reason) { this.reason = reason; }
+ */
+proc createExceptionElements(MClass)
+  // Do not create if class is abstract:
+  if ([MClass:abstract])
+    return;
+  end if
+  if (! hasLoop(MClass->MOperation Where ([MOperation.name] == [MClass.name] && getOpParas([MOperation]) == "String message")))
+    metaCreate(MOperation As exc_ctor);
+    [exc_ctor.name] = [MClass.name];
+    [exc_ctor.guid] = [MClass.guid] "-exc-ctor";
+    [exc_ctor.binding] = "";
+    [exc_ctor.returnType] = "void";
+    [exc_ctor.access] = [DEF_CTOR_VISIB];
+    metaInsert([MClass], MOperation, [exc_ctor]);
+    metaCreate(MOperationPara as exc_ctor_para);
+    [exc_ctor_para.name] = "message";
+    [exc_ctor_para.type] = "String";
+    metaInsert([exc_ctor], OpPara, [exc_ctor_para]);
+    metaCreate(MAnnotNote As exc_ctor_note);
+    [exc_ctor_note.type] = "GenericObject";
+    >>
+    Constructs an exception <code>[MClass.name]</code> with the specified detail
+    message. The string <code>message</code> may later be retrieved by the
+    <code>{@link java.lang.Throwable#getMessage}</code> method of class
+    <code>java.lang.Throwable</code>.
+      
+    @param message the detail message.
+    >> [exc_ctor_note.description]
+    metaInsert([exc_ctor], Note, [exc_ctor_note]);
+    metaCreate(MAnnotNote As exc_ctor_code);
+    [exc_ctor_code.type] = "UmlOperationJavaCode";
+    [exc_ctor_code.description] = "super(message);";
+    metaInsert([exc_ctor], Note, [exc_ctor_code]);
+  end if
+end proc
+
+
+/* Class patterns, based on stereotypes and
+ * tagged values.
+ */
+proc createPatterns(MClass)
+  local tagval;
+  switch (toLower([MClass.stereotype]))
+    case "main" :
+      createMainOperation([MClass]);
+     break;
+    default :
+     break;
+  end switch
+  if (hasPattern([MClass], "singleton"))
+    createSingleton([MClass]);
+  end if
+end proc
+
+
+// creates class attribute and class method for a class with
+// pattern "singleton".
+proc createSingleton(MClass)
+  if (! hasLoop(MClass->MAttribute Where [MAttribute.name] == "thisInstance"))
+    metaCreate(MAttribute as single_attr);
+    [single_attr.name] = "thisInstance";
+    [single_attr.type] = [MClass.name];
+    [single_attr.guid] = [MClass.guid] "-inst-attr";
+    [single_attr.binding] = "static";
+    [single_attr.access] = "private";
+    [single_attr:defval] = "null";
+    [single_attr:derived] = FALSE;
+    metaInsert([MClass], MAttribute, [single_attr]);
+    metaCreate(MAnnotNote As single_attr_note);
+    [single_attr_note.type] = "GenericObject";
+    [single_attr_note.description] = "Single instance of class " [MClass.name] ".";
+    metaInsert([single_attr], Note, [single_attr_note]);
+  end if
+  if (! hasLoop(MClass->MOperation Where [MOperation.name] == "getInstance"))
+    metaCreate(MOperation as single_op);
+    [single_op.name] = "getInstance";
+    [single_op.returnType] = [MClass.name];
+    [single_op.guid] = [MClass.guid] "-inst-op";
+    [single_op.binding] = "static";
+    [single_op.access] = "public";
+    metaInsert([MClass], MOperation, [single_op]);
+    metaCreate(MAnnotNote As single_op_note);
+    [single_op_note.type] = "GenericObject";
+    >>
+    Returns the only instance of class [MClass.name].
+    Do not create a public or protected constructor for this
+    class, otherwise this method wouln't make much sense!
+    
+    @return The single instance of this class.
+    >> [single_op_note.description]
+    metaInsert([single_op], Note, [single_op_note]);
+    metaCreate(MAnnotNote As single_op_code);
+    [single_op_code.type] = "UmlOperationJavaCode";
+    >>
+    if (thisInstance == null)
+      thisInstance = new [MClass.name]();
+    return thisInstance;
+    >> [single_op_code.description]
+    metaInsert([single_op], Note, [single_op_code]);
+  end if
+end proc
+
+
+// Generates for a class with "main" stereotype
+// a main()-method. Initializes modfifiers,
+// parameters and return type.
+proc createMainOperation(MClass)
+  metaCreate(MOperation As main_op);
+  [main_op.name] = "main";
+  [main_op.guid] = [MClass.guid] "-main";
+  [main_op.access] = "public";
+  [main_op.binding] = "static";
+  [main_op.returnType] = "void";
+  metaInsert([MClass], MOperation, [main_op]);
+  metaCreate(MOperationPara as main_op_para);
+  [main_op_para.name] = "args";
+  [main_op_para.type] = "String[]";
+  metaInsert([main_op], OpPara, [main_op_para]);
+  metaCreate(MAnnotNote As main_op_note);
+  [main_op_note.type] = "GenericObject";
+  >>
+  Entry point of this java application.
+  Can appear only once in your applications code!
+  
+  @param String\[] The array of command line parameters
+  >> [main_op_note.description]
+  metaInsert([main_op], Note, [main_op_note]);
+end proc

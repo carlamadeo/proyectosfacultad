@@ -1,0 +1,43 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/T
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1994
+//      All rights reserved
+//
+//
+// stp_t.rules: StP/T portion of desktop interface
+//
+
+
+
+Class 0 Test
+{
+    { ClassCommand
+        { Name "StartTableEditor" }
+        { Command "stpem -ed ${editor} -s ${system} -p ${projdir} -C EditorStart -C EditorShowDeiconify -C 'FileLoad TestUnits' -C 'EditorQrlEval T_set_TONLY_hide_show();'" }
+    }
+
+    { ObjectCommand
+        { Name "ExtractTestUnit" }
+        { Command "echo Test Case Extraction is only available with StP/OMT and StP/SE." }
+    }
+ 
+    { ObjectCommand
+        { Name "TestUnitEditor" }
+        { DefaultCommand True }
+        { Command "stpem -ed tut -p ${projdir} -s ${system} -C EditorStart -C EditorShowDeiconify -C 'FileLoad TestUnits' -C 'EditorQrlEval T_highlight_testunit(\"${cmd.objects}\");' -C 'EditorQrlEval T_set_TONLY_hide_show();' &" }
+    }
+ 
+    { ObjectCommand
+        { Name "DeleteTestUnit" }
+        { Command "stpem -ed tut -p ${projdir} -s ${system} -C EditorStart -C EditorShowDeiconify -C 'FileLoad TestUnits' -C 'EditorQrlEval T_set_TONLY_hide_show();' -C 'EditorQrlEval T_delete_testunit_row(\"${cmd.objects}\");' &" }
+    }
+
+    { ObjectCommand
+	{ Name "CreateTestUnit" }
+        { Label "Create TestUnit" }
+        { SingleObject True }
+        { Command "mkdir ${projdir}/${system}/test_files/${cmd.objects}" }
+    }
+}

@@ -1,0 +1,27 @@
+Process 1.1: read pulse
+Pspec generated from the data flow diagram "1" of the "g_train" system of the
+"/usr3/home/MogulMaster/jhsia/Development/strand_5.0/lab/" projdir at 01/17/94
+18:01:36 by jhsia@professor
+
+
+This process has 3 data flows:
+    pulse, time, time
+
+input data flows
+    time : DataFlow
+
+output data flows
+    pulse : DataFlow
+    time : DataFlow
+
+This process has 0 control flows
+description
+
+This process reads the signal it gets from the sensor and records the time
+associated with this signal. The time is stored in a data-store 'time' and
+simultaneously a pulse is sent to the pulse counter.
+
+
+
+end pspec
+

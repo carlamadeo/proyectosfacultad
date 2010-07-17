@@ -1,0 +1,38 @@
+
+FillTable TedTable 
+{
+	{ Hsect	{ Appid 2 }
+		{ NumRows 2 }
+		{ Hidden False }
+		{ NumVisRows 2 }
+		{ Vsect	{ Appid 3 }
+		{ NumCols 6 }
+		{ Hidden False }
+		{ NumVisCols 6 }
+			{ Row	{ Appid 4 }
+				{ Height 49 }
+				{ Cell	{ Appid 5 }
+					{ Label "Pulses" } }
+				{ Cell	{ Appid 6 }
+					{ Label "Weight" } }
+				{ Cell	{ Appid 7 }
+					{ Label "Delay" } }
+				{ Cell	{ Appid 8 }
+					{ Label "Speed" } }
+				{ Cell	{ Appid 14 }
+					{ Label "Distance" } }
+				{ Cell	{ Appid 15 }
+					{ Label "Lights" } } }
+			{ Row	{ Appid 9 }
+				{ Cell	{ Appid 10 }
+					{ Label "Interrupts" } }
+				{ Cell	{ Appid 11 }
+					{ Label "Kilograms" } }
+				{ Cell	{ Appid 12 }
+					{ Label "Seconds" } }
+				{ Cell	{ Appid 13 }
+					{ Label "km/hr" } }
+				{ Cell	{ Appid 16 }
+					{ Label "km" } }
+				{ Cell	{ Appid 17 }
+					{ Label "Interrupts" } } } } } }

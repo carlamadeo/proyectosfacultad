@@ -1,0 +1,69 @@
+//
+//      sccsid[] = @(#)stp_t.rules	1.5  94/03/31
+//      StP/T
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1994
+//      All rights reserved
+//
+ 
+//
+// stp_t_omt.rules: StP/T-OMT portion of desktop interface
+//
+
+Class 0 Test
+{
+    { ClassCommand
+        { Name "StartTableEditor" }
+        { Command "stpem -ed ${editor} -s ${system} -p ${projdir} -C EditorStart -C EditorShowDeiconify -C 'FileLoad TestUnits' -C 'EditorQrlEval T_set_OMT_hide_show();'" }
+    }
+
+    { ObjectCommand
+        { Name "ExtractTestUnit" }
+        { Command "qrp -p ${projdir} -s ${system} -x TTestUnit ${cmd.objects} qrl/omt_t.qrl" }
+    }
+
+    { ObjectCommand
+        { Name "TestUnitEditor" }
+        { DefaultCommand True }
+        { Command "stpem -ed tut -p ${projdir} -s ${system} -C EditorStart -C EditorShowDeiconify -C 'FileLoad TestUnits' -C 'EditorQrlEval T_highlight_testunit(\"${cmd.objects}\");' -C 'EditorQrlEval T_set_OMT_hide_show();' &" }
+    }
+
+    { ObjectCommand
+        { Name "DeleteTestUnit" }
+        { Command "stpem -ed tut -p ${projdir} -s ${system} -C EditorStart -C EditorShowDeiconify -C 'FileLoad TestUnits' -C 'EditorQrlEval T_set_OMT_hide_show();' -C 'EditorQrlEval T_delete_testunit_row(\"${cmd.objects}\");' &" }
+    }
+} 
+
+
+
+Class 0 TestTypes
+{
+    { Label "Test Type Tables" }
+    { Image "test_type_tables" }
+    { ShowOnDesktop True }
+ 
+    { OMSObjects
+        { Match "file[TTypeTable]" }
+	{ Editor "tte" }
+    }
+
+    { UseClassCommand StartTableEditor }
+    { UseObjectCommand EditTable }
+    { UseObjectCommand Copy }
+    { ObjectCommand
+        { Name "Copy" }
+        { Label "Copy Table..." }
+    }
+    { UseObjectCommand Rename }
+    { ObjectCommand
+        { Name "Rename" }
+        { Label "Rename Table..." }
+    }
+    { UseObjectCommand Delete }
+    { ObjectCommand
+        { Name "Delete" }
+        { Label "Delete Table..." }
+    }
+    { UseObjectCommand LockingCommands }
+    { UseObjectCommand VccCommands }
+}

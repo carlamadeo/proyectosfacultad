@@ -1,0 +1,26 @@
+/* XPM */
+static char* properties_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 4 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #000000	c #000080",
+/* pixels */
+"................",
+".......XXXXX.XXX",
+"......X.....XXOX",
+".....X.X.....XOX",
+"XXXXX.X.X....XOX",
+"X  X.X.X.X..XXOX",
+"X X.X X.X.XX.XOX",
+"X  X   X.X X..XX",
+"X       X  X....",
+"X          X....",
+"X XX XXXXX X....",
+"X          X....",
+"X XX XXXXX X....",
+"X          X....",
+"XXXXXXXXXXXX....",
+"................"};

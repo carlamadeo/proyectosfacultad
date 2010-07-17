@@ -1,0 +1,29 @@
+/* XPM */
+static char* decision_tables_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 7 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #000000	c #808080",
+"o	m #ffffff	c #c0c0c0",
+"x	m #000000	c #ff0000",
+"+	m #000000	c #ffff00",
+/* pixels */
+"XXXXXXXXXXXXXXX.",
+"XOoOOOOOOXoOOOXo",
+"XXXXXXXXXXXXXXXo",
+"XOo           Xo",
+"XOo     X     Xo",
+"XOo    XxX    Xo",
+"XOo   Xx+xX   Xo",
+"XOo  Xx+ +xX  Xo",
+"XOo Xx+   +xX Xo",
+"XOo  Xx+ +xXO Xo",
+"XOo   Xx+xXO  Xo",
+"XOo    XxXO   Xo",
+"XOo     XO    Xo",
+"XOo           Xo",
+"XXXXXXXXXXXXXXXo",
+".ooooooooooooooo"};

@@ -1,0 +1,42 @@
+FileObject 1
+{
+    { Name "a134" }
+    { Type ObjectAnnotation }
+    { GUID "UID_4FDDDC7A-F91C-42cb-B15D-3A7A687B294A" }
+}
+
+NodeObject 99999
+{
+    { Name "Account,OracleDB" }
+    { Type UmlAssociation }
+    { ObjectId 422 }
+    { AnnotFileId 1 }
+    { Sig ":" }
+    { ScopeNodeId 0 }
+    { GUID "UID_E38779E3-10B1-11d5-8C6F-000000000000" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 424 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 426 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Account,OracleDB" }
+    { NoteId 3 }
+    { ObjectId 427 }
+}
+

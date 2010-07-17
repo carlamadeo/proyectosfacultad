@@ -1,0 +1,318 @@
+%
+% 	sccsid[] = %W% %Y% %D%
+% 	StP/Core
+% 	Confidential property of Interactive Development Environments, Inc.
+% 	Copyright (c) 1992-1993
+% 	All rights reserved
+%
+
+% Error file, process by msg_to_file
+% Some lines have trailing spaces, they should not be stripped 
+% away
+% If you plan to change some messages, make sure that the
+% % characters used for printf stay in the same order
+% problems might occur otherwise
+% =======================================================
+% StP Utility
+% File ideutil.c
+1;Project database must be enabled for this command\n
+2;Usage:  stputil [-p projdir] [-s system] [-C cmd] [-V] [-F]
+3;No Diagram Name
+4;No system name given after -s flag
+5;System name '%s' too long
+6;No command given after -C flag
+7;Too many command arguments
+8;Editor: %s\n
+11;Database %s\n
+12;enabled
+13;disabled
+14;Project Dir: %s\n
+15;System: %s\n
+16;Interactive on\n
+17;Interactive off\n
+18;Verbose on\n
+19;Verbose off\n
+20;Quiet on\n
+21;Quiet off\n
+22;Force on\n
+23;Force off\n
+24;StP-Utility Status\n
+25;Project Dir: %s\n
+26;System     : %s\n
+27;Database enabled, %s\n
+28;open
+29;closed
+30;Database disabled\n
+31;Editor     : %s\n
+32;Verbose    : %s\n
+33;Quiet      : %s\n
+34;Interactive: %s\n
+35;Force      : %s\n
+36;on
+37;off
+38;What is %s?\n
+39;\nInterrupt\n
+40;Abort current operation (y/n)? 
+41;Could not find DBMS scripts\n
+42;Open db failed\n
+43;What editor is %s?\n
+44;No names matching '%s' found\n
+45;No entries\n
+46;Project %s System %s\nFilestore directory %s\n
+47;%-19s  %8s  Filename\n
+48;Diagram
+49;Object Id
+50;%-20s  %8ld  
+51;-- Diagram file not available --\n
+52;Project %s System %s\nFilestore directory %s\n
+53;Ls on files
+54;Execute %s failed\n
+55;Delete project%csystem%cdiagram: 
+56;No name\n
+57;Empty diagram name\n
+58;No names matching '%s' found\n
+59;Delete %s %s%c%s%c%s? 
+60;No diagram name to delete\n
+61;DBMS error: %s\n
+62;Memory allocation for DBMS response failed\n
+64;Delete file %s (y/n): 
+65;\nCould not remove file
+66;\ -- removed\n
+67;Do you really want to terminate truncating the history? 
+68;Please be patient; truncating the history takes a while\n
+69;history information may be corrupted, restoring\n
+70;history information may be corrupted\nplease check StP/DD for backup file .hst.bak\n
+71;From diagram: 
+72;No `from' name\n
+73;To diagram: 
+74;No `to' name\n
+75;Use copy and delete to rename across project/system boundaries\n
+76;Empty `from' name\n
+77;Empty `to' name\n
+78;`From' name is identical with `to' name\n
+79;Access StP/DD diagram names failed\n
+80;Diagram %s does not exist in StP/DD diagram names\n
+81;Diagram `%s' exists -- should it be deleted? 
+82;DBMS error in rename\n
+83;From project%csystem%cdiagram: 
+84;Empty `from' diagram\n
+85;Error: You may not specify a `from' pattern and a `to' diagram\n
+86;Copy usage: copy fromfile tofile\n
+87;Or: copy fromfilelist tosystem\n
+88;From project/system is identical with to project/system\n
+89;Copy %s%c%s%c%s to %s%c%s%c%s\n
+90;Could not access diagram names table in %s:%s\n
+91;Diagram `%s' exists in %s%c%s -- should it be deleted? 
+92;Diagram `%s' has no object identifier, insert (y)? 
+93;Diagram `%s' inserted with object identifier %ld\n
+94;Could not get filenames
+95;Could not make file name for %s\n
+96;DBMS error '%s' in ins diag_name\n
+% The first characters for a yes/no answer
+% change to 'on' (oui/non for french)
+97;yn
+98;Type yes or no only: 
+99;Failed print diagram names\n
+% StPutil help
+100;Valid commands are:\n
+101;\tc[opy]\t\tCopy files matching pattern over system/project\n\t\t\tboundaries\n
+102;\tcle[an]\t\tRemove unreferenced objects from StP Repository\n
+103;\td[elete]\tDelete files matching pattern\n
+104;\tdi[sable]\tDisable project database\n
+105;\te[ditor]\tSet or examine current editor\n
+106;\ten[able]\tEnable project database\n
+107;\tenv[ironment]\tEnter environment subsystem\n
+108;\tfilet[ype]\tRestrict operations to specified file type\n
+109;\tf[iles]\t\tList files in project/system directory matching pattern\n
+110;\th[elp]\t\tPrint this message\n
+111;\tl[s]\t\tList diagrams in project database matching pattern\n
+112;\tm[ove]\t\tMove decomposition of dfe diagrams\n
+113;\tp[roject]\tSet or examine project directory\n
+114;\tq[uit]\t\tExit program\n
+115;\tr[ename]\tChange diagram name from `n1' to `n2'\n
+116;\ts[ystem]\tSet or examine system name\n
+117;\tu[ndef]\t\tCheck for files that are not known to StP Repository\n
+120;\nFlags\n
+121;\tf[orce]\t\tToggle force mode\n\t\t\tif force mode is on, stputil doesn't ask for\n\t\t\tconfirmation before deleting files or objects\n
+122;\ti[nteractive]\tToggle interactive mode\n\t\t\tusually off if -C 'cmd' is used\n
+123;\tquie[t]\t\tToggle quiet mode\n
+124;\tv[erbose]\tToggle verbose mode\n
+125;\nNames\n
+126;Full names are given [[project%c]system%c]diagram.\n
+127;If the higher parts of the hierarchy are omitted the current values are used\n
+128;Patterns are matched against the diagram names in the database\n
+% more help for locking in locking.txt
+% 
+130;copy/move file
+131;Execute %s %s %s failed\n
+132;Regular expression %s failed: %s
+133;Could not get file list
+134;Diagram name '%s' too long, not inserted\n
+% StPutil commands
+% Each command entry has two parts name#minlen
+% where name is the full name of a command and minlen
+% is the minimal length needed for matching
+% for example
+% copy#1
+% close#2
+% clean#3
+% means that a c alone will match copy but only cl will match close
+% and cle matches clean
+139;filetype#5
+140;quiet#4
+141;decomp#3
+142;interactive#3
+143;close#2
+144;disable#2
+145;dump#2
+146;force#2
+147;load#2
+148;repstatus#3
+149;enable#2
+150;status#2
+151;copy#1
+152;Copy#1
+153;delete#1
+154;editor#1
+155;files#1
+156;?#1
+157;help#1
+158;invert#1
+159;ls#1
+160;move#1
+161;open#1
+162;project#1
+163;rename#1
+164;quit#1
+165;system#1
+166;undef#1
+167;Interactive#1
+168;verbose#1
+169;Verbose#1
+170;Quiet#1
+171;Force#1
+172;fixcontext#3
+173;clean#3
+174;lock#3
+175;unlock#3
+176;vcc#2
+177;version#4
+178;convert#3
+179;environment#3
+% File mvdecomp.c
+180;Move decomposition makes sense only for DFE and CFE\n
+181;Move decomposition need from and to name\n
+182;Move decomposition: From name '%s' too long\n
+183;Move decomposition: To name '%s' too long\n
+184;Move decomposition: Can't move context diagram\n
+185;Move decomposition: From is equal to To -- nothing to do\n
+186;Failed counting decomposed %s diagrams\n
+187;No decomposition to move\n
+188;Memory allocation for Diagram names failed\n
+189;From Diagram name %s too long -- ignored\n
+190;To Diagram name %s%s too long -- ignored\n
+191;No diagram on decomposition of %s\n
+192;Diagram names to move form a cycle, do you want to continue (y/n)? 
+193;Some diagrams will be overwritten because the names form a cycle\n
+194;Rename %s %s to %s\n
+195;StP/DD should be rebuilt now\n
+196;WARNING: Diagram names form a cycle\n
+197;From %s to %s\n
+% File util.backup.c
+200;No directory name after `to' keyword\n
+201;Access to dump directory
+202;Directory name %s\n
+203;Could not get names list, DBMS error: %s\n
+204;Dumping to %s\n
+205;No directory name after `from' keyword\n
+206;to
+207;from
+208;all
+209;Access from dump directory
+210;Directory name %s\n
+211;Loading from %s\n
+212;DBMS Error in dump %s to %.10s.Bak: %s\n
+213;Dumped %6d tuples from table %-11.11s to %.10s.Bak\n
+214;No Backup file %s for table %s\n
+215;DBMS error, access table %s failed\n
+216;retry limit exhausted\n
+217;table does not exist\n
+218;Table %s has %d tuples, clear? 
+219;DBMS Error in load %s from %.10s.Bak: %s\n
+220;Loaded %6d tuples from %.10s.Bak to table %-11.11s\n
+% File util_troll.c
+221;Memory allocation for reply buffer failed -- giving up
+% File dummy_ideutil.c
+222;%.60s: No such diagram
+223;%.50s: %.30s
+224;%.60s: Undocumented system error: %d
+% Messages from garbage collection
+225;Could not import names/object -- Cleanup aborted\n
+226;Please be patient; cleaning up the StP Data Dictionary takes a while\n
+227;Unconnected Externals (Source/Sink)\n
+228;Found %d entries\n
+229;Delete External `%s' ? 
+230;Could not access %s table -- Cleanup aborted\n
+231;Found 1 entry\n
+232;Unconnected Data Stores\n
+233;Delete Data Store `%s', D%s ? 
+234;Unused Aliases\n
+235;Delete `%s', alias of `%s' ? 
+236;Entries of type `Undefined Data' which are not used anywhere\n
+237;Delete `%s' ? 
+238;Deleted `%s'\n
+239;Modules neither called nor defined\n
+240;%s `%s'%s\n
+241;Please execute the cleanup command to delete unused data-names\n
+242;\tDeleted %s\n
+243;\tNo entries found\n
+244;Predefined modules which are never called\n
+245;To project%csystem%cdiagram: 
+246;Program Units neither called nor defined\n
+247;Names which have no object associated\n
+248;StP/DD-Utility\n
+% Diagram Types
+249;Unknown Diagram
+250;??? Diagram
+251;USE State Transition Diagram
+252;Structure Chart
+253;Data Flow Diagram
+254;Entity Relationship Diagram
+255;Picture Diagram
+256;Data Flow Diagram
+257;Data Structure Diagram
+258;Data Flow Diagram
+259;Data Flow Diagram
+260;StP Data Dictionary File
+261;Other Diagram
+262;StP file
+263;State Transition Diagram
+264;Control Specification
+265;SADT Diagram
+266;Matrix
+267;Annotation
+268;Document
+269;Object
+270;Source
+271;Design Diagram
+% Do not use up to 280 ...
+281;Diagram Names\n
+282;\tLength: %d\n
+283;\tDot is: %c\n
+284;\tSystem in DFD\n
+285;\tNo System in DFD\n
+286;System name in DFD name: %s/Leave unchanged(l): 
+287;Remove (r)
+288;Add (a)
+289;New maximal diagram name length (current limit %d, system limit %d): 
+290;Character to substitute for dot in file-names (currently %c): 
+291;Converting Diagram - names:\n
+292;\t%s system name\n
+293;Inserting
+294;Removing
+295;\tChanging dot character from %c to %c\n
+296;Diagram name length unchanged\n
+297;Diagram name length changed from %d to %d\n
+298;conv[ert] [ [ 'a' | 'r' ] '/' [ len ] '/' [ dot-char ] ]\n\
+ - Convert file-name parameters for the current system\n
+299;\ - Add/Remove system name in DFD names / Change maximal length / Replace dot in names\n

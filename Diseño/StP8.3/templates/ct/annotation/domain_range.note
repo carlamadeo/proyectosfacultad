@@ -1,0 +1,37 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Note 800002
+{
+    { AppType DomainRange }
+    { HelpText "The Value Range note lets you add items that declare a domain range. This information is used in SQL generation." }
+    { Bounds { Min 0 } } 
+    { PrintName "Value Range" }
+    { Item
+	{ AppType NoteKey }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ IsVisible False }
+	{ InitValue "${unique_key}" }
+	{ IsKey True }
+    }
+    { Item
+	{ AppType DomainRangeStart }
+	{ HelpText "The Start item lets you specify a starting value or lower bound for a domain range." }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Start" }
+    }
+    { Item
+	{ AppType DomainRangeEnd }
+	{ HelpText "The End item lets you specify an ending value or upper bound for a domain range." }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "End" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_domain_range.note"

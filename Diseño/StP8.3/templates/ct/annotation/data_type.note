@@ -1,0 +1,44 @@
+//  Type annotation for SCE ControlIn, ControlOut, DataIn, DataOut,
+//  DataInOut
+
+
+// This note is for backward compatibility only
+
+Note 802010
+{    
+    { AppType DataType }
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Obsolete Data Type" }
+    { Item
+      	{ AppType DataType }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Type" } 
+	//{ IsReadOnly True } 
+	{ HelpText "This item is for backward compatibility only." }
+    }
+}
+
+
+
+Note 802041
+{    
+    { AppType ParameterDefinition }
+    { Bounds { Min 1 } { Max 1 } }
+    { PrintName "Parameter Definition" }
+    { Item
+      	{ AppType DataType }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Type" } 
+	{ HelpText "Use the Data Type note to specify the data type of this object." }
+	{ InitValue "int" }
+    }
+    { Item
+        { AppType ParamStorageClass }
+        { PrintName "Storage Class" }
+        { HelpText "The Storage Class item lets you specify the storage class for Parameters. Possibilities are | register | const | register const ." }
+        { Bounds { Min 0 } { Max 1 } }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_data_type.note"

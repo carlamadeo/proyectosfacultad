@@ -1,0 +1,35 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1995
+// 	All rights reserved
+//
+
+//
+//	FILE:	Category.note
+//
+
+Note 801708
+{
+	{ AppType CategoryDefinition }
+        { HelpText "The Category Definition note lets you add items that capture modeling information about a particular class category." }
+	{ PrintName "Category Definition" }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ Item
+		{ AppType ClassExportControl }
+                { HelpText "The Export Control item lets you specify how a category is seen outside of the category in which it's defined." }
+		{ PrintName "Export Control" }
+		{ Bounds { Min 0 } { Max 1 } }
+		{ InitValue "Public" }
+	}
+	{ Item
+		{ AppType CategoryIsGlobal }
+                { HelpText "The Global item lets you specify whether or not the class category is global, i.e., whether or not it may be used by all others." }
+		{ PrintName "Global" }
+      		{ Bounds { Min 0 } { Max 1 } }
+      		{ InitValue "True" }
+	}
+}
+
+ 

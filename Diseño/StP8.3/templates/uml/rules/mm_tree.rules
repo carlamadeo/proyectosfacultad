@@ -1,0 +1,1078 @@
+//
+// Model Management Tree
+//
+Tree TreeMMView
+{
+    { Label "ModelManagement View" }
+    { Image "folder" }
+    { RootObjects
+        (
+            UmlTopLevelSubsystems
+            UmlUnassignedFiles
+        )
+    }
+    { NodeObjects
+        (
+            UmlLowerLevelSubsystems
+            UmlUseCasePackageUseCases
+            UmlUseCaseScenarioInstances
+            UmlUseCaseCollaborationInstances
+            UmlUseCaseActivityInstances
+            UmlSubsystemSubPackages
+            // Begin Add ECR 5187
+            UmlSubsystemSubUCPackages
+            UmlSubsystemSubCDPackages
+            // End Add ECR 5187
+            UmlClassPackageClasses
+            // Begin Add ECR 5292
+            UmlClassPackageInterfaces
+            UmlClassPackageParameterizedClasses
+            UmlClassPackageInstantiatedClasses
+            UmlClassGeneralizations
+            UmlClassSubClasses
+            UmlClassSubParameterizedClasses
+            UmlClassForeignGeneralizations
+            UmlClassForeignSubClasses
+            UmlClassForeignSubParameterizedClasses
+            UmlClassForeignInheritance
+            UmlClassForeignSuperClasses
+            UmlClassForeignSuperInstantiatedClasses
+            UmlClassPackageSubPackages
+            UmlClassObjectInstances
+            UmlClassObjectInstanceAttribute
+            // End Add ECR 5292
+            UmlClassAttributes
+            UmlClassOperations
+            // Begin Add ECR 5080
+            UmlClassActivityStateMachines
+            UmlClassStateStateMachines
+            // End Change ECR 5080
+            // ECR 4991 start
+            UmlUnassignedUseCaseDiagramFolder
+            UmlUnassignedClassDiagramFolder
+            UmlUnassignedSequenceDiagramFolder
+            UmlUnassignedCollaborationDiagramFolder
+            UmlUnassignedComponentDiagramFolder
+            UmlUnassignedDeploymentDiagramFolder
+            UmlUnassignedStereotypeDiagramFolder
+            UmlUnassignedREQTableFolder
+            // ECR 4991 end
+        )
+    }
+    { LeafObjects
+        (
+// Subsystem Assigned Diagrams
+            UmlSubsystemREQTables
+            UmlSubsystemUseCaseDiagrams
+            UmlSubsystemSequenceDiagrams
+            UmlSubsystemCollaborationDiagrams
+            UmlSubsystemActivityDiagrams
+            UmlSubsystemClassDiagrams
+            UmlSubsystemClassTables
+            UmlSubsystemStateDiagrams
+            UmlSubsystemStateTables
+            UmlSubsystemComponentDiagrams
+            UmlSubsystemDeploymentDiagrams
+            UmlSubsystemStereotypeDiagrams
+// Unassigned Diagrams
+            UmlUnassignedREQTables
+            UmlUnassignedUseCaseDiagrams
+            UmlUnassignedSequenceDiagrams
+            UmlUnassignedCollaborationDiagrams
+            UmlUnassignedClassDiagrams
+            UmlUnassignedComponentDiagrams
+            UmlUnassignedDeploymentDiagrams
+            UmlUnassignedStereotypeDiagrams
+// Uml References
+            UmlUseCaseDiagramRef
+            UmlClassDiagramReferences
+            UmlClassTableReferences
+            UmlSeqDiagramReferences
+            UmlCollDiagramReferences
+            // Begin Add ECR 5080
+            UmlActivityDiagramReferences
+            UmlStateDiagramReferences
+            // End Add ECR 5080
+        )
+    }
+}
+
+Class 0 UmlTopLevelSubsystems
+{
+    { Label "Assigned Diagrams" }
+    { Image "packages" }
+    { OMSObjects
+        // ECR 4983
+        { Match "node[UmlPackage && node_refs && !in_links[UmlContains && link_refs && from_node[UmlPackage && items[UmlStereotype && value = 'subsystem']]] && items[UmlStereotype && value = 'subsystem']] sort by name" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand CheckSingleSubsystem }
+    { UseObjectCommand CreateBaselineFromSubSystem }
+    // ECR 4969 start
+    { UseObjectCommand LockSingleSubsystem }
+    { UseObjectCommand UnlockSingleSubsystem }
+    // ECR 4969 end
+    // ECR 5887 { UseClassCommand RestoreSubsystemBaseline }
+    { UseObjectCommand ReconfigureSubsystemExternals }
+    { ChildObjects
+        (
+            UmlLowerLevelSubsystems
+            UmlUseCasePackageUseCases
+            UmlSubsystemSubPackages
+            // Begin Add ECR 5187
+            UmlSubsystemSubUCPackages
+            UmlSubsystemSubCDPackages
+            // End Add ECR 5187
+            UmlClassPackageClasses
+            UmlSubsystemREQTables
+            UmlSubsystemUseCaseDiagrams
+            UmlSubsystemSequenceDiagrams
+            UmlSubsystemCollaborationDiagrams
+            UmlSubsystemActivityDiagrams
+            UmlSubsystemClassDiagrams
+            UmlSubsystemClassTables
+            UmlSubsystemStateDiagrams
+            UmlSubsystemStateTables
+            UmlSubsystemComponentDiagrams
+            UmlSubsystemDeploymentDiagrams
+            UmlSubsystemStereotypeDiagrams
+        )
+    }
+}
+
+Class 0 UmlLowerLevelSubsystems
+{
+    { Label "Assigned Diagrams" }
+    { Image "packages" }
+    { OMSObjects
+        // ECR 4983
+        { Match "node[UmlPackage && in_links[UmlContains && link_refs && from_node[id = ${parent.id}]] && items[UmlStereotype && value = 'subsystem']] sort by name" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand CheckSingleSubsystem }
+    { UseObjectCommand CreateBaselineFromSubSystem }
+    // ECR 4969 start
+    { UseObjectCommand LockSingleSubsystem }
+    { UseObjectCommand UnlockSingleSubsystem }
+    // ECR 4969 end
+    // ECR 5887 { UseClassCommand RestoreSubsystemBaseline }
+    { UseObjectCommand ReconfigureSubsystemExternals }
+    { ChildObjects
+        (
+            UmlLowerLevelSubsystems
+            UmlUseCasePackageUseCases
+            UmlSubsystemSubPackages
+            // Begin Add ECR 5187
+            UmlSubsystemSubUCPackages
+            UmlSubsystemSubCDPackages
+            // End Add ECR 5187
+            UmlClassPackageClasses
+            UmlSubsystemREQTables
+            UmlSubsystemUseCaseDiagrams
+            UmlSubsystemSequenceDiagrams
+            UmlSubsystemCollaborationDiagrams
+            UmlSubsystemActivityDiagrams
+            UmlSubsystemClassDiagrams
+            UmlSubsystemClassTables
+            UmlSubsystemStateDiagrams
+            UmlSubsystemStateTables
+            UmlSubsystemComponentDiagrams
+            UmlSubsystemDeploymentDiagrams
+            UmlSubsystemStereotypeDiagrams
+        )
+    }
+}
+
+// Changed for ECR 5187 to work around not having an object selector to pick
+// the target diagram type, the resulting redundancy needs to be removed
+// as soon as we have that
+Class 0 UmlSubsystemSubPackages
+{
+    { Label "Diagram References" }
+    { Image "package" }
+    { OMSObjects
+        { Match "node[UmlPackage && node_refs[file[UmlUseCaseDiagram]] && node_refs[file[UmlClassDiagram]] && in_links[UmlContains && link_refs && from_node[id = ${parent.id}]] && !items[UmlStereotype && value = 'subsystem']] sort by name" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowPackageCDCommand }
+    { UseObjectCommand ShowPackageUCCommand }
+    { UseObjectCommand EditPackageAnnotationCommand }
+    { ChildObjects
+        (
+            UmlLowerLevelSubsystems
+            UmlUseCasePackageUseCases
+            UmlSubsystemSubPackages
+            // Begin Add ECR 5187
+            UmlSubsystemSubCDPackages
+            UmlSubsystemSubUCPackages
+            // End Add ECR 5187
+            UmlClassPackageClasses
+            UmlClassDiagramReferences
+            UmlUseCaseDiagramRef
+        )
+    }
+}
+
+// Begin Add ECR 5187
+Class 0 UmlSubsystemSubCDPackages
+{
+    { Label "Diagram References" }
+    { Image "package" }
+    { OMSObjects
+        // ECR 4983
+        { Match "node[UmlPackage && node_refs[file[UmlClassDiagram]] && !node_refs[file[UmlUseCaseDiagram]] && in_links[UmlContains && link_refs && from_node[id = ${parent.id}]] && !items[UmlStereotype && value = 'subsystem']] sort by name" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand ShowPackageCDCommand }
+    { UseObjectCommand EditPackageAnnotationCommand }
+    { ChildObjects
+        (
+            UmlLowerLevelSubsystems
+            UmlUseCasePackageUseCases
+            UmlSubsystemSubCDPackages
+            UmlSubsystemSubPackages
+            UmlClassPackageClasses
+            UmlClassDiagramReferences
+            UmlUseCaseDiagramRef
+        )
+    }
+}
+
+Class 0 UmlSubsystemSubUCPackages
+{
+    { Label "Diagram References" }
+    { Image "package" }
+    { OMSObjects
+        // ECR 4983
+        { Match "node[UmlPackage && node_refs[file[UmlUseCaseDiagram]] && !node_refs[file[UmlClassDiagram]] && in_links[UmlContains && link_refs && from_node[id = ${parent.id}]] && !items[UmlStereotype && value = 'subsystem']] sort by name" }
+        { Editor "uusecased" }
+    }
+    { UseObjectCommand ShowPackageUCCommand }
+    { UseObjectCommand EditPackageAnnotationCommand }
+    { ChildObjects
+        (
+            UmlLowerLevelSubsystems
+            UmlUseCasePackageUseCases
+            UmlSubsystemSubUCPackages
+            UmlSubsystemSubPackages
+            UmlClassDiagramReferences
+            UmlUseCaseDiagramRef
+        )
+    }
+}
+// End Add ECR 5187
+
+//
+// Leaf Objects
+//
+Class 0 UmlSubsystemREQTables
+{
+    { Label "Assigned Diagrams" }
+    { Image "requirements_tables" }
+    { OMSObjects
+        { Match "file[REQTable && items[UmlSubsystemName && value = '${parent.name}']] sort by name" }
+        { Editor "rqtbl" }
+    }
+    { UseObjectCommand AssignDiagramToSubSystem }
+    { UseObjectCommand EditTable }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlSubsystemUseCaseDiagrams
+{
+    { Label "Assigned Diagrams" }
+    { Image "use_case_diagrams" }
+    { OMSObjects
+        { Match "file[UmlUseCaseDiagram && items[UmlSubsystemName && value = '${parent.name}']] sort by name" }
+        { Editor "uusecased" }
+    }
+    { UseObjectCommand AssignDiagramToSubSystem }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlSubsystemSequenceDiagrams
+{
+    { Label "Assigned Diagrams" }
+    { Image "sequence_diagrams" }
+    { OMSObjects
+//        { ObjectsFunc "getSubsystemSequenceDiagrams(${parent.id});" }
+        { Match "file[UmlSequenceDiagram && items[UmlSubsystemName && value = '${parent.name}']] sort by name" }
+        { Editor "usequenced" }
+    }
+    { UseObjectCommand AssignDiagramToSubSystem }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlSubsystemCollaborationDiagrams
+{
+    { Label "Assigned Diagrams" }
+    { Image "collaboration_diagrams" }
+    { OMSObjects
+        { Match "file[UmlCollaborationDiagram && items[UmlSubsystemName && value = '${parent.name}']] sort by name" }
+        { Editor "ucollaborationd" }
+    }
+    { UseObjectCommand AssignDiagramToSubSystem }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlSubsystemActivityDiagrams
+{
+    { Label "Assigned Diagrams" }
+    { Image "activity_diagrams" }
+    { OMSObjects
+	// ECR 5080
+        { ObjectsFunc "getSubsystemActivityDiagrams(${parent.id});" }
+        { Editor "uactivityd" }
+    }
+    // ECR 5012
+    // { UseObjectCommand AssignDiagramToSubSystem }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlSubsystemClassDiagrams
+{
+    { Label "Assigned Diagrams" }
+    { Image "class_diagrams" }
+    { OMSObjects
+        { Match "file[UmlClassDiagram && items[UmlSubsystemName && value = '${parent.name}']] sort by name" }
+        { Editor "uclassd" }
+    }
+    { UseObjectCommand AssignDiagramToSubSystem }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlSubsystemClassTables
+{
+    { Label "Assigned Diagrams" }
+    { Image "class_tables" }
+    { OMSObjects
+        // ECR 5181
+        { Match "file[UmlClassTable && node_refs[node[UmlClass && in_links[UmlContains && link_refs && from_node[UmlPackage && id = ${parent.id}]]]]] sort by name" }
+        { Editor "uclasst" }
+    }
+    // ECR 5012
+    // { UseObjectCommand AssignDiagramToSubSystem }
+    { UseObjectCommand EditTable }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlSubsystemStateDiagrams
+{
+    { Label "Assigned Diagrams" }
+    { Image "state_diagrams" }
+    { OMSObjects
+        { ObjectsFunc "getSubsystemStateDiagrams(${parent.id});" }
+        { Editor "ustated" }
+    }
+    // ECR 5012
+    // { UseObjectCommand AssignDiagramToSubSystem }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlSubsystemStateTables
+{
+    { Label "Assigned Diagrams" }
+    { Image "state_tables" }
+    { OMSObjects
+        { ObjectsFunc "getSubsystemStateTables(${parent.id});" }
+        { Editor "ustatet" }
+    }
+    // ECR 5012
+    // { UseObjectCommand AssignDiagramToSubSystem }
+    { UseObjectCommand EditTable }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlSubsystemComponentDiagrams
+{
+    { Label "Assigned Diagrams" }
+    { Image "component_diagrams" }
+    { OMSObjects
+        { Match "file[UmlComponentDiagram && items[UmlSubsystemName && value = '${parent.name}']] sort by name" }
+        { Editor "ucomponentd" }
+    }
+    { UseObjectCommand AssignDiagramToSubSystem }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlSubsystemDeploymentDiagrams
+{
+    { Label "Assigned Diagrams" }
+    { Image "deployment_diagrams" }
+    { OMSObjects
+        { Match "file[UmlDeploymentDiagram && items[UmlSubsystemName && value = '${parent.name}']] sort by name" }
+        { Editor "udeploymentd" }
+    }
+    { UseObjectCommand AssignDiagramToSubSystem }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlSubsystemStereotypeDiagrams
+{
+    { Label "Assigned Diagrams" }
+    { Image "stereotype_diagrams" }
+    { OMSObjects
+        { Match "file[UmlStereotypeDiagram && items[UmlSubsystemName && value = '${parent.name}']] sort by name" }
+        { Editor "ustereotyped" }
+    }
+    { UseObjectCommand AssignDiagramToSubSystem }
+    { UseObjectCommand EditDiagram }
+    // ECR 5110
+//    { UseObjectCommand PrintById }
+//    { UseObjectCommand PrintAsById }
+    { UseObjectCommand CopyById }
+    { UseObjectCommand DeleteById }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+//
+// Unassigned stuff
+//
+Class 0 UmlUnassignedFiles
+{
+    { Image "folder" }
+    { Label "Unassigned Files" }
+    { OMSObjects
+        // to show the folder icon we have to create a valid query that gives a result.
+        //ECR 5142 begin
+        //{ Match "file[name='.sys_id_file']" } 
+        //{ LabelFunc "get_unassigned_folder_name" }
+        //if you change child objects, change next too
+        { ObjectsFunc "getUnassignedDiagramFolder(\"(UmlUseCaseDiagram | UmlClassDiagram | UmlSequenceDiagram | UmlCollaborationDiagram | UmlComponentDiagram | UmlDeploymentDiagram | UmlStereotypeDiagram | REQTable)\");" }
+        { LabelFunc "get_unassigned_folder_name_no_id" }
+        //ECR 5142 end
+    }
+    { ChildObjects
+        (
+            // ECR 4991 start
+            UmlUnassignedUseCaseDiagramFolder
+            UmlUnassignedClassDiagramFolder
+            UmlUnassignedSequenceDiagramFolder
+            UmlUnassignedCollaborationDiagramFolder
+            UmlUnassignedComponentDiagramFolder
+            UmlUnassignedDeploymentDiagramFolder
+            UmlUnassignedStereotypeDiagramFolder
+            UmlUnassignedREQTableFolder
+            // ECR 4991 end
+        )
+    }
+}
+
+// ECR 4991 start
+Class 0 UmlUnassignedUseCaseDiagramFolder
+{
+    { Label "Unassigned Use Case Diagrams" }
+    { Image "use_case_diagrams" }
+    { OMSObjects
+        { ObjectsFunc "getUnassignedDiagramFolder(\"UmlUseCaseDiagram\");" }
+        { LabelFunc "get_unassigned_folder_name" }
+    }
+    { ChildObjects
+        (
+            UmlUnassignedUseCaseDiagrams
+        )
+    }
+}
+
+Class 0 UmlUnassignedClassDiagramFolder
+{
+    { Label "Unassigned Class Diagrams" }
+    { Image "class_diagrams" }
+    { OMSObjects
+        { ObjectsFunc "getUnassignedDiagramFolder(\"UmlClassDiagram\");" }
+        { LabelFunc "get_unassigned_folder_name" }
+    }
+    { ChildObjects
+        (
+            UmlUnassignedClassDiagrams
+        )
+    }
+}
+
+Class 0 UmlUnassignedSequenceDiagramFolder
+{
+    { Label "Unassigned Sequence Diagrams" }
+    { Image "sequence_diagrams" }
+    { OMSObjects
+        { ObjectsFunc "getUnassignedDiagramFolder(\"UmlSequenceDiagram\");" }
+        { LabelFunc "get_unassigned_folder_name" }
+    }
+    { ChildObjects
+        (
+            UmlUnassignedSequenceDiagrams
+        )
+    }
+}
+
+Class 0 UmlUnassignedCollaborationDiagramFolder
+{
+    { Label "Unassigned Collaboration Diagrams" }
+    { Image "collaboration_diagrams" }
+    { OMSObjects
+        { ObjectsFunc "getUnassignedDiagramFolder(\"UmlCollaborationDiagram\");" }
+        { LabelFunc "get_unassigned_folder_name" }
+    }
+    { ChildObjects
+        (
+            UmlUnassignedCollaborationDiagrams
+        )
+    }
+}
+
+Class 0 UmlUnassignedComponentDiagramFolder
+{
+    { Label "Unassigned Component Diagrams" }
+    { Image "component_diagrams" }
+    { OMSObjects
+        { ObjectsFunc "getUnassignedDiagramFolder(\"UmlComponentDiagram\");" }
+        { LabelFunc "get_unassigned_folder_name" }
+    }
+    { ChildObjects
+        (
+            UmlUnassignedComponentDiagrams
+        )
+    }
+}
+
+Class 0 UmlUnassignedDeploymentDiagramFolder
+{
+    { Label "Unassigned Deployment Diagrams" }
+    { Image "deployment_diagrams" }
+    { OMSObjects
+        { ObjectsFunc "getUnassignedDiagramFolder(\"UmlDeploymentDiagram\");" }
+        { LabelFunc "get_unassigned_folder_name" }
+    }
+    { ChildObjects
+        (
+            UmlUnassignedDeploymentDiagrams
+        )
+    }
+}
+
+Class 0 UmlUnassignedStereotypeDiagramFolder
+{
+    { Label "Unassigned Stereotype Diagrams" }
+    { Image "stereotype_diagrams" }
+    { OMSObjects
+        { ObjectsFunc "getUnassignedDiagramFolder(\"UmlStereotypeDiagram\");" }
+        { LabelFunc "get_unassigned_folder_name" }
+    }
+    { ChildObjects
+        (
+            UmlUnassignedStereotypeDiagrams
+        )
+    }
+}
+
+Class 0 UmlUnassignedREQTableFolder
+{
+    { Label "Unassigned Requirements Tables" }
+    { Image "requirements_tables" }
+    { OMSObjects
+        { ObjectsFunc "getUnassignedDiagramFolder(\"REQTable\");" }
+        { LabelFunc "get_unassigned_folder_name" }
+    }
+    { ChildObjects
+        (
+            UmlUnassignedREQTables
+        )
+    }
+}
+// ECR 4991 end
+
+//
+// Leaf Objects
+//
+Class 0 UmlUnassignedREQTables
+{
+    { Label "Unassigned Files" }
+    { Image "requirements_tables" }
+    { OMSObjects
+        // ECR 4983
+        { Match "file[REQTable && !items[UmlSubsystemName && value != 'unassigned']] sort by name" }
+        { Editor "rqtbl" }
+    }
+    // ECR 4991
+    { UseObjectCommand AssignMultipleDiagramToSubSystem }
+    { UseObjectCommand EditTable }
+    { UseObjectCommand PrintTable }
+    { UseObjectCommand PrintTableAs }
+    { UseObjectCommand Copy }
+    { UseObjectCommand Delete }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlUnassignedUseCaseDiagrams
+{
+    { Label "Unassigned Files" }
+    { Image "use_case_diagrams" }
+    { OMSObjects
+        // ECR 4983
+        { Match "file[UmlUseCaseDiagram && !items[UmlSubsystemName && value != 'unassigned']] sort by name" }
+        { Editor "uusecased" }
+    }
+    // ECR 4991
+    { UseObjectCommand AssignMultipleDiagramToSubSystem }
+    { UseObjectCommand EditDiagram }
+    { UseObjectCommand PrintDiagram }
+    { UseObjectCommand PrintDiagramAs }
+    { UseObjectCommand Copy }
+    { UseObjectCommand Delete }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlUnassignedSequenceDiagrams
+{
+    { Label "Unassigned Files" }
+    { Image "sequence_diagrams" }
+    { OMSObjects
+        // ECR 4983
+        { Match "file[UmlSequenceDiagram && !items[UmlSubsystemName && value != 'unassigned']] sort by name" }
+        { Editor "usequenced" }
+    }
+    // ECR 4991
+    { UseObjectCommand AssignMultipleDiagramToSubSystem }
+    { UseObjectCommand EditDiagram }
+    { UseObjectCommand PrintDiagram }
+    { UseObjectCommand PrintDiagramAs }
+    { UseObjectCommand Copy }
+    { UseObjectCommand Delete }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlUnassignedCollaborationDiagrams
+{
+    { Label "Unassigned Files" }
+    { Image "collaboration_diagrams" }
+    { OMSObjects
+        // ECR 4983
+        { Match "file[UmlCollaborationDiagram && !items[UmlSubsystemName && value != 'unassigned']] sort by name" }
+        { Editor "ucollaborationd" }
+    }
+    // ECR 4991
+    { UseObjectCommand AssignMultipleDiagramToSubSystem }
+    { UseObjectCommand EditDiagram }
+    { UseObjectCommand PrintDiagram }
+    { UseObjectCommand PrintDiagramAs }
+    { UseObjectCommand Copy }
+    { UseObjectCommand Delete }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlUnassignedClassDiagrams
+{
+    { Label "Unassigned Files" }
+    { Image "class_diagrams" }
+    { OMSObjects
+        // ECR 4983
+        { Match "file[UmlClassDiagram && !items[UmlSubsystemName && value != 'unassigned']] sort by name" }
+        { Editor "uclassd" }
+    }
+    // ECR 4991
+    { UseObjectCommand AssignMultipleDiagramToSubSystem }
+    { UseObjectCommand EditDiagram }
+    { UseObjectCommand PrintDiagram }
+    { UseObjectCommand PrintDiagramAs }
+    { UseObjectCommand Copy }
+    { UseObjectCommand Delete }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlUnassignedComponentDiagrams
+{
+    { Label "Unassigned Files" }
+    { Image "component_diagrams" }
+    { OMSObjects
+        // ECR 4983
+        { Match "file[UmlComponentDiagram && !items[UmlSubsystemName && value != 'unassigned']] sort by name" }
+        { Editor "ucomponentd" }
+    }
+    // ECR 4991
+    { UseObjectCommand AssignMultipleDiagramToSubSystem }
+    { UseObjectCommand EditDiagram }
+    { UseObjectCommand PrintDiagram }
+    { UseObjectCommand PrintDiagramAs }
+    { UseObjectCommand Copy }
+    { UseObjectCommand Delete }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlUnassignedDeploymentDiagrams
+{
+    { Label "Unassigned Files" }
+    { Image "deployment_diagrams" }
+    { OMSObjects
+        // ECR 4983
+        { Match "file[UmlDeploymentDiagram && !items[UmlSubsystemName && value != 'unassigned']] sort by name" }
+        { Editor "udeploymentd" }
+    }
+    // ECR 4991
+    { UseObjectCommand AssignMultipleDiagramToSubSystem }
+    { UseObjectCommand EditDiagram }
+    { UseObjectCommand PrintDiagram }
+    { UseObjectCommand PrintDiagramAs }
+    { UseObjectCommand Copy }
+    { UseObjectCommand Delete }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 UmlUnassignedStereotypeDiagrams
+{
+    { Label "Unassigned Files" }
+    { Image "stereotype_diagrams" }
+    { OMSObjects
+        // ECR 4983
+        { Match "file[UmlStereotypeDiagram && !items[UmlSubsystemName && value != 'unassigned']] sort by name" }
+        { Editor "ustereotyped" }
+    }
+    // ECR 4991
+    { UseObjectCommand AssignMultipleDiagramToSubSystem }
+    { UseObjectCommand EditDiagram }
+    { UseObjectCommand PrintDiagram }
+    { UseObjectCommand PrintDiagramAs }
+    { UseObjectCommand Copy }
+    { UseObjectCommand Delete }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+// Begin Add ECR 5187
+Global 0 ShowPackageCDCommand
+{
+    { ObjectCommand
+        { Name "ShowCDPackage" }
+        { Type Nowin }
+        { Label "Edit Package in Class Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"uclassd\",\"UmlPackage\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+Global 0 ShowPackageUCCommand
+{
+    { ObjectCommand
+        { Name "ShowUCPackage" }
+        { Type Nowin }
+        { Label "Edit Package in UseCase Diagram..." }
+        { QrlEvaluate "GoToAnyReference(\"uusecased\",\"UmlPackage\",\"${cmd.objects}\");" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+// End Add ECR 5187
+// ECR 4969 start
+Global 1 LockSingleSubsystem
+{
+    { ObjectCommand
+    	{ Name "LockSingleSubsystem" }
+    	{ Label "Lock Subsystem..." }
+    	{ Type Nowin }
+        { QrlEvaluate "doLockSubsystem(\"${cmd.objects}\",True);" }
+    }
+}
+
+Global 1 UnlockSingleSubsystem
+{
+    { ObjectCommand
+    	{ Name "UnlockSingleSubsystem" }
+    	{ Label "Unlock Subsystem..." }
+    	{ Type Nowin }
+        { QrlEvaluate "doLockSubsystem(\"${cmd.objects}\",False);" }
+    }
+}
+// ECR 4969 end
+
+Global 1 CheckSingleSubsystem
+{
+    { ObjectCommand
+    	{ Name "CheckSingleSubsystem" }
+    	{ Label "Check Semantics for Subsystem..." }
+    	{ Type Nowin }
+        // ECR 5148
+        { QrlEvaluate "CheckTotalSubsystemSemantics(\"${cmd.objects}\");" }
+    }
+}
+
+Global 1 ReconfigureSubsystemExternals
+{
+// ECR 5327
+//    { ObjectCommand
+//    	{ Name "ReconfigureSubsystemExternals" }
+//    	{ Label "Reconfigure External Model Elements" }
+//    	{ Type Nowin }
+//        { Builtin "EditorQrlEval stp_run_command(\"UmlSubsystem\",\"ReconfigureExternals\");" }
+//    }
+    { ObjectCommand
+	{ Name "ReconfigureExternals1" }
+	{ Label "Reconfigure Externals from Baseline(s)..." }
+	{ ShowPopsOnExec True }
+	{ Properties
+	    { Text
+    		{ Name "basedir" }
+    		{ Label "Baseline directory:" }
+    		{ LabelAbove True }
+    		{ MinLength 1 }
+                { DispLength 60 }
+    		{ MaxLength 256 }
+    		{ InitVal "${projdir}" }
+	    }
+            // ECR 3651
+            { Button
+                { Name "browse_for_basedir" }
+                { Label "Choose" }
+                { Event
+                    { Type Select }
+                    { Callback "select_subsystem_baseline_basedir_callback" }
+                }
+            }
+            { Group
+                { Name "folder_group" }
+                { Label "" }
+                { Type Horizontal }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { Align Bottom }
+                { Members ( basedir browse_for_basedir ) }
+            }
+	    { Button
+    		{ Name "OK" }
+    		{ Label "OK" }
+		{ Event
+		    { Type Activation }
+		    { Callback "RestoreExternals1Func" }
+		}
+		{ Event
+		    { Type Select }
+		    { Callback "RestoreExternals1_cb" }
+		}
+	    }
+	}
+    }
+// ECR 5327 end
+}
+// End FixME
+
+// Commands
+Global 1 CreateBaselineFromSubSystem
+{
+    { ObjectCommand
+    	{ Name "CreateBaselineFromSubSystem" }
+    	{ Label "Create Baseline for Subsystem..." }
+    	{ Type Nowin }
+    	{ QrlEvaluate "CreateBaselineFromSubSys(\"${cmd.objects}\");" }
+    }
+}
+
+PropertySheet CreateBaselineDirectProp
+{
+    { Name "CreateBaselineDirectProp" }
+    { Label "Create Baseline" }
+    { ShowPopsOnExec True }
+    { Properties
+	{ Text
+	    { Name "basename" }
+	    { Label "SubSystem:" }
+	    { MinLength 1 }
+   	    { MaxLength 256 }
+	}
+	{ Text
+	    { Name "basedir" }
+	    { Label "Save directory:" }
+	    { MinLength 1 }
+   	    { MaxLength 256 }
+	}
+        { Button
+            { Name "browse_for_basedir" }
+            { Label "Choose" }
+            { Event
+                { Type Select }
+                { Callback "select_subsystem_baseline_basedir_callback" }
+            }
+        }
+        { Group
+            { Name "folder_group" }
+            { Label "" }
+            { Type Horizontal }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { LayoutPolicy ResizeAny }
+            { VerticalAlign AlignLabels }
+            { Members ( basedir browse_for_basedir ) }
+        }
+	{ Choice
+	    { Name "overwrite_file" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "Overwrite existing baseline file." }
+		{ Init Off }
+	    }
+	}
+	{ Choice
+	    { Name "create_dir" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "Create directory if it doesn't exist." }
+		{ Init On }
+	    }
+	}
+	{ Choice
+	    { Name "ignore_lock" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "Ignore locks." }
+		{ Init Off }
+	    }
+	}
+        // ECR 4969
+	{ Choice
+	    { Name "lock_after" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "Lock subsystem after baselining." }
+		{ Init Off }
+	    }
+	}
+	{ Button
+	    { Name "OK" }
+	    { Label "OK" }
+	    { Event
+		{ Type Select }
+		{ Callback "CreateBaseline_cb" }
+	    }
+	}
+    }
+}
+
+Global 1 AssignDiagramToSubSystem
+{
+    { ObjectCommand
+        { SpaceAfter True }
+        // ECR 5012
+        { SingleObject True }
+    	{ Name "AssignDiagramToSubSystem" }
+    	{ Label "Assign File to Subsystem..." }
+    	{ Type Nowin }
+    	{ QrlEvaluate "AssignDiagramToSubSystem(\"${cmd.objects}\",\"${editor}\");" }
+    }
+}
+
+// ECR 4991 start
+Global 1 AssignMultipleDiagramToSubSystem
+{
+    { ObjectCommand
+        { SpaceAfter True }
+    	{ Name "AssignMultipleDiagramToSubSystem" }
+    	{ Label "Assign Files to Subsystem..." }
+    	{ Type Nowin }
+    	{ QrlEvaluate "AssignDiagramToSubSystem(\"${cmd.objects}\",\"${editor}\");" }
+    }
+}
+// ECR 4991 end
+
+PropertySheet AssignDiagramProp
+{
+    { Name "AssignDiagramProp" }
+    { Label "Assign File to Subsystem..." }
+    { ShowPopsOnExec True }
+    { Properties
+        { List
+            { Name "subsystems" }
+            { Label "Subsystem name:" }
+            { Exclusive True }
+            { LabelAbove False }
+            { Rows 5 }
+        }
+	{ Button
+	    { Name "OK" }
+	    { Label "OK" }
+	    { Event
+		{ Type Select }
+		{ Callback "AssignDiagramToSubSystem_cb" }
+	    }
+	}
+    }
+}

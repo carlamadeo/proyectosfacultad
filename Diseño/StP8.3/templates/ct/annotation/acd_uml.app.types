@@ -1,0 +1,36 @@
+
+// 	StP/UML
+// 	Confidential property of Aonix
+// 	Copyright (c) 1997
+// 	All rights reserved
+//  FILE: user_uml.app.types
+
+// For ID ranges see "Customiziong StP" manual, table 1 at page 16-3
+// NoteObject Range: 800001-899999, higher used: 810012 (StP7.3-Validator), 810011 (StP2.6.0.2-Validator), requested range: 810051-810100 (49 IDs)
+// ItemObject Range: 500001-599999, higher used: 510020 (StP7.3), 510020 (StP2.6.0.2), requested range: 510101-510200 ( 99 IDs)
+
+// XMI customization:  01 notes types and 13 items 
+
+// NoteObject  895501  UmlAttributeDDLDeclarations { }
+// ItemObject  589902  UmlAttributeIsPrimaryKey { { DataType "Boolean" } }
+// ItemObject  588110  UmlClassType { { DataType "UmlClassTypeEnum" } }
+
+NoteObject  810051  UmlAttributeDDLDeclarations { }
+NoteObject  810052  UmlOperationIDLDefinitionExtensions { }
+
+ItemObject  510101  UmlAttributeIsPrimaryKey { { DataType "Boolean" } } // UmlAttributeDDLDeclarationsIsPrimaryKey
+ItemObject  510102  UmlClassType { { DataType "UmlClassTypeEnum" } } // UmlClassDefinitionType
+ItemObject  510103  UmlClassIsQueryable  {{ DataType "Boolean" }} // UmlClassIDLDeclarationIsQueryable
+ItemObject  510104  UmlClassCreateImplementation {{ DataType "Boolean" }} // UmlClassIDLDeclarationCreateImplementation
+ItemObject  510105  UmlClassCreateKey   {{ DataType "Boolean" }} // UmlClassIDLDeclarationCreateKey
+ItemObject  510106  UmlClassCreateCopyHelper {{ DataType "Boolean" }} // UmlClassIDLDeclarationCreateCopyHelper
+ItemObject  510107  UmlClassBridgeToOB  {{ DataType "Boolean" }} // UmlClassIDLDeclarationBridgeToOB
+ItemObject  510108  UmlAttributeLength  {{ DataType "int" }} // UmlAttributeDDLDeclarationsLength
+ItemObject  510109  UmlAttributeCopyHelper {{ DataType "Boolean" }} // UmlAttributeDDLDeclarationsCopyHelper
+ItemObject  510110  UmlAttributeIsIncludedInDataObject {{ DataType "Boolean" }} // UmlAttributeDDLDeclarationsIsIncludedInDataObject
+ItemObject  510111  UmlOperationIsOneWay {{ DataType "Boolean" }} // UmlOperationIDLDefinitionIsOneWay
+
+ItemObject  510112  UmlRoleMapAsObjectRelationship  {{ DataType "Boolean" }} // UmlRoleIDLDefinitionMapAsObjectRelationship
+ItemObject  510113  UmlRoleRelationshipImplementation { { DataType "UmlRoleRelationshipImplementationEnum" } }// UmlRoleIDLDefinitionRelationshipImplementation
+ItemObject  510114  UmlClassImplementationType { { DataType "String" } }// UmlClassIDLDeclarationImplementationType
+ItemObject  510115  UmlClassConstValue { {DataType "String"} } // UmlClassIDLDeclarationConstValue

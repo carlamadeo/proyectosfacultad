@@ -1,0 +1,50 @@
+
+// typedef
+// Notes for DSE Typedef objects
+
+Include "annotation/se_generic_object"
+
+Note 802037
+{
+    { AppType TypedefDefinition }
+    { Bounds { Min 1 } { Max 1 } }
+    { PrintName "Typedef Definition" }
+    { Item
+        { AppType DataType }
+        { HelpText "Use the Type note item to specify the data type of this typedef." }
+        { Bounds { Min 0 } { Max 1 } }
+        { PrintName "Type" }
+    }
+    { Item
+        { AppType ArraySize }
+        { Bounds { Min 0 } { Max 1 } }
+        { PrintName "Array Size" }
+        { HelpText "The size of the array, specified as size, [size] or [size1][size2], etc." }
+    }
+    { Item
+        { AppType SystemType }
+        { PrintName "System Type" }
+        { Bounds { Min 0 } { Max 1 } }
+        { HelpText "The SystemType item accepts values of either 'True' or 'False'. If set to 'True' the data item is taken to be a system type, thus semantic checks and code generation will handle it appropriately." }
+        { InitValue "True" }
+    }
+    { Item
+        { AppType CodeGenId }
+        { PrintName "Code Generation ID" }
+        { HelpText "Contains the unique ID for code generated object."}
+        { Bounds { Min 0 } { Max 1 } }
+        { IsVisible False }
+    }
+}
+
+Note 802035
+{
+    { AppType DataStructureComment }
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Data Structure Comment" }
+    { HelpText "The Data Structure Comment note lets you specify a comment to be generated as a comment for the data structure." }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_typedef"
+ 

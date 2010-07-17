@@ -1,0 +1,10 @@
+short
+unsigned short
+long
+unsigned long
+float
+double
+char
+boolean
+octet
+any

@@ -1,0 +1,292 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/SE
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1995
+//      All rights reserved
+//
+
+//	codegen.rules
+//
+//	This files contains rules which are used for the 
+//	code generation properties dialog for both the 
+//	desktop and sce editor.
+
+Global 1 CKandR_Ansi
+{
+    { Properties
+        { Choice
+            { Name "kandr_or_ansi" }
+            { Label "C Implementation:" }
+            { Type AbbrMenu }
+            { ChoiceItem
+                { Label "ANSI" }
+                { Value "-x kandr_or_ansi 'ansi'" }
+                { Init On }
+            }
+            { ChoiceItem
+                { Label "K&R" }
+                { Value "-x kandr_or_ansi 'kandr'" }
+            }
+        }
+    }
+}
+
+Global 1 CFileDirectory
+{
+    { Properties
+        { Text
+            { Name "file_directory" }
+            { Label "Directory:" }
+            { Type Text }
+            { MinLength 0 }
+            { MaxLength 300 }
+            { DispLength 32 }
+            { InitVal "${projdir}${system}/src_files" }
+        }
+        // ECR 3651a begin
+        { Button
+            { Name "browse_for_out_dir" }
+            { Label "Choose" }
+            { Event
+                { Type Select }
+                { Callback "select_output_dir_se_callback" }
+            }
+        }
+        { Group
+            { Name "output_directory_group" }
+            { Label "" }
+            { Type Horizontal }
+            // ECR 5836 begin - commmented out next lines
+            //{ Resizable ResizeAny }
+            //{ ChildSizePolicy ResizeWidth }
+            //{ LayoutPolicy ResizeAny }
+            // ECR 5836 end
+            { Align Label }    //ECR 5843
+            { Members ( file_directory browse_for_out_dir ) }
+        }
+        // ECR 3651a end
+    }
+}
+
+Global 1 CFileName
+{
+    { Properties
+        { Choice
+            { Name "alternate_file" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "file" }
+                { Label "Use Alternate File Name" }
+                { Init Off }
+                { Activation
+                    { Target "file_name" }
+                    { On Activate }
+                }
+                { Activation
+                    { Target "file_name" }
+                    { Off InActivate }
+                }
+            }
+        }
+        { Text
+            { Name "file_name" }
+            { Label "File Name:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 100 }
+            { DispLength 16 }
+            { InitVal "" }
+        }
+        { Choice
+            { Name "view_file" }
+            { Label "" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Label "View file" }
+                { OnValue "-x view_file '1'" }
+                { OffValue "-x view_file '0'" }
+                { Init Off }
+                { Activation
+                    { Target "view_editor" }
+                    { On Activate }
+                }
+                { Activation
+                    { Target "view_editor" }
+                    { Off InActivate }
+                }
+            }
+        }
+// Remedy 2806. Initial value for view_editor was set to vi. This
+// does not work with 7.2 because MKS is no longer shipped with
+// product. Make value vi or notepad depending on platform.
+        { Text
+	    { ParseCondition "is_windows_platform();" }
+            { Name "view_editor" }
+            { Label "Editor:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 20 }
+            { DispLength 9 }
+	    { InitVal "notepad" }
+	}
+        { Text
+	    { ParseCondition "is_unix_platform();" }
+            { Name "view_editor" }
+            { Label "Editor:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 20 }
+            { DispLength 9 }
+            { Resizable ResizeNone }    //ECR 5836
+	    { InitVal "vi" }
+	}
+        //ECR 5836 begin
+        { Space
+            { Name "DummySpace" }
+        }
+        //ECR 5836 end
+        { Group
+            { Name "file_name_subgroup1" }
+            { Type Vertical }
+            { VerticalSpacing 1 }
+            { HorizontalAlign AlignLabels }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { Members ( alternate_file file_name ) }
+        }
+        { Group
+            { Name "file_name_subgroup2" }
+            { Type Vertical }
+            { VerticalSpacing 1 }
+            { HorizontalAlign AlignLabels }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { Members ( view_file view_editor ) }
+        }
+        { Group
+            { Name "file_name_group" }
+            { Type Horizontal }
+            { Align Label }    //ECR 5843
+            { HorizontalSpacing 20 }
+            //{ VariableColumn "0" }        //ECR 5836 - commented out
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { Members ( file_name_subgroup1 file_name_subgroup2 DummySpace) } //ECR 5836
+        }        
+    }
+}
+
+Global 1 CFileExtensions
+{
+    { Properties
+        { Text
+            { Name "file_interface_extension" }
+            { Label "Interface (Header) File Extension:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".h" }
+            { Resizable ResizeNone }
+        }
+        { Text
+            { Name "file_extension" }
+            { Label "Implementation (Body) File Extension:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 10 }
+            { DispLength 10 }
+            { InitVal ".c" }
+            { Resizable ResizeNone }
+        }
+        { Group
+            { Name "file_extension_group" }
+            { Type Vertical }
+            { HorizontalAlign AlignLabels }
+            { Members ( file_interface_extension file_extension ) }
+        }
+
+   }
+}
+
+Global 1 CDeleteOldCode
+{
+    { Properties
+        { Choice
+            { Name "delete_old_code" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "delete_old_code" }
+                { Label "Remove Previously Generated Code" }
+                { OnValue "-x delete_old_code '1'" }
+                { OffValue "-x delete_old_code '0'" }
+                { Init Off }
+            }
+        }
+    }
+}
+
+Global 1 SeVerbose
+{
+    { Properties
+        { Choice
+            { Name "verbose" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Label "Verbose" }
+                { OnValue "-x verbose '1'" }
+                { OffValue "-x verbose '0'" }
+                { Init Off }
+            }
+        }
+    }
+}
+
+Global 1 CGenCodeBody
+{
+    { Properties
+        { Choice
+            { Name "gen_code_body" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Label "Generate C Code Body" }
+                { OnValue "-x gen_code_body '1'" }
+                { OffValue "-x gen_code_body '0'" }
+                { Init Off }
+            }
+        }
+    }
+}
+
+Global 1 CGenComment
+{
+    { Properties
+        { Choice
+            { Name "gen_comment" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Label "Generate Comments" }
+                { OnValue "-x gen_comment '1'" }
+                { OffValue "-x gen_comment '0'" }
+                { Init Off }
+            }
+        }
+    }
+}
+
+Global 1 CCheckOnly
+{
+    { Properties
+        { Choice
+            { Name "check_only" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Label "Perform Check Only" }
+                { OnValue "-x check_only '1'" }
+                { OffValue "-x check_only '0'" }
+                { Init Off }
+            }
+        }
+    }    
+}

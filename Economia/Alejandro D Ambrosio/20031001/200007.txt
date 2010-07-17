@@ -1,0 +1,37 @@
+
+27/6/2000:
+
+1) "Recursos escasos" no está incluido en "Ciencia económica"
+
+2) Método Inductivo es:
+	a) Dogmático
+	b) Empírico
+	c) Fundamenta a la Economía
+
+3) Si la curva de demanda se desplaza paralela a otra de referencia, es:
+	a) Cambio de precio
+	b) Cambio de Ingreso
+	c) Cambio de gusto
+
+4) El presupuesto del Sujeto Consumidor cambia de pendiente al variar P1 y
+P2 en la misma proporción e inversamente. El SC queda:
+	a) Mejor ...... (no entiendo la letra)
+	b) Peor
+	c) Igual
+
+Justificar y Graficar
+
+5) En competencia perfecta:
+	a) la empresa es igual a la industria
+	b) la empresa supera a la industria
+	c) n empresas y una industria
+
+6) ¿La curva de oferta del mercado es equivalente a la curva de oferta de la
+empresa?
+
+7) 	I = 45q - 0,7q^2
+	CT = 3,8q + 0,2q^2
+
+8) 	a	1	2	3	4	5	6	7	8
+	CF	50	50	50	50	50	50	50	50
+	Cma	35	30	24	18	25	32	30	45

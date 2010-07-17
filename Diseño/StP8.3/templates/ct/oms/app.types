@@ -1,0 +1,319 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1995
+// 	All rights reserved
+//
+
+CntxObject	100001	ActionInstance		
+{
+    { Update
+	{ Dependency
+	    { Name "EventAction" }
+	    { DeriveAttrsFunc "action_instance_derive_name" }
+	}
+    }
+}
+
+FileHistObject	200001	SystemCreate		{}
+FileHistObject	200002	FileRepSyncSucceed	{}
+FileHistObject	200003	FileRepSyncFail		{}
+FileHistObject	200004	FileCreate		{}
+FileHistObject	200005	FileView		{}
+FileHistObject	200006	FileModify		{}
+FileHistObject  200007	FileLckEnabled      	{}
+FileHistObject	200008	FileLckDisabled     	{}
+FileHistObject	200009	FileVersionUpdate	{}
+FileHistObject	200010	FileVccInit		{}
+
+
+FileLockObject	300001   Enabling            	{}
+FileLockObject	300002   Permanent           	{}
+FileLockObject	300003   Automatic           	{}
+FileLockObject	300004   System                 {}
+
+FileObject	400000	PDMTypesTable		// browser
+{
+    { Method 
+	{ Name	"FileNavigate" }		// navigate to browser file 
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"tbr\\",\\"FileLoad ${file.name}\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"tprint -forward_messages 0${msgd_handle} -ed tbr -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } }
+} 
+FileObject	400001	ObjectAnnotation
+{
+    { Method 
+	{ Name	"Edit" }
+	{ Cmd 	"stpem -ed oae -p ${projdir} -s ${system} -C EditorShowDeiconify -C 'FileLoad ${file.name}' &" } }
+    { Method 
+	{ Name	"Show" }
+	{ Cmd 	"stpem -ed oas -p ${projdir} -s ${system} -C EditorShowDeiconify -C 'FileLoad ${file.name}' &" } }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"oae\\",\\"EditorQrlEval FileLoad(\\\"${file.name}\\\");\\");\"" }
+    }
+}
+FileObject	400010	SpeDiagram
+{
+    { Annot "annotation/spe_diagram" }
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"spe\\",\\"EditorQrlEval NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"spe\\",\\"EditorQrlEval NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"spe\\",\\"EditorQrlEval NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"dprint -forward_messages 0${msgd_handle} -ed spe -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+}
+FileObject	400011	SoftwareProcessTable
+{
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"spt\\",\\"EditorQrlEval NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"spt\\",\\"EditorQrlEval NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"spt\\",\\"EditorQrlEval NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"tprint -forward_messages 0${msgd_handle} -ed spt -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+}
+FileObject      401511  REQTable
+{
+    { Method
+        { Name  "Navigate" }
+        { Builtin "EditorQrlEval \"NavigateSend(\\"rqtbl\\",\\"EditorQrlEval NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method
+        { Name  "SymbolNavigate" }
+        { Builtin "EditorQrlEval \"NavigateSend(\\"rqtbl\\",\\"EditorQrlEval NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method
+        { Name  "FileNavigate" }
+        { Builtin "EditorQrlEval \"NavigateSend(\\"rqtbl\\",\\"EditorQrlEval NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method
+        { Name  "Print" }
+        { Cmd   "tprint -forward_messages 0${msgd_handle} -ed rqtbl -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" }
+    }
+// Added for Life Cycle prototype
+     { Annot "annotation/REQTable" }
+}
+FileObject	400013	SysIdFile		{}
+
+ItemObject	500080	ResourceStartDate	{}
+ItemObject	500081	ResourceDuration	{}
+ItemObject	500083	ObjectName		{}
+ItemObject	500084	Author			{}
+ItemObject	500085	Generated		{}
+ItemObject	500086	RequirementName		{}
+ItemObject	500087	RequirementDocument	{}
+ItemObject	500088	RequirementParagraph	{}
+ItemObject	500089	NoteKey			{}
+ItemObject	500090	NoteName		{}
+ItemObject	500098	ExternalFile	{}      //ECR 3161
+ItemObject	500099	UniqueID		{
+    { NoClone True }
+}
+
+// --- START PATCH stp_rme 1.0 --- 
+FileObject      406001  RmeDiagram
+{
+    { Annot "annotation/rme_diagram" }
+    { Method
+        { Name  "Navigate" }
+        { Cmd   "stpem -ed rme -first -p ${projdir} -s ${system} -C 'EditorQrlEval NavLoadAndFind(\"${file.name}\",\"${symbol_ref.appid}\");' &" } }
+    { Method
+        { Name  "SymbolNavigate" }
+        { Cmd   "stpem -ed rme -first -p ${projdir} -s ${system} -C 'EditorQrlEval NavLoadAndFind(\"${file.name}\",\"${symbol_ref.appid}\");' &" } }
+    { Method
+        { Name  "FileNavigate" }
+        { Cmd   "stpem -ed rme -first -p ${projdir} -s ${system} -C 'EditorQrlEval NavLoadAndFind(\"${file.name}\",NULL);' &" } }
+    { Method
+        { Name  "Print" }
+//        { Cmd   "dprint -forward_messages 0${msgd_handle} -ed rme -p ${projdir} -s ${system} -rules_print ${print_rules_file} ${label_font} ${display_mark_font} ${caption_font} ${inclusion_id} ${caption_id} ${output_file} ${file} &" }
+	{ Cmd 	"dprint -forward_messages 0${msgd_handle} -ed rme -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+
+}}
+NodeObject      706001 CoverPageSection
+{ { Annot "annotation/coverpagesection" } }
+NodeObject      706002 SingleDiagSection
+{ { Annot "annotation/singlediagsection" } }
+NodeObject      706003 MultiDiagSection
+{ { Annot "annotation/multidiagsection" } }
+NodeObject      706004 SingleTableSection
+{ { Annot "annotation/singletablesection" } }
+NodeObject      706005 MultiTableSection
+{ { Annot "annotation/multitablesection" } }
+NodeObject      706006 TextSection
+{ { Annot "annotation/textsection" } }
+NodeObject      706007 MultiObjectSection
+{ { Annot "annotation/multiobjectsection" } }
+
+LinkObject      606001  NextSection                 {}
+
+NoteObject	806001  CoverPageRptOptions {}
+NoteObject	806002  DiagRptOptions {}
+NoteObject	806003  MultiDiagRptOptions {}
+NoteObject	806004  TableRptOptions {}
+NoteObject	806005  MultiTableRptOptions {}
+NoteObject	806006  TextRptOptions {}
+NoteObject	806007  DBObjectRptOptions {}
+NoteObject	806008  GenericRptOptions {}
+NoteObject	806009  ReportFormatFile {}
+
+ItemObject	506000	Title { { DataType "String" } }
+ItemObject	506001	Orientation { { DataType "Orientation" } }
+ItemObject	506002	ParagraphStyle { { DataType "String" } }
+ItemObject	506003	AsciiParagraphStyle { { DataType "AsciiParagraphStyle" } }
+ItemObject	506004	MifParagraphStyle { { DataType "MifParagraphStyle" } }
+ItemObject	506005	IleafParagraphStyle { { DataType "IleafParagraphStyle" } }
+ItemObject      506006  RtfParagraphStyle { { DataType "RtfParagraphStyle" } }
+ItemObject	506007	DiagramType { { DataType "DiagramType" } }
+ItemObject	506008	DiagramName { { DataType "String" } }
+ItemObject	506009	TableType { { DataType "TableType" } }
+ItemObject	506010	TableName { { DataType "String" } }
+ItemObject	506011	DBObjectType { { DataType "String" } }
+ItemObject	506012	OmitDiagCalled { { DataType "String" } }
+ItemObject	506013	OmitTableCalled { { DataType "String" } }
+ItemObject	506014	Caption { { DataType "String" } }
+ItemObject	506015	CaptionOrientation { { DataType "CaptionOrientation" } }
+ItemObject	506016	SortBy { { DataType "String" } }
+ItemObject	506017	Date { { DataType "String" } }
+ItemObject	506018	RowRange { { DataType "String" } }
+ItemObject	506019	ColumnRange { { DataType "String" } }
+ItemObject	506020	HeaderRowRange { { DataType "String" } }
+ItemObject	506021	ShowRowIndices { { DataType "Boolean" } }
+ItemObject	506022	ShowColumnIndices { { DataType "Boolean" } }
+ItemObject	506023	ShowReportDate { { DataType "Boolean" } }
+ItemObject	506024	DBObjectName { { DataType "String" } }
+ItemObject	506025	ListAttributes { { DataType "Boolean" } }
+ItemObject	506026	ListOperations { { DataType "Boolean" } }
+ItemObject	506027	ListInLinks { { DataType "Boolean" } }
+ItemObject	506028	ListOutLinks { { DataType "Boolean" } }
+ItemObject	506029	ShowItemValueFor { { DataType "String" } }
+ItemObject	506030	ShowNoteDescFor { { DataType "String" } }
+ItemObject	506031	StartNewPage { { DataType "Boolean" } }
+ItemObject	506032	StartEachNewPage { { DataType "Boolean" } }
+ItemObject	506033	DiagramFrameHeight { { DataType "Float" } }
+ItemObject	506034	DiagramFrameWidth { { DataType "Float" } }
+ItemObject	506035	TableWidth { { DataType "Float" } }
+ItemObject	506036	PrintSetting { { DataType "String" } }
+ItemObject	506037	FormatFileName { { DataType "String" } }
+ItemObject	506038	RmeIncludeFile { { DataType "String" } }
+ItemObject	506039	TableOrientation { { DataType "TableOrientation" } }
+
+// --- END PATCH stp_rme 1.0 --- 
+
+
+// Glossary Item
+ItemObject  500094  GlossaryItem	{ { DataType "String" } }
+
+// Used for I18N version
+ItemObject	501740	GenerateAs		{}
+
+ItemObject      501825  REQInformalNameItem        {}
+ItemObject      501826  REQAnalysisAssignmentItem  {}
+ItemObject      501827  REQDesignAssignmentItem    {}
+ItemObject      501828  REQTestAssignmentItem      {}
+ItemObject      501829  REQImplementationAssignmentItem {}
+
+LinkObject	600019	PhaseTransition 		{}
+LinkObject      601580  ReqParent                       {}
+LinkObject      601581  REQCurrentRequirementIdentifier {}
+
+NodeObject 	700015 	Comment 	{}     
+NodeObject	700016	StartPhase
+{
+    { Annot "annotation/phase" }
+}
+NodeObject	700017	Phase
+{
+    { Annot "annotation/phase" }
+}
+NodeObject	700018	Event
+{
+    { Annot "annotation/event" }
+    { Update
+    	{ DependentsFunc "event_action_dependents" }
+    }
+}
+NodeObject	700019	Action
+{
+    { Annot "annotation/action" }
+    { Update
+	{ DependentsFunc "event_action_dependents" }
+    }
+}
+////////// obsolete
+NodeObject      701580  ParentRequirement { {Annot "annotation/Requirement" } }
+NodeObject      701581  LeafRequirement { {Annot "annotation/Requirement" } }
+/////////   end obsolete
+
+NodeObject      701582  RequirementSubsystem {}
+NodeObject      701583  REQRequirement { {Annot "annotation/Requirement" } }
+
+NoteObject	800031 	Output			{}
+NoteObject	800032 	Resource		{}
+NoteObject	800033 	Event			{}
+NoteObject	800034 	Action			{}
+NoteObject	800035	GenericObject		{}
+NoteObject	800036  Requirement		{}
+NoteObject	800037  Tool			{}
+NoteObject	800038 	Input			{}
+NoteObject      801570  REQAssignmentNote 	{}
+NoteObject      801571  REQDefinitionNote 	{}
+NoteObject      801572  REQSourceNote 		{}
+NoteObject	800039  ItemValueOverflow	{}
+NoteObject	800040  ItemSvalueOverflow	{}
+
+// Glossary Note 
+NoteObject  800041  GlossaryDefinition	{}
+
+// rename dependents ....
+NodeObject REQRequirement
+{
+    { Update
+	{ DependentsFunc "REQRequirement_dependents" }
+    }
+}
+
+
+Include "oms/im.app.types"
+Include "oms/omt.app.types"
+Include "oms/booch.app.types"
+Include "oms/se.app.types"
+Include "oms/t.app.types"
+// ECR 5223
+//IncludeIfExists "oms/acd.app.types"
+IncludeIfExists "oms/acd_uml.app.types"
+IncludeIfExists "oms/user_uml.app.types"
+
+Include "oms/uml.app.types"
+Include "oms/integration.app.types"
+
+// added for Lifecycle desktop integration
+Include "oms/lifecycle.app.types"
+
+IncludeIfExists "val/oms/validator.app.types"
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/oms/user_app.types"
+IncludeIfExists "val/oms/WinRunner.app.types"

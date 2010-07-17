@@ -1,0 +1,19 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+// There are currently no semantics for the flow chart editor - however,
+// customers can add their own in the file below
+
+#include_if_exists "user/se/rules/qrl/check_fce.qrl"
+
+
+int main()
+{
+    // just call the routine in the user file
+    return user_supplied_semantic_check();
+}

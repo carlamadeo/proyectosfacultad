@@ -1,0 +1,444 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+//      StP/SE
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1995
+//      All rights reserved
+//
+// sce.prop: SCE property sheet definitions
+//
+//////////////////////////////////////////////////////////////////////////////
+
+
+
+PropertySheet SceObjectDialogFiller
+{
+    { Name "ObjectDialogFiller" }
+    { Label "SCE: Fill List" }
+    { Properties
+        { Qrl { QrlFile "qrl/properties/se_common_props.inc" } }
+	{ List
+            { Name "Selector" }
+            { Label "" }
+            { Rows 12 }
+            { Width 40 }
+            { Exclusive True }
+            //{ LabelAbove True }
+            { Event
+                { Type SelectRow }
+                { Callback "ObjectSelectorRowSelected_cb" }
+            }
+// ECR 6894 begin
+            { Event
+                { Type DeSelectRow }
+                { Callback "ObjectSelectorRowDeSelected_cb" }
+            }
+            { Event
+                { Type DoubleClickRow }
+                { Callback "SelectorOkButton_cb" }
+            }
+// ECR 6894 end
+        }
+// ECR 6894 begin
+        { Button
+            { Name "OK" }
+            { Label "OK" }
+            { Event
+                { Type Select }
+                { Callback "SelectorOkButton_cb" }
+            }
+        }
+// ECR 6894 end
+    }
+}
+
+
+PropertySheet SceObjectDialog
+{
+    { Name "ObjectDialog" }
+// fix for spr 2847
+//    { Label "Structure Chart Editor: Edit Object Properties" }
+    { Label "Properties" }
+    { Properties
+        { Qrl { QrlFile "qrl/properties/sce_props.inc" } }
+
+        { Text
+	    { Name "SceObjName" }
+	    { Label "Name: " }
+	    { MinLength 0 }
+	    { DispLength 40 }
+	}
+
+        { Text
+	    { Name "Directory" }
+	    { Label "Directory: " }
+	    { MinLength 0 }
+	    { DispLength 40 }
+	}
+        { Button
+            { Name "DirectorySelect" }
+            { Label "Fill" }
+            { Event
+                { Type Select }
+                { Callback "DirectorySelectorFill_cb" }
+            }
+        }
+	{ Group
+	    { Name DirLine }
+	    { Type Horizontal }
+            { Resizable ResizeAny }
+            { ChildResizePolicy ResizeWidth }
+            { VariableColumn "0" }
+	    { HorizontalAlign AlignLabels } //ECR 5842
+        { HorizontalSpacing 10 }
+	    { Members ( Directory DirectorySelect ) }
+	}
+
+        { Text
+	    { Name "File" }
+	    { Label "File: " }
+	    { MinLength 0 }
+	    { DispLength 40 }
+	}
+        { Button
+            { Name "FileSelect" }
+            { Label "Fill" }
+            { Event
+                { Type Select }
+                { Callback "FileSelectorFill_cb" }
+            }
+        }
+	{ Group
+	    { Name FileLine }
+	    { Type Horizontal }
+            { Resizable ResizeAny }
+            { ChildResizePolicy ResizeWidth }
+            { VariableColumn "0" }
+        { HorizontalAlign AlignLabels } //ECR 5842
+	    { HorizontalSpacing 10 }
+	    { Members ( File FileSelect ) }
+	}
+	
+        { Text
+	    { Name "Type" }
+	    { Label "Type: " }
+	    { MinLength 0 }
+	    { DispLength 40 }
+	}
+        { Button
+            { Name "TypeSelect" }
+            { Label "Fill" }
+            { Event
+                { Type Select }
+                { Callback "TypeSelectorFill_cb" }
+            }
+        }
+	{ Group
+	    { Name TypeLine }
+	    { Type Horizontal }
+            { Resizable ResizeAny }
+            { ChildResizePolicy ResizeWidth }
+            { VariableColumn "0" }
+	    { HorizontalAlign AlignLabels } //ECR 5842
+        { HorizontalSpacing 10 }
+	    { Members ( Type TypeSelect ) }
+	}
+
+        { Text
+            { Name "ArraySize" }
+            { Label "Array Size: " }
+            { MinLength 0 }
+            { DispLength 18 }
+	    { Resizable ResizeNone }
+        }
+
+        { Choice
+	    { Name "ModuleOrLexical" }
+	    { Label "Module is:" }
+	    { Type AbbrMenu }
+	    { ChoiceItem
+		{ Name Normal }
+		{ Label "Normal" }
+		{ OnValue "N" }
+		{ Init On }
+	    }
+	    { ChoiceItem
+		{ Name Lexical }
+		{ Label "Lexical Include" }
+		{ OnValue "L" }
+	    }
+	}
+
+        { Choice
+	    { Name "GlobalAccess" }
+	    { Label "Access:" }
+	    { Type AbbrMenu }
+	    { ChoiceItem
+		{ Name NotSpecified }
+		{ Label "Not Specified" }
+		{ Init On }
+	    }
+	    { ChoiceItem
+		{ Name Read }
+		{ Label "Read" }
+	    }
+	    { ChoiceItem
+		{ Name Write }
+		{ Label "Write" }
+	    }
+	    { ChoiceItem
+		{ Name ReadWrite }
+		{ Label "Read/Write" }
+	    }
+	}
+
+        { Choice
+	    { Name "StorageClass" }
+	    { Label "Storage Class:" }
+	    { Type AbbrMenu }
+	    { ChoiceItem
+		{ Name NotSpecified }
+		{ Label "Not Specified" }
+		{ Init On }
+	    }
+	    { ChoiceItem
+		{ Name Const }
+		{ Label "const" }
+	    }
+	    { ChoiceItem
+		{ Name Register }
+		{ Label "register" }
+	    }
+	    { ChoiceItem
+		{ Name RegisterConst }
+		{ Label "register const" }
+	    }
+	    { ChoiceItem
+		{ Name Static }
+		{ Label "static" }
+	    }
+	    { ChoiceItem
+		{ Name StaticConst }
+		{ Label "static const" }
+	    }
+	}
+
+	{ Choice
+	     { Name "MultiObjectMode" }
+	     { Label "" }
+	     { Type CheckBox }
+	     { ChoiceItem
+		 { Label "Apply to Multiple Selection" }
+		 { Init Off }
+                 { Event
+                     { Type DeSelect }
+                     { Callback "SceUnSetMultiMode_cb" }
+                 }
+                 { Event
+                     { Type Select }
+                     { Callback "SceSetMultiMode_cb" }
+                 }
+            }
+        }
+        { Group
+            { Name PathnameGroup }
+	    { Label "Pathname" }
+	    { Type Vertical }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { LayoutPolicy ResizeAny }
+            { HorizontalAlign AlignLabels }
+	    { Members ( DirLine FileLine ) }
+	}
+        { Group
+            { Name DeclarationGroup }
+	    { Label "Declaration" }
+	    { Type Vertical }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { LayoutPolicy ResizeAny }
+            { HorizontalAlign AlignLabels }
+	    { Members ( StorageClass TypeLine ) }
+	}
+	{ Group
+            { Name ModuleGroup }
+	    { Label "Module" }
+	    { Type Vertical }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { LayoutPolicy ResizeAny }
+            { HorizontalAlign AlignLabels }
+	    { Members ( ModuleOrLexical ) }
+	}
+	{ Group
+            { Name GlobalGroup }
+	    { Label "Global" }
+	    { Type Vertical }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { LayoutPolicy ResizeAny }
+            { HorizontalAlign AlignLabels }
+	    { Members ( GlobalAccess ArraySize ) }
+	}
+        { TopGroup
+	    { Name TheWholeThing }
+	    { Align Left }
+	    { Members ( SceObjName PathnameGroup DeclarationGroup ModuleGroup GlobalGroup MultiObjectMode) }
+	}
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "SceObjectDialog_Apply" }
+            }
+        }
+        { Button
+            { Name "Apply" }
+            { Event
+                { Type Select }
+                { Callback "SceObjectDialog_Apply" }
+            }
+        }
+        { Button
+            { Name "Reset" }
+            { Label "Reset" }
+            { Event
+                { Type Select }
+                { Callback "SceObjectDialog_Reset" }
+            }
+        }
+        { Button
+            { Name "Cancel" }
+            { Label "Cancel" }
+            { Event
+                { Type Select }
+                { Callback "SEDialogFiller_Cancel" }
+            }
+        }
+        { Button
+            { Name "Help" }
+            { Label "Help" }
+        }
+        { Footer
+            { Name "Status" }
+            { LeftFooter "" }
+            { Active True }
+        }
+    }
+}
+
+
+PropertySheet SECodeGen
+{    
+    { Name SECodeGeneration }
+    { Label "Generate C Code"}
+    { ResetAfterExec False }
+    { UseProperty CKandR_Ansi }
+    { UseProperty CDeleteOldCode }
+    { UseProperty SeVerbose }
+    { UseProperty CFileExtensions }
+    { UseProperty CFileDirectory }
+    { UseProperty CFileName }
+    { UseProperty CGenCodeBody }
+    { UseProperty CGenComment }
+    { UseProperty CCheckOnly }
+    { Properties
+        { Group
+            { Name "Options1" }
+            { Label "Output File:" }
+            { Type Vertical }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { LayoutPolicy ResizeAny }
+            { HorizontalAlign AlignLabels }
+            // ECR 3651a begin
+            //{ Members ( file_directory file_name_group delete_old_code ) }
+            { Members ( output_directory_group file_name_group delete_old_code ) }
+            // ECR 3651a end
+        }
+        { Group
+            { Name "Options2" }
+            { Label "File Extensions:" }
+            { Type Vertical }
+            { Resizable ResizeWidth }
+            { ChildSizePolicy ResizeWidth }
+            { LayoutPolicy ResizeWidth }
+            { HorizontalAlign AlignLabels }
+            { Members ( file_extension_group ) }
+        }
+        { Group
+            { Name "Options3" }
+            { Label "Code Options:" }
+            { Type Vertical }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { LayoutPolicy ResizeAny }
+            { HorizontalAlign AlignLabels }
+            { Members ( kandr_or_ansi gen_code_body gen_comment verbose check_only) }
+        }
+        { TopGroup
+            { Align Left }
+            { Members ( Options1 Options2 Options3 ) }
+        }
+        { Qrl { QrlFile "qrl/properties/codegen_cb.inc" } }
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "OkGenerateCode" }
+            }
+	}
+        { Footer
+            { Name "Status" }
+            { LeftFooter "" }
+            { Active True }
+        }
+    }
+}
+
+PropertySheet SCESemanticChecks
+{
+    { Name "SCESemanticChecks" }
+    { Label "Check Semantics Selectively"}
+    { ResetAfterExec False }
+    { UseProperty SceCheckOne }
+    { UseProperty SceCheckTwo }
+    { UseProperty SceCheckThree }
+    { UseProperty SceCheckFour }
+    { UseProperty SceCheckFive }
+    { UseProperty SceCheckSix }
+    { UseProperty SceCheckSeven }
+    { UseProperty SceCheckVerbose }
+    { Properties
+        { Qrl { QrlFile "qrl/properties/sce_props.inc" } }
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "OkSceCheckSemantics" }
+            }
+        }
+        { Button
+            { Name "Apply" }
+            { Event
+                { Type Select }
+                { Callback "ApplySceCheckSemantics" }
+            }
+        }
+        { Group
+            { Name "Top" }
+            { Type Vertical }
+            { Align Labels }
+            { Members ( check_one check_two check_three check_four check_five check_six check_seven verbose ) }
+        }
+        { Group
+            { Name "All" }
+            { Type Vertical }
+            { Members (Top Buttons)}
+            { VerticalAlign Center}
+        }
+    }    
+}
+
+Include "se/rules/sce_check.rules"
+Include "se/rules/codegen.rules"

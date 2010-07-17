@@ -1,0 +1,115 @@
+// Ordering in this file completely changed for ECR 2469
+
+Toolbar Standard
+{
+    { Entry
+        { Name "NewModel" }
+        { Type Button }
+        { Builtin "CreateModelDialogShow" }
+        //{ Builtin "EditorQrlEval stp_run_command(\"SysAdmin\",\"CreateSystem\");" }
+        { HelpTip "Create New System" }
+        { Image "new_model" }
+    }
+
+    { Entry
+        { Name "OpenModel" }
+        { Type MenuShortCut }
+        { MenuEntry "File:OpenModel" }
+        { HelpTip "Open System" }
+        { Image "open_model" }
+    }
+
+    { Entry
+	{ Type Separator }
+    }
+
+    { Entry
+        { Name "Edit" }
+        { Type Button }
+        { Builtin "EditorQrlEval stp_edit_diagram_or_table();" }
+        //{ ActiveFunc stp_editor_file_selected } //ECR 5370
+        { ActiveFunc edit_menu_active_func } //ECR 5370
+        { HelpTip "Edit Diagram/Table" }
+        { Image "edit_diagram" }
+    }
+
+    { Entry
+        { Name "StartEditor" }
+        { Type Button }
+        { Builtin "EditorQrlEval stp_start_editor();" }
+        //{ ActiveFunc stp_editor_selected } //ECR 5370
+        { ActiveFunc new_editor_active_func } //ECR 5370
+        { HelpTip "Start New Editor" }
+        { Image "new_diagram" }
+    }
+
+    { Entry
+        { Name "Print" }
+        { Type Button }
+        { Builtin "EditorQrlEval stp_print_diagram_or_table();" }
+        //{ ActiveFunc stp_editor_files_selected } //ECR 5370
+        { ActiveFunc print_menu_active_func } //ECR 5370
+        { HelpTip "Print Diagram/Table" }
+        { Image "print" }
+    }
+
+    { Entry
+        { Name "Copy" }
+        { Type Button }
+        // ECR4244 begin change: Copy one or more files
+        // Same behavior as in File Menu Entry
+        // Unfortunaltey the active function of the menu entry does not
+        // work here, so we have to define it twice !!!
+        //{ ActiveFunc stp_editor_file_selected }
+        //{ ActiveFunc stp_editor_files_selected } //ECR 5370
+        { ActiveFunc copy_menu_active_func } //ECR 5370
+        { Builtin "EditorQrlEval stp_copy_diagram_or_table();" }
+        // ECR4244 end change: Copy one or more files
+        { HelpTip "Copy Diagram/Table" }
+        { Image "copy_diagram" }
+    }
+
+    { Entry
+        { Name "Delete" }
+        { Type Button }
+        { Builtin "EditorQrlEval stp_delete_diagram_or_table();" }
+        //{ ActiveFunc stp_editor_files_selected } //ECR 5370
+        { ActiveFunc delete_menu_active_func } //ECR 5370
+        { HelpTip "Delete Diagram/Table" }
+        { Image "delete" }
+    }
+
+    { Entry
+	{ Type Separator }
+    }
+
+    { Entry
+        { Name "ShowMessageLog" }
+        { Type MenuShortCut }
+        { MenuEntry "View:ShowLog" }
+        { HelpTip "Show/Hide Message Log" }
+        { Image "message_log" }
+    }
+
+    { Entry
+	{ Type Separator }
+    }
+
+    { Entry
+        { Name "StartScriptMan" }
+        { Type Button }
+        { Builtin "EditorQrlEval editor_send_msg(\"scriptman\",\"EditorShowDeiconify\",-1);" }
+        { ActiveFunc stp_repos_is_open } // ECR 7830
+        { HelpTip "Start Script Manager" }
+        { Image "script_manager" }
+    }
+
+    { Entry
+        { Name "OpenReport" }
+        { Type Button }
+        { HelpTip "Open Report" }
+        { Builtin "FileChooser \"Open Report\" \"StP Report (*.rtf;*.html;*.mif;*.doc)|*.rtf;*.html;*.mif;*.doc|All Files (*.*)|*\" \"${projdir}${system}/qrl_files\"" }
+        { Image "open_report" }
+    }
+}
+

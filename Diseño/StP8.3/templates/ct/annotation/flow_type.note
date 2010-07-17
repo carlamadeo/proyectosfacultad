@@ -1,0 +1,181 @@
+// DFE data/control flow type
+
+Note 802001
+{
+    { AppType Flow }
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Flow Type" }
+    { Item
+        { AppType FlowType }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Flow Type" }
+	{ HelpText "Use the Flow Type item to specify whether this is a discrete or continuous flow." }
+    }
+}
+
+
+Note 802015
+{
+    { AppType InterfaceRequirement }
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Interface Requirement" }
+    { Item
+        { AppType InterfaceName }
+        { Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Interface Name" }
+	{ InitValue "${sym_label}" }
+    }
+    { Item
+        { AppType Execution } 
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Execution" }
+    }
+    { Item
+        { AppType Synchronization } 
+        { Bounds { Min 0 } { Max 1 } }
+	{ InitValue "N/A" }
+	{ PrintName "Synchronization" }
+    }
+    { Item
+        { AppType InterruptPriority }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Interrupt Priority" }
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType PriorityLevel }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Priority Level" }
+	{ InitValue "N/A" }
+    }
+}
+
+Note 802016
+{
+    { AppType CommunicationProtocol }
+    { Bounds { Min 0 } } 
+    { PrintName "Communication Protocol" }
+    { Item
+	{ AppType NoteKey }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Key" }
+	{ IsKey True }
+	{ IsVisible False }
+	{ InitValue "${unique_key}" }
+    }
+    { Item
+        { AppType CommunicationProtocol }
+        { Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Communication Protocol" }
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType Fragmentation }
+        { Bounds { Min 0 } { Max 1 } }
+	{ InitValue "N/A" }
+	{ PrintName "Fragmentation" }
+    }
+    { Item
+        { AppType MessageFormatting }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Message Formatting" }
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType ErrorControl }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Error Control" }
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType Synchronization }
+        { Bounds { Min 0 } { Max 1 } }
+	{ InitValue "N/A" }
+	{ PrintName "Synchronization" }
+    }
+    { Item
+        { AppType FlowControl }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Flow Control" }
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType DataTransferRate }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Data Transfer Rate" }
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType RoutingAddressing }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Routing Addressing" }
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType TransmissionServices }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Transmission Services" }
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType StatusIdentification }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Status Identification" }
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType SecurityEncryption }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Security Encryption" }
+	{ InitValue "N/A" }
+    }
+}
+
+Note 802017
+{
+    { AppType InitiationConditionReq }
+    { Bounds { Min 0 } }
+    { PrintName "Initiation Condition Requirement" }
+    { Item
+	{ AppType NoteKey }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Key" }
+	{ IsKey True }
+	{ IsVisible False }
+	{ InitValue "${unique_key}" }
+    }
+    { Item
+        { AppType Condition }
+        { Bounds { Min 1 } { Max 1 } }
+	{ InitValue "N/A" }
+	{ PrintName "Condition" }
+    }
+    { Item
+        { AppType Response }
+        { Bounds { Min 0 } { Max 1 } }
+	{ InitValue "N/A" }
+	{ PrintName "Response" }
+    }
+}
+
+Note 802018
+{
+    { AppType InterfaceDesign }
+    { Bounds { Min 1 } { Max 1 } }
+    { PrintName "Interface Design" }
+    { Item
+        { AppType InterfaceName }
+        { Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Name" }
+	{ InitValue "${sym_label}" }
+    }
+    { Item
+        { AppType InterfacePriority }
+        { Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Priority" }
+	{ InitValue "N/A" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_flow_type.note"

@@ -1,0 +1,8 @@
+// Push all objects with DOORS IDs to DOORS
+#include "ct/rules/qrl/doors.inc"
+
+void main() 
+{
+	doors_push_renames();
+}
+	

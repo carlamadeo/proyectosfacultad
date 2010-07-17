@@ -1,0 +1,25 @@
+/* XPM */
+static char* start_time_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 3 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+/* pixels */
+"................",
+"XXX.............",
+"XXX ..XXXX......",
+"XXX ...  XX.....",
+"XXX ..XXXXX ....",
+"XXX .XX  XX ....",
+"XXX .XX .XX ....",
+"XXX ..XXXXX ....",
+"XXX ...     X...",
+"XXX ........XX..",
+"XXX .XXXXXXXXXX ",
+"XXX ..      XX .",
+"XXX ........X ..",
+"XXX ............",
+".   ............",
+"................"};

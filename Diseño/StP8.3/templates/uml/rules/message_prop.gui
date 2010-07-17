@@ -1,0 +1,105 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+//
+
+
+PropertySheet OperationNameBrowser
+{
+    { Name OperationNameBrowser }
+    { Label "Label Message Symbol" }
+    { Properties
+	{ Text
+	    { Name Pattern }
+	    { Label "Filter" }
+	    { LabelAbove True }
+	    { MinLength	1 }
+	    { DispLength 40 }
+	    { MaxLength	512 }
+	    { Event
+		{ Type NewLine }
+		{ Callback "uml_message_patternCB" }
+	    }
+	}
+	{ List
+	    { Name	Operations }
+	    { Label	"Operations provided by Server" }
+	    { Rows	10 }
+	    { Width	40 }
+	    { Exclusive	True }
+	    { LabelAbove True }
+	    { Event
+		{ Type  SelectRow }
+		{ Callback "MessageOperationRowSelected" }
+	    }
+	    { Event
+		{ Type  PropEventDoubleClick }
+		{ Callback "MessageOperationDialog_Apply" }
+	    }
+	}
+	{ Text
+	    { Name OperationName }
+	    { Label "Operation Name" }
+	    { LabelAbove True }
+	    { MinLength 1 }
+	    { DispLength 40 }
+	    { MaxLength 512 }
+	    { Event
+		 { Type NewLine }
+		 { Callback "MessageOperationDialog_Apply" }
+	    }
+	    { Event
+		{ Type Any }
+		{ Callback "MessageOperationCharTyped" }
+	    }
+	}
+	{ Group
+	    { Name TextGroup }
+	    { Type Vertical }
+	    { VerticalAlign AlignLeft }
+	    { Members ( Pattern Operations OperationName ) }
+	}
+	{ Button
+	    { Name "OK" }
+	    { Label "OK" }
+	    { Event
+		{ Type Select }
+		{ Callback "MessageOperationDialog_Apply" }
+	    }
+	}
+	{ Button
+	    { Name "Apply" }
+	    { Label "Apply" }
+	    { Event
+		{ Type Select }
+		{ Callback "MessageOperationDialog_Apply" }
+	    }
+	}
+	{ Button
+	    { Name "Reset" }
+	    { Label "Filter" }
+	    { Event
+		{ Type Select }
+		{ Callback "uml_message_patternCB" }
+	    }
+	}
+	{ Button
+	    { Name "Cancel" }
+	    { Label "Cancel" }
+	}
+	{ Footer
+	    { Name "Status" }
+	    { RightFooter "" }
+	    { Active True }
+	}
+	{ Group
+	    { Name OperationNameBrowser }
+	    { Type Vertical }
+	    { VerticalAlign Center }
+	    // { Members ( TextGroup ButtonsGroup ) }
+	    { Members ( TextGroup ) }
+	}
+    }
+}

@@ -1,0 +1,26 @@
+/* XPM */
+static char* check_syntax_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 4 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #000000	c #ff0000",
+/* pixels */
+"................",
+".............O..",
+"............OO..",
+"......O....OO...",
+"......OO.OOO....",
+"..XXXXXOOOO.....",
+"..X    OOOO.....",
+"..XXXXXXOO......",
+"..X     OX......",
+"..XXXXXXOX......",
+".....XX.........",
+"..XXXXXXXX......",
+"..X      X......",
+"..X      X......",
+"..XXXXXXXX......",
+"................"};

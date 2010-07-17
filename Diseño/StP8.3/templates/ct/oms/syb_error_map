@@ -1,0 +1,204 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1994
+// 	All rights reserved
+//
+
+ErrorMap
+{
+    { DbmsError	1105 }
+    { OmsError	10000 }
+    { Message	"System repository or log is full"}
+    { IsError	True }
+}
+
+ErrorMap
+{
+    { DbmsError	3902 }
+    { OmsError	10003 }
+    { Message	"Unbalanced call to oms_txn_commit()" }
+}
+
+ErrorMap
+{
+    { DbmsError	3903 }
+    { OmsError	10004 }
+    { Message	"Unbalanced call to oms_txn_abort()" }
+}
+
+// This error says "General SQL Server error: Check messages from the SQL
+// Server."  It happens after another error, so we don't need it.
+ErrorMap
+{
+    { DbmsError	20018 }
+    { OmsError	0 }
+    { IsError	False }
+}
+
+ErrorMap
+{
+    { DbmsError	20012 }
+    { OmsError	10005 }
+    { IsError	True }
+    { Message	"Unable to locate server in sybase interfaces file" }
+}
+
+ErrorMap
+{
+    { DbmsError	20014 }
+    { OmsError	10006 }
+    { IsError	True }
+    { Message	"Not a valid login/password" }
+}
+
+ErrorMap
+{
+    { DbmsError	916 }
+    { OmsError	10007 }
+    { IsError	True }
+    { Message	"You are not a valid user in the current system" }
+}
+
+ErrorMap
+{
+    { DbmsError	4002 }
+    { OmsError	10008 }
+    { IsError	True }
+    { Message	"Unable to open current repository" }
+}
+
+ErrorMap
+{
+    { DbmsError	257 }
+    { OmsError	10022 }
+    { IsError   True }
+    { Message   "Invalid SQL statement passed to repository manager" }
+}
+
+ErrorMap
+{
+    { DbmsError	20047 }
+    { OmsError	0 }
+}
+
+ErrorMap
+{
+    { DbmsError	20017 }
+    { OmsError	10009 }
+    { IsError	True }
+    { Message	"Can't connect to sybase (too many users?)" }
+}
+
+ErrorMap
+{
+    { DbmsError	407 }
+    { OmsError	10010 }
+    { IsError	True }
+    { Message	"Too many relationships used in query" }
+}
+
+ErrorMap
+{
+    { DbmsError	262 }
+    { OmsError	10011 }
+    { IsError	True }
+    { Message	"User \"guest\" does not have create table privilege in tempdb -- have you set up the repository manager after restart (run rmansetup)?" }
+}
+
+ErrorMap
+{
+    { DbmsError	267 }
+    { OmsError	0 }
+}
+
+ErrorMap
+{
+    { DbmsErrorRange
+	{ Low	90000 }
+	{ High	90999 }
+    }
+    { OmsError	10012 }
+    { IsError	True }
+}
+
+ErrorMap
+{
+    { DbmsErrorRange
+	{ Low	91000 }
+	{ High	91999 }
+    }
+    { OmsError	10013 }
+    { IsError	True }
+}
+
+ErrorMap
+{
+    { DbmsErrorRange
+	{ Low	92000 }
+	{ High	92999 }
+    }
+    { OmsError	10014 }
+    { IsError	True }
+}
+
+ErrorMap
+{
+    { DbmsErrorRange
+	{ Low	93000 }
+	{ High	93999 }
+    }
+    { OmsError	10015 }
+    { IsError	True }
+}
+
+ErrorMap
+{
+    { DbmsErrorRange
+	{ Low	94000 }
+	{ High	94999 }
+    }
+    { OmsError	10016 }
+    { IsError	True }
+}
+
+ErrorMap
+{
+    { DbmsError	20013 }
+    { OmsError	10017 }
+    { IsError	True }
+    { Message	"Unknown hostname in sybase interfaces file" }
+}
+
+ErrorMap
+{
+    { DbmsError	20015 }
+    { OmsError	10018 }
+    { IsError	True }
+    { Message	"Could not open sybase interfaces file" }
+}
+
+ErrorMap
+{
+    { DbmsError	20011 }
+    { OmsError	10019 }
+    { IsError	True }
+    { Message	"Maximum number of sybase connections already allocated" }
+}
+
+ErrorMap
+{
+    { DbmsError	20009 }
+    { OmsError	10020 }
+    { IsError	True }
+    { Message	"SQL server is unavailable or does not exist" }
+}
+
+ErrorMap
+{
+    { DbmsError 5006 }
+    { OmsError  10021 }
+    { IsError   True }
+    { Message   "Insufficient space on server %s to expand repository %s by %d Mb." }
+}

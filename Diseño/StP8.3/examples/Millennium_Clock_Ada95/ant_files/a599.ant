@@ -1,0 +1,90 @@
+FileObject 1
+{
+    { Name "a599" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65CCD-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "String" }
+    { Type UmlClass }
+    { ObjectId 1385 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD933A-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlClassDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1387 }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1389 }
+}
+
+ItemObject 4
+{
+    { Type UmlStereotype }
+    { Value "datatype" }
+    { NoteId 3 }
+    { ObjectId 1390 }
+}
+
+ItemObject 5
+{
+    { Type UmlTaggedValue }
+    { Value "Java = String" }
+    { NoteId 3 }
+    { ObjectId 1391 }
+}
+
+ItemObject 6
+{
+    { Type UmlTaggedValue }
+    { Value "C++ = char *" }
+    { NoteId 3 }
+    { ObjectId 1392 }
+}
+
+ItemObject 7
+{
+    { Type UmlTaggedValue }
+    { Value "Ada95 = String" }
+    { NoteId 3 }
+    { ObjectId 1393 }
+}
+
+ItemObject 8
+{
+    { Type UmlTaggedValue }
+    { Value "C = char *" }
+    { NoteId 3 }
+    { ObjectId 1394 }
+}
+
+NoteObject 9
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1396 }
+}
+
+ItemObject 10
+{
+    { Type ObjectName }
+    { Value "String" }
+    { NoteId 9 }
+    { ObjectId 1397 }
+}
+

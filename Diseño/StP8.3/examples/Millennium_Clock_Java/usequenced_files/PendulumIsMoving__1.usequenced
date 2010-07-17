@@ -1,0 +1,264 @@
+Diagram UmlSequenceDiagram
+{
+    { Name "PendulumIsMoving__1" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -346 }
+    { PanY -226 }
+    { Alignment 32 }
+    { GUID "UID_7CAD2690-0206-11d6-AE65-000000000000" }
+    { Summary
+        { Nodes 3 }
+        { Arcs 2 }
+    }
+}
+
+Node 2
+{
+    { Type ScenarioInstance }
+    { Loc 15 -148 }
+    { Scale 1424.00 50.00 }
+    { Label
+        { Text "PendulumIsMoving(UmlUseCase:PendulumIsMoving)" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_C27DF190-63AF-11d4-A4BA-00008606A51E" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ScenarioMapping }
+        { ID 2567 }
+        { GUID "UID_7CFB96CE-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2569 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2571 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ParentName }
+        { ID 2570 }
+    }
+}
+
+Node 3
+{
+    { Type PassiveObject }
+    { Loc 188 54 }
+    { Scale 128.00 1286.00 }
+    { Label
+        { Text "clockwork:Clockwork" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_C27DF195-63AF-11d4-A4BA-00008606A51E" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 2511 }
+        { GUID "UID_7CFB96D1-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 2514 }
+        { GUID "UID_7CFB96D7-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 2572 }
+        { GUID "UID_7CFB96D4-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 4
+{
+    { Type ActiveObject }
+    { Loc -204 54 }
+    { Scale 128.00 1286.00 }
+    { Label
+        { Text "pend:Pendulum" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_C27DF194-63AF-11d4-A4BA-00008606A51E" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 792 }
+        { GUID "UID_7CFB96B5-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 793 }
+        { GUID "UID_7CFB96BB-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 2574 }
+        { GUID "UID_7CFB96B8-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ActiveObjectMapping }
+        { ID 2573 }
+        { GUID "UID_7CFB96DB-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Arc 5
+{
+    { Type SynchronousMessage }
+    { From
+        { ID 4 }
+        { Loc 4 -166 }
+        { Offset 0 -70 }
+    }
+    { To
+        { ID 3 }
+        { Loc 387 -166 }
+        { Offset 0 -70 }
+    }
+    { Label
+        { Text "takeEvent(tick)" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_C27DF193-63AF-11d4-A4BA-00008606A51E" }
+        }
+    }
+}
+
+Arc 6
+{
+    { Type ReturnMessage }
+    { From
+        { ID 3 }
+        { Loc 387 -96 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 4 }
+        { Loc 4 -96 }
+        { Offset 0 0 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_C27DF192-63AF-11d4-A4BA-00008606A51E" }
+        }
+    }
+}
+
+Link 7
+{
+    { FirstArc 5 }
+    { LastArc 5 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 2584 }
+        { GUID "UID_7CFB96E3-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2586 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2592 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 2591 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 2590 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 2589 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 2588 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 2587 }
+    }
+}
+
+Link 8
+{
+    { FirstArc 6 }
+    { LastArc 6 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 2575 }
+        { GUID "UID_7CFB96E0-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2577 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2583 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 2582 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 2581 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 2580 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 2579 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 2578 }
+    }
+}

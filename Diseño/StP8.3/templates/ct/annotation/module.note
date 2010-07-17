@@ -1,0 +1,408 @@
+// SCE ModulePDL note
+//
+
+Note 802004
+{
+    { AppType ModulePDL } 
+    { HelpText "Use the description of this note to enter the PDL information." }
+    { Bounds { Min 0 } { Max 1 } } 
+    { PrintName "Module PDL" }
+    { Item
+	{ AppType PDL }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Has PDL?" }
+	{ IsReadOnly True }
+	{ InitValue "True" }
+    }
+}
+
+
+
+Note 802033
+{ 
+    { AppType CCodeBody }
+    { PrintName "C Code Body" }
+    { HelpText "The C Code note lets you specify the code body for a module." }
+    { Bounds { Min 0 } { Max 1 } }
+}
+
+Note 802034
+{
+    { AppType ModuleComment }
+    { PrintName "Module Comment" }
+    { HelpText "The Module Comment note lets you specify a comment to be generated into the Description section of the function header comment" }
+    { Bounds { Min 0 } { Max 1 } }
+}
+
+Note 802005
+{
+    { AppType ModuleDefinition }
+    { PrintName "Module Definition" }
+    { HelpText "The Module Definition note lets you add items which are used for C code generation." }
+    { Bounds { Min 1 } { Max 1 } }
+    { Item
+        { AppType ModuleReturnType }
+        { PrintName "Module Return Type" }
+        { HelpText "The Module Return Type item lets you specify the return type for a module." }
+        { Bounds { Min 0 } { Max 1 } }
+        { InitValue "int" }
+    }
+    { Item
+        { AppType StorageClass }  
+        { PrintName "Storage Class" } 
+        { HelpText "The Storage Class item lets you specify the storage class for Modules.  Possible values are | static | const | static const. " } 
+        { Bounds { Min 0 } { Max 1 } } 
+    } 
+    { Item
+        { AppType VariableArguments }
+        { PrintName "Variable Arguments" }
+        { HelpText "The Variable Arguments item lets you specify whether or not a module accepts a variable arugment list." }
+        { Bounds { Min 0 } { Max 1 } }
+        { InitValue "False" }
+    }
+    { Item
+        { AppType CodeGenId }
+        { PrintName "Code Generation ID" }
+        { HelpText "Contains the unique ID for code generated object."}
+        { Bounds { Min 0 } { Max 1 } }
+        { IsVisible False }
+    }
+}
+
+ 
+Note 802036
+{
+    { AppType LexicalModule }
+    { PrintName "Lexical Module" }
+    { HelpText "The Lexical Module note is used to specify if a module is a lexical module or not." }
+    { Bounds { Min 0 } { Max 1 } }
+    { Item
+        { AppType IsLexicalModule }
+        { PrintName "Is Lexical Module" }
+        { HelpText "The Is Lexical Module is True if the module is a lexical inclusion module, and False otherwise." }
+        { Bounds { Min 1 } { Max 1 } }
+        { InitValue "True" }
+    }
+}
+
+
+// 2167A notes and items.
+Note 802019
+{
+    { AppType Module }
+    { HelpText "Use the description of this note to enter the PDL information." }
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Module" }
+    { Item
+        { AppType MemoryBudget } 
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Memory Budget" }
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType ProcessingTime }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Processing Time" }
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType DecompositionLevel }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Decomposition Level" }
+    }
+}
+
+Note 802020
+{
+    { AppType LocalData }
+    { Bounds { Min 0 } }
+    { PrintName "Local Data" }
+    { Item
+	{ AppType NoteKey }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Key" }
+	{ IsKey True }
+	{ IsVisible False }
+	{ InitValue "${unique_key}" }
+    }
+    { Item
+        { AppType DataName } 
+        { Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Name" } 
+    }
+    { Item
+        { AppType DataSize }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Size" } 
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType DataType }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Type" }
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType Representation }
+        { Bounds { Min 0 } { Max 1 } }
+	{ InitValue "N/A" }
+	{ PrintName "Representation" }
+    }
+    { Item
+        { AppType Constraint }
+        { Bounds { Min 0 } { Max 1 } }
+	{ InitValue "N/A" }
+	{ PrintName "Constraint" }
+    }
+    { Item
+        { AppType Units }
+        { Bounds { Min 0 } { Max 1 } }
+	{ InitValue "N/A" }
+	{ PrintName "Units" }
+    }
+    { Item
+        { AppType Precision }
+        { Bounds { Min 0 } { Max 1 } }
+	{ InitValue "N/A" }
+	{ PrintName "Precision" }
+    }
+    { Item
+        { AppType Accuracy }
+        { Bounds { Min 0 } { Max 1 } }
+	{ InitValue "N/A" }
+	{ PrintName "Accuracy" }
+    }
+}
+
+Note 802021
+{
+    { AppType LocalDatabase }
+    { Bounds { Min 0 } }
+    { PrintName "Local Database" }
+    { Item
+	{ AppType NoteKey }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Key" }
+	{ IsKey True }
+	{ IsVisible False }
+	{ InitValue "${unique_key}" }
+    }
+    { Item
+        { AppType ERDiagram }
+        { Bounds { Min 1 } { Max 1 } }
+	{ PrintName "E-R Diagram" }
+    }
+    { Item
+        { AppType AccessMethod }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Access Method" }
+    }
+}
+
+Note 802022
+{
+    { AppType ExternalDatabase }
+    { Bounds { Min 0 } }
+    { PrintName "External Database" }
+    { Item
+	{ AppType NoteKey }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Key" }
+	{ IsKey True }
+	{ IsVisible False }
+	{ InitValue "${unique_key}" }
+    }
+    { Item
+        { AppType ERDiagram }
+        { Bounds { Min 1 } { Max 1 } }
+	{ PrintName "E-R Diagram" }
+    }
+    { Item
+        { AppType AccessMethod }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Access Method" }
+    }
+}
+
+Note 802023
+{
+    { AppType DatabaseReference }
+    { Bounds { Min 0 } }
+    { PrintName "Database Reference" }
+    { Item
+	{ AppType NoteKey }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Key" }
+	{ IsKey True }
+	{ IsVisible False }
+	{ InitValue "${unique_key}" }
+    }
+    { Item
+        { AppType DatabaseName }
+        { Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Database Name" }
+    }
+    { Item
+        { AppType DatabaseUsage }
+        { Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Database Usage" } 
+    }
+}
+
+Note 802013
+{
+    { AppType SystemState }
+    { Bounds { Min 0 } }
+    { PrintName "System State" }
+    { Item
+	{ AppType NoteKey }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Key" }
+	{ IsKey True }
+	{ IsVisible False }
+	{ InitValue "${unique_key}" }
+    }
+    { Item 
+        { AppType SystemState } 
+        { Bounds { Min 1 } { Max 1 } }
+	{ PrintName "System State" }
+    }
+}
+
+Note 802024
+{
+    { AppType Interrupt } 
+    { Bounds { Min 0 } }
+    { PrintName "Interrupt" }
+    { Item
+	{ AppType NoteKey }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Key" }
+	{ IsKey True }
+	{ IsVisible False }
+	{ InitValue "${unique_key}" }
+    }
+    { Item
+        { AppType InterruptName }
+        { Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Name" }
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType Source }
+        { Bounds { Min 0 } { Max 1 } }
+	{ InitValue "N/A" }
+	{ PrintName "Source" }
+    }
+    { Item
+        { AppType InterruptPriority }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Priority" } 
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType Response }
+        { Bounds { Min 0 } { Max 1 } }
+	{ InitValue "N/A" }
+	{ PrintName "Response" }
+    }
+    { Item
+        { AppType InterruptTime }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Time" } 
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType MinimumFrequency }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Minimum Frequency" }
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType MaximumFrequency }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Maximum Frequency" }
+	{ InitValue "N/A" }
+    }
+    { Item
+        { AppType ProbableFrequency }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Probable Frequency" }
+	{ InitValue "N/A" }
+    }
+}
+Note 802025
+{
+    { AppType Timing } 
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Timing" }
+    { Item
+        { AppType TimingConditions }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Timing Conditions" }
+    }
+    { Item
+        { AppType Sequencing }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Sequencing" }
+    }
+    { Item
+        { AppType DynamicLogic }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Dynamic Logic" }
+    }
+}
+
+Note 802026
+{
+    { AppType Library }
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Library" }
+    { Item
+        { AppType LibraryName }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Name" } 
+    }
+    { Item
+        { AppType LibraryNumber }
+        { Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Number" }
+    }
+}
+
+Note 802027
+{
+    { AppType OtherElements }
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Other Elements" }
+}
+
+Note 802028
+{
+    { AppType Limitations } 
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Limitations" }
+}
+
+Note 802012
+{
+    { AppType DerivedRequirement  }
+    { Bounds { Min 0 } }
+    { PrintName "Derived Requirement" }
+    { Item
+	{ AppType NoteKey }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Key" }
+	{ IsKey True }
+	{ IsVisible False }
+	{ InitValue "${unique_key}" }
+    }
+    { Item
+        { AppType DerivedRequirementName }
+        { Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Name" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_module.note"

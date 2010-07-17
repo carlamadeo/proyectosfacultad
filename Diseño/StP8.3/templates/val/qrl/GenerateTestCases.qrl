@@ -1,0 +1,82 @@
+external string UseCases;
+
+#include "val/qrl/include/TConfig.inc"
+#include "val/qrl/include/TUseCase.inc"
+#include "val/qrl/include/ExtractOneModel.inc"
+#include "val/qrl/include/DesignTestCase.inc"
+#include "val/qrl/include/progress.inc"
+#include "val/qrl/include/tdrvMessaging.inc"
+#include "val/qrl/include/CreateDir.inc"
+
+void 
+main()
+{
+  initProgress(20);
+  initValidatorOperationMessage("Generate Test Cases", UseCases);
+
+  string sOutputPath = current_projdir() + current_system() + "/test_files/";
+  string sCdfFile, sOutputDir;
+  
+  list lstUseCases, lstTestUnitIds;
+  int count, i;
+  string sUseCaseName, sTestUnitId;
+
+  lstTestUnitIds = list_create("string", 0);
+  lstUseCases = string_to_list(UseCases, " ");
+
+  count = list_count (lstUseCases);
+  setProgressStep(calcProgressStep(20, 65, count));
+  updateProgress("Checking usecases...");
+  for (i=0;i<count;i=i+1)
+    {
+      sUseCaseName = list_get(lstUseCases,i );
+      if (!CheckExistance (sUseCaseName) )
+        {
+           validatorErrorMessage("Use Case: " + sUseCaseName + " is not in the selected model");
+           return;
+        }
+
+      sTestUnitId = Get_T_test_unit_id(sUseCaseName, "");
+      extractOneModel(sTestUnitId);
+      updateProgress("Extracting model for use case "+ sUseCaseName +"...");
+      // showProgress();
+      sOutputDir = sOutputPath + sTestUnitId;
+      if (!CheckForSDF(sOutputDir, "sdf"))
+        {
+         validatorWarningMessage("SDF file for " + sTestUnitId + " does not exist.");
+         continue;
+        }
+
+      //validatorUserMessage(" " + sUseCaseName);
+      sCdfFile = formatTraceData(sTestUnitId, sOutputPath);
+      // showProgress();
+      list_append(lstTestUnitIds, sTestUnitId);
+    }
+  
+  progress("Generating test cases...", 100);
+  count = list_count(lstTestUnitIds);
+  if ( count!=0 )
+    {
+        if ( count > 1 )
+            tdriverVDP(list_to_string(lstTestUnitIds, " -U ") , sOutputPath + " -sf 1.cdf", "UseCaseTestScripts");
+        else      
+        {
+            if (count == 0)
+            sTestUnitId = list_get(lstTestUnitIds, 0);
+            //sOutputDir = sOutputPath + sTestUnitId;
+            //sCdfFile = sOutputDir + sTestUnitId + "/" + sTestUnitId + ".cdf";
+            validatorUserMessage(" ");
+            validatorUserMessage("Calling TDriver to Compile, Design and Prepare Test Cases...");
+            tdriverVDP(sTestUnitId, sCdfFile + " -pl 1 ", "UseCaseTestScripts");
+            validatorUserMessage(" ");
+            // showProgress();
+        }
+    }
+  else
+      validatorErrorMessage("No test units redy for generation test specifications");
+
+  finalizeValidatorMessaging("Generate Test Cases");
+  doneProgress();
+
+}
+

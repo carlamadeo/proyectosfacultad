@@ -1,0 +1,17 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Include "annotation/domain_values.note"
+Include "annotation/domain_range.note"
+Include "annotation/subject_area.note"
+Include "annotation/oracle_sequence.note"
+Include "annotation/generic_object"
+
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_domain"

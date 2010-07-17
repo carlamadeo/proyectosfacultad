@@ -1,0 +1,42 @@
+FileObject 1
+{
+    { Name "a107" }
+    { Type ObjectAnnotation }
+    { GUID "UID_94BCA547-D1C4-4794-B36A-A6E0B56D5075" }
+}
+
+NodeObject 99999
+{
+    { Name "Account,Transfer" }
+    { Type UmlAssociation }
+    { ObjectId 340 }
+    { AnnotFileId 1 }
+    { Sig "fromAcc:" }
+    { ScopeNodeId 0 }
+    { GUID "UID_DEAA1A07-108E-11d5-8C6F-000000000000" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 342 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 344 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Account,Transfer" }
+    { NoteId 3 }
+    { ObjectId 345 }
+}
+

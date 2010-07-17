@@ -1,0 +1,102 @@
+FileObject 1
+{
+    { Name "a149" }
+    { Type ObjectAnnotation }
+    { GUID "UID_B81D6043-8E89-402e-A4B0-EAD3A1E13275" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "speed_of_train.h" }
+    { Type SEFile }
+    { ObjectId 2419 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_FBE757CD-2D83-40dd-A777-88DCBA63C1C9" }
+}
+
+NodeObject 99997
+{
+    { Name "speed of train" }
+    { Type Sequence }
+    { ObjectId 2420 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_50981882-114E-4352-BE09-9080AE63D9AF" }
+}
+
+NoteObject 2
+{
+    { Type DataDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2422 }
+}
+
+ItemObject 3
+{
+    { Type DataType }
+    { Value "integer" }
+    { NoteId 2 }
+    { ObjectId 2423 }
+}
+
+ItemObject 4
+{
+    { Type SystemType }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 2424 }
+}
+
+ItemObject 5
+{
+    { Type Units }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 2425 }
+}
+
+ItemObject 6
+{
+    { Type Scaling }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 2426 }
+}
+
+ItemObject 7
+{
+    { Type Precision }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 2427 }
+}
+
+NoteObject 8
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2429 }
+}
+
+ItemObject 9
+{
+    { Type ObjectName }
+    { Value "speed of train" }
+    { NoteId 8 }
+    { ObjectId 2430 }
+}
+

@@ -1,0 +1,14 @@
+// Initialize the DXL server
+
+/*
+   Initialize the DXL server
+
+*/
+
+if (platform == "WIN32") {
+	ack "It is only necessary to start a DXL server under UNIX"
+	halt
+} else {
+	initDXLServer getenv("DXLSOCKET2")
+	ack "DXL server started"
+}

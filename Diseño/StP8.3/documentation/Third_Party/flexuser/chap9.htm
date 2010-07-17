@@ -1,0 +1,533 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="TEMPLATEBASE" content="Users Guide WebWorks Template">
+<meta name="LASTUPDATED" content="01/24/02 09:18:47">
+<title>Appendix B </title>
+</head>
+
+<body link="#0066CC" vlink="#800080" text="#000000" alink="#FF0000" bgcolor="#FFFFFF"
+background="graphics/backgrnd.gif">
+
+<p>
+<img src="graphics/FLEX-lm.gif" align="left"
+alt="FLEXlm icon" width="214" height="53"> </p>
+
+<table width="331" border="0" align="right" cellpadding="0" cellspacing="0">
+  <tr>
+    <td><a href="TOC.htm#TOC"><img src="graphics/navtoc.gif" width="84" height="23"
+    border="0" alt="TOC"> </a></td>
+    <td><a href="chap8.htm"><img src="graphics/navprev.gif" width="80" height="23"
+    border="0" alt="PREV"> </a></td>
+    <td><a href="chap10.htm"><img src="graphics/navnext.gif" width="83" height="23"
+    border="0" alt="NEXT"> </a></td>
+    <td><a href="IX.htm"><img src="graphics/navidx.gif" width="84" height="23"
+    border="0" alt="INDEX"> </a></td>
+  </tr>
+</table>
+
+<p><br clear="all">
+</p>
+
+<hr align="left">
+
+<blockquote>
+<h2>
+  <a name="916236"> </a>Appendix B 
+</h2>
+
+
+<h2>
+  <a name="916242"> </a>Troubleshooting Guide
+</h2><hr>
+
+
+<p>
+  <a name="896089"> </a>This appendix documents areas of FLEX<em>lm</em> that have given customers difficulty in the past.
+</p>
+
+
+<h3>
+  <a name="896091"> </a>B.1	 General Debugging Hints
+</h3>
+
+
+<p>
+  <a name="896092"> </a>The following are tips for debugging:
+</p>
+
+<ul>
+
+
+  <li ><a name="896093"> </a>When you start the license server (<code>lmgrd</code>) be sure that you direct the output into a log file where you can examine it. The log file often contains useful information. You should examine it when you have a problem, and be prepared to answer questions about it when you talk to a support person.
+  <li ><a name="896094"> </a>If the license server appears to have started correctly (which you should be able to determine from the log file), try running <code>lmstat -a</code> and <code>lmdiag</code> to see if that program has the same problem as your application.
+  <li ><a name="896100"> </a>If your application is FLEX<em>lm</em> v4.1 or later (v5 or later on Windows), you can use the <code>FLEXLM_DIAGNOSTICS</code> environment variable. Set <code>FLEXLM_DIAGNOSTICS</code> to 1, 2, or 3. A setting of 3 gives more information than 2, 2 gives more information than 1 (in particular, the feature name that was denied).
+  <li ><a name="896101"> </a>When you talk to a support person, you should be prepared to answer the following questions:
+  <li ><a name="896102"> </a>What kind of machine is your license server running on? What version of the operating system? What machine and operating system is the application running on?
+  <li ><a name="896106"> </a>What version of FLEX<em>lm</em> does the program use? Use the <code>lmver</code> script, or, on UNIX, execute the following command on your <code>lmgrd</code>, vendor daemon, and application:
+</ul>
+<dl>
+  <dl>
+    <dl>
+       <dt> <a name="896107"> </a><CODE><code>strings </code><code><em>binary_name</em></code><code> | grep Copy</code></CODE>
+    </dl>
+  </dl>
+  <dl>
+     <dt> <a name="896108"> </a>Alternatively, <code>lmgrd -v</code> gives the <code>lmgrd</code> version, and this works with the vendor daemon also.
+  </dl>
+</dl>
+<ul>
+
+
+  <li ><a name="896109"> </a>What error or warning messages appear in the log file? Did the server start correctly? Look for a message such as: 
+</ul>
+<dl>
+  <dl>
+    <dl>
+       <dt> <a name="896110"> </a><CODE><code>server xyz started for: feature1 feature2</code>.</CODE>
+    </dl>
+  </dl>
+</dl>
+<ul>
+
+
+  <li ><a name="896111"> </a>What is the output from running <code>lmstat -a</code>?
+  <li ><a name="896115"> </a>Are you running other products which are also licensed by FLEX<em>lm</em>? Are you using a combined license file or separate license files?
+  <li ><a name="896116"> </a>Are you using a three-server redundant license server (multiple SERVER lines in your license file)?
+</ul>
+
+<h3>
+  <a name="896119"> </a>B.2	 FLEXLM_DIAGNOSTICS
+</h3>
+
+
+<p>
+  <a name="896123"> </a><HR WIDTH=75%><FONT COLOR=RED>Note:	 Available only with applications using FLEX<em>lm</em> v4.1 or higher for UNIX, and v5.0 or higher with Windows. Also, applications may choose not to provide this functionality.</FONT><HR WIDTH=75%>
+</p>
+
+
+<p>
+  <a name="896124"> </a><code>FLEXLM_DIAGNOSTICS</code> is an environment variable that will cause the application to produce diagnostic information when a checkout is denied. The format of the diagnostic information may change over time.
+</p>
+
+
+<p>
+  <a name="896125"> </a>To set <code>FLEXLM_DIAGNOSTICS</code>, on UNIX:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="896126"> </a><CODE>(csh): setenv FLEXLM_DIAGNOSTICS 1</CODE>
+     <dt> <a name="896127"> </a><CODE>(sh): FLEXLM_DIAGNOSTICS=1; export FLEXLM_DIAGNOSTICS</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="896128"> </a>On Windows 3.1 and 95, add the following line to <code>C:\autoexec.bat</code>:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="896129"> </a><CODE>SET FLEXLM_DIAGNOSTICS=1</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="896130"> </a>On NT, use the System Control Panel applet to change the global environment, adding <code>FLEXLM_DIAGNOSTICS</code> to 1.
+</p>
+
+
+<p>
+  <a name="896131"> </a>On UNIX, the diagnostic output goes to stderr.
+</p>
+
+
+<p>
+  <a name="896132"> </a>On Windows, if the application is v5.11 or higher, the output is a file in the current directory called <code>flex</code><code><em>pid</em></code><code>.log</code>, where <code><em>pid</em></code> is the application's process ID. If the application is v5.0, the output file is called <code>flex_err.log</code>.
+</p>
+
+
+<h4>
+  <a name="896133"> </a>B.2.1	 Level 1 Content
+</h4>
+
+
+<p>
+  <a name="896137"> </a>If <code>FLEXLM_DIAGNOSTICS</code> is set to 1, then the standard FLEX<em>lm</em> error message will be presented, plus a complete list of license files that the application tried to use. For example:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="896138"> </a><CODE>setenv FLEXLM_DIAGNOSTICS 1<br>FLEXlm checkout error: Cannot find license file (-1,73:2) No such file or directory<br>license file(s):  /usr/myproduct/licenses/testing.lic license.lic</CODE>
+  </dl>
+</dl>
+
+<h4>
+  <a name="896139"> </a>B.2.2	 Level 2 Content
+</h4>
+
+
+<p>
+  <a name="905913"> </a>If <code>FLEXLM_DIAGNOSTICS</code> is set to 2, then, in addition to level 1 output, the checkout arguments are presented. For example:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="905914"> </a><CODE>setenv FLEXLM_DIAGNOSTICS 2<br>FLEXlm checkout error: No such feature exists (-5,116:2) No such file or directory<br>license file(s):  /usr/myproduct/licenses/testing.lic license.lic<br>lm_checkout("f1", 1.0, 1, 0x0, ..., 0x4000)</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="896142"> </a>Note that the error message actually contains two separate problems, which both occurred during the checkout: 
+</p>
+
+<ul>
+
+
+  <li ><a name="896143"> </a>There's no such feature in the license it did find
+  <li ><a name="896144"> </a>It was unable to find the other license file, which is what produces the message "No such file or directory"
+</ul>
+
+<p>
+  <a name="896145"> </a>Following is a description of the arguments to <font  face="Arial" size="2">lm_checkout()</font>
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="896146"> </a><CODE>lm_checkout(<code><em>feature</em></code>, <code><em>version</em></code>, <code><em>num_lic</em></code>, <code><em>queue_flag</em></code>, <code><em>...</em></code>, <code><em>dupgroup_mask</em></code>)</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="896147"> </a>where:
+</p>
+
+
+<p>
+  <a name="896169"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="896150"> </a><code><em>feature<br></em></code></td>
+    <td><a name="896152"> </a>The requested feature.<br></td>
+  </tr>
+  <tr>
+    <td><a name="896154"> </a><code><em>version<br></em></code></td>
+    <td><a name="896156"> </a>The requested version. The license file must <br>contain a version &gt;= the requested version.<br></td>
+  </tr>
+  <tr>
+    <td><a name="896158"> </a><code><em>num_lic<br></em></code></td>
+    <td><a name="896160"> </a>Number of licenses requested. Usually 1.<br></td>
+  </tr>
+  <tr>
+    <td><a name="896162"> </a><code><em>queue_flag<br></em></code></td>
+    <td><a name="896164"> </a>If 0, no queueing<br><br>If 1, queue for license ("blocking" queue)<br><br>If 2, queue for licenses, but return to application <br>("non-blocking" queue)<br></td>
+  </tr>
+  <tr>
+    <td><a name="896166"> </a><code><em>dupgroup_mask<br></em></code></td>
+    <td><a name="896168"> </a>Indicates duplicate grouping, also called license <br>sharing. User, host, and display are as shown by <br><code>lmstat -a</code>.<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="896170"> </a>
+</p>
+
+
+<h4>
+  <a name="896174"> </a>B.2.3	 Level 3 Content (FLEX<em>lm</em> v6.0+ only)
+</h4>
+
+
+<p>
+  <a name="896175"> </a>If <code>FLEXLM_DIAGNOSTICS</code> is set to 3, then, in addition to level 1 and 2 output, if a checkout is successful, information is printed explaining how the license was granted:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="896176"> </a><CODE>setenv FLEXLM_DIAGNOSTICS 3<br><code><em>app<br></em></code>Checkout succeeded: f0/14263EAEA8E0<br>License file: ./servtest.lic<br>No server used<br><code><em>app2<br></em></code>Checkout succeeded: f1/BC64A7B120AE<br>License file: @localhost<br>License Server: @localhost<br><code><em>app3<br></em></code>Checkout succeeded: f1/BC64A7B120AE<br>License file: servtest.lic<br>License Server: @speedy</CODE>
+  </dl>
+</dl>
+
+<p>
+  <a name="896177"> </a>Note that the feature name and license key are printed, along with the license file location (or host name if <code>@</code><code><em>host</em></code> were used) and host name of the server, where applicable.
+</p>
+
+
+<h3>
+  <a name="896182"> </a>B.3	 FLEX<em>lm</em> Troubleshooting List
+</h3>
+
+
+<h4>
+  <a name="896183"> </a>B.3.1	 Problem Description Format
+</h4>
+
+
+<p>
+  <a name="896184"> </a>Each problem is presented in three parts:
+</p>
+
+
+<p>
+  <a name="896198"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="896187"> </a><strong>Symptom:<br></strong></td>
+    <td><a name="896189"> </a><em>A description of the problem.<br></em></td>
+  </tr>
+  <tr>
+    <td><a name="896191"> </a>Cause:<br></td>
+    <td><a name="896193"> </a>A discussion of what causes the problem described in <br>the "Symptom" section.<br></td>
+  </tr>
+  <tr>
+    <td><a name="896195"> </a>Solution:<br></td>
+    <td><a name="896197"> </a>Instructions on how to solve the problem.<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="896199"> </a>
+</p>
+
+
+<p>
+  <a name="896200"> </a>You can scan through the list of problems to find any which appear to relate to your concerns. In order to solve your problem, you may have to use all or some of the solutions listed here.
+</p>
+
+
+<h4>
+  <a name="896201"> </a>B.3.2	 Hostid Problems
+</h4>
+
+
+<p>
+  <a name="896218"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="896204"> </a><strong>Symptom:<br></strong></td>
+    <td><a name="896206"> </a><em>When I run the license manager on my machine, it tells <br>me it is the wrong hostid.<br></em></td>
+  </tr>
+  <tr>
+    <td><a name="896208"> </a>Cause:<br></td>
+    <td><a name="896210"> </a>The vendor daemon checks the hostid listed on the <br>SERVER line in the license file; if it does not match the <br>hostid of the machine it is running on, this message will <br>be printed. Possible causes include: 1) you are trying to <br>run the license server on a different machine from the <br>machine the file was made for; 2) the hostid of the <br>machine you are running on changed (for example, the <br>dongle hostid was moved (Windows) or the CPU board <br>was replaced); 3) the hostid in the license file was <br>modified.<br></td>
+  </tr>
+  <tr>
+    <td><a name="896212"> </a>Solution:<br></td>
+    <td><a name="896214"> </a>Verify that the hostid of the machine on which the <br>vendor daemon (or node locked client program) is being <br>run matches the hostid specified in the license file (on <br>the SERVER line for the vendor or on the FEATURE <br>line for a node-locked client). You can run the <br><code>lmhostid</code> program to see what FLEX<em>lm</em> thinks the <br>hostid is. You may not modify the hostid in the license <br>file. If the hostid of your server machine changes, you <br>will have to get a new license file from your software <br>vendor.<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="896219"> </a>
+</p>
+
+
+<h4>
+  <a name="896220"> </a>B.3.3	 Connection Problems
+</h4>
+
+
+<p>
+  <a name="896242"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="896223"> </a><strong>Symptom:<br></strong></td>
+    <td><a name="896225"> </a><em>The application program (or </em><em>lmstat</em><em>) can't connect to <br>the server to check out a license.<br></em></td>
+  </tr>
+  <tr>
+    <td><a name="896227"> </a>Cause:<br></td>
+    <td><a name="896232"> </a>The FLEX<em>lm</em> routines in the application are unable to <br>make a TCP connection to the server and port specified <br>in the license file. Possible reasons for this are: 1) the <br>wrong license file is being referenced by the application <br>program; 2) the server machine specified in the license <br>file is down; 3) the vendor daemon specified in the <br>license file is not running; 4) the host name in the <br>license file is not recognized by the system; 5) the <br>network between the client machine and the server <br>machine is down; 6) You are mixing FLEX<em>lm</em> v1.5 (or <br>earlier) and v2.1 (or later) vendor daemons in one <br>license file and have run <code>lmgrd</code> without the <code>-b</code> <br>command line option; 7) TCP is not running on your <br>machine.<br></td>
+  </tr>
+  <tr>
+    <td><a name="896237"> </a>Solution:<br></td>
+    <td><a name="896241"> </a>The <code>lmdiag</code> utility is designed primarily to debug this <br>problem, so first, try <code>lmdiag</code>. Verify that the application <br>is using the proper license file. Verify that specified <br>server machine is up and reachable by executing another <br>command that uses TCP, such as <code>telnet</code>, from the <br>client to the server. Verify that the vendor daemon is <br>running (you can use <code>ps</code> on the server to look for it). <br>Examine the license log file to see if any problems are <br>reported, particularly messages indicating that the <br>vendor daemon has quit. Run <code>lmstat -a</code> from the <br>server machine to verify that the vendor daemon is alive. <br>Run <code>lmstat -a</code> from the client machine to verify the <br>connection from client to vendor daemon across the <br>network. Try using <code>telnet </code><code><em>host</em></code><code> </code><code><em>port</em></code> where <code><em>host</em></code> <br>and <code><em>port</em></code> are the same as on the SERVER line in your <br>license file.<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="896243"> </a>
+</p>
+
+
+<h4>
+  <a name="896244"> </a>B.3.4	 Other Client Problems
+</h4>
+
+
+<p>
+  <a name="896261"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="896247"> </a><strong>Symptom:<br></strong></td>
+    <td><a name="896249"> </a><em>When I run my application program (or vendor <br>daemon), I get the error </em><em>bad code</em><em> or </em><em>inconsistent <br>encryption code</em><em>.</em> <br></td>
+  </tr>
+  <tr>
+    <td><a name="896251"> </a>Cause:<br></td>
+    <td><a name="896253"> </a>Possible causes for this are: 1) the license file was <br>modified (either the hostid on a SERVER line or <br>anything on the FEATURE line was changed); 2) the <br>vendor used the wrong version of his license creation <br>program to generate your license file (or there is a bug <br>in that process).<br></td>
+  </tr>
+  <tr>
+    <td><a name="896255"> </a>Solution:<br></td>
+    <td><a name="896257"> </a>You may not modify the license file (except for specific <br>fields, see <a href="chap2.htm#916895">Chapter  2, "The License File"</a>). If you need <br>to change something in your license file, you must get a <br>new license file from your software vendor.<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="896262"> </a>
+</p>
+
+
+<p>
+  <a name="896276"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="896265"> </a><strong>Symptom:<br></strong></td>
+    <td><a name="896267"> </a><em>When the second user tries to check out a license, the <br>vendor daemon prints an error concerning </em><em>Parameter <br>mismatch</em><em> in the debug log file and refuses the license. <br>The application may give the error: </em><em>Duplicate <br>selection mismatch for this feature.<br></em></td>
+  </tr>
+  <tr>
+    <td><a name="896269"> </a>Cause:<br></td>
+    <td><a name="899079"> </a>The most likely cause of this problem is that you are <br>simultaneously trying to run two different versions of <br>the application program, and the software vendor has not <br>specifically set up the new version for this kind of <br>compatibility. Check the debug log file for a comm <br>version mismatch warning message; this indicates that <br>someone is running an older client than the license <br>server daemon, <code>lmgrd</code>.<br></td>
+  </tr>
+  <tr>
+    <td><a name="896273"> </a>Solution:<br></td>
+    <td><a name="896275"> </a>Run only the new version of the application (or only the <br>old version) or get a copy of a v8.0+ vendor daemon.<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<h4>
+  <a name="896277"> </a>B.3.5	 Other Server Problems
+</h4>
+
+
+<p>
+  <a name="896291"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="906691"> </a><strong>Symptom:<br></strong></td>
+    <td><a name="906693"> </a><em>I'm having trouble restarting my license servers on <br>Solaris.<br></em></td>
+  </tr>
+  <tr>
+    <td><a name="906696"> </a>Cause:<br></td>
+    <td><a name="906698"> </a>The default Solaris TCP port delay of four minutes may <br>cause problems when restarting a license server, <br>especially a license server that is using a hard-coded <br>port number (for example, each of the three-server <br>redundant servers) rather than selecting from a set of <br>default port numbers. <br></td>
+  </tr>
+  <tr>
+    <td><a name="906700"> </a>Solution:<br></td>
+    <td><a name="906802"> </a>If you have a problem restarting license servers on <br>Solaris, a root user can reset the port delay to 2.4 <br>seconds (2400 milliseconds). As a long-term solution, it <br>is recommended that one of the following lines be put in <br>a boot script because the port delay is reset every time <br>the machine reboots:<br><a name="906803"> </a>Solaris 2.6-:<br><a name="906804"> </a> ndd -set /dev/tcp tcp_close_wait_interval 2400<br><a name="906805"> </a>Solaris 2.7+:<br><a name="906806"> </a> ndd -set /dev/tcp tcp_time_wait_interval 2400<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="896292"> </a>
+</p>
+
+
+<p>
+  <a name="896324"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="896313"> </a><strong>Symptom:<br></strong></td>
+    <td><a name="896315"> </a><em>The license server keeps reporting "lost lock" errors in <br>the log file and exiting.<br></em></td>
+  </tr>
+  <tr>
+    <td><a name="896317"> </a>Cause:<br></td>
+    <td><a name="896319"> </a>The lock file (normally placed in <code>/usr/tmp</code> on UNIX <br>(<code>/var/tmp</code> in FLEX<em>lm</em> v8.1), <code>C:\flexlm</code> on Windows <br>NT) is being removed by someone else. There could be <br>another daemon running, or the license administrator (or <br>a script he set up) could have deleted the file.<br></td>
+  </tr>
+  <tr>
+    <td><a name="896321"> </a>Solution:<br></td>
+    <td><a name="896323"> </a>Check to see if there is more than one copy of the <br>daemon running. On UNIX use a command like <br><br><code>ps -aux | grep </code><code><em>vendor</em></code> to search for it. Check for <br>more than one <code>lmgrd</code> running as well, since it will <br>restart your vendor daemon when it is killed. If more <br>than one <code>lmgrd</code> is running, kill them all (using the <code>kill</code> <br>command, not <code>kill -9</code>, on UNIX or LMTOOLS on <br>Windows NT), then kill any remaining vendor daemons <br>(on UNIX, try a simple <code>kill</code>, if that fails then try <code>kill <br>-9</code> the <code>lmgrd</code> and all vendor daemons) and start one <br>fresh copy of <code>lmgrd</code>. On UNIX, check to see if there is <br>a shell script running that cleans out <code>/tmp</code> (or <code>/usr/tmp</code> <br>or <code>/var/tmp</code>). If so, try modifying it so that it does not <br>delete zero-length files.<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="896325"> </a>
+</p>
+</blockquote>
+
+<hr>
+
+<table width="380" align="right" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align=left width="215"><em>FLEXlm  End Users Guide</em>
+  </tr>
+    <td align=left width="165"><em>February 2002</em></td>
+</table>
+
+<table width="331" border="0" align="left" cellpadding="0" cellspacing="0">
+  <tr>
+    <td><a href="TOC.htm#TOC"><img src="graphics/navtoc.gif" width="84" height="23"
+    border="0" alt="TOC"> </a></td>
+    <td><a href="chap8.htm"><img src="graphics/navprev.gif" width="80" height="23"
+    border="0" alt="PREV"> </a></td>
+    <td><a href="chap10.htm"><img src="graphics/navnext.gif" width="83" height="23"
+    border="0" alt="NEXT"> </a></td>
+    <td><a href="IX.htm"><img src="graphics/navidx.gif" width="84" height="23"
+    border="0" alt="INDEX"> </a></td>
+  </tr>
+</table>
+</body>
+</html>

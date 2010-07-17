@@ -1,0 +1,43 @@
+// ECR 3556 start
+
+Toolbar DefaultArcType
+{
+    //ECR 6568 begin
+    //{ Position Top }
+    //{ IsFloating True }
+    { Position Left }
+    //ECR 6568 end
+    { Group
+        { Exclusive True }
+        { Entry
+            { Name "ModuleCall" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType ModuleCall" }
+            { HelpTip "Module Call" }
+            { Image "modulecall" }
+        }
+        { Entry
+            { Name "DefaultStyle" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType DefaultStyle" }
+            { HelpTip "Default Style" }
+            { Image "defaultstyle" }
+        }
+        { Entry
+            { Name "OffpageConnection" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType OffpageConnection" }
+            { HelpTip "Offpage Connection" }
+            { Image "offpageconnection" }
+        }
+        { Entry
+            { Name "CommentLink" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType CommentLink" }
+            { HelpTip "Comment Link" }
+            { Image "commentlink" }
+        }
+    }
+}
+
+// ECR 3556 end

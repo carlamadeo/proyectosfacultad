@@ -1,0 +1,370 @@
+FileObject 1
+{
+    { Name "a48" }
+    { Type ObjectAnnotation }
+    { GUID "UID_F70D3ABC-003D-4996-AE2A-91D72207344E" }
+}
+
+NodeObject 99999
+{
+    { Name "control g_train" }
+    { Type Process }
+    { ObjectId 3290 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_568D2BAB-E1BE-4138-9BBA-EBBA70597B20" }
+}
+
+NodeObject 99998
+{
+    { Name "speed sensors" }
+    { Type External }
+    { ObjectId 3363 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_A6B3F8D1-6310-4bca-91BD-3CFFE6382D4D" }
+}
+
+LinkObject 99997
+{
+    { Name "tracking signal" }
+    { Type ControlFlow }
+    { ObjectId 3364 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_D7D14F35-64CB-497c-B8C0-8493DACD80F0" }
+}
+
+NoteObject 2
+{
+    { Type InterfaceRequirement }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3366 }
+    { DescLine "Speed sensors are placed at fixed distances. Every time the train passes a sensor a signal is sent to the computer, which in turn sends this information to the screen." }
+}
+
+ItemObject 3
+{
+    { Type InterfaceName }
+    { Value "tracking_signal" }
+    { NoteId 2 }
+    { ObjectId 3367 }
+}
+
+ItemObject 4
+{
+    { Type Execution }
+    { Value "sequential" }
+    { NoteId 2 }
+    { ObjectId 3368 }
+}
+
+ItemObject 5
+{
+    { Type Synchronization }
+    { Value "set" }
+    { NoteId 2 }
+    { ObjectId 3369 }
+}
+
+ItemObject 6
+{
+    { Type InterruptPriority }
+    { Value "enabled" }
+    { NoteId 2 }
+    { ObjectId 3370 }
+}
+
+ItemObject 7
+{
+    { Type PriorityLevel }
+    { Value "enabled" }
+    { NoteId 2 }
+    { ObjectId 3371 }
+}
+
+NoteObject 8
+{
+    { Type InterfaceDesign }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3373 }
+}
+
+ItemObject 9
+{
+    { Type InterfaceName }
+    { Value "magnet-system" }
+    { NoteId 8 }
+    { ObjectId 3374 }
+}
+
+ItemObject 10
+{
+    { Type InterfacePriority }
+    { Value "N/A" }
+    { NoteId 8 }
+    { ObjectId 3375 }
+}
+
+NoteObject 11
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3377 }
+    { DescLine "The tracking signal is a pulse that is sent to the computer from the sensors along the 200 Km track.  This pulse is used for location and speed determinations." }
+}
+
+ItemObject 12
+{
+    { Type ObjectName }
+    { Value "tracking signal" }
+    { NoteId 11 }
+    { ObjectId 3378 }
+}
+
+ItemObject 13
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 11 }
+    { ObjectId 3379 }
+}
+
+NoteObject 14
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 3381 }
+    { DescLine "Modified." }
+}
+
+ItemObject 15
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 14 }
+    { ObjectId 3382 }
+}
+
+ItemObject 16
+{
+    { Type RequirementName }
+    { Value "speed-sub-system" }
+    { NoteId 14 }
+    { ObjectId 3383 }
+}
+
+ItemObject 17
+{
+    { Type RequirementDocument }
+    { Value "SSS" }
+    { NoteId 14 }
+    { ObjectId 3384 }
+}
+
+ItemObject 18
+{
+    { Type RequirementParagraph }
+    { Value "speed" }
+    { NoteId 14 }
+    { ObjectId 3385 }
+}
+
+ItemObject 19
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 14 }
+    { ObjectId 3386 }
+}
+
+ItemObject 20
+{
+    { Type QualificationMethod }
+    { Value "" }
+    { NoteId 14 }
+    { ObjectId 3387 }
+}
+
+ItemObject 21
+{
+    { Type QualificationLevel }
+    { Value "" }
+    { NoteId 14 }
+    { ObjectId 3388 }
+}
+
+ItemObject 22
+{
+    { Type FormalTestParagraph }
+    { Value "" }
+    { NoteId 14 }
+    { ObjectId 3389 }
+}
+
+NoteObject 23
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 3391 }
+}
+
+ItemObject 24
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 23 }
+    { ObjectId 3392 }
+}
+
+ItemObject 25
+{
+    { Type DocumentName }
+    { Value "SRS" }
+    { NoteId 23 }
+    { ObjectId 3393 }
+}
+
+ItemObject 26
+{
+    { Type DocumentNumber }
+    { Value "3" }
+    { NoteId 23 }
+    { ObjectId 3394 }
+}
+
+ItemObject 27
+{
+    { Type ParagraphNumber }
+    { Value "1" }
+    { NoteId 23 }
+    { ObjectId 3395 }
+}
+
+NoteObject 28
+{
+    { Type Document }
+    { Name "1" }
+    { OwnerId 99997 }
+    { ObjectId 3397 }
+}
+
+ItemObject 29
+{
+    { Type NoteKey }
+    { Value "1" }
+    { NoteId 28 }
+    { ObjectId 3398 }
+}
+
+ItemObject 30
+{
+    { Type DocumentName }
+    { Value "SDD" }
+    { NoteId 28 }
+    { ObjectId 3399 }
+}
+
+ItemObject 31
+{
+    { Type DocumentNumber }
+    { Value "1" }
+    { NoteId 28 }
+    { ObjectId 3400 }
+}
+
+ItemObject 32
+{
+    { Type ParagraphNumber }
+    { Value "7" }
+    { NoteId 28 }
+    { ObjectId 3401 }
+}
+
+NoteObject 33
+{
+    { Type Document }
+    { Name "2" }
+    { OwnerId 99997 }
+    { ObjectId 3403 }
+}
+
+ItemObject 34
+{
+    { Type NoteKey }
+    { Value "2" }
+    { NoteId 33 }
+    { ObjectId 3404 }
+}
+
+ItemObject 35
+{
+    { Type DocumentName }
+    { Value "IRS" }
+    { NoteId 33 }
+    { ObjectId 3405 }
+}
+
+ItemObject 36
+{
+    { Type DocumentNumber }
+    { Value "6" }
+    { NoteId 33 }
+    { ObjectId 3406 }
+}
+
+ItemObject 37
+{
+    { Type ParagraphNumber }
+    { Value "9" }
+    { NoteId 33 }
+    { ObjectId 3407 }
+}
+
+NoteObject 38
+{
+    { Type Document }
+    { Name "3" }
+    { OwnerId 99997 }
+    { ObjectId 3409 }
+}
+
+ItemObject 39
+{
+    { Type NoteKey }
+    { Value "3" }
+    { NoteId 38 }
+    { ObjectId 3410 }
+}
+
+ItemObject 40
+{
+    { Type DocumentName }
+    { Value "IDD" }
+    { NoteId 38 }
+    { ObjectId 3411 }
+}
+
+ItemObject 41
+{
+    { Type DocumentNumber }
+    { Value "1" }
+    { NoteId 38 }
+    { ObjectId 3412 }
+}
+
+ItemObject 42
+{
+    { Type ParagraphNumber }
+    { Value "8" }
+    { NoteId 38 }
+    { ObjectId 3413 }
+}
+

@@ -1,0 +1,251 @@
+FileObject 1
+{
+    { Name "a41" }
+    { Type ObjectAnnotation }
+    { GUID "UID_6FBDA25D-BA84-4e7d-AD83-C7CDC4BC00FC" }
+}
+
+NodeObject 99999
+{
+    { Name "display on screen" }
+    { Type Process }
+    { ObjectId 3279 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_4AB6693B-44B9-4199-A627-EFEFF95341DD" }
+}
+
+NoteObject 2
+{
+    { Type Pspec }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 3758 }
+    { DescLine "This process gathers all the information regarding the:" }
+    { DescLine "1. speed of the train (Ts)" }
+    { DescLine "2. Location of the train (location)" }
+    { DescLine "3. Total number of passengers on the train." }
+    { DescLine "4. Total weight of the train." }
+}
+
+ItemObject 3
+{
+    { Type ProcessSpec }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 3759 }
+}
+
+NoteObject 4
+{
+    { Type PerformanceRequirement }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 3761 }
+    { DescLine "As specified in the Manual." }
+}
+
+ItemObject 5
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 4 }
+    { ObjectId 3762 }
+}
+
+ItemObject 6
+{
+    { Type PerformanceRequirementName }
+    { Value "fixed" }
+    { NoteId 4 }
+    { ObjectId 3763 }
+}
+
+NoteObject 7
+{
+    { Type DerivedRequirement }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 3765 }
+    { DescLine "There are no derived requirements for this system." }
+}
+
+ItemObject 8
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 7 }
+    { ObjectId 3766 }
+}
+
+ItemObject 9
+{
+    { Type DerivedRequirementName }
+    { Value "N/A" }
+    { NoteId 7 }
+    { ObjectId 3767 }
+}
+
+NoteObject 10
+{
+    { Type SystemState }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 3769 }
+}
+
+ItemObject 11
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 10 }
+    { ObjectId 3770 }
+}
+
+ItemObject 12
+{
+    { Type SystemState }
+    { Value "real-time" }
+    { NoteId 10 }
+    { ObjectId 3771 }
+}
+
+NoteObject 13
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 3773 }
+    { DescLine "Sends all the info to the screen." }
+}
+
+ItemObject 14
+{
+    { Type ObjectName }
+    { Value "display on screen" }
+    { NoteId 13 }
+    { ObjectId 3774 }
+}
+
+ItemObject 15
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 13 }
+    { ObjectId 3775 }
+}
+
+NoteObject 16
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 3777 }
+    { DescLine "Modified." }
+}
+
+ItemObject 17
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 16 }
+    { ObjectId 3778 }
+}
+
+ItemObject 18
+{
+    { Type RequirementName }
+    { Value "screen-sub-system" }
+    { NoteId 16 }
+    { ObjectId 3779 }
+}
+
+ItemObject 19
+{
+    { Type RequirementDocument }
+    { Value "SSS" }
+    { NoteId 16 }
+    { ObjectId 3780 }
+}
+
+ItemObject 20
+{
+    { Type RequirementParagraph }
+    { Value "display" }
+    { NoteId 16 }
+    { ObjectId 3781 }
+}
+
+ItemObject 21
+{
+    { Type ParagraphNumber }
+    { Value "4" }
+    { NoteId 16 }
+    { ObjectId 3782 }
+}
+
+ItemObject 22
+{
+    { Type QualificationMethod }
+    { Value "Test IV" }
+    { NoteId 16 }
+    { ObjectId 3783 }
+}
+
+ItemObject 23
+{
+    { Type QualificationLevel }
+    { Value "A++" }
+    { NoteId 16 }
+    { ObjectId 3784 }
+}
+
+ItemObject 24
+{
+    { Type FormalTestParagraph }
+    { Value "32" }
+    { NoteId 16 }
+    { ObjectId 3785 }
+}
+
+NoteObject 25
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 3787 }
+}
+
+ItemObject 26
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 25 }
+    { ObjectId 3788 }
+}
+
+ItemObject 27
+{
+    { Type DocumentName }
+    { Value "SRS" }
+    { NoteId 25 }
+    { ObjectId 3789 }
+}
+
+ItemObject 28
+{
+    { Type DocumentNumber }
+    { Value "1" }
+    { NoteId 25 }
+    { ObjectId 3790 }
+}
+
+ItemObject 29
+{
+    { Type ParagraphNumber }
+    { Value "32" }
+    { NoteId 25 }
+    { ObjectId 3791 }
+}
+

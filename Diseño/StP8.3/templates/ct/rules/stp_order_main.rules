@@ -1,0 +1,30 @@
+Category CatModelDiagrams
+{
+    { Label "Diagrams" }
+    { ShowOnDesktop False }
+    { Image "diagrams" }
+}
+
+Category CatModelTables
+{
+    { Label "Tables" }
+    { ShowOnDesktop False }
+    { Image "tables" }
+}
+
+Category CatModelElements
+{
+    { Label "Model Elements" }
+    { ShowOnDesktop False }
+    { Image "model_elements" }
+}
+
+// CIM merge issue - this came in from the merge of 2.6 to 7.0 - as the desktop
+// categories are much reduced in 7.0 we probably don't want a validator category
+// so for the moment I'm leaving this here commented out (cim 8/7/98)
+//
+// Category CatValidator
+// {
+//     { Label "Validation" }
+//     { ShowOnDesktop False }
+// }

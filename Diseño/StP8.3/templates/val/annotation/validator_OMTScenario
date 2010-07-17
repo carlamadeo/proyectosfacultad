@@ -1,0 +1,67 @@
+//
+//  ct/annotation/validator_OMTscenario
+//
+// Annotations added StP/Validator
+
+Include "val/annotation/acts_only_if.note"
+
+Note 801593
+{
+    { Item
+        { AppType ScenarioSequence }
+        { HelpText "The order of this Sequence. " }
+        { Bounds { Min 0 } { Max 1 } }
+        { PrintName "Scenario Sequence Number" }
+    }
+}
+
+Note 810008
+{
+    { AppType Measurements }
+    { HelpText "Enter the measurements for the Scenario" }
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Measurements" }
+    { Item
+        { AppType OperationDuration }
+        { Bounds { Min 1 } { Max 1 } }
+        { PrintName "Required Execution Time" }
+        { HelpText "Enter Required Execution Time" }
+	{ InitValue  "0" }
+    }
+    { Item
+        { AppType TestDuration }
+        { Bounds { Min 1 } { Max 1 } }
+        { PrintName "Predicted Test Duration" }
+        { HelpText "Enter test duration" }
+	{ InitValue  "0" }
+    }
+    { Item
+        { AppType SetUpTime }
+        { Bounds { Min 1 } { Max 1 } }
+        { PrintName "Predicted Setup Time" }
+        { HelpText "Enter setup time" }
+	{ InitValue  "0" }
+    }
+    { Item
+        { AppType EvaluationTime }
+        { Bounds { Min 1 } { Max 1 } }
+        { PrintName "Predicted Evaluation Time" }
+        { HelpText "Enter test duration" }
+	{ InitValue  "0" }
+    }
+    { Item
+        { AppType TimeUnit }
+        { Bounds { Min 1 } { Max 1 } }
+        { PrintName "Time Unit" }
+        { HelpText "Enter Time Unit for Duration" }
+	{ InitValue  "seconds" }
+    }
+    { Item
+        { AppType CompletionStatus }
+        { Bounds { Min 1 } { Max 1 } }
+        { PrintName "Completion Status" }
+        { HelpText "Enter Completion Status" }
+	{ InitValue  "Scenario Undefined" }
+    }
+}
+

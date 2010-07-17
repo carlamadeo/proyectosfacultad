@@ -1,0 +1,228 @@
+#this is the formal template file for the stdlib library
+# c = control flag, r = read, w = write, u = update
+# this should be correct, so think twice before altering it
+# do not leave a parm blank if it is unused, instead put the
+# letter x in.
+#
+# HAS CAUSED PROBS IF MORE THAN 7 PARMS FOR A FUNCTION !!
+
+#	CTYPE.h
+isalnum		r
+isalpha		r
+iscntrl		r
+isdigit		r
+isgraph		r
+islower		r
+isprint		r
+ispunct		r
+isspace		r
+isupper		r
+isxdigit	r
+tolower		r
+toupper		r
+
+#	STDIO.h
+clearerr	u
+ctermid		w
+cuserid		w
+fclose		r
+fdopen		r r
+feof		r
+ferror		r
+fflush		u
+fgetc		u
+fgets		w r u
+fgetpos		r w
+fopen		r r
+fprintf		u r r r r r
+fputc		r u
+fputs		r u
+fread		w r r u
+freopen		r r u
+fscanf		u r w w w w
+fseek		u r r
+fsetpos		u r
+ftell		r
+fwrite		r r r u
+getc		u
+getchar
+gets		w
+perror		r
+popen		r r
+printf		r r r r r r
+putc		r u
+putchar		r
+puts		r
+remove		r
+rename		r r
+rewind		u
+scanf		r r r r r r
+setbuf		u r
+setvbuf		u r r r
+sprintf		w r r r r r
+sscanf		r r w w w w
+tmpfile		
+tempnam		r r
+tmpnam		w
+ungetc		r u
+vfprintf	u r r
+vprintf		r r
+vsprintf	w r r
+
+#	STRING.h
+memchr		r r r
+memcmp		r r r
+memcpy		w r r
+memmove		w r r
+memset		w r r
+strcat		u r
+strchr		r r
+strcmp		r r
+strcoll		r r
+strcpy		w r
+strcspn		r r
+strdup		r
+strerror	r
+strlen		r
+strncat		u r r
+strncmp		r r r
+strncpy		w r r
+strpbrk		r r
+strrchr		r r
+strspn		r r
+strstr		r r 
+strtok		r r
+strxfrm		w r r
+
+#	LOCALE.h
+localeconv	
+setlocale	r r
+
+#	MATH.h
+acos		r
+asin		r
+atan		r
+atan2		r r
+ceil		r
+cos		r
+cosh		r
+exp		r
+fabs		r
+floor		r
+fmod		r r
+frexp		r w
+ldexp		r r
+log		r
+log10		r
+modf		r w
+pow		r r
+sin		r
+sinh		r
+sqrt		r
+tan		r
+tanh		r
+
+#	TIME.h
+asctime		r
+clock		
+ctime		r
+difftime	r r
+gmtime		r
+localtime	r
+mktime		r
+strftime	w r r r
+time		w
+
+#	STDLIB.h
+abort
+abs		r
+atexit		r
+atof		r
+atoi		r
+atol		r
+bsearch		r r r r r
+calloc		r r
+div		r r
+exit		r
+free		r
+getenv		r
+labs		r
+ldiv		r r
+malloc		r
+mblen		r r
+mbstowcs	w r r
+mbtowc		w r r
+qsort		u r r r
+rand
+realloc		r r
+srand		r
+strtod		r w
+strtol		r w r
+strtoul		r w r
+system		r
+wcstombs	w r r
+wctomb		w r
+
+#	SETJMP.h
+longjmp		r r
+setjmp		u
+
+#	SIGNAL.h
+raise		r
+signal		r r
+
+#	SYS/FCNTLCOM.h
+open		r r r
+creat		r r
+fcntl		r r r r r
+
+#	SYS/UNISTD.h
+_exit		r
+access		r r
+alarm		r
+chdir		r
+chmod		r r
+chown		r r r
+close		r
+ctermid		w
+cuserid		w
+dup		r
+dup2		r r
+execl		r r r r r
+execle		r r r r r
+execlp		r r r r r
+execv		r r
+execve		r r r
+execvp		r r
+fork
+fpathconf	r r
+getcwd		w r
+getegid
+geteuid
+getgid
+getgroups	r w
+getlogin
+getpgrp
+getpid
+getppid
+getuid
+isatty		r
+link		r r
+lseek		r r r
+pathconf	r r
+pause
+pipe		w
+read		r w r
+rmdir		r
+setgid		r
+setpgid		r r
+setsid
+setuid		r
+sleep		r
+sysconf		r
+tcgetpgrp	r
+tcsetpgrp	r r
+ttyname		r
+unlink		r
+write		r r r
+

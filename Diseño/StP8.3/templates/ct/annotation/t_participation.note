@@ -1,0 +1,25 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/T
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1994
+// 	All rights reserved
+//
+// t_participation.note: for notes on links
+
+
+Note 804004
+{
+    { AppType TestParticipation }
+    { HelpText "The TestParticipation note specifies whether a data flow or data store connected to a link participates in a test activity. If the note does not exist, the default is to participate." }
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Test Participation" }
+    { Item
+        { AppType TParticipates }
+        { HelpText "Set this annotation to False to keep the associated T DataItem(s) from appearing in the action relating to the class or process this link refers to." }
+        { Bounds { Min 0 } { Max 1 } }
+        { PrintName "Participates" }
+        { InitValue "True" }
+    }
+}
+

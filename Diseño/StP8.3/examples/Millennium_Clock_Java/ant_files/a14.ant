@@ -1,0 +1,74 @@
+FileObject 1
+{
+    { Name "a14" }
+    { Type ObjectAnnotation }
+    { GUID "UID_7CAD2620-0206-11d6-AE65-000000000000" }
+}
+
+NodeObject 99999
+{
+    { Name "Owl" }
+    { Type UmlClass }
+    { ObjectId 451 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_378C31F9-544B-11d4-8778-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlClassDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 453 }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 455 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 457 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "Owl" }
+    { NoteId 4 }
+    { ObjectId 458 }
+}
+
+ItemObject 6
+{
+    { Type UniqueID }
+    { Value "163" }
+    { NoteId 4 }
+    { ObjectId 459 }
+}
+
+NoteObject 7
+{
+    { Type REQAssignmentNote }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 461 }
+}
+
+ItemObject 8
+{
+    { Type REQAnalysisAssignmentItem }
+    { Value "Owl" }
+    { NoteId 7 }
+    { ObjectId 462 }
+}
+

@@ -1,0 +1,26 @@
+/* XPM */
+static char* source_comment_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 4 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #000000	c #00ffff",
+/* pixels */
+"XXXXXXXXXXXX....",
+"X O O O O OXX...",
+"XO O O O O X X..",
+"X O O O O OXXXX.",
+"XO O O O O O OX ",
+"X O X OXO X O X ",
+"XO X OXO X O OX ",
+"X O X X OXO O X ",
+"XO X OXO OXO OX ",
+"X O O O O O O X ",
+"XO O O O O O OX ",
+"X O O O O O O X ",
+"XXXXXXXXXXXXXXX ",
+".               ",
+"................",
+"................"};

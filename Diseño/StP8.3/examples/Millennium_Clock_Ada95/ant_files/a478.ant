@@ -1,0 +1,56 @@
+FileObject 1
+{
+    { Name "a478" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65C88-34FB-11d6-8DB9-00500445CF96" }
+}
+
+FileObject 99999
+{
+    { Name "ThisSystem" }
+    { Type UmlUseCaseDiagram }
+    { ObjectId 410 }
+    { AnnotFileId 1 }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1273 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1275 }
+    { DescLine "Please see the description of the symbol \"This system\"." }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "ThisSystem" }
+    { NoteId 3 }
+    { ObjectId 1276 }
+}
+
+NoteObject 5
+{
+    { Type UmlSubsystem }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1278 }
+}
+
+ItemObject 6
+{
+    { Type UmlSubsystemName }
+    { Value "uc_Coocoo" }
+    { NoteId 5 }
+    { ObjectId 1279 }
+}
+

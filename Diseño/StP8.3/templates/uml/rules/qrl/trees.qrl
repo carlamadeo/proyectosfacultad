@@ -1,0 +1,707 @@
+// new file for ECR 4731
+
+// we need this for oi_node_from_label
+#include "rules/qrl/navtostp.inc"
+
+// Begin Add ECR 5421
+const string UML_BAD_CH = "!@#$%^&*()|\\{}[]/?~`:'\";";
+const string UML_GOOD_CH = string_repeat("_", string_length(UML_BAD_CH));
+// End Add ECR 5421
+
+// ObjectCommand functions --------------------------------------------------------------
+
+// Open existing class table or create new class table
+int
+GoToClassTable( string class_name )
+{
+    class_name = normalize_class_label( class_name );
+    file uclasst = find_by_query( "file[UmlClassTable && node_refs[node[UmlClass && name == '${class_name}']]]" );
+    if( uclasst != NULL )
+    {
+        editor_send_msg( "uclasst", "EditorShowDeiconify", -1 );
+        editor_send_msg( "uclasst", "EditorQrlEval \"Nav2StP(\\\"uclasst\\\",\\\"UmlClass\\\",\\\"" + class_name + "\\\");\"", -1 );
+    }
+    else
+    {
+        node the_class = find_by_query( "node[UmlClass && name == '${class_name}']" );
+        if( the_class == NULL )
+        {
+            print_error( "Class " + class_name + " doesn't exist yet." );
+            return 0;
+        }
+        else    
+        {
+            editor_send_msg( "uclasst", "EditorShowDeiconify", -1 );
+            editor_send_msg( "uclasst", "EditorQrlEval \"UmlClassTableInitialize(" + the_class.id + ");\"", -1 );
+        }
+    }
+    return 0;
+}
+
+// go to any reference of a tree element
+int
+GoToAnyFile( string editor, string name )
+{
+    name = normalize_class_label( name );
+    editor_send_msg( editor, "EditorShowDeiconify", -1 );
+    editor_send_msg( editor, "FileLoad " + name, -1 );
+    return 0;
+}
+
+// go to any reference of a tree element
+int
+GoToAnyReference( string editor, string app_type, string name )
+{
+    // Begin mod ECR 5023
+    if( app_type == "UmlClass" ) 
+        name = normalize_class_label( name );
+    else if( app_type == "UmlOperation" ) {
+        node op = op_node_from_label( name );
+        if( op != NULL )
+            name = op.node;
+    }
+    // End mod ECR 5023
+    editor_send_msg( editor, "EditorShowDeiconify", -1 );
+    editor_send_msg( editor, "EditorQrlEval \"Nav2StP(\\\"" + editor + "\\\",\\\"" + app_type + 
+        "\\\",\\\"" + name + "\\\");\"", -1 );
+    return 0;
+}
+
+string 
+get_first_id( string ids )
+{
+    list id_l = string_to_list( ids, " " );
+    if( list_count( id_l ) > 0 )
+        return list_get( id_l, 0 );
+    else 
+    {
+        print_error( "OMS ID not found." );
+        return "";
+    }
+}
+    
+int
+GoToAnyReferenceByID( string editor, string app_type, string ids )
+{
+    string id = get_first_id( ids );
+    if( id != "" )
+    {
+        editor_send_msg( editor, "EditorShowDeiconify", -1 );
+        editor_send_msg( editor, "EditorQrlEval \"Nav2StPByID(\\\"" + editor + "\\\",\\\"" + app_type + 
+            "\\\",\\\"" + id + "\\\");\"", -1 );
+        return 0;
+    }
+    else
+        return -1;
+}
+
+int
+GoToAnyAnnotByID( string app_type, string ids )
+{
+    string id = get_first_id( ids );
+    if( id != "" )
+    {
+        editor_send_msg( "oae", "EditorShowDeiconify", -1 );
+    	editor_send_msg("oae", "AnnotEdit " + id, -1);
+    	return 0;
+    }
+    else
+        return -1;
+}
+
+// LabelFunc definitions ----------------------------------------------------------------
+string
+normalize_class_label( string name )
+{
+    // remove package label
+    int pos = string_find( name, 0, " (" );
+    if( pos < string_length( name ) )
+        name = string_extract( name, 0, pos );
+    return name;
+}    
+
+node
+op_node_from_label( string name )
+{
+    string op_name = name;
+    string op_sig = "";
+    node op;
+    int pos = string_find( name, 0, "(" );
+    if( pos < string_length( name ) )
+    {
+        op_name = string_extract( name, 0, pos );
+        // takes care of (), too
+        op_sig = string_extract( name, pos+1, string_length(name)-(pos+2) );
+        op_sig = string_search_and_replace( op_sig, "'", "\"" );
+        // Begin add ECR 5532
+        if(find_by_query( "node[UmlOperation && name == '${op_name}' && !sig && node_refs]"))
+            return( find_by_query( "node[UmlOperation && name == '${op_name}' && !sig && node_refs]" ) );
+        else 
+        // End add ECR 5532
+            return( find_by_query( "node[UmlOperation && name == '${op_name}' && sig = '${op_sig}' && node_refs]" ) );
+    }
+    else
+        return( find_by_query( "node[UmlOperation && name == '${op_name}' && node_refs]" ) );
+}
+        
+string 
+get_op_full_name( int id )
+{
+    node op = find_by_query( "node[id==${id}]" );
+    if( op != NULL )
+        return( op.name + "(" + string_search_and_replace( op.sig, "\"", "'" ) + ")" );
+    else
+        return "";
+}
+
+string
+get_generalization_name( int id )
+{
+    return "Generalization";
+}
+
+string
+get_parent_package_name( int id )
+{
+    string pp = get_parent_package( id );
+    node c = find_by_query( "node[id==${id}]" );
+    if( pp != "" )
+        return c.name + " (from " + pp + ")";
+    else
+        return c.name + " (no package)";
+}
+
+string
+get_plain_scenario_name( int id )
+{
+    file s = find_by_query( "file[id==${id}]" );
+    return( s.name + " (file)" );
+}
+
+string
+get_object_instance_full_name( int id )
+{
+    string object = "";
+    string class = "";
+    node oi = find_by_query( "node[id==${id}]" );
+    if( oi != NULL )
+    {
+        if( string_find( oi.name, 0, "%%object%%" ) )
+            object = oi.name;
+        node cs = find_by_query( "node[UmlObjectClassScope && node_refs && id==${oi.scope_node_id}]" );
+        if( cs != NULL )
+        {
+            if( string_find( cs.name, 0, "%%class%%" ) )
+                class = cs.name;
+            else
+                class = "";
+        }
+    }
+        
+    return object + ":" + class;
+}        
+    
+string
+get_message_link_to_name( int id )
+{
+    link message = find_by_query( "link[id==${id}]" );
+    return "In: " + message.name;
+}
+
+string
+get_message_link_from_name( int id )
+{
+    link message = find_by_query( "link[id==${id}]" );
+    return "Out: " + message.name;
+}
+
+// Begin Add ECR 5421
+string clean_as_name( string as_name )
+{
+    string newres = string_translate(as_name, UML_BAD_CH, UML_GOOD_CH);
+    newres = string_search_and_replace( newres, " ", "_" );
+    return newres;
+}
+// End ECR 5421
+
+// ObjectsFunc definitions --------------------------------------------------------------
+// this is almost the same as in uactivityd.qrl
+// changed parameter to node id for ECR 5421
+list
+find_refined_action_state( int as_id )
+{
+    node as = find_by_query( "node[id==${as_id}]" );
+    if( as == NULL )
+        return NULL;
+    list refined_sms = list_create( "node", 0 );
+    file my_file = find_by_query( "file[UmlActivityDiagram && node_refs[node[id==" + as_id + "]]]" );
+    if( my_file == NULL )
+        return refined_sms;
+ 
+    string refined_query = "node[UmlStateMachine && name == '" +
+        clean_as_name( as.name ) + "' && node_refs[file[UmlActivityDiagram && id != " +
+        my_file.id + "]]]";
+    refined_sms = list_select( refined_query );
+    return refined_sms;
+}
+
+boolean
+getStateMachineContext( string sm_name )
+{
+    node my_as;
+    int i;
+    list all_action_states = list_select( "node[UmlActionState && node_refs]" );
+        
+    // loop and "normalize"
+    for( i=0; i<list_count( all_action_states ); i++ )
+    {
+        my_as = list_get( all_action_states, i );
+        if( clean_as_name( my_as.name ) == sm_name ) 
+        {
+            return True;
+        }
+    }
+    
+    return False;
+}
+
+list
+find_toplevel_state_machines()
+{
+    int i;
+    node sm;
+    list toplevel_sms = list_create( "node", 0 );
+    list sms = list_select( "node[UmlStateMachine && node_refs[file[UmlActivityDiagram]]]" );
+    for( i=0; i<list_count( sms ); i++ )
+    {
+        sm = list_get( sms, i );
+        if( ! getStateMachineContext( sm.name ) )
+            list_append( toplevel_sms, sm );
+    }
+    return( toplevel_sms );
+}
+
+// Begin Add ECR 5080
+list
+find_implicit_state_machines( string parent_name, int parent_id, string parent_type, string type )
+{
+    list sms;
+    if( parent_type == "UmlClass" ) 
+        sms = list_select( "node[UmlStateMachine && name == '${parent_name}' && node_refs[file[${type}]]]" );
+    else if( parent_type == "UmlOperation" )
+    {
+        node the_op = find_by_query( "node[id==${parent_id}]" );
+        if( the_op == NULL )
+            return NULL;
+        node parent_class = find_by_query( "node[id==${the_op.scope_node_id}]" );
+        if( parent_class == NULL )
+            return NULL;
+            
+        string sm_name = parent_class.name + "::" + the_op.name + "(" + 
+            string_search_and_replace( the_op.sig, "\"", "'" ) + ")";
+        print_message( sm_name );
+        sms = list_select( "node[UmlStateMachine && name == '${sm_name}' && node_refs[file[${type}]]]" );
+    }
+    return( sms );
+}
+// End Add ECR 5080
+
+// ----------------------------------------------------------------------------
+// Get all different kinds of classes
+// ----------------------------------------------------------------------------
+boolean
+find_class( node class, string type )
+{
+    if( find_by_query( "node[${type} && node_refs && name == '${class.name}']" ) != NULL )
+        return True;
+    else
+        return False;
+}
+
+list
+get_typed_class_list( list candidates, string type )
+{
+    int i;
+    list classes = list_create( "node", 0 );
+    node class;
+    for( i=0; i<list_count( candidates ); i++ )
+    {
+        class = list_get( candidates, i );
+        if( type == "" ) {
+            if( !find_class( class, "UmlInterface" ) && 
+                !find_class( class, "UmlParameterizedClass" ) && 
+                !find_class( class, "UmlInstantiatedClass" ) )
+                list_append( classes, class );
+        } else if( find_class( class, type ) )
+            list_append( classes, class );
+    }
+    return classes;
+}
+
+list
+get_toplevel_classes( string type )
+{
+    string query = "node[UmlClass && " + 
+        "node_refs[file[type==UmlClassDiagram || type==UmlClassTable]] && " +
+        "!in_links[UmlContains && link_refs[file[UmlClassDiagram]]] && !out_links[UmlGeneralization && link_refs]] sort by name";
+    return( get_typed_class_list( list_select( query ), type ) );
+}
+
+list
+get_sub_classes( int p_id, string type )
+{
+    string query = "node[UmlClass && " +
+        "node_refs[file[type==UmlClassDiagram || type==UmlClassTable]] && " +
+        "out_links[UmlGeneralization && id == ${p_id}]] sort by name";
+    return( get_typed_class_list( list_select( query ), type ) );
+}
+
+list
+get_foreign_super_classes( int p_id, string type )
+{
+    string query = "node[UmlClass && " +
+        "node_refs[file[type==UmlClassDiagram || type==UmlClassTable]] && " +
+        "in_links[UmlGeneralization && id == ${p_id}]] sort by name";
+    return( get_typed_class_list( list_select( query ), type ) );
+}
+
+
+
+list
+get_inheritance_outside_package( int parent_id )
+{
+    int i;
+    list ret = list_create( "link", 0 );
+    string parent_package = get_parent_package( parent_id );
+    // print_message( "Checking candidates for " + to_string( parent_id ) + " " + parent_package );
+    node super;
+    link ex_inh_link;
+
+    // all potential superclasses
+    list candidate_supers = list_select( "node[UmlClass && node_refs && in_links[UmlGeneralization && " +
+        "from_node_id == ${parent_id} && link_refs]]" );
+        
+    for( i=0; i<list_count( candidate_supers ); i++ )
+    {
+        super = list_get( candidate_supers, i );
+        // print_message( "Parent P of " + super.name + " = " + get_parent_package( super.id ) );
+        if( get_parent_package( super.id ) != parent_package )
+        {
+            // this is a superclass from another package
+            ex_inh_link = find_by_query( "link[UmlGeneralization && from_node_id == ${parent_id} && " +
+                "to_node_id == ${super.id} && link_refs]" );
+            if( ex_inh_link != NULL )
+                list_append( ret, ex_inh_link );
+        }
+    }
+    
+    return( ret );
+}
+
+string
+get_parent_package( int id )
+{
+    string ret = "";
+    node p;
+    list pl = list_select( "node[node_refs && out_links[UmlContains && link_refs && to_node_id == ${id}]]" );
+    if( list_count( pl ) > 0 )
+    {
+        // don't care if there are many ...
+        p = list_get( pl, 0 );
+        ret = p.name;
+    }
+
+    return ret;
+}
+
+string
+get_my_parent_package( int id )
+{
+    string ret = "";
+    node p;
+    list pl = list_select( "node[node_refs && in_links[UmlContains && link_refs && from_node_id == ${id}]]" );
+    if( list_count( pl ) > 0 )
+    {
+        // don't care if there are many ...
+        p = list_get( pl, 0 );
+        ret = p.name;
+    }
+
+    return ret;
+}
+
+list
+get_package_generalizations( int parent_id, int my_packages )
+{
+    int i;
+    list ret = list_create( "link", 0 );
+    string parent_package = get_parent_package( parent_id );
+    // print_message( "Checking candidates for " + to_string( parent_id ) + " PP = " + parent_package );
+    node sub;
+    link ex_inh_link;
+
+    // all potential subclasses
+    list candidate_subs = list_select( "node[UmlClass && node_refs && out_links[UmlGeneralization && " +
+        "to_node_id == ${parent_id} && link_refs]]" );
+        
+    for( i=0; i<list_count( candidate_subs ); i++ )
+    {
+        sub = list_get( candidate_subs, i );
+        // print_message( "Parent P of " + sub.name + " = " + get_parent_package( sub.id ) );
+        if( my_packages && get_parent_package( sub.id ) == parent_package )
+        {
+            // we're looking for subclasses in the current package
+            ex_inh_link = find_by_query( "link[UmlGeneralization && from_node_id == ${sub.id} && " +
+                "to_node_id == ${parent_id} && link_refs]" );
+            if( ex_inh_link != NULL )
+                list_append( ret, ex_inh_link );
+        } else if( ! my_packages && get_parent_package( sub.id ) != parent_package )
+        {
+            // we're looking for subclasses in other packages
+            ex_inh_link = find_by_query( "link[UmlGeneralization && from_node_id == ${sub.id} && " +
+                "to_node_id == ${parent_id} && link_refs]" );
+            if( ex_inh_link != NULL )
+                list_append( ret, ex_inh_link );
+        }
+    }
+    
+    return( ret );
+}
+
+list
+get_package_root_classes( int package_id, string type )
+{
+    int i;
+    node n, p;
+    list ret = list_create( "node", 0 );
+    
+    // all classes directly contained in that package
+    list candidates = list_select( "node[UmlClass && node_refs && in_links[UmlContains && " +
+        "link_refs && from_node[UmlPackage && id = ${package_id}]]]sort by name" );
+        
+    candidates = get_typed_class_list( candidates, type );
+    
+    // now check if those classe might have UmlGeneralization links to other classes in the
+    // package, in that case remove them
+    for( i=0; i<list_count( candidates ); i++ )
+    {
+        n = list_get( candidates, i );
+        p = find_by_query( "node[UmlClass && in_links[UmlGeneralization && link_refs && " +
+            "from_node_id == ${n.id}]]" );
+        if( p != NULL )
+        {
+            if( get_parent_package( p.id ) != get_parent_package( n.id ) )
+            {
+                // this is a superclass from another package
+                list_append( ret, n );
+            }
+        }
+        else
+        {
+            // seems to be a root class, so add it, too
+            list_append( ret, n );
+        }
+    }
+    
+    return( ret );
+}
+
+// ECR 5110 start
+//int mm_print_command(string ids)
+//{
+//    return 0;
+//}
+//
+//int mm_print_as_command(string ids)
+//{
+//    return 0;
+//}
+
+// function to copy the selected file(s) 
+// As long as the stputil copy command can handle only one file,
+// we have to handle bulk copy here 
+int copy_files_by_id(string ids,
+               string withAnnotations, string force, 
+               string targetProjectSys, string newName)
+{
+    boolean isOk = True;
+
+    file     copyFile;
+
+    int      fcnt, fx;
+
+    string   copyCommand,
+             fileName,
+             targetProject,
+             targetSystem,
+             targetName,
+             targetPath;
+
+    print_message( "Starting copy." );
+
+    // make sure we have something to copy
+    if (string_length(ids) < 1)
+    {
+       print_error("No file(s) to copy !");
+       return 1;
+    }
+
+    // count the number of ids
+    fcnt     = list_count(string_to_list(ids, " "));
+
+    // check correctness:
+    // - if no project/system is given, we are copying within the
+    //   same system. 
+    //   -> Only one file may be selected
+    //   -> We need a new file name
+    // - if a project/system is given
+    //   -> the target system must exist !!!
+    //   - if one file is selected
+    //     -> we may use a new name
+    //   - else (more than one file is selected
+    //     -> we may not use a new name, but have to copy the files with
+    //        their original name
+
+    if (targetProjectSys == "")
+    {
+       // we are copying within our current system
+       targetProject = current_projdir();
+       targetSystem  = current_system();
+
+       // more than one file selected ?
+       if (fcnt > 1)
+       {
+          print_error("You can copy only one file within the same system !" );
+          isOk = False;
+       }
+
+       // new file name given ?
+       if (newName == "")
+       {
+          print_error("You must enter a new name to copy this file within the same system !" );
+          isOk = False;
+       }
+    }
+    else
+    {
+       // if value is empty, use the current project/system name
+       targetProject = path_part( targetProjectSys );
+       targetSystem  = file_part( targetProjectSys );
+
+       // is the target system a valid stp system ?
+       if (!sys_has_rep(targetProject, targetSystem))
+       {
+          print_error("Your target system <" + targetProject + ":" + targetSystem + "> is not a valid StP system !" );
+          isOk = False;
+       }
+
+       // more than one file selected but a new file name given
+       if (fcnt > 1 && newName != "")
+       {
+          print_error("You must select only one file if you want to give the copy a new name !" );
+          isOk = False;
+       }
+    }
+
+    if (!isOk)
+       return 1;
+
+    targetPath  = " " + path_convert_to_right_slash(targetProject + ":" + targetSystem + ":");
+
+    list filelist = list_select("file[id =" + list_to_string(string_to_list(ids, " "), "|id=") + "] sort by type");
+    int i;
+    file F;
+    string cmd;
+
+    for(i = 0; i < list_count(filelist); ++ i) {
+        F = list_get(filelist, i);
+
+        if(fcnt == 1 && newName != "")
+            targetName = targetPath + newName;
+        else
+            targetName = targetPath + F.name;
+
+        cmd = "stputil -forward_messages " + editor_get_msgd_handle() + " -s "
+              + current_system() + " -p " + path_convert_to_right_slash(current_projdir()) + " "
+              + force + " -Quiet -C \"copy -e " + getEditor(F) + " " + withAnnotations + " " + F.name + targetName + "\"";
+        print_message("Copying " + F.name + " to" + targetName + " ...");
+        system(cmd);
+
+    }
+
+    print_message( "Finished copy." );
+    return 0;
+}
+
+int delete_files_by_id(string ids)
+{
+    list filelist = list_select("file[id =" + list_to_string(string_to_list(ids, " "), "|id=") + "] sort by type");
+    int i;
+    string editor;
+    string lastType = "";
+    string files = "";
+    file F;
+    string cmd;
+    
+    for(i = 0; i < list_count(filelist); ++ i) {
+        F = list_get(filelist, i);
+        if(lastType != F.type) {
+            if(files != "") {
+            	cmd = "stputil -forward_messages " + editor_get_msgd_handle() + " -s "
+                      + current_system() + " -p " + path_convert_to_right_slash(current_projdir())
+                      + " -Quiet -C \"delete -e " + editor + files + "\"";
+                system(cmd);
+            }
+
+            editor = getEditor(F);
+            lastType = F.type;
+            files = "";
+        }
+        files += " " + F.name;
+    }
+
+    if(files != "") {
+        cmd = "stputil -forward_messages " + editor_get_msgd_handle() + " -s "
+              + current_system() + " -p " + path_convert_to_right_slash(current_projdir())
+              + " -Quiet -C \"delete -e " + editor + files + "\"";
+        system(cmd);
+    }
+
+    stp_refresh_trees();
+
+    return 0;
+}
+
+string getEditor(file theFile)
+{
+    if(theFile.type == "UmlClassDiagram")
+        return "uclassd";
+    if(theFile.type == "UmlClassTable")
+        return "uclasst";
+    if(theFile.type == "UmlUseCaseDiagram")
+        return "uusecased";
+    if(theFile.type == "UmlSequenceDiagram")
+        return "usequenced";
+    if(theFile.type == "UmlCollaborationDiagram")
+        return "ucollaborationd";
+    if(theFile.type == "UmlStateDiagram")
+        return "ustated";
+    if(theFile.type == "UmlStateTable")
+        return "ustatet";
+    if(theFile.type == "UmlActivityDiagram")
+        return "uactivityd";
+    if(theFile.type == "UmlComponentDiagram")
+        return "ucomponentd";
+    if(theFile.type == "UmlDeploymentDiagram")
+        return "udeploymentd";
+    if(theFile.type == "UmlStereotypeDiagram")
+        return "ustereotyped";
+    if(theFile.type == "REQTable")
+        return "rqtbl";
+
+    print_message("Unknown file type " + theFile.type);
+    return NULL;
+}
+// ECR 5110 end
+
+#include_if_exists "uml/rules/qrl/mm_tree.qrl"

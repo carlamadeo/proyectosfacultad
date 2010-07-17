@@ -1,0 +1,1063 @@
+Diagram DfeDiagram
+{
+    { Name "nivel1" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -533 }
+    { PanY -351 }
+    { Alignment 32 }
+    { GUID "UID_C6D2E9D1-2C41-4e7c-96DC-9B7C569781DC" }
+    { Summary
+        { Nodes 22 }
+        { Arcs 26 }
+    }
+}
+
+Node 9
+{
+    { Type External }
+    { Loc -439 -9 }
+    { Scale 192.00 192.00 }
+    { Label
+        { Text "Barrera" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 308 }
+        { GUID "UID_8EA07752-F1B7-465d-BED9-E59DC9D2D522" }
+    }
+}
+
+Node 10
+{
+    { Type External }
+    { Loc -445 -198 }
+    { Scale 192.00 192.00 }
+    { Label
+        { Text "Sensor" }
+        { Text "velocidad" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 302 }
+        { GUID "UID_F537E981-53DE-48df-A78D-588EDB9DC144" }
+    }
+}
+
+Node 3
+{
+    { Type Process }
+    { Loc -249 -28 }
+    { Scale 230.40 230.40 }
+    { Label
+        { Text "Controlador" }
+        { Text "Barrera" }
+    }
+    { PropertyList
+        { Property
+            { Name "pindex" }
+            { Value "0" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 703 }
+        { GUID "UID_2E40FD14-49EA-44bf-98B0-E89AD87E01AE" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 705 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName Default }
+        { ID 706 }
+    }
+}
+
+Node 4
+{
+    { Type Process }
+    { Loc -138 109 }
+    { Scale 230.40 230.40 }
+    { Label
+        { Text "Verificar" }
+        { Text "tecnica del" }
+        { Text "auto" }
+    }
+    { PropertyList
+        { Property
+            { Name "pindex" }
+            { Value "1" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 707 }
+        { GUID "UID_B8C5567B-77B7-4fe5-B543-961DFD2F038C" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 709 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName Default }
+        { ID 710 }
+    }
+}
+
+Node 5
+{
+    { Type Process }
+    { Loc 222 268 }
+    { Scale 233.41 233.41 }
+    { Label
+        { Text "Verificar" }
+        { Text "documentacion" }
+    }
+    { PropertyList
+        { Property
+            { Name "pindex" }
+            { Value "2" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 715 }
+        { GUID "UID_20DA943D-AC6C-4277-BFE1-5AD5B19BF85E" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 717 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName Default }
+        { ID 718 }
+    }
+}
+
+Node 38
+{
+    { Type Process }
+    { Loc -58 -267 }
+    { Scale 230.40 230.40 }
+    { Label
+        { Text "Calcular" }
+        { Text " velocidad multa" }
+    }
+    { PropertyList
+        { Property
+            { Name "pindex" }
+            { Value "6" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 736 }
+        { GUID "UID_2872A46D-BD82-4219-8121-36CB8E748D5E" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 738 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName Default }
+        { ID 739 }
+    }
+}
+
+Node 8
+{
+    { Type Process }
+    { Loc 227 -88 }
+    { Scale 233.41 233.41 }
+    { Label
+        { Text "Confeccionar " }
+        { Text "multa" }
+    }
+    { PropertyList
+        { Property
+            { Name "pindex" }
+            { Value "5" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 723 }
+        { GUID "UID_1D4E5EDF-0727-42a8-9F57-808736EC67B0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 725 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName Default }
+        { ID 726 }
+    }
+}
+
+Node 11
+{
+    { Type Store }
+    { Loc -135 -143 }
+    { Scale 128.00 128.00 }
+    { Label
+        { Text "velocidades" }
+        { Text " por tramos" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 727 }
+        { GUID "UID_828B7D7B-D13D-4b31-A68A-5546B89D99FC" }
+    }
+}
+
+Node 45
+{
+    { Type SplitFlow }
+    { Loc -283 -191 }
+    { Scale 25.60 25.60 }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 743 }
+        { GUID "UID_B8832500-1F56-4540-844A-D72056B3B8DA" }
+    }
+}
+
+Node 53
+{
+    { Type Vertex }
+    { Loc -267 -134 }
+    { Scale 128.00 128.00 }
+}
+
+Node 55
+{
+    { Type Vertex }
+    { Loc -320 -187 }
+    { Scale 128.00 128.00 }
+}
+
+Node 59
+{
+    { Type Store }
+    { Loc 360 -219 }
+    { Scale 128.00 128.00 }
+    { Label
+        { Text "multas" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 748 }
+        { GUID "UID_F06EC166-3B9C-491f-A225-D2FF01704BAF" }
+    }
+}
+
+Node 62
+{
+    { Type Store }
+    { Loc 445 25 }
+    { Scale 128.00 128.00 }
+    { Label
+        { Text "penalidades" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 751 }
+        { GUID "UID_2D8D0332-946F-4330-92C3-D26DC783FF5F" }
+    }
+}
+
+Node 65
+{
+    { Type External }
+    { Loc -377 263 }
+    { Scale 192.00 192.00 }
+    { Label
+        { Text "sensor" }
+        { Text "auto" }
+        { Text "detenido" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 762 }
+        { GUID "UID_41C959AE-D22D-4179-84C9-B81A2CECE798" }
+    }
+}
+
+Node 90
+{
+    { Type Store }
+    { Loc -411 132 }
+    { Scale 128.00 128.00 }
+    { Label
+        { Text "req tec legales" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 769 }
+        { GUID "UID_E171EF96-A36F-42e0-8E6C-55731283B795" }
+    }
+}
+
+Node 93
+{
+    { Type External }
+    { Loc -9 269 }
+    { Scale 192.00 192.00 }
+    { Label
+        { Text "auto" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 309 }
+        { GUID "UID_8562D42C-B222-4057-9978-77AD1DD63624" }
+    }
+}
+
+Node 98
+{
+    { Type Store }
+    { Loc 429 164 }
+    { Scale 128.00 128.00 }
+    { Label
+        { Text "doc leg req" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 774 }
+        { GUID "UID_36A547C7-9B2C-4aa7-A024-22CDDC18B8EB" }
+    }
+}
+
+Node 117
+{
+    { Type Vertex }
+    { Loc -374 -49 }
+    { Scale 128.00 128.00 }
+}
+
+Node 119
+{
+    { Type Vertex }
+    { Loc -328 -73 }
+    { Scale 128.00 128.00 }
+}
+
+Node 123
+{
+    { Type Vertex }
+    { Loc -290 16 }
+    { Scale 128.00 128.00 }
+}
+
+Node 125
+{
+    { Type Vertex }
+    { Loc -362 12 }
+    { Scale 128.00 128.00 }
+}
+
+Node 127
+{
+    { Type Vertex }
+    { Loc -327 19 }
+    { Scale 128.00 128.00 }
+}
+
+Arc 118
+{
+    { Type ControlFlow }
+    { From
+        { ID 117 }
+        { Loc -48 178 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 9 }
+        { Loc -75 195 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 41
+{
+    { Type DataFlow }
+    { From
+        { ID 11 }
+        { Loc 205 59 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 38 }
+        { Loc 244 -1 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "limite" }
+    }
+}
+
+Arc 16
+{
+    { Type DataFlow }
+    { From
+        { ID 11 }
+        { Loc 167 108 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 3 }
+        { Loc 109 167 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "limite" }
+    }
+}
+
+Arc 120
+{
+    { Type ControlFlow }
+    { From
+        { ID 119 }
+        { Loc -2 154 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 117 }
+        { Loc -48 178 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 46
+{
+    { Type DataFlow }
+    { From
+        { ID 10 }
+        { Loc -81 31 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 55 }
+        { Loc 6 40 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "Velocidad" }
+    }
+}
+
+Arc 48
+{
+    { Type DataFlow }
+    { From
+        { ID 45 }
+        { Loc 47 35 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 38 }
+        { Loc 225 -27 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 121
+{
+    { Type ControlFlow }
+    { From
+        { ID 3 }
+        { Loc 38 222 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 127 }
+        { Loc -1 246 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "CEBA" }
+    }
+}
+
+Arc 51
+{
+    { Type DataFlow }
+    { From
+        { ID 45 }
+        { Loc 43 41 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 53 }
+        { Loc 59 93 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 54
+{
+    { Type DataFlow }
+    { From
+        { ID 53 }
+        { Loc 59 93 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 3 }
+        { Loc 71 154 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 56
+{
+    { Type DataFlow }
+    { From
+        { ID 55 }
+        { Loc 6 40 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 45 }
+        { Loc 38 36 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 57
+{
+    { Type DataFlow }
+    { From
+        { ID 38 }
+        { Loc 307 -16 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 8 }
+        { Loc 513 115 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "delta de velocidad" }
+    }
+}
+
+Arc 60
+{
+    { Type DataFlow }
+    { From
+        { ID 8 }
+        { Loc 586 107 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 59 }
+        { Loc 662 31 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "multa" }
+    }
+}
+
+Arc 63
+{
+    { Type DataFlow }
+    { From
+        { ID 62 }
+        { Loc 747 240 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 8 }
+        { Loc 595 160 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "penalidad" }
+    }
+}
+
+Arc 66
+{
+    { Type ControlFlow }
+    { From
+        { ID 3 }
+        { Loc 37 177 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 119 }
+        { Loc -2 154 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "CEBB" }
+    }
+}
+
+Arc 124
+{
+    { Type ControlFlow }
+    { From
+        { ID 123 }
+        { Loc 36 243 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 125 }
+        { Loc -36 239 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 126
+{
+    { Type ControlFlow }
+    { From
+        { ID 125 }
+        { Loc -36 239 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 9 }
+        { Loc -75 227 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 128
+{
+    { Type ControlFlow }
+    { From
+        { ID 127 }
+        { Loc -1 246 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 123 }
+        { Loc 36 243 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 131
+{
+    { Type DataFlow }
+    { From
+        { ID 65 }
+        { Loc -13 466 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 4 }
+        { Loc 149 360 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "CEAD" }
+    }
+}
+
+Arc 88
+{
+    { Type DataFlow }
+    { From
+        { ID 4 }
+        { Loc 228 315 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 8 }
+        { Loc 512 160 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "resultado" }
+        { Text "verificacion" }
+        { Text "tecnica" }
+    }
+}
+
+Arc 91
+{
+    { Type DataFlow }
+    { From
+        { ID 90 }
+        { Loc -59 358 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 4 }
+        { Loc 143 339 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "reqleg" }
+    }
+}
+
+Arc 94
+{
+    { Type DataFlow }
+    { From
+        { ID 93 }
+        { Loc 287 458 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 4 }
+        { Loc 216 371 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "valores" }
+        { Text "tecnicos" }
+    }
+}
+
+Arc 103
+{
+    { Type DataFlow }
+    { From
+        { ID 8 }
+        { Loc 528 178 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 93 }
+        { Loc 341 458 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "multa" }
+    }
+}
+
+Arc 107
+{
+    { Type DataFlow }
+    { From
+        { ID 98 }
+        { Loc 731 403 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 5 }
+        { Loc 590 475 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "doc leg req" }
+    }
+}
+
+Arc 109
+{
+    { Type DataFlow }
+    { From
+        { ID 93 }
+        { Loc 355 496 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 5 }
+        { Loc 502 495 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "doc" }
+    }
+}
+
+Arc 111
+{
+    { Type DataFlow }
+    { From
+        { ID 5 }
+        { Loc 548 449 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 8 }
+        { Loc 553 185 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "resultado" }
+        { Text "doc" }
+    }
+}
+
+Arc 113
+{
+    { Type DataFlow }
+    { From
+        { ID 8 }
+        { Loc 507 143 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 3 }
+        { Loc 122 194 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "multa" }
+    }
+}
+
+Link 42
+{
+    { FirstArc 41 }
+    { LastArc 41 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 758 }
+        { GUID "UID_BB565ABE-6B90-43ca-8D87-96C9B97C867F" }
+    }
+}
+
+Link 17
+{
+    { FirstArc 16 }
+    { LastArc 16 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 757 }
+        { GUID "UID_E6CBCC53-9EE3-4dae-A487-DF3899F78A62" }
+    }
+}
+
+Link 47
+{
+    { FirstArc 46 }
+    { LastArc 56 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 756 }
+        { GUID "UID_FA541A65-85AA-41ab-BE76-DB4314867A05" }
+    }
+}
+
+Link 49
+{
+    { FirstArc 48 }
+    { LastArc 48 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 755 }
+        { GUID "UID_4CC8B984-FB1A-41a0-B4A4-6CE0B7F67B7C" }
+    }
+}
+
+Link 122
+{
+    { FirstArc 121 }
+    { LastArc 126 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 785 }
+        { GUID "UID_7132E4E1-9D55-49f7-BA99-C0F4BB9C2B86" }
+    }
+}
+
+Link 52
+{
+    { FirstArc 51 }
+    { LastArc 54 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 754 }
+        { GUID "UID_D0B881F8-B11A-4056-8907-CB3ED81D401C" }
+    }
+}
+
+Link 58
+{
+    { FirstArc 57 }
+    { LastArc 57 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 747 }
+        { GUID "UID_42496A31-8D38-4b94-A1DB-7E714C7CE656" }
+    }
+}
+
+Link 61
+{
+    { FirstArc 60 }
+    { LastArc 60 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 750 }
+        { GUID "UID_4C07A501-6B9D-4019-A81E-74E56F4F428E" }
+    }
+}
+
+Link 64
+{
+    { FirstArc 63 }
+    { LastArc 63 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 753 }
+        { GUID "UID_583D3BBD-8FC1-4cfe-A7F1-0758418E9139" }
+    }
+}
+
+Link 67
+{
+    { FirstArc 66 }
+    { LastArc 118 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 759 }
+        { GUID "UID_5DC522F1-8C19-45fa-A69E-8A4CF8669269" }
+    }
+}
+
+Link 132
+{
+    { FirstArc 131 }
+    { LastArc 131 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 763 }
+        { GUID "UID_CDE036B4-DC4A-4cb4-B933-54508B35372C" }
+    }
+}
+
+Link 89
+{
+    { FirstArc 88 }
+    { LastArc 88 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 777 }
+        { GUID "UID_1CA93E7F-4171-4935-BEF6-6BC7C929264B" }
+    }
+}
+
+Link 92
+{
+    { FirstArc 91 }
+    { LastArc 91 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 771 }
+        { GUID "UID_B43367D1-CD8A-43e4-8380-9CDBD407256F" }
+    }
+}
+
+Link 95
+{
+    { FirstArc 94 }
+    { LastArc 94 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 772 }
+        { GUID "UID_7468C3AF-71B8-49c0-AC6D-73FC5F41A9F4" }
+    }
+}
+
+Link 104
+{
+    { FirstArc 103 }
+    { LastArc 103 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 779 }
+        { GUID "UID_FB0340C3-4312-4b45-989A-135547D790BF" }
+    }
+}
+
+Link 108
+{
+    { FirstArc 107 }
+    { LastArc 107 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 781 }
+        { GUID "UID_E4574DD1-4DDD-446e-8A84-B2FDA1598D9E" }
+    }
+}
+
+Link 110
+{
+    { FirstArc 109 }
+    { LastArc 109 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 782 }
+        { GUID "UID_BCDCB25C-FB14-4543-BCE3-D923AFD522BF" }
+    }
+}
+
+Link 112
+{
+    { FirstArc 111 }
+    { LastArc 111 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 783 }
+        { GUID "UID_6D1AD05B-5269-482f-9B8F-900B68E9F376" }
+    }
+}
+
+Link 114
+{
+    { FirstArc 113 }
+    { LastArc 113 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 784 }
+        { GUID "UID_E7DEAF36-05E9-4e5f-93DB-5B2044415481" }
+    }
+}

@@ -1,0 +1,74 @@
+FileObject 1
+{
+    { Name "a16" }
+    { Type ObjectAnnotation }
+    { GUID "UID_E0D93124-C886-11d5-90AA-0050045C27F0" }
+}
+
+NodeObject 99999
+{
+    { Name "Cuckoo" }
+    { Type UmlClass }
+    { ObjectId 455 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_378C31FA-544B-11d4-8778-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlClassDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 457 }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 459 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 461 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "Cuckoo" }
+    { NoteId 4 }
+    { ObjectId 462 }
+}
+
+ItemObject 6
+{
+    { Type UniqueID }
+    { Value "165" }
+    { NoteId 4 }
+    { ObjectId 463 }
+}
+
+NoteObject 7
+{
+    { Type REQAssignmentNote }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 465 }
+}
+
+ItemObject 8
+{
+    { Type REQAnalysisAssignmentItem }
+    { Value "Coocoo" }
+    { NoteId 7 }
+    { ObjectId 466 }
+}
+

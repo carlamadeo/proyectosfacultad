@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0055)http://www.rad.com/networks/1997/nettut/token_ring.html -->
+<HTML><HEAD><TITLE>Token Ring/FDDI LANs: Network For Dummies</TITLE>
+<META content="text/html; charset=iso-8859-1" http-equiv=Content-Type>
+<META content="Gil Behar" name=Author>
+<META content="MSHTML 5.00.2919.6307" name=GENERATOR></HEAD>
+<BODY aLink=#ff0000 
+background="Token Ring-FDDI LANs Network For Dummies_archivos/qs_rock.jpg" 
+bgColor=#ffffff link=#0000ee text=#000000 vLink=#551a8b>
+<CENTER>
+<H1><I><FONT face=Arial,Helvetica><FONT color=#000099>Token Ring/FDDI 
+Networks</FONT></FONT></I></H1></CENTER>&nbsp; <BR>&nbsp; 
+<CENTER>
+<TABLE bgColor=#ff0000 border=2 cols=1 height=273 width=442>
+  <TBODY>
+  <TR>
+    <TD><IMG alt="Token Ring Animation" border=2 height=273 
+      src="Token Ring-FDDI LANs Network For Dummies_archivos/token_ring_animation.gif" 
+      width=442></TD></TR></TBODY></TABLE></CENTER>
+<CENTER><B>An illustration of a token ring's token passing</B></CENTER>&nbsp; 
+<P><B><I><FONT face=Arial,Helvetica><FONT 
+color=#990000>General</FONT></FONT></I></B> 
+<P>A token passing ring LAN is a group of computers connected in a loop.&nbsp; 
+The group uses a token passing access mechanism.&nbsp; A computer wishing to 
+send data should first receive permission.&nbsp; When it gets control of the 
+network it may transmit a frame.&nbsp; Each frame transmitted on the ring is 
+transmitted from one computer to the next, untill it ultimately returns to the 
+initiator of the transmition. <BR>The Token Passing Ring Network was originally 
+developed by IBM and only Ethernet LANs are more popular. The IEEE 802.5 
+specification which was modeled after IBM's Token Ring is almost identical and 
+the term Token Ring is used to refer both specifications.. <BR>FDDI (Fiber 
+Distributed Data Interconnect) is an improved token ring specification based on 
+fiber as the physical medum.&nbsp; As opposed to Token Ring's single ring, FDDI, 
+uses two to achieve better results.&nbsp; CDDI, yet another standard, resembles 
+FDDI, but uses a copper wire for it's ring. 
+<P><B><I><FONT face=Arial,Helvetica><FONT 
+color=#990000>Characteristics</FONT></FONT></I></B> 
+<UL>
+  <LI><U>Comparison of basic characteristics</U> <BR>&nbsp; 
+  <TABLE bgColor=#bdbec4 border=1 cellPadding=3>
+    <TBODY>
+    <TR>
+      <TD>
+        <CENTER>
+        <H4><B><FONT color=#660000>Technology</FONT></B></H4></CENTER></TD>
+      <TD width=100>
+        <CENTER>
+        <H4><B><FONT color=#660000>Data Rate (Mbps)</FONT></B></H4></CENTER></TD>
+      <TD width=100>
+        <CENTER>
+        <H4><B><FONT color=#660000>Maximum Segment Length 
+        (m)</FONT></B></H4></CENTER></TD>
+      <TD>
+        <CENTER>
+        <H4><B><FONT color=#660000>Media</FONT></B></H4></CENTER></TD>
+      <TD>
+        <H4><B><FONT color=#660000>Rings</FONT></B></H4></TD>
+      <TD>
+        <H4><B><FONT color=#660000>Recovery</FONT></B></H4></TD></TR>
+    <TR>
+      <TD>IBM Token Ring</TD>
+      <TD>
+        <CENTER>4/16</CENTER></TD>
+      <TD>
+        <CENTER>250 Shielded</CENTER>
+        <CENTER>72 Unshielded</CENTER></TD>
+      <TD>Twisted pair</TD>
+      <TD>
+        <CENTER>1</CENTER></TD>
+      <TD>Can handle a computer failure but can&#8217;t recover from a broken 
+        connection.</TD></TR>
+    <TR>
+      <TD>IEEE 802.5</TD>
+      <TD>
+        <CENTER>4/16</CENTER></TD>
+      <TD>
+        <CENTER>250</CENTER></TD>
+      <TD>Not specified</TD>
+      <TD>
+        <CENTER>1</CENTER></TD>
+      <TD>Can handle a computer failure but can&#8217;t recover from a broken 
+        connection.</TD></TR>
+    <TR>
+      <TD>CDDI</TD>
+      <TD>
+        <CENTER>4/16</CENTER></TD>
+      <TD>
+        <CENTER>250 Shielded</CENTER>
+        <CENTER>72 Unshielded</CENTER></TD>
+      <TD>Twisted pair</TD>
+      <TD>
+        <CENTER>2</CENTER></TD>
+      <TD>Can recover from a brokenconnection (Self healing).</TD></TR>
+    <TR>
+      <TD>FDDI</TD>
+      <TD>
+        <CENTER>100</CENTER></TD>
+      <TD>
+        <CENTER>Unlimited</CENTER></TD>
+      <TD>Optical fiber</TD>
+      <TD>
+        <CENTER>2</CENTER></TD>
+      <TD>Can recover from a brokenconnection (Self 
+  healing).</TD></TR></TBODY></TABLE>&nbsp; 
+  <LI><U>Topology</U> <BR>Token Ring LANs use a ring topology, i.e. each station 
+  is connected to two other stations which are all together arranged in a 
+  loop.&nbsp; Each station can send a signal along the loop after receiving 
+  permission to do so (Only one station may have control on the network at <BR>a 
+  specific point of time). The signal will travel from one station to the other 
+  untill it reaches its initiator. <BR>&nbsp; 
+  <LI><U>Priority System</U> <BR>Token Ring networks has a priority system that 
+  allows stations with high priority to use the network more frequently. The 
+  priority is defined by the frame's priority and reservation fields. In order 
+  to seize a token a station must have priority which equals or is higher than 
+  the priority field of&nbsp; the token. Only than the station can reserve the 
+  token for the next pass around the network. This way when the next token is 
+  generated, it includes the higher reserving station. Stations must change the 
+  priority back to its previous value after theit transmision has completed. 
+  <BR>&nbsp; 
+  <LI><U>Fault Management Mechanisms</U> <BR>In order to detect and correct 
+  network faults Token Ring networks may dedicate a station for monitoring 
+  frames which are circuling around without being dealt with. This monitor 
+  removes such frames and allow the network to function in a normal manner all 
+  over again. <BR>&nbsp; 
+  <LI><U>FDDI - Self healing</U> <BR>&nbsp; <BR>&nbsp;<IMG align=left border=2 
+  height=413 hspace=20 
+  src="Token Ring-FDDI LANs Network For Dummies_archivos/fddi_recovery1.gif" 
+  width=365> <BR>As described above FDDI networks implements a recovery 
+  mechanism which enable the network to function properly even under a broken 
+  ring. FDDI uses two rings to achieve recovery capabilities.&nbsp; As shown a 
+  token is passed simultanioulsy on the network's inner and outer rings which 
+  backup each other.&nbsp;<BR clear=both><BR>
+  <P><IMG align=right border=2 height=419 hspace=20 
+  src="Token Ring-FDDI LANs Network For Dummies_archivos/fddi_recovery2.gif" 
+  width=366> <BR>As shown in the following figure&nbsp; in case of broken 
+  connection or&nbsp; station malfunction, the closest station closes the 
+  network loop by sending the token it recieved from the outer/inner ring back 
+  using the inner/outer ring.&nbsp; This feature is called Self healing.<BR 
+  clear=both><BR></P></LI></UL><B><I><FONT face=Arial,Helvetica><FONT 
+color=#990000>Frame Format</FONT></FONT></I></B> <BR>&nbsp; 
+<UL>
+  <H5><B>Token Ring Frame Formats (tokens and data/command)</B></H5><IMG 
+  border=1 height=223 
+  src="Token Ring-FDDI LANs Network For Dummies_archivos/token_ring_frame_format.gif" 
+  width=545> 
+  <P>Tokens&nbsp; consist of: 
+  <OL>
+    <LI>Start delimiter - which alerts the stations of a token arrival (or 
+    data/command frame). 
+    <LI>Access control byte - which contains the priority and reservation 
+    fields, a token bit to differentiate token from data/command frame and a 
+    monitor bit checking whether a frame is circling the ring endlessly. 
+    <LI>End delimiter - which signals the end of a frame, end of a logical 
+    sequence and damaged frames. </LI></OL>Data/Command Frames carry information 
+  for upper-layer protocols. <BR>After the Access control byte a frame control 
+  byte arrives and indicates whether it is a data or control information (and 
+  which) frame. Then arrives two address fields (source &amp; destination) each 
+  6 bytes long. Data follows these fields (its length depends on the time each 
+  station can hold a token) and then a FCS (frame check sequence) field. At the 
+  end as in tokens, an end delimiter completes the frame. 
+<BR>&nbsp;</UL><B><I><FONT face=Arial,Helvetica><FONT color=#990000>Related 
+topics</FONT></FONT></I></B> 
+<UL>
+  <LI><A href="http://www.rad.com/networks/1997/nettut/gls_l.html#LAN">LAN</A> 
+  </LI></UL><B><I><FONT face=Arial,Helvetica><FONT color=#990000>See 
+Also</FONT></FONT></I></B> 
+<UL>
+  <LI>&nbsp;<A 
+  href="http://www.rad.com/networks/1997/nettut/ethernet.html">Ethernet LANs</A> 
+  </LI></UL>&nbsp; </BODY></HTML>

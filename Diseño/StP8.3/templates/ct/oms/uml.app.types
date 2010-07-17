@@ -1,0 +1,1066 @@
+//
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+//
+
+// ECR 7464  (changed various EditorQrlEval to EditorQrlEvalNoSave)
+//
+// file objects
+// 
+
+FileObject	401700	UmlClassDiagram
+{
+
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"uclassd\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"uclassd\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"uclassd\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"dprint -forward_messages 0${msgd_handle} -ed uclassd -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+    { Annot "annotation/UmlClassDiagram" } // Uncommented this for Subsystems/ModelMgmt. SML 11/12/99
+}
+
+
+
+FileObject	401702	UmlClassTable
+{
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"uclasst\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"uclasst\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"uclasst\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"tprint -forward_messages 0${msgd_handle} -ed uclasst -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+    { Annot "annotation/UmlClassTable" } // Uncommented this for Subsystems/ModelMgmt. SML 11/12/99
+    { Update
+		{ Dependency
+			{ Name "ClassNameChange" }
+			{ DeriveAttrsFunc "UmlClass_File_derattrs" }
+		}
+	}
+}
+
+
+FileObject	401704	UmlUseCaseDiagram
+{
+
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"uusecased\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"uusecased\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"uusecased\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"dprint -forward_messages 0${msgd_handle} -ed uusecased -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+     { Annot "annotation/UmlUseCaseDiagram" }
+}
+
+FileObject	401706	UmlSequenceDiagram
+{
+
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"usequenced\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"usequenced\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"usequenced\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"dprint -forward_messages 0${msgd_handle} -ed usequenced -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+    { Annot "annotation/UmlSequenceDiagram" }
+    { Update
+	{ Dependency
+	    { Name "ScenarioInstanceFile" }
+	    { DeriveAttrsFunc "UmlScenarioInstance_File_derattrs" }
+	}
+    }
+}
+
+FileObject	401708	UmlCollaborationDiagram
+{
+
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"ucollaborationd\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"ucollaborationd\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"ucollaborationd\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"dprint -forward_messages 0${msgd_handle} -ed ucollaborationd -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+    { Annot "annotation/UmlCollaborationDiagram" } // Uncommented this for Subsystems/ModelMgmt. SML 11/12/99
+    { Update
+	{ Dependency
+	    { Name "ScenarioInstanceFile" }
+	    { DeriveAttrsFunc "UmlScenarioInstance_File_derattrs" }
+	}
+    }
+}
+
+FileObject	401710	UmlStateDiagram
+{
+
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"ustated\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"ustated\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"ustated\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"dprint -forward_messages 0${msgd_handle} -ed ustated -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+    { Annot "annotation/UmlStateDiagram" } // Uncommented this for Subsystems/ModelMgmt. SML 11/12/99
+    { Update
+		{ Dependency
+			{ Name "StateMachineFile" }
+			{ DeriveAttrsFunc "UmlStateMachine_File_derattrs" }
+		}
+    }
+}
+
+
+
+FileObject	401712	UmlStateTable
+{
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"ustatet\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"ustatet\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"ustatet\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"tprint -forward_messages 0${msgd_handle} -ed ustatet -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+    { Annot "annotation/UmlStateTable" } // Uncommented this for Subsystems/ModelMgmt. SML 11/12/99
+    { Update
+		{ Dependency
+			{ Name "StateMachineFile" }
+			{ DeriveAttrsFunc "UmlStateMachine_File_derattrs" }
+		}
+    }
+}
+
+
+
+FileObject	401714	UmlActivityDiagram
+{
+
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"uactivityd\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"uactivityd\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"uactivityd\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"dprint -forward_messages 0${msgd_handle} -ed uactivityd -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+    { Annot "annotation/UmlActivityDiagram" }
+    { Update
+		{ Dependency
+			{ Name "StateMachineFile" }
+			{ DeriveAttrsFunc "UmlStateMachine_File_derattrs" }
+		}
+    }
+}
+
+
+
+FileObject	401716	UmlComponentDiagram
+{
+
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"ucomponentd\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"ucomponentd\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"ucomponentd\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"dprint -forward_messages 0${msgd_handle} -ed ucomponentd -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+    // ECR 4052
+    { Annot "annotation/UmlComponentDiagram" }
+}
+
+
+FileObject	401718	UmlDeploymentDiagram
+{
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"udeploymentd\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"udeploymentd\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"udeploymentd\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"dprint -forward_messages 0${msgd_handle} -ed udeploymentd -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+    // ECR 4052
+    { Annot "annotation/UmlDeploymentDiagram" }
+}
+
+
+
+
+FileObject	401720	UmlStereotypeDiagram
+{
+
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"ustereotyped\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"ustereotyped\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEvalNoSave \"NavigateSend(\\"ustereotyped\\",\\"EditorQrlEvalNoSave NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"dprint -forward_messages 0${msgd_handle} -ed ustereotyped -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+    // ECR 4052
+    { Annot "annotation/UmlStereotypeDiagram" }
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// node objects
+//
+NodeObject	701800	UmlStereotype			
+{ 
+    { Annot "annotation/UmlGenericObject" }
+    { Update 
+        { DependentsFunc "UmlStereotype_dependents" } 
+    }
+}
+NodeObject	701801	UmlAction		
+{
+    { Annot "annotation/UmlGenericObject" }
+	{ Update
+		{ Dependency
+			{ Name "OperationStateAction" }
+			{ DeriveAttrsFunc "UmlOperation_StateAction_derattrs" }
+		}
+	}	
+}
+//--- START ECR 3829   
+//NodeObject    701802  UmlActionState          {}
+NodeObject  701802  UmlActionState          
+{
+    { Annot "annotation/UmlActionState" }
+    { Update 
+        { DependentsFunc "UmlActionState_dependents" } 
+    }
+}
+//--- END  ECR 3829   
+NodeObject	701803	UmlActiveObject			{}
+NodeObject	701804	UmlActor			{{ Annot "annotation/UmlActor" }}
+NodeObject	701806	UmlAssociation			{{ Annot "annotation/UmlGenericObject" }
+	{ Update
+		{ Dependency
+			{ Name "ClassNameChange" }
+			{ DeriveAttrsFunc "UmlClass_Association_derattrs" }
+		}
+		{ Dependency
+			{ Name "RoleNameChange" }
+			{ DeriveAttrsFunc "UmlRole_Association_derattrs" }
+		}
+	}
+}
+NodeObject	701808	UmlAttribute			{
+    // ECR 4515
+    { Annot "annotation/UmlAttribute" }
+	{ Update
+		{ DependentsFunc "UmlAttribute_dependents" }
+	}
+}
+NodeObject	701810	UmlClass			{
+	{ Annot "annotation/UmlClass" }
+	{ Update
+		{ DependentsFunc "UmlClass_dependents" }
+		{ Dependency
+			{ Name "InstantiatedClassChange" }
+			{ DeriveAttrsFunc "UmlInstantiatedClass_Class_derattrs" }
+		}
+	}
+}
+// ECR2653
+NodeObject	711818	UmlEllipsis			{
+	{ Update
+		{ Dependency
+			{ Name "EllipsisParentChange" }
+		}
+	}
+}
+// ECR2653
+NodeObject	701812	UmlCollaboration		{
+// SPR 4052 - Model Management
+    { Annot "annotation/UmlCollaboration" }
+}
+//NodeObject	701814	UmlCollaborationContext		{}
+NodeObject	701816	UmlComponentBinary		{
+// SPR 4052 - Model Management
+    { Annot "annotation/UmlComponentBinary" }
+}
+NodeObject	701818	UmlComponentExecutable		{
+// SPR 4052 - Model Management
+    { Annot "annotation/UmlComponentExecutable" }
+}
+NodeObject	701820	UmlComponentInterface		{
+// SPR 4052 - Model Management
+    { Annot "annotation/UmlComponentInterface" }
+}
+NodeObject	701822	UmlComponentObject		{
+// SPR 4052 - Model Management
+    { Annot "annotation/UmlComponentObject" }
+}
+NodeObject	701824	UmlComponentSource		{
+// SPR 4052 - Model Management
+    { Annot "annotation/UmlComponentSource" }
+}
+NodeObject	701826	UmlCompositeObject		{{ Annot "annotation/UmlGenericObject" }}
+NodeObject	701830	UmlDeploymentNode		{
+// SPR 4052 - Model Management
+    { Annot "annotation/UmlDeploymentNode" }
+}
+NodeObject	701832	UmlExtensionPoint		{
+// SPR 4052 - Model Management
+    { Annot "annotation/UmlExtensionPoint" }
+}
+NodeObject	701834	UmlFinalState			{{ Annot "annotation/UmlGenericObject" }}
+NodeObject	701836	UmlHistoryState			{
+// SPR 4052 - Model Management
+    { Annot "annotation/UmlHistoryState" }
+}
+NodeObject	701840	UmlInitialState			{{ Annot "annotation/UmlGenericObject" }}
+NodeObject	701842	UmlInstantiatedClass		{
+	{ Update
+		{ DependentsFunc "UmlInstantiatedClass_dependents" }
+		{ Dependency
+			{ Name "ClassNameChange" }
+			{ DeriveAttrsFunc "UmlClass_InstantiatedClass_derattrs" }
+		}
+	}
+}
+NodeObject	701844	UmlMergeControl			{
+// SPR 4052 - Model Management
+    { Annot "annotation/UmlMergeControl" }
+}
+NodeObject	701846	UmlObjectClassScope		
+{
+// SPR 4052 - Model Management
+    { Annot "annotation/UmlObjectClassScope" }
+// ECR 4500
+	{ Update
+		{ DependentsFunc "UmlObjectClassScope_dependents" }
+        }
+}
+NodeObject	701847	UmlObjectInState
+{
+	{ Annot "annotation/UmlGenericObject" }
+	{ Update
+		{ Dependency
+			{ Name "StateNameChange" }
+			{ DeriveAttrsFunc "UmlObjectInState_State_derattrs" }
+		}
+    }
+}
+NodeObject	701848	UmlObjectInstance		{{ Annot "annotation/UmlGenericObject" }} // ECR 6726
+NodeObject	701850	UmlObjectInstanceAttribute	{}
+NodeObject	701852	UmlOperation			{
+	{ Annot "annotation/UmlOperation" }
+	{ Update
+		{ DependentsFunc "UmlOperation_dependents" }
+		{ Dependency
+			{ Name "ClassNameChange" }
+			{ DeriveAttrsFunc "UmlClass_OperationOrSignal_derattrs" }
+		}
+		{ Dependency
+			{ Name "ClassDestructor" }
+			{ DeriveAttrsFunc "UmlClass_OperationDestructor_derattrs" }
+		}
+		{ Dependency
+			{ Name "ClassConstructor" }
+			{ DeriveAttrsFunc "UmlClass_OperationConstructor_derattrs" }
+		}
+	    { Dependency
+		{ Name "MessageItemSignatureChange" }
+	        { DeriveAttrsFunc "UmlMessageItem_OperationOrSignal_derattrs" }
+	    }
+	}
+	{ PrintValueFunc "UmlOperationPrintValue" }
+}
+NodeObject	701855	UmlSwimlane			{} // ECR 3159
+NodeObject	701854	UmlPackage
+{
+// SPR 4052 - Model Management
+    { Update
+        { DependentsFunc "UmlPackage_dependents" }
+    }
+    { Annot "annotation/UmlPackage" }
+}
+NodeObject	701856	UmlParameterizedClass		{}
+NodeObject	701857	UmlInterface				{} // ECR 4986
+
+NodeObject	701858	UmlScenarioInstance		{{ Annot "annotation/UmlScenarioInstance" }}
+NodeObject	701860	UmlSplitControl			{
+// SPR 4052 - Model Management
+    { Annot "annotation/UmlSplitControl" }
+}
+NodeObject	701862	UmlState			
+{
+    { Annot "annotation/UmlGenericObject" }
+	{ Update
+        { DependentsFunc "UmlState_dependents" }
+    }
+}
+NodeObject	701863	UmlStateMachine			
+{
+// SPR 4052 - Model Management
+    { Annot "annotation/UmlStateMachine" }
+	{ Update
+	        { DependentsFunc "UmlStateMachine_dependents" } 
+		{ Dependency
+			{ Name "OperationStateMachine" }
+			{ DeriveAttrsFunc "UmlOperation_StateMachine_derattrs" }
+		}
+		{ Dependency
+			{ Name "ClassStateMachine" }
+			{ DeriveAttrsFunc "UmlClass_StateMachine_derattrs" }
+		}
+	}
+}
+// ECR 7215
+NodeObject	701885	UmlJunctionPoint
+{
+    { Annot "annotation/UmlGenericObject" }
+	{ Update
+        { DependentsFunc "UmlState_dependents" }
+    }
+}
+
+NodeObject	701886	UmlDynamicChoicePoint
+{
+    { Annot "annotation/UmlGenericObject" }
+	{ Update
+        { DependentsFunc "UmlState_dependents" }
+    }
+}
+
+NodeObject	701864	UmlSystem			{
+// SPR 4052 - Model Management
+    { Annot "annotation/UmlSystem" }
+}
+NodeObject	701866	UmlType				{}
+NodeObject	701868	UmlUseCase			{
+    { Annot "annotation/UmlUseCase" }
+    { Update
+	{ DependentsFunc "UmlUseCase_dependents" }
+//         { Dependency
+// 	    { Name "UseCaseNameChange" }
+// 	    { DeriveAttrsFunc "UmlUseCase_derattrs" }
+// 	}
+    }
+}
+NodeObject	701870	UmlSignal			{
+	{ Update
+		{ DependentsFunc "UmlSignal_dependents" }
+		{ Dependency
+			{ Name "ClassNameChange" }
+			{ DeriveAttrsFunc "UmlClass_OperationOrSignal_derattrs" }
+		}
+	    { Dependency
+		{ Name "MessageItemSignatureChange" }
+	        { DeriveAttrsFunc "UmlMessageItem_OperationOrSignal_derattrs" }
+	    }
+	}
+}
+
+NodeObject 701880 UmlDeferredEvent
+{ }
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// link objects
+// 
+LinkObject	601802	UmlAsynchronousMessage {
+	{ Annot "annotation/UmlMessages" }
+	{ Update
+	    { DependentsFunc "UmlMessage_dependents" }
+	    { Dependency
+		{ Name "MessageItemValueChange" }
+	        { DeriveAttrsFunc "UmlMessageItem_MessageLink_derattrs" }
+	    }
+	    { Dependency
+		{ Name "MessageSignatureChange" }
+	        { DeriveAttrsFunc "UmlMessage_MessageLink_derattrs" }
+	    }
+	}
+}
+LinkObject	601804	UmlBalkingMessage {
+	{ Annot "annotation/UmlMessages" }
+	{ Update
+	    { DependentsFunc "UmlMessage_dependents" }
+	    { Dependency
+		{ Name "MessageItemValueChange" }
+	        { DeriveAttrsFunc "UmlMessageItem_MessageLink_derattrs" }
+	    }
+	    { Dependency
+		{ Name "MessageSignatureChange" }
+	        { DeriveAttrsFunc "UmlMessage_MessageLink_derattrs" }
+	    }
+	}
+}
+//LinkObject	601806	UmlCollaborationDefinition	{}
+LinkObject	601808	UmlCollaborationRole		{{ Annot "annotation/UmlGenericObject" }}
+LinkObject	601810	UmlComponentComposit		{{ Annot "annotation/UmlGenericObject" }}
+LinkObject	601812	UmlComponentDependency		{{ Annot "annotation/UmlGenericObject" }}
+LinkObject	601814	UmlComponentInterface		{{ Annot "annotation/UmlGenericObject" }}
+LinkObject	601816	UmlContains			{{ Annot "annotation/UmlGenericObject" }}
+LinkObject	601818	UmlDependency			{{ Annot "annotation/UmlGenericObject" }}
+LinkObject	601820	UmlDeployment			{{ Annot "annotation/UmlGenericObject" }} // ECR 7082
+// ECR 4514
+LinkObject	601821	UmlDeploymentNodeCommunicates   {{ Annot "annotation/UmlGenericObject" }} 
+LinkObject	601822	UmlGeneralization		{{ Annot "annotation/UmlGeneralization" }}
+LinkObject	601823	UmlImplements			{{ Annot "annotation/UmlImplements" }}
+LinkObject	601824	UmlInput			{{ Annot "annotation/UmlGenericObject" }}
+LinkObject	601826	UmlObjectLink			{{ Annot "annotation/UmlGenericObject" }}
+LinkObject	601828	UmlOutput			{{ Annot "annotation/UmlGenericObject" }}
+LinkObject	601830	UmlRefines			{{ Annot "annotation/UmlRefines" }}
+
+LinkObject	601832	UmlRole				{
+	{ Update
+		{ DependentsFunc "UmlRole_dependents" }
+	}
+	{ Annot "annotation/UmlRole" }
+}
+
+LinkObject	601833	UmlAssociationClassLink {}
+LinkObject	601834	UmlSimpleMessage		{
+	{ Annot "annotation/UmlMessages" }
+	{ Update
+	    { DependentsFunc "UmlMessage_dependents" }
+	    { Dependency
+		{ Name "MessageItemValueChange" }
+	        { DeriveAttrsFunc "UmlMessageItem_MessageLink_derattrs" }
+	    }
+	    { Dependency
+		{ Name "MessageSignatureChange" }
+	        { DeriveAttrsFunc "UmlMessage_MessageLink_derattrs" }
+	    }
+	}
+}
+LinkObject	601836	UmlSynchronousMessage		{
+	{ Annot "annotation/UmlMessages" }
+	{ Update
+	    { DependentsFunc "UmlMessage_dependents" }
+	    { Dependency
+		{ Name "MessageItemValueChange" }
+	        { DeriveAttrsFunc "UmlMessageItem_MessageLink_derattrs" }
+	    }
+	    { Dependency
+		{ Name "MessageSignatureChange" }
+	        { DeriveAttrsFunc "UmlMessage_MessageLink_derattrs" }
+	    }
+	}
+}
+LinkObject	601838	UmlTimeoutMessage		{
+	{ Annot "annotation/UmlMessages" }
+	{ Update
+	    { DependentsFunc "UmlMessage_dependents" }
+	    { Dependency
+		{ Name "MessageItemValueChange" }
+	        { DeriveAttrsFunc "UmlMessageItem_MessageLink_derattrs" }
+	    }
+	    { Dependency
+		{ Name "MessageSignatureChange" }
+	        { DeriveAttrsFunc "UmlMessage_MessageLink_derattrs" }
+	    }
+	}
+}
+LinkObject	601839	UmlReturnMessage		{
+	{ Annot "annotation/UmlMessagesRet" }
+	{ Update
+	    { DependentsFunc "UmlMessage_dependents" }
+	    { Dependency
+		{ Name "MessageItemValueChange" }
+	        { DeriveAttrsFunc "UmlMessageItem_MessageLink_derattrs" }
+	    }
+	    { Dependency
+		{ Name "MessageSignatureChange" }
+	        { DeriveAttrsFunc "UmlMessage_MessageLink_derattrs" }
+	    }
+	}
+}
+LinkObject	601840	UmlTransition			
+{
+	{ Annot "annotation/UmlGenericObject" }
+	{ Update 
+		{ Dependency
+			{ Name "ItemTransition" }
+			{ DeriveAttrsFunc "UmlItem_Transition_derattrs" }
+		} 
+    	}
+}
+LinkObject	601842	UmlUseCaseExtends		{{ Annot "annotation/UmlGenericObject" }}
+LinkObject	601844	UmlUseCaseInteraction		{{ Annot "annotation/UmlGenericObject" }}
+LinkObject	601846	UmlUseCaseUses			{{ Annot "annotation/UmlGenericObject" }}
+LinkObject	601848	UmlStereotypeInheritance	{}
+LinkObject	601849	UmlStateActivity		{}
+LinkObject	601850	UmlStateEntryAction		{}
+LinkObject	601851	UmlStateEvent			
+{
+	{ Update
+		{ Dependency
+			{ Name "OperationStateEvent" }
+			{ DeriveAttrsFunc "UmlOperation_StateEvent_derattrs" }
+		}
+	}
+}
+LinkObject	601852	UmlStateExitAction		{}
+LinkObject	601853	UmlStateTableDefinesState	{}
+LinkObject	601854	UmlStateAttribute   		{}
+LinkObject	601856	UmlSignalSends	{}
+LinkObject	601858	UmlSignalReceives	{}
+LinkObject	601860	UmlDeferredEventLink	{}
+
+/////////////////////////////////////////////////////////////////////////////////
+//	
+// cntx objects
+// 
+CntxObject	101100	UmlConstraint			{}
+CntxObject	101102	UmlTimeDelivered		{}
+CntxObject	101104	UmlTimeSent			{}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// note objects
+// 
+NoteObject	801900	UmlAttributeAda95Definition	{}
+NoteObject	801902	UmlAttributeCxxDefinition	{}
+NoteObject	801904	UmlAttributeDefinition		{}
+NoteObject	801906	UmlAttributeJavaDefinition	{}
+NoteObject      801907  UmlAttributeIDLDefinition       {}
+NoteObject	801908	UmlClassAda95Declarations	{}
+NoteObject	801919	UmlClassCxxDefinition		{}
+NoteObject	801920	UmlClassAda95Definition		{}
+NoteObject	801921	UmlClassIDLDeclarations		{}
+NoteObject	801922	UmlClassCxxDeclarations		{}
+NoteObject	801923	UmlClassCxxTableNote	        {}
+NoteObject	801924	UmlClassDefinition		{}
+NoteObject	801926	UmlClassJavaDeclarations	{}
+NoteObject	801928	UmlClassJavaDefinition		{}
+NoteObject	801929	UmlMessageNote			{}
+NoteObject	801930	UmlMessageDefinition		{}
+NoteObject	801932	UmlOperationAda95Code		{}
+NoteObject	801934	UmlOperationAda95Definition	{}
+NoteObject	801936	UmlOperationCxxCode		{}
+NoteObject	801938	UmlOperationCxxDefinition	{}
+NoteObject	801940	UmlOperationDefinition		{}
+NoteObject	801942	UmlOperationJavaCode		{}
+NoteObject	801944	UmlOperationJavaDefinition	{}
+NoteObject	801945	UmlOperationIDLDefinition	{}
+NoteObject	801946	UmlRefinesDefinition		{}
+NoteObject	801948	UmlSignalDefinition		{}
+NoteObject	801949	UmlStateDefinition		{}
+NoteObject	801950	UmlExtensibilityDefinition	{}
+NoteObject	801951	UmlTransitionDefinition		{}
+NoteObject	801952	UmlUseCaseDefinition		{}
+NoteObject	801954	UmlScenarioInstanceNote		{}
+NoteObject	801956	UmlRoleDefinition    		{}
+NoteObject	801957	UmlRoleCxxDefinition	        {}
+NoteObject	801958	UmlRoleJavaDefinition	        {}
+NoteObject	801959	UmlRoleIDLDefinition	        {}
+//NoteObject	801960	UmlAggregationDefinition    	{}
+NoteObject	801962	UmlActionStateDefinition    	{}
+NoteObject	801964	UmlCxxInheritanceDefinition     {}
+NoteObject	801965	UmlRoleAda95Definition	        {}
+NoteObject	801966	UmlClassAda95TableNote	        {}
+NoteObject      801967	UmlPackageDefinition            {}
+NoteObject	801968	UmlClassTOOLImplementation                   {}
+NoteObject      801969  UmlOperationTOOLCode                         {}
+NoteObject 	801970  UmlOperationTOOLImplementation               {}
+NoteObject 	801971  UmlAttributeTOOLImplementation               {}
+NoteObject 	801972  UmlRoleTOOLImplementation                    {}
+NoteObject  801973  UmlSubsystem    {}  // SPR 4052 - Model Management
+NoteObject  801974  UmlExternalSubsystem    {}  // SPR 4052 - Model Management
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// item objects
+// 
+ItemObject  503100  UmlReturnType             {
+    { Update
+	{ Dependency
+	    { Name "ClassNameChange" }
+	    { DeriveAttrsFunc "UmlClass_ItemType_derattrs" }
+	}
+        { Dependency
+	    { Name "MessageNameChange" }
+	    { DeriveAttrsFunc "UmlMessage_ItemType_derattrs" }
+	}
+	{ Dependency
+            { Name "MessageItemChange" }
+            { DeriveAttrsFunc "UmlMessageItem_ItemType_derattrs" }
+        }
+        { DependentsFunc "UmlMessageItem_dependents" }
+    }
+    { DataType "String" }
+}
+ItemObject  503102  UmlAttributeAda95IsAliased {{ DataType "Boolean" }}
+ItemObject  503104  UmlOperationAda95IsSubunit {{ DataType "Boolean" }}
+ItemObject  503106  UmlAttributeIsDerived     {{ DataType "Boolean" }}
+ItemObject  503108  UmlAttributeCxxIsVolatile {{ DataType "Boolean" }}
+ItemObject  503109  UmlAttributeDefaultValue  {}
+ItemObject  503110  UmlAttributeType  {
+	{ Update
+		{ Dependency
+			{ Name "ClassNameChange" }
+			{ DeriveAttrsFunc "UmlClass_ItemType_derattrs" }
+		}
+	}
+}
+// code gen id's for various languages
+ItemObject  503111  UmlCxxCodeGenId { { DataType "String" } }
+
+ItemObject  503120  UmlClassAda95FullViewNotAbstract {}
+ItemObject  503122  UmlClassAda95FullViewNotLimited {}
+ItemObject  503124  UmlClassAda95GenAccessType {{ DataType "Boolean" }}
+ItemObject  503126  UmlClassAda95GenWideAccessType {{ DataType "Boolean" }}
+ItemObject  503128  UmlClassAda95IsLimited    {{ DataType "Boolean" }}
+ItemObject  503132  UmlClassAda95TypePrivacy  { { DataType "UmlClassAda95TypePrivacyEnum" }}
+ItemObject  503134  UmlClassIsImported        {{ DataType "Boolean" }}
+ItemObject  503135  UmlClassIsAbstract        {{ DataType "Boolean" }}
+ItemObject  503136  UmlClassParameters        {
+	{ Update
+		{ Dependency
+			{ Name "ClassNameChange" }
+			{ DeriveAttrsFunc "UmlClass_ItemType_derattrs" }
+		}
+	}
+}
+ItemObject  503138  UmlClassVisibility        {{ DataType "UmlVisibilityEnum" }}
+ItemObject  503139  UmlConcurrentState        {{ DataType "Boolean" }}
+ItemObject  503140  UmlOperationCxxCtorInitList {}
+ItemObject  503142  UmlOperationCxxIsInline   {{ DataType "Boolean" }}
+ItemObject  503143  UmlOperationAda95IsInline {{ DataType "Boolean" }}
+ItemObject  503144  UmlOperationCxxIsVirtual  {{ DataType "Boolean" }}
+ItemObject  503145  UmlOperationReturnType    {
+	{ Update
+		{ Dependency
+			{ Name "ClassNameChange" }
+			{ DeriveAttrsFunc "UmlClass_ItemType_derattrs" }
+		}
+	}
+}
+ItemObject  503148  UmlAttributeJavaIsTransient {{ DataType "Boolean" }}
+ItemObject  503150  UmlAttributeJavaIsVolatile {{ DataType "Boolean" }}
+ItemObject  503152  UmlClassJavaIsFinal       {{ DataType "Boolean" }}
+ItemObject  503154  UmlClassJavaVisibility     {{ DataType "UmlJavaVisibilityEnum" }}
+//ECR 114 begin
+ItemObject  503155  UmlClassJavaIsStaticClass   {{ DataType "Boolean" }} 
+//ECR 114 end
+ItemObject  503156  UmlMemberJavaIsFinal      {{ DataType "Boolean" }}
+//ECR 116 begin
+ItemObject  503157  UmlClassJavaIsAnonymous   {{ DataType "Boolean" }} 
+//ECR 116 end
+ItemObject  503158  UmlOperationJavaIsNative  {{ DataType "Boolean" }}
+ItemObject  503160  UmlOperationJavaIsSynchronized {{ DataType "Boolean" }}
+ItemObject  503270  UmlAttributeIDLType       {{ DataType "String" }}
+ItemObject  503271  UmlAttributeIDLIsReadOnly {{ DataType "Boolean" }}
+ItemObject  503272  UmlOperationIDLSignature  {{ DataType "String" }}
+ItemObject  503273  UmlOperationIDLReturnType  {{ DataType "String" }}
+ItemObject  503274  UmlOperationIDLAttribute  {{ DataType "String" }}
+ItemObject  503275  UmlOperationIDLContext    {{ DataType "String" }}
+
+ItemObject  503162  UmlMemberIsClass          {{ DataType "Boolean" }}
+ItemObject  503163  UmlMemberJavaVisibility   {{ DataType "UmlJavaVisibilityEnum" }}
+ItemObject  503164  UmlMemberAda95Visibility  {{ DataType "UmlAda95VisibilityEnum" }}
+ItemObject  503165  UmlMemberCxxVisibility    {{ DataType "UmlVisibilityEnum" }}
+ItemObject  503166  UmlMemberCxxIsConst       {{ DataType "Boolean" }}
+ItemObject  503167  UmlMemberVisibility       {{ DataType "UmlVisibilityEnum" }}
+ItemObject  503168  UmlMessageArgs            {
+    { Update 
+	{ Dependency
+	    { Name "MessageNameChange" }
+	    { DeriveAttrsFunc "UmlMessage_ItemType_derattrs" }
+	}
+	{ DependentsFunc "UmlMessageItem_dependents" }
+    }	
+    { DataType "String" }
+}
+ItemObject  503170  UmlMessageDirection       {{ DataType "UmlMessageDirectionEnum" }}
+ItemObject  503172  UmlMessageIsCreation      {{ DataType "Boolean" }}
+ItemObject  503173  UmlMessageIsDestruction      {{ DataType "Boolean" }}
+ItemObject  503174  UmlMessageRecurrence      {
+    { Update 
+	{ Dependency
+	    { Name "MessageNameChange" }
+	    { DeriveAttrsFunc "UmlMessage_ItemType_derattrs" }
+	}
+        { DependentsFunc "UmlMessageItem_dependents" }
+    }	
+}
+ItemObject  503176  UmlOperationIsAbstract    {{ DataType "Boolean" }}
+ItemObject  503178  UmlOperationThrows        {
+	{ Update
+		{ Dependency
+			{ Name "ClassNameChange" }
+			{ DeriveAttrsFunc "UmlClass_ItemType_derattrs" }
+		}
+	}
+}
+ItemObject  503180  UmlPredecessorGuard       {
+    { Update 
+	{ Dependency
+	    { Name "MessageNameChange" }
+	    { DeriveAttrsFunc "UmlMessage_ItemType_derattrs" }
+	}
+        { DependentsFunc "UmlMessageItem_dependents" }
+    }	
+    { DataType "String" }
+}
+ItemObject  503182  UmlRefineArgs             {
+	{ Update
+		{ Dependency
+			{ Name "ClassNameChange" }
+			{ DeriveAttrsFunc "UmlClass_ItemType_derattrs" }
+		}
+	}
+}
+ItemObject  503184  UmlSequenceExpression     {
+    { Update 
+    	{ Dependency
+	        { Name "MessageNameChange" }
+	        { DeriveAttrsFunc "UmlMessage_ItemType_derattrs" }
+	    }
+        { DependentsFunc "UmlMessageItem_dependents" }
+    }	
+    { DataType "String" }
+}
+ItemObject  503190  UmlStereotype             {{ DataType "String" }}
+ItemObject  503194  UmlUseCaseException       {{ DataType "String" }}
+ItemObject  503196  UmlUseCasePostcondition   {{ DataType "String" }}
+ItemObject  503198  UmlUseCasePrecondition    {{ DataType "String" }}
+// ECR 2850
+ItemObject  503199  UmlUseCaseExtensionPoint  {{ DataType "String" }}
+ItemObject  503200  Umlstring                 {}
+ItemObject  503202  UmlType                   {}
+ItemObject  503207  UmlParentTypeItem         {{ DataType "String" }}
+ItemObject  503203  UmlTransitionAction       
+{
+	{ Update 
+		{ Dependency
+			{ Name "OperationTransition" }
+			{ DeriveAttrsFunc "UmlTransitionItem_derattrs" }
+		}
+        	{ DependentsFunc "UmlTransitionItem_dependents" } 
+    	}	
+	{ DataType "String" }
+}
+ItemObject  503204  UmlTransitionEvent	      
+{
+	{ Update 
+		{ Dependency
+			{ Name "OperationTransition" }
+			{ DeriveAttrsFunc "UmlTransitionItem_derattrs" }
+		}
+        	{ DependentsFunc "UmlTransitionItem_dependents" } 
+    	}	
+	{ DataType "String" }
+}
+ItemObject  503205  UmlTransitionGuard 
+{
+	{ Update 
+        	{ DependentsFunc "UmlTransitionItem_dependents" } 
+    	}	
+	{ DataType "String" }
+}       
+ItemObject  503206  UmlTransitionSend	      
+{
+	{ Update 
+		{ Dependency
+			{ Name "OperationTransition" }
+			{ DeriveAttrsFunc "UmlTransitionItem_derattrs" }
+		}
+        	{ DependentsFunc "UmlTransitionItem_dependents" } 
+    	}	
+	{ DataType "String" }
+}
+ItemObject  503208  UmlParentNameItem         {
+    { DataType "String" }
+    { Update 
+	{ Dependency
+	    { Name "ParentNameChange" }
+	    { DeriveAttrsFunc "UmlParentNameItem_derattrs" }
+	}
+        //{ DependentsFunc "UmlParentNameItem_dependents" }
+    }
+}
+ItemObject  503210  UmlConstraintItem         {}
+ItemObject  503212  UmlTaggedValue            {}
+ItemObject  503214  UmlMultiplicity           {}
+ItemObject  503216  UmlRoleNavigability       {{ DataType "Boolean" }}
+ItemObject  503218  UmlRoleQualifier          {}
+ItemObject  503220  UmlRoleIsOrdered          {{ DataType "Boolean" }}
+ItemObject  503222  UmlAggregationType        {{ DataType "UmlAggregationEnum" }}
+ItemObject  503224  UmlObjectName             {
+	{ Update 
+		{ Dependency
+			{ Name "OperationNameChange" }
+			{ DeriveAttrsFunc "UmlOperation_ItemType_derattrs" }
+		}
+        	{ Dependency
+			{ Name "MessageNameChange" }
+			{ DeriveAttrsFunc "UmlMessage_ItemType_derattrs" }
+		}
+        	{ Dependency
+			{ Name "MessageItemChange" }
+			{ DeriveAttrsFunc "UmlMessageItem_ItemType_derattrs" }
+		}
+        	{ DependentsFunc "UmlMessageItem_dependents" }
+   	}	
+	{ DataType "String" }
+}
+
+ItemObject  503226  UmlCxxInheritanceVisibility {{ DataType "UmlVisibilityEnum" }}
+ItemObject  503228  UmlCxxInheritanceIsVirtual {{ DataType "Boolean" }}
+ItemObject  503230  UmlEnclosingScope 		{}
+ItemObject  503231  UmlGenerateClassIfType	{{ DataType "Boolean" }}
+ItemObject  503232  UmlGenerateTypeAttributes	{{ DataType "Boolean" }}
+
+ItemObject  503240  UmlRoleCxxVisibility     {{ DataType "UmlVisibilityEnum" }} 
+ItemObject  503241  UmlRoleCxxPatternFamily    {} 
+ItemObject  503242  UmlRoleJavaVisibility     {{ DataType "UmlJavaVisibilityEnum" }} 
+ItemObject  503243  UmlRoleJavaPatternFamily    {} 
+ItemObject  503244  UmlRoleJavaInit    {} 
+ItemObject  503245  UmlRoleIDLPatternFamily    {} 
+ItemObject  503246  UmlRoleIDLReadOnly    {{ DataType "Boolean" }} 
+
+ItemObject  503247  UmlPackageIsImported        {{ DataType "Boolean" }}
+ItemObject  503248  UmlPackageComponent         {{ DataType "String" }}
+
+// TOOL (forte) code generation Items
+ItemObject	503249	UmlTOOLClassShared { { DataType "UmlTOOLClassPropertyEnum" } }
+ItemObject	503250	UmlTOOLClassSubclassOverrideShared { { DataType "Boolean" } }
+ItemObject	503251	UmlTOOLClassDistributed { { DataType "UmlTOOLClassPropertyEnum" } }
+ItemObject	503252	UmlTOOLClassSubclassOverrideDistributed { { DataType "Boolean" } }
+ItemObject	503253	UmlTOOLClassTransactional { { DataType "UmlTOOLClassPropertyEnum" } }
+ItemObject	503254	UmlTOOLClassSubclassOverrideTransactional { { DataType "Boolean" } }
+ItemObject	503255	UmlTOOLClassMonitored { { DataType "UmlTOOLClassPropertyEnum" } }
+ItemObject	503256	UmlTOOLClassSubclassOverrideMonitored { { DataType "Boolean" } }
+ItemObject	503257	UmlTOOLClassRestricted { { DataType "Boolean" } }
+ItemObject	503258	UmlTOOLWindowClassFilename { { DataType "String" } }
+ItemObject	503259	UmlTOOLRolePrivilege { { DataType "UmlTOOLClassComponentPrivacyEnum" } }
+ItemObject	503260	UmlTOOLRoleUseLargeArray { { DataType "Boolean" } }
+ItemObject	503261	UmlTOOLAttributePrivilege { { DataType "UmlTOOLClassComponentPrivacyEnum" } }
+ItemObject	503262	UmlTOOLVirtualAttributeSet { { DataType "String" } }
+ItemObject	503263	UmlTOOLVirtualAttributeGet { { DataType "String" } }
+ItemObject	503264	UmlTOOLOperationPrivilege { { DataType "UmlTOOLClassComponentPrivacyEnum" } }
+ItemObject      503265  UmlTOOLOperationParamList { { DataType "String" } }
+ItemObject	503266	UmlTOOLOperationCopyReturn { { DataType "Boolean" } }
+ItemObject	503267	UmlTOOLOperationExceptionEvent { { DataType "String" } }
+ItemObject	503268	UmlTOOLOperationKind { { DataType "UmlTOOLOperationKindEnum" } }
+ItemObject	503269	UmlTOOLOperationCodeGenerate { { DataType "Boolean" } }
+ItemObject	503276	UmlTOOLOperationReturnEvent { { DataType "String" } }
+ItemObject  503277  UmlSubsystemName         {{ DataType "String" }}    // SPR 4052 - Model Management
+ItemObject  503278  UmlExternalSubsystemName {{ DataType "String" }} // SPR 4052 - Model Management
+ItemObject  503279  UmlExternalSubsystemVersion {{ DataType "String" }} // SPR 4052 - Model Management
+ItemObject  503280  UmlSubsystemIsLocked {{ DataType "Boolean" }} // SPR 4052 - Model Management
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// viewpoint objects
+// 
+// ViewpointObject 901800	UmlViewpointFirst
+ViewpointObject 901801	UmlRefinedState {}
+ViewpointObject 901803	UmlScopeAmbassador {}
+ViewpointObject 901810	UmlAllAggregation {}
+ViewpointObject 901812	UmlAllGeneralization {}
+ViewpointObject 901814	UmlAllAssociation {}
+ViewpointObject 901816	UmlAllDependency {}
+ViewpointObject 901818	UmlAllMembers {}
+ViewpointObject 901820  UmlPackageContainment {} // no longer used, keep for backward compatibility
+// ViewpointObject 901899	UmlViewpointLast

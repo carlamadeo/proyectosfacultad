@@ -1,0 +1,42 @@
+FileObject 1
+{
+    { Name "a473" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65C79-34FB-11d6-8DB9-00500445CF96" }
+}
+
+FileObject 99999
+{
+    { Name "Pendulum__1" }
+    { Type UmlStateDiagram }
+    { ObjectId 428 }
+    { AnnotFileId 1 }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1243 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1245 }
+    { DescLine "Once the pendulum started moving it just moves from left to right" }
+    { DescLine "and vice versa. Each movement is denoted by a transition, that sends" }
+    { DescLine "a send event tick to the clockwork." }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Pendulum__1" }
+    { NoteId 3 }
+    { ObjectId 1246 }
+}
+

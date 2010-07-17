@@ -1,0 +1,332 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/OMT
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1993
+//      All rights reserved
+//
+ 
+ 
+//////////////////////////////////////////////////////////////////////////////
+//
+//
+//    File: objectcenter_nav.inc
+//
+//    Description:
+//
+//    Routines to browse from CenterLine products to StP editors
+//    (This is also used from ParcPlace's Smalltalk environment.)
+//
+//////////////////////////////////////////////////////////////////////////////
+ 
+
+// #include "qrl/include/appids.inc"
+
+
+int 
+Impl_OMTFromProgrammingEnvironment(string editor, string class, string member)
+{
+    node_ref	nr;
+    node class_node, member_node;
+    list member_list, diag_list;
+    string query;
+    file diag;
+    int		id;
+    int		p, l;
+
+    if (class == "")
+       print_message("Browsing to member " + member  + " ...");
+    else if (member == "")
+       print_message("Browsing to class " + class  + " ...");
+    else
+       print_message("Browsing to " + class  + "::" + member + " ...");
+
+    l = string_length(member);
+    if (l > 0)
+    {
+	p = string_find(member, 0, "(") ;
+	if (p < l)
+	{
+	    member = string_extract(member, 0, p);
+	}
+    }
+    
+    // now find the object. If object does not exist, error for now. Nicer
+    // would be to create the object if possible ...
+
+    if (editor == "ome" )
+    {
+	if (class == "")
+	{
+	    print_error("Specify class to browse to Object Model ...", NULL);
+	    return -1;
+	}
+
+	class_node = node_from_name_type(class, OMT_CLASS_TYPE);
+
+        if (class_node == NULL)
+        {
+            // eventually we want to do the same as push from ome
+            print_error("Class " + class + " not found.", NULL);
+	    return -1;
+        }
+        else
+        {
+	    query = "node_ref[viewpoints[AllOperations && node_id == ${class_node.id}]" +
+		    " && node_id == ${class_node.id}]";
+	    diag_list = list_select(query);
+	    if (list_count(diag_list) > 0)
+	    {
+		nr = list_get(diag_list, 0);
+		query = "file[id == ${nr.file_id}]";
+		diag_list = list_select(query);
+		if (list_count(diag_list) > 0)
+		{
+		    diag = list_get(diag_list, 0);
+		    NavLoadAndFind(diag.name, nr.appid);
+		    return 0;
+		}
+	    }
+
+	    query = "file[OMTObjectDiagram && " + 
+		"node_refs[node_id == ${class_node.id}]]";
+	    diag_list = list_select(query);
+	    if (list_count(diag_list) > 0)
+	    {
+		diag = list_get(diag_list, 0);
+		id = list_get(nav_node_appids(class_node, diag), 0);
+		NavLoadAndFind(diag.name, id + "");
+		return 0;
+	    }
+	}
+    } else if (editor == "cte" )
+    {
+	if (class == "")
+	{
+	    print_error("Specify class to browse to cte ...", NULL);
+	    return -1;
+	}
+
+	query = "file[OMTClassTable && node_refs[node[OMTClass && name == '${class}']]]";
+	diag_list = list_select(query);
+
+        if (list_count(diag_list) == 0)
+        {
+            // eventually we want to do the same as push from ome
+            print_error("Class " + class + " not found.", NULL);
+	    return -1;
+        }
+        else
+        {
+	    diag = list_get(diag_list, 0);
+	    NavLoadAndFind(diag.name, NULL);
+	    return 0;
+	}
+    }
+    else if (editor == "fme")
+    {
+	// if editor is fme, we want to check if the object has an associated 
+	// fme file, otherwise create one in the same fashion as navigation
+	// from ome to fme. The first part of this is just like the code 
+        // above.
+
+	if (class == "")
+	{
+	    print_error("Specify class to browse to Functional Model ...", NULL);
+	    return -1;
+	}
+
+	class_node = node_from_name_type(class, OMT_CLASS_TYPE);
+	if (class_node == NULL)
+	{
+	    print_error("Class `" + class + "' not found", NULL);
+	    return -1;
+	}
+
+	if (member != "" && member != NULL)
+	{
+	    query = "node_ref[file[OMTFuncDiagram]&node[name='${member}'&OMTOperation&scope_node_id=${class_node.id}]]";
+	} else {
+	    query = "node_ref[node_id == ${class_node.id}&file[OMTFuncDiagram]]";
+	}
+	member_list = list_select(query);
+
+	if (list_count(member_list) == 0)
+	{ 
+	    if (member == "" || member == NULL)
+	    {
+		print_error("No Functional Model for Class `" + class + "' found.", NULL);
+	    } else {
+		print_error("No Functional Model for Member `" + class + "::" +
+			member + "' found.", NULL);
+	    }
+	    return -1;
+	}
+	if (list_count(member_list) > 1)
+	{
+	    editor_item_selector(member_list, "NavigateToSymFromRef(${selected_id});", "Navigate to Member", False);
+	    return 0;
+	}
+
+	nr = list_get(member_list, 0);
+	diag = find_by_query("file[${nr.file_id}]");
+
+	if (diag != NULL)
+	{
+	    NavLoadAndFind(diag.name, nr.appid);
+	    return 0;
+	}
+	else
+	{
+	    // eventually we want to do the same as push from ome
+	    if (class == "")	
+		print_error("Diagram for member " + member + 
+				" not found.", NULL);
+	    else 
+		print_error("Diagram for member " + member + 
+				" and class" + class + " not found.", NULL);
+	}
+    }
+    else if (editor == "dme")
+    {
+	// if editor is dme, we want to check if the object has an associated 
+	// dme file, otherwise create one in the same fashion as navigation
+	// from ome to dme. The first part of this is just like the code 
+        // above.
+
+	if (class == "")
+	{
+	    print_error("Specify class to browse to dme ...", NULL);
+	    return -1;
+	}
+
+	query = "file[OMTStateDiagram && node_refs[node[OMTState && name == '${class}' && scope_node_id == 0]]]";
+	diag_list = list_select(query);
+
+        if (list_count(diag_list) == 0)
+        {
+            // eventually we want to do the same as push from ome
+            print_error("Class " + class + " dynamic model not found.", NULL);
+	    return -1;
+        }
+        else
+        {
+	    diag = list_get(diag_list, 0);
+	    NavLoadAndFind(diag.name, NULL);
+	    return 0;
+	}
+    }
+    else if (editor == "class" || editor == "uclass" || editor == "uclassd")
+    {
+	string		file_type;
+
+	if (editor == "class")
+	    file_type = "BoochClassDiagram";
+	else if (editor == "uclassd")
+	    file_type = "UmlClassDiagram";
+	else
+	    file_type = "ClassDiagram";
+	if (class == "")
+	{
+	    print_error("Specify class to browse to class editor ...", NULL);
+	    return -1;
+	}
+
+	if (editor == "uclassd")
+	{
+	    class_node = node_from_name_type(class, "UmlPackage");
+	}
+	else
+	{
+	    class_node = node_from_name_type(class, OMT_CLASS_TYPE);
+	}
+
+        if (class_node == NULL)
+        {
+            // eventually we want to do the same as push from ome
+            print_error("Package " + class + " not found.", NULL);
+	    return -1;
+        }
+        else
+        {
+	    query = "node_ref[viewpoints[Members && node_id == ${class_node.id}]" +
+		    " && node_id == ${class_node.id}]";
+	    diag_list = list_select(query);
+	    if (list_count(diag_list) > 0)
+	    {
+		nr = list_get(diag_list, 0);
+		query = "file[id == ${nr.file_id}]";
+		diag_list = list_select(query);
+		if (list_count(diag_list) > 0)
+		{
+		    diag = list_get(diag_list, 0);
+		    NavLoadAndFind(diag.name, nr.appid);
+		    return 0;
+		}
+	    }
+
+	    query = "file[${file_type} && " + 
+		"node_refs[node_id == ${class_node.id}]]";
+	    diag_list = list_select(query);
+	    if (list_count(diag_list) > 0)
+	    {
+		diag = list_get(diag_list, 0);
+		id = list_get(nav_node_appids(class_node, diag), 0);
+		NavLoadAndFind(diag.name, id + "");
+		return 0;
+	    }
+	}
+    }
+    else
+	print_error("Navigation from PE to editor " + editor + " not supported.", NULL);
+    
+    return -1;
+}
+
+// this is from ct (node_appids) but dtrans generates an error
+// on a multiple include, but somehow
+
+list 
+nav_node_appids(node nodeobj, file fileobj)
+{
+    list     nodeids, ids = list_create("int", 0);
+    string   query;
+    node_ref noderef;
+
+    if (fileobj != NULL)
+    {
+	query = "node_ref[node_id==${nodeobj.id} && file_id==${fileobj.id}]";
+
+	for_each_in_select(query, noderef)
+	{
+	    // if the noderef is a gde link symbol then the appids 
+	    // are in pairs - first & last arc segment
+
+    	    nodeids = string_to_list(noderef.appid, ", ");
+
+	    list_append(ids, to_int(list_get(nodeids, 0)));
+
+	    if (list_count(nodeids) > 1)
+	    {
+		list_append(ids, to_int(list_get(nodeids, 1)));
+	    }
+	}
+    }
+    return(ids);
+}
+
+
+void
+NavigateToSymFromRef(int refid)
+{
+    node_ref	nr = find_by_query("node_ref[${refid}]");
+    file	f;
+    if (nr != NULL)
+    {
+	f = find_by_query("file[${nr.file_id}]");
+	if (f != NULL)
+	{
+	    NavLoadAndFind(f.name, nr.appid);
+	}
+    }
+}

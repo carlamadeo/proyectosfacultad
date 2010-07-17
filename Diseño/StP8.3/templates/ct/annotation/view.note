@@ -1,0 +1,47 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Note 800023
+{
+    { AppType View }
+    { HelpText "The Table View note lets you add items for declaring a view of a single table in an RDBMS schema. The view will be on the table created by the object being annotated. The information provided by this note is used in SQL generation." }
+    { PrintName "Table View" }
+    { Bounds { Min 0 } }
+    { Item
+	{ AppType SqlName }
+	{ HelpText "The View Name item specifies the name of a view. You can include columns in the view by using the View Name item under the In View note to associate the name of the view with an attribute." }
+	{ PrintName "View Name" }
+	{ Bounds { Min 1 } { Max 1 } } 
+	{ IsKey True }
+	{ InitValue "${sym_label} view" }
+    }
+    { Item
+	{ AppType CheckOption }
+	{ HelpText "The Check Option? item specifies that inserts and updates performed through a view should not be allowed to create or result in rows that the view cannot select." }
+	{ PrintName "Check Option?" }
+	{ Bounds { Min 0 } { Max 1 } } 
+	{ InitValue "True" }
+    }
+    { Item
+	{ AppType ConstraintName }
+	{ HelpText "The Constraint Name item names the constraint imposed by the Check Option? item." }
+	{ PrintName "Constraint Name" }
+	{ Bounds { Min 0 } { Max 1 } } 
+	{ InitValue "${sym_label} view check" }
+    }
+    { Item
+        { AppType SelectDistinct }
+	{ HelpText "The Select Distinct Rows? item allows you to specify whether to use \"SELECT\" or \"SELECT DISTINCT\" in the view definition." }
+	{ PrintName "Select Distinct Rows?"}
+	{ Bounds { Min 0 } { Max 1 } }
+	{ InitValue "True" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_view.note"

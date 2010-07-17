@@ -1,0 +1,29 @@
+/* XPM */
+static char* use_cases_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 7 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #000000	c #0000ff",
+"o	m #ffffff	c #c0c0c0",
+"x	m #000000	c #ff0000",
+"+	m #000000	c #ffff00",
+/* pixels */
+"................",
+"..........XXXX..",
+".........XOOOOX.",
+".........XOOOOXo",
+"..X....X..XXXXo.",
+".XOXo.X....ooo..",
+"..Xo..X...XXXX..",
+".XXXo.XX.XxxxxX.",
+"XoXoXoXX.XxxxxXo",
+"..Xo..X...XXXXo.",
+".XoXo.X....ooo..",
+"Xo..Xo.X..XXXX..",
+".........X++++X.",
+".........X++++Xo",
+"..........XXXXo.",
+"...........ooo.."};

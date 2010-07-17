@@ -1,0 +1,9 @@
+filterfile1
+Operator: Load All Links
+Find Links with Type: Control Flow
+Operator: Show
+Operator: Show Labels
+Operator on Set: Pop
+Find Links with Type: Data Flow
+Operator: Hide
+Operator: Hide Labels

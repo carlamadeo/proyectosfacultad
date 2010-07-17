@@ -1,0 +1,1168 @@
+
+//
+//      StP/SE
+//      Confidential property of Aonix
+//      Copyright (c) 1992-1999
+//      All rights reserved
+//
+
+// base DFE rules set.  Included by the gane-sarson dfe editor and the 
+// demarco-yourdan DFE editor.
+
+
+NodeSymbol 1 Comment {}
+
+NodeSymbol 2 Anchor
+{
+    { NodeMapping
+	{ AppType FlowAnchor }
+    }
+    { Cardinality
+	{ Min 1 }
+	{ AnyLinks Flows }
+    }
+}
+
+NodeSymbol 3 Vertex
+{
+    { SeeThrough True }
+    { Cardinality { Min 1 } { Max 1 } { InLinks AllLinkTypes } }
+    { Cardinality { Min 1 } { Max 1 } { OutLinks AllLinkTypes } }
+}
+
+NodeSymbol 4 External
+{
+    { NodeMapping
+	{ AppType External }
+	{ NameIsRequired True }
+        { NameFunc se_basic_node_name_func }
+    }
+    { Cardinality
+	{ Min 1 }
+	{ AnyLinks Flows }
+    }
+    { DefaultSize 1.5 1.5 }
+    { RenameFunc se_external_rename }
+    { PrintName "External" }
+    { UniformScale True }
+    { PreserveScale LabelTypes }
+    { CanApplyScaleCmd True }
+
+    { Navigation
+        { Name Parent }
+        { Label "&Parent" }
+	{ TargetFunc "DfeParent(\"${file}\");" }
+    }
+    { Navigation
+        { Name AssignRequirementsToObject }
+        { Label "Allocate &Requirements" }
+        { SpaceBefore True }
+        { Accelerator
+            { Label "Alt+Ctrl+R" }
+            { Value "Alt Ctrl<Key>R" }
+        }
+        { FailureCmd GoToRequirementsTableFromNode }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "D&OORS" }
+        { FailureCmd GoToDOORSFromNode }
+    }
+
+}
+
+NodeSymbol 11 ExternalStore
+{
+    { NodeMapping
+	{ AppType External }
+	{ NameIsRequired True }
+        { NameFunc se_basic_node_name_func }
+    }
+    { Cardinality
+	{ Min 1 }
+	{ AnyLinks Flows }
+    }
+    { ApplicationTag "ExternalStore" }
+    { Shape 
+        { Predefined ExternalStore } 
+        { ToolbarImage "external_store" }
+    }
+    { RenameFunc se_external_rename }
+    { PrintName "External Store" }
+    { UniformScale True }
+    { PreserveScale LabelTypes }
+    { CanApplyScaleCmd True }
+}
+
+NodeSymbol 5 Process
+{
+    { DefaultSize 1.8 1.8 }
+    { RenameFunc se_process_rename }
+    { PrintName "Process" }
+    { UniformScale True }
+    { PreserveScale LabelTypes }
+    { NodeMapping 
+	{ AppType Process }
+	{ NameIsRequired True }
+        { NameFunc se_basic_node_name_func }
+    }
+    { NoteMapping 
+	{ AppType ProcessIndex }
+    }
+    { ItemMapping 
+	{ AppType RelativeIndex }
+	{ NoteAppType ProcessIndex }
+	{ ValueString "${nodesym.prop.pindex}" }
+    }
+    { ConstructorFunc idehook_process_node_constructor }
+    { DestructorFunc idehook_process_node_destructor }
+    { Cardinality
+	{ Min 1 } 
+        // { OutLinks Flows }
+	{ AnyLinks Flows }
+    }
+    { DisplayMark
+        { Name Pindex }
+        { PreFunc "GetAllProcessesWithPspecs();" }
+        { CondFunc "AlwaysTrue();" }
+        { StringMarkFunc "PindexMark(\"${file}\",${nodesym.prop.pindex},\"${nodesym.label}\");" }
+        { Anchor UpperCenter }
+        { HAdjust Center }
+        { VAdjust Top }
+        { XPixelOffset 0 }
+        { Help "Process index and pspec or decomposition indicator" }
+    }
+    { Navigation
+        { Name Parent }
+        { Label "&Parent" }
+	{ TargetFunc "DfeParent(\"${file}\");" }
+    }
+    { Navigation
+	{ Name Decomposition }
+	{ Label "&Decomposition" }
+	{ TargetFunc "FindDecompositionOrPspec(\"${file}\", ${nodesym.prop.pindex}, ${node.id});" }
+	{ FailureCmd CreateDfeDiagram }
+    }
+// spr 3047
+//    { Navigation
+//	{ Name  BusinessProcess }
+//	{ Label "&Business Process in CRUD Table" }
+//        { TargetFunc "FindBusinessProcess(\"${node.name}\");" }
+//    }
+    { Navigation
+        { Name AssignRequirementsToObject }
+        { SpaceBefore True }
+        { Label "Allocate &Requirements" }
+        { Accelerator
+            { Label "Alt+Ctrl+R" }
+            { Value "Alt Ctrl<Key>R" }
+        }
+        { FailureCmd GoToRequirementsTableFromNode }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "D&OORS" }
+        { FailureCmd GoToDOORSFromNode }
+    }
+
+    { Methods
+        { Method
+            { Name DoubleClick }
+            { MethodFunc dfe_process_double_click }
+        }
+    }
+}
+
+NodeSymbol 6 Store
+{
+    { NodeMapping
+	{ AppType Store }
+	{ NameIsRequired True }
+        { NameFunc se_basic_node_name_func }
+	{ SigFunc dfe_qualifier_store_signature }
+    }
+    { Cardinality
+	{ Min 1 }
+	{ AnyLinks Flows }
+    }
+    { ApplicationTag "Store" }
+    { RenameFunc dfe_store_rename }
+    { PrintName "Store" }
+    { CanApplyScaleCmd True }
+
+    { Navigation
+        { Name Parent }
+        { Label "&Parent" }
+	{ TargetFunc "DfeParent(\"${file}\");" }
+    }
+}
+
+NodeSymbol 7 ControlSpec
+{
+    { NodeMapping
+	{ AppType  Cspec }
+	{ NameFunc idehook_cspec_name_func }
+    }
+    { Cardinality
+	{ Min 1 }
+	{ AnyLinks ControlFlow }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { FailureCmd GoToDOORSFromNode }
+    }
+
+}
+
+NodeSymbol 8 SplitFlow
+{
+    { SeeThrough True }
+    { NeedsInOutLink True }
+    { ApplicationTag "Split" }
+    { Cardinality { Min 1 } { InLinks Flows }
+    		  { Min 1 } { OutLinks Flows } }
+    { ReadOnly True }
+    { NodeMapping
+    	{ AppType SplitFlow }
+	{ SigFunc idehook_splitflow_sig_func }
+    }
+    //{ SymbolicDependentsFunc dfe_split_flow_depend_func }
+    { PrintName "Split Flow" }
+    { Shape { Predefined FilledEllipse } }
+    { DefaultSize 0.2 0.2 }
+    { CanHaveLabel False }
+    { CanApplyScaleCmd False }
+}
+
+NodeSymbol 9 OffPageProcess
+{
+    { NodeMapping
+	{ AppType OffPageProcess }
+	{ NameIsRequired True }
+    }
+    { Cardinality
+	{ Min 1 }
+	{ AnyLinks Flows }
+    }
+    { Shape 
+        { Predefined DoubleEllipse }
+        {ToolbarImage "offpage_process" }
+    }
+    { PrintName "Offpage Process" }
+    { UniformScale True }
+    { PreserveScale LabelTypes }
+
+    { Navigation
+        { Name Parent }
+        { Label "&Parent" }
+	{ TargetFunc "DfeParent(\"${file}\");" }
+    }
+    { Navigation
+        { Name AssignRequirementsToObject }
+        { Label "Allocate &Requirements" }
+        { SpaceBefore True }
+        { Accelerator
+            { Label "Alt+Ctrl+R" }
+            { Value "Alt Ctrl<Key>R" }
+        }
+        { FailureCmd GoToRequirementsTableFromNode }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "D&OORS" }
+        { FailureCmd GoToDOORSFromNode }
+    }
+
+}
+
+NodeSymbol 10 OffPageExternal
+{
+    { NodeMapping
+	{ AppType OffPageExternal }
+	{ NameIsRequired True }
+        { NameFunc se_basic_node_name_func }
+    }
+    { Cardinality
+	{ Min 1 }
+	{ AnyLinks Flows }
+    }
+    { Shape 
+        { Predefined DoubleRectangle }
+        { ToolbarImage "offpage_external" }
+    }
+    { DefaultSize 1.5 1.5 }
+    { PrintName "Offpage External" }
+    { UniformScale True }
+    { PreserveScale LabelTypes }
+
+    { Navigation
+        { Name Parent }
+        { Label "&Parent" }
+	{ TargetFunc "DfeParent(\"${file}\");" }
+    }
+    { Navigation
+        { Name AssignRequirementsToObject }
+        { Label "Allocate &Requirements" }
+        { SpaceBefore True }
+        { Accelerator
+            { Label "Alt+Ctrl+R" }
+            { Value "Alt Ctrl<Key>R" }
+        }
+        { FailureCmd GoToRequirementsTableFromNode }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "D&OORS" }
+        { FailureCmd GoToDOORSFromNode }
+    }
+
+}
+
+LinkSymbol 100 DataFlow
+{
+    { Connects 	{ From FlowEnds } { To Process } { IsDefault True }  }
+    { Connects 	{ From Process } { To FlowEnds } { IsDefault True }  }
+    { Connects 	{ From FlowEnds } { To SplitFlow } { IsDefault True }  }
+    { Connects 	{ From SplitFlow } { To FlowEnds } { IsDefault True }  }
+    { Connects 	{ From OutsideProcessTypes } { To Store } { IsDefault True }  }
+    { Connects 	{ From Store } { To OutsideProcessTypes } { IsDefault True }  }
+    { Connects 	{ From External } { To ExternalStore } { IsDefault True }  }
+    { Connects 	{ From ExternalStore } { To External } { IsDefault True }  }
+    
+    { LinkMapping
+	{ AppType DataFlow }
+	{ NameIsRequired True }
+	{ InverseMapFunc dfe_flow_inverse_map_func }
+        { NameSigFunc dfe_flow_name_sig_func }
+    }
+
+    { SymbolicDependentsFunc dfe_flow_depend_func }
+    { RenameFunc dfe_data_flow_rename }
+    { PrintName "Data Flow" }
+    { CanHaveLabel True }
+    { ToArrow True }
+    { Uncentered False }
+
+    { Navigation
+        { Name Parent }
+        { Label "&Parent" }
+	{ TargetFunc "DfeParent(\"${file}\");" }
+    }
+}
+
+LinkSymbol 101 CommentLink
+{
+    { Connects  { From Comment } 
+		{ To AllNodes } }
+    { Connects  { From AllNodes } 
+		{ To Comment } }
+
+    { PrintName "Comment Link" }
+    { Uncentered True }
+    { ToArrow True }
+    { Dashed True }
+}
+
+LinkSymbol 102 ControlFlow
+{
+    { Connects 	{ From FlowEnds } { To Process } }
+    { Connects 	{ From Process } { To FlowEnds } }
+    { Connects 	{ From FlowEnds } { To ControlSpec } }
+    { Connects 	{ From ControlSpec } { To FlowEnds } }
+    { Connects 	{ From FlowEnds } { To SplitFlow } }
+    { Connects 	{ From SplitFlow } { To FlowEnds } }
+    { Connects 	{ From OutsideProcessTypes } { To Store } }
+    { Connects 	{ From Store } { To OutsideProcessTypes } }
+    { LinkMapping
+	{ AppType ControlFlow }
+	{ NameIsRequired True }
+        { InverseMapFunc dfe_flow_inverse_map_func }
+        { NameSigFunc dfe_flow_name_sig_func }
+    }
+
+    { SymbolicDependentsFunc dfe_flow_depend_func }
+    { RenameFunc dfe_control_flow_rename }
+    { PrintName "Control Flow" }
+    { CanHaveLabel True }
+    { ToArrow True }
+    { Uncentered False }
+    { Dashed True }
+
+    { Navigation
+        { Name Parent }
+        { Label "&Parent" }
+	{ TargetFunc "DfeParent(\"${file}\");" }
+    }
+}
+
+NodeSymbol 998 MultiSelectionNavigation
+{
+    { PrintName "Hook for navigations with multiselection" }
+    { Shape { Predefined Rectangle }}
+    { ReadOnly True }
+
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { FailureCmd GoToDOORSFromMulti }
+    }
+    
+}
+
+	
+TypeSet Flows
+{
+    ControlFlow
+    DataFlow
+}
+
+TypeSet AllLinkTypes
+{
+    Flows
+    CommentLink
+}
+
+TypeSet ControlObjects
+{
+    ControlSpec
+    ControlFlow
+}
+
+TypeSet FlowEnds
+{
+    Process
+    OffPageProcess
+    External
+    ExternalStore
+    Store
+    Anchor
+    OffPageExternal
+    SplitFlow
+}
+
+TypeSet OutsideProcessTypes
+{
+    OffPageProcess
+    Anchor
+}
+
+TypeSet AllNodes
+{
+    FlowEnds
+    ControlSpec
+}
+
+TypeSet LabelTypes
+{
+    Process
+    External
+    ExternalStore
+    OffPageProcess
+    OffPageExternal
+}
+
+NodeSymbol Anchor
+{
+    { PrintName "Anchor" }
+    { Shape 
+        { Predefined Anchor }
+        { ToolbarImage "anchor" }
+    }
+    { CanHaveLabel False }
+}
+
+NodeSymbol Vertex
+{
+    { PrintName "Vertex" }
+    { Shape { Predefined Vertex } }
+    { ReadOnly True }
+    { CanHaveLabel False }
+}
+
+TypeSet Stores
+{
+    ExternalStore
+    Store
+}
+
+LinkSymbol Flows
+{
+    { DisplayMark
+        { Name FlowType }
+	{ ItemCond (FlowType) }
+        { EndMarkFunc "dfe_flow_endmark(gde_dmark_matched_items);" }
+	{ Anchor ToEnd }
+	{ Help "Identifies discrete or continuous flow" }
+    }
+    { Navigation
+        { Name DSEFlowDataDefinition }
+        { Label "&DSE Data Definition" }
+        //{ TargetFunc "DfeFindDataDefinition(\"${link.name}\");" }
+        { Query "node_ref[node[(Selection || Sequence || Enumeration || Typedef) && name == '${link.name}']]" }
+        { FailureCmd CreateDseDiagram }
+    }
+// spr 3047
+//    { Navigation
+//        { Name IMFlowDefinition } 
+//        { Label "&IM Definition" } 
+//        { Query "node_ref[node[(Entity || EntityGroup) && name == '${link.name}'] && file[BachDiagram || ChenDiagram || AttributeTable]]"} 
+//    }
+}
+
+// this is here for ordering
+
+LinkSymbol DataFlow
+{
+//spr 3047
+//    { Navigation
+//	{ Name  CrudInfoLink}
+//	{ Label "&CRUD Info Link" }
+//	{ TargetFunc "FindCrudLink(\"${file}\");" }
+//   }
+//    { Navigation 
+//	{ Name EreEntityGroup }
+//	{ Label "&Entity Group" }
+//        { TargetFunc "FindEntityGroup(\"${link.name}\");" }
+//    }
+}
+
+LinkSymbol Flows
+{
+    { Navigation
+        { Name AssignRequirementsToObject }
+        { Label "Allocate &Requirements" }
+        { SpaceBefore True }
+        { Accelerator
+            { Label "Alt+Ctrl+R" }
+            { Value "Alt Ctrl<Key>R" }
+        }
+        { FailureCmd GoToRequirementsTableFromLink }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "D&OORS" }
+        { FailureCmd GoToDOORSFromLink }
+    }
+}
+
+NodeSymbol Stores
+{
+    { Navigation
+        { Name DSEDataDefinition }
+        { Label "&DSE Data Definition" }
+        //{ TargetFunc "DfeFindDataDefinition(\"${node.name}\");" }
+        { Query "node_ref[node[(Sequence || Selection || Enumeration || Typedef) && name == '${node.name}'] && file[DseDiagram]]" }
+        { FailureCmd CreateDseDiagramFromStore }
+    }
+// spr 3047
+//    { Navigation
+//        { Name IMDefinition }
+//        { Label "&IM Definition" }
+//        { Query "node_ref[node[(Entity || EntityGroup) && name == '${node.name}'] && file[BachDiagram || ChenDiagram || AttributeTable]]"}
+//    }
+
+//    { Navigation
+//	{ Name  BusinessData }
+//	{ Label "&Business Data in CRUD Table" }
+//        { TargetFunc "FindBusinessData(\"${node.name}\");" }
+//    }
+
+//    { Navigation 
+//	{ Name EreEntityGroup }
+//	{ Label "&Entity Group" }
+//        { TargetFunc "FindEntityGroup(\"${node.name}\");" }
+//    }
+
+    { Navigation
+        { Name AssignRequirementsToObject }
+        { Label "Allocate &Requirements" }
+        { SpaceBefore True }
+        { Accelerator
+            { Label "Alt+Ctrl+R" }
+            { Value "Alt Ctrl<Key>R" }
+        }
+        { FailureCmd GoToRequirementsTableFromNode }
+    }
+
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "D&OORS" }
+        { FailureCmd GoToDOORSFromLink }
+    }
+
+}
+
+
+
+
+SymbolList
+{
+    { ShowStraightArc True }
+    { ShowSpline True }
+    { Symbols
+	(
+	    Comment
+	    External
+	    Store
+	    Process
+	    OffPageExternal
+	    ExternalStore
+	    OffPageProcess
+	    ControlSpec
+	    Anchor
+	)
+    }
+}
+
+NodeSymbol ControlSpec
+{
+    { Navigation
+        { Name Parent }
+        { Label "&Parent" }
+        { TargetFunc "DfeParent(\"${file}\");" }
+    }
+    { Navigation 
+	{ Name StateTransitionDiagram }
+	{ Label "State Transition &Diagram" }
+        { SpaceBefore True }
+	{ Query "file[SteDiagram && name == '${file}']" }
+	{ FailureCmd CreateSteDiagram }
+    }
+    { Navigation 
+	{ Name StateTransitionTable }
+	{ Label "State Transition &Table" }
+	{ Query "file[StateTransitionTable && name == '${file}']" }
+	{ FailureCmd CreateStateTransitionTable }
+    }
+    { Navigation 
+	{ Name DecisionTable }
+	{ Label "De&cision Table" }
+	{ Query "file[DecisionTable && name == '${file}']" }
+	{ FailureCmd CreateDecisionTable }
+    }
+    { Navigation 
+	{ Name ProcessActivationTable }
+	{ Label "Process Activation Ta&ble" }
+	{ Query "file[ProcessActivationTable && name == '${file}']" }
+	{ FailureCmd CreateProcessActivationTable }
+    }
+    { Navigation 
+	{ Name ProcessActivationMatrix }
+	{ Label "Process Activation Matri&x" }
+	{ Query "file[ProcessActivationMatrix && name == '${file}']" }
+	{ FailureCmd CreateProcessActivationMatrix }
+    }
+    { Navigation 
+	{ Name StateEventMatrix }
+	{ Label "State E&vent Matrix" }
+	{ Query "file[StateEventMatrix && name == '${file}']" }
+	{ FailureCmd CreateStateEventMatrix }
+    }
+    { Navigation 
+	{ Name EventLogicTable }
+	{ Label "&Event Logic Table" }
+        { SpaceBefore True }
+	{ Query "file[EventLogicTable && name == '${file}']" }
+	{ FailureCmd CreateEventLogicTable }
+    }
+    { Navigation 
+	{ Name ActionLogicTable }
+	{ Label "&Action Logic Table" }
+	{ Query "file[ActionLogicTable && name == '${file}']" }
+	{ FailureCmd CreateActionLogicTable }
+    }
+
+    { PrintName "Cspec Bar" }
+    { Shape 
+        { Predefined Bar } 
+        { ToolbarImage "cspec_bar" }
+    }
+    { DefaultSize 0.5 1.5 }
+    { CanHaveLabel False }
+}
+
+NodeSymbol 999 NoSelectionNavigation
+{
+    { PrintName "Hook for navigations without selection" }
+    { Shape { Predefined Rectangle }}
+    { ReadOnly True }
+
+    { Navigation
+        { Name Parent }
+        { Label "&Parent" }
+	//{ TargetFunc "DfeParent(\"${file}\");" }
+	{ FailureCmd BackgroundToParent }
+    }
+}
+
+
+
+Command GoToDOORSFromMulti
+{
+   { Builtin "EditorQrlEvalNoSave doors_export_selected();" }
+}
+
+Command GoToRequirementsTableFromNode
+{
+   { Builtin "EditorQrlEvalNoSave to_requirements_table_from_node(0${node.id});" }
+}
+
+Command GoToRequirementsTableFromLink
+{
+   { Builtin "EditorQrlEvalNoSave to_requirements_table_from_link(0${link.id});" }
+}
+ 
+ 
+Command GoToDOORSFromNode
+{
+   { Builtin "EditorQrlEvalNoSave node_navigate_to_doors(0${node.id});" }
+}
+
+ 
+Command GoToDOORSFromLink
+{
+   { Builtin "EditorQrlEvalNoSave link_navigate_to_doors(0${link.id});" }
+}
+
+Command CreateDseDiagram
+{
+    { PrintName "Create Data Structure Diagram?" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { StartMessage "Executing Create Data Structure Diagram" }
+    { FailureMessage "Create Data Structure Diagram failed." }
+    { SuccessMessage "Create Data Structure Diagram completed." }
+    { Builtin "EditorQrlEvalNoSave DfeInitializeDseDiagram(\"${link.name}\");" }
+}
+
+Command CreateDseDiagramFromStore
+{
+    { PrintName "Create Data Structure Diagram?" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { StartMessage "Executing Create Data Structure Diagram" }
+    { FailureMessage "Create Data Structure Diagram failed." }
+    { SuccessMessage "Create Data Structure Diagram completed." }
+    { Builtin "EditorQrlEvalNoSave DfeInitializeDseDiagram(\"${node.name}\");" }
+}
+
+Command CreateSteDiagram
+{
+    { PrintName "Create State Transition Diagram?" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { CheckDiagramName True }
+    { StartMessage "Executing Create State Transition Diagram" }
+    { FailureMessage "Create State Transition Diagram failed." }
+    { SuccessMessage "Create State Transition Diagram completed." }
+    //{ OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed ste -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"InitializeSteDiagram(${file.id});\"'" }
+ //   }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"ste\",\"InitializeSteDiagram(${file.id});\");" }
+}
+
+Command BackgroundToParent
+{
+    { ObjectRequired False }
+    { StartMessage "Navigate to Parent Diagram..." }
+    { FailureMessage "Navigate to Parent Diagram failed." }
+    { SuccessMessage "Navigate to Parent Diagram completed." }
+    { Builtin "EditorQrlEvalNoSave DfeParentFromBackground(\"${file}\");" }
+}
+
+
+Command CreateDecisionTable
+{
+    { PrintName "Create Decision Table?" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { CheckDiagramName True }
+    { StartMessage "Executing Create Decision Table" }
+    { FailureMessage "Create Decision Table failed." }
+    { SuccessMessage "Create Decision Table completed." }
+ //   { OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed cse -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"InitializeCseTable(${file.id}, 1);\"'" }
+    //}
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"cse\",\"InitializeCseTable(${file.id},1);\");" }
+}
+
+Command CreateActionLogicTable
+{
+    { PrintName "Create Action Logic Table?" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { CheckDiagramName True }
+    { StartMessage "Executing Create Action Logic Table" }
+    { FailureMessage "Create Action Logic Table failed." }
+    { SuccessMessage "Create Action Logic Table completed." }
+    //{ OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed cse -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"InitializeCseTable(${file.id}, 2);\"'" }
+ //   }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"cse\",\"InitializeCseTable(${file.id},2);\");" }
+}
+
+Command CreateStateEventMatrix
+{
+    { PrintName "Create State Event Matrix?" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { CheckDiagramName True }
+    { StartMessage "Executing Create State Event Matrix" }
+    { FailureMessage "Create State Event Matrix failed." }
+    { SuccessMessage "Create State Event Matrix completed." }
+    //{ OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed cse -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"InitializeCseTable(${file.id}, 3);\"'" }
+ //   }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"cse\",\"InitializeCseTable(${file.id},3);\");" }
+}
+
+Command CreateStateTransitionTable
+{
+    { PrintName "Create State Transition Table?" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { CheckDiagramName True }
+    { StartMessage "Executing Create State Transition Table" }
+    { FailureMessage "Create State Transition Table failed." }
+    { SuccessMessage "Create State Transition Table completed." }
+    //{ OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed cse -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"InitializeCseTable(${file.id}, 4);\"'" }
+ //   }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"cse\",\"InitializeCseTable(${file.id},4);\");" }
+}
+
+Command CreateEventLogicTable
+{
+    { PrintName "Create Event Logic Table?" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { CheckDiagramName True }
+    { StartMessage "Executing Create Event Logic Table" }
+    { FailureMessage "Create Event Logic Table failed." }
+    { SuccessMessage "Create Event Logic Table completed." }
+    //{ OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed cse -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"InitializeCseTable(${file.id}, 5);\"'" }
+ //   }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"cse\",\"InitializeCseTable(${file.id},5);\");" }
+}
+
+Command CreateProcessActivationTable
+{
+    { PrintName "Create Process Activation Table?" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { CheckDiagramName True }
+    { StartMessage "Executing Create Process Activation Table" }
+    { FailureMessage "Create Process Activation Table failed." }
+    { SuccessMessage "Create Process Activation Table completed." }
+//    { OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed cse -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"InitializeCseTable(${file.id}, 6);\"'" }
+ //   }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"cse\",\"InitializeCseTable(${file.id},6);\");" }
+}
+
+Command CreateProcessActivationMatrix
+{
+    { PrintName "Create Process Activation Matrix?" }
+    { ObjectRequired True }
+    { StopOnFailure True }
+    { CheckDiagramName True }
+    { StartMessage "Executing Create Process Activation Matrix" }
+    { FailureMessage "Create Process Activation Matrix failed." }
+    { SuccessMessage "Create Process Activation Matrix completed." }
+    //{ OS
+//	{ UseOutputWindow False }
+//	{ CommandLine "stpem -ed cse -first -p ${projdir} -s ${system} -C 'EditorQrlEval \"InitializeCseTable(${file.id}, 7);\"'" }
+ //   }
+{ Builtin "EditorQrlEvalNoSave NavigateSendQrl(\"cse\",\"InitializeCseTable(${file.id},7);\");" }
+}
+
+Include "rules/gde_menu_bar.std"
+Include "rules/gde_accels.std"
+Include "rules/gde_edit_menu.std"
+Include "rules/dfe_toolbar_arc_types.rules" // ECR 3556
+
+Menu MenuBarEdit
+{
+    { MenuEntry
+        { Name DeleteUnconnectedAnchors }
+        { Show True }
+        { Label "Delete Unconnected Anchors" }
+        { Builtin "EditorQrlEval DeleteUnconnectedAnchors();" }
+    }
+}
+
+Menu DiagramContextMenu //Edit
+{
+    { MenuEntry
+        { Name CheckSemantics }
+        // ECR 7464
+        // { Builtin "EditorQrlEval NewDfeCheckSemantics();" }
+        { Builtin "EditorQrlEvalNoSave NewDfeCheckSemantics();" }
+    }
+    { MenuEntry
+        { Name CheckSemanticsSelectively }
+        { Label "Check Semantics Selectively..." }
+        { PlaceAfter CheckSemantics }
+        // ECR 7464
+        // { Builtin "EditorQrlEval NewDfeCheckSemanticsSelect();" }
+        { Builtin "EditorQrlEvalNoSave NewDfeCheckSemanticsSelect();" }
+    }
+//    { MenuEntry
+//        { Name CheckSemanticsFaster }
+//        { Builtin "EditorQrlEval DfeCheckSemantics();" }
+//        { PlaceAfter NewCheckSemantics }
+//    }
+    // Old Semantic Checks
+//    { MenuEntry
+//        { Name OldCheckSemantics }
+//        { Label "Old Check Semantics" }
+//        { PlaceAfter CheckSemanticsSelectively }
+//        { Builtin "EditorQrlEval DfeCheckSemantics();" }
+//    }
+//    { MenuEntry
+//        { Name OldCheckSemanticsSelectively }
+//        { Label "OldCheck Semantics Selectively..." }
+//        { PlaceAfter OldCheckSemantics }
+//        { Builtin "EditorQrlEval DfeCheckSemanticsSelect();" }
+//    }
+}
+
+Menu Tools
+{
+    { MenuEntry
+        { Name CheckSemantics }
+        // ECR 7464
+        // { Builtin "EditorQrlEval NewDfeCheckSemantics();" }
+        { Builtin "EditorQrlEvalNoSave NewDfeCheckSemantics();" }
+    }
+    { MenuEntry
+        { Name CheckSemanticsSelectively }
+        { Label "Check Semantics Selectively..." }
+	{ PlaceAfter CheckSemantics }
+        { Builtin "EditorQrlEvalNoSave NewDfeCheckSemanticsSelect();" }
+        { Accelerator
+            { Label "Alt+F7" }
+            { Value "Alt<Key>F7" }
+        }
+    }
+//    { MenuEntry
+//        { Name OldCheckSemantics }
+//        { Label "Old Check Semantics" }
+//        { Builtin "EditorQrlEval DfeCheckSemantics();" }
+//        { PlaceAfter CheckSemanticsSelectively }
+//    }
+//    { MenuEntry
+//        { Name OldCheckSemanticsSelectively }
+//        { Label "Old Check Semantics Selectively..." }
+//	{ PlaceAfter OldCheckSemantics }
+//        { Builtin "EditorQrlEvalNoSave DfeCheckSemanticsSelect();" }
+//    }
+//    { MenuEntry
+//        { Name CheckSemanticsFaster }
+//        { Builtin "EditorQrlEval DfeCheckSemantics();" }
+//        { PlaceAfter NewCheckSemantics }
+//    }
+}
+
+DiagramType
+{
+    { SyntaxCheckFunc DfeCheckSyntax }
+}
+
+Command CreateDfeDiagram
+{
+    { PrintName "Create Decomposition?" }
+    { ObjectRequired True }
+    { StartMessage "Executing Create Decomposition" }
+    { FailureMessage "Create Decomposition failed." }
+    { SuccessMessage "Create Decomposition completed." }
+    { CheckDiagramName True } // no null filenames
+    { Builtin "EditorQrlEval \"DecomposeDfeDiagram(\\"${file}\\", ${nodesym.prop.pindex},  ${node.id});\"" }
+}
+
+Menu ProductMenu
+{
+    { InMenuBar True }
+    { Label "&DFE" }
+    { Pin True }
+    { MenuEntry
+        { Name EditPspec }
+        { Label "&Edit PSpec Note" }
+        // ECR 7464
+        //{ Builtin "EditorQrlEval FindOrCreatePspecNote(\"${file}\");" }
+        // { Builtin "EditorQrlEval PThingEdit(0);" }
+        { Builtin "EditorQrlEvalNoSave PThingEdit(0);" }
+        { ActiveFunc idehook_edit_pdl_active_func }
+    }
+    { MenuEntry
+	{ Name GeneratePspec }
+    	{ Label "&Generate Pspec(s)" }
+        // ECR 7464
+        // { Builtin "EditorQrlEval \"GenerateSelectedPspecs();\"" }
+        { Builtin "EditorQrlEvalNoSave \"GenerateSelectedPspecs();\"" }
+    	//{ Builtin "EditorExecCommand GeneratePspec" }
+	{ ActiveFunc idehook_gen_pspec_active_func }
+    }
+    { MenuEntry
+        { Name ViewPspec }
+        { Label "&View Generated PSpec" }
+        // ECR 7464
+        // { Builtin "EditorQrlEval ViewPthings(0);" }
+        { Builtin "EditorQrlEvalNoSave ViewPthings(0);" }
+	{ ActiveFunc idehook_view_pspec_active_func }
+    }
+    { MenuEntry
+	{ Name ChangePindex }
+    	{ Label "Change &Process Index" }
+	{ Builtin "EditorQrlEvalNoSave \"ChangeProcessIndexPrompt();\"" }
+        { ActiveFunc idehook_change_pindex_active_func }
+    }
+    { Spacer { Name Spacer1 } }
+    { MenuEntry
+	{ Name Collapse }
+    	{ Label "&Collapse (No Undo)" }
+	{ Builtin "EditorQrlEval \"CollapseProcessesPrompt(${file.id});\"" }
+	{ ActiveFunc idehook_collapse_active_func }
+    }
+    { MenuEntry
+	{ Name Explode }
+    	{ Label "E&xplode (No Undo)" }
+	{ Builtin "EditorQrlEval \"ExplodeProcess(${file.id});\"" }
+	{ ActiveFunc idehook_explode_active_func }
+    }
+    { Spacer { Name Spacer2 } }
+//    { MenuEntry
+//        { Name UnQualify }
+//        { Label "Remove &Qualification from Flow/Store" }
+//        { Builtin "EditorQrlEval \"DfeQualify(False);\"" }
+//        { ActiveFunc idehook_qualify_dfe_active_func }
+//    }
+    { MenuEntry
+        { Name UnQualifyAll }
+        { Label "Remove &All Qualifications in Diagram" }
+        { Builtin "EditorQrlEval \"DfeUnQualifyAll();\"" }
+        { ActiveFunc idehook_dfe_show_all_qualifications_active_func }
+    }
+    { Spacer { Name Spacer3 } }
+    { MenuEntry
+	{ Name SplitFlow }
+    	{ Label "Split &Flow" }
+    	{ Builtin "EditorQrlEval CreateSplit();" }
+        { ActiveFunc idehook_split_active_func }
+    }
+    { MenuEntry
+	{ Name MergeFlow }
+    	{ Label "&Merge Flow" }
+    	{ Builtin "EditorQrlEval CreateMerge();" }
+        { ActiveFunc idehook_merge_active_func }
+    }
+    { MenuEntry
+	{ Name ReverseFlow }
+        { Label "&Reverse Flow" }
+        { Builtin "EditorQrlEvalNoSave DfeReverseFlows();" }
+        { ActiveFunc idehook_reverse_flow_active_func }
+    }
+//    { MenuEntry
+//        { Name Qualify }
+//        { Label "Qualify F&low/Store" }
+//        { Builtin "EditorQrlEval \"DfeQualify(True);\"" }
+//        { ActiveFunc idehook_qualify_dfe_active_func }
+//    }
+//    { MenuEntry
+//        { Name ShowQualification }
+//        { Label "&Show Qualification" }
+//        { Builtin "EditorQrlEval \"DfeShowQualification();\"" }
+//        { ActiveFunc idehook_qualify_dfe_active_func }
+//    }
+//    { MenuEntry
+//        { Name ShowAllQualifications }
+//        { Label "S&how All Qualifications" }
+//        { Builtin "EditorQrlEval \"DfeShowAllQualifications();\"" }
+//        { ActiveFunc idehook_dfe_show_all_qualifications_active_func }
+//    }
+}
+
+
+//Command GeneratePspec
+//{
+//    { PrintName "Generate Pspec " }
+//    { StartMessage "Generating Pspec..."}
+//    { FailureMessage "Generate Pspec failed."}
+//    { SuccessMessage "Generate Pspec completed."}
+//    { CheckDiagramName True } // no null filenames
+//    { Builtin "EditorQrlEval \"GenerateSelectedPspecs(\\"${file}\\");\"" }
+//}
+
+DisplayMarkGroups
+{
+    { ContinuousDisplayMarks ( Pindex ) }
+}
+ 
+TypeSet DOORS
+{
+	External
+	Process
+	OffPageProcess
+	OffPageExternal
+	Flows
+	Stores
+	ControlSpec
+}
+
+//Include "rules/gde_accels.std"
+//Include "rules/gde_edit_menu.std"
+Include "rules/se_object_rename.rules"
+Include "rules/dfe.prop"
+Include "rules/pthing.prop"
+Include "rules/comment.symbol"
+Include "rules/re_navigate.prop"
+Include "se/rules/feature.rule"
+
+
+Include "rules/dfe_toolbar.rules" // ECR 3548
+
+Include "rules/default_arc_type.rules" //ECR 6469
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/se/rules/user_dfe.rules"

@@ -1,0 +1,520 @@
+FileObject 1
+{
+    { Name "a136" }
+    { Type ObjectAnnotation }
+    { GUID "UID_B551D98C-1B6E-471f-A2B6-CEBBB8D8C8FA" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "process_weight.c" }
+    { Type SEFile }
+    { ObjectId 1717 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_1EEA8DB2-5254-4960-8D94-5294AEA4F70B" }
+}
+
+NodeObject 99997
+{
+    { Name "process weight" }
+    { Type Module }
+    { ObjectId 1718 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_42BCAD54-FAFB-4d34-A9C1-3A2D906F273F" }
+}
+
+NoteObject 2
+{
+    { Type ModulePDL }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1720 }
+    { DescLine "process_weight (N_Kgs,number_of_passengers)" }
+    { DescLine "        (" }
+    { DescLine "           compute_wt_no(N_Kgs,number_of_passengers);" }
+    { DescLine "        )" }
+}
+
+ItemObject 3
+{
+    { Type PDL }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 1721 }
+}
+
+NoteObject 4
+{
+    { Type ModuleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1723 }
+}
+
+ItemObject 5
+{
+    { Type ModuleReturnType }
+    { Value "int" }
+    { NoteId 4 }
+    { ObjectId 1724 }
+}
+
+ItemObject 6
+{
+    { Type CodeGenId }
+    { Value "13" }
+    { NoteId 4 }
+    { ObjectId 1725 }
+}
+
+NoteObject 7
+{
+    { Type Module }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1727 }
+    { DescLine "This module calculates the total weight of all the passengers on the g_train. The flags 'done' and 'weight_ok' indicate that a passenger has been weighed and that the train's weight is within limits. The variable 'N_Kgs' is the total weight of the train." }
+}
+
+ItemObject 8
+{
+    { Type MemoryBudget }
+    { Value "2 WORDS" }
+    { NoteId 7 }
+    { ObjectId 1728 }
+}
+
+ItemObject 9
+{
+    { Type ProcessingTime }
+    { Value "2 seconds" }
+    { NoteId 7 }
+    { ObjectId 1729 }
+}
+
+ItemObject 10
+{
+    { Type DecompositionLevel }
+    { Value "CSU" }
+    { NoteId 7 }
+    { ObjectId 1730 }
+}
+
+NoteObject 11
+{
+    { Type LocalData }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1732 }
+    { DescLine "Machine Parameters" }
+}
+
+ItemObject 12
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 11 }
+    { ObjectId 1733 }
+}
+
+ItemObject 13
+{
+    { Type DataName }
+    { Value "Weight-Info" }
+    { NoteId 11 }
+    { ObjectId 1734 }
+}
+
+ItemObject 14
+{
+    { Type DataSize }
+    { Value "5K" }
+    { NoteId 11 }
+    { ObjectId 1735 }
+}
+
+ItemObject 15
+{
+    { Type DataType }
+    { Value "FORD" }
+    { NoteId 11 }
+    { ObjectId 1736 }
+}
+
+ItemObject 16
+{
+    { Type Representation }
+    { Value "Standard" }
+    { NoteId 11 }
+    { ObjectId 1737 }
+}
+
+ItemObject 17
+{
+    { Type Constraint }
+    { Value "None" }
+    { NoteId 11 }
+    { ObjectId 1738 }
+}
+
+ItemObject 18
+{
+    { Type Units }
+    { Value "Kgs" }
+    { NoteId 11 }
+    { ObjectId 1739 }
+}
+
+ItemObject 19
+{
+    { Type Precision }
+    { Value "100 %" }
+    { NoteId 11 }
+    { ObjectId 1740 }
+}
+
+NoteObject 20
+{
+    { Type LocalDatabase }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1742 }
+    { DescLine "All the data gathered is stored in an internal database for future access." }
+}
+
+ItemObject 21
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 20 }
+    { ObjectId 1743 }
+}
+
+ItemObject 22
+{
+    { Type ERDiagram }
+    { Value "Internal" }
+    { NoteId 20 }
+    { ObjectId 1744 }
+}
+
+ItemObject 23
+{
+    { Type AccessMethod }
+    { Value "Subroutines" }
+    { NoteId 20 }
+    { ObjectId 1745 }
+}
+
+NoteObject 24
+{
+    { Type ExternalDatabase }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1747 }
+}
+
+ItemObject 25
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 24 }
+    { ObjectId 1748 }
+}
+
+ItemObject 26
+{
+    { Type ERDiagram }
+    { Value "None" }
+    { NoteId 24 }
+    { ObjectId 1749 }
+}
+
+NoteObject 27
+{
+    { Type SystemState }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1751 }
+}
+
+ItemObject 28
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 27 }
+    { ObjectId 1752 }
+}
+
+ItemObject 29
+{
+    { Type SystemState }
+    { Value "steady" }
+    { NoteId 27 }
+    { ObjectId 1753 }
+}
+
+NoteObject 30
+{
+    { Type Interrupt }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1755 }
+    { DescLine "If a passenger is weighed before 10 seconds then the light changes from red to green." }
+}
+
+ItemObject 31
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 30 }
+    { ObjectId 1756 }
+}
+
+ItemObject 32
+{
+    { Type InterruptName }
+    { Value "Automatic" }
+    { NoteId 30 }
+    { ObjectId 1757 }
+}
+
+ItemObject 33
+{
+    { Type Source }
+    { Value "Computer Controlled" }
+    { NoteId 30 }
+    { ObjectId 1758 }
+}
+
+ItemObject 34
+{
+    { Type InterruptPriority }
+    { Value "First Come First Serve" }
+    { NoteId 30 }
+    { ObjectId 1759 }
+}
+
+ItemObject 35
+{
+    { Type Response }
+    { Value "Immediate" }
+    { NoteId 30 }
+    { ObjectId 1760 }
+}
+
+ItemObject 36
+{
+    { Type InterruptTime }
+    { Value "Fixed" }
+    { NoteId 30 }
+    { ObjectId 1761 }
+}
+
+ItemObject 37
+{
+    { Type MinimumFrequency }
+    { Value "2 MHZ" }
+    { NoteId 30 }
+    { ObjectId 1762 }
+}
+
+ItemObject 38
+{
+    { Type MaximumFrequency }
+    { Value "10" }
+    { NoteId 30 }
+    { ObjectId 1763 }
+}
+
+ItemObject 39
+{
+    { Type ProbableFrequency }
+    { Value "10 MHZ" }
+    { NoteId 30 }
+    { ObjectId 1764 }
+}
+
+NoteObject 40
+{
+    { Type Timing }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1766 }
+    { DescLine "The timing is set so that every ten seconds the light changes from red-green." }
+}
+
+ItemObject 41
+{
+    { Type TimingConditions }
+    { Value "exist" }
+    { NoteId 40 }
+    { ObjectId 1767 }
+}
+
+ItemObject 42
+{
+    { Type Sequencing }
+    { Value "enabled" }
+    { NoteId 40 }
+    { ObjectId 1768 }
+}
+
+ItemObject 43
+{
+    { Type DynamicLogic }
+    { Value "inherent" }
+    { NoteId 40 }
+    { ObjectId 1769 }
+}
+
+NoteObject 44
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1771 }
+}
+
+ItemObject 45
+{
+    { Type ObjectName }
+    { Value "process weight" }
+    { NoteId 44 }
+    { ObjectId 1772 }
+}
+
+ItemObject 46
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 44 }
+    { ObjectId 1773 }
+}
+
+NoteObject 47
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1775 }
+    { DescLine "This fulfills the requirement that there be a weight system on the gravity train." }
+}
+
+ItemObject 48
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 47 }
+    { ObjectId 1776 }
+}
+
+ItemObject 49
+{
+    { Type RequirementName }
+    { Value "weight-sub-system" }
+    { NoteId 47 }
+    { ObjectId 1777 }
+}
+
+ItemObject 50
+{
+    { Type RequirementDocument }
+    { Value "g_train_specifications" }
+    { NoteId 47 }
+    { ObjectId 1778 }
+}
+
+ItemObject 51
+{
+    { Type RequirementParagraph }
+    { Value "weight" }
+    { NoteId 47 }
+    { ObjectId 1779 }
+}
+
+ItemObject 52
+{
+    { Type ParagraphNumber }
+    { Value "2" }
+    { NoteId 47 }
+    { ObjectId 1780 }
+}
+
+ItemObject 53
+{
+    { Type QualificationMethod }
+    { Value "" }
+    { NoteId 47 }
+    { ObjectId 1781 }
+}
+
+ItemObject 54
+{
+    { Type QualificationLevel }
+    { Value "" }
+    { NoteId 47 }
+    { ObjectId 1782 }
+}
+
+ItemObject 55
+{
+    { Type FormalTestParagraph }
+    { Value "" }
+    { NoteId 47 }
+    { ObjectId 1783 }
+}
+
+NoteObject 56
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1785 }
+}
+
+ItemObject 57
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 56 }
+    { ObjectId 1786 }
+}
+
+ItemObject 58
+{
+    { Type DocumentName }
+    { Value "SDD" }
+    { NoteId 56 }
+    { ObjectId 1787 }
+}
+
+ItemObject 59
+{
+    { Type DocumentNumber }
+    { Value "4" }
+    { NoteId 56 }
+    { ObjectId 1788 }
+}
+
+ItemObject 60
+{
+    { Type ParagraphNumber }
+    { Value "7" }
+    { NoteId 56 }
+    { ObjectId 1789 }
+}
+

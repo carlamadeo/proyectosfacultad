@@ -1,0 +1,26 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/T
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1994
+//      All rights reserved
+//
+// Use this file for standalone T
+
+ 
+// For ordering:
+ 
+Include "ct/rules/stp_order_main.rules"
+Include "t/rules/stp_order.rules"
+Include "ct/rules/stp_order.rules"
+ 
+ 
+// Includes
+ 
+Include "ct/rules/stp.rules"
+Include "t/rules/stp_t_common.rules"
+Include "t/rules/stp_t.rules"
+ 
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/t/rules/user_stp.rules"
+

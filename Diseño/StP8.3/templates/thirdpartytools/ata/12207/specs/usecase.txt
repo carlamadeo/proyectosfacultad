@@ -1,0 +1,33 @@
+#  UseCase Container Specification
+#
+#  This file defines what UseCase information is processed,
+#  how it is processed, and the order it is processed.
+#
+#  This file may be specified as the starting Specification or referenced by
+#  another Specification.
+#
+#  This file may be modified by the user.
+#
+#  NOTE=    The preferred approach is for the user to copy this file
+#           into their workspace.  The copy of this file can then be
+#           modified as desired.
+#
+#  The following lines specify the UseCase Container format.
+#  A description of the available directives follows the specification.
+
+TYPE=UseCase
+
+
+# Generate a Section Title
+SECTION=$NAME $TYPE
+
+# Output the Notes for the UseCase
+
+
+NOTE=%ATAHOME%\doc\ctools\stp\specs\uml\defaults\note.txt
+
+NOTE=%STP_ATA_12207%\specs\requirement_allocation_note.txt
+NOTE=%STP_ATA_12207%\specs\use_case_definition_note.txt
+
+# Get all the Objects of type SD for the UseCase
+SD=%STP_ATA_12207%\specs\sd.txt

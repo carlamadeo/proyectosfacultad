@@ -1,0 +1,118 @@
+FileObject 1
+{
+    { Name "a19" }
+    { Type ObjectAnnotation }
+    { GUID "UID_CCAACEE3-B192-4512-AC4C-A0CFF5F4D5D9" }
+}
+
+NodeObject 99999
+{
+    { Name "time" }
+    { Type Store }
+    { ObjectId 2728 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_02CB5AB6-8F7C-4be7-8913-58F954DBB4E9" }
+}
+
+NoteObject 2
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 2730 }
+    { DescLine "This is basically a database that stores" }
+    { DescLine "information about the times when the different" }
+    { DescLine "pulses come in." }
+}
+
+ItemObject 3
+{
+    { Type ObjectName }
+    { Value "time" }
+    { NoteId 2 }
+    { ObjectId 2731 }
+}
+
+ItemObject 4
+{
+    { Type Author }
+    { Value "ide" }
+    { NoteId 2 }
+    { ObjectId 2732 }
+}
+
+NoteObject 5
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 2734 }
+    { DescLine "These are the requirements of the \"time\" data-store." }
+}
+
+ItemObject 6
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 5 }
+    { ObjectId 2735 }
+}
+
+ItemObject 7
+{
+    { Type RequirementName }
+    { Value "time-sub-system" }
+    { NoteId 5 }
+    { ObjectId 2736 }
+}
+
+ItemObject 8
+{
+    { Type RequirementDocument }
+    { Value "g_train_specifications" }
+    { NoteId 5 }
+    { ObjectId 2737 }
+}
+
+ItemObject 9
+{
+    { Type RequirementParagraph }
+    { Value "speed" }
+    { NoteId 5 }
+    { ObjectId 2738 }
+}
+
+ItemObject 10
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 5 }
+    { ObjectId 2739 }
+}
+
+ItemObject 11
+{
+    { Type QualificationMethod }
+    { Value "" }
+    { NoteId 5 }
+    { ObjectId 2740 }
+}
+
+ItemObject 12
+{
+    { Type QualificationLevel }
+    { Value "" }
+    { NoteId 5 }
+    { ObjectId 2741 }
+}
+
+ItemObject 13
+{
+    { Type FormalTestParagraph }
+    { Value "" }
+    { NoteId 5 }
+    { ObjectId 2742 }
+}
+

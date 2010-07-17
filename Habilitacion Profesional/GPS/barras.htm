@@ -1,0 +1,323 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html><head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.5 [es] (Win95; I) [Netscape]">
+   <meta name="Author" content="Antonio Rodriguez Franco"><title>Tipos de encendidos en los GPS's.</title></head>
+
+<body>
+
+<center><b><font color="#3333ff"><font size="+1">QUÉ INDICAN LAS COLUMNAS
+DE LA PÁGINA DE ESTADO EN LOS GARMINS</font></font></b>
+<p><b><font color="#3333ff"><font size="+1">QUÉ ES UN ENCENDIDO CALIENTE
+(WARM START),&nbsp; ENCENDIDO FRIO (COLD START),&nbsp; AUTOLOCALIZACIÓN
+(AutoLocate), y BÚSQUEDA EN EL CIELO (Search the Sky)</font></font></b></p></center>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp; El significado de las columns sólidas
+y huecas en la página de estado de los satelites en los receptores
+Garmins, Lowrance y otras marcas, así como el de términos
+como "Encendido caliente", "Encendido frío", "Autolocalización"&nbsp;
+y "Búsqueda en el cielo" que muestran estos GPS's pueden ser desconocidos
+o mal interpretados por mucha gente. Este artículo pretende aclarar
+estos términos.
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp; Los satelites de la constelación NAVSTAR
+(en inglés los SV) envían dos tipos de datos que son recogidos
+e interpretados por el receptor: el <b>almanaque</b> y las <b>efemérides.</b>
+<br>&nbsp;&nbsp;&nbsp;&nbsp; El <font color="#3333ff">almanaque</font>
+está constituido por un conjunto de valores o parámetros
+que permiten predecir la órbita y la posición de todos los
+satelites, pero solo de <b>una manera aproximada</b>. Cada satelite envía
+de forma individual los datos correspondientes al almanaque de todos los
+demás satelites. Los datos de este almanaque son útiles durante
+varios meses. Hay programas como el OZIExplorer, Waypoint+ y G7toWin que
+pueden extraer el almanaque de los Garmins y los pueden grabar como un
+archivo de texto. Hacedlo, editar el archivo con NotePad o un programa
+similar, y vereis que es un archivo relativamente simple (o complejo, depende)
+que contiene muchas variables distintas. Los GPS de Lowrance también
+trabajan con el almanaque, pero hasta ahora no existe un programa que pueda
+extraerlo de estos de receptores.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Las <font color="#3333ff">efemérides</font>
+son también datos transmitidos por el satelite que son recibidos
+por el GPS.&nbsp; Estos datos indican al GPS la posición exacta
+de los satelites. El GPS usa los datos de la efemérides de varios
+satelites al mismo tiempo para realizar cálculos (triangulaciones)
+y correcciones muy complejas que le permiten determinar con una extraordinaria
+precisión cuál es su posición real en la Tierra. Estos
+datos son por tanto muchísimo más completos y detallados
+que los que contienen los almanaques,
+<br>&nbsp;&nbsp;&nbsp; Otra diferencia es que cada satelite solo envia
+sus propios efemérides. La validez de los datos contenidos en las
+efemérides depende de cada satelite en particular, pero pueden llegar
+a ser útiles hasta 4 e incluso 6 horas. Garmin sin embargo considera
+las efemérides válidas sólo por un periodo máximo
+de 30 minutos. Este periodo de validez está incluida en la información
+que envían los propios efemérides.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Las efemérides se envían en
+bloques de información digital que el receptor GPS tarda 30 segundos
+en recibir, y son enviados de forma continua (es decir, se reenvían
+de nuevo cada 30 segundos). De esta forma un receptor GPS siempre tendrá
+muchas oportunidades para recibir esta información. Además,
+como veremos más adelante, estos datos están fraccionados
+en 3 diferentes partes o paquetes..
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp; Cuando el GPS se enciende, lo primero que hace
+es tener en cuenta los datos del almanaque y la hora de su reloj interno
+para predecir qué satelites van a estar disponibles en la esfera
+celeste justo encima de él. Entonces intentará conectar sólo
+con esos satelites <b>presuntamente</b> disponibles con el objeto de captar
+la información de sus efemérides. Esto permite ahorrar tiempo
+a la hora de adquirir una posición, ya que si no obtiene información
+del almanaque, tendría que buscar uno a uno todos los satelites,
+y algunos de ellos podrían estar en la otra cara del planeta, donde
+serían completamente inaccesibles.
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp; A partir de ahora, cuando el GPS conecta con
+un satelite, muestra una columna (barra) hueca en la pantalla de estado.
+Esta columna se mantiene hueca hasta que se recibe la totalidad de la información
+contenida en los efemérides. Las columnas se hacen sólidas
+cuando se completa la recepción de <i>toda</i> la información
+de los efemérides, indicando que los datos de ese satelite en particular
+ya son útiles para poder usarlos en la navegación.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; La altura de las columnas, tanto cuando son
+huecas como cuando son sólidas, es un reflejo de la intensidad con
+la que se están recibiendo las señales desde los satelites.
+Las barras serán más bajas cuando los satelites están
+justo en el horizonte (2 a 5 grados) porque la intensidad de la recepción
+será baja, y serán más elevadas cuando el satelite
+tenga una elevación comprendida entre los 45 a 50 grados en las
+que la recepción de las señales son óptimas y mucho
+mñas elevadas. En el caso de los Garmins 12/12XL, el nivel base
+corresponde a un valor de recepción de la señal de 30dB,
+mientras que la parte superior corresponde a un nivel de recepción
+de 50dB. En los Lowrances el rango mostrado es aún mayor.
+<br>&nbsp;&nbsp;&nbsp; Muchas columnas se volverán sólidas
+al mismo tiempo cuando un receptor con varios canales paralelos recoge
+de forma simultánea la información de las efemérides
+de varios satelites al mismo tiempo. En realidad, todos los satelites envían
+de forma sincrónica la información de sus efemérides,
+de forma que la parte final de cada uno de los mismos llega al mismo tiempo
+a los receptores.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Es importante tener en cuenta que los GPS's
+no necesitan conseguir todos los datos de las efemérides de una
+forma secuencial. De hecho, como cada bloque de 30 segundos de las efemérides
+están divididos en tres partes. El receptor puede recibir cada una
+de estas partes por separado. Así, si por alguna razón el
+GPS no recibe la segunda parte, podrá recibir la primera y la tercera
+sin problemas. Sólo cuando se ha completado la recepción
+de las 3 diferentes partes en el siguiente o en sucesivos ciclos, se volverá
+la columna sólida. Y si hay suficientes columnas (o sea, satelites)
+conseguirá un posicionamiento.
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp; Las columnas de señales en la ventana
+de estado de los Garmins requieren cierta clarificación. En receptores
+como el GPS12/12XL, una columna hueca significa que ese satelite en particular
+<font color="#000099">no
+está siendo utilizado para la navegación</font>. Puede ocurrir
+que el receptor disponga de los datos de las efemérides para ese
+satelite en particular aunque esté hueca. Así que una columna
+sólida significa que ese satelite en particular está siendo
+utilizado activamente para la navegación, y por tanto sus datos
+efeméricos están disponibles.
+<br>&nbsp;&nbsp;&nbsp;&nbsp; En los equipos que poseen mapas (como los
+Garmins III, III+, NavTalk, 175/195...), una&nbsp; columna gris (equivalente
+a la hueca) significa que de ese satelite en particular no se han obtenido
+los datos de las efemérides. En este caso una barra sólida
+significa que ya se han recolectado las efemérides para ese satelite
+en particular, aún cuando puede no estar siendo usado en la navegación.
+</p><p>&nbsp;&nbsp;&nbsp; Prueba con apagar el receptor, y espera unos minutos
+antes de encenderlo de nuevo. Bajo estas condiciones los datos de las efemérides
+son tan recientes, que observarás que el GPS adquirirá una
+posición de forma casi instantanea (menos de15 segundos en un receptor
+de 12 canales). Esto es así porque al GPS le bastará recepcionar
+sólo una de las 3 partes que constituyen un bloque de las efemérides
+para percatarse de que los datos son muy recientes. Esto es lo que se llama
+un <b>encendido caliente</b>. Sin embargo, ten lo siguiente en consideración.
+Aún cuando los datos de las efemérides pueden ser válidos
+por varias horas (4 ó 5 horas), puede ocurrir que trascurriendo
+solo media o una hora, un determinado satelite haya penetrado en una región
+con baja elevación (baja calidad en la recepción) o incluso
+se haya salido del hemisferio celeste (ausencia completa de recepción).
+Eso dependerá de donde estaba localizado el satelite inicialmente.
+En este caso, no obtendrás un encendido caliente aunque haya pasado
+una hora porque la información de ese satelite en particular no
+estará disponible para el receptor, y el GPS tendrá que buscar
+uno nuevo.
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp; Si en el momento del encendido no se dispone
+de información reciente de las efemérides correspondientes
+a al menos <b>3</b> satelites,&nbsp; tendrá lugar un <b>encendido
+frío</b>, porque será necesario que el receptor recoja la
+información de varios satélites (hasta completar los 4) antes
+de hacer el posicionamiento en 3D. Esto causará que un posicionamiento
+de tipo frío tarde al menos 30 segundos más que un encendido
+caliente.
+</p><p><i>NOTA: en algunos modelos de Garmin, cuando el receptor se apaga antes
+de que se haya realizado un posicionamiento, puede tener lugar la completa
+eliminación de los datos efeméricos previos, lo que obligará
+al receptor a realizar un encendido "muy" frío aunque hayan pasado
+sólo unos minutos.</i>
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp; Las 3 partes o paquetes en los que están
+constituidos un mismo bloque de efemérides se reconocen gracias
+a la presencia en la emisión de unas señales de identificación
+(Issue of Data, o IOD) que son específicas para cada satelite y
+efemérides en un momento dado. El GPS comprueba el IOD, y se asegura
+de esta forma que todas las partes de una efeméride siendo recibida
+provienen del mismo paquete y por tanto del mismo satelite. De esta forma,
+no hay que esperar que empieze un nuevo ciclo de envio de efemérides
+para obtener uno completo, y basta con solo 10 a 15 segundos se puede disponer
+de un nuevo posicionamiento en un encendido caliente. Esta información
+también permite a los GPS unir los 3 paquetes de datos en situaciones
+de pobre recepción recibiendo sólo parte de esta información
+en distintos bloques de envio de información. Esta habilidad permite
+obtener los posicionamientos más rápidos posibles bajo condiciones
+adversas.
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp; Si estas conduciendo un coche o te mueves en
+un tren a alta velocidad, la adquisión de un posicionamiento por
+parte de tu GPS tardará mucho más tiempo que si estas quieto
+o simplemente estas andando. Esto es así porque tu GPS debe recibir
+la información <b>completa</b> incluida de una efeméride,
+y la debe recibir <b>sin fallos</b> para que sea considerada útil
+y haga aparacer la columna sólida. Un bloqueo momentáneo
+por la presencia de alta cobertura de árboles, un cambio brusco
+de dirección y/o velocidad, o la presencia de múltiples señales
+que rebotan en edificios y montañas, causan errores que hacen al
+GPS errar obligándole a obtener de nuevo los datos que son esenciales
+para obtener un posicionamiento correcto. Por esta razón no es bueno
+tampoco tener antenas demasiados sensibles, porque las señales débiles
+procedentes de los rebotes hacen errar al GPS cuando no lo harian en un
+receptor con una antena menos sensible que no llegaría a percatarse
+de la presencia de estas señales secundarias.
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp; Los datos de las efemérides no serán
+validos si el GPS se desplaza varios cientos de kilometros desde la última
+posición en la que se encendió, o en el caso de que no contenga
+una hora exacta en el reloj interno. Además, en este caso puede
+que los datos del almanaque no sean tampoco válidos, porque las
+posiciones de los satelites se estiman teniendo en cuenta la última
+posición adquirida por el GPS. Si se cambia de hemisferio o de cara
+del planeta (en un viaje desde USA a Europa), puede ocurrir que ninguno
+de los satelites previstos por el almanaque estén ahi. Aquí
+te muestro unas imágenes correspondientes a la página de
+estado de mi Lowrance GM100 tomadas desde Córdoba, y de una localización
+en el estado de Missouri (USA) desde la misma latitud y tomadas a la misma
+hora (sólo medio minuto de diferencia). Ved como en ambas situaciones
+sólo se comparten algunos satelites que están en diferentes
+orientaciones porque el eje Polo norte y Sur de la Tierra no es completamente
+perpendicular. Como un ejemplo fijaros que&nbsp; los satelites 18, y 7
+se recibirían desde USA mucho más debilmente que cuando se
+está en Córdoba. Lo más probable es que el GPS use
+las efemérides de estos dos satelites en Córdoba, pero no
+los consideraría buenos si estuviera en USA.
+<br>&nbsp;
+</p><center><table border="1" cols="2" width="42%">
+<tbody><tr>
+<td>
+<center><img src="barras_files/spainon.gif" nosave="" height="160" width="104">
+<br><font face="Arial,Helvetica"><font size="-1">Página de Estado
+tomada desde Córdoba, donde se indican las posiciones que ocupan
+los satelites en el espacio.</font></font></center>
+</td>
+
+<td>
+<center><img src="barras_files/usaon.gif" height="160" width="104">
+<br><font face="Arial,Helvetica"><font size="-1">Esta sería la misma
+página de Estado de un receptor que estuviera localizado en la misma
+latitud y a la misma hora en Missouri (USA)</font></font></center>
+</td>
+</tr>
+</tbody></table></center>
+
+<p>&nbsp;&nbsp;&nbsp; Imaginemos que la última vez que tomé
+una posición con mi GPS fue en Córdoba. Luego cojo un avión
+(perdón por los argentinos) y me voy a USA. En estos casos de desplazamientos
+largos, el GPS tiene en cuenta la última posición obtenida
+(en Córdoba), considera la hora de su reloj interno, y cree que
+los satelites que van a estar en el hemisferio son los que están
+representados en la imagen de la izquierda.
+<br>&nbsp;&nbsp;&nbsp; Pero en realidad, los satelites que van a estar
+en el hemisferio son los que estan representados en la imagen de la derecha,
+porque estamos en otro sitio, ¿no?.
+<br>&nbsp;&nbsp;&nbsp; ¿Qué ocurre?. Que el GPS se vuelve
+loco. No encontrará las señales correspondientes a muchos
+de los satelites que deberían estar ahí, pero que en realidad
+no estan.
+<br>&nbsp;&nbsp;&nbsp; Entonces, pasados unos minutos de fracasos continuos,
+el GPS se decide a realizar una búsqueda en el cielo (search the
+sky). Este proceso implica la búsqueda de las señales enviadas
+por los satelites de uno en uno con idea de refrescar las nuevas efemérides.
+En los receptores Garmin esta función se llama AUTOLOCATE.
+<br>&nbsp;&nbsp;&nbsp; Sin embargo, podemos ayudar considerablemente al
+GPS a obtener las señales de los satelites en un viaje largo si
+éste dispone de un almanaque válido, y nosotros al mismo
+tiempo le indicamos nuestra nueva posición. En los Garmins, podemos
+indicar al GPS donde estamos eligiendo el lugar de los presentados en una
+lista "Select for country". En los Lowrances que poseen mapas movemos el
+cursor con las flechas del teclado, y lo llevamos al nuevo lugar. Tras
+indicarle nuestra nueva posición, el GPS hará inmediatamente
+una nueva estima de donde están los satelites rápidamente
+si dispone de un almanaque válido, y se acelera la búsqueda
+de los satelites adecuados.
+<br>&nbsp;&nbsp;&nbsp; No tendremos almanaque o sus datos serán
+inútiles si el aparato ha estado apagado durante varios meses (almanaque
+obsoleto), o si se ha hecho un reset completo del aparato o se ha agotado
+la pila interna del receptor (almanaque borrado). En estos casos no podemos
+ayudar a nuestro receptor indicándole nuestra posición, ya
+que será necesario que adquiera de nuevo un almanaque completo y
+actualizado. Por eso, es a siempre interesante guardar una copia del almanaque
+en nuestro PC, que podría ser tranasferido a los Garmins con programas
+como Waypoint+ y/o G7toWin.
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp; Los receptores GPS están de forma automática
+y continua recogiendo la información de las efemérides tan
+a menudo como sea necesario para mantener un posicionamiento correcto.
+Y lo hacen en el background, sin que nos demos cuenta. Si bloqueamos la
+antena, o estamos en una situación con pobre recepción, entonces
+se creará una situación en la que el GPS no podrá
+recoger los datos y la columna de estado de ese satelite en particular
+se volverá hueca otra vez.
+</p><p>&nbsp;&nbsp;&nbsp; Con todos estos datos en la mente, y en la forma
+de resumen, podemos decir que:
+</p><ul>
+<li>
+<b>Búsqueda en el Cielo</b> (Search the sky). Esto ocurre cuando
+las variables Tiempo, Posición, el almanaque y las efemérides
+son todos desconocidos. El GPS empieza a buscar satelites uno por uno,
+y tardará de 10 a 15 minutos en conseguir un posicionamiento. Esto
+sólo ocurre uando se le hace un reset, el equipo viene de fábrica
+y ha estado apagado por varios meses.</li>
+
+<li>
+<b>AutoLocalización</b> (Autolocate). Ocurre cuando se desconocen
+las variables Tiempo y efemérides, se conoce la totalidad o parte
+de la información que ofrece el almanaque, y se ha variado notablemente
+o incluso se desconoce la posición (porque se ha hecho un viaje
+muy largo). En esta etapa es necesario introducir manualmente una estima
+aproximada de nuestra posición que el receptor usará para
+predecir la posición de los satelites en un momento dado con la
+ayuda de los datos del almanaque que tiene almacenado. En estas condiciones
+el GPS no necesitará buscar uno a uno los satelites, sino sólo
+aquellos que están en el cielo, y tardará mucho menos que
+en el caso anterior para adquirir un posicionamiento correcto (varios minutos).
+Será necesario recoger la información de al menos 4 efemérides
+completas.</li>
+
+<li>
+<b>Encendido frio</b> (Cold Start). Cuando se conoce <i>de forma aproximada
+</i>las
+variables Tiempo y Posición, pero se conoce el almanaque y se desconocen
+las efemérides de al menos un satelite de los 4 que son necesarios
+para obtener un posicionamiento correcto. Como es necesario adquirir la
+información efemérica completa de uno o varios satelites,
+el receptor tardará al menos 30 segundos o más en completar
+un posicionamiento que en un encendido caliente. Puede llegar a coincidir
+con el mismo tiempo de un Autolocate.</li>
+
+<li>
+<b>Encendido caliente</b> (Warm start). Cuando se conoce de forma aproximada
+las variables Tiempo y posición, se conoce el almanaque y los datos
+de las efemérides son muy recientes y conocidos por el receptor.
+Al GPS sólo le bastará adquirir un bloque parcial de las
+efemérides de los 4 satelites (10 a 15 segundos) para cerciorarse
+de que no han cambiado estos datos ni su posición.</li>
+</ul>
+Artículo basado en&nbsp; un documento originalmente escrito por
+Joe Mehaffey el 12 de Julio de 1999
+<br>Traducido y ampliado por Antonio R. Franco el 26 de julio de 1999
+<br>Corregido el 5/10/99
+<br>================================================================
+<br>&nbsp;
+<br>&nbsp;
+</body></html>

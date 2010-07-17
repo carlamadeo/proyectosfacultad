@@ -1,0 +1,5 @@
+first pulse ::= boolean
+first pulse ::= *Precision N/Afirst pulse ::= *Units none*
+second pulse ::= boolean
+second pulse ::= *Precision N/Asecond pulse ::= *Units none*
+tracking signal ::= first pulse + second pulse

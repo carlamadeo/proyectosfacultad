@@ -1,0 +1,250 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+Include "rules/uml.feature"
+Include "rules/note_vertex_syms.rules.common"
+
+TypeSet AllNoteableNodeTypes
+{
+	Stereotype
+// ECR947, ECR 4494
+	CommentAnchor
+// End ECR947, ECR 4494
+}
+
+// SPR 4969 - Model Management
+// used for Model Management to have one common display mark
+TypeSet AllLockableNodeTypes
+{
+    Stereotype
+}
+
+NodeSymbol 1 Stereotype
+{
+    { PrintName "Stereotype" }
+    { Shape 
+	{ Predefined Guillemot }
+        { ToolbarImage "stereotype" }
+    }
+    { AutoScaleLarger True }
+    { AutoScaleSmaller True }
+    { NodeMapping
+	{ MappingName StereotypeMapping }
+	{ AppType UmlStereotype }
+	{ NameFunc uml_gde_node_with_spaces_name_func }
+	{ NameIsRequired True }
+    }
+    //{ RenameFunc oo_class_rename }
+    { Navigation
+        { Name CategoryDiagram }
+        { Label "Where Stereotype Is Used" }
+        // can not use a query here because we need node_refs, cntx_refs and link_refs
+        { TargetFunc "UstereotypedNavUsage(\"${node.name}\");" }
+    }
+    { DisplayMark
+        { Name StereotypeStereotype }
+        { ItemCond (UmlStereotype) }
+	    { StringMark "«${annot.UmlExtensibilityDefinition.UmlStereotype}»" }
+        { Anchor LabelUpperCenter }
+        { HAdjust Center }
+        { VAdjust Bottom }
+        { Help "Stereotype Stereotype" }
+    }
+    // Begin Add ECR 6389
+    { DisplayMark
+        { Name SDescription }
+        { CondFunc "symbol_has_description(0${node.id});" }
+        { Anchor LowerRight }
+        { VAdjust Bottom }
+        { HAdjust Center }
+        { YPixelOffset 19 }
+        { BitmapMark0 "descln0" }
+        { BitmapMark1 "descln1" }
+        { BitmapMark2 "descln2" }
+        { Help "Stereotype has description." }
+    }
+    // End Add ECR 6389
+    { Methods
+        { Method
+            { Name DoubleClick }
+            { MethodFunc UmlStereotype_ps_double_click }
+        }
+    } 
+}
+
+
+NodeSymbol 2 Note
+{
+}
+
+NodeSymbol 3 Vertex
+{
+    { Cardinality { Max 1 } { OutLinks StereotypeInheritance } }
+}
+
+// ECR947, ECR 4494
+// Added CommentAnchor
+CntxSymbol CommentAnchor
+{
+    { ParentLink StereotypeInheritance }
+}
+// End ECR947, ECR 4494
+
+LinkSymbol 4  StereotypeInheritance
+{
+    { PrintName "Stereotype Inheritance" }
+    { Connects { From Stereotype } { To Stereotype } }
+    { CanHaveLabel False }
+// ECR 6941 begin
+    //{ ToOpenArrow True } // ECR 4861	
+    { ToLargeArrow True }	// the arrow points to the superclass
+    { ToFilledArrow False }
+// ECR 6941 end
+    //{ Uncentered True }
+    { LinkMapping
+	{ AppType UmlStereotypeInheritance }
+	{ FromNode 
+	    { Symbol FromNode }
+	    { MappingName StereotypeMapping }
+	}
+	{ ToNode 
+	    { Symbol ToNode }
+	    { MappingName StereotypeMapping }
+	}
+    }
+}
+
+
+SymbolList
+{
+    { ShowStraightArc True }
+    { ShowSpline True }
+    { OrthogonalArcsAreAllowed True }
+    { OrthogonalArcsAreDefault False }
+    { Symbols
+	(
+	    Note
+            SEPARATOR
+	    Stereotype
+	)
+    }
+}
+
+DisplayMarkGroups
+{
+    { Group
+        { DisplayMarks (StereotypeStereotype) }
+        { Name Stereotype }
+    }
+    { ContinuousDisplayMarks (Stereotype) }
+}
+
+Include "rules/gde_menu_bar.std"
+Include "rules/gde_accels.std"
+Include "rules/gde_edit_menu.std"
+Include "rules/comment.rules.common"
+
+Include "rules/default_arc_type.rules" //ECR 6469
+
+Menu Repository
+{
+    { MenuEntry
+        { Name CheckSemantics }
+        { Show True }
+    }
+}
+
+Include "rules/syms_to_rqtbl.rules.common"
+
+TypeSet RequirementToNodeNodeSymbols
+{
+    Stereotype
+}
+
+TypeSet DOORS
+{
+    Stereotype
+}
+
+
+// Menu Navigation
+// {
+//     { InMenuBar True }
+//     { Label "&Navigation" }
+//     { Pin True }
+//     { GenerationFunc idehook_navigation_menu_gen_func }
+//     //{ GenerationFunc idehook_navigation_parent_menu_gen_func }
+// }
+
+Menu ProductMenu
+{
+    { InMenuBar True }
+    { Label "&UML" }
+    { Pin True }
+    //{ GenerationFunc idehook_navigation_menu_gen_func }
+    { MenuEntry
+        { Name PreDefStereotypes }
+         { Label "&Label with Predefined Stereotype..." }
+//         { Label "&Apply Predefined Stereotype" }
+        { Builtin "EditorQrlEvalNoSave LabelPredefinedStereotypeSymbol();" }
+        { ActiveFunc UmlStereotypeObjectPropsActive }
+        { Accelerator
+             { Value "Ctrl<Key>l" }
+        }
+    }
+
+// Begin ECR947, ECR 4494
+    { MenuEntry
+	{ Name ConnectNoteToLink }
+	{ Label "Connect Note To Link" }
+	{ Builtin "EditorQrlEval ConnectNoteToLink();" }
+//    	{ Accelerator
+//             { Value "Ctrl<Key>n" }
+//	}
+	{ ActiveFunc idehook_note_link_active_func }
+    }
+// End ECR947, ECR 4494
+}
+
+Menu MenuBarEdit
+{
+    { MenuEntry
+        { Name ObjectProperties }
+        { Show True }
+        { Builtin "EditorQrlEvalNoSave UmlPopUpPropSheet(\"ustereotyped\");" }
+        { ActiveFunc UmlStereotypeObjectPropsActive }
+    }
+}
+
+Menu ObjectContextMenu
+{
+    { MenuEntry
+        { Name ObjectProperties }
+        { Show True }
+        { Builtin "EditorQrlEvalNoSave UmlPopUpPropSheet(\"ustereotyped\");" }
+        { ActiveFunc UmlStereotypeObjectPropsActive }
+    }
+}
+
+Command CheckSemantics
+{
+    { PrintName "Check Semantics" }
+    { StartMessage "Check Diagram Semantics" }
+    // ECR 7464
+    // { Builtin "EditorQrlEval uml_diag_check_semantics(\"ustereotyped_CheckSemantics\");" }
+    { Builtin "EditorQrlEvalNoSave uml_diag_check_semantics(\"ustereotyped_CheckSemantics\");" }
+}
+
+Include "rules/ustereotyped.prop"
+
+// ECR 4052 Model Management
+Include "rules/model_management.common"
+Include "rules/ustereotyped_toolbar_acr_types.rules" // ECR 3556
+
+IncludeIfExists "user/uml/rules/user_ustereotyped.rules"
+
+PassWord "7C8D401C"
+

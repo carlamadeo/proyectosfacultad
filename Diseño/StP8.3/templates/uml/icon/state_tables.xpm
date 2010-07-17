@@ -1,0 +1,28 @@
+/* XPM */
+static char* state_tables_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 6 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #ffffff	c #c0c0c0",
+"o	m #000000	c #00ffff",
+"x	m #000000	c #0000ff",
+/* pixels */
+"XXXXXX     XXXX.",
+"X X O  XXX  O XO",
+"XXXXXX XXXOXXXXO",
+"XOXO O XXXOO OXO",
+"X X O O OOO O XO",
+"XOXO O OXO O OXO",
+"X X O O X O O XO",
+"XOXO O XXX O OXO",
+"X X O ooXOo O XO",
+"XOXO oooOooo OXO",
+"X X OoooooooO XO",
+"XOXO xooooox OXO",
+"X X O xxxxx O XO",
+"XOXO O O O O OXO",
+"XXXXXXXXXXXXXXXO",
+".OOOOOOOOOOOOOOO"};

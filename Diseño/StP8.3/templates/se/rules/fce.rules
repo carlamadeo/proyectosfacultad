@@ -1,0 +1,760 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/SE
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1995
+// 	All rights reserved
+//
+
+// Flow Chart Editor rules
+
+DiagramType
+{
+    { SyntaxCheckFunc FceCheckSyntax }
+}
+
+
+NodeSymbol 1 SECodeBlock 
+{
+//    { NodeMapping 
+//	{ AppType SECodeBlock }
+//	{ NameIsRequired True }
+//    }
+    { PrintName "Code Block" }
+    { Shape 
+        { Predefined Rectangle } 
+        { ToolbarImage "code_block" }
+    }
+    { DefaultSize 2.5 1.2 }
+    { AutoScaleLarger True }
+    { HAdjust Center }
+}
+
+
+
+NodeSymbol 2 SESourceComment 
+{
+    { PrintName "Source Comment" }
+    { Shape 
+        { Predefined Comment }
+        { ToolbarImage "source_comment" }
+    }
+    { AutoScaleLarger True }
+    { ShowTypeLabel True }
+    { HAdjust Center }
+}
+
+
+
+NodeSymbol 3 Vertex 
+{ 
+    { SeeThrough True } 
+    { PrintName "Vertex" }
+    { Shape { Predefined Vertex } }
+    { ReadOnly True }
+    { ForceCentered True }
+    { CanHaveLabel False }
+    { Cardinality { Min 1 } { InLinks AllLinkTypes } }
+    { Cardinality { Min 1 } { OutLinks AllLinkTypes } }
+}
+
+NodeSymbol 4 SETerminal  
+{
+//    { NodeMapping 
+//	{ AppType SETerminal }
+//	{ NameIsRequired True }
+//	{ OutScopeLink NavigationTypes }
+//    }
+    { PrintName "Terminal" }
+    { Shape 
+        { Predefined Ellipse } 
+        { ToolbarImage "terminal" }
+    }
+    { DefaultSize  1.7 1.7 }
+    { UniformScale True }
+    { DisplayMark
+        { Name Terminal }
+        { StringMark "RETURN" }
+        { Anchor UpperCenter }
+        { HAdjust Center }
+        { VAdjust Top }
+	{ YPixelOffset 6 }
+    }
+}
+
+
+NodeSymbol 5 SEVoidTerminal  
+{
+//    { NodeMapping 
+//	{ AppType SEVoidTerminal }
+//	{ OutScopeLink NavigationTypes }
+//    }
+    { PrintName "Void Terminal" }
+    { Shape 
+        { Predefined Ellipse } 
+        { ToolbarImage "void_terminal" }
+    }
+    { DefaultSize  1.7 1.7 }
+    { CanHaveLabel False }
+    { UniformScale True }
+    { DisplayMark
+        { Name VoidTerminal1 }
+        { StringMark "VOID" }
+        { Anchor CenterCenter }
+        { HAdjust Center }
+        { VAdjust Center }
+	{ YPixelOffset -8 }
+    }
+    { DisplayMark
+        { Name VoidTerminal2 }
+        { StringMark "RETURN" }
+        { Anchor CenterCenter }
+        { HAdjust Center }
+        { VAdjust Center }
+	{ YPixelOffset 8 }
+    }
+}
+
+NodeSymbol 6 SEUserCall 
+{
+    { NodeMapping 
+	{ AppType SEUserCall } 
+	{ NameIsRequired True } 
+    }
+    { PrintName "User Call" }
+    { Shape 
+        { Predefined Parallelogram } 
+        { ToolbarImage "user_call" }
+    }
+    { DefaultSize 2.5 1.2 }
+    { AutoScaleLarger True }
+}
+
+NodeSymbol 7 SELibraryCall 
+{
+    { NodeMapping 
+	{ AppType SELibraryCall } 
+	{ NameIsRequired True } 
+    }
+    { PrintName "Library Call" }
+    { Shape 
+        { Predefined DoubleBarParallelogram }
+        { ToolbarImage "library_call" }
+    }
+    { DefaultSize 2.5 1.2 }
+    { AutoScaleLarger True }
+}
+
+
+NodeSymbol 8 SEPointerCall 
+{
+//    { NodeMapping 
+//	{ AppType SEPointerCall } 
+//	{ NameIsRequired True } 
+//    }
+    { PrintName "Pointer Call" }
+    { Shape 
+        { Predefined TripleBarParallelogram } 
+        { ToolbarImage "pointer_call" }
+    }
+    { DefaultSize 2.5 1.2 }
+    { AutoScaleLarger True }
+}
+
+
+
+
+NodeSymbol 9 SEIf
+{
+//    { NodeMapping 
+//	{ AppType SEIf } 
+//	{ NameIsRequired False } 
+//    }
+    { PrintName "If Statement" }
+    { CanHaveLabel True }
+    { Shape 
+        { Predefined Diamond } 
+        { ToolbarImage "if_statement" }
+    }
+    { DefaultSize 2.5 1.5 }
+    { AutoScaleLarger True }
+    { DisplayMark
+        { Name IfType }
+        { StringMark "If" }
+        { Anchor UpperCenter }
+        { HAdjust Center }
+        { VAdjust Top }
+	{ YPixelOffset 6 }
+    }
+}
+
+NodeSymbol 10 SEIfElse
+{
+//    { NodeMapping 
+//	{ AppType SEIfElse } 
+//	{ NameIsRequired False } 
+//    }
+    { PrintName "If-Else Statement" }
+    { CanHaveLabel True }
+    { Shape 
+        { Predefined Diamond } 
+        { ToolbarImage "if_else_statement" }
+    }
+    { DefaultSize 2.5 1.5 }
+    { AutoScaleLarger True }
+    { DisplayMark
+        { Name IfElseType }
+        { StringMark "If-Else" }
+        { Anchor UpperCenter }
+        { HAdjust Center }
+        { VAdjust Top }
+	{ YPixelOffset 8 }
+    }
+}
+
+NodeSymbol 11 SEFor
+{
+//    { NodeMapping 
+//	{ AppType SEFor } 
+//	{ NameIsRequired False } 
+//    }
+    { PrintName "For Statement" }
+    { CanHaveLabel True }
+    { Shape 
+        { Predefined Diamond }
+        { ToolbarImage "for_statement" }
+    }
+    { DefaultSize 2.5 1.5 }
+    { AutoScaleLarger True }
+    { DisplayMark
+        { Name ForType }
+        { StringMark "For" }
+        { Anchor UpperCenter }
+        { HAdjust Center }
+        { VAdjust Top }
+	{ YPixelOffset 6 }
+    }
+}
+
+NodeSymbol 12 SEWhile
+{
+//    { NodeMapping 
+//	{ AppType SEWhile } 
+//	{ NameIsRequired False } 
+//    }
+    { PrintName "While Statement" }
+    { CanHaveLabel True }
+    { Shape 
+        { Predefined Diamond } 
+        { ToolbarImage "while_statement" }
+    }
+    { DefaultSize 2.5 1.5 }
+    { AutoScaleLarger True }
+    { DisplayMark
+        { Name WhileType }
+        { StringMark "While" }
+        { Anchor UpperCenter }
+        { HAdjust Center }
+        { VAdjust Top }
+	{ YPixelOffset 8 }
+    }
+}
+
+NodeSymbol 13 SEUntil
+{
+//    { NodeMapping 
+//	{ AppType SEUntil } 
+//	{ NameIsRequired False } 
+//    }
+    { PrintName "Do-While Statement" }
+    { CanHaveLabel True }
+    { Shape 
+        { Predefined Diamond } 
+        { ToolbarImage "do_while_statement" }
+    }
+    { DefaultSize 2.5 1.5 }
+    { AutoScaleLarger True }
+    { DisplayMark
+        { Name UntilType }
+        { StringMark "Do-While" }
+        { Anchor UpperCenter }
+        { HAdjust Center }
+        { VAdjust Top }
+	{ YPixelOffset 11 }
+    }
+}
+
+NodeSymbol 14 SESwitch
+{
+//    { NodeMapping 
+//	{ AppType SESwitch } 
+//	{ NameIsRequired False } 
+//    }
+    { PrintName "Switch Statement" }
+    { CanHaveLabel True }
+    { Shape 
+        { Predefined Diamond } 
+        { ToolbarImage "switch_statement" }
+    }
+    { DefaultSize 2.5 1.5 }
+    { AutoScaleLarger True }
+    { DisplayMark
+        { Name SwitchType }
+        { StringMark "Switch" }
+        { Anchor UpperCenter }
+        { HAdjust Center }
+        { VAdjust Top }
+	{ YPixelOffset 8 }
+    }
+}
+
+
+NodeSymbol 15 SEStartState
+{
+    { PrintName "Initial State" }
+    { UniformScale True }
+    { Shape 
+        { Predefined FilledEllipse } 
+        { ToolbarImage "initial_state" }
+    }
+    { DefaultSize 0.4 0.4 }
+    { CanHaveLabel False }
+    { Cardinality { Min 0 } { Max 0 } { InLinks SEFlowLink } }
+    { Cardinality { Min 1 } { Max 1 } { OutLinks SEFlowLink } }
+//    { NodeMapping 
+//	{ AppType SEStartState }
+//    }
+}
+
+NodeSymbol 16 SEFinalState
+{
+    { PrintName "Final State" }
+    { UniformScale True }
+    { Shape 
+        { Predefined DoubleEllipseInsideFilled } 
+        { ToolbarImage "final_state" }
+    }
+    { DefaultSize 0.4 0.4 }
+    { CanHaveLabel False }
+    { Cardinality { Min 1 } { Max 1 } { InLinks SEFlowLink } }
+//    { NodeMapping 
+//	{ AppType SEFinalstate }
+//    }
+}
+
+
+
+
+NodeSymbol 17 SEMacro
+{
+//    { NodeMapping
+//        { AppType SEmacro }
+//        { NameIsRequired True }
+//    }
+    { PrintName "Macro" }
+    { Shape
+        { Predefined TriRectangle } 
+        { ToolbarImage "macro" }
+    }
+    { DefaultSize 2.5 1.2 }
+    { AutoScaleLarger True }
+    { HAdjust Center }
+}
+
+
+NodeSymbol 18 Comment {}
+ 
+NodeSymbol 999 NoSelectionNavigation
+{
+    { PrintName "Hook for navigations without selection" }
+    { Shape { Predefined Rectangle }}
+    { ReadOnly True }
+
+    { Navigation
+	{ Name Caller }
+	{ Label "Flow Chart's Caller" }
+	{ FailureCmd BackgroundToFceCaller }
+	//{ TargetFunc "FceCallerFromBackground(\"${file}\", True);" }
+    }
+    { Navigation
+	{ Name Callee }
+	{ Label "Flow Chart's Callee" }
+	{ FailureCmd BackgroundToFceCallee }
+	//{ TargetFunc "FceCalleeFromBackground(\"${file}\", True);" }
+    }
+    { Navigation
+	{ Name SceModule }
+	{ Label "Flow Chart's SCE Module" }
+	{ FailureCmd BackgroundToSceModule }
+	//{ TargetFunc "FceCalleeFromBackground(\"${file}\", True);" }
+    }
+    { Navigation
+        { Name SourceCodeDef }
+        { Label "Flow Chart's Source Code Definition" }
+	{ FailureCmd BackgroundToSourceCode }
+    }
+}
+ 
+
+LinkSymbol 20 SEFlowLink
+{
+    { PrintName "Flow Link" }
+    { CanHaveLabel True }
+//    { LinkMapping 
+//	{ AppType SEFlowLink }
+//	{ NameIsRequired False }
+//    }
+    { Connects { From CommentableTypes } { To CommentableTypes } }
+    { Connects { From Vertex } { To CommentableTypes } }
+    { Connects { From CommentableTypes } { To Vertex } }
+    { Connects { From SEStartState } { To CommentableTypes } }
+    { Connects { From CommentableTypes } { To SEFinalState } }
+    { PrintName "Flow Link" }
+    { Uncentered True }
+    { ToArrow True }
+}
+
+
+LinkSymbol 21 SESourceCommentLink 
+{
+    { Connects { From SESourceComment } { To CommentableTypes } }
+    { Connects { From CommentableTypes } { To SESourceComment } }
+    { PrintName "Source Comment Link" }
+    { Uncentered True }
+    { ToArrow True }
+    { Dashed True }
+}
+
+// generic comment
+LinkSymbol 22 CommentLink
+{
+    { Connects  { From Comment } { To AllSymbols } }
+    { Connects  { From AllSymbols } { To Comment } }
+    { PrintName "Comment Link" }
+    { Uncentered True }
+    { ToArrow True }
+    { Dashed True }
+}
+
+TypeSet ConditionDiamonds
+{
+    SEIf
+    SEIfElse
+    SEFor
+    SEWhile
+    SEUntil
+    SESwitch
+}
+
+
+TypeSet CommentableTypes
+{
+    SETerminal
+    SEVoidTerminal
+    SEUserCall
+    SELibraryCall
+    SEPointerCall
+    SECodeBlock
+    ConditionDiamonds
+    SEMacro
+}
+
+TypeSet NavigationTypes
+{
+    SEUserCall
+    SELibraryCall
+    SEPointerCall
+}
+
+
+
+TypeSet AllLinkTypes
+{
+    SEFlowLink
+    CommentLink
+}
+
+
+TypeSet AllSymbols
+{
+    SEStartState
+    SECodeBlock
+    SEMacro
+    SEUserCall
+    SELibraryCall
+    SEPointerCall
+    SEIf
+    SEIfElse
+    SEFor
+    SEWhile
+    SEUntil
+    SESwitch
+    SESourceComment
+    SETerminal
+    SEVoidTerminal
+    SEFinalState
+    Comment
+}
+
+
+SymbolList
+{
+    { ShowStraightArc True }
+    { ShowSpline True }
+    { Symbols (
+	Comment
+	SEStartState
+	SECodeBlock
+	SEMacro
+	SEUserCall
+	SELibraryCall
+	SEPointerCall
+	SEIf
+	SEIfElse
+	SEFor
+	SEWhile
+	SEUntil
+	SESwitch
+	SESourceComment
+	SETerminal
+	SEVoidTerminal
+	SEFinalState
+    ) }
+}
+
+
+
+// Navigations
+
+NodeSymbol AllSymbols
+{
+    { Navigation
+	{ Name FcCaller }
+	{ Label "Flow Chart's Caller" }
+	{ TargetFunc "FceCaller(\"${file}\", True);" }
+    }
+    { Navigation
+	{ Name FcCallee }
+	{ Label "Flow Chart's Callee" }
+	{ TargetFunc "FceCallee(\"${file}\", True);" }
+    }
+    { Navigation
+	{ Name FcSceModule }
+	{ Label "Flow Chart's SCE Module" }
+	{ TargetFunc "FceModuleFromFile();" }
+    }
+    { Navigation
+        { Name FcSourceCodeDef }
+        { Label "Flow Chart's Source Code Definition" }
+        { TargetFunc "FceBrowseToFcCodeFromBackground(\"${file}\");" }
+    }
+    // ECR 5124 begin
+    { Navigation
+        { ParseCondition "use_doors_integration();" }
+        { Name DOORS }
+        { Label "DOORS" }
+        { FailureCmd GoToDOORSFromNode }
+    }
+    // ECR 5124 end
+}
+
+
+NodeSymbol SEPointerCall
+{
+    { Navigation
+	{ Name ToSCEModule }
+	{ Label "Structure Chart Module" }
+	{ TargetFunc "FceToSceModule(\"Module\");" } 
+	//{ Query "node_ref[node[Module && name = '${node.name}']]" } 
+    }
+    { Navigation
+        { Name FuncSourceCodeDef }
+        { Label "Source Code Definition" }
+        { TargetFunc "SEBrowseToFunctionDef(${node.id});" }
+    }
+}
+
+
+NodeSymbol SEUserCall 
+{
+    { Navigation
+	{ Name ToSCEModule }
+	{ Label "Structure Chart Module" }
+	{ TargetFunc "FceToSceModule(\"Module\");" } 
+	//{ Query "node_ref[node[Module && name = '${file}']]" } 
+    }
+    { Navigation
+	{ Name CallCaller }
+	{ Label "Call's Caller" }
+	{ TargetFunc "FceCaller(\"${node.name}\", False);" }
+    }
+    { Navigation
+	{ Name CallCallee }
+	{ Label "Call's Callee" }
+	{ TargetFunc "FceCallee(\"${node.name}\", False);" }
+    }
+    { Navigation
+	{ Name CallFlowChart }
+	{ Label "Call's Flow Chart" }
+	{ FailureCmd CallFlowChart }
+    }
+    { Navigation
+        { Name FuncSourceCodeDef }
+        { Label "Source Code Definition" }
+        { TargetFunc "SEBrowseToFunctionDef(${node.id});" }
+    }
+}
+
+
+
+NodeSymbol SELibraryCall
+{
+    { Navigation
+	{ Name ToSCELib }
+	{ Label "Structure Chart Library Module" }
+	{ TargetFunc "FceToSceModule(\"LibraryModule\");" } 
+	//{ Query "node_ref[node[LibraryModule && name = '${node.name}']]" } 
+    }
+    { Navigation
+	{ Name CallCaller }
+	{ Label "Call's Caller" }
+	{ TargetFunc "FceCaller(\"${node.name}\", False);" }
+    }
+    { Navigation
+        { Name LibSourceCodeDef }
+        { Label "Source Code Definition" }
+        { TargetFunc "SEBrowseToLibRef(${node.id});" }
+    }
+}
+
+
+Include "rules/gde_menu_bar.std"
+Include "rules/se_object_rename.rules"
+Include "rules/gde_accels.std"
+Include "rules/gde_edit_menu.std"
+Include "rules/re_navigate.prop"
+Include "rules/comment.symbol"
+Include "rules/fce_toolbar_arc_types.rules" // ECR 3556
+Include "se/rules/feature.rule"
+
+Menu ProductMenu
+{
+    { Show False }
+    { InMenuBar False }
+}
+
+Menu Navigation
+{
+    { InMenuBar True }
+// fix for spr 2789
+    { Label "&GoTo" }
+    { Pin True }
+    { GenerationFunc idehook_navigation_menu_gen_func }
+}
+
+Menu DiagramContextMenu //Edit
+{
+    { MenuEntry
+        { Name CheckSemantics }
+        { Show False }
+    }
+}
+
+Menu Tools
+{
+    { MenuEntry
+        { Name CheckSemantics }
+        { Show False }
+    }
+}
+
+Command BackgroundToFceCaller
+{
+    { ObjectRequired False }
+    { StartMessage "Navigate to Caller Diagram..." }
+    { FailureMessage "Navigate to Caller Diagram failed." }
+    //spr 3253
+    //{ SuccessMessage "Navigate to Caller Diagram completed." }
+    { Builtin "EditorQrlEvalNoSave FceCallerFromBackground(\"${file}\");" }
+}
+
+
+Command BackgroundToFceCallee
+{
+    { ObjectRequired False }
+    { StartMessage "Navigate to Callee Diagram..." }
+    { FailureMessage "Navigate to Callee Diagram failed." }
+    // spr 3253
+    //{ SuccessMessage "Navigate to Callee Diagram completed." }
+    { Builtin "EditorQrlEvalNoSave FceCalleeFromBackground(\"${file}\");" }
+}
+
+
+Command BackgroundToSourceCode
+{
+    { ObjectRequired False }
+    { StartMessage "Navigate to Source Code..." }
+    { FailureMessage "Navigate to Source Code failed." }
+    // spr 3253
+    //{ SuccessMessage "Navigate to Source Code completed." }
+    { Builtin "EditorQrlEvalNoSave FceBrowseToFcCodeFromBackground(\"${file}\");" }
+}
+
+
+Command BackgroundToSceModule
+{
+    { ObjectRequired False }
+    { StartMessage "Navigate to Sce Diagram..." }
+    { FailureMessage "Navigate to Sce Diagram failed." }
+    // spr 3253
+    //{ SuccessMessage "Navigate to Sce Diagram completed." }
+    { Builtin "EditorQrlEvalNoSave FceSceModuleFromBackground();" }
+}
+
+
+
+Command CallFlowChart
+{
+    { PrintName "Navigate to Flow Definition" }
+    { StartMessage "Navigating to  Flow Definition ..." }
+    // might relate to spr 3253
+    //{ SuccessMessage "Navigate to Flow Definition completed."}
+    { FailureMessage "Navigate to Flow Definition failed."}
+    { CheckFullName True } // no null filenames
+    { Builtin "EditorQrlEval \"FceFlowDefinition(\\"${node.name}\\");\"" }
+}
+
+
+
+Command FCEGotoSourceCode
+
+{
+    { PrintName "Source Code" }
+    { ObjectRequired True }
+    { StartMessage "Show source code ..." }
+    { FailureMessage "Failed to show source code" }
+    { SuccessMessage "Show source code completed" }
+    { Builtin "EditorQrlEvalNoSave GotoSourceCode(${node.id});" }
+}
+
+Command FCEGotoCrossReferenceBrowser
+{
+    { PrintName "Cross Reference Browser" }
+    { ObjectRequired True }
+    { StartMessage "Show cross reference browser ..." }
+    { FailureMessage "Failed to show cross reference browser" }
+    { SuccessMessage "Show cross reference browser completed" }
+    { Builtin "EditorQrlEvalNoSave GotoCrossReferenceBrowser(${node.id});" }
+}
+
+DisplayMarkGroups
+{
+    { ContinuousDisplayMarks (Terminal VoidTerminal IfType IfElseType ForType WhileType UntilType SwitchType) }
+}
+
+Include "rules/default_arc_type.rules" //ECR 6469
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/se/rules/user_fce.rules"
+
+PassWord "5399C446"

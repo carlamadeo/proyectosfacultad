@@ -1,0 +1,317 @@
+
+Global 1 ReportTargetOutputFormat
+{
+    { Properties
+        { Choice
+            { Name "output_target" }
+            { Label "Use Target Format:" }
+            { Type Exclusive }
+            
+            { ChoiceItem
+                { Label "RTF (Microsoft Word)" }
+                { Value "rtf" }
+                { Activation
+                    { Target "output_include_diagrams" }
+                    { On Activate }
+                }
+            }
+			{ ChoiceItem
+                { Label "HTML" }
+                { Value "html" }
+                { Activation
+                    { Target "output_include_diagrams" }
+                    { On Activate }
+                }
+            }
+			{ ChoiceItem
+                { Label "FrameMaker" }
+                { Value "mif" }
+                { Activation
+                    { Target "output_include_diagrams" }
+                    { On Activate }
+                }
+            }    
+ //           { ChoiceItem
+ //               { Label "Interleaf" }
+ //               { Value "leaf" }
+ //               { Activation
+ //                   { Target "output_include_diagrams" }
+ //                   { On Activate }
+ //               }
+ //           }        
+            { ChoiceItem
+                { Label "ASCII" }
+                { Value "ascii" }
+                { Activation
+                    { Target "output_include_diagrams" }
+                    { On InActivate }
+                }
+	    }
+	}
+    }
+}
+
+
+Global 1 ReportSymbols
+{
+    { Properties
+        { Choice
+            { Name "output_symbols" }
+            { Label "Use Symbol Set:" }
+            { Type Exclusive }
+            { ChoiceItem
+                { Label "DeMarco/Yourdon" }
+                { Value "-x output_symbols dydfe" }
+            }    
+            { ChoiceItem
+                { Label "Gane/Sarson" }
+                { Value "-x output_symbols gsdfe" }
+            }    
+	}
+    }
+}
+
+
+
+
+Global 1 ReportDefaultOutputDirAndFileObjectsProperty
+{
+    { Properties
+        { Text
+            { Name "output_dir" }
+            { Label "Output File Directory:" }
+            { Type Text }
+            { MinLength 0 }
+            { MaxLength 300 }
+            { DispLength 40 }
+            { InitVal "${projdir}${system}/qrl_files" }
+        }
+        // ECR 3651a begin
+        { Button
+            { Name "browse_for_out_dir" }
+            { Label "Choose" }
+            { Event
+                { Type Select }
+                { Callback "select_output_dir_callback" }
+            }
+        }
+        { Group
+            { Name "output_file_group" }
+            { Label "" }
+            { Type Horizontal }
+            //ECR 5833 begin - commented out next lines
+            //{ Resizable ResizeAny }
+            //{ ChildSizePolicy ResizeWidth }
+            //{ LayoutPolicy ResizeAny }
+            { Align Labels }
+            //ECR 5833 end
+            { Members ( output_dir browse_for_out_dir ) }
+        }
+        // ECR 3651a end
+        { Text
+            { Name "output_file_design" }
+            { Label "Output File Name:" }
+            { Type Text }
+            { MinLength 0 }
+            { MaxLength 100 }
+            { DispLength 20 }
+            { InitVal "DesignReport" }
+        }
+        { Group
+            { Name "main_output_file_group" }       //ECR 5833
+            { Type Vertical }
+            { Align Labels }
+            // ECR 3651a begin
+            // { Members ( output_dir output_file_design ) }
+            { Members ( output_file_group output_file_design ) }
+            // ECR 3651a end
+    	}
+    }
+}
+
+Global 1 ReportDefaultOutputDirAndFileObjectsPropertyAnalysis
+{
+    { Properties
+        { Text
+            { Name "output_dir" }
+            { Label "Output File Directory:" }
+            { Type Text }
+            { MinLength 0 }
+            { MaxLength 300 }
+            { DispLength 40 }
+            { InitVal "${projdir}${system}/qrl_files" }
+        }
+        // ECR 3651a begin
+        { Button
+            { Name "browse_for_out_dir" }
+            { Label "Choose" }
+            { Event
+                { Type Select }
+                { Callback "select_output_dir_callback" }
+            }
+        }
+        { Group
+            { Name "output_file_group" }
+            { Label "" }
+            { Type Horizontal }
+            //ECR 5832 begin - commented out next lines
+            //{ Resizable ResizeAny }
+            //{ ChildSizePolicy ResizeWidth }
+            //{ LayoutPolicy ResizeAny }
+            { Align Labels }
+            //ECR 5832 end
+            { Members ( output_dir browse_for_out_dir ) }
+        }
+        // ECR 3651a end
+        { Text
+                { Name "output_file_analysis" }
+                { Label "Output File Name:" }
+                { Type Text }
+                { MinLength 0 }
+                { MaxLength 100 }
+                { DispLength 20 }
+                { InitVal "AnalysisReport" }
+        }
+        { Group
+            { Name "output_file_group_analysis" }
+            { Type Vertical }
+            { Align Labels }
+            // ECR 3651a begin
+            // { Members ( output_dir output_file_analysis ) }
+            { Members ( output_file_group output_file_analysis ) }
+            // ECR 3651a end
+        }
+    }    
+}
+
+Global 1 ReportIncludeSceDiagrams
+{
+    { Properties
+        { Choice
+            { Name "include_sce_diagrams" }
+            { Label "Include SCE Diagrams" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "include_sce_diagrams" }
+                { Label "" }
+                { OnValue "-x include_sce_diagrams 'True'" }
+                { OffValue "-x include_sce_diagrams 'False'" }
+                { Init On }
+            }
+        }
+    }
+}
+
+
+Global 1 ReportIncludeDseDiagrams
+{ 
+    { Properties 
+        { Choice 
+            { Name "include_dse_diagrams" } 
+            { Label "Include DSE Diagrams" } 
+            { Type CheckBox } 
+            { ChoiceItem    
+                { Name "include_dse_diagrams" } 
+                { Label "" } 
+                { OnValue "-x include_dse_diagrams 'True'" } 
+                { OffValue "-x include_dse_diagrams 'False'" } 
+                { Init On } 
+            } 
+        } 
+    }   
+} 
+
+Global 1 ReportIncludeSourceListings
+{
+    { Properties 
+        { Choice 
+            { Name "include_source_listings" }
+            { Label "Include Source Listings" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "include_source_listings" }
+                { Label "" }
+                { OnValue "-x include_source_listings 'True'" }
+                { OffValue "-x include_source_listings 'False'" }
+                { Init On }
+            } 
+        }
+    }    
+}
+
+Global 1 ReportIncludeCspecTables
+{
+    { Properties
+        { Choice
+            { Name "include_cspec_tables" }
+            { Label "Include Cspec Tables" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "include_cspec_tables" }
+                { Label "" }
+                { OnValue "-x include_cspec_tables 'True'" }
+                { OffValue "-x include_cspec_tables 'False'" }
+                { Init On }
+            }
+        }
+    }
+}
+
+
+Global 1 ReportIncludeAnnotations
+{ 
+    { Properties 
+        { Choice 
+            { Name "include_annotations" } 
+            { Label "Include Annotations" } 
+            { Type CheckBox } 
+            { ChoiceItem    
+                { Name "include_annotations" } 
+                { Label "" } 
+                { OnValue "-x include_annotations 'True'" } 
+                { OffValue "-x include_annotations 'False'" } 
+                { Init On } 
+            } 
+        } 
+    }   
+} 
+
+Global 1 ReportIncludeAllFileHistory
+{ 
+    { Properties 
+        { Choice 
+            { Name "include_all_file_history" } 
+            { Label "Include All File History" } 
+            { Type CheckBox } 
+            { ChoiceItem    
+                { Name "include_all_file_history" } 
+                { Label "" } 
+                { OnValue "-x include_all_file_history 'True'" } 
+                { OffValue "-x include_all_file_history 'False'" } 
+                { Init Off } 
+            } 
+        } 
+    }   
+} 
+
+Global 1 ReportVerbose
+{ 
+    { Properties 
+        { Choice 
+            { Name "verbose" } 
+            { Label "Verbose" } 
+            { Type CheckBox } 
+            { ChoiceItem    
+                { Name "verbose" } 
+                { Label "" } 
+                { OnValue "-x verbose 'True'" } 
+                { OffValue "-x verbose 'False'" } 
+                { Init Off } 
+            } 
+        } 
+    }   
+} 
+
+
+
+

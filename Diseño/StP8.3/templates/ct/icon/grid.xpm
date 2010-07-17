@@ -1,0 +1,26 @@
+/* XPM */
+static char* grid_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 4 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #000000	c #808080",
+/* pixels */
+"XXXXXXXXXXXXXXX.",
+"XO.O.O.O.O.O.OO.",
+"X.X.X.X.X.X.X.O.",
+"XO........... O.",
+"X.X.X.X.X.X.X.O.",
+"XO........... O.",
+"X.X.X.X.X.X.X.O.",
+"XO........... O.",
+"X.X.X.X.X.X.X.O.",
+"XO........... O.",
+"X.X.X.X.X.X.X.O.",
+"XO........... O.",
+"X.X.X.X.X.X.X.O.",
+"XO. . . . . . O.",
+"XOOOOOOOOOOOOOO.",
+"................"};

@@ -1,0 +1,334 @@
+Diagram UmlClassDiagram
+{
+    { Name "display" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -311 }
+    { PanY -265 }
+    { Alignment 32 }
+    { GUID "UID_70BB788F-0206-11d6-AE65-000000000000" }
+    { Summary
+        { Nodes 11 }
+        { Arcs 7 }
+    }
+}
+
+Node 1
+{
+    { Type Class }
+    { Loc -18 -125 }
+    { Scale 261.00 90.00 }
+    { Label
+        { Text "Display" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 494 }
+        { GUID "UID_04328C60-544E-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Node 2
+{
+    { Type Class }
+    { Loc -13 125 }
+    { Scale 311.00 90.00 }
+    { Label
+        { Text "Clockwork" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 412 }
+        { GUID "UID_378C31F0-544B-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Node 7
+{
+    { Type Class }
+    { Loc 136 61 }
+    { Scale 298.00 90.00 }
+    { Label
+        { Text "ClockBird" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 421 }
+        { GUID "UID_378C31F2-544B-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Node 8
+{
+    { Type Vertex }
+    { Loc 127 7 }
+    { Scale 128.00 128.00 }
+}
+
+Node 10
+{
+    { Type Vertex }
+    { Loc 20 7 }
+    { Scale 128.00 128.00 }
+}
+
+Node 18
+{
+    { Type Class }
+    { Loc -151 60 }
+    { Scale 220.00 90.00 }
+    { Label
+        { Text "Door" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 430 }
+        { GUID "UID_378C31F6-544B-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Node 19
+{
+    { Type Vertex }
+    { Loc -156 1 }
+    { Scale 128.00 128.00 }
+}
+
+Node 21
+{
+    { Type Vertex }
+    { Loc -49 1 }
+    { Scale 128.00 128.00 }
+}
+
+Arc 3
+{
+    { Type Association }
+    { From
+        { ID 2 }
+        { Loc -12 107 }
+        { Offset 1 -5 }
+    }
+    { To
+        { ID 1 }
+        { Loc -12 -107 }
+        { Offset 6 0 }
+    }
+}
+
+Arc 9
+{
+    { Type Association }
+    { From
+        { ID 7 }
+        { Loc 127 43 }
+        { Offset -9 -4 }
+    }
+    { To
+        { ID 8 }
+        { Loc 127 7 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 11
+{
+    { Type Association }
+    { From
+        { ID 8 }
+        { Loc 127 7 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 10 }
+        { Loc 20 7 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 12
+{
+    { Type Association }
+    { From
+        { ID 10 }
+        { Loc 20 7 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 1 }
+        { Loc 20 -107 }
+        { Offset 38 2 }
+    }
+}
+
+Arc 20
+{
+    { Type Association }
+    { From
+        { ID 18 }
+        { Loc -156 42 }
+        { Offset -5 -1 }
+    }
+    { To
+        { ID 19 }
+        { Loc -156 1 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 22
+{
+    { Type Association }
+    { From
+        { ID 19 }
+        { Loc -156 1 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 21 }
+        { Loc -49 1 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 23
+{
+    { Type Association }
+    { From
+        { ID 21 }
+        { Loc -49 1 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 1 }
+        { Loc -49 -107 }
+        { Offset -31 -1 }
+    }
+}
+
+Cntx 6
+{
+    { Type RelLabelTo }
+    { Loc -46 -49 }
+    { Scale 185.00 50.00 }
+    { Label
+        { Text "display" }
+    }
+    { Parent 3 }
+    { Object
+        { PDMType Link }
+        { MappingName ToMapping }
+        { ID 837 }
+        { GUID "UID_04328C61-544E-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Cntx 17
+{
+    { Type RelLabelTo }
+    { Loc 55 -86 }
+    { Scale 185.00 50.00 }
+    { Label
+        { Text "display" }
+    }
+    { Parent 12 }
+    { Object
+        { PDMType Link }
+        { MappingName ToMapping }
+        { ID 875 }
+        { GUID "UID_04328C64-544E-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Cntx 26
+{
+    { Type RelLabelTo }
+    { Loc -4 -71 }
+    { Scale 185.00 50.00 }
+    { Label
+        { Text "display" }
+    }
+    { Parent 23 }
+    { Object
+        { PDMType Link }
+        { MappingName ToMapping }
+        { ID 903 }
+        { GUID "UID_04328C67-544E-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Link 4
+{
+    { FirstArc 3 }
+    { LastArc 3 }
+    { Object
+        { PDMType Node }
+        { MappingName AssociationNodeMapping }
+        { ID 820 }
+        { GUID "UID_04328C63-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName FromMapping }
+        { ID 827 }
+        { GUID "UID_04328C62-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName ToMapping }
+        { ID 837 }
+        { GUID "UID_04328C61-544E-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Link 13
+{
+    { FirstArc 9 }
+    { LastArc 12 }
+    { Object
+        { PDMType Node }
+        { MappingName AssociationNodeMapping }
+        { ID 868 }
+        { GUID "UID_04328C66-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName FromMapping }
+        { ID 886 }
+        { GUID "UID_04328C65-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName ToMapping }
+        { ID 875 }
+        { GUID "UID_04328C64-544E-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Link 24
+{
+    { FirstArc 20 }
+    { LastArc 23 }
+    { Object
+        { PDMType Node }
+        { MappingName AssociationNodeMapping }
+        { ID 896 }
+        { GUID "UID_04328C69-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName FromMapping }
+        { ID 914 }
+        { GUID "UID_04328C68-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName ToMapping }
+        { ID 903 }
+        { GUID "UID_04328C67-544E-11d4-8778-00C04F8DEC45" }
+    }
+}

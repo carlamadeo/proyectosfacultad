@@ -1,0 +1,80 @@
+// ECR 3159 start
+
+NodeSymbol Swimlane
+{
+    { PrintName "Swimlane" }
+    { Shape
+		{ Draw
+			{ Line
+				{ Origin -50.00  60.00 }
+				{ Point  -50.00 -60.00 }
+				{ LineStyle Solid } 
+			}
+			{ Line
+				{ Origin 50.00  60.00 }
+				{ Point  50.00 -60.00}
+				{ LineStyle Solid } 
+			}
+			{ Rectangle 
+				{ Origin 0.00 0.00 }
+				{ Size  100.00 120.00 }
+				{ LineStyle None }
+				{ FillStyle None }
+			}
+		}
+        { ToolbarImage "swimlane" }
+    }
+    { AutoScaleLarger True }
+    { LabelAnchor North }
+    { Cardinality { Min 0 } { OutLinks SwimLaneContains } }
+	//{ SeeThrough True } // ECR 5007, 5059
+    { ReplaceSet ( None ) }
+	{ Navigation
+		{ Name SwimlaneToClass }
+		{ Label "Class with the same name" }
+		{ Query "node_ref[node[UmlClass && name == '${node.name}']]" }
+    }
+	{ NodeMapping
+        { MappingName SwimlaneMapping }
+        { AppType UmlSwimlane }
+		{ Scope { SymbolFunc uml_state_machine_symbol } }
+        { NameIsRequired False }
+    }
+	{ ApplicationTag "SwimlaneSymbol" }
+}
+
+LinkSymbol SwimLaneContains  
+{
+	{ CanBeVisible False }
+	{ CanBeInclude True }
+	{ CanBeSelected False }
+    { Connects
+            { From Swimlane }
+            { To SwimlaneContainsTypes }
+    }
+	{ LinkMapping
+		{ MappingName ContainsMappingD }
+		{ AppType UmlContains }
+		{ NameIsRequired False }
+		{ FromNode { MappingName SwimlaneMapping } }
+		{ ToNode { MappingName Default } }
+	}
+	{ LinkMapping
+		{ MappingName ContainsMappingO }
+		{ AppType UmlContains }
+		{ NameIsRequired False }
+		{ FromNode { MappingName SwimlaneMapping } }
+		{ ToNode { MappingName ObjectMapping } }
+	}
+}
+
+TypeSet SwimlaneContainsTypes
+{
+	State
+	InitialState
+	FinalState
+	Object
+        Decision // ECR 5231
+}
+
+// ECR 3159 end

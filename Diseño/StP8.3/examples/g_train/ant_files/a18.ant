@@ -1,0 +1,255 @@
+FileObject 1
+{
+    { Name "a18" }
+    { Type ObjectAnnotation }
+    { GUID "UID_8CF0865C-28FF-483b-BC63-C3DE6F8CE56D" }
+}
+
+NodeObject 99999
+{
+    { Name "read pulse" }
+    { Type Process }
+    { ObjectId 2739 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_67582A44-DDD7-45f7-B6BF-F9EE30D788AC" }
+}
+
+NoteObject 2
+{
+    { Type Pspec }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 2741 }
+    { DescLine "This process reads the signal it gets from the sensor and records the time associated with this signal. The time is stored in a data-store 'time' and simultaneously a pulse is sent to the pulse counter." }
+}
+
+ItemObject 3
+{
+    { Type ProcessSpec }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 2742 }
+}
+
+NoteObject 4
+{
+    { Type PerformanceRequirement }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 2744 }
+    { DescLine "As specified in the manual." }
+}
+
+ItemObject 5
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 4 }
+    { ObjectId 2745 }
+}
+
+ItemObject 6
+{
+    { Type PerformanceRequirementName }
+    { Value "fixed" }
+    { NoteId 4 }
+    { ObjectId 2746 }
+}
+
+NoteObject 7
+{
+    { Type DerivedRequirement }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 2748 }
+    { DescLine "There are no derived requirements for this system." }
+}
+
+ItemObject 8
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 7 }
+    { ObjectId 2749 }
+}
+
+ItemObject 9
+{
+    { Type DerivedRequirementName }
+    { Value "N/A" }
+    { NoteId 7 }
+    { ObjectId 2750 }
+}
+
+NoteObject 10
+{
+    { Type SystemState }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 2752 }
+}
+
+ItemObject 11
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 10 }
+    { ObjectId 2753 }
+}
+
+ItemObject 12
+{
+    { Type SystemState }
+    { Value "real-time" }
+    { NoteId 10 }
+    { ObjectId 2754 }
+}
+
+NoteObject 13
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 2756 }
+    { DescLine "This process registers the pulses as they are picked up by the sensors." }
+}
+
+ItemObject 14
+{
+    { Type ObjectName }
+    { Value "read pulse" }
+    { NoteId 13 }
+    { ObjectId 2757 }
+}
+
+ItemObject 15
+{
+    { Type Author }
+    { Value "ide" }
+    { NoteId 13 }
+    { ObjectId 2758 }
+}
+
+ItemObject 16
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 13 }
+    { ObjectId 2759 }
+}
+
+NoteObject 17
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 2761 }
+    { DescLine "Standard." }
+}
+
+ItemObject 18
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 17 }
+    { ObjectId 2762 }
+}
+
+ItemObject 19
+{
+    { Type RequirementName }
+    { Value "speed-sub-system" }
+    { NoteId 17 }
+    { ObjectId 2763 }
+}
+
+ItemObject 20
+{
+    { Type RequirementDocument }
+    { Value "SSS" }
+    { NoteId 17 }
+    { ObjectId 2764 }
+}
+
+ItemObject 21
+{
+    { Type RequirementParagraph }
+    { Value "speed" }
+    { NoteId 17 }
+    { ObjectId 2765 }
+}
+
+ItemObject 22
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 17 }
+    { ObjectId 2766 }
+}
+
+ItemObject 23
+{
+    { Type QualificationMethod }
+    { Value "Test IV" }
+    { NoteId 17 }
+    { ObjectId 2767 }
+}
+
+ItemObject 24
+{
+    { Type QualificationLevel }
+    { Value "A++" }
+    { NoteId 17 }
+    { ObjectId 2768 }
+}
+
+ItemObject 25
+{
+    { Type FormalTestParagraph }
+    { Value "13" }
+    { NoteId 17 }
+    { ObjectId 2769 }
+}
+
+NoteObject 26
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 2771 }
+}
+
+ItemObject 27
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 26 }
+    { ObjectId 2772 }
+}
+
+ItemObject 28
+{
+    { Type DocumentName }
+    { Value "SRS" }
+    { NoteId 26 }
+    { ObjectId 2773 }
+}
+
+ItemObject 29
+{
+    { Type DocumentNumber }
+    { Value "1" }
+    { NoteId 26 }
+    { ObjectId 2774 }
+}
+
+ItemObject 30
+{
+    { Type ParagraphNumber }
+    { Value "13" }
+    { NoteId 26 }
+    { ObjectId 2775 }
+}
+

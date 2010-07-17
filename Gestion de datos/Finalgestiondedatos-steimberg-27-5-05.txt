@@ -1,0 +1,26 @@
+Marcar V/F
+
+1. Toda clave es superclave
+2. Los atributos de la relacion inicial que no figuran en ninguna dependencia funcional deben formar parte de la clave
+3. Siempre es posible descomponer una relacion en BCNF sin perdida de informacion
+4. Siempre es posible descomponer una relacion en BCNF para que preserve dependencias
+5. Siempre BCNF implica 3FN
+6. Siempre BCNF implica 4FN
+7. Siempre 4FN implica BCNF
+8. Al construir el Fm (Conjubto minimal de dependencias funcionales) siempre los lados izquierdos resultan con un unico atributo
+9. El indice no denso permite prueba de existencia
+10.La cantidad de accesos para ubicar un registro en un arbol B+, con n punteros por nodo en el momento que tienen M claves está acotada por la expresion: 1 + log(n/2)M
+11.El grafo ciclico de una ejecucion entrelazada garantiza que sea serializable
+12.El compromiso de dos fases de una ejecucion entrelazada grarantiza que sea serializable
+13.El protocolo FCL garantiza atomicidad
+14.El protocolo WAL garantiza durabilidad
+15.En el proceso de recuperacion todas las transacciones iniciadas despues del ultimo chekcpoint se abortan
+16.La traduccion a forma canonica de una consulta deénde del estado de la base de datos al momento de la consulta
+17.La junta natural de dos relaciones con cabeceras identicas es igual a la interseccion de esas relaciones
+18.Una interrelacion muchos a unoen un diagrama E/R, siempre se resuelve en el modelo relacional mediante una nueva tabla
+19.Un arbol B facilita la lectura secuencial de los registros
+20.dada una funcion de hashing, si en un momento dado la profundidad de un bloque es d, y la del directorio n, llegan a ese bloque n - d punteros.
+
+
+Respuestas.
+1.V 2.V 3.V 4.F 5.V 6.F 7.V 8.F 9.F 10.V 11.F 12.V 13.F 14.F 15.F 16.F 17.V 18.F 19.F 20.F

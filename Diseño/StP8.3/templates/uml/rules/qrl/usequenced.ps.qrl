@@ -1,0 +1,204 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+#include "rules/qrl/ps.inc"
+
+//////////////////////////////////////////////
+// 
+//  Sequence Nodes
+//
+//////////////////////////////////////////////
+
+void
+UmlSequence_ps_show()
+
+{
+    gde_builtin("PropertySheetShow UmlSequence_ps");
+
+    // reset
+
+    UmlSequence_ps_init();
+}
+
+
+// double click hook
+void
+UmlSequence_ps_double_click(gde_mapsymbol ms)
+{
+    ps_reset_last_fill();
+    UmlSequence_ps_show();
+}
+
+
+
+boolean UmlSequence_ps_initted = False;
+
+void
+UmlSequence_ps_init()
+
+{
+    if (UmlSequence_ps_initted)
+    {
+        // just refresh the prop sheet
+        ps_fill("UmlSequence_ps");
+        return;
+    }
+    UmlSequence_ps_initted = True;
+//    gde_builtin("EditorActionDone 0214951139  UmlSequence_ps_ActionDone();"); // ECR 6880
+    ps_init("UmlSequence_ps", "ObjectName", ps_Node, string_to_list("Actor Package System PassiveObject ActiveObject", " "), ps_Node);
+
+    // ECR 3789 begin
+    ps_append_field("UmlSequence_ps", "ObjectDescription",
+    "GenericObject", "", ps_NoteDescriptionExternal, NULL);
+    // ECR 3789 end
+    ps_append_field("UmlSequence_ps", "Stereotype", "UmlExtensibilityDefinition", "UmlStereotype", ps_StringAnt, NULL);
+    ps_append_field("UmlSequence_ps", "Constraints", "UmlExtensibilityDefinition", "UmlConstraintItem", ps_StringList, NULL);
+    ps_append_field("UmlSequence_ps", "TaggedValues", "UmlExtensibilityDefinition", "UmlTaggedValue", ps_StringList, NULL);
+
+    ps_fill("UmlSequence_ps");
+
+    //ps_dump();
+
+    return;
+}
+
+
+// change focus of property sheet
+
+void
+UmlSequence_ps_ActionDone()
+
+{
+    // reset propsheet
+
+    if( ui_owner_visible(to_ui_prop("UmlSequence_ps","OK")) ) // ECR 4037
+        ps_fill("UmlSequence_ps");
+}
+
+
+
+//////////////////////////////////////////////
+// 
+//  Sequence Links
+//
+//////////////////////////////////////////////
+
+void
+UmlSequenceLink_ps_show()
+
+{
+    gde_builtin("PropertySheetShow UmlSequenceLink_ps");
+
+    // reset
+
+    UmlSequenceLink_ps_init();
+}
+
+
+// double click hook
+void
+UmlSequenceLink_ps_double_click(gde_mapsymbol ms)
+{
+    ps_reset_last_fill();
+    UmlSequenceLink_ps_show();
+}
+
+
+
+boolean UmlSequenceLink_ps_initted = False;
+
+void
+UmlSequenceLink_ps_init()
+
+{
+    if (UmlSequenceLink_ps_initted)
+    {
+        // just refresh the prop sheet
+        ps_fill("UmlSequenceLink_ps");
+        return;
+    }
+    ui_text_set_readonly(to_ui_prop("UmlSequenceLink_ps", "MessageObjectName"), True);
+
+    UmlSequenceLink_ps_initted = True;
+//    gde_builtin("EditorActionDone 0214951140  UmlSequenceLink_ps_ActionDone();"); // ECR 6880
+
+    ps_init("UmlSequenceLink_ps", "ObjectName", ps_Link, string_to_list("SimpleMessage SynchronousMessage BalkingMessage TimeoutMessage AsynchronousMessage ReturnMessage", " "), ps_Link);
+
+    // ECR 3789 begin
+    ps_append_field("UmlSequenceLink_ps", "ObjectDescription",
+    "GenericObject", "", ps_NoteDescriptionExternal, NULL);
+    // ECR 3789 end
+    ps_append_field("UmlSequenceLink_ps", "Stereotype", "UmlExtensibilityDefinition", "UmlStereotype", ps_StringAnt, NULL);
+    ps_append_field("UmlSequenceLink_ps", "Constraints", "UmlExtensibilityDefinition", "UmlConstraintItem", ps_StringList, NULL);
+    ps_append_field("UmlSequenceLink_ps", "TaggedValues", "UmlExtensibilityDefinition", "UmlTaggedValue", ps_StringList, NULL);
+    
+    ps_append_field("UmlSequenceLink_ps", "MessageObjectName", "", "", ps_SeqCollab, NULL);
+
+    ps_append_field("UmlSequenceLink_ps", "NameComponent", "", "", ps_SeqCollab, NULL);
+    // Begin add ECR 5050
+    ps_append_field("UmlSequenceLink_ps", "ChooseAction", "", "", ps_ChooseAction, NULL);
+    // End add ECR 5050
+    ps_append_field("UmlSequenceLink_ps", "ReturnType", "", "", ps_SeqCollab, NULL);
+    ps_append_field("UmlSequenceLink_ps", "MessageArgs", "", "", ps_SeqCollab, NULL);
+    // Begin ECR4197
+    ps_append_field("UmlSequenceLink_ps", "Destruction", "UmlMessageDefinition", "UmlMessageIsDestruction", ps_TrueFalse, NULL);
+    // End ECR4197
+    ps_append_field("UmlSequenceLink_ps", "PredecessorGuard", "", "", ps_SeqCollab, NULL);
+    // Begin add ECR 5050
+    ps_append_field("UmlSequenceLink_ps", "ChooseGuard", "", "", ps_ChooseGuard, NULL);
+    // End add ECR 5050
+
+    ps_append_field("UmlSequenceLink_ps", "MessageSequence", "", "", ps_SeqCollab, NULL);
+
+    ps_append_field("UmlSequenceLink_ps", "MessageRecurrence", "", "", ps_SeqCollab, NULL);
+    // Begin ECR4197
+    ps_append_field("UmlSequenceLink_ps", "Creation", "UmlMessageDefinition", "UmlMessageIsCreation", ps_TrueFalse, NULL);
+    // End ECR4197
+    ps_fill("UmlSequenceLink_ps");
+
+    //ps_dump();
+
+    return;
+}
+
+
+// change focus of property sheet
+
+void
+UmlSequenceLink_ps_ActionDone()
+
+{
+    // reset propsheet
+
+    if( ui_owner_visible(to_ui_prop("UmlSequenceLink_ps","OK")) ) // ECR 4037
+        ps_fill("UmlSequenceLink_ps");
+}
+
+// Active Function
+
+int
+UmlSequenceObjectPropsActive()
+{
+    list symbols;
+
+    symbols = gde_selected_symbols();
+    if (list_count(symbols) != 1)
+        return ACTIVE_FUNC_IS_INACTIVE;
+
+    // Begin Add ECR 7169
+    list objects = gde_symbols_find_with_types(symbols, string_to_list("Actor PassiveObject ActiveObject ", " "));
+    if (list_count( objects ) == 1)
+    {
+    	return ActiveIfNonAnonymousObject( objects );
+    }        
+    // End Add ECR 7169
+
+    if (list_count(gde_symbols_find_with_types(symbols, string_to_list("Package System SimpleMessage SynchronousMessage BalkingMessage TimeoutMessage AsynchronousMessage ReturnMessage", " "))) == 1)
+        return ACTIVE_FUNC_IS_ACTIVE;
+
+    return ACTIVE_FUNC_IS_INACTIVE;
+}
+

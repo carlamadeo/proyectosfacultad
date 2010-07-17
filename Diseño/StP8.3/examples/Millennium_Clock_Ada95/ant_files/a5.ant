@@ -1,0 +1,50 @@
+FileObject 1
+{
+    { Name "a5" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65CB5-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "ClockBird" }
+    { Type UmlClass }
+    { ObjectId 679 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD92B2-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlClassDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1311 }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1313 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1315 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "ClockBird" }
+    { NoteId 4 }
+    { ObjectId 1316 }
+}
+

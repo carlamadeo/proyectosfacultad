@@ -1,0 +1,433 @@
+
+
+ Class 0  MercuryIntegration
+{
+  { Label "Mercury Tools" }
+  { ParseCondition "( (toolinfo_variable(\"TestDirector\") == \"True\") || (toolinfo_variable(\"WinRunner\") == \"True\") );" }
+  { Image "use_cases" }
+  { OMSObjects
+      { Match "node[UmlUseCase && node_refs] sort by name" }
+  }
+
+  { ShowOnDesktop True }
+  { UseClassCommand StartTestDirector }
+  { UseObjectCommand GenerateTestDirectorAPI }
+  { UseObjectCommand GenerateWinRunnerScript }
+//  { UseObjectCommand GenerateWinRunnerData }
+}
+
+
+Global 1 StartTestDirector
+{
+  { ClassCommand
+        { Name "StartTestDirector" }
+	{ Label "Start TestDirector" }
+	{ ShowPropsOnExec True }
+	{ Type Nowin }
+	{ Command "${MERCURYHOME}\TestDirector\bin\TD.exe" }
+  }
+}
+
+
+
+
+
+Global 1 GenerateTestDirectorAPI
+{
+
+ { ObjectCommand
+        { Name "GenerateTestDirectorAPI" }
+        { ParseCondition "(toolinfo_variable(\"TestDirector\") == \"True\");" }
+	{ Label "Generate Test Plan for TestDirector ..." }
+	{ ShowPropsOnExec True }
+	{ Type Nowin }
+	{ Command "qrp  -forward_message ${msgd_handle} -p ${projdir} -s ${system}  -x UseCases '${cmd.objects}' -x TDDataBase '${prop.DataBaseName}'  -x TDUserName '${prop.UserName}' -x TDPassword '${prop.Password}'  -x TDServer '${prop.Server}'   -x TDDirectory '${prop.Directory}' thirdpartytools/mercury/qrl/GenerateTestDirectorAPI.qrl " }
+        { UseProperty TDDataBaseName}
+        { UseProperty TDUserName }
+        { UseProperty TDPassword }
+        { UseProperty TDServer }
+        { UseProperty TDDirectory }
+        { Properties
+	    { Activation
+	        { Target "DataBaseName" }
+                { On Activate }
+            }
+	    { Activation
+	        { Target "UserName" }
+                { On Activate }
+            }
+	    { Activation
+	        { Target "Password" }
+                { On Activate }
+            }
+	    { Activation
+	        { Target "Server" }
+                { On Activate }
+            }
+	    { Activation
+	        { Target "Directory" }
+                { On Activate }
+            }
+	    { Footer
+		{ Name "Footer1" }
+		{ LeftFooter "Choose Properties" }
+	    }
+    	    { Activation 
+		{ Target "Footer1" }
+		{ OnInit Active }
+	    }
+    	    { Footer
+    	    	{ Name "Footer2" }
+    	    	{ RightFooter "TestDirector Integration" }
+    	    }
+    	    { Activation 
+		{ Target "Footer2" }
+		{ OnInit Active }
+	    }
+		
+	    { Group
+		{ Name "options2" }
+		{ Type Vertical }
+                { Align Labels }
+    	    	{ Align Bottom }
+		{ Members ( Server DataBaseName Directory UserName Password) }
+	    }
+	    { Group
+	  	{ Name "midcolumn" }
+	  	{ Type Vertical }
+	  	{ Members ( options2 ) }
+	    }
+    	    { Group
+    	    	{ Name "All" }
+    	    	{ Type Horizontal }
+		{ Members (  midcolumn) }
+    	    }
+    	}
+    }
+}
+
+
+Global 1 GenerateWinRunnerDataXXX
+{
+  { ObjectCommand
+        { Name "GenerateWinRunnerData" }
+        { ParseCondition "(toolinfo_variable(\"WinRunner\") == \"True\");" }
+	{ Label "Generate WinRunner Data Files" }
+	{ ShowPropsOnExec True }
+	{ Type Nowin }
+        { Command "tdrv.exe qrp -p ${projdir} -s ${system} -x UseCases '${cmd.objects}'  -x T_subactions 'all' -x T_substates 'all' -x T_subindices 'all'   -x T_message_level '3' -x T_case_desc_file 'spreadsheet.cdf'  -x T_case_desc_dir 'spreadsheet.dir' val/qrl/PrepareTestCases.qrl" }
+  }
+}
+
+Global 1 GenerateWinRunnerData
+{
+  { ObjectCommand
+        { Name "GenerateWinRunnerData" }
+        { ParseCondition "(toolinfo_variable(\"WinRunner\") == \"True\");" }
+	{ Label "Generate WinRunner Data" }
+	{ ShowPropsOnExec True }
+	{ Type Nowin }
+	{ Command "qrp -forward_message ${msgd_handle} -p ${projdir} -s ${system}  -x UseCases '${cmd.objects}' -x TDDataBase '${prop.DataBaseName}'  -x TDDirectory '${prop.Directory}' thirdpartytools/mercury/qrl/GenerateWinRunnerData.qrl " }
+
+
+        { UseProperty TDDataBaseName}
+        { UseProperty TDDirectory }
+        { Properties
+	    { Activation
+	        { Target "DataBaseName" }
+                { On Activate }
+            }
+	    { Activation
+	        { Target "Directory" }
+                { On Activate }
+            }
+	    { Footer
+		{ Name "Footer1" }
+		{ LeftFooter "Choose Properties" }
+	    }
+    	    { Activation 
+		{ Target "Footer1" }
+		{ OnInit Active }
+	    }
+    	    { Footer
+    	    	{ Name "Footer2" }
+    	    	{ RightFooter "WinRunner Integration" }
+    	    }
+    	    { Activation 
+		{ Target "Footer2" }
+		{ OnInit Active }
+	    }
+		
+	    { Group
+		{ Name "options2" }
+		{ Type Vertical }
+              { Align Labels }
+    	    	{ Align Bottom }
+		{ Members ( Server DataBaseName Directory) }
+	    }
+	    { Group
+	  	{ Name "midcolumn" }
+	  	{ Type Vertical }
+	  	{ Members ( options2 ) }
+	    }
+    	    { Group
+    	    	{ Name "All" }
+    	    	{ Type Horizontal }
+		{ Members (  midcolumn) }
+    	    }
+    	}
+    }
+}
+
+
+ 
+Global 1 GenerateWinRunnerScript
+{
+  { ObjectCommand
+        { Name "GenerateWinRunnerScript" }
+        { ParseCondition "(toolinfo_variable(\"WinRunner\") == \"True\");" }
+	{ Label "Generate WinRunner Script ..." }
+	{ ShowPropsOnExec True }
+	{ Type Nowin }
+	{ Command "qrp -forward_message ${msgd_handle} -p ${projdir} -s ${system}  -x UseCases '${cmd.objects}' -x TDDataBase '${prop.DataBaseName}'  -x TDDirectory '${prop.Directory}' thirdpartytools/mercury/qrl/GenerateWinRunnerIntegration.qrl " }
+
+
+        { UseProperty TDDataBaseName}
+        { UseProperty TDDirectory }
+        { Properties
+	    { Activation
+	        { Target "DataBaseName" }
+                { On Activate }
+            }
+	    { Activation
+	        { Target "Directory" }
+                { On Activate }
+            }
+	    { Footer
+		{ Name "Footer1" }
+		{ LeftFooter "Choose Properties" }
+	    }
+    	    { Activation 
+		{ Target "Footer1" }
+		{ OnInit Active }
+	    }
+    	    { Footer
+    	    	{ Name "Footer2" }
+    	    	{ RightFooter "WinRunner Integration" }
+    	    }
+    	    { Activation 
+		{ Target "Footer2" }
+		{ OnInit Active }
+	    }
+		
+	    { Group
+		{ Name "options2" }
+		{ Type Vertical }
+              { Align Labels }
+    	    	{ Align Bottom }
+		{ Members ( Server DataBaseName Directory) }
+	    }
+	    { Group
+	  	{ Name "midcolumn" }
+	  	{ Type Vertical }
+	  	{ Members ( options2 ) }
+	    }
+    	    { Group
+    	    	{ Name "All" }
+    	    	{ Type Horizontal }
+		{ Members (  midcolumn) }
+    	    }
+    	}
+    }
+}
+
+
+ 
+
+Global 1 TDDataBaseName
+{
+    { Properties
+	{ Text
+	    { Name "DataBaseName" }
+	    { Label "DataBase Name:" }
+	    { Init "${TDDATABASENAME}" }
+    	    { Type Text }
+    	    { MinLength 1 }
+	    { MaxLength 80 }
+	    { DispLength 20 }
+	}
+    }
+}
+
+
+
+ 
+Global 2 TDUserName
+{
+    { Properties
+	{ Text
+	    { Name "UserName" }
+	    { Label "User Name:" }
+	    { Init "admin" }
+    	    { Type Text }
+    	    { MinLength 1 }
+	    { MaxLength 80 }
+	    { DispLength 20 }
+	}
+    }
+}
+
+
+
+ 
+Global 5 TDPassword
+{
+    { Properties
+	{ Text
+	    { Name "Password" }
+	    { Label "User Password:" }
+	    { Init "NONE" }
+    	    { Type Text }
+    	    { MinLength 1 }
+	    { MaxLength 80 }
+	    { DispLength 20 }
+	}
+    }
+
+}
+
+
+
+
+ 
+Global 5 TDServer
+{
+    { Properties
+	{ Text
+	    { Name "Server" }
+	    { Label "DataBaseServer:" }
+	    { Init "${COMPUTERNAME}" }
+    	    { Type Text }
+    	    { MinLength 1 }
+	    { MaxLength 80 }
+	    { DispLength 20 }
+	}
+    }
+
+}
+
+
+
+ 
+Global 5 TDDirectory
+{
+    { Properties
+	{ Text
+	    { Name "Directory" }
+	    { Label "TD Path:" }
+	    { Init "${TDCOMDIR}" }
+    	    { Type Text }
+    	    { MinLength 1 }
+	    { MaxLength 80 }
+	    { DispLength 20 }
+	}
+    }
+
+}
+
+
+
+
+ 
+Global 5 TDSeparator
+{
+    { Properties
+	{ Text
+	    { Name "Separator" }
+	    { Label "Data Separator:" }
+	    { Init "TAB" }
+    	    { Type Text }
+    	    { MinLength 1 }
+	    { MaxLength 80 }
+	    { DispLength 20 }
+	}
+    }
+
+}
+
+
+
+
+ 
+Global 5 TDW1
+{
+    { Properties
+	{ Text
+	    { Name "W1" }
+	    { Label "Action Weight:" }
+	    { Init "0.25" }
+    	    { Type Text}
+    	    { MinLength 1 }
+	    { MaxLength 10 }
+	    { DispLength 10 }
+	}
+    }
+
+}
+
+
+ 
+Global 5 TDW2
+{
+    { Properties
+	{ Text
+	    { Name "W2" }
+	    { Label "Inputs Weight:" }
+	    { Init "0.25" }
+    	    { Type Text}
+    	    { MinLength 1 }
+	    { MaxLength 10 }
+	    { DispLength 10 }
+	}
+    }
+
+}
+
+
+ 
+Global 5 TDW3
+{
+    { Properties
+	{ Text
+	    { Name "W3" }
+	    { Label "Outputs Weight:" }
+	    { Init "0.25" }
+    	    { Type Text}
+    	    { MinLength 1 }
+	    { MaxLength 10 }
+	    { DispLength 10 }
+	}
+    }
+
+}
+
+
+ 
+Global 5 TDW4
+{
+    { Properties
+	{ Text
+	    { Name "W4" }
+	    { Label "Paths Weight:" }
+	    { Init "0.25" }
+    	    { Type Text}
+    	    { MinLength 1 }
+	    { MaxLength 10 }
+	    { DispLength 10 }
+	}
+    }
+
+}
+
+
+

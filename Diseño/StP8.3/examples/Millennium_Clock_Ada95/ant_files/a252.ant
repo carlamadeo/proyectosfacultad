@@ -1,0 +1,87 @@
+FileObject 1
+{
+    { Name "a252" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65BC5-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "Clockwork,Coocoo" }
+    { Type UmlAssociation }
+    { ObjectId 644 }
+    { Sig ":coocoo" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD92C4-6EAE-11d4-8044-00104BF16798" }
+}
+
+NodeObject 99998
+{
+    { Name "Coocoo" }
+    { Type UmlClass }
+    { ObjectId 541 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD92BA-6EAE-11d4-8044-00104BF16798" }
+}
+
+LinkObject 99997
+{
+    { Name "coocoo" }
+    { Type UmlRole }
+    { ObjectId 651 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_91DD92C2-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlRoleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 653 }
+}
+
+ItemObject 3
+{
+    { Type UmlMultiplicity }
+    { Value "1" }
+    { NoteId 2 }
+    { ObjectId 654 }
+}
+
+ItemObject 4
+{
+    { Type UmlRoleNavigability }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 655 }
+}
+
+NoteObject 5
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 657 }
+}
+
+NoteObject 6
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 659 }
+}
+
+ItemObject 7
+{
+    { Type ObjectName }
+    { Value "coocoo" }
+    { NoteId 6 }
+    { ObjectId 660 }
+}
+

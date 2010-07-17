@@ -1,0 +1,42 @@
+FileObject 1
+{
+    { Name "a258" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65BCB-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "ClockBird,Door" }
+    { Type UmlAssociation }
+    { ObjectId 672 }
+    { AnnotFileId 1 }
+    { Sig ":door" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD92D3-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 674 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 676 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "ClockBird,Door" }
+    { NoteId 3 }
+    { ObjectId 677 }
+}
+

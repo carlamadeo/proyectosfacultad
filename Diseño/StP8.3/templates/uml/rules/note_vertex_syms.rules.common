@@ -1,0 +1,80 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+
+NodeSymbol Note
+{
+	{ DefaultSize 2.5 1.0 }
+	{ PrintName "Note" }
+        { AutoScaleLarger True }
+	{ Shape
+                { ToolbarImage "comment" }
+		{ Draw
+			// the main box
+			{ Rectangle
+				{ Origin 0.0 0.0 }
+				{ Size   40.0 20.0 }
+			}
+			// chop off the corner
+			{ Rectangle
+				{ Origin 17.75 -7.75 }
+				{ Size 5.5 5.5 }
+				{ LineStyle None }
+				{ FillStyle White }
+			}
+			// the folded corner
+			{ Polygon
+				{ Origin  0.0   0.0 } 
+				{ Point  15.0 -10.0 } // start on the top right, in 5 pixels
+				{ Point  15.0  -5.0 } // down part of tab
+				{ Point  20.0  -5.0 } // bottom of tab
+				{ Point  15.0 -10.0 } // close the triangle
+			}
+		}
+	}
+        { CanAdjustLabel True }
+    { LabelAnchor NorthWest } // ECR 5738
+
+}
+
+LinkSymbol 110 NoteLink
+{
+    { PrintName "Note Link" }
+    { Connects { From Note } { To AllNoteableNodeTypes } }
+    { Connects { From Collaboration } { To Note } }
+    { Uncentered True }
+    { Dashed True }
+}
+
+NodeSymbol Vertex
+{
+    { PrintName "Vertex" }
+    { Shape { Predefined Vertex } }
+    { ReadOnly True }
+    { CanHaveLabel False }
+    { SeeThrough True }
+}
+
+// Begin ECR947, ECR 4494
+CntxSymbol 22004 CommentAnchor
+{
+    { ReadOnly True }
+    { PrintName "Comment Anchor" }
+    { Shape { Predefined FilledEllipse } }
+// ECR947, ECR 4494, added the ParentLink Rule
+	{ ParentLink AllLinkSymbols }
+    { UniformScale True }
+    { CanApplyScaleCmd False }
+    { DefaultSize 0.01 0.01 }
+    { SnapToLink True }
+    { NeedsLink True }
+    { PickBeforeArcs True }
+    { ReparentOnMove True }
+    { ReplaceSet ( None ) }
+}
+// End ECR947, ECR 4494
+
+

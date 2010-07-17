@@ -1,0 +1,60 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Note 80027
+{
+    { AppType Trigger }
+    { HelpText "The Trigger note lets you add the items needed to declare an RDBMS Trigger object. This information is used in SQL generation. Use the Note Description to specify the actual trigger statement." }
+    { Bounds { Min 0 } }
+    { PrintName "Trigger" }
+    { Item
+	{ IsKey True }
+	{ AppType SqlName }
+	{ HelpText "The Trigger Name item contains the name of a procedure that is executed when a specific type of transaction (such as insert, delete, or update) takes place against a database table." }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Trigger Name" }
+	{ InitValue "${sym_label} trigger" }
+    }
+    { Item
+	{ AppType SqlAction }
+	{ HelpText "The SQL Action item lists the action that triggers the procedure specified by Trigger Name. The Value text field contains a menu listing all available choices." }
+	{ Bounds { Min 1 } } 
+	{ PrintName "SQL Action" }
+    }
+    { Item
+	{ AppType TriggerTiming }
+	{ HelpText "The Trigger Fires item specifies when the Oracle 7 trigger is executed with respect to the transaction." }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Trigger Fires" }
+	{ InitValue "AFTER" }
+    }
+    { Item
+	{ AppType OldCorrelation }
+	{ HelpText "The Old Correlation item specifies the name to use to refer to affected table rows." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Old Correlation" }
+	{ InitValue "Old" }
+    }
+    { Item
+	{ AppType NewCorrelation }
+	{ HelpText "The New Correlation item specifies the name to use to refer to affected table rows." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "New Correlation" }
+	{ InitValue "New" }
+    }
+    { Item
+	{ AppType EachRow }
+	{ HelpText "The Each item specifies whether the trigger should fire for every row or for every statement" }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "For Each Row?" }
+	{ InitValue "False" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_trigger.note"

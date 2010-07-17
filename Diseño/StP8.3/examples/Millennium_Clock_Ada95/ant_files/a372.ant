@@ -1,0 +1,115 @@
+FileObject 1
+{
+    { Name "a372" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65C1F-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "Coocoo" }
+    { Type UmlObjectClassScope }
+    { ObjectId 949 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_73727F33-6EAE-11d4-8044-00104BF16798" }
+}
+
+NodeObject 99998
+{
+    { Name "%%object%%933079824_337" }
+    { Type UmlObjectInstance }
+    { ObjectId 950 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_2246249E-CE14-11d5-A046-0010A4B8EFF8" }
+}
+
+NodeObject 99997
+{
+    { Name "Clockwork" }
+    { Type UmlObjectClassScope }
+    { ObjectId 951 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_73727F34-6EAE-11d4-8044-00104BF16798" }
+}
+
+NodeObject 99996
+{
+    { Name "%%object%%933083130_307" }
+    { Type UmlObjectInstance }
+    { ObjectId 952 }
+    { Sig "" }
+    { ScopeNodeId 99997 }
+    { GUID "UID_2246246B-CE14-11d5-A046-0010A4B8EFF8" }
+}
+
+LinkObject 99995
+{
+    { Name "cry(inthour)" }
+    { Type UmlSimpleMessage }
+    { ObjectId 953 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99998 }
+    { FromNodeId 99996 }
+    { GUID "UID_73727F3A-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlMessageDefinition }
+    { Name "" }
+    { OwnerId 99995 }
+    { ObjectId 955 }
+}
+
+ItemObject 3
+{
+    { Type UmlMessageDirection }
+    { Value "Activation" }
+    { NoteId 2 }
+    { ObjectId 956 }
+}
+
+ItemObject 4
+{
+    { Type UmlMessageIsCreation }
+    { Value "False" }
+    { NoteId 2 }
+    { ObjectId 957 }
+}
+
+ItemObject 5
+{
+    { Type UmlMessageIsDestruction }
+    { Value "False" }
+    { NoteId 2 }
+    { ObjectId 958 }
+}
+
+NoteObject 6
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99995 }
+    { ObjectId 960 }
+}
+
+NoteObject 7
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99995 }
+    { ObjectId 962 }
+}
+
+ItemObject 8
+{
+    { Type ObjectName }
+    { Value "cry(inthour)" }
+    { NoteId 7 }
+    { ObjectId 963 }
+}
+

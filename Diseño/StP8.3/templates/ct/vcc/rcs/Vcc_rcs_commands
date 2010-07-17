@@ -1,0 +1,29 @@
+% sccsid[] = %W% %Y% %D%; Copyright (C) IDE 1984-1994
+
+vcc_create_command=\templates\ct\vcc\rcs\vcc_rcs_create.tcl -f ${ti.vcc_file} -p l -c "${ti.vcc_comment}" ${ti.vcc_flags}
+vcc_create_flags=
+
+vcc_get_command=\templates\ct\vcc\rcs\vcc_rcs_checkout.tcl -f ${ti.vcc_file} -fo ${ti.vcc_flags}
+vcc_get_flags=r1
+
+vcc_edit_command=\templates\ct\vcc\rcs\vcc_rcs_checkout.tcl -l -f ${ti.vcc_file} -fo ${ti.vcc_flags} 
+vcc_edit_flags=r1
+
+vcc_unedit_command=\templates\ct\vcc\rcs\vcc_rcs_uncheckout.tcl -f ${ti.vcc_file} ${ti.vcc_flags}
+vcc_unedit_flags=
+
+vcc_new_v_command=\templates\ct\vcc\rcs\vcc_rcs_checkin.tcl -c "${ti.vcc_comment}" -f ${ti.vcc_file}  ${ti.vcc_flags} 
+vcc_new_v_flags=
+
+vcc_hist_command=\templates\ct\vcc\rcs\vcc_rcs_rlog.tcl -f ${ti.vcc_file} ${ti.vcc_flags}
+vcc_hist_flags=
+
+vcc_list_command=\templates\ct\vcc\rcs\vcc_rcs_ls.tcl -d ${ti.baseline_path} ${ti.vcc_flags}
+vcc_list_flags=
+
+vcc_delete_command=\templates\ct\vcc\rcs\vcc_rcs_rmelem.tcl -c "${ti.vcc_comment}" -force -f ${ti.vcc_file} ${ti.vcc_flags}
+vcc_delete_flags=
+
+% ECR 6807
+vcc_rename_command=/templates/ct/vcc/rcs/vcc_rcs_rename.tcl ${ti.vcc_file} ${ti.vcc_to_file}
+vcc_rename_flags=

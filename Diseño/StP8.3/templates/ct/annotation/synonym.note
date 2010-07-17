@@ -1,0 +1,39 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Note 800016
+{
+    { AppType Synonym }
+    { HelpText "The Synonym note lets you add items for declaring RDBMS synonyms. This information is used in SQL generation." }
+    { PrintName "Synonym" }
+    { Bounds { Min 0 } } 
+    { Item
+	{ IsKey True }
+	{ AppType SqlName }
+	{ HelpText "The Synonym Name item lets you specify an alternative name for views and tables created for the object you are annotating." }
+	{ PrintName "Synonym Name" }
+	{ Bounds { Min 0 } { Max 1 } }
+    }
+    { Item
+	{ AppType IsPrivate }
+	{ HelpText "The Private Synonym? item lets you designate a synonym as private." }
+	{ PrintName "Private Synonym?" }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ InitValue "True" }
+    }
+    { Item
+	{ AppType DbmsObjectName }
+	{ HelpText "The Synonym For item contains the name of the table or view for which you are creating a synonym." }
+	{ PrintName "Synonym For" }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ InitValue "${sym_label}" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_synonym.note"

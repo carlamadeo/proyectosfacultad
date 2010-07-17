@@ -1,0 +1,53 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/OO
+//	StP Core
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1996-2001
+//      All rights reserved
+//
+ 
+PropertySheet ObjectAdaDialogue
+{
+    { Name ObjectAdaDialogue }
+    { Label "StP: Assign ObjectAda Directory for System" }
+    { Properties
+        {  Qrl { QrlFile "rules/qrl/objectada_nav.inc" } }
+	{ Text
+	    { Name OA_Context }
+	    { Label "ObjectAda Directory:" }
+	    { MinLength 0 }
+	    { DispLength 60 }
+	    { MaxLength	200 }
+        }
+	{ Choice
+	    { Name "StartOA" }
+	    { Label "Start ObjectAda for this project now:" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "" }
+		{ Init Off }
+	    }
+	}
+	{ Button
+	    { Name "OK" }
+	    { Label "OK" }
+	    { Event
+		{ Type Select }
+		{ Callback "OA_Registration_cb" }
+	    }
+	}
+	{ Footer
+	    { Name Status }
+	    { RightFooter "" }
+	    { Active True }
+	}
+	{ Group
+	    { Name ClassDialog }
+	    { Type Vertical }
+	    { VerticalAlign Left }
+	    { Members ( OA_Context StartOA ) }
+	}
+    }
+
+}

@@ -1,0 +1,115 @@
+/******************************************************
+ * java_MClass.tdl
+ * ---------------
+ *
+ * Initialization methods that are common both to 
+ * a "MNormalClass" and a "MInterface".
+ *
+ * Note: "MTemplateClass" and "MInstantiatedClass"
+ * are currently ignored, because Java doesn't 
+ * support generic programming (yet!). So functions
+ * for these meta classes contain only warnings.
+ * Once generic programming is supported in Java,
+ * these functions must go into their own TDL files.
+ *
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    31.12.2001
+ *
+ * Copyright 2001, Aonix, San Diego
+ *****************************************************/
+
+
+// Gives a class a (physical) directory name and a
+// (logical) package name (better: fully qualified
+// name).
+// Note: a inner class has the same file name as its
+// outmost enclosing class. Care has to be taken, 
+// whether the outmost class is itself in a package
+// or not.
+proc MClass.initPackageAndDir()
+  local pack_list;
+  local dir_name;
+  local package_name;
+  local enclosing;
+
+  loop(MClass->MPackage)
+    [pack_list] = getIdListRec(MPackage->Domain) [MPackage.id];
+  end loop
+  loop(Instances->MPackage([pack_list]))
+    [dir_name] = [dir_name] [MPackage.name] "/";
+  end loop
+  [MClass:dir_name] = [dir_name];
+  loop(Instances->MPackage([pack_list]); setDelim(""); setDelim("."))
+    [package_name] = [package_name] delim() [MPackage.name];
+  end loop
+  // If the class is enclosed in some outer class(es).
+  [enclosing] = getIdListRec(MClass->EnclosingClass);
+  if ([package_name] != "")
+    loop(Instances->MClass([enclosing]) As OuterClass; setDelim("."); setDelim("."))
+      [package_name] = [package_name] delim() [OuterClass.name];
+    end loop
+  else
+    loop(Instances->MClass([enclosing]) As OuterClass; setDelim(""); setDelim("."))
+      [package_name] = [package_name] delim() [OuterClass.name];
+    end loop
+  end if
+  [MClass:package_name] = [package_name];
+end proc
+
+
+// Looks if a class is marked as external itself
+// or contained in a package marked as external.
+proc MClass.initExternal()
+  local packages;
+  if (classIsExternal([MClass]))
+    [MClass:isExternal] = TRUE;
+    return;
+  end if
+  
+  loop(MClass->MPackage)
+    [packages] = getIdListRec(MPackage->Domain) " " [MPackage.id];
+  end loop
+  
+  loop(Instances->MPackage([packages]))
+    if ([MPackage:isExternal])
+      [MClass:isExternal] = TRUE;
+      break;
+    end if
+  end loop
+end proc
+
+
+// Generated visibility property. A Java specific
+// visibility gets precedence over a more generic
+// visibility.
+proc init_classvisib(MClass)
+  loop(MClass->Note->Item Where [Item.type] == "UmlClassVisibility")
+    [MClass:access] = [Item.value];
+  end loop
+  loop(MClass->Note->Item Where [Item.type] == "UmlClassJavaVisibility")
+    [MClass:access] = [Item.value];
+  end loop
+  if ([MClass:access] == "package private")
+    [MClass:access] = "";
+    return;
+  end if
+  // Can happen with reverse engineered classes?
+  if ([MClass:access] == "")
+    [MClass:access] = [DEF_CLASS_VISIB];
+  end if
+end proc
+
+  
+// Dummy implementations, containing only a warning
+// that generic programming constructs aren't (yet)
+// supported in Java.
+proc MTemplateClass.init()
+  info = "Warning: Parameterized class \"" [MTemplateClass.name] "\" ignored,\n"
+     "because Java doesn't support generic programming (yet)!\n";
+end proc
+
+proc MInstantiatedClass.init()
+  info = "Warning: Instantiated class \"" [MInstantiatedClass.name] "\" ignored,\n"
+     "because Java doesn't support generic programming (yet)!\n";
+end proc

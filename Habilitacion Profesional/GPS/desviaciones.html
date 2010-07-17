@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html><head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Antonio R. Franco">
+   <meta name="GENERATOR" content="Mozilla/4.5 [es] (Win95; I) [Netscape]"><title>Distorsion dependiente de datum</title></head>
+
+<body>
+
+<center><b><font face="Arial,Helvetica"><font color="#3333ff"><font size="+2">DISTORSIÓN
+PROVOCADA AL INTRODUCIR LAS</font></font></font></b>
+<br><b><font face="Arial,Helvetica"><font color="#3333ff"><font size="+2">COORDENADAS
+EN UN DATUM ERRÓNEO</font></font></font></b></center>
+
+<p><font face="Arial,Helvetica"><font color="#000000"><b>&nbsp;&nbsp; </b>Para
+hacer este documento he hecho lo siguiente:</font></font>
+</p><ol>
+<li>
+<font face="Arial,Helvetica"><font color="#000000">Crear un dibujo completamente
+en blanco con Paint Shop Pro de 300 x 300 pixels, que he grabado en formato
+*.png.</font></font></li>
+
+<li>
+<font face="Arial,Helvetica"><font color="#000000">Importar este cuadro
+en blanco dentro de OZIExplorer con la función <b>Load and calibrate
+map image</b></font></font></li>
+
+<li>
+<font face="Arial,Helvetica"><font color="#000000">He calibrado este cuadrado
+como si de un mapa de 1000 x 1000 metros se tratara. Para ello he usado
+la proyección Universal Transverse Mercator, coordenadas UTM, y
+el datum Europeo 1979.</font></font></li>
+
+<li>
+<font face="Arial,Helvetica"><font color="#000000">A continuación
+he abierto la lista de waypoints de OZIExplorer, que en un principio estaba
+vacía, y he creado un primer waypoint con las coordenadas </font><font color="#cc0000">UTM
+30S 500250 4195750</font><font color="#000000"> usando la orden <b>Add</b>
+que se en la parte inferior de la ventana de diálogo.</font></font></li>
+
+<li>
+<font face="Arial,Helvetica"><font color="#000000">He salido de la lista,
+he editado el waypoint 1 recien creado pulsando dos veces con el ratón,
+y le he pedido a OZIExplorer que me muestre un círculo de 100 metros
+alrededor de este punto que nos va a servir de referencia.</font></font></li>
+</ol>
+<font face="Arial,Helvetica"><font color="#3333ff">A partir de aquí...</font></font>
+<ol>
+<li>
+<font face="Arial,Helvetica"><font color="#000000">He abierto de nuevo
+la lista de waypoints, y he ido añadiendo nuevos waypoints con la
+función "Add".</font></font></li>
+
+<li>
+<font face="Arial,Helvetica"><font color="#000000">En todos los casos <b>siempre
+he introducido manualmente los mismos valores de coordenadas</b>: </font><font color="#cc0000">UTM
+30S 500250 4195750</font><font color="#000000">, pero <i><b>he seleccionado
+cada vez un datum</b> <b>diferente</b>.</i></font></font></li>
+
+<li>
+<font face="Arial,Helvetica"><font color="#000000">OZIExplorer convierte
+automáticamente estos valores de coordenadas al datum Europeo 1979
+que es como está calibrado el mapa. Por eso se obtienen estas distorsiones.</font></font></li>
+</ol>
+<b><font face="Arial,Helvetica"><font color="#3333ff">Por esta razón,
+cuando quieras introducir manualmente valores de coordenadas en tu receptor
+GPS, debes de tener en cuenta las siguientes consideraciones:</font></font></b>
+<ol>
+<li>
+<font face="Arial,Helvetica"><font color="#000000">Debes fijarte que tipo
+de datum usa el mapa. Si te han pasado un archivo conteniendo waypoints,
+exige que te digan el datum en el que están expresadas las coordenadas.</font></font></li>
+
+<li>
+<i><font face="Arial,Helvetica"><font color="#000000">Si el mapa o el archivo
+no indica el datum que usan, no deberias usarlos.</font></font></i></li>
+
+<li>
+<font face="Arial,Helvetica"><font color="#000000">Una vez que sepas el
+datum de las coordenadas, abre el menú correspondiente en tu receptor
+GPS, y elige el mismo tipo de datum.</font></font></li>
+
+<li>
+<font face="Arial,Helvetica"><font color="#000000">Cuando los datum de
+los mapas y/o archivos y el de tu receptor GPS coincidan, ya es momento
+de introducir manualmente los datum. ¡ Fijate que hay desviaciones
+de mas de 300 metros !</font></font></li>
+</ol>
+
+<table border="1" cellspacing="3" cols="2" width="100%">
+<tbody><tr align="left">
+<td><img src="desviaciones_files/desviacion.gif" border="2" height="461" width="326"></td>
+
+<td align="left"><font face="Arial,Helvetica"><b><u>Número</u></b>&nbsp;
+<b><u>Datum usado</u></b></font>
+<p><font face="Arial,Helvetica">UTM,1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; European
+1979</font>
+<br><font face="Arial,Helvetica">UTM,2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WGS84</font>
+<br><font face="Arial,Helvetica">UTM,3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Postdam</font>
+<br><font face="Arial,Helvetica">UTM,4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Geodeticum
+1949</font>
+<br><font face="Arial,Helvetica">UTM,5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NAD27</font>
+<br><font face="Arial,Helvetica">UTM,6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Pico
+de las Nieves</font>
+<br><font face="Arial,Helvetica">UTM,7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Rome
+1940</font>
+<br><font face="Arial,Helvetica">UTM,8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ireland
+1965</font>
+<br><font face="Arial,Helvetica">UTM,9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LC
+5 Astro</font>
+<br><font face="Arial,Helvetica">UTM,10&nbsp;&nbsp;&nbsp; Merchich</font>
+<br><font face="Arial,Helvetica">UTM,11&nbsp;&nbsp;&nbsp; Observatorio
+1966</font>
+<br><font face="Arial,Helvetica">UTM,12&nbsp;&nbsp;&nbsp; Austrian</font>
+<br><font face="Arial,Helvetica">UTM,13&nbsp;&nbsp;&nbsp; CH-1903</font>
+<br><font face="Arial,Helvetica">UTM,14&nbsp;&nbsp;&nbsp; DOS 1968</font>
+<br><font face="Arial,Helvetica">UTM,15&nbsp;&nbsp;&nbsp; Marco Astro</font>
+</p><p><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp; El datum Europeo
+1950 no muestra ninguna diferencia apreciable en relación al Europeo
+1979, y como coinciden, lo he eliminado de la lista</font>
+<br><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp; La línea
+superior muestra una estima de la distancia obtenida con OZI: exactamente
+1 km entre las dos marcas.</font>
+<br><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp; Recuerda, el círculo
+marcado tiene un radio que corresponde a 100 metros</font>
+<br>&nbsp;</p></td>
+</tr>
+</tbody></table>
+
+<br>&nbsp;
+</body></html>

@@ -1,0 +1,63 @@
+FileObject 1
+{
+    { Name "a323" }
+    { Type ObjectAnnotation }
+    { GUID "UID_7CAD263A-0206-11d6-AE65-000000000000" }
+}
+
+NodeObject 99999
+{
+    { Name "Clockwork" }
+    { Type UmlStateMachine }
+    { ObjectId 725 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_98A70124-AC4F-11d4-BEDC-0060971B5EE0" }
+}
+
+NodeObject 99998
+{
+    { Name "SolidHourAtNight" }
+    { Type UmlState }
+    { ObjectId 726 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_98A70130-AC4F-11d4-BEDC-0060971B5EE0" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 728 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 730 }
+    { DescLine "This state will be reached at each solid hour at night." }
+    { DescLine "The definition of night is made by the appropriate guard condition of the " }
+    { DescLine "transition, that leads to this state, thus it can be changed by the model." }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "SolidHourAtNight" }
+    { NoteId 3 }
+    { ObjectId 731 }
+}
+
+ItemObject 5
+{
+    { Type UniqueID }
+    { Value "152" }
+    { NoteId 3 }
+    { ObjectId 732 }
+}
+

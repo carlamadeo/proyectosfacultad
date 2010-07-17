@@ -1,0 +1,79 @@
+FileObject 1
+{
+    { Name "a132" }
+    { Type ObjectAnnotation }
+    { GUID "UID_CE47E299-FDAE-40f2-8C24-2AB6CBEA8135" }
+}
+
+NodeObject 99999
+{
+    { Name "Customer,OracleDB" }
+    { Type UmlAssociation }
+    { ObjectId 392 }
+    { Sig ":" }
+    { ScopeNodeId 0 }
+    { GUID "UID_E38779FC-10B1-11d5-8C6F-000000000000" }
+}
+
+NodeObject 99998
+{
+    { Name "Customer" }
+    { Type UmlClass }
+    { ObjectId 399 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_41F11F95-0B6F-11d5-8C6A-000000000000" }
+}
+
+LinkObject 99997
+{
+    { Name "" }
+    { Type UmlRole }
+    { ObjectId 400 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_E3877A04-10B1-11d5-8C6F-000000000000" }
+}
+
+NoteObject 2
+{
+    { Type UmlRoleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 402 }
+}
+
+ItemObject 3
+{
+    { Type UmlAggregationType }
+    { Value "None" }
+    { NoteId 2 }
+    { ObjectId 403 }
+}
+
+NoteObject 4
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 405 }
+}
+
+NoteObject 5
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 407 }
+}
+
+ItemObject 6
+{
+    { Type ObjectName }
+    { Value "" }
+    { NoteId 5 }
+    { ObjectId 408 }
+}
+

@@ -1,0 +1,846 @@
+
+// 	StP/SE
+// 	Confidential property of Aonix
+// 	Copyright (c) 1992-1999
+// 	All rights reserved
+
+#include "qrl/check/check_common.inc"
+#include "qrl/include/files.inc"
+#include "qrl/include/se_defs.inc"
+#include "qrl/check/cse.inc"
+#include "qrl/check/dfe_semantics_common.inc"
+#include "qrl/check/balance.inc"
+#include "qrl/include/appids.inc"
+
+int
+checkCseSemantics(string filename, string table_type, int verbose)
+{
+    boolean  all_tables = False;
+    list     filelist;
+
+    cseVerbose = verbose;
+
+    if (table_type == "")
+    {
+	table_type = "(" + DECISION_TABLE + " || " +
+		     PROCESS_ACTIVATION_TABLE + " || " +
+		     PROCESS_ACTIVATION_MATRIX + " || " +
+		     STATE_TRANSITION_TABLE + " || " +
+		     STATE_EVENT_MATRIX + " || " +
+		     EVENT_LOGIC_TABLE + " || " +
+		     ACTION_LOGIC_TABLE + ")";
+	all_tables = True;
+    }
+    filelist = file_list(table_type, filename);
+
+    if (list_count(filelist) == 0) 
+    { 
+	print_error("No files found."); 
+	print_sc_error("Cse", CurFile, "No files found."); 
+	return 1;
+    } 
+
+    return checkSemantics(filelist, all_tables);
+}
+
+int
+checkSemantics(list filelist, boolean all_tables)
+{
+    int		i, errors = 0;
+    file	file;
+
+    for (i = 0; i < list_count(filelist); i++)
+    {
+	file = list_get(filelist, i);
+        CurFile = file.name;
+
+	print_message("Checking " + file.type + " " + file.name + "...");
+	print_sc_para("Checking " + file.type + " " + file.name + "...");
+
+	if (!file_history(file))
+	{
+	    cacheClear();
+	    errors += do_cse_check(file);
+	}
+    }
+    if (all_tables)
+    {
+	print_message("Checking Cspec " + file.name + "...");
+	print_sc_para("Checking Cspec " + file.name + "...");
+	errors += check_ControlIn_usage(file);
+	errors += check_ControlOut_usage(file);
+    }
+
+    if (!errors)
+    {
+        print_message("Check CSE semantics completed with no errors.");
+        print_sc_para("Check CSE semantics completed with no errors.");
+    }
+    else if (errors == 1)
+    {
+        print_message("Check CSE semantics completed with 1 error.");
+        print_sc_para("Check CSE semantics completed with 1 error.");
+    }
+    else
+    {
+        print_message("Check CSE semantics completed with " + errors + " errors.");
+        print_sc_para("Check CSE semantics completed with " + errors + " errors.");
+    }
+
+    return(errors);
+}
+
+int 
+do_cse_check(file file)
+{
+    int errors = 0;
+
+    if (file.type == ACTION_LOGIC_TABLE)
+	errors = check_alt(file);
+
+    else if (file.type == DECISION_TABLE)
+	errors = check_dt(file);
+
+    else if (file.type == EVENT_LOGIC_TABLE)
+	errors = check_elt(file);
+
+    else if (file.type == PROCESS_ACTIVATION_MATRIX)
+	errors = check_pam(file);
+
+    else if (file.type == PROCESS_ACTIVATION_TABLE)
+	errors = check_pat(file);
+
+    else if ((file.type == STATE_EVENT_MATRIX) || 
+	     (file.type == STATE_TRANSITION_TABLE))
+	errors = check_sem_stt(file);
+
+    return(errors);
+}
+
+// Action Logic Table 
+
+int 
+check_alt(file file)
+{
+    int errors = 0;
+
+    errors += check_process_references(file);
+    errors += check_ControlOuts_in_cspec(file);
+    errors += check_ControlValue_values(file);
+    errors += check_dup_ControlComb_for_ControlFlows(file);
+    errors += check_ProcessActivation_values(file);
+    errors += check_dup_dfn_links_to_ProcessCombination(file);
+    errors += check_dup_dfn_links_to_ControlCombination(file);
+    errors += check_duplicate_processes(file);
+    return(errors);
+}
+
+// Decision Table
+
+int
+check_dt(file file)
+{
+    int errors = 0;
+    
+    errors += check_ControlIns_in_cspec(file);
+    errors += check_ControlOuts_in_cspec(file);
+    errors += check_ControlValue_values(file);
+    errors += check_dup_ControlComb_for_ControlFlows(file);
+    return(errors);
+}
+
+// Event Logic Table
+
+int
+check_elt(file file)
+{
+    int errors = 0;
+
+    errors += check_ControlIns_in_cspec(file);
+    errors += check_ControlValue_values(file);
+    errors += check_duplicate_events(file);
+    errors += check_dup_ControlComb_for_ControlFlows(file);
+    return(errors);
+}
+
+// Process Activation Matrix
+
+int
+check_pam(file file)
+{
+    int errors = 0;
+
+    errors += check_process_references(file);
+    errors += check_ControlIns_in_cspec(file);
+    errors += check_ProcessActivation_values(file);
+    errors += check_dup_definition_links_for_control_ins(file);
+    errors += check_duplicate_processes(file);
+    return(errors);
+}
+
+// Process Activation Table
+
+int
+check_pat(file file)
+{
+    int errors = 0;
+
+    errors += check_ControlIns_in_cspec(file);
+    errors += check_process_references(file);
+    errors += check_ControlValue_values(file);
+    errors += check_dup_ControlComb_for_ControlFlows(file);
+    errors += check_ProcessActivation_values(file);
+    return(errors);
+}
+
+// State Event Matrix and State Transition Table
+
+int
+check_sem_stt(file file)
+{
+    int errors = 0;
+    
+    errors += check_reachable_states(file);
+    errors += check_elt_alt_definitions(file, EVENT);
+    errors += check_elt_alt_definitions(file, ACTION);
+    errors += check_ste_duplicate_links(file);
+    return(errors);
+}
+
+// Each Process must have a reference on the corresponding Flow Diagram
+
+int
+check_process_references(file file)
+{
+    int     errors = 0;
+    string  query;
+    node    process;
+
+    query = "node[Process && node_refs[file_id=${file.id}] && " + 
+    	    	"!node_refs[file[DfeDiagram && name == '${file.name}']]]";
+
+    for_each_in_select(query, process)
+    {
+	errors += 1;
+
+    	print_error("Process '" + process.name + 
+		    "'does not exist in the corresponding Flow Diagram.",
+		    node_appids(process, file));
+    	print_sc_error("Cse", CurFile, "Process '" + process.name + 
+		    "'does not exist in the corresponding Flow Diagram.");
+    }
+    return(errors);
+}
+
+// Each ControlIn cell's data must flow into the Cspec bar on the DFE
+
+int
+check_ControlIns_in_cspec(file file)
+{
+    cnode_tp         cnode;
+    string	     query;
+    node	     cspec, cin;
+    link 	     cflow;
+    int              errors = 0;
+    options_tp       options;
+    afterbalance_tp  result;
+    list	     ins = list_create("data_tp", 0);
+    list	     controls = list_create("data_tp", 0);
+
+    options.file = file;
+
+    // get all data of control flows into the Cspec
+
+    cspec = find_by_query("node[Cspec && name == '${file.name}']");
+
+    if (cspec == NULL)
+    {
+	errors += 1;
+	print_error("Could not find corresponding Cspec on Flow Diagram.");
+	print_sc_error("Cse", CurFile, "Could not find corresponding Cspec on Flow Diagram.");
+	return(errors);
+    }
+    query = "link[ControlFlow && to_node_id == ${cspec.id} && link_refs]";
+
+    for_each_in_select(query, cflow)
+    {
+	cnode.link = cflow;
+	errors += CnodeGetDataDef(options, cnode, False, True);
+
+	if (cnode.definition != NULL)
+	{
+	    cnode.definition.parent = NULL;
+	    list_append(ins, cnode.definition);
+	}
+    }
+    cnode.link = NULL;
+
+    // get all ControlIns used within the table
+	
+    query = "node[ControlIn && node_refs[file_id == ${file.id}]]";
+
+    for_each_in_select(query, cin)
+    {
+	cnode.node = cin;
+	errors += CnodeGetDataDef(options, cnode, True, False);
+
+	if (cnode.definition != NULL)
+	{
+	    cnode.definition.parent = NULL;
+	    list_append(controls, cnode.definition);
+	}
+    }
+    result = CheckBalance(options.file,
+			  cnode,
+			  ins,
+			  controls);
+
+    errors += CspecBalanceResults(options, result, TableIn);
+    return(errors);
+}
+
+// Each ControlOut cell's data must flow out of the Cspec bar on the DFE
+
+int
+check_ControlOuts_in_cspec(file file)
+{
+    cnode_tp         cnode;
+    string	     query;
+    node	     cspec, cout;
+    link 	     cflow;
+    int              errors = 0;
+    options_tp       options;
+    afterbalance_tp  result;
+    list	     outs = list_create("data_tp", 0);
+    list	     controls = list_create("data_tp", 0);
+
+    options.file = file;
+
+    // get all data of control flows out of the Cspec
+
+    cspec = find_by_query("node[Cspec && name == '${file.name}']");
+
+    if (cspec == NULL)
+    {
+	errors += 1;
+	print_error("Could not find corresponding Cspec on Flow Diagram.");
+	print_sc_error("Cse", CurFile, "Could not find corresponding Cspec on Flow Diagram.");
+	return(errors);
+    }
+    query = "link[ControlFlow && from_node_id == ${cspec.id} && link_refs]";
+
+    for_each_in_select(query, cflow)
+    {
+	cnode.link = cflow;
+	errors += CnodeGetDataDef(options, cnode, False, False);
+
+	if (cnode.definition != NULL)
+	{
+	    cnode.definition.parent = NULL;
+	    list_append(outs, cnode.definition);
+	}
+    }
+    cnode.link = NULL;
+
+    // get all ControlOuts used within the Cspec
+	
+    query = "node[ControlOut && node_refs[file_id == ${file.id}]]";
+
+    for_each_in_select(query, cout)
+    {
+	cnode.node = cout;
+	errors += CnodeGetDataDef(options, cnode, True, False);
+
+	if (cnode.definition != NULL)
+	{
+	    cnode.definition.parent = NULL;
+	    list_append(controls, cnode.definition);
+	}
+    }
+    result = CheckBalance(options.file,
+			  cnode,
+			  controls,
+			  outs);
+
+    errors += CspecBalanceResults(options, result, TableOut);
+    return(errors);
+}
+
+// ControlValue links must be valid values for the ControlIn or ControlOut
+// to which they connect
+//
+// If the ControlIn/ControlOut is defined as a sequence and has one or more
+// "AllowedValue" note items, then the values of the ControlValue links
+// must be one of these note items.  If there are no AllowedValues defined,
+// all values are allowed.
+
+int
+check_ControlValue_values(file file)
+{
+    int     errors = 0;
+    string  query;
+    node    node, dnode;
+    link    link;
+    item    item;
+    list    values = list_create("string",0);
+
+    query = "node[(ControlOut || ControlIn) && " +
+	    "node_refs[file_id == ${file.id}]]";
+
+    for_each_in_select(query, node)
+    {
+	query = "node[node_refs && (Sequence || Enumeration || Selection)" +
+		" && name == '" + to_oms_string(node.name) + "']";
+
+	for_each_in_select(query, dnode)
+	{
+	    query = "item[AllowedValue && note[DataDefinition && " +
+		    "obj_id == ${dnode.id}]]";
+
+	    for_each_in_select(query, item)
+	    {
+		list_append(values, item.value);
+	    }
+	}
+	if (list_count(values) != 0)
+	{	
+	    query = "link[ControlValue && from_node_id == ${node.id} && " +
+		    "name != null && link_refs[file_id == ${file.id}]]";
+
+	    for_each_in_select(query, link)
+	    {
+		if (list_find(values, 0, link.name) == list_count(values))
+		{
+		    errors += 1;
+
+		    print_error("'" + link.name + 
+			        "' is not a valid value for " + node.type +
+                                " '" + node.name + "'",
+				link_appids(link, file));
+		    print_sc_error("Cse", CurFile, "'" + link.name + 
+			        "' is not a valid value for " + node.type +
+                                " '" + node.name + "'");
+		}
+	    }
+	    list_clear(values);
+	}
+    }
+    return(errors);
+}
+
+// Each ControlCombination may have only one link to any 
+// given Event in this file.
+
+int
+check_duplicate_events(file file)
+{
+    int     errors = 0;
+    string  query;
+    node    node;
+
+    query = "node[Event && node_refs[file_id == ${file.id}] && " +
+    	    "out_links[Definition && " +
+	    "count[link_refs[file_id == ${file.id}]] > 1]]";
+
+    for_each_in_select(query, node)
+    {
+	errors += 1;
+
+	print_error("Event '" + node.name + "' " +
+	            "is caused more than once by the same ControlCombination",
+		    node_appids(node, file));
+	print_sc_error("Cse", CurFile, "Event '" + node.name + "' " +
+	            "is caused more than once by the same ControlCombination");
+    }
+    return(errors);
+}
+
+// Each ControlIn and ControlOut may have only one link to a 
+// specific ControlCombination
+
+int
+check_dup_ControlComb_for_ControlFlows(file file)
+{
+    int     errors = 0;
+    string  query;
+    node    node;
+
+    query = "node[(ControlIn || ControlOut) && " + 
+	    "node_refs[file_id == ${file.id}] && " +
+	    "out_links[ControlValue && " + 
+	    "count[link_refs[file_id == ${file.id}]] > 1]]";
+
+    for_each_in_select(query, node)
+    {
+	errors += 1;
+
+	print_error("'" + node.name + "' " +
+		    "participates in a Control Combination more than once",
+		    node_appids(node, file));
+	print_sc_error("Cse", CurFile, "'" + node.name + "' " +
+		    "participates in a Control Combination more than once");
+    }
+    return(errors);
+}
+
+// ProcessActivation links must have positive integer values
+
+int
+check_ProcessActivation_values(file file)
+{
+    int     errors = 0;
+    string  query;
+    link    link;
+    
+    query = "link[ProcessActivation && link_refs[file_id == ${file.id}]]";
+
+    for_each_in_select(query, link)
+    {
+	if (link.name == "T")
+    	    continue;
+    
+	if (!string_converts(link.name, "int") || (to_int(link.name) < 0))
+	{
+	    errors += 1;
+
+	    print_error(link.type + " '" + link.name + "' " +
+			"must be a positive integer value or 'T'",
+			link_appids(link, file));
+	    print_sc_error("Cse", CurFile, link.type + " '" + link.name + "' " +
+			"must be a positive integer value or 'T'");
+	}
+    }
+    return(errors);
+}
+
+// Each ControlIn may have only one Definition link to a ProcessCombination
+
+int
+check_dup_definition_links_for_control_ins(file file)
+{
+    int     errors = 0;
+    string  query;
+    node    node;
+
+    query = "node[ControlIn && node_refs[file_id == ${file.id}] && " +
+	    "out_links[Definition && " + 
+	    "count[link_refs[file_id == ${file.id}]] > 1]]";
+
+    for_each_in_select(query, node)
+    {
+	errors += 1;
+
+	print_error("'" + node.name + "' " +
+		    "activates a Process Combination more than once",
+		    node_appids(node, file));
+	print_sc_error("Cse", CurFile, "'" + node.name + "' " +
+		    "activates a Process Combination more than once");
+    }
+    return(errors);
+}
+
+// Each Action may have only one Definition link to a ProcessCombination
+
+int
+check_dup_dfn_links_to_ProcessCombination(file file)
+{
+    int     errors = 0;
+    node    node;
+    string  query;
+
+    query = "node[Action && node_refs[file_id == ${file.id}] && " +
+	    "out_links[Definition && " + 
+	    "count[link_refs[file_id == ${file.id}]] > 1]]";
+
+    for_each_in_select(query, node)
+    {
+	errors += 1;
+
+	print_error("'" + node.name + "' " +
+		    "activates a Process Combination more than once",
+		    node_appids(node, file));
+	print_sc_error("Cse", CurFile, "'" + node.name + "' " +
+		    "activates a Process Combination more than once");
+    }
+    return(errors);
+}
+
+// Each Action may have only one ActionControlDefinition 
+// link to a ControlCombination
+
+int
+check_dup_dfn_links_to_ControlCombination(file file)
+{
+    int     errors = 0;
+    node    node;
+    string  query;
+
+    query = "node[Action && node_refs[file_id == ${file.id}] && " +
+	    "out_links[ActionControlDefinition && " + 
+	    "count[link_refs[file_id == ${file.id}]] > 1]]";
+
+    for_each_in_select(query, node)
+    {
+	errors += 1;
+
+	print_error("'" + node.name + "' " +
+		    "creates a Control Combination more than once.",
+		    node_appids(node, file));
+	print_sc_error("Cse", CurFile, "'" + node.name + "' " +
+		    "creates a Control Combination more than once.");
+    }
+    return(errors);
+}
+
+// Each ProcessCombination may have only one ProcessActivation 
+// link to any given Process
+
+int
+check_duplicate_processes(file file)
+{
+    int     errors = 0;
+    string  query;
+    node    node;
+
+    query = "node[Process && node_refs[file_id == ${file.id}] && " +
+	    "in_links[ProcessActivation && " + 
+	    "count[link_refs[file_id == ${file.id}]] > 1]]";
+
+    for_each_in_select(query, node)
+    {
+	errors += 1;
+
+	print_error("'" + node.name + "' " +
+		    "participates in a Process Combination more than once",
+		    node_appids(node, file));
+	print_sc_error("Cse", CurFile, "'" + node.name + "' " +
+		    "participates in a Process Combination more than once");
+    }
+    return(errors);
+}
+
+// Each State must be the target of at least one Transition 
+// (i.e. the State must be reachable)
+
+int
+check_reachable_states(file file)
+{
+    int     errors = 0;
+    node    node;
+    string  query;
+
+    query = "node[State && node_refs[file_id == ${file.id}] && " + 
+	    "!in_links[Transition && link_refs]]";
+
+    for_each_in_select(query, node)
+    {
+	errors += 1;
+
+	print_error("'" + node.name + "' is not the target of any Transition",
+		    node_appids(node, file));
+	print_sc_error("Cse", CurFile, "'" + node.name + "' is not the target of any Transition");
+    }
+    return(errors);
+}
+
+// report errors from balance tree
+
+int
+CspecBalanceResults(options_tp options, 
+		    afterbalance_tp result, 
+		    balance_tp which)
+{
+    int		i, errors = 0;
+    tree_tp	t;
+
+    for (i = 0; result.ins != NULL && i < list_count(result.ins); i++)
+    {
+	t = list_get(result.ins, i);
+
+	if (which == CspecIn)
+	{
+	    if (t.matched == 0)
+	    {
+		print_error("ControlFlow '" + t.data.node.name + "' flows " +
+			    "into the Cspec but is not used in any table.");
+		print_sc_error("Cse", CurFile, "ControlFlow '" + t.data.node.name + "' flows " +
+			    "into the Cspec but is not used in any table.");
+		errors += 1;
+	    }
+	} else if (which == TableOut)
+	{
+	    if (t.matched == 0)
+	    {
+		print_error(t.data.node.type + " '" + t.data.node.name + 
+			    "' does not flow out of the Cspec.",
+			    node_appids(t.data.node, options.file));
+		print_sc_error("Cse", CurFile, t.data.node.type + " '" + t.data.node.name + 
+			    "' does not flow out of the Cspec.");
+		errors += 1;
+	    }
+	}
+    }
+    for (i = 0; result.outs != NULL && i < list_count(result.outs); i++)
+    {
+	t = list_get(result.outs, i);
+
+	if (which == CspecOut)
+	{
+	    if (t.matched == 0)
+	    {
+		print_error("ControlFlow '" + t.data.node.name + "' flows " +
+			    "out of the Cspec but is not used in any table.");
+		print_sc_error("Cse", CurFile, "ControlFlow '" + t.data.node.name + "' flows " +
+			    "out of the Cspec but is not used in any table.");
+		errors += 1;
+	    }
+	} else if (which == TableIn)
+	{
+	    if (t.matched == 0)
+	    {
+		print_error(t.data.node.type + " '" + t.data.node.name + 
+			    "' does not flow into the Cspec.",
+			    node_appids(t.data.node, options.file));
+		print_sc_error("Cse", CurFile, t.data.node.type + " '" + t.data.node.name + 
+			    "' does not flow into the Cspec.");
+		errors += 1;
+	    }
+	}
+    }
+    return(errors);
+}
+
+// All data from incoming ControlFlows must be used within the Cspec
+
+int
+check_ControlIn_usage(file file)
+{
+    cnode_tp         cnode;
+    string	     query;
+    node	     cspec, cin;
+    link 	     cflow;
+    int              errors = 0;
+    options_tp       options;
+    afterbalance_tp  result;
+    list	     ins = list_create("data_tp", 0);
+    list	     controls = list_create("data_tp", 0);
+
+    options.file = file;
+
+    // get all data of control flows into the Cspec
+
+    cspec = find_by_query("node[Cspec && name == '${file.name}']");
+
+    if (cspec == NULL)
+    {
+	errors += 1;
+	print_error("Could not find corresponding Cspec on Flow Diagram.");
+	print_sc_error("Cse", CurFile, "Could not find corresponding Cspec on Flow Diagram.");
+	return(errors);
+    }
+    query = "link[ControlFlow && to_node_id == ${cspec.id} && link_refs]";
+
+    for_each_in_select(query, cflow)
+    {
+	cnode.link = cflow;
+	errors += CnodeGetDataDef(options, cnode, False, False);
+
+	if (cnode.definition != NULL)
+	{
+	    cnode.definition.parent = NULL;
+	    list_append(ins, cnode.definition);
+	}
+    }
+    cnode.link = NULL;
+
+    // get all ControlIns used within the Cspec
+	
+    query = "node[ControlIn && node_refs[file[name == '${file.name}']]]";
+
+    for_each_in_select(query, cin)
+    {
+	cnode.node = cin;
+	errors += CnodeGetDataDef(options, cnode, True, False);
+
+	if (cnode.definition != NULL)
+	{
+	    cnode.definition.parent = NULL;
+	    list_append(controls, cnode.definition);
+	}
+    }
+    result = CheckBalance(options.file,
+			  cnode,
+			  ins,
+			  controls);
+
+    errors += CspecBalanceResults(options, result, CspecIn);
+    return(errors);
+}
+
+// All data from outgoing ControlFlows must be generated by the Cspec
+
+int
+check_ControlOut_usage(file file)
+{
+    cnode_tp         cnode;
+    string	     query;
+    node	     cspec, cout;
+    link 	     cflow;
+    int              errors = 0;
+    options_tp       options;
+    afterbalance_tp  result;
+    list	     outs = list_create("data_tp", 0);
+    list	     controls = list_create("data_tp", 0);
+
+    options.file = file;
+
+    // get all data of control flows out of the Cspec
+
+    cspec = find_by_query("node[Cspec && name == '${file.name}']");
+
+    if (cspec == NULL)
+    {
+	errors += 1;
+	print_error("Could not find corresponding Cspec on Flow Diagram.");
+	print_error("Could not find corresponding Cspec on Flow Diagram.");
+	return(errors);
+    }
+    query = "link[ControlFlow && from_node_id == ${cspec.id} && link_refs]";
+
+    for_each_in_select(query, cflow)
+    {
+	cnode.link = cflow;
+	errors += CnodeGetDataDef(options, cnode, False, False);
+
+	if (cnode.definition != NULL)
+	{
+	    cnode.definition.parent = NULL;
+	    list_append(outs, cnode.definition);
+	}
+    }
+    cnode.link = NULL;
+
+    // get all ControlOuts used within the Cspec
+	
+    query = "node[ControlOut && node_refs[file[name == '${file.name}']]]";
+
+    for_each_in_select(query, cout)
+    {
+	cnode.node = cout;
+	errors += CnodeGetDataDef(options, cnode, True, False);
+
+	if (cnode.definition != NULL)
+	{
+	    cnode.definition.parent = NULL;
+	    list_append(controls, cnode.definition);
+	}
+    }
+    result = CheckBalance(options.file,
+			  cnode,
+			  controls,
+			  outs);
+
+    errors += CspecBalanceResults(options, result, CspecOut);
+    return(errors);
+}
+

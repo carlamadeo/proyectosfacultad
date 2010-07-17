@@ -1,0 +1,70 @@
+FileObject 1
+{
+    { Name "a208" }
+    { Type ObjectAnnotation }
+    { GUID "UID_67652065-E82C-48c6-BC7D-9A4D4A13EBC9" }
+}
+
+NodeObject 99999
+{
+    { Name "." }
+    { Type SEDirectory }
+    { ObjectId 2744 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_EC87D812-675F-4d56-950D-3302FC4EC087" }
+}
+
+NodeObject 99998
+{
+    { Name "file.h" }
+    { Type SEFile }
+    { ObjectId 2930 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_BDBAC12B-BC56-4428-A807-A513AD37CF9D" }
+}
+
+NodeObject 99997
+{
+    { Name "file" }
+    { Type Typedef }
+    { ObjectId 2931 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_DFCDA72C-E5AC-4acb-82BA-71910F092D96" }
+}
+
+NoteObject 2
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2933 }
+}
+
+ItemObject 3
+{
+    { Type ObjectName }
+    { Value "file" }
+    { NoteId 2 }
+    { ObjectId 2934 }
+}
+
+NoteObject 4
+{
+    { Type TypedefDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2936 }
+}
+
+ItemObject 5
+{
+    { Type DataType }
+    { Value "int" }
+    { NoteId 4 }
+    { ObjectId 2937 }
+}
+

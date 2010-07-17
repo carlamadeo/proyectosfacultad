@@ -1,0 +1,53 @@
+Category CatModelDiagrams
+{
+    { ShowOnDesktop True }
+    { Group
+         (
+	     DyDfe
+	     GsDfe
+             Sce
+             Fce
+	     Dse
+             Ste
+	 )
+    }
+}
+
+Category CatModelTables
+{
+    { ShowOnDesktop True }
+    { Group
+         (
+             RequirementTableFiles
+             Cse
+             DecisionTable
+             ProcessActivationTable
+             ProcessActivationMatrix
+             StateTransitionTable
+             StateEventMatrix
+             EventLogicTable
+             ActionLogicTable
+             // If anybody uses Ted then they can uncomment the next line
+	     // Ted
+	 )
+    }
+}
+
+
+
+
+
+Category CatModelElements
+{
+    { ShowOnDesktop True }
+    { Group
+         (
+	     EntireSEModel
+	     SEFile
+	     SEDirectory
+		 MicrosoftWord  // SPR 2467 - Microsoft Word CatModelElements
+		 Rme
+          )
+    }
+}
+

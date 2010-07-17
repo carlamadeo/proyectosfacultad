@@ -1,0 +1,45 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Note 80019
+{
+    { AppType IndexColumn }
+    { HelpText "The In Index note lets you add items to declare that the column appears in an index. This information is used in SQL generation." }
+    { PrintName "In Index" }
+    { Bounds { Min 0 } }
+    { Item
+	{ AppType DbmsObjectName }
+	{ HelpText "The Index Name item specifies the name of the index in which the attribute appears. The value of this item should be the name of the index specified for the corresponding entity (see the Index Name item under the Database_Name Index note, where Database_Name is the name of your database)." }
+	{ PrintName "Index Name" }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ IsKey True }
+    }
+    { Item
+	{ AppType Position } 
+	{ HelpText "The Position item enables you to override the table column order for the index column order." } 
+	{ PrintName "Position" } 
+	{ Bounds { Min 0 } { Max 1 } } 
+    }
+    { Item
+	{ AppType IsDescending }
+	{ HelpText "The Descending? item enables you to override the ascending order default in an index." }
+	{ PrintName "Descending?" }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ InitValue "True" }
+    }
+    { Item 
+	{ AppType IsKey } 
+	{ HelpText "The Is Key? item specifies this column is key data in Ingres Indexes." } 
+	{ PrintName "Is Key?" } 
+	{ Bounds { Min 0 } { Max 1 } } 
+	{ InitValue "True" } 
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_index_column.note"

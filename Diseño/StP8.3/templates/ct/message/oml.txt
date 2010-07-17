@@ -1,0 +1,189 @@
+%
+% 	sccsid[] = @(#)oml.txt	4.1  94/01/14
+% 	StP/Core
+% 	Confidential property of Interactive Development Environments, Inc.
+% 	Copyright (c) 1992-1993
+% 	All rights reserved
+%
+% SPR 2542 - three spelling errors
+
+8600;STP_ARG_ARR found inside array.
+8601;calloc failed.
+8602;Could not open temp file for desc text.
+8603;Error while parsing following command.
+8604;%s
+8605;The following command terminated with non-zero status.
+8606;%s
+8607;Illegal arg found where text arg expected.
+8608;Illegal attr for handle: %s.
+8609;Illegal attr for handle: %s.
+8610;Illegal attr for handle: %s.
+8611;Unable to generate gr reps of diagrams created by %s.
+8612;Attribute '%s' not in STP_STP_DIAG.
+8613;Attempt to access 'has_pdl' through Process PROG_UNIT object.
+8614;Attempt to access 'has_pspec' through Module PROG_UNIT object.
+8615;Can only get descriptions from notes.
+8616;Could not init description.
+8617;Unable to get unique number for database.
+8618;Not able to perform initializations.
+8619;Invalid handle type sent to stp_free.
+8620;Invalid second argument to TI_VAR arg list.
+8621;Failed to find var name in toolinfo file.
+8622;Attribute ID expected after all aggregate ops except STP_COUNT.
+8623;Non DB attribute used with aggregate operator.
+8624;Aggregate operator used with wrong type attribute.
+8625;DBMS error during aggregate operation.
+8626;Illegal arg following object handle.
+8627;Invalid handle type in sort expression.
+8628;Only attr names can appear after STP_SORT.
+8629;Non-existent or illegal type attribute in sort list.
+8630;STP_PROJECT follows a handle that is not a collection.
+8631;STP_ATTR, <attr_name>, must follow STP_PROJECT.
+8632;Unexpected argument follows STP_PROJECT.
+8633;No attributes found in projection list.
+8634;DBMS error while doing STP_PROJECT.
+8635;Invalid argument follows after collection.
+8636;Null argument follows collection handle.
+8637;Illegal arg following base collection.
+8638;BASE COLLECTION constant must follow STP_ROOT.
+8639;stp_init must be called before stp_get.
+8640;Null Handle in Ide get.
+8641;Invalid 1st argument to stp_get.
+8642;Not enough memory to init obj attribute list.
+8643;Failed to init elements.
+8644;Failed to init ere diag.
+8645;Failed to init objects.
+8646;Failed to init flows.
+8647;Failed to init objects.
+8648;Failed to init STP_DIAG.
+8649;Failed to init objects.
+8650;Failed to init flows.
+8651;Failed to init params.
+8652;Failed to init store.
+8653;Failed to init stp_diags.
+8654;Failed to init stp_diags.
+8655;Failed to init objects.
+8656;Failed to init component.
+8657;Failed to init relationship.
+8658;Failed to init stp_diags.
+8659;Failed to init params.
+8660;Failed to init allnames.
+8661;Failed to init history.
+8662;Failed to init objects.
+8663;Failed to init store.
+8664;Failed to init process.
+8665;Failed to init note_item.
+8666;Failed to init description.
+8667;Failed to init objects.
+8668;Failed to init process.
+8669;Failed to init objects.
+8670;Failed to init stp_diags.
+8671;Failed to init objects.
+8672;Failed to init objects.
+8673;Failed to init objects.
+8674;Failed to init stp_diags.
+8675;Failed to init objects.
+8676;Failed to init stp_diags.
+8677;Failed to init objects.
+8678;Unable to retrieve annotation.
+8679;STP_NEXT used with annot before STP_FIRST.
+8680;Couldn't get first note group from annotation.
+8681;Couldn't get next note group from annotation.
+8682;Specified field does not exist in annotation.
+8683;Illegal arg follows annotation handle.
+8684;Attempt to get next without getting first.
+8685;Couldn't get first note from note group handle.
+8686;Couldn't get next note from note group handle.
+8687;Specified field does not exist in note handle.
+8688;Illegal arg follows note group handle.
+8689;DBMS error during selection of note_group.
+8690;Couldn't get first name group from note.
+8691;Attempt to get next nmgp without getting first.
+8692;Couldn't get next name group from note.
+8693;Illegal arg follows note component handle.
+8694;Attempt to retrieve non_existent field from note.
+8695;Illegal arg follows annotation component handle.
+8696;Illegal arg following name handle.
+8697;Invalid arg following note retrieval constant.
+8698;Invalid arg following note retrieval constant.
+8699;Invalid arg following note retrieval constant.
+8700;Invalid arg following note retrieval constant.
+8701;Object ident field not in handle.
+8702;All strings following NOTE id were null.
+8703;Can't obtain note name handle.
+8704;Result of STP_NOTE_NAME is ambiguous.
+8705;Can't obtain note handle.
+8706;Result of STP_NOTE is ambiguous.
+8707;STP_FIRST_NOTE follows wrong type of handle.
+8708;STP_FIRST_NOTE_NAME follows wrong type of handle.
+8709;DBMS error while performing selection.
+8710;DBMS Error while terminating selection operation.
+8711;Illegal argument found after STP_SELECT.
+8712;Type clash between args following STP_SELECT.
+8713;Illegal attribute specified after STP_CONTAINS.
+8714;Non-String attribute used with STP_CONTAINS.
+8715;Non-String arg type used with STP_CONTAINS.
+8716;Illegal arg type used as 2nd operand of STP_CONTAINS.
+8717;Illegal attribute as operand of relop.
+8718;Non-DB attribute found in select clause.
+8719;Error in select clause, Returning NULL handle.
+8720;Illegal attribute as operand of mathop.
+8721;Incompatible attribute used with math operator.
+8722;Incompatible arg type used with mathop.
+8723;Invalid arg type used with math operator.
+8724;Illegal attribute as operand of mathop.
+8725;Incompatible attribute used with math operator.
+8726;Error following math operator in select clause.
+8727;Invalid arg type used with math operator.
+8728;Illegal attribute as operand of mathop.
+8729;Incompatible attribute used with math operator.
+8730;Error following math operator in select clause.
+8731;No keys to declare in relation.
+8732;Unable to create relation.
+8733;Handle to collection must follow Set operator.
+8734;Handle attributes don't agree in type.
+8735;DBMS error during set operation.
+8736;STP_JOIN expected after collection and attribute
+8737;Illegal arg follows STP_JOIN.
+8738;Illegal arg follows STP_JOIN.
+8739;DBMS error during join.
+8740;Illegal handle type sent to get_attr_value.
+8741;Field '%s' is not in handle.
+8742;Pointer to base obj is null, can't generate value.
+8743;Can't get unique number for db operations.
+8744;Can't init internal table: %s.
+8745;Can't allocate space for new handle.
+8746;DBMS error while attempting to create new cursor.
+8747;DBMS error while attempting to create new cursor.
+8748;DBMS error while advancing cursor.
+8749;Null cursor in function: tuple exists.
+8750;Unable to determine if tuple exists.
+8751;Null cursor in function: print_tuple.
+8752;Position too high to insert into attr list.
+8753;Illegal arg following STP_ATTR_TYPE.
+8754;Attribute is not a part of handle, Can't return
+8755;Can't allocate space for attribute descriptors.
+8756;Can't allocate space for attribute descriptors.
+8757;Could not find attribute to add it.
+8758;Could not allocate space to copy attribute.
+8759;DB error:
+8760;NULL
+8761;DBMS error while preparing for sort.
+8762;DBMS error while attempting sort.
+8763;Failed to initialize oml object STP_OBJECTS.
+8764;Failed to initialize oml object STP_REFERENCE.
+8765;Failed to initialize oml object STP_LINK.
+8766;Failed to initialize oml object STP_PARAMETER.
+8767;Failed to initialize oml object STP_HISTORY.
+8768;Failed to initialize oml object STP_STP_DIAGRAM.
+8769;Failed to initialize oml object STP_GENERIC.
+8770;Failed to initialize oml object STP_NOTE_ITEM.
+8771;Failed to initialize oml object STP_DESCRIPTION.
+8773;Uable to retrieve meta information for OML object %s
+8774;Illegal number of attributes received while creating attribute list for %s
+8775;Unable to retrieve troll domain information for OML object %s
+8776;Illegal number of domains received while creatig attribute list for %s     
+8777;Illegal attribute for the handle : %s
+8778;%s attribute not implemented
+8779;Not enough memory to build a troll script call command string 
+8780;Unrecognized troll type during Base Collection init

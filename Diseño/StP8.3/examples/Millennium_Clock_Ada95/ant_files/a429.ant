@@ -1,0 +1,79 @@
+FileObject 1
+{
+    { Name "a429" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65C31-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "Clockwork,Display" }
+    { Type UmlAssociation }
+    { ObjectId 993 }
+    { Sig ":display" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD9318-6EAE-11d4-8044-00104BF16798" }
+}
+
+NodeObject 99998
+{
+    { Name "Clockwork" }
+    { Type UmlClass }
+    { ObjectId 502 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD92B0-6EAE-11d4-8044-00104BF16798" }
+}
+
+LinkObject 99997
+{
+    { Name "" }
+    { Type UmlRole }
+    { ObjectId 1000 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_91DD9317-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlRoleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1002 }
+}
+
+ItemObject 3
+{
+    { Type UmlRoleNavigability }
+    { Value "False" }
+    { NoteId 2 }
+    { ObjectId 1003 }
+}
+
+NoteObject 4
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1005 }
+}
+
+NoteObject 5
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1007 }
+}
+
+ItemObject 6
+{
+    { Type ObjectName }
+    { Value "" }
+    { NoteId 5 }
+    { ObjectId 1008 }
+}
+

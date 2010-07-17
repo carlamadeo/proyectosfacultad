@@ -1,0 +1,59 @@
+/************************************************** 
+ * java_MPackage.tdl
+ * -----------------
+ *
+ * Code for initialization of packages. This in-
+ * cludes creating default values, bindings, 
+ * visibility in case those information is not in
+ * the model. Other modifiers are initialzed and
+ * normalized too.
+ * 
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    17.12.2001
+ *
+ * Copyright 2001, Aonix, San Diego
+ **************************************************/
+
+
+proc MPackage.init()
+  [MPackage].initExternal();
+  [MPackage].initPackageAndDir();
+end proc
+
+
+
+proc MPackage.initPackageAndDir()
+  local pack_list;
+  local dir_name;
+  local package_name;
+
+  [pack_list] = getIdListRec(MPackage->Domain) [MPackage.id];
+  loop(Instances->MPackage([pack_list]) As SuperPack)
+		[dir_name] = [dir_name] [SuperPack.name] "/";
+	end loop
+  loop(Instances->MPackage([pack_list]) As SuperPack; setDelim(""); setDelim("."))
+    [package_name] = [package_name] delim() [SuperPack.name];
+  end loop
+  [MPackage:dir_name] = [dir_name];
+  [MPackage:package_name] = [package_name];
+end proc
+
+
+proc MPackage.initExternal()
+  local packages;
+  if ([MPackage:isExternal])
+    return;
+  end if
+  if (packageIsExternal([MPackage]))
+    [MPackage:isExternal] = TRUE;
+    return;
+  end if
+  [packages] = getIdListRec(MPackage->Domain);
+  loop(Instances->MPackage([packages]) As SuperPack)
+    if ([SuperPack:isExternal] || packageIsExternal([SuperPack]))
+      [MPackage:isExternal] = TRUE;
+      break;
+    end if
+  end loop
+end proc

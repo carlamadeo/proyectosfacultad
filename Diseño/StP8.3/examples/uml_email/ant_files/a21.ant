@@ -1,0 +1,61 @@
+FileObject 1
+{
+    { Name "a21" }
+    { Type ObjectAnnotation }
+    { GUID "UID_98ED1FA0-DCCB-42a7-BC52-0270E5B10542" }
+}
+
+NodeObject 99999
+{
+    { Name "MailSystem" }
+    { Type UmlClass }
+    { ObjectId 333 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_CFF94412-538F-11d4-8777-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "create_user_or_conf" }
+    { Type UmlOperation }
+    { ObjectId 425 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_CFF9441B-538F-11d4-8777-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlOperationCxxCode }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 427 }
+    { DescLine "char buf[bufsize];cout << \"Type a name for the new user: \";cin >> buf;if (findUserOrConf(buf) != NULL)	cout << buf << \" is already in use\n\";else{	User* user = new User(buf, this);	users.add(user);}" }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 429 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 431 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "create_user_or_conf" }
+    { NoteId 4 }
+    { ObjectId 432 }
+}
+

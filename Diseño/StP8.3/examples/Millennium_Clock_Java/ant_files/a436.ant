@@ -1,0 +1,69 @@
+FileObject 1
+{
+    { Name "a436" }
+    { Type ObjectAnnotation }
+    { GUID "UID_7CAD264A-0206-11d6-AE65-000000000000" }
+}
+
+NodeObject 99999
+{
+    { Name "Display" }
+    { Type UmlClass }
+    { ObjectId 494 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_04328C60-544E-11d4-8778-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "showBirdCry" }
+    { Type UmlOperation }
+    { ObjectId 848 }
+    { AnnotFileId 1 }
+    { Sig "s:String" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_066C8552-544E-11d4-8778-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlOperationJavaCode }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 850 }
+    { DescLine "System.out.print(s);" }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 852 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 854 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "showBirdCry" }
+    { NoteId 4 }
+    { ObjectId 855 }
+}
+
+ItemObject 6
+{
+    { Type UniqueID }
+    { Value "142" }
+    { NoteId 4 }
+    { ObjectId 856 }
+}
+

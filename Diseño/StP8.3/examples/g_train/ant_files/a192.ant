@@ -1,0 +1,70 @@
+FileObject 1
+{
+    { Name "a192" }
+    { Type ObjectAnnotation }
+    { GUID "UID_DDD8B138-34B2-4fda-8496-C667DB81F6E2" }
+}
+
+NodeObject 99999
+{
+    { Name "." }
+    { Type SEDirectory }
+    { ObjectId 2744 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_EC87D812-675F-4d56-950D-3302FC4EC087" }
+}
+
+NodeObject 99998
+{
+    { Name "boolean.h" }
+    { Type SEFile }
+    { ObjectId 2745 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_BBAE21F0-4F2D-4405-92CE-11580779D584" }
+}
+
+NodeObject 99997
+{
+    { Name "boolean" }
+    { Type Typedef }
+    { ObjectId 2746 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_0DC0E086-5039-444c-907E-5E5549E1CDC2" }
+}
+
+NoteObject 2
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2748 }
+}
+
+ItemObject 3
+{
+    { Type ObjectName }
+    { Value "boolean" }
+    { NoteId 2 }
+    { ObjectId 2749 }
+}
+
+NoteObject 4
+{
+    { Type TypedefDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2751 }
+}
+
+ItemObject 5
+{
+    { Type DataType }
+    { Value "boolean" }
+    { NoteId 4 }
+    { ObjectId 2752 }
+}
+

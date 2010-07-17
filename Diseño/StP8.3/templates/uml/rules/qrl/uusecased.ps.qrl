@@ -1,0 +1,195 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+#include "rules/qrl/ps.inc"
+
+//////////////////////////////////////////////
+// 
+//  Usecase Nodes
+//
+//////////////////////////////////////////////
+
+void
+UmlUsecase_ps_show()
+
+{
+    gde_builtin("PropertySheetShow UmlUsecase_ps");
+
+    // reset
+
+    UmlUsecase_ps_init();
+}
+
+
+// double click hook
+void
+UmlUsecase_ps_double_click(gde_mapsymbol ms)
+{
+    ps_reset_last_fill();
+    UmlUsecase_ps_show();
+}
+
+
+
+boolean UmlUsecase_ps_initted = False;
+
+void
+UmlUsecase_ps_init()
+
+{
+    if (UmlUsecase_ps_initted)
+    {
+        // just refresh the prop sheet
+        ps_fill("UmlUsecase_ps");
+        return;
+    }
+    UmlUsecase_ps_initted = True;
+//    gde_builtin("EditorActionDone 0214951139  UmlUsecase_ps_ActionDone();"); // ECR 6880
+    ps_init("UmlUsecase_ps", "ObjectName", ps_Node, string_to_list("Actor Package System UseCase", " "), ps_Node);
+
+    // ECR 3789 begin
+    ps_append_field("UmlUsecase_ps", "ObjectDescription",
+    "GenericObject", "", ps_NoteDescriptionExternal, NULL);
+    // ECR 3789 end
+    ps_append_field("UmlUsecase_ps", "Stereotype", "UmlExtensibilityDefinition", "UmlStereotype", ps_StringAnt, NULL);
+    ps_append_field("UmlUsecase_ps", "Constraints", "UmlExtensibilityDefinition", "UmlConstraintItem", ps_StringList, NULL);
+    ps_append_field("UmlUsecase_ps", "TaggedValues", "UmlExtensibilityDefinition", "UmlTaggedValue", ps_StringList, NULL);
+
+    ps_fill("UmlUsecase_ps");
+
+    //ps_dump();
+
+    return;
+}
+
+
+// change focus of property sheet
+
+void
+UmlUsecase_ps_ActionDone()
+
+{
+    // reset propsheet
+
+    if( ui_owner_visible(to_ui_prop("UmlUsecase_ps","OK")) ) // ECR 4037
+        ps_fill("UmlUsecase_ps");
+}
+
+
+
+//////////////////////////////////////////////
+// 
+//  Usecase Links
+//
+//////////////////////////////////////////////
+
+void
+UmlUsecaseLink_ps_show()
+
+{
+    gde_builtin("PropertySheetShow UmlUsecaseLink_ps");
+
+    // reset
+
+    UmlUsecaseLink_ps_init();
+}
+
+
+// double click hook
+void
+UmlUsecaseLink_ps_double_click(gde_mapsymbol ms)
+{
+    ps_reset_last_fill();
+    UmlUsecaseLink_ps_show();
+}
+
+
+
+boolean UmlUsecaseLink_ps_initted = False;
+
+void
+UmlUsecaseLink_ps_init()
+
+{
+//ECR 4558 begin
+//ECR 4558    list symbols;
+//ECR 4558
+//ECR 4558    symbols = gde_selected_symbols();
+//ECR 4558    if((symbols != NULL) && (list_count(symbols)>0) && (gde_get_symbol_type(list_get(symbols, 0)) == "Communicates"))
+//ECR 4558        ui_text_set_readonly(to_ui_prop("UmlUsecaseLink_ps", "ObjectName"), False);
+//ECR 4558    else
+//ECR 4558        ui_text_set_readonly(to_ui_prop("UmlUsecaseLink_ps", "ObjectName"), True);
+//ECR 4558 end
+
+    if (UmlUsecaseLink_ps_initted)
+    {
+        // just refresh the prop sheet
+        ps_fill("UmlUsecaseLink_ps");
+        return;
+    }
+    UmlUsecaseLink_ps_initted = True;
+//    gde_builtin("EditorActionDone 0214951140  UmlUsecaseLink_ps_ActionDone();"); // ECR 6880
+// ECR 6926 - added Generalization to list
+    //ps_init("UmlUsecaseLink_ps", "ObjectName", ps_Link, string_to_list("Communicates Extends Uses Inherits", " "), ps_Link);
+    ps_init("UmlUsecaseLink_ps", "ObjectName", ps_Link, string_to_list("Communicates Generalization Extends Uses Inherits", " "), ps_Link);
+
+    // ECR 3789 begin
+    ps_append_field("UmlUsecaseLink_ps", "ObjectDescription",
+    "GenericObject", "", ps_NoteDescriptionExternal, NULL);
+    // ECR 3789 end
+    ps_append_field("UmlUsecaseLink_ps", "Stereotype", "UmlExtensibilityDefinition", "UmlStereotype", ps_StringAnt, NULL);
+    ps_append_field("UmlUsecaseLink_ps", "Constraints", "UmlExtensibilityDefinition", "UmlConstraintItem", ps_StringList, NULL);
+    ps_append_field("UmlUsecaseLink_ps", "TaggedValues", "UmlExtensibilityDefinition", "UmlTaggedValue", ps_StringList, NULL);
+
+    ps_fill("UmlUsecaseLink_ps");
+
+    //ps_dump();
+
+    return;
+}
+
+
+// change focus of property sheet
+
+void
+UmlUsecaseLink_ps_ActionDone()
+
+{
+//ECR 4558 begin
+//ECR 4558     list symbols;
+//ECR 4558 
+//ECR 4558     symbols = gde_selected_symbols();
+//ECR 4558     if((symbols != NULL) && (list_count(symbols)>0) && (gde_get_symbol_type(list_get(symbols, 0)) == "Communicates"))
+//ECR 4558         ui_text_set_readonly(to_ui_prop("UmlUsecaseLink_ps", "ObjectName"), False);
+//ECR 4558     else
+//ECR 4558         ui_text_set_readonly(to_ui_prop("UmlUsecaseLink_ps", "ObjectName"), True);
+//ECR 4558 end
+
+    // reset propsheet
+
+    if( ui_owner_visible(to_ui_prop("UmlUsecaseLink_ps","OK")) ) // ECR 4037
+        ps_fill("UmlUsecaseLink_ps");
+}
+
+// Active Function
+
+int
+UmlUsecaseObjectPropsActive()
+{
+    list symbols;
+
+    symbols = gde_selected_symbols();
+    if (list_count(symbols) != 1)
+        return ACTIVE_FUNC_IS_INACTIVE;
+
+// ECR 6926 - added Generalization to list
+    //if (list_count(gde_symbols_find_with_types(symbols, string_to_list("Actor Package System UseCase Communicates Extends Uses Inherits", " "))) == 1)
+    if (list_count(gde_symbols_find_with_types(symbols, string_to_list("Actor Package System UseCase Generalization Communicates Extends Uses Inherits", " "))) == 1)
+        return ACTIVE_FUNC_IS_ACTIVE;
+
+    return ACTIVE_FUNC_IS_INACTIVE;
+}
+

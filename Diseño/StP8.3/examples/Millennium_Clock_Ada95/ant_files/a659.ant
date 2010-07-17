@@ -1,0 +1,39 @@
+FileObject 1
+{
+    { Name "a659" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65CE5-34FB-11d6-8DB9-00500445CF96" }
+}
+
+FileObject 99999
+{
+    { Name "ClockworkIsRunning__1" }
+    { Type UmlSequenceDiagram }
+    { ObjectId 414 }
+    { AnnotFileId 1 }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1427 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1429 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "ClockworkIsRunning__1" }
+    { NoteId 3 }
+    { ObjectId 1430 }
+}
+

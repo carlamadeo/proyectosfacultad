@@ -1,0 +1,472 @@
+Diagram UmlStateDiagram
+{
+    { Name "Message_1" }
+    { Format "1.6" }
+    { Scale 0.83 }
+    { PanX -354 }
+    { PanY -345 }
+    { Alignment 32 }
+    { GUID "UID_29F39855-DC26-425c-ABBC-548ACEA09CC1" }
+    { Summary
+        { Nodes 7 }
+        { Arcs 5 }
+    }
+}
+
+Node 2
+{
+    { Type StateMachine }
+    { Loc -128 -272 }
+    { Scale 268.00 115.00 }
+    { Label
+        { Text "Message" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_ED9177A0-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 3402 }
+        { GUID "UID_29EA25F6-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 3
+{
+    { Type State }
+    { Loc 41 -175 }
+    { Scale 411.00 130.00 }
+    { Label
+        { Text "sender" }
+        { Text "known" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_ED9177A1-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 3403 }
+        { GUID "UID_29EA25F9-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 4
+{
+    { Type State }
+    { Loc 41 -58 }
+    { Scale 429.00 130.00 }
+    { Label
+        { Text "receiver" }
+        { Text "known" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_ED9177A2-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 3404 }
+        { GUID "UID_29EA25FC-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 5
+{
+    { Type State }
+    { Loc 41 59 }
+    { Scale 449.00 130.00 }
+    { Label
+        { Text "body" }
+        { Text "complete" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_ED9177A3-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 3405 }
+        { GUID "UID_29EA25FF-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 6
+{
+    { Type State }
+    { Loc 41 184 }
+    { Scale 466.00 172.00 }
+    { Label
+        { Text "message" }
+        { Text "in receiver" }
+        { Text "mailbox" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_ED9177A4-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 3406 }
+        { GUID "UID_29EA2602-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 7
+{
+    { Type InitialState }
+    { Loc 41 -275 }
+    { Scale 38.00 38.00 }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_ED9177A5-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 3407 }
+        { GUID "UID_29EA2605-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 8
+{
+    { Type FinalState }
+    { Loc 41 286 }
+    { Scale 51.00 51.00 }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_ED9177A6-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 3408 }
+        { GUID "UID_29EA2608-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Arc 9
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 3 }
+        { Loc 36 -151 }
+        { Offset -1 20 }
+    }
+    { To
+        { ID 4 }
+        { Loc 36 -85 }
+        { Offset -1 3 }
+    }
+    { Label
+        { Text "Request address/enter_address" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_ED9177A7-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 10
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 4 }
+        { Loc 37 -34 }
+        { Offset 0 18 }
+    }
+    { To
+        { ID 5 }
+        { Loc 37 32 }
+        { Offset 0 9 }
+    }
+    { Label
+        { Text "Request text/enter_text" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_ED9177A8-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 11
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 5 }
+        { Loc 36 83 }
+        { Offset -1 22 }
+    }
+    { To
+        { ID 6 }
+        { Loc 36 149 }
+        { Offset -1 2 }
+    }
+    { Label
+        { Text "Request delivery/send_to_rec" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_ED9177A9-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 12
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 7 }
+        { Loc 37 -268 }
+        { Offset 0 4 }
+    }
+    { To
+        { ID 3 }
+        { Loc 37 -202 }
+        { Offset 0 14 }
+    }
+    { Label
+        { Text "Request message creation/Message" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_ED9177AB-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 13
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 6 }
+        { Loc 36 216 }
+        { Offset -1 13 }
+    }
+    { To
+        { ID 8 }
+        { Loc 36 276 }
+        { Offset -1 3 }
+    }
+    { Label
+        { Text "Delete message/~Message" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_ED9177AA-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Link 14
+{
+    { FirstArc 9 }
+    { LastArc 9 }
+    { Object
+        { PDMType Link }
+        { MappingName Transition }
+        { ID 3409 }
+        { GUID "UID_29EA260B-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3411 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionEvent }
+        { ID 3415 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionGuard }
+        { ID 3414 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionAction }
+        { ID 3413 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionSend }
+        { ID 3412 }
+    }
+}
+
+Link 15
+{
+    { FirstArc 10 }
+    { LastArc 10 }
+    { Object
+        { PDMType Link }
+        { MappingName Transition }
+        { ID 3416 }
+        { GUID "UID_29EA260E-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3418 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionEvent }
+        { ID 3422 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionGuard }
+        { ID 3421 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionAction }
+        { ID 3420 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionSend }
+        { ID 3419 }
+    }
+}
+
+Link 16
+{
+    { FirstArc 11 }
+    { LastArc 11 }
+    { Object
+        { PDMType Link }
+        { MappingName Transition }
+        { ID 3423 }
+        { GUID "UID_29EA2611-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3425 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionEvent }
+        { ID 3429 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionGuard }
+        { ID 3428 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionAction }
+        { ID 3427 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionSend }
+        { ID 3426 }
+    }
+}
+
+Link 17
+{
+    { FirstArc 12 }
+    { LastArc 12 }
+    { Object
+        { PDMType Link }
+        { MappingName Transition }
+        { ID 3437 }
+        { GUID "UID_29EA2617-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3439 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionEvent }
+        { ID 3443 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionGuard }
+        { ID 3442 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionAction }
+        { ID 3441 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionSend }
+        { ID 3440 }
+    }
+}
+
+Link 18
+{
+    { FirstArc 13 }
+    { LastArc 13 }
+    { Object
+        { PDMType Link }
+        { MappingName Transition }
+        { ID 3430 }
+        { GUID "UID_29EA2614-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3432 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionEvent }
+        { ID 3436 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionGuard }
+        { ID 3435 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionAction }
+        { ID 3434 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionSend }
+        { ID 3433 }
+    }
+}

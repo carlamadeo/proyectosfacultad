@@ -1,0 +1,151 @@
+
+Global 1 VccCreateBaseline
+{
+    { ClassCommand
+        { Name "VccCreateBaseline" }
+        { Label "Create Version Control Baseline..." }
+        { ShowPropsOnExec True }
+        { ResetAfterExec True }
+        { Chdir False }
+        { Command "sh -c echo Alan should fix this" }
+        // { Command "VccCreatebaselineCmd" }
+
+        { Properties
+            { Qrl { QrlFile "rules/qrl/vcc_baseline.qrl" } }
+
+            { Text
+                { Name "VccBaselineTag" }
+                { Label "Tag for new baseline:" }
+            }
+
+
+            // the current list of additional files
+            { List
+                { Name "VccAddlFiles" }
+                { Label "Additional files to include in baseline:" }
+                { LabelAbove True }
+                { Rows 4 }
+                { Width 50 }
+            }
+
+            { Choice
+                { Name "VccUseFilesInState" }
+                { Type AbbrMenu }
+                { Label "File State:" }
+                { ChoiceItem
+                    { Label "Baseline files as of last checkin" }
+                    { Init On }
+                }
+                { ChoiceItem
+                    { Label "Baseline files as they are right now" }
+                    { Init Off }
+                }
+                { Event 
+                    { Type Initialize }
+                    { Callback "VccInit_cb" }
+                }
+            }
+
+            { Choice
+                { Name "VccIncludeDump" }
+                { Type Checkbox }
+                { Label "" }
+                { ChoiceItem
+                    { Label "Include system dump file" }
+                    { InitVal 0 }
+                }
+            }
+
+            { Button
+                { Name "VccPickFilesButton" }
+                { Label "Edit files list..." }
+                { Event
+                        { Type Select }
+                        { Callback "VccSelectAdditional_cb" }
+                }
+            }
+
+            { Group
+                { Name "LowerCol3" }
+                { Type Vertical }
+                { VerticalAlign Left }
+                { Align Left }
+                { Members ( VccBaselineTag VccUseFilesInState VccIncludeDump VccAddlFiles VccPickFilesButton ) }
+            }
+
+            { Button
+                { Name "OK" }
+                { Label "OK" }
+                { Event 
+                    { Type Select }
+                    { Callback "VccApply_cb" }
+                }
+            }
+            { Button
+                { Name "Apply" }
+                { Label "Apply" }
+                { Event 
+                    { Type Select }
+                    { Callback "VccApply_cb" }
+                }
+            }
+
+            { Button
+                { Name "Reset" }
+                { Label "Reset" }
+                { Event 
+                    { Type Select }
+                    { Callback "VccReset_cb" }
+                }
+            }
+
+        }
+    }
+}
+
+PropertySheet VccPickAddlFiles
+{
+    { Label "Choose Additional Files to Baseline..." }
+    { Name "VccPickAddlFiles" }
+	{ UseProperty FileChooser }
+    { Properties
+	    { List
+            { Name "Files" }
+            { Label "Selected files:" }
+	    }
+        { Button
+            { Name "OK" }
+            { Label "OK" }
+            { Event 
+                { Type Select }
+                { Callback "VccSetFiles_cb" }
+            }
+            { Event 
+                { Type Initialize }
+                { Callback "VccDirChooserFill_cb" }
+            }
+        }
+        { Button
+            { Name "ChooserDirectoryButton" }
+            { Event
+                { Type Select }
+                { Callback "VccDirChooserFill_cb" }
+            }
+        }
+        { Text
+            { Name "ChooserDirectory" }
+            { Event
+                { Type NewLine }
+                { Callback "VccDirChooserFill_cb" }
+            }
+        }
+        { List
+            { Name "DirSelector" }
+            { Event
+                { Type EventDoubleClickRow }
+                { Callback "VccFileChooserDoubleClick_cb" }
+            }
+        }
+    }
+
+}

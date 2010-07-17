@@ -1,0 +1,26 @@
+/* XPM */
+static char* synchronous_message_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 4 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #000000	c #808080",
+/* pixels */
+"................",
+"................",
+"................",
+"................",
+".......XO..X....",
+".......XO..XX...",
+"XXXXXXXXXXXXXX..",
+"XXXXXXXXXXXXXXX.",
+"XXXXXXXXXXXXXX .",
+".      XO  XX ..",
+".......XO .X ...",
+"........  . ....",
+"................",
+"................",
+"................",
+"................"};

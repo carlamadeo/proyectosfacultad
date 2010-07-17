@@ -1,0 +1,638 @@
+<!OPS, Version = 8.0>
+
+<!Page Number Stream,
+ 	Name =			"page",
+	Starting Page # = 	Inherit>
+
+<!Document,
+	Final Output Device =	"ileaf",
+	Default Printer =	"nearest-ileaf",
+	Default Page Stream Name = "page">
+
+<!Font Definitions,
+	F2 = Times 10,
+	F3 = Times 10 Bold,
+	F4 = Times 14 Bold,
+	F1201 = Times 12 Bold,
+	F1200 = Times 12,
+	F1001 = Times 10 Bold,
+	F1000 = Times 10,
+	F1401 = Times 14 Bold,
+	F1400 = Times 14,
+	F101 = Times 12 Bold,
+	F100 = Times 12,
+	F5 = Times 12 Bold>
+
+<!Page,
+	Bottom Margin =		1 Inches,
+	Left Margin =		1 Inches,
+	Right Margin =		1 Inches,
+	Hyphenation =		on,
+	Consecutive Hyphens =	3,
+	Revision Bar Placement = Left,
+	Feathering =		off>
+
+<!Autonumber Stream, "list", 1>
+
+<!Autonumber Stream, "Figure", 1,
+	Level 1 Prefix =	"Figure ",
+	Level 1 Suffix =	":">
+
+<!Class, "DescInd2",
+	Bottom Margin =		0 Inches,
+	Left Margin =		0.75 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Hyphenation =		off,
+	Left Tab =		0/0.5/0.25*22 Inches,
+	Composition =		Optimum>
+
+<!Class, "DescInd3",
+	Bottom Margin =		0 Inches,
+	Left Margin =		0.75 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Hyphenation =		off,
+	Left Tab =		0/0.75/0.25*21 Inches,
+	Composition =		Optimum>
+
+<!Class, "DescText",
+	Bottom Margin =		0 Inches,
+	Left Margin =		0.25 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Hyphenation =		off,
+	Left Tab =		0/0.25*9/2.75/0.25*13 Inches,
+	Composition =		Optimum>
+
+<!Class, "Description1",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		1.0 Inches,
+	First Indent =		0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Description1
+
+<!Class, "Description2",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		1.25 Inches,
+	First Indent =		0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Description2
+
+<!Class, "Description3",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		1.5 Inches,
+	First Indent =		0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Description3
+
+<!Class, "Description4",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		1.75 Inches,
+	First Indent =		0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Description4
+
+<!Class, "Description5",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		2.0 Inches,
+	First Indent =		0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Description5
+
+<!Class, "Description6",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		2.25 Inches,
+	First Indent =		0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Description6
+
+<!Class, "Description7",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		2.5 Inches,
+	First Indent =		0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Description7
+
+<!Class, "FigureTitle",
+	Bottom Margin =		0.03 Inches,
+	Alignment =		Center,
+	Font =			F3@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum,
+	Contents =		Prefix>
+
+<"|:FigureTitle",
+	Hidden =		yes,
+	Font =			@i*,
+	Subcomponent =		yes,
+	Contents =		Prefix Shared><F0>
+<"|:FigureTitle",
+	Hidden =		yes,
+	Font =			@i*,
+	Subcomponent =		yes,
+	Contents =		Shared><F0><End Sub><F0>
+<Autonum, "Figure", 1, Value = "Figure 2:"> <End Sub><F0>TableHeaderCell
+
+<!Class, "Item1",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		1.0 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Item1
+
+<!Class, "Item2",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		1.25 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Item2
+
+<!Class, "Item3",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		1.5 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Item3
+
+<!Class, "Item4",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		1.75 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Item4
+
+<!Class, "Item5",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		2.0 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Item5
+
+<!Class, "Item6",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		2.25 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Item6
+
+<!Class, "Item7",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		2.5 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Item7
+
+<!Class, "Note1",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		0.75 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Note1
+
+<!Class, "Note2",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		1.0 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Note2
+
+<!Class, "Note3",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		1.25 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Note3
+
+<!Class, "Note4",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		1.5 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Note4
+
+<!Class, "Note5",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		1.75 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Note5
+
+<!Class, "Note6",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		2.0 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Note6
+
+<!Class, "Note7",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		2.25 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Note7
+
+<!Class, "Object1",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		0.5 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F3@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Object1
+
+<!Class, "Object2",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		0.75 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F3@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Object2
+
+<!Class, "Object3",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		1.0 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F3@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Object3
+
+<!Class, "Object4",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		1.25 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F3@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Object4
+
+<!Class, "Object5",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		1.5 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F3@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Object5
+
+<!Class, "Object6",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		1.75 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F3@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Object6
+
+<!Class, "Object7",
+	Bottom Margin =		0.03 Inches,
+	Left Margin =		2.0 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F3@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Object7
+
+<!Class, "Section",
+	Bottom Margin =		0.03 Inches,
+	Alignment =		Left,
+	Font =			F4@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Section
+
+<!Class, "Section2",
+	Bottom Margin =		0.03 Inches,
+	Alignment =		Left,
+	Font =			F5@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+<!Class, "Separator",
+	Bottom Margin =		0.03 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Separator
+
+<!Class, "StdText",
+	Bottom Margin =		0.03 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/0.25*24 Inches,
+	Composition =		Optimum>
+
+<!Class, "TableBodyCell",
+	Bottom Margin =		0.03 Inches,
+	Alignment =		Center,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+Separator
+
+<!Class, "TableHeaderCell",
+	Bottom Margin =		0.03 Inches,
+	Alignment =		Center,
+	Font =			F2@Z7@Lam,
+	Line Spacing =		0.0276742 Inches,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+TableHeaderCell
+
+<!Class, "|:FigureTitle",
+	Bottom Margin =		0.03 Inches,
+	Font =			F3@Z7@Lam@i*,
+	Line Spacing =		1.162 lines,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum,
+	Contents =		Prefix Shared>
+
+<"|:FigureTitle",
+	Hidden =		yes,
+	Font =			@i*,
+	Subcomponent =		yes,
+	Contents =		Shared><F0><End Sub><F0>
+<Autonum, "Figure", 1, Value = "Figure 2:"> 
+
+<!Master Frame,
+	Name =			"floating",
+	Placement =		Following Anchor,
+	Horizontal Alignment =	Center,
+	Width =			0 Inches,
+	Width =			Page Without Margins,
+	Height =		0 Inches,
+	Height =		Page Without Margins * 0.33,
+	Diagram =
+V11,
+(g9,0,0,)>
+
+<Page Header, Frame =
+V11,
+(g9,1,0,
+ (t14,1,4,,6.4933333,0.4387817,2,7,0,0,,wst:timsps10,)
+ (t14,2,4,,3.2466667,0.4387817,1,7,0,0,,wst:timsps10,)
+ (t14,3,4,,0,0.4387817,0,7,0,0,,wst:timsps10,)
+ (E16,0,0,,5,1,1,0.0533333,1,15,0,0,1,0,0,0,1,5,127,7,0,0,7,0,1,1,0.0666667,0.06
+  66667,6,6,0,0.0666667,6))>
+
+<Page Footer, Frame =
+V11,
+(g9,1,0,
+ (t14,1,4,,6.4933333,0.478772,2,7,0,0,,wst:timsps10,)
+ (t14,2,4,,3.2466667,0.478772,1,7,0,0,,wst:timsps10,\X80a0)
+ (t14,3,4,,0,0.478772,0,7,0,0,,wst:timsps10,)
+ (E16,0,0,,5,1,1,0.0533333,1,15,0,0,1,0,0,0,1,5,127,7,0,0,7,0,1,1,0.0666667,0.06
+  66667,6,6,0,0.0666667,6))>
+
+<!End Declarations>
+
+<"Section">
+
+<|,"1">Section
+
+<"Section2">
+
+Section2
+
+<"Separator">
+
+Separator
+
+<"Object1">
+
+Object1
+
+<"Note1">
+
+Note1
+
+<"Item1">
+
+Item1
+
+<"Description1">
+
+Description1
+
+<"Object2">
+
+Object2
+
+<"Note2">
+
+Note2
+
+<"Item2">
+
+Item2
+
+<"Description2">
+
+Description2
+
+<"Object3">
+
+Object3
+
+<"Note3">
+
+Note3
+
+<"Item3">
+
+Item3
+
+<"Description3">
+
+Description3
+
+<"TableBodyCell">
+
+TableBodyCell
+
+<"TableHeaderCell">
+
+<"FigureTitle">
+
+<"|:FigureTitle", Subcomponent = yes><F0><"|:FigureTitle", Subcomponent = yes,
+	Contents =		Shared><F0><End Sub><F0>
+<Autonum, "Figure", 1, First = Yes, Value = "Figure 1:"> 
+<End Sub><F0>
+
+<"FigureTitle">
+
+<"|:FigureTitle", Subcomponent = yes><F0><"|:FigureTitle", Subcomponent = yes,
+	Contents =		Shared><F0><End Sub><F0>
+<Autonum, "Figure", 1, Value = "Figure 2:"> <End Sub><F0>
+
+<"StdText",
+	Bottom Margin =		0 Inches>
+
+StdText, plain 10 <"Separator", Subcomponent = yes><F0><End Sub><F0>pts, 
+tab every .25"
+
+<"DescText">
+
+DescText  this is used for descriptive text whichis going to span 
+over more than one line. The first line is left <SR>
+adjuested and the the rest of the lines should be indented by one 
+tab stop ..... 
+
+<"DescInd2",
+	First Indent =		-0.25 Inches>
+
+DescInd2 is normal (plain) text with the first line indented .5" and 
+the following lines indented  .75". Tab <SR>
+stops are also every .25"
+
+<"DescInd3">
+
+DescInd3 is normal (plain) text with the first line indented .75" 
+and the following lines indented  1.0". <SR>
+Tab stops are also every .25"
+

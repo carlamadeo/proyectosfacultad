@@ -1,0 +1,206 @@
+FileObject 1
+{
+    { Name "a45" }
+    { Type ObjectAnnotation }
+    { GUID "UID_0F0F96DC-EBC0-4d55-8278-9AB4F9CD6B4F" }
+}
+
+NodeObject 99999
+{
+    { Name "speed sensors" }
+    { Type External }
+    { ObjectId 3363 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_A6B3F8D1-6310-4bca-91BD-3CFFE6382D4D" }
+}
+
+NoteObject 2
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 3803 }
+    { DescLine "These sensors are mounted along the 200 Km" }
+    { DescLine "track at 5 Km intervals and send signals to" }
+    { DescLine "the computer. These signals help evaluate" }
+    { DescLine "the speed and location of the g_train. " }
+}
+
+ItemObject 3
+{
+    { Type ObjectName }
+    { Value "speed sensors" }
+    { NoteId 2 }
+    { ObjectId 3804 }
+}
+
+NoteObject 4
+{
+    { Type Requirement }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 3806 }
+}
+
+ItemObject 5
+{
+    { Type RequirementName }
+    { Value "speed-sub-system" }
+    { NoteId 4 }
+    { ObjectId 3807 }
+}
+
+ItemObject 6
+{
+    { Type RequirementDocument }
+    { Value "g_train_specifications" }
+    { NoteId 4 }
+    { ObjectId 3808 }
+}
+
+ItemObject 7
+{
+    { Type RequirementParagraph }
+    { Value "speed" }
+    { NoteId 4 }
+    { ObjectId 3809 }
+}
+
+ItemObject 8
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 4 }
+    { ObjectId 3810 }
+}
+
+NoteObject 9
+{
+    { Type Document }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 3812 }
+}
+
+ItemObject 10
+{
+    { Type DocumentName }
+    { Value "SRS" }
+    { NoteId 9 }
+    { ObjectId 3813 }
+}
+
+ItemObject 11
+{
+    { Type DocumentNumber }
+    { Value "2" }
+    { NoteId 9 }
+    { ObjectId 3814 }
+}
+
+ItemObject 12
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 9 }
+    { ObjectId 3815 }
+}
+
+NoteObject 13
+{
+    { Type Document }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 3812 }
+}
+
+ItemObject 14
+{
+    { Type DocumentName }
+    { Value "IRS" }
+    { NoteId 13 }
+    { ObjectId 3817 }
+}
+
+ItemObject 15
+{
+    { Type DocumentNumber }
+    { Value "4" }
+    { NoteId 13 }
+    { ObjectId 3818 }
+}
+
+ItemObject 16
+{
+    { Type ParagraphNumber }
+    { Value "5" }
+    { NoteId 13 }
+    { ObjectId 3819 }
+}
+
+NoteObject 17
+{
+    { Type Document }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 3812 }
+}
+
+ItemObject 18
+{
+    { Type DocumentName }
+    { Value "IDD" }
+    { NoteId 17 }
+    { ObjectId 3821 }
+}
+
+ItemObject 19
+{
+    { Type DocumentNumber }
+    { Value "5" }
+    { NoteId 17 }
+    { ObjectId 3822 }
+}
+
+ItemObject 20
+{
+    { Type ParagraphNumber }
+    { Value "6" }
+    { NoteId 17 }
+    { ObjectId 3823 }
+}
+
+NoteObject 21
+{
+    { Type Document }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 3812 }
+}
+
+ItemObject 22
+{
+    { Type DocumentName }
+    { Value "SDD" }
+    { NoteId 21 }
+    { ObjectId 3825 }
+}
+
+ItemObject 23
+{
+    { Type DocumentNumber }
+    { Value "6" }
+    { NoteId 21 }
+    { ObjectId 3826 }
+}
+
+ItemObject 24
+{
+    { Type ParagraphNumber }
+    { Value "7" }
+    { NoteId 21 }
+    { ObjectId 3827 }
+}
+

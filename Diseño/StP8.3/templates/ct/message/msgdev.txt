@@ -1,0 +1,190 @@
+%
+% 	sccsid[] = @(#)msgdev.txt	4.1  94/01/14
+% 	StP/Core
+% 	Confidential property of Interactive Development Environments, Inc.
+% 	Copyright (c) 1992-1993
+% 	All rights reserved
+%
+
+% Messages for scpdl and dfpspec parsing
+7000;type
+7001;type_name
+7002;el_type
+7003;element_type
+7004;el_cons
+7005;constraint
+7006;element_const
+7007;str_type
+7008;struct_type
+7009;iter_bounds
+7010;iter
+7011;desc
+7012;description
+7013;alias
+7014;str_type_name
+7015;index
+7016;id
+7017;ident
+7018;mod_desc
+7019;mod_type
+7020;mod_type_name
+7021;comp
+7022;str_comp
+7023;no_comp
+7024;name_id
+7025;dflow
+7026;indflow
+7027;outdflow
+7028;cflow
+7029;incflow
+7030;outcflow
+7031;flow
+7032;inflow
+7033;outflow
+7034;Cdcl
+7035;Pdcl
+7036;Adcl
+% end of db names
+7040;Sequence
+7041;Selection
+7042;Iteration
+7043;Predefined Module
+7044;Module
+7045;Lexical Include Module
+7046;(%s..%s)
+% Error messages for pdl variable replacement
+7050;Line %d: End of module while inside a loop
+7051;Line %d: Null variable name
+7052;Invalid special variable '%s'
+7053;Memory allocation failed
+7054;Line %d: No variable name for define/append statement
+7055;Line %d: Too many nested loops
+7056;Line %d: Invalid loop header: %s
+7057;Line %d: Initialize loop header failed, no value for lower bound '%s'
+7058;Line %d: Initialize loop header failed, no value for upper bound '%s'
+7059;Line %d: Initialize loop header failed, invalid value for lower bound '%s'
+7060;Line %d: Initialize loop header failed, invalid value for upper bound '%s'
+7061;Line %d: Initialize loop header failed, no value for increment '%s'
+7062;Line %d: Initialize loop header failed, invalid value for increment '%s'
+7063;Line %d: Initialize loop header failed, could not get file position
+7064;Line %d: Not inside a loop
+7065;Line %d: Terminate loop failed, could not get file position
+% scpdl separator line between modules
+% ToolInfo var pdl_sep_lines tell how many times to print
+7070;\n
+% dfpspec separator line between pspecs
+% ToolInfo var pspec_sep_lines tell how many times to print
+7071;\n
+%%%%%% DFE -> write pspec
+7075;Pspec in file '%s'
+7076;Error in generating Pspec
+7077;No Pspec template '%s' found
+%%%%%% SCE -> push (edit pdl)
+7085;PDL -- Module Decomposition
+7086;Create Decomposition
+7087;Create PDL
+7088;PDL in file '%s'
+7089;Error in generating PDL
+7090;Edit PDL
+7091;Edit Decomposition
+7092;PDL template '%s' not found
+%%%%%%% check_dd
+7100;Process '%.30s' (%s) has no decomposition and no specification
+7101;Access module connect table failed -- check for undefined items aborted
+7102;Control Flow '%.30s'
+7103;Lookup control flow info in StP/DD failed
+7104;Lookup module connect info in StP/DD failed
+7105;Access module connect info
+7106;Insert module param
+7107;Could not get module parameter name from StP/DD
+7108;Module Parameter '%.30s'
+7109;%s\n
+7110;Caller: %.50s\n
+7111;Callee: %.50s\n
+7112;\nChecking Modules
+7113;Access Program Unit table failed -- no modules checked
+7114;Access Module Parameter table failed -- no modules checked
+7115;Lookup parameter info failed -- no modules checked
+7116;Access module info
+7117;Setup temporary storage failed -- check for undefined modules aborted
+7118;Module '%.30s' called but not defined
+7119;\tCalled by '%.30s'\n
+7120;Access Data Module table table failed -- no modules checked
+%% Rapid: print
+7140;.sp\n.TS\nlp12 s\nnp10 lp10.\nActions\n.sp\n
+7141;\nActions\n
+7142;%d\t
+7143;%2d\t
+7144;.TE\n.sp 2\n.ps 10\n.vs 12\n.nf\n
+7145;\n\n
+7146;More than one ELSE transition from node '%.50s'
+7147;\ do action(%s)
+7148;action: do %s
+%%%% SCE -> table
+%%%% see messages 1177 ... too
+7175;.ps 8\n.vs 10\n.TS\nallbox;\nn c s c s\n
+7176;n c c c c\nn l l l l.\n
+7177;\\&\t%s\t%s\n\\&\t%s\t%s\t%s\t%s\n
+7178;.ps 8\n.vs 10\n.TS\nallbox;\nn c c\n
+7179;n l l.\n\\&\t%s\t%s\n
+7180;|    | %-*.*s   %-*.*s | %-*.*s   %-*.*s |\n
+7181;|    | %-*.*s   %-*.*s | %-*.*s   %-*.*s |\n
+7182;|    | %-*.*s | %-*.*s |\n
+7183;.TE\n.ps\n.vs\n
+7184;\n\n
+7185;%d
+7186;|%3d |
+7187;T{\n.na\n
+7188;T}
+7189;\\&
+7190;\n|    |
+7191;\ %*s |
+7192;\ %-*s |
+% The characters for the first and last line
+% in unformatted tables
+7193;-
+7194;+
+%%%%%%%%%%%%%%%%%
+% Check_dd of a single diagram
+7250;Checking StP/DD project %s system %s: diagram %s
+7251;Data Flow diagram %s not found
+7252;Structure Chart %s not found
+7253;Call to SC diagram check program failed (%.40s)
+7254;Check current diagram
+7255;Diagram checking successfully completed
+7256;Diagram checking completed with errors
+7257;Checking Structure Chart
+% User defined menus
+7300;Please select symbol for %.30s
+7301;Please select symbol for action
+7302;Error in action: %.40s
+7303;Completed action: %.40s
+7304;Action `%.40s; aborted
+% struct_dd: change undef to alias
+7330;DBMS error %d, %d in change_al_in_flow
+7331;Resolving aliases for %s failed
+7332;\tAlias resolved for 1 %s\n
+7333;\tAlias resolved for %d %s\n
+7334;Flow
+7335;Flows
+7336;Control Flow
+7337;Control Flows
+7338;DBMS error %d, %d in change_al_in_ds_comp
+7339;Structure Component
+7340;Structure Components
+7341;DBMS error %d, %d in change_al_in_store
+7342;Data Store
+7343;Data Stores
+7344;DBMS error %d, %d in change_al_in_para
+7345;Module Parameter
+7346;Module Parameters
+7347;Change type to alias failed, DBMS error %s
+7348;Memory allocation in insert alias failed
+7349;DBMS error %d, %d in change_al_in_fl_end
+7350;Flow End Point
+7351;Flow End Points
+7352;Control Flow End Point
+7353;Control Flow End Points
+7354;DBMS error %d, %d in change_al_in_cspec
+7355;Control Specification Flow
+7356;Control Specification Flows

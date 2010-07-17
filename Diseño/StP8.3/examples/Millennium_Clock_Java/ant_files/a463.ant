@@ -1,0 +1,87 @@
+FileObject 1
+{
+    { Name "a463" }
+    { Type ObjectAnnotation }
+    { GUID "UID_7CAD2657-0206-11d6-AE65-000000000000" }
+}
+
+NodeObject 99999
+{
+    { Name "Clockwork,Pendulum" }
+    { Type UmlAssociation }
+    { ObjectId 955 }
+    { Sig "clockwork:" }
+    { ScopeNodeId 0 }
+    { GUID "UID_378C320D-544B-11d4-8778-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "Clockwork" }
+    { Type UmlClass }
+    { ObjectId 412 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_378C31F0-544B-11d4-8778-00C04F8DEC45" }
+}
+
+LinkObject 99997
+{
+    { Name "clockwork" }
+    { Type UmlRole }
+    { ObjectId 1002 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_94B689F5-544C-11d4-8778-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlRoleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1004 }
+}
+
+ItemObject 3
+{
+    { Type UmlMultiplicity }
+    { Value "1" }
+    { NoteId 2 }
+    { ObjectId 1005 }
+}
+
+ItemObject 4
+{
+    { Type UmlRoleNavigability }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 1006 }
+}
+
+NoteObject 5
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1008 }
+}
+
+NoteObject 6
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1010 }
+}
+
+ItemObject 7
+{
+    { Type ObjectName }
+    { Value "clockwork" }
+    { NoteId 6 }
+    { ObjectId 1011 }
+}
+

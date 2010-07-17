@@ -1,0 +1,30 @@
+Process 1.4: count pulse
+Pspec generated from the data flow diagram "1" of the "g_train" system of the
+"/usr3/home/MogulMaster/jhsia/Development/strand_5.0/lab/" projdir at 01/17/94
+18:01:54 by jhsia@professor
+
+
+This process has 3 data flows:
+    pulse, pulse, location of train
+
+input data flows
+    pulse : DataFlow
+    pulse : DataFlow
+
+output data flows
+    location of train : DataFlow
+
+This process has 0 control flows
+description
+
+This process computes the location of the train depending on the number of
+pulses it recieves. Since the distance between the sensors is known:
+
+Current g_train location = no of pulses recieved * 5
+
+Note : the distance between the sensors is 5 Km.
+
+
+
+end pspec
+

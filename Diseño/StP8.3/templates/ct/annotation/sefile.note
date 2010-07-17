@@ -1,0 +1,18 @@
+ 
+// notes for sefile objects
+ 
+
+Note 802045
+{
+    { AppType SEFileDefinition }
+    { PrintName "SE File Definition" }
+    { HelpText "The SE File Definition note lets you add items for SE File objects that are used for C Code generation." }
+    { Bounds { Min 0 } { Max 1 } }
+    { Item
+    	{ AppType IncludedFile }
+        { PrintName "Included File" }
+    	{ HelpText "The Included File item lets you specify the include files necessary for a C file object." }
+        { Bounds { Min 1 } }
+    }
+}
+

@@ -1,0 +1,27 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Include "annotation/generic_object"
+
+Note 800005	// KeyAttribute
+{
+    { AppType CardExist } 
+    { HelpText "The Existence note lets you add items that capture the existence of an entity in a relationship. This information is used in SQL generation and key inheritance." }
+    { PrintName "Existence" }
+    { Bounds { Min 1 } { Max 1 } }
+    { Item
+        { AppType Existence }
+	{ HelpText "The Existence item lets you specify whether or not a specific entity is required to participate in a relationship. Specifying the value Any indicates that the existence is either not set or not known." }
+        { PrintName "Existence" }
+        { Bounds { Min 1 } { Max 1 } }
+        { InitValue "Zero" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_key_attribute"

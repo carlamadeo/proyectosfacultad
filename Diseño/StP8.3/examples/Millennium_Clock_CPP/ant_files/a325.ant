@@ -1,0 +1,63 @@
+FileObject 1
+{
+    { Name "a325" }
+    { Type ObjectAnnotation }
+    { GUID "UID_E0D93175-C886-11d5-90AA-0050045C27F0" }
+}
+
+NodeObject 99999
+{
+    { Name "Clockwork" }
+    { Type UmlStateMachine }
+    { ObjectId 652 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_98A70124-AC4F-11d4-BEDC-0060971B5EE0" }
+}
+
+NodeObject 99998
+{
+    { Name "SolidHourAtDay" }
+    { Type UmlState }
+    { ObjectId 669 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_98A7012A-AC4F-11d4-BEDC-0060971B5EE0" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 671 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 673 }
+    { DescLine "This state will be reached at each solid hour during daytime." }
+    { DescLine "The definition of daytime is made by the appropriate guard condition of the " }
+    { DescLine "transition, that leads to this state, thus it can be changed by the model." }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "SolidHourAtDay" }
+    { NoteId 3 }
+    { ObjectId 674 }
+}
+
+ItemObject 5
+{
+    { Type UniqueID }
+    { Value "154" }
+    { NoteId 3 }
+    { ObjectId 675 }
+}
+

@@ -1,0 +1,21 @@
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+Include "rules/uml.feature"
+Include "rules/val.feature"
+
+// The body of usequenced.rules was moved to usequenced_impl.rules in order  
+// to be able to run the editor as a valreq feature as part of the  
+// validator standalone product. EH 
+
+Include "rules/usequenced_impl.rules"
+
+// ECR 4052 Model Management
+Include "rules/model_management.common"
+Include "rules/usequenced_toolbar_acr_types.rules" // ECR 3556
+
+Include "rules/object_instance_rename.prop" //ECR 6433
+
+PassWord "26476926"

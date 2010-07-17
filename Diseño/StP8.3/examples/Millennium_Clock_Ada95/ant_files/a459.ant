@@ -1,0 +1,103 @@
+FileObject 1
+{
+    { Name "a459" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65C52-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "Pendulum,Weight" }
+    { Type UmlAssociation }
+    { ObjectId 1123 }
+    { Sig "pend:" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD92E0-6EAE-11d4-8044-00104BF16798" }
+}
+
+NodeObject 99998
+{
+    { Name "Pendulum" }
+    { Type UmlClass }
+    { ObjectId 592 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD92B1-6EAE-11d4-8044-00104BF16798" }
+}
+
+LinkObject 99997
+{
+    { Name "pend" }
+    { Type UmlRole }
+    { ObjectId 1130 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_91DD92DE-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlRoleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1132 }
+}
+
+ItemObject 3
+{
+    { Type UmlMultiplicity }
+    { Value "1" }
+    { NoteId 2 }
+    { ObjectId 1133 }
+}
+
+ItemObject 4
+{
+    { Type UmlRoleNavigability }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 1134 }
+}
+
+ItemObject 5
+{
+    { Type UmlRoleIsOrdered }
+    { Value "False" }
+    { NoteId 2 }
+    { ObjectId 1135 }
+}
+
+NoteObject 6
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1137 }
+}
+
+ItemObject 7
+{
+    { Type UmlTaggedValue }
+    { Value "X=u" }
+    { NoteId 6 }
+    { ObjectId 1138 }
+}
+
+NoteObject 8
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1140 }
+}
+
+ItemObject 9
+{
+    { Type ObjectName }
+    { Value "pend" }
+    { NoteId 8 }
+    { ObjectId 1141 }
+}
+

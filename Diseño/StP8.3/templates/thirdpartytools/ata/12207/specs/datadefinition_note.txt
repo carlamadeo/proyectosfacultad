@@ -1,0 +1,106 @@
+#  Note Table Specification
+#
+#  This file defines what Note information is processed, how it is processed,
+#  and the order it is processed.  This file may be specified as the starting
+#  Specification or referenced by another Specification.
+#
+#  This file may be modified by the user.
+#
+#  NOTE=  	The preferred approach is for the user to copy this file into
+#		their workspace.  The copy of this file can then be modified
+#		as desired.  
+#
+#
+#  The following lines specify the Note format
+#  A description of the Specification follows its specification.  
+#
+
+Type= Note
+NAME=TestDataItem
+
+Skip=ItemType:TDataType
+
+
+
+
+Note=%STP_ATA_12207\specs\datadefinition_notetable.txt
+
+
+
+#  The text in the Specification must comply with the following rules=
+#	1.	Comment lines begin with a pound sign (i.e., #)
+#	2.	All other lines must have two (2) fields and may have as many
+#		as (4) fields where fields are separated by an equal sign (i.e., =).  
+#		The fields are described as follows=
+#  		<directive>=<directive value>=<valid directive values>=<description>
+#	3.	The directives are specific to a type of Specification where the
+#		Specification type is defined with the "Type" directive.
+#	4.	The "Type" directive must exist and have a valid value.
+#	5.	Most directives have a value.  
+#	6.	Directive values are dependent on the directive.  In general they
+#		may be enumerated, text, numeric, filenames, or a sub-field.  
+#	6.a	The valid enumerated values are specified in their description 
+#		below.  
+#	6.b	A text value is any alpha-numeric characters.  Text values
+#		may contain variables.  The valid variables are described below.
+#	6.b.1	The valid variables are as follows= 
+#			any environment variable
+#			any variable in the ToolInfo file
+#			$DATE	     - equivalent to $MONTH $DAY, $YEAR
+#			$DAY	     - current day as two digit decimal
+#			$DECIMALDATE - equivalent to MONTHDEC\$DAY\$SHORTYEAR
+#			$HOUR12	     - the current hour using a 12 hour clock 
+#			$HOUR24	     - the current hour using a 24 hour clock 
+#			$ID	     - the Identifier specified with the Item
+#				     - ProjectUniqueIdentifier or the StP id of
+#				       the node, link, or file.
+#			$MINUTE      - the current minute
+#			$MONTH	     - the current month
+#			$MONTHDEC    - the current month as a decimal
+#			$NAME	     - the name of the node, link, or file.
+#			$PROJECT     - the current project directory
+#			$SECOND	     - the current second
+#			$SECTIONLEVEL- the current Section Level
+#			$SHORTDATE   - equivalent to $SHORTMONTH $DAY, $YEAR
+#			$SHORTMONTH  - current month with three letters
+#			$SHORTYEAR   - last two digits of the current year
+#			$STPID	     - the StP id of the node, link, or file.
+#			$SYSTEM      - the current system
+#			$TYPE	     - the type of the node, link, or file.
+#			$YEAR	     - the current year
+#	6.b.2	In addition, the value for the Section directive may contain the
+#		following variables=
+#			$INCREMENT - increment the section's level.
+#			$DECREMENT - decrement the section's level. 
+#	6.c	The numeric values must be a real number.  The directives that
+#		have numeric values are Height and Width.  
+#	6.d	The filename values must contain the complete path of a file.  
+#		Environment variables may be used within the file specification.
+#		The file must exist or an error will be issued.  
+#	6.e	Sub-fields within the value are specified as follows=
+#		<directive>=<value>;
+
+#  The valid directives for the Note Table Specification are as follows=  
+
+#  Standard Table Directives
+#       ITEM                  Text           Ouput the specified Item as text.  
+#                                            The name of the Item is specified 
+#                                            in the Directive's value.
+#
+#       NAME                  String         Specifies a specific 
+#                                            Note by name.
+#
+#       OBJECT                Text           Output information for a OBJECT.  
+#                                            Variables in the value are 
+#                                            resolved in terms of the 
+#                                            Note.
+#
+#       TABLEDEF              Filename       Specifies the path to a Table 
+#                                            Definition file.
+#
+#       TEXT                  Blank          Output the Notes text.
+#
+#       TYPE                  String         Identifies the Specification type 
+#                                            and thus, determines all other 
+#                                            Directives which may be used in the
+#

@@ -1,0 +1,43 @@
+FileObject 1
+{
+    { Name "a475" }
+    { Type ObjectAnnotation }
+    { GUID "UID_E0D931F0-C886-11d5-90AA-0050045C27F0" }
+}
+
+FileObject 99999
+{
+    { Name "Weight__1" }
+    { Type UmlStateDiagram }
+    { ObjectId 320 }
+    { AnnotFileId 1 }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 855 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 857 }
+    { DescLine "This diagrams clarifies, that weight has only one state - " }
+    { DescLine "hasEnergy. Each transition proofs the guard condition." }
+    { DescLine "If the decreasing energy is zero no more send events " }
+    { DescLine "will be send to pendulum." }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Weight__1" }
+    { NoteId 3 }
+    { ObjectId 858 }
+}
+

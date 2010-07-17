@@ -1,0 +1,257 @@
+FileObject 1
+{
+    { Name "a147" }
+    { Type ObjectAnnotation }
+    { GUID "UID_5A36D9C9-F655-4e70-9098-B9EEC0643974" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "artificial_csc.c" }
+    { Type SEFile }
+    { ObjectId 2382 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_DE4F0512-53AD-4f3e-9623-5AF87251FB03" }
+}
+
+NodeObject 99997
+{
+    { Name "artificial csc" }
+    { Type Module }
+    { ObjectId 2383 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_D6A6126E-5771-420f-88FB-75C97D1348D9" }
+}
+
+NoteObject 2
+{
+    { Type ModulePDL }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2385 }
+}
+
+ItemObject 3
+{
+    { Type PDL }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 2386 }
+}
+
+NoteObject 4
+{
+    { Type ModuleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2388 }
+}
+
+ItemObject 5
+{
+    { Type ModuleReturnType }
+    { Value "int" }
+    { NoteId 4 }
+    { ObjectId 2389 }
+}
+
+ItemObject 6
+{
+    { Type CodeGenId }
+    { Value "1" }
+    { NoteId 4 }
+    { ObjectId 2390 }
+}
+
+NoteObject 7
+{
+    { Type Module }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2392 }
+}
+
+ItemObject 8
+{
+    { Type MemoryBudget }
+    { Value "N/A" }
+    { NoteId 7 }
+    { ObjectId 2393 }
+}
+
+ItemObject 9
+{
+    { Type ProcessingTime }
+    { Value "N/A" }
+    { NoteId 7 }
+    { ObjectId 2394 }
+}
+
+ItemObject 10
+{
+    { Type DecompositionLevel }
+    { Value "CSC" }
+    { NoteId 7 }
+    { ObjectId 2395 }
+}
+
+NoteObject 11
+{
+    { Type SystemState }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 2397 }
+}
+
+ItemObject 12
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 11 }
+    { ObjectId 2398 }
+}
+
+ItemObject 13
+{
+    { Type SystemState }
+    { Value "Artificial State" }
+    { NoteId 11 }
+    { ObjectId 2399 }
+}
+
+NoteObject 14
+{
+    { Type DerivedRequirement }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 2401 }
+    { DescLine "Once again, tit for tat.  An artificial CSC calls for an artificial derived requirement." }
+}
+
+ItemObject 15
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 14 }
+    { ObjectId 2402 }
+}
+
+ItemObject 16
+{
+    { Type DerivedRequirementName }
+    { Value "Artificial Derived Requirement" }
+    { NoteId 14 }
+    { ObjectId 2403 }
+}
+
+NoteObject 17
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2405 }
+    { DescLine "This CSC is artificial.  it has no other purpose than to add additional CSCI hierarchy to the gravity train example.  Normally, this description would include some logical description of the purpose of the CSC." }
+}
+
+ItemObject 18
+{
+    { Type ObjectName }
+    { Value "artificial csc" }
+    { NoteId 17 }
+    { ObjectId 2406 }
+}
+
+ItemObject 19
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 17 }
+    { ObjectId 2407 }
+}
+
+NoteObject 20
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 2409 }
+    { DescLine "Given that this is an artificial CSC, it is only natural for this CSC to satisfy an artificial requirement.  " }
+}
+
+ItemObject 21
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 20 }
+    { ObjectId 2410 }
+}
+
+ItemObject 22
+{
+    { Type RequirementName }
+    { Value "Some Requirement Name" }
+    { NoteId 20 }
+    { ObjectId 2411 }
+}
+
+ItemObject 23
+{
+    { Type RequirementDocument }
+    { Value "XYZ" }
+    { NoteId 20 }
+    { ObjectId 2412 }
+}
+
+ItemObject 24
+{
+    { Type RequirementParagraph }
+    { Value "Artificial Paragraph Name" }
+    { NoteId 20 }
+    { ObjectId 2413 }
+}
+
+ItemObject 25
+{
+    { Type ParagraphNumber }
+    { Value "1.2.3" }
+    { NoteId 20 }
+    { ObjectId 2414 }
+}
+
+ItemObject 26
+{
+    { Type QualificationMethod }
+    { Value "" }
+    { NoteId 20 }
+    { ObjectId 2415 }
+}
+
+ItemObject 27
+{
+    { Type QualificationLevel }
+    { Value "" }
+    { NoteId 20 }
+    { ObjectId 2416 }
+}
+
+ItemObject 28
+{
+    { Type FormalTestParagraph }
+    { Value "" }
+    { NoteId 20 }
+    { ObjectId 2417 }
+}
+

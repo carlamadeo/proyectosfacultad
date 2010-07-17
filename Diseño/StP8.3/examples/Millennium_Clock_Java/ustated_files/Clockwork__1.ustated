@@ -1,0 +1,547 @@
+Diagram UmlStateDiagram
+{
+    { Name "Clockwork__1" }
+    { Format "1.6" }
+    { Scale 0.83 }
+    { PanX -568 }
+    { PanY -398 }
+    { Alignment 32 }
+    { GUID "UID_7CAD269A-0206-11d6-AE65-000000000000" }
+    { Summary
+        { Nodes 5 }
+        { Arcs 6 }
+    }
+}
+
+Node 2
+{
+    { Type StateMachine }
+    { Loc 227 -286 }
+    { Scale 301.00 115.00 }
+    { Label
+        { Text "Clockwork" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F0FEBA30-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 725 }
+        { GUID "UID_98A70124-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 3
+{
+    { Type InitialState }
+    { Loc -120 309 }
+    { Scale 38.00 38.00 }
+    { Label
+        { Text "NotMoving" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F0FEBA31-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 750 }
+        { GUID "UID_98A70127-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 5
+{
+    { Type State }
+    { Loc 388 -189 }
+    { Scale 554.00 128.00 }
+    { Label
+        { Text "SolidHourAtDay" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F0FEBA32-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 742 }
+        { GUID "UID_98A7012A-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 6
+{
+    { Type State }
+    { Loc -101 110 }
+    { Scale 512.00 128.00 }
+    { Label
+        { Text "NotSolidHour" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F0FEBA33-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 734 }
+        { GUID "UID_98A7012D-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 1105
+{
+    { Type State }
+    { Loc -294 -271 }
+    { Scale 572.00 128.00 }
+    { Label
+        { Text "SolidHourAtNight" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F0FEBA34-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 726 }
+        { GUID "UID_98A70130-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Arc 7
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 3 }
+        { Loc -109 302 }
+        { Offset -1 -1 }
+    }
+    { To
+        { ID 6 }
+        { Loc -94 135 }
+        { Offset -4 -2 }
+    }
+    { Label
+        { Text "setTime/setHour(13),setMinute(15)" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F0FEBA35-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 183
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 6 }
+        { Loc -168 86 }
+        { Offset -68 -7 }
+    }
+    { To
+        { ID 6 }
+        { Loc -172 132 }
+        { Offset -74 11 }
+    }
+    { Label
+        { Text "tick[notSolidHour()]/" }
+        { Text "showTime(),addMinute(15)" }
+    }
+    { Spline
+        { Points 9 }
+        { Point -180 86 }
+        { Point -180 86 }
+        { Point -180 86 }
+        { Point -244 1 }
+        { Point -501 105 }
+        { Point -254 210 }
+        { Point -184 132 }
+        { Point -184 132 }
+        { Point -184 132 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F0FEBA39-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 505
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 6 }
+        { Loc -112 85 }
+        { Offset -23 -23 }
+    }
+    { To
+        { ID 1105 }
+        { Loc -223 -246 }
+        { Offset -14 -5 }
+    }
+    { Label
+        { Text "tick[solidHourAtNight()]/" }
+        { Text "showTime(),addMinute(15),owl.cry(hour),door.close()" }
+    }
+    { Spline
+        { Points 7 }
+        { Point -124 85 }
+        { Point -124 85 }
+        { Point -124 85 }
+        { Point -95 -187 }
+        { Point -235 -246 }
+        { Point -235 -246 }
+        { Point -235 -246 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F0FEBA38-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 1841
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 6 }
+        { Loc -30 85 }
+        { Offset 55 -4 }
+    }
+    { To
+        { ID 5 }
+        { Loc 341 -214 }
+        { Offset 15 4 }
+    }
+    { Label
+        { Text "tick[solidHourAtDay()]/" }
+        { Text "showTime(),addMinute(15),door.open(),cuckoo.cry(hour),door.close()" }
+    }
+    { Spline
+        { Points 7 }
+        { Point -42 85 }
+        { Point -42 85 }
+        { Point -42 85 }
+        { Point 58 -323 }
+        { Point 329 -214 }
+        { Point 329 -214 }
+        { Point 329 -214 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F0FEBA37-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 3984
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 5 }
+        { Loc 352 -164 }
+        { Offset -39 3 }
+    }
+    { To
+        { ID 6 }
+        { Loc 7 124 }
+        { Offset 69 2 }
+    }
+    { Label
+        { Text "tick[notSolidHour()]/" }
+        { Text "showTime(),addMinute(15)" }
+    }
+    { Spline
+        { Points 7 }
+        { Point 340 -164 }
+        { Point 340 -164 }
+        { Point 340 -164 }
+        { Point 176 215 }
+        { Point -5 124 }
+        { Point -5 124 }
+        { Point -5 124 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F0FEBA36-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 5069
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 1105 }
+        { Loc -364 -246 }
+        { Offset -60 7 }
+    }
+    { To
+        { ID 6 }
+        { Loc -124 85 }
+        { Offset 4 6 }
+    }
+    { Label
+        { Text "tick[notSolidHour()]/" }
+        { Text "showTime(),addMinute(15)" }
+    }
+    { Spline
+        { Points 7 }
+        { Point -376 -246 }
+        { Point -376 -246 }
+        { Point -376 -246 }
+        { Point -467 -173 }
+        { Point -136 85 }
+        { Point -136 85 }
+        { Point -136 85 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F0FEBA3A-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+}
+
+Link 8
+{
+    { FirstArc 7 }
+    { LastArc 7 }
+    { Object
+        { PDMType Link }
+        { MappingName Transition }
+        { ID 2902 }
+        { GUID "UID_48D7E60C-0239-11d6-AE65-000000000000" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2904 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionEvent }
+        { ID 2908 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionGuard }
+        { ID 2907 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionAction }
+        { ID 2906 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionSend }
+        { ID 2905 }
+    }
+}
+
+Link 188
+{
+    { FirstArc 183 }
+    { LastArc 183 }
+    { Object
+        { PDMType Link }
+        { MappingName Transition }
+        { ID 2930 }
+        { GUID "UID_98A7013F-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2932 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionEvent }
+        { ID 2936 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionGuard }
+        { ID 2935 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionAction }
+        { ID 2934 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionSend }
+        { ID 2933 }
+    }
+}
+
+Link 510
+{
+    { FirstArc 505 }
+    { LastArc 505 }
+    { Object
+        { PDMType Link }
+        { MappingName Transition }
+        { ID 2923 }
+        { GUID "UID_98A7013C-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2925 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionEvent }
+        { ID 2929 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionGuard }
+        { ID 2928 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionAction }
+        { ID 2927 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionSend }
+        { ID 2926 }
+    }
+}
+
+Link 1846
+{
+    { FirstArc 1841 }
+    { LastArc 1841 }
+    { Object
+        { PDMType Link }
+        { MappingName Transition }
+        { ID 2916 }
+        { GUID "UID_98A70139-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2918 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionEvent }
+        { ID 2922 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionGuard }
+        { ID 2921 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionAction }
+        { ID 2920 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionSend }
+        { ID 2919 }
+    }
+}
+
+Link 3989
+{
+    { FirstArc 3984 }
+    { LastArc 3984 }
+    { Object
+        { PDMType Link }
+        { MappingName Transition }
+        { ID 2909 }
+        { GUID "UID_98A70136-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2911 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionEvent }
+        { ID 2915 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionGuard }
+        { ID 2914 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionAction }
+        { ID 2913 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionSend }
+        { ID 2912 }
+    }
+}
+
+Link 5074
+{
+    { FirstArc 5069 }
+    { LastArc 5069 }
+    { Object
+        { PDMType Link }
+        { MappingName Transition }
+        { ID 2937 }
+        { GUID "UID_98A70142-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2939 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionEvent }
+        { ID 2943 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionGuard }
+        { ID 2942 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionAction }
+        { ID 2941 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionSend }
+        { ID 2940 }
+    }
+}

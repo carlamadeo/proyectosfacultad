@@ -1,0 +1,443 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/SE
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1995
+//      All rights reserved
+//
+//      Description: callbacks for the flow chart editor
+//
+
+#include "rules/qrl/gde_qrl_std.inc"
+#include "qrl/include/appids.inc"
+#include "rules/qrl/se_rename.inc"
+#include "rules/qrl/nav_source.inc"
+
+#include "rules/qrl/default_arc_type.inc" //ECR 6469
+
+// if the filename has a suffix - main.1 then whip it off
+//
+string
+StripUniqueIdentifier( string filename )
+{
+    int pos = string_find( filename, 0, "." );
+    if ( pos != string_length( filename ))
+    {
+	return string_extract( filename, 0, pos - 1 );
+    }
+    return filename;
+}
+ 
+
+
+list 
+FceCallee(string name, boolean name_is_fname)
+
+{
+    // return a list of files that call the call in question.  Use relationships in SCE to
+    // determine this. 
+
+    list sce_nodes, sce_calls, files;
+    node sce_node, sce_call;
+    file file;
+    string query, fname, nqtname;
+    int i;
+
+    sce_calls = list_create("node", 0);
+    files = list_create("file", 0);
+
+    if (name_is_fname)
+    {
+	name = StripUniqueIdentifier( string_translate(name, "_", "?"));
+	nqtname = to_oms_string(name);
+	query = "node[Module && ( name $ '" + nqtname + "' || name $ '" + nqtname + ".*' ) && node_refs]";
+    }
+    else
+    {
+	nqtname = to_oms_string(name);
+        query = "node[Module && ( name = '" + nqtname + "' || name $ '" + nqtname + ".*' ) && node_refs]";
+    }
+
+    sce_nodes = list_select(query);
+
+    for (i = 0; i < list_count(sce_nodes); i = i + 1)
+    {
+	sce_node = list_get(sce_nodes, i);
+	nqtname = to_oms_string(sce_node.name);
+	list_concatenate(sce_calls, list_select("node[Module && in_links[SubProgramCall && from_node[Module && name = '${nqtname}']]]"));
+    }
+
+    for (i = 0; i < list_count(sce_calls); i = i + 1)
+    {
+	sce_call = list_get(sce_calls, i);
+	fname = string_translate(sce_call.name, " \n", "__");
+	nqtname = to_oms_string(fname);
+	file = find_by_query("file[FceDiagram && name = '${nqtname}']");
+	if (file != NULL)
+	    list_append(files, file);
+    }
+
+    if (list_count(files) == 0)
+    {
+	print_error("No Callees found", NULL);
+	return NULL;
+    }
+
+    return files;
+
+} // end of FceCallee()
+
+
+ 
+
+
+list 
+FceCaller(string name, boolean name_is_fname)
+
+{
+    // return a list of files that call the call in question.  Use relationships in SCE to
+    // determine this. 
+
+    list sce_nodes, sce_calls, files;
+    node sce_node, sce_call;
+    file file;
+    string query, fname, nqtname;
+    int i;
+
+    sce_calls = list_create("node", 0);
+    files = list_create("file", 0);
+
+    if (name_is_fname)
+    {
+	name = StripUniqueIdentifier( string_translate(name, "_", "?"));
+	nqtname = to_oms_string(name);
+	query = "node[Module && ( name $ '" + nqtname + "' || name $ '" + nqtname + ".*' ) && node_refs]";
+    }
+    else
+    {
+	nqtname = to_oms_string(name);
+        query = "node[Module && ( name = '" + nqtname + "' || name $ '" + nqtname + ".*' ) && node_refs]";
+    }
+	
+    sce_nodes = list_select(query);
+
+    for (i = 0; i < list_count(sce_nodes); i = i + 1)
+    {
+	sce_node = list_get(sce_nodes, i);
+	nqtname = to_oms_string(sce_node.name);
+	list_concatenate(sce_calls, list_select("node[Module && out_links[SubProgramCall && to_node[Module && name = '${nqtname}']]]"));
+    }
+
+    for (i = 0; i < list_count(sce_calls); i = i + 1)
+    {
+	sce_call = list_get(sce_calls, i);
+	fname = string_translate(sce_call.name, " \n", "__");
+	nqtname = to_oms_string(fname);
+	file = find_by_query("file[FceDiagram && name = '${nqtname}']");
+	if (file != NULL)
+	    list_append(files, file);
+    }
+
+    if (list_count(files) == 0)
+    {
+	print_error("No Callers found", NULL);
+	return NULL;
+    }
+
+    return files;
+
+} // end of FceCaller()
+
+
+
+
+void
+FceCalleeFromBackground(string name)
+
+{
+    list l;
+    file f;
+ 
+    l = FceCallee(name, True);
+ 
+    if (l != NULL && list_count(l) == 1)
+    {
+        f = list_get(l, 0);
+        gde_builtin("FileLoad " + f.name);
+    }
+    else
+	editor_item_selector(l, "FceFromBackground_cb();", "Callee Object Selector", False);
+
+    return;
+}
+
+
+
+void
+FceCallerFromBackground(string name)
+
+{
+    list l;
+    file f;
+
+    l = FceCaller(name, True);
+ 
+    if (l != NULL && list_count(l) == 1)
+    {
+        f = list_get(l, 0);
+        gde_builtin("FileLoad " + f.name);
+    }
+    else
+	editor_item_selector(l, "FceFromBackground_cb();", "Caller Object Selector", False);
+
+    return;
+}
+
+
+list
+FceBrowseToFcCodeFromBackground(string name)
+
+{
+    list l;
+
+    l = SEBrowseToFcCode(StripUniqueIdentifier(name));
+    //spr 3253
+    if (list_count(l) == 0) 
+       print_error("No Source Code Definition found");
+    return l;   
+}
+
+
+
+void
+FceSceModuleFromBackground()
+
+{
+    list l;
+    node_ref nr;
+    file f;
+    string cmd;
+
+    l = FceModuleFromFile();
+    // spr 3253
+    if (list_count(l) == 0)
+       print_error("No SCE Module found");
+ 
+    if (l != NULL && list_count(l) == 1)
+    {
+        nr = list_get(l, 0);
+	f = find_by_query("file[id = ${nr.file_id}]");
+
+	cmd = "EditorQrlEval NavLoadAndFind(\"" + f.name + "\",\"" + nr.appid + "\");";
+	NavigateSend("sce", cmd);
+    }
+    else
+	editor_item_selector(l, "FceModuleFromBackground_cb();", "SCE Module Object Selector", False);
+
+    return;
+}
+
+
+
+
+void
+FceModuleFromBackground_cb()
+{
+    list objs;
+    node_ref nr;
+    file f;
+    int id;
+    string cmd;
+ 
+    objs = editor_selector_selected_objects();
+
+    if (list_count(objs) == 1)
+    {
+	id = list_get(objs, 0);
+	nr = find_by_query("node_ref[id = ${id}]");
+	f = find_by_query("file[id = ${nr.file_id}]");
+
+	cmd = "EditorQrlEval NavLoadAndFind(\"" + f.name + "\",\"" + nr.appid + "\");";
+	NavigateSend("sce", cmd);
+    }
+    else
+        print_error("Navigation Failed", NULL);
+ 
+    return;
+
+}
+
+
+void
+FceFromBackground_cb()
+{
+    list objs;
+    file f;
+    int id;
+ 
+    objs = editor_selector_selected_objects();
+
+    if (list_count(objs) == 1)
+    {
+	id = list_get(objs, 0);
+	f = find_by_query("file[id = ${id}]");
+	gde_builtin("FileLoad " + f.name);
+    }
+    else
+        print_error("Navigation Failed", NULL);
+ 
+    return;
+}
+
+
+
+list 
+FceModuleFromFile()
+
+{
+    list mods;
+    string fname = gde_diagram_name();
+
+    fname = string_translate(fname, "_", "?");
+    mods = list_select("node_ref[node[Module && ( name $ '" + to_oms_string(fname) + "' || name $ '" + to_oms_string(fname) + ".*' )]]");
+
+    if (list_count(mods) == 0) 
+	return list_create("node_ref", 0);
+
+    return mods;
+} 
+
+
+
+list
+FceToSceModule(string apptype)
+
+{
+    gde_node gn = to_gde_node(list_get(gde_selected_symbols(), 0));
+    list l;
+    string label;
+    node n;
+
+    l = gde_node_oms_nodes(gn);
+    if (l == NULL || list_count(l) == 0)
+	return list_create("node_ref", 0);
+
+    n = list_get(l, 0);
+
+    // first search with this label, then try with underscores.
+    l = list_select("node_ref[node[${apptype} && name = '" + to_oms_string(n.name) + "']]");
+    if (list_count(l) == 0)
+    {
+	label = to_underscore_name(n.name);
+        l = list_select("node_ref[node[${apptype} && name = '" + to_oms_string(label) + "']]");
+    }
+
+    return l;
+}
+
+
+int 
+FceFlowDefinition(string name)
+
+{
+    file file;
+
+    // remove spaces
+
+    name = string_translate(name, " \n", "__");
+    file = find_by_query("file[FceDiagram && name == '${name}']");
+
+    if (file == NULL)
+    {
+        print_error("Flow chart definition not found.");
+        return 1;
+    }
+
+    gde_builtin("FileLoad " + file.name);
+    gde_builtin("BufferCenter");
+
+    return 0;
+
+} // end of FceFlowDefinition()
+
+
+
+void
+GotoSourceCode(int nodeid)
+
+{
+    node node;
+    
+    node = find_by_query("node[id = ${nodeid}]");
+    RevCNav(node.name, "nav_source", 0);
+
+    return;
+}
+
+
+void 
+GotoCrossReferenceBrowser(int nodeid)
+
+{
+    node node;
+    
+    node = find_by_query("node[id = ${nodeid}]");
+    RevCNav(node.name, "xrb", 1);
+
+    return;
+} 
+
+// Extra Syntax checking
+ 
+boolean
+FceCheckSyntax()
+{
+    boolean fine = True;
+    list all_syms, syms;
+
+    if (gde_default_check_syntax() == False)
+	fine = False;
+
+    all_syms = gde_all_symbols();
+
+    if (list_count(all_syms) == 0)
+    {
+        print_error("Diagram is empty. Start State and Final State required.");
+        return False;
+    }
+
+    // start symbols
+    syms = gde_symbols_find_with_types(all_syms, string_to_list("SEStartState", " "));
+    if (list_count(syms) == 0)
+    {
+        print_error("No Initial State symbol found.  Flow Chart must contain exactly one Initial State symbol.");
+        fine = False;
+    }
+    else if (list_count(syms) > 1)
+    {
+        print_error(list_count(syms) + " Initial State symbols found.  Flow Chart must contain exactly one Initial State symbol.");
+        fine = False;
+    }
+
+    // final symbols
+    syms = gde_symbols_find_with_types(all_syms, string_to_list("SEFinalState", " "));
+    if (list_count(syms) == 0)
+    {
+// ECR 6858 begin
+        print_warning("No Final Symbol state found.");
+        //print_error("No Final Symbol state found.  Flow Chart must contain exactly one Final State symbol.");
+        //fine = False;
+// ECR 6858 end
+    }
+    else if (list_count(syms) > 1)
+    {
+        print_error(list_count(syms) + " Final State symbols found.  Flow Chart must contain exactly one Final State symbol.");
+        fine = False;
+    }
+
+    return fine;
+} 
+
+
+//  Add any user customizations to the file included below:
+#include_if_exists "user/se/rules/qrl/user_fce.qrl"

@@ -1,0 +1,39 @@
+FileObject 1
+{
+    { Name "a680" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65CFD-34FB-11d6-8DB9-00500445CF96" }
+}
+
+FileObject 99999
+{
+    { Name "pendulum" }
+    { Type UmlClassTable }
+    { ObjectId 406 }
+    { AnnotFileId 1 }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1651 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1653 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "pendulum" }
+    { NoteId 3 }
+    { ObjectId 1654 }
+}
+

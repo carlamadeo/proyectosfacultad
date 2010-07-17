@@ -1,0 +1,225 @@
+Diagram UmlSequenceDiagram
+{
+    { Name "SetTime__1" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -344 }
+    { PanY -264 }
+    { Alignment 32 }
+    { GUID "UID_3A23E022-34FB-11d6-8DB9-00500445CF96" }
+    { Summary
+        { Nodes 3 }
+        { Arcs 2 }
+    }
+}
+
+Node 2
+{
+    { Type ScenarioInstance }
+    { Loc -6 -160 }
+    { Scale 953.00 45.00 }
+    { Label
+        { Text "set_Time(UmlUseCase:SetTime)" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ScenarioMapping }
+        { ID 3320 }
+        { GUID "UID_6E951D60-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3322 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 3324 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ParentName }
+        { ID 3323 }
+    }
+}
+
+Node 3
+{
+    { Type Actor }
+    { Loc -178 64 }
+    { Scale 128.00 1286.00 }
+    { Label
+        { Text "Watchadministrator" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 986 }
+        { GUID "UID_A5C11F71-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Node 4
+{
+    { Type PassiveObject }
+    { Loc 208 64 }
+    { Scale 128.00 1286.00 }
+    { Label
+        { Text ":Clockwork" }
+    }
+    { PropertyList
+        { Property
+            { Name "AnonymousName" }
+            { Value "%%object%%933009193_334" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 951 }
+        { GUID "UID_73727F34-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 3112 }
+        { GUID "UID_2246246E-CE14-11d5-A046-0010A4B8EFF8" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 3325 }
+        { GUID "UID_2FC9B4F3-CE14-11d5-A046-0010A4B8EFF8" }
+    }
+}
+
+Arc 5
+{
+    { Type SimpleMessage }
+    { From
+        { ID 3 }
+        { Loc -176 -7 }
+        { Offset 0 -71 }
+    }
+    { To
+        { ID 4 }
+        { Loc 202 -7 }
+        { Offset 0 -71 }
+    }
+    { Label
+        { Text "setHour(int hour)" }
+    }
+}
+
+Arc 7
+{
+    { Type SimpleMessage }
+    { From
+        { ID 3 }
+        { Loc -176 64 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 4 }
+        { Loc 202 64 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "setMinute(int minute)" }
+    }
+}
+
+Link 6
+{
+    { FirstArc 5 }
+    { LastArc 5 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 3335 }
+        { GUID "UID_6E951D64-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3337 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 3343 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 3342 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 3341 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 3340 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 3339 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 3338 }
+    }
+}
+
+Link 8
+{
+    { FirstArc 7 }
+    { LastArc 7 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 3326 }
+        { GUID "UID_6E951D63-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3328 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 3334 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 3333 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 3332 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 3331 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 3330 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 3329 }
+    }
+}

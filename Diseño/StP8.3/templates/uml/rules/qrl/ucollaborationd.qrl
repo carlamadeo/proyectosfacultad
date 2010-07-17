@@ -1,0 +1,1051 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+//
+
+#include "rules/qrl/gde_qrl_std.inc"
+#include "rules/qrl/uml.inc"
+#include "rules/qrl/ucollaborationd.ps.qrl"
+#include "rules/qrl/object_instance.inc"
+#include "rules/qrl/message_label.inc"
+#include "rules/qrl/scenario_instance.inc"
+#include "rules/qrl/find_interaction_scenario.inc"
+#include "rules/qrl/interaction_dg_navigation.inc"
+#include "rules/qrl/interaction_dg_semantics.inc"
+#include "rules/qrl/package_sym_rename.inc"
+#include "rules/qrl/gde_uml_object_rename.inc"
+#include "rules/qrl/message_prop.inc"
+#include "qrl/include/export_to_doors.inc"
+
+// ECR4052 Model Management
+#include "rules/qrl/model_management.inc"
+
+// Begin ECR947, ECR 4494
+#include "rules/qrl/note_link.inc"
+
+// ECR 4110
+#include "rules/qrl/navtostp.inc"
+
+#include "rules/qrl/default_arc_type.inc" //ECR 6469
+
+const    int    ACTIVE_FUNC_IS_UNDEFINED = -1; // SAME AS OMT
+
+list    the_last_selection = NULL; // SAME AS OMT
+
+int    idehook_note_link_active_func_lv = ACTIVE_FUNC_IS_UNDEFINED;
+
+boolean
+idehook_invalidate_all()
+{
+    idehook_note_link_active_func_lv = ACTIVE_FUNC_IS_UNDEFINED;
+    return(True);
+}
+
+// SAME AS OMT
+void
+idehook_force_new_selection()
+{
+    the_last_selection = NULL;
+    idehook_invalidate_all();
+}
+
+// SAME AS OMT
+boolean
+idehook_did_selection_change()
+{
+    list    symbols;
+
+    symbols = gde_selected_symbols();
+
+    if (the_last_selection == NULL)
+    {
+    the_last_selection = symbols;
+    return(idehook_invalidate_all());
+    }
+    if (list_count(symbols) != list_count(the_last_selection))
+    {
+    the_last_selection = symbols;
+    return(idehook_invalidate_all());
+    }
+    if (lists_equal(symbols, the_last_selection) == False)
+    {
+    the_last_selection = symbols;
+    return(idehook_invalidate_all());
+    }
+    return(False);
+}
+
+list
+uml_note_link_symbols()
+{
+    string link_types = "CollaborationRole Contains ObjectLink TypeElementLink";
+    return string_to_list(link_types, " ");
+}
+// End ECR947, ECR 4494
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//	sequence editor navigation
+//
+////////////////////////////////////////////////////////////////////////////////
+void sequenceNavigation()
+{
+    string diagramName;
+    string currentQuery;
+    list sequenceFileReferences;
+
+    diagramName = gde_substitute_string("${file}");
+    currentQuery = "file[UmlSequenceDiagram && name = '" + diagramName + "']";
+    sequenceFileReferences = list_select(currentQuery);
+    if (list_count(sequenceFileReferences) != 0)
+    {
+    	editor_send_msg("usequenced", "FileLoad "+diagramName, CH_FIRST);
+    	editor_send_msg("usequenced", "EditorShowDeiconify", CH_FIRST);
+	print_message("Navigated to Sequence Diagram '"+diagramName+"'");
+    }
+    else
+    {
+	print_message("No Sequence Diagram '"+diagramName+"'");
+	if (editor_confirm("Generate Sequence Diagram '"+diagramName+"'?", "OK", "Cancel"))
+	{
+		sequenceThisDiagram();
+	}
+	else
+	{
+	    print_message("Navigation Canceled");
+	}
+    }
+}
+
+void sequenceThisDiagram()
+{
+    string diagramName;
+    diagramName = gde_substitute_string("${file}");
+    editor_send_msg("usequenced",
+	"EditorQrlEvalNoSave clearAndSequenceACollaborationDiagram(\""+diagramName+"\");",
+	CH_FIRST);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+////////////////////////////////////////////////////////////////////////////////
+void clearAndCollaborateASequenceDiagram(string diagramName)
+{
+    ///////////////////////////////////////////////////////////////////////////
+    // Clear the buffer (If user cancels the next if statment succeeds) 
+    // and deployment is canceled
+    ///////////////////////////////////////////////////////////////////////////
+    gde_builtin("BufferClear");
+    gde_builtin("EditorSetFileName \"Noname\"");
+    if (list_count(gde_all_symbols()) != 0)
+    {
+	return;
+    }
+    generateCollaborationFromSequence(diagramName);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//	Primary routine to generate a Collaboration Diagram from a Sequence
+//	as called from the Collaboration UML menu.
+//
+////////////////////////////////////////////////////////////////////////////////
+void generateACollaborationFromSequence()
+{
+    string currentQuery;
+    file currentFile;
+    list sequenceFileReferences;
+    int i;
+    list currentSequenceFiles;
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Clear the buffer (If user cancels the next if statment succeeds) 
+    // and deployment is canceled
+    ///////////////////////////////////////////////////////////////////////////
+    gde_builtin("BufferClear");
+    if (list_count(gde_all_symbols()) != 0)
+    {
+	return;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    //  Query for all UmlSequenceDiagrams
+    ///////////////////////////////////////////////////////////////////////////
+    currentQuery = "file[UmlSequenceDiagram]";
+    sequenceFileReferences = list_select(currentQuery);
+    ///////////////////////////////////////////////////////////////////////////
+    //  Make a list of strings representing the diagrams
+    ///////////////////////////////////////////////////////////////////////////
+    currentSequenceFiles = list_create("string",0);
+    for (i = 0; i < list_count(sequenceFileReferences); i++)
+    {
+	currentFile = list_get(sequenceFileReferences,i);
+	list_append(currentSequenceFiles,currentFile.name);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Start the file selection property sheet
+    ///////////////////////////////////////////////////////////////////////////
+    gde_builtin("PropertySheetShow selectDiagram");
+    FileSelectionNameInitialize(currentSequenceFiles);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// 	Because only one arc may exist between the different objects an arc 
+//	list is kept to make sure no duplicates are created.   A simple
+// 	hasing algorythm (key actually) is keeps track of arcs made between
+//	nodes.
+//
+///////////////////////////////////////////////////////////////////////////////
+list arcList;
+list arcIds;
+list nodesNorth;
+list nodesSouth;
+
+void initArcList()
+{
+    arcList = list_create("int",0);
+    arcIds = list_create("gde_arc",0);
+    nodesNorth = list_create("int",0);
+    nodesSouth = list_create("int",0);
+}
+
+
+int arcMakeKey(int to, int from)
+{
+    int min;
+    int max;
+    int newKey;
+
+    if (to > from) 
+    {
+	max = to;
+	min = from;
+    }
+    else
+    {
+	min = to;
+	max = from;
+    }
+    newKey = (max * 1000) + min;
+    return(newKey);
+}
+
+int arcIndex;  // nasty global to save on search time
+
+gde_arc arcGet(int to, int from)
+{
+    int newKey;
+    int i;
+    gde_arc returnValue;
+
+    newKey = arcMakeKey(to,from);
+
+    returnValue = NULL;
+    for (i = 0; i < list_count(arcList) && (returnValue == NULL); i++)
+    {
+	if (newKey == list_get(arcList,i))
+	{
+	    returnValue = list_get(arcIds,i);
+	    arcIndex = i;
+	}
+    }
+    return(returnValue);
+}
+
+void arcAdd(int to, int from, gde_arc arcId)
+{
+    int newKey;
+
+    newKey = arcMakeKey(to,from);
+
+    list_append(arcList,newKey);
+    list_append(arcIds,arcId);
+    list_append(nodesNorth,0);
+    list_append(nodesSouth,0);
+}
+
+ObjectPosition arcGenerateContextPosition(int to, int from)
+{
+    ObjectPosition returnValue;
+    int xCenter, yCenter;
+    int xDistance, yDistance;
+    float slope;
+    boolean infinateSlope;
+    gde_arc theArc;
+    int numberOfObjects;
+
+    returnValue.xPos = 0;
+    returnValue.yPos = 0;
+
+    theArc = arcGet(to, from);
+    // as a result arcGet arcIndex now points to the position for this arc
+
+    if (theArc == NULL)
+    {
+	print_error("Unable to locate arc diagram may be incomplete");
+	return (returnValue);
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////	
+    //	compute the middle of the arc
+    /////////////////////////////////////////////////////////////////////////////////	
+    xDistance = gde_arc_tox(theArc) - gde_arc_fromx(theArc);
+    yDistance = gde_arc_toy(theArc) - gde_arc_fromy(theArc);
+    if ((xDistance <= 2) && (xDistance >= -2))
+    {
+	slope = 0.0;
+	infinateSlope = True;
+    }
+    else
+    {
+        slope = to_float(yDistance)/to_float(xDistance);
+	infinateSlope = False;
+    }
+
+    xCenter = gde_arc_fromx(theArc) + (xDistance/2);
+    yCenter = gde_arc_fromy(theArc) + (yDistance/2);
+
+    if (to < from)
+    {
+	numberOfObjects = list_get(nodesNorth,arcIndex);
+	if (!infinateSlope)
+	{
+	    // move it out from the line
+	    if ((slope < 0.02) && (slope > 0.02))
+	    {
+	    	xCenter += 25;
+	    }
+	    else
+	    {
+	    	yCenter += 25;
+	    }
+	    // add space for old ones alread there
+	    xCenter += (50 * numberOfObjects);
+	    yCenter += to_int(slope*to_float(50 * numberOfObjects));
+	}
+	else
+	{
+	    yCenter += (50 * numberOfObjects);
+	    xCenter += 25;
+	}
+	numberOfObjects++;
+	list_set(nodesNorth,arcIndex,numberOfObjects);
+    }
+    else
+    {
+	numberOfObjects = list_get(nodesSouth,arcIndex);
+	if (!infinateSlope)
+	{    
+	    // move it out from the line
+	    if ((slope < 0.02) && (slope > 0.02))
+	    {
+	    	xCenter -= 25;
+	    }
+	    else
+	    {
+	    	yCenter -= 25;
+	    }
+	    // add space for old ones alread there
+	    xCenter -= (50 * numberOfObjects);
+	    yCenter -= to_int(slope*to_float(50 * numberOfObjects));
+	}
+	else
+	{
+	    yCenter -= (50 * numberOfObjects);
+	    xCenter -= 25;
+	}
+	numberOfObjects++;
+	list_set(nodesSouth,arcIndex,numberOfObjects);
+    }
+
+    returnValue.xPos = xCenter;
+    returnValue.yPos = yCenter;
+
+    return(returnValue);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+// This structure is used to maintain a list of postential x and y positions
+// for automatically generated object interaction diagrams.  This is where all the
+// layout stuff is created.
+/////////////////////////////////////////////////////////////////////////////////////
+struct ObjectPosition
+{
+	int xPos;
+	int yPos;
+};
+
+list objectPositions;
+
+struct rect_tp
+{
+	int minx;
+	int maxx;
+	int miny;
+	int maxy;
+};
+
+/////////////////////////////////////////////////////////////////////////////////////
+//  This routine is responsible for generating positions for non aligned object
+//  interaction objects (the boxes) in the OID.
+/////////////////////////////////////////////////////////////////////////////////////
+void generateObjectPositions
+	(int numberOfObjects, int offset, rect_tp interactionArea, list objectPositions)
+{
+	/////////////////////////////////////////////////////////////////////////////////
+	// First of all we calculate a square the size of the width of the current
+	// interaction diagram.  In this square we layout 16 positions where are for
+	// the most part non linear (hummm hummm).  Anyway they are better than it 
+	// use to be.  
+	/////////////////////////////////////////////////////////////////////////////////
+	int minX = interactionArea.minx;
+	int maxX = interactionArea.maxx;
+	int minY = interactionArea.maxy + offset;
+	int maxY = minY + (interactionArea.maxx - interactionArea.minx);
+	/////////////////////////////////////////////////////////////////////////////////
+	// If the current object position list contains information we clear it and
+	// start over to ensure the integrity of the the current layout.  In other words
+	// because the user can update the current diagram it's best to recalculate
+	// the entire list from the start.
+	/////////////////////////////////////////////////////////////////////////////////
+	if (list_count(objectPositions) > 0)
+	{
+		list_clear(objectPositions);
+		objectPositions = list_create("ObjectPosition",0);
+	}
+	/////////////////////////////////////////////////////////////////////////////////
+	// While the number of created positions is less than the necessary positions
+	// keep calling the loadPositions16AtATime until we've generated enough positions.
+	/////////////////////////////////////////////////////////////////////////////////
+	while (numberOfObjects > loadPositions16AtATime(minX, maxX, minY, maxY, objectPositions))
+	{
+		minY = maxY + offset;
+		maxY = minY + (interactionArea.maxx - interactionArea.minx);
+	}
+}
+
+int loadPositions16AtATime(int minX, int maxX, int minY, int maxY, list objectPositions)
+{
+	int i;
+	int j;
+	int x1;
+	int x2;
+	int y1; 
+	int y2;
+	ObjectPosition currentObjectPosition;
+
+	//////////////////////////////////////////////////////////////////  X           X
+	// Do the four corners of the current box in which we are to lay
+	// out our object interaction diagram.
+	// 
+	//   LOOK at the X and O's at the end of the comment block for
+	//   an explination
+	//////////////////////////////////////////////////////////////////  X           X
+	currentObjectPosition.xPos = minX;
+	currentObjectPosition.yPos = minY;
+	list_append(objectPositions, currentObjectPosition);
+
+	currentObjectPosition.xPos = maxX;
+	currentObjectPosition.yPos = minY;
+	list_append(objectPositions, currentObjectPosition);
+
+	currentObjectPosition.xPos = maxX;
+	currentObjectPosition.yPos = maxY;
+	list_append(objectPositions, currentObjectPosition);
+
+	currentObjectPosition.xPos = minX;
+	currentObjectPosition.yPos = maxY;
+	list_append(objectPositions, currentObjectPosition);
+
+	//////////////////////////////////////////////////////////////////  O           O
+	// Do the four diamond positions in the center.  These are mid         
+	// ways between everything.                                               X 
+	//                                                                      X   X
+	//																	      X     
+	//                                                                            
+	//////////////////////////////////////////////////////////////////  O           O
+	currentObjectPosition.xPos = minX+((maxX-minX)/2);
+	currentObjectPosition.yPos = minY+((maxY-minY)/4);
+	list_append(objectPositions, currentObjectPosition);
+
+	currentObjectPosition.xPos = maxX-((maxX-minX)/4);
+	currentObjectPosition.yPos = minY+((maxY-minY)/2);
+	list_append(objectPositions, currentObjectPosition);
+
+	currentObjectPosition.xPos = maxX-((maxX-minX)/2);
+	currentObjectPosition.yPos = maxY-((maxY-minY)/4);
+	list_append(objectPositions, currentObjectPosition);
+
+	currentObjectPosition.xPos = minX+((maxX-minX)/4);
+	currentObjectPosition.yPos = maxY-((maxY-minY)/2);
+	list_append(objectPositions, currentObjectPosition);
+
+	//////////////////////////////////////////////////////////////////  O           O
+	// Now do those final 8 that are somewhat non colinear.                X     X
+	//                                                                   X    O    X
+	//  SPECIAL NOTE:  THIS COULD HAVE BEEN DONE IN A CUTE LOOP             O   O
+	//                 HOWEVER IT WOULD HAVE BEEN VERY CONFUSING         X    O    X
+	//                 TO THE FIRST TIME READER...HINT DON'T CHANGE IT!    X     X
+	//////////////////////////////////////////////////////////////////  O           O
+	currentObjectPosition = list_get(objectPositions, 0);
+	x1 = currentObjectPosition.xPos;
+	y1 = currentObjectPosition.yPos;
+	currentObjectPosition = list_get(objectPositions, 4);
+	x2 = currentObjectPosition.xPos;
+	y2 = currentObjectPosition.yPos;
+	currentObjectPosition.xPos = x1-((x1-x2)/2);
+	currentObjectPosition.yPos = y1+((y2-y1)/2);
+	list_append(objectPositions, currentObjectPosition);
+
+	currentObjectPosition = list_get(objectPositions, 1);
+	x1 = currentObjectPosition.xPos;
+	y1 = currentObjectPosition.yPos;
+	currentObjectPosition.xPos = x1-((x1-x2)/2);
+	currentObjectPosition.yPos = y1+((y2-y1)/2);
+	list_append(objectPositions, currentObjectPosition);
+
+	currentObjectPosition = list_get(objectPositions, 5);
+	x2 = currentObjectPosition.xPos;
+	y2 = currentObjectPosition.yPos;
+	currentObjectPosition.xPos = x1-((x1-x2)/2);
+	currentObjectPosition.yPos = y1+((y2-y1)/2);
+	list_append(objectPositions, currentObjectPosition);
+
+	currentObjectPosition = list_get(objectPositions, 2);
+	x1 = currentObjectPosition.xPos;
+	y1 = currentObjectPosition.yPos;
+	currentObjectPosition.xPos = x1-((x1-x2)/2);
+	currentObjectPosition.yPos = y1+((y2-y1)/2);
+	list_append(objectPositions, currentObjectPosition);
+
+	currentObjectPosition = list_get(objectPositions, 6);
+	x2 = currentObjectPosition.xPos;
+	y2 = currentObjectPosition.yPos;
+	currentObjectPosition.xPos = x1-((x1-x2)/2);
+	currentObjectPosition.yPos = y1+((y2-y1)/2);
+	list_append(objectPositions, currentObjectPosition);
+
+	currentObjectPosition = list_get(objectPositions, 3);
+	x1 = currentObjectPosition.xPos;
+	y1 = currentObjectPosition.yPos;
+	currentObjectPosition.xPos = x1-((x1-x2)/2);
+	currentObjectPosition.yPos = y1+((y2-y1)/2);
+	list_append(objectPositions, currentObjectPosition);
+
+	currentObjectPosition = list_get(objectPositions, 7);
+	x2 = currentObjectPosition.xPos;
+	y2 = currentObjectPosition.yPos;
+	currentObjectPosition.xPos = x1-((x1-x2)/2);
+	currentObjectPosition.yPos = y1+((y2-y1)/2);
+	list_append(objectPositions, currentObjectPosition);
+
+	currentObjectPosition = list_get(objectPositions, 0);
+	x1 = currentObjectPosition.xPos;
+	y1 = currentObjectPosition.yPos;
+	currentObjectPosition.xPos = x1-((x1-x2)/2);
+	currentObjectPosition.yPos = y1+((y2-y1)/2);
+	list_append(objectPositions, currentObjectPosition);
+
+	return list_count(objectPositions);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//	This is the place to fix the size of your layout.  Unhappy with the
+//	ratio of space between arcs etc then change the maxx and maxy 
+//
+////////////////////////////////////////////////////////////////////////////////
+void computeWorkArea(int nodeCount)
+{
+    rect_tp box;
+    objectPositions = list_create("ObjectPosition",0);
+    box.minx = 0;
+    box.maxx = nodeCount * 50;
+    box.miny = 0;
+    box.maxy = nodeCount * 30;
+    generateObjectPositions(nodeCount,50,box,objectPositions);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  
+//  After a user picks a diagram this routine does the main work.  This is the
+//  call back that's invoked as a result of generateACollaborationFromSequence()
+//  
+////////////////////////////////////////////////////////////////////////////////
+void generateCollaborationFromSequence(string diagramName)
+{
+    int 	theTransaction;
+    list 	sequenceNodeReferences;
+    list	sequenceLinkReferences;
+    list	sequenceCntxReferences;
+    list 	oldNodes;
+    list 	newGdeNodes;
+    int		newNodesCount;
+    string	currentQuery;
+    gde_arc	currentArc;
+    gde_cntx	currentCntx;
+    gde_node	theNode;
+    gde_node	vertex1;
+    gde_node	vertex2;
+    int		xDistance, yDistance;
+    float	slope;
+    int		xpos;
+    int		ypos;
+    int 	i,j;
+    node_ref	currentNodeReference;
+    node	currentNode;
+    node	secondaryNode;
+    link_ref	currentLinkReference;
+    link_ref	secondaryLinkReference;
+    link	currentLink;
+    item	currentItem;
+    gde_node 	currentGdeNode;
+    int		foundTo;
+    rect_tp	box;
+    int		foundFrom;
+    string 	labelString;
+    ObjectPosition currentObjectPosition;
+    ObjectPosition cntxPosition;
+    int		extensionCount = 0;
+    string  nodeType;
+    node    activeNode;
+    string fullLabel;
+
+    ///////////////////////////////////////////////////////////////////////////
+    // if name is null exit
+    ///////////////////////////////////////////////////////////////////////////
+    if (diagramName == "")
+    {
+	return;
+    }
+    //
+    // notes have unique names, to allow for different items,
+    // corresponding to different symbols, attached to the same node
+    // Prepare the note name prefix.  Name is created by appending the
+    // symbol appid to this prefix.
+    string dg_type = "UmlSequenceDiagram";
+    string noteNamePrefix = dg_type+"%"+diagramName+"%";
+
+    ///////////////////////////////////////////////////////////////////////////
+    // save current state for editor
+    ///////////////////////////////////////////////////////////////////////////
+    gde_save_state();
+    theTransaction = gde_start_edit_transaction();
+
+    ///////////////////////////////////////////////////////////////////////////
+    // set this deployment diagram name to same as sequence diagram
+    ///////////////////////////////////////////////////////////////////////////
+    gde_builtin("EditorSetFileName \"" + diagramName  +"\"");
+
+    ///////////////////////////////////////////////////////////////////////////
+    // get all nodes && links  associated with this sequence diagram
+    ///////////////////////////////////////////////////////////////////////////
+    currentQuery = "node_ref[file[type==UmlSequenceDiagram && name=='"+diagramName+"']]";
+    sequenceNodeReferences = list_select(currentQuery);
+    currentQuery = "link_ref[file[type==UmlSequenceDiagram && name=='"+diagramName+"']]";
+    sequenceLinkReferences = list_select(currentQuery);
+    currentQuery = "cntx_ref[file[type==UmlSequenceDiagram && name=='"+diagramName+"']]";
+    sequenceCntxReferences = list_select(currentQuery);
+    ///////////////////////////////////////////////////////////////////////////
+    // Sort out the various node types into separte lists and draw them
+    ///////////////////////////////////////////////////////////////////////////
+    oldNodes 		= list_create("node",0);
+    newGdeNodes 	= list_create("gde_node",0);
+    newNodesCount	= 0;
+    computeWorkArea(list_count(sequenceNodeReferences));
+    for (i = 0; i < list_count(sequenceNodeReferences); i++)
+    {
+	currentNodeReference = list_get(sequenceNodeReferences,i);
+	currentNode = find_by_query("node[id="+currentNodeReference.node_id+"]");
+	secondaryNode = find_by_query("node[id="+currentNode.scope_node_id+"]");
+	if (currentNode != NULL)
+	{
+	    if (currentNode.type == "UmlObjectInstance")
+	    {
+            nodeType = "PassiveObject";
+            activeNode = find_by_query("node[UmlActiveObject && name=" +
+                    "'${currentNode.name}'  && sig='${currentNode.sig}'" +
+                    " && scope_node_id=${currentNode.scope_node_id} && " +
+                    "node_refs]");
+            if (NULL != activeNode)
+                nodeType = "ActiveObject";
+            labelString = currentNode.name + ":" + secondaryNode.name;
+            currentObjectPosition = list_get(objectPositions,newNodesCount);
+            currentGdeNode = gde_node_create (nodeType,
+                    currentObjectPosition.xPos,currentObjectPosition.yPos);
+            //gde_node_set_label(currentGdeNode,labelString);
+            uml_set_object_label(labelString,currentGdeNode);
+            list_append(newGdeNodes,currentGdeNode);
+            list_append(oldNodes,currentNode);
+            newNodesCount++;
+	    }
+	    else if (currentNode.type == "UmlActor")
+	    {
+		currentObjectPosition = list_get(objectPositions,newNodesCount);
+		currentGdeNode = gde_node_create
+		    ("Actor",currentObjectPosition.xPos,currentObjectPosition.yPos);
+		gde_node_set_label(currentGdeNode,currentNode.name);
+		list_append(newGdeNodes,currentGdeNode);
+   		list_append(oldNodes,currentNode);
+		newNodesCount++;
+	    }
+	    else if (currentNode.type == "UmlExtensionPoint")
+	    {
+		// Instead of using just currentNode.name, get the
+		// whole label including sequence value, recurrence.
+		fullLabel =uml_get_ext_point_label_from_node(currentNode,currentNodeReference,noteNamePrefix);
+		currentGdeNode = gde_node_create("ExtensionPoint",0,++extensionCount*20);
+		//gde_node_set_label(currentGdeNode,currentNode.name);
+                gde_node_set_label(currentGdeNode,fullLabel);
+	    }
+	    else if (currentNode.type == "UmlScenarioInstance")
+	    {
+		currentGdeNode = gde_node_create("ScenarioInstance",0,0);
+		currentItem = find_by_query("item[UmlParentTypeItem && obj_id="+currentNode.id+"]");
+		labelString = "";
+		if (currentItem != NULL)
+		{
+		    labelString = currentItem.value;
+		}
+		currentItem = NULL;
+		currentItem = find_by_query("item[UmlParentNameItem && obj_id="+currentNode.id+"]");
+		if (currentItem != NULL)
+		{
+		    labelString = labelString + ":" + currentItem.value;
+		}
+		gde_node_set_label(currentGdeNode,currentNode.name+"("+labelString+")");
+	    }
+	}
+    }
+    ///////////////////////////////////////////////////////////////////////////
+    // Now draw the links that apply to the carried though nodes
+    ///////////////////////////////////////////////////////////////////////////
+    initArcList();
+    for (i = 0; i < list_count(sequenceLinkReferences); i++)
+    {
+	currentLinkReference = list_get(sequenceLinkReferences,i);
+	currentLink = find_by_query("link[id="+currentLinkReference.link_id+"]");
+	if (currentLink != NULL)
+	{
+	    foundTo = -1;
+	    foundFrom = -1;
+	    for (j = 0; ((j < list_count(oldNodes)) && ((foundTo == -1) || (foundFrom == -1))); j++)
+	    {
+		currentNode = list_get(oldNodes,j);
+		if (currentNode.id == currentLink.to_node_id)
+		{
+		    foundTo = j;
+		}
+		if (currentNode.id == currentLink.from_node_id)
+		{
+		    foundFrom = j;
+		}
+	    }
+	    if ((foundTo != -1) && (foundFrom != -1))
+	    {	
+		currentArc = arcGet(foundTo,foundFrom);
+		if (currentArc == NULL)
+		{
+		    if (foundFrom == foundTo)
+		    {
+			theNode = list_get(newGdeNodes,foundTo);
+			xpos = gde_node_x(theNode) + (gde_node_width(theNode) * 2);
+			ypos = gde_node_y(theNode) - (gde_node_height(theNode) / 2);
+			vertex1 = gde_node_create("Vertex", xpos, ypos);
+			ypos = gde_node_y(theNode) + (gde_node_height(theNode) / 2);
+			vertex2 = gde_node_create("Vertex", xpos, ypos);
+		    	gde_arc_create("ObjectLink", theNode, vertex1);
+		    	currentArc = gde_arc_create("ObjectLink", vertex1, vertex2);
+		    	gde_arc_create("ObjectLink", vertex2, theNode);
+		    }
+		    else
+		    {
+		    	if (foundTo < foundFrom)
+			{
+		    	    currentArc = gde_arc_create("ObjectLink",
+				list_get(newGdeNodes,foundTo), list_get(newGdeNodes,foundFrom));
+			}
+			else
+			{
+		    	    currentArc = gde_arc_create("ObjectLink",
+				list_get(newGdeNodes,foundFrom), list_get(newGdeNodes,foundTo));
+			}
+		    }
+		    arcAdd(foundTo,foundFrom,currentArc);
+		}
+		// Instead of using just currentLink.name, get the
+		// whole label including predecessor guard, sequence
+		// value, recurrence.
+		fullLabel = uml_get_message_label_from_link(currentLink,currentLinkReference,noteNamePrefix);
+		if (currentLink.type == "UmlSimpleMessage")
+		{
+		    cntxPosition = arcGenerateContextPosition(foundTo,foundFrom);
+		    if (foundTo < foundFrom)
+		    	currentCntx = gde_cntx_create("RevSimpleMessage", 
+			    currentArc, cntxPosition.xPos, cntxPosition.yPos );
+		    else
+		    	currentCntx = gde_cntx_create("SimpleMessage", 
+			    currentArc, cntxPosition.xPos, cntxPosition.yPos );
+		    gde_cntx_set_label(currentCntx, fullLabel);
+		}
+		else if (currentLink.type == "UmlSynchronousMessage")
+		{
+		    cntxPosition = arcGenerateContextPosition(foundTo,foundFrom);
+		    if (foundTo < foundFrom)
+		    	currentCntx = gde_cntx_create("RevSynchronousMessage", 
+			    currentArc, cntxPosition.xPos, cntxPosition.yPos );
+		    else
+		    	currentCntx = gde_cntx_create("SynchronousMessage", 
+			    currentArc, cntxPosition.xPos, cntxPosition.yPos );
+		    gde_cntx_set_label(currentCntx, fullLabel);
+		}
+		else if (currentLink.type == "UmlBalkingMessage")
+		{
+		    cntxPosition = arcGenerateContextPosition(foundTo,foundFrom);
+		    if (foundTo < foundFrom)
+		    	currentCntx = gde_cntx_create("RevBalkingMessage", 
+			    currentArc, cntxPosition.xPos, cntxPosition.yPos );
+		    else
+		    	currentCntx = gde_cntx_create("BalkingMessage", 
+			    currentArc, cntxPosition.xPos, cntxPosition.yPos );
+		    gde_cntx_set_label(currentCntx, fullLabel);
+		}
+		else if (currentLink.type == "UmlTimeoutMessage")
+		{
+		    cntxPosition = arcGenerateContextPosition(foundTo,foundFrom);
+		    if (foundTo < foundFrom)
+		    	currentCntx = gde_cntx_create("RevTimeoutMessage", 
+			    currentArc, cntxPosition.xPos, cntxPosition.yPos );
+		    else
+		    	currentCntx = gde_cntx_create("TimeoutMessage", 
+			    currentArc, cntxPosition.xPos, cntxPosition.yPos );
+		    gde_cntx_set_label(currentCntx, fullLabel);
+		}
+		else if (currentLink.type == "UmlAsynchronousMessage")
+		{
+		    cntxPosition = arcGenerateContextPosition(foundTo,foundFrom);
+		    if (foundTo < foundFrom)
+		    	currentCntx = gde_cntx_create("RevAsynchronousMessage", 
+			    currentArc, cntxPosition.xPos, cntxPosition.yPos );
+		    else
+		    	currentCntx = gde_cntx_create("AsynchronousMessage", 
+			    currentArc, cntxPosition.xPos, cntxPosition.yPos );
+		    gde_cntx_set_label(currentCntx, fullLabel);
+		}
+		else if (currentLink.type == "UmlReturnMessage")
+		{
+		    cntxPosition = arcGenerateContextPosition(foundTo,foundFrom);
+		    if (foundTo < foundFrom)
+		    	currentCntx = gde_cntx_create("RevReturnMessage", 
+			    currentArc, cntxPosition.xPos, cntxPosition.yPos );
+		    else
+		    	currentCntx = gde_cntx_create("ReturnMessage", 
+			    currentArc, cntxPosition.xPos, cntxPosition.yPos );
+		    gde_cntx_set_label(currentCntx, fullLabel);
+		}
+	    }
+	}
+    }
+
+    gde_builtin("BufferZoom FitDiagram");
+    gde_builtin("EditorShowDeiconify");
+    gde_end_edit_transaction(GDE_CMD_INSERT, theTransaction, False);
+}
+
+///////////////////////////////////////////////////////
+// Semantics
+///////////////////////////////////////////////////////
+
+int ucollaborationd_check_semantics()
+{
+    int errCount = 0;
+    int warningCount = 0;
+    string dg_name = gde_diagram_name();
+    string dg_type = current_editor_apptype();
+
+    errCount += interaction_dg_completeness_check_actors(dg_type+" & name='"+dg_name+"'");
+    warningCount += interaction_dg_completeness_check_parent(dg_name,dg_type,"[file["+dg_type+" && name='"+dg_name+"']]");
+   errCount += interaction_dg_completeness_check_externalEvents("[file["+dg_type+" && name='"+dg_name+"']]");
+   errCount += interaction_dg_completeness_check_messages();
+    errCount += interaction_dg_completeness_check_objects("file[name='"+dg_name+"']");
+    errCount += interaction_dg_check_extension_points();
+
+    errCount += interaction_dg_check_typeDef("[name='"+dg_name+"']");
+    errCount += interaction_dg_check_collaborationContext("[name='"+dg_name+"']");
+
+    return errCount;
+   //errCount += uml_interaction_dg_completeness_check_externalEvents("[file["+dg_type+" && name='"+dg_name+"']]");
+   // messages are checked together with external events
+   //errCount += uml_interaction_dg_completeness_check_messages("[file[name='"+dg_name+"']]");
+    //errCount += uml_interaction_dg_check_extension_points("file[name='"+dg_name+"']");
+}
+
+int object_any_message_selected()
+{
+    return(DoReverseMessageDirection(False, False));
+}
+
+list collaborationMessageTypes = NULL;
+list collaborationMessageTypes()
+{
+    if (collaborationMessageTypes == NULL)
+    {
+	// it's important that all Rev messages appear in same order after original messages
+	collaborationMessageTypes = list_create("string",0);
+	list_append(collaborationMessageTypes,"SimpleMessage");
+	list_append(collaborationMessageTypes,"SynchronousMessage");
+	list_append(collaborationMessageTypes,"BalkingMessage");
+	list_append(collaborationMessageTypes,"TimeoutMessage");
+	list_append(collaborationMessageTypes,"AsynchronousMessage");
+	list_append(collaborationMessageTypes,"ReturnMessage");
+	list_append(collaborationMessageTypes,"RevSimpleMessage");
+	list_append(collaborationMessageTypes,"RevSynchronousMessage");
+	list_append(collaborationMessageTypes,"RevBalkingMessage");
+	list_append(collaborationMessageTypes,"RevTimeoutMessage");
+	list_append(collaborationMessageTypes,"RevAsynchronousMessage");
+	list_append(collaborationMessageTypes,"RevReturnMessage");
+    }
+    return(collaborationMessageTypes);
+}
+
+int DoReverseMessageDirection(boolean doit, boolean internal)
+{
+    list	symbols;
+    gde_symbol	s;
+    int		i, dodefer;
+    string	tp, ntp;
+    const	string	REV_MSG_PRE = "Rev"; 
+
+
+    symbols = gde_selected_symbols();
+
+    if (list_count(symbols) != 1)
+    {
+	return(ACTIVE_FUNC_IS_INACTIVE);
+    }
+    s = list_get(symbols, 0);
+    if (gde_symbol_is_cntx(s) == True)
+    {
+	tp = gde_get_symbol_type(s);
+	if (list_find(collaborationMessageTypes(), 0, tp) < list_count(collaborationMessageTypes))
+	{
+	    if (doit == True)
+	    {
+		if (list_find(collaborationMessageTypes(), 
+		    (list_count(collaborationMessageTypes)/2), tp) < 
+		    list_count(collaborationMessageTypes))
+		{
+		    ntp = string_extract(tp, 3, string_length(tp) - 3);
+		} else {
+		    ntp = REV_MSG_PRE + tp;
+		}
+		gde_save_state();
+		dodefer = gde_start_edit_transaction();
+		gde_cntx_replace_ct(to_gde_cntx(s), ntp);
+		gde_end_edit_transaction(0, dodefer, False);
+	    }
+	    return(ACTIVE_FUNC_IS_ACTIVE);
+	}
+    	return(ACTIVE_FUNC_IS_INACTIVE);
+    }
+    return(ACTIVE_FUNC_IS_INACTIVE);
+}
+
+void reverseMessageDirection()
+{
+    DoReverseMessageDirection(True, False);
+}
+
+// ECR 4452 begin remove functions for MakeObject Active/Passive
+// list objectTypes = NULL;
+// list objectTypes() ...
+// void changeObjectActiveStatus() ...
+// int any_object_selected() ...
+// int DoPassiveActivateObject(boolean doit) ...
+// string objectActiveStatusLabel() ...
+// ECR 4452 end remove functions for MakeObject Active/Passive
+
+
+
+// SYNTAX CHECKING FOR ucollaborationd
+
+boolean 
+ucollaborationd_CheckSyntax()
+{
+    int i;
+    boolean diagramIsClean = True;
+    string current_type;
+    string pretty_name = "Node";
+    list symbols;
+    list in_arcs_list;
+    gde_symbol current_symbol;
+    gde_node current_node;
+
+    // Checking for labels on Objects, Composite Objects, and Multi Objects.
+    // NameIsRequired attribute on the mappings aren't picking these up.
+
+    symbols = gde_all_symbols();
+    for (i=0; i<list_count(symbols); i++) 
+    {
+        current_symbol = list_get(symbols, i);
+
+        if (gde_symbol_is_node(current_symbol)) 
+        {
+            current_node = to_gde_node(current_symbol);
+            current_type = gde_nt_name(gde_node_nt(current_node));
+
+            if (current_type == "PassiveObject" ||
+                current_type == "ActiveObject" ||
+                current_type == "PassiveCompositeObject" ||
+                current_type == "InstanceAttribute" ||
+                current_type == "MultiObject")
+            {
+                if (gde_node_label(current_node) == "")
+                {
+                    if (current_type == "PassiveObject" ||
+                            current_type == "ActiveObject")
+                        pretty_name = "Object";
+                    else if (current_type == "PassiveCompositeObject")
+                        pretty_name = "Composite Object";
+                    else if (current_type == "MultiObject")
+                        pretty_name = "Multi Object";
+                    else if (current_type == "InstanceAttribute")
+                        pretty_name = "Value of Attribute";
+
+                    gde_print_error(pretty_name + " must have a label.", 
+                                    gde_node_psymid(current_node));
+                    diagramIsClean = False;
+                }
+            }
+            if (current_type == "InstanceAttribute")
+            {
+                in_arcs_list = gde_node_inarcs(current_node);
+                if (list_count(in_arcs_list) < 1)
+                {
+                    gde_print_error("Value of Attribute must be contained by an " +
+                                    "Object or Multi Object.", 
+                                    gde_node_psymid(current_node));
+                    diagramIsClean = False;
+                }
+            }
+        }
+    }
+
+    // Now run the default gde syntax checks. 
+  
+    if (gde_default_check_syntax() == False)
+    diagramIsClean = False;
+
+    return diagramIsClean;
+}
+
+
+
+//  Add any user customizations to the file included below:
+#include_if_exists "user/uml/rules/qrl/user_ucollaborationd.qrl"

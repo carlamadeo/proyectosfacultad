@@ -1,0 +1,5 @@
+/* Made with Gimp */
+#define substate2_width 8
+#define substate2_height 8
+static char substate2_bits[] = {
+   0x00, 0x60, 0x90, 0x70, 0x0e, 0x09, 0x06, 0x00 };

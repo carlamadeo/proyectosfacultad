@@ -1,0 +1,51 @@
+#include "rules/qrl/uml.inc"
+#include "rules/qrl/uml_class_semantics.inc"
+#include "rules/qrl/uml_inherit_ops.inc"
+
+
+void print_results(list errs)
+{
+	int i;
+	for(i=0;i<list_count(errs);i++) {
+		print_error(list_get(errs,i));
+	}
+}
+
+boolean test_class_semantics()
+{
+	boolean testSucceeded = True;
+	list errs = NULL;
+
+	// JED just run the test
+	if(!uml_check_class_semantics("c1","","",errs))
+		print_results(errs);
+
+	if(!uml_check_class_semantics("c1","[file_id=108]","&& node_refs[file_id=108]",errs))
+		print_results(errs);
+
+	if(!uml_check_class_semantics("c2","","",errs))
+		print_results(errs);
+
+	if(!uml_check_class_semantics("u1","","",errs))
+		print_results(errs);
+
+	if(!uml_check_class_semantics("myConcrete","","",errs))
+		print_results(errs);
+
+	if(!uml_check_class_semantics("myConcrete","[file[type=UmlClassTable]]","",errs))
+		print_results(errs);
+
+	return testSucceeded;
+}
+
+
+
+void main()
+{
+	print_message("Begin test of uml_check_class_semantics");
+	if (test_class_semantics()) {
+		print_message("Test of uml_check_class_semantics passed.");
+	} else {
+		print_error("Test of uml_check_class_semantics failed.");
+	}
+}

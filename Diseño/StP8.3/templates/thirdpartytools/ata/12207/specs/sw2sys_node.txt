@@ -1,0 +1,7 @@
+
+TYPE= node
+
+Name= REQRequirement
+
+
+Note= %ATAHOME%\doc\ctools\stp\specs\LifeCycleDesktop\sw2sys_notetable.txt

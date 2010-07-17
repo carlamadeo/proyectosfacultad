@@ -1,0 +1,173 @@
+/**********************************************
+ *
+ * Helper-Routines for Attributes
+ * 
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    11/18/2000
+ *********************************************/
+ 
+USES util/ejb_strings;
+ 
+ // Gives the Attribute a default visibility (public).
+ // (Functions only with StP 8.0 !)
+proc genAttributeVisibility(MAttribute)
+    if ([MAttribute.access] == "")
+        [MAttribute.access] = "public";
+    end if
+end proc
+
+
+
+// Changes the "access"-attribute variable: changes 
+// "normal" to "".
+// (Functions only with StP 8.0 !)
+proc genAttributeBinding(MAttribute)
+    if ([MAttribute.binding] == "normal")
+        [MAttribute.binding] = "";
+    end if
+end proc
+
+
+
+// Returns the modifiers (the rest except "static"), an Attribute might have.
+// That means: "final", "transient" and/or "volatile".
+proc genAttributeModifier(MAttribute)
+    local modifier = "";
+
+    loop(MAttribute->Note->Item Where ([Item.type] == "UmlAttributeJavaIsVolatile" || [Item.type] == "UmlAttributeJavaIsTransient" || [Item.type] == "UmlMemberJavaIsFinal") && [Item.value] == "True"; setDelim(""); setDelim(" "))
+        if ([Item.type] == "UmlAttributeJavaIsVolatile")
+            [modifier] = [modifier] delim() "volatile";
+        end if 
+        if ([Item.type] == "UmlAttributeJavaIsTransient")
+            [modifier] = [modifier] delim() "transient";
+        end if
+        if ([Item.type] == "UmlMemberJavaIsFinal")
+            [modifier] = [modifier] delim() "final";
+        end if
+    end loop
+    [MAttribute:modifier] = [modifier];
+end proc
+
+// If the attribute is final
+proc isAttributeFinal(MAttribute)
+    [MAttribute:final] = "False";
+    loop(MAttribute->Note->Item Where [Item.type] == "UmlMemberJavaIsFinal" && [Item.value] == "True")
+        [MAttribute:final] = "True";
+    end loop
+end proc
+
+// If the attribute is transient
+proc isAttributeTransient(MAttribute)
+    [MAttribute:transient] = "False";
+    loop(MAttribute->Note->Item Where [Item.type] == "UmlAttributeJavaIsTransient" && [Item.value] == "True")
+        [MAttribute:transient] = "True";
+    end loop
+end proc
+
+
+
+// Generates Defaultvalue for Attribute
+proc genDefVal(MAttribute)
+    if ([MAttribute.defaultValue] == "")
+        return "";
+    else
+        return " = " [MAttribute.defaultValue];
+    end if
+end proc
+
+
+// If the attribute is readonly (means e.g. that only a get()-method
+// should be created
+proc isAttributeReadonly(MAttribute)
+    [MAttribute:readonly] = "False";
+    loop(MAttribute->TaggedValue Where [TaggedValue.tag] == "readonly")
+        if([TaggedValue.value] == "True")
+            [MAttribute:readonly] = "True";          
+        end if
+    end loop
+end proc
+
+
+// Prepares the generation of attribute access methods:
+// If the attribute is "static" and/or "final", no methods 
+// are generated
+proc prepareAccessMethods(MAttribute)
+    if ([MAttribute.binding] == "static" || [MAttribute:final] == "True" || hasLoop(MAttribute->TaggedValue As TG Where [TG.tag] == "ejb_access" && [TG.value] == "False"))
+        [MAttribute:access_methods] = "False";
+    else
+        if (hasLoop(MAttribute->TaggedValue As TV Where ([TV.tag] == "ejb_PKField" && [TV.value] == "True") || ([TV.tag] == "ejb_PKClass" && [TV.value] == "True") ))
+            // PK fields or -classes should have no setter-method
+            [MAttribute:readonly] = "True";
+        end if
+        if ([MAttribute.access] != "public")
+            [MAttribute:bp_access_methods] = "True"; // bean private accessors!
+        end if
+        [MAttribute:access_methods] = "True";
+    end if
+end proc
+
+
+
+// generates the access method for an attribute
+template genAccessMethods(MAttribute)
+// Getter/Setter for "[MAttribute.type] [MAttribute.name]"
+    [if ([MAttribute:readonly] == "False")]
+public void set[upcase_firstchar([MAttribute.name])]([MAttribute.type] value) 
+{
+    this.[MAttribute.name] = value;
+}
+    [end if]
+public [MAttribute.type] get[upcase_firstchar([MAttribute.name])]() 
+{
+    return [MAttribute.name];
+}
+
+end template
+
+
+
+// Generates the access method declaration (without body) for an attribute.
+// Needed for example in the Remote Interface. In case the Attribute' access
+// is not public, not accessor in the RemoteInterface is generated.
+template genAccessMethodsDeclaration(MAttribute)
+[if ([MAttribute:bp_access_methods] != "True")]
+[importType([MAttribute.type])]
+// Getter/Setter for "[MAttribute.type] [MAttribute.name]"
+    [if ([MAttribute:readonly] == "False")]
+public void set[upcase_firstchar([MAttribute.name])]([MAttribute.type] value)
+    throws RemoteException;
+    [end if]
+public [MAttribute.type] get[upcase_firstchar([MAttribute.name])]()
+    throws RemoteException;
+
+[end if]
+end template
+
+
+// Generiert einen Default-Wert für die 
+// Konstruktoren von Wrapper-Klassen
+proc genDefValForCtor(type)
+    switch([type])
+        case "Void" :
+            return "";
+        case "Boolean" :
+            return "false";
+        case "Byte" :
+        case "Short" :
+        case "Integer" :
+            return "0";
+        case "Long" :
+            return "0L";
+        case "Float" :
+            return "0.0F";
+        case "Double" :
+            return "0.0D";
+        case "Character" :
+            return "\u0000";
+        case "String" :
+            return "\"\"";
+        default :
+            return "";
+    end switch
+end proc

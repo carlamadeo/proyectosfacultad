@@ -1,0 +1,19 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1994
+// 	All rights reserved
+//
+
+//
+//	FILE:	OMTUseCaseActor.note
+//
+
+Note 801591
+{
+	{ AppType OMTUseCaseActorDefinition }
+        { HelpText "The Use Case Actor note lets you add a description of the Actor involved in the Use Case" }
+	{ PrintName "Use Case Actor" }
+	{ Bounds { Min 0 } { Max 1 } }
+}

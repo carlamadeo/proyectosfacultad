@@ -1,0 +1,26 @@
+
+ItemValType Method_type
+{
+    { ChoiceType
+        { Choice "Demonstration" }
+        { Choice "Test" }
+        { Choice "Analysis" }
+        { Choice "Inspection" }
+        { Choice "Special" }
+     }
+}
+
+
+
+
+ItemValType LifeCycle
+{
+	{ChoiceType
+		{Choice "SystemRequirements"}
+		{Choice "SystemArchitecture"}
+		{Choice "SoftwareRequirements"}
+		{Choice "SoftwareArchitecture"}
+		{Choice "SoftwareDetailDesign"}
+		{Choice "SoftwareCode"}
+	}
+}

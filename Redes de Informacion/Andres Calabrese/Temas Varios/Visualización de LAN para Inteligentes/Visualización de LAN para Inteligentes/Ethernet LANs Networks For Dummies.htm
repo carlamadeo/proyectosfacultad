@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0053)http://www.rad.com/networks/1997/nettut/ethernet.html -->
+<HTML><HEAD><TITLE>Ethernet LANs: Networks For Dummies</TITLE>
+<META content="text/html; charset=iso-8859-1" http-equiv=Content-Type>
+<META content="Gil Behar" name=Author>
+<META content="MSHTML 5.00.2919.6307" name=GENERATOR></HEAD>
+<BODY aLink=#ff0000 
+background="Ethernet LANs Networks For Dummies_archivos/qs_rock.jpg" 
+bgColor=#ffffff link=#0000ee text=#000000 vLink=#551a8b>
+<CENTER>
+<H1><I><FONT face=Arial,Helvetica><FONT color=#000099>Ethernet Local Area 
+Networks</FONT></FONT></I></H1></CENTER>
+<CENTER>
+<TABLE bgColor=#ff0000 border=2 cols=1 height=170 width=321>
+  <TBODY>
+  <TR>
+    <TD><IMG alt="Ethernet Animation" border=1 height=169 
+      src="Ethernet LANs Networks For Dummies_archivos/ethernet_animation.gif" 
+      width=307></TD></TR></TBODY></TABLE></CENTER>
+<CENTER>&nbsp;<B>An illustration of an Ethernet bus</B></CENTER>&nbsp; 
+<BR>&nbsp; 
+<P><B><I><FONT face=Arial,Helvetica><FONT 
+color=#990000>General</FONT></FONT></I></B> 
+<P>Ethernet is, today, the de-facto hardware standard for local area 
+networks.&nbsp; Ethernet (Version 2) and the very similar IEEE 802.3 standard 
+define the physical and link layers of <I>carrier sense multiple 
+access/collision detection (CSMA/CD)</I> LANs.&nbsp; In CSMA/CD LANs, all 
+stations can access the network at any time.&nbsp; Before sending data, each 
+station must "listen" to the network to see if it is already in use.&nbsp; Data 
+is sent only if the station doesn't "hear" any data being sent.&nbsp; 
+<I>Collision</I>, is a situation where two stations detect silance on the 
+network and send data at the same time.&nbsp; To overcome collision problems, 
+Etherenet hardware is equipped with collision detection sensors.&nbsp; Whenever 
+a collision is detected, the colliding data is ignored, at the stations that 
+originally sent the data, will resend it. <BR>&nbsp; 
+<P><B><I><FONT face=Arial,Helvetica><FONT 
+color=#990000>Characteristics</FONT></FONT></I></B> 
+<UL>
+  <LI><U>Transmission speeds, cable lengths and media</U> <BR>Ethernet and IEEE 
+  802.3 LANs come in a few flavours, each with it's own length limits: 
+  <BR>&nbsp; 
+  <TABLE bgColor=#bdbec4 border=1 cellPadding=3>
+    <TBODY>
+    <TR>
+      <TD>
+        <CENTER>
+        <H4><B><FONT color=#660000>Technology</FONT></B></H4></CENTER></TD>
+      <TD width=100>
+        <CENTER>
+        <H4><B><FONT color=#660000>Data Rate (Mbps)</FONT></B></H4></CENTER></TD>
+      <TD width=100>
+        <CENTER>
+        <H4><B><FONT color=#660000>Maximum Segment Length 
+        (m)</FONT></B></H4></CENTER></TD>
+      <TD>
+        <CENTER>
+        <H4><B><FONT color=#660000>Media</FONT></B></H4></CENTER></TD></TR>
+    <TR>
+      <TD>Ethernet</TD>
+      <TD>
+        <CENTER>10</CENTER></TD>
+      <TD>
+        <CENTER>500</CENTER></TD>
+      <TD>50-ohm coax (thick)</TD></TR>
+    <TR>
+      <TD>10Base5 (IEEE 802.3)</TD>
+      <TD>
+        <CENTER>10</CENTER></TD>
+      <TD>
+        <CENTER>500</CENTER></TD>
+      <TD>50-ohm coax (thick)</TD></TR>
+    <TR>
+      <TD>10Base2 (IEEE 802.3)</TD>
+      <TD>
+        <CENTER>10</CENTER></TD>
+      <TD>
+        <CENTER>185</CENTER></TD>
+      <TD>50-ohm coax (thin)</TD></TR>
+    <TR>
+      <TD>1Base5 (IEEE 802.3)</TD>
+      <TD>
+        <CENTER>1</CENTER></TD>
+      <TD>
+        <CENTER>250</CENTER></TD>
+      <TD>Unshielded twisted-pairwire</TD></TR>
+    <TR>
+      <TD>10BaseT (IEEE 802.3)</TD>
+      <TD>
+        <CENTER>10</CENTER></TD>
+      <TD>
+        <CENTER>100</CENTER></TD>
+      <TD>Unshielded twisted-pairwire</TD></TR>
+    <TR>
+      <TD>10Broad36 (IEEE 802.3)</TD>
+      <TD>
+        <CENTER>10</CENTER></TD>
+      <TD>
+        <CENTER>1800</CENTER></TD>
+      <TD>75-ohm coax</TD></TR></TBODY></TABLE>&nbsp; 
+  <LI><U>Topology</U> <BR>Ethenet LANs use a bus topology, i.e. all stations are 
+  connected to a single long cable.&nbsp; Any station can send a signal along 
+  the cable, which all other stations will receive.&nbsp; Unlike ring 
+  topologies, the cable doesn't close a loop.</LI></UL>
+<UL></UL><B><I><FONT face=Arial,Helvetica><FONT color=#990000>Frame 
+Format</FONT></FONT></I></B> <BR>&nbsp; 
+<UL>
+  <H5><B>Ethernet and IEEE 802.3 Frame Formats</B></H5><IMG border=1 height=259 
+  src="Ethernet LANs Networks For Dummies_archivos/ethernet_frame_format.gif" 
+  width=521> <BR>&nbsp;</UL>Ethernet and IEEE 802.3 frames are similar.&nbsp; Both 
+begin with an alternating pattern of ones and zeros (the <I>Preamable</I>), that 
+tells the receiving stations that a frame is coming.&nbsp; Following the 
+preamable, are the address of the destination station and the address of the 
+source (sending) station. <BR>In Ethernet frames, the 2-byte field following the 
+source address is a type field, used to identify the data.&nbsp; In IEEE 802.3 
+frames, the 2-byte field following the source address is a length field, which 
+indicates the number of bytes of data that follow this field and precede the 
+frame check sequence (FCS) field. <BR>Following the type/length field is the 
+actual data contained in the frame, followed by a 4-byte FCS field containing a 
+cyclic redundancy check (CRC) value. The CRC is created by the sending device 
+and recalculated by the receiving device to check for damage that might have 
+occurred to the frame in transit. <BR>&nbsp; 
+<P><B><I><FONT face=Arial,Helvetica><FONT color=#990000>Related 
+topics</FONT></FONT></I></B> 
+<UL>
+  <LI><A 
+  href="http://www.rad.com/networks/1997/nettut/gls_c.html#CSMA/CD">CSMA/CD</A> 
+  <LI><A href="http://www.rad.com/networks/1997/nettut/gls_l.html#LAN">LAN</A> 
+  </LI></UL><B><I><FONT face=Arial,Helvetica><FONT color=#990000>See 
+Also</FONT></FONT></I></B> 
+<UL>
+  <LI><A href="http://www.rad.com/networks/1997/nettut/token_ring.html">Token 
+  Ring LANs</A> <BR>&nbsp; <BR>&nbsp;</LI></UL></BODY></HTML>

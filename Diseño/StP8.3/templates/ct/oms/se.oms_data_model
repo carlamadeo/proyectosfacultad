@@ -1,0 +1,114 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+ItemValType FlowTypeEnum
+{
+    { ChoiceType
+	{ Choice "DISCRETE" }
+	{ Choice "CONTINUOUS" }
+    }
+}
+
+ItemValType ExecutionEnum
+{
+    { ChoiceType
+        { Choice "Concurrent" } 
+	{ Choice "Sequential" } 
+    }
+}
+
+ItemValType DecompLevelEnum
+{
+    { ChoiceType
+        { Choice "CSC" }
+	{ Choice "SubCSC" } 
+	{ Choice "CSU" }
+	{ Choice "CSCI" }
+    }
+}
+
+ItemValType DatabaseUsageEnum
+{
+    { ChoiceType
+        { Choice "Set" }
+	{ Choice "Use" }
+	{ Choice "Both" } 
+    }
+}
+
+ItemValType DocNameEnum
+{
+    { ChoiceType
+        { Choice "IDD" }
+	{ Choice "IRS" }
+	{ Choice "SDD" } 
+	{ Choice "SRS" }
+    }
+}
+
+//ItemValType KindEnum
+//{
+//    { ChoiceType
+//        { Choice "def" }
+//	{ Choice "enum" }
+//	{ Choice "typedef" }
+//    }
+//}
+
+// having these two be the same simplifies the property sheet for SCE, and
+// likely does not matter for anything else. There is some potential that 
+// you could generate incorrect code, depending upon the compiler, but ...
+
+ItemValType ParamStorageClassEnum
+{
+    { ChoiceType
+        { Choice "const" }
+        { Choice "register" }
+        { Choice "register const" }
+        { Choice "static" }
+        { Choice "static const" }
+    }
+}
+
+ItemValType StorageClassEnum
+{
+    { ChoiceType
+        { Choice "const" }
+        { Choice "register" }
+        { Choice "register const" }
+        { Choice "static" }
+        { Choice "static const" }
+    }
+}
+//
+//ItemValType ParamStorageClassEnum
+//{
+//    { ChoiceType
+//        { Choice "register" }
+//        { Choice "const" }
+//        { Choice "register const" }
+//    }
+//}
+//
+//ItemValType StorageClassEnum
+//{
+//    { ChoiceType
+//        { Choice "const" }
+//        { Choice "static" }
+//        { Choice "static const" }
+//    }
+//}
+
+ItemValType AccessModeEnum
+{
+    { ChoiceType
+        { Choice "read" }
+        { Choice "write" }
+        { Choice "read-write" }
+    }
+}

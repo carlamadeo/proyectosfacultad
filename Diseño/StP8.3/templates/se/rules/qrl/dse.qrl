@@ -1,0 +1,880 @@
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// 	sccsid[] = @(#)dse.inc	
+// 	StP/SE
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1995
+// 	All rights reserved
+//
+//////////////////////////////////////////////////////////////////////////////
+
+#include "rules/qrl/se_scope.inc"
+#include "rules/qrl/se_rename.inc"
+#include "qrl/check/check_dse.impl"
+#include "qrl/bnf/bnf.qrl"
+#include "rules/qrl/re_pe_label_funcs.inc"
+#include "rules/qrl/se_re.inc"
+#include "rules/qrl/nav_source.inc"
+#include "qrl/include/se_utils.inc"
+#include "qrl/properties/dse_props.inc"
+#include "rules/qrl/codecenter_nav.inc"
+#include "rules/qrl/requirements_nav.inc"
+#include "rules/qrl/doors_nav.inc"
+#include "qrl/req_trace/export_to_doors.inc"
+
+#include "rules/qrl/default_arc_type.inc" //ECR 6469
+
+const string SYMS_WITH_TYPES = "Sequence Selection Typedef Global";
+const string SYMS_WITH_FILE_DIR = "Sequence Selection Enumeration Typedef Global";
+
+
+ 
+string
+DSESetFileDir(int id, boolean isfile)
+ 
+{
+    gde_node mod, parent, child;
+    gde_arc arc;
+    list inarcs, outarcs;
+    string val;
+    int i;
+ 
+    mod = gde_node_find_by_psymid(id);
+ 
+    if (isfile)
+        val = gde_node_prop(mod, "SEFile");
+    else
+        val = gde_node_prop(mod, "SEDirectory");
+ 
+    if (str_no_val(val))
+        return NULL;
+    else
+        return val;
+ 
+} // end of DSESetFileDir()
+ 
+
+
+// find the decomposition of the current node 
+
+node
+get_oms_seq_sel_iter(gde_node gnode)
+
+{
+    string nt;
+    list oms_nodes;
+    node oms_node;
+    int i;
+
+    nt = gde_nt_name(gde_node_nt(gnode));
+
+    if (nt == "Sequence" || nt == "Selection")
+    {
+        oms_nodes = gde_node_oms_nodes(gnode);
+    
+	for (i = 0; i < list_count(oms_nodes); i = i + 1)
+	{
+	    oms_node = list_get(oms_nodes, i);
+	    if (oms_node.type == "Sequence" || oms_node.type == "Selection")
+	    {
+		return oms_node;
+	    }
+	}
+    }
+    return NULL;
+}
+
+
+
+// get all the objects with the same name as this guy's type.
+
+list
+FindDseType(int id)
+{
+    return FindTypeDefinition(id, "DataType");
+} 
+
+
+
+
+
+// find a node that has a type property with the same name as the one here.
+// Note that this can be more then one.
+
+list
+GoToDseParent(int id)
+{
+    node n;
+    list l;
+    string name;
+
+    // first see if there is a parent that is not a file
+
+    n = find_by_query("node[id = ${id}]");
+    if (n == NULL)
+	return list_create("node_ref", 0);
+
+    l = list_select("node_ref[node[!SEFile && id = ${n.scope_node_id}]]");
+
+    // look for noderefs of the node named like the datatype
+
+    list_concatenate( l, list_select( "node_ref[node[items[DataType && value = '" + to_oms_string(n.name) + "']]]"));
+
+    // search for this anyway, as there may be struct, union and pointer
+    // refs as well as direct refs
+    name = to_reveng_name(n.name);
+    if (name == n.name)
+      name = to_underscore_name(n.name);
+
+    list_concatenate( l, list_select("node_ref[node[items[DataType && value $ '* " + to_oms_string(name) + "*']]]"));
+
+    return l;
+}
+
+
+
+
+void
+InitializeDseDiagramFromId(int id)
+{
+    item one_item;
+    node n;
+
+    n = find_by_query("node[id == ${id}]");
+
+    if (n != NULL)
+    	InitializeDseDiagram(n.name, "Sequence");
+    else
+	print_error("Object not found.", NULL);
+    return;
+}
+
+
+
+
+void
+InitializeDseDiagramFromNode(int id, int whichi)
+{
+    item one_item;
+    node n;
+    string itemtype;
+
+    if (whichi == 1)
+        itemtype = "ModuleReturnType";
+    else
+        itemtype = "DataType";
+    
+    one_item = find_by_query("item[${itemtype} && obj_id == ${id}]");
+
+    if (one_item != NULL)
+    	InitializeDseDiagram(one_item.value, "Sequence");
+    else
+    {
+	n = find_by_query("node[id = ${id}]");
+	print_error("Object " + n.name + " has no type.", NULL);
+    }
+    return;
+}
+
+
+
+void
+InitializeDseDiagramFromCntx(int id, int whichi)
+{
+    item one_item;
+    cntx c;
+    string itemtype;
+
+    if (whichi == 1)
+        itemtype = "ModuleReturnType";
+    else
+        itemtype = "DataType";
+    
+    one_item = find_by_query("item[${itemtype} && obj_id == ${id}]");
+
+    if (one_item != NULL)
+    	InitializeDseDiagram(one_item.value, "Sequence");
+    else
+    {
+	c = find_by_query("cntx[id = ${id}]");
+	print_error("Object " + c.name + " has no type. You must assign a type before navagating to the type definition.", NULL);
+    }
+    return;
+}
+
+
+
+void 
+InitializeDseDiagram(string name, string nodetype)
+{
+
+    gde_node start;
+    int txn;
+    string fname, basename;
+
+    if (str_no_val(name))
+	return;
+
+    gde_builtin("BufferClear");
+
+    if (list_count(gde_all_symbols()) != 0)
+    {
+	// must have pressed cancel!
+	print_error("Initialization of `" + name + "' cancelled.");
+	return;
+    }
+	
+    gde_save_state();
+    txn = gde_start_edit_transaction();
+
+    EditorShowOnNavReceive();
+
+    if (str_no_val(nodetype))
+	nodetype = "Sequence";
+
+    fname = to_oms_string(strip_suffix(name));
+    basename = fname;
+    while (find_by_query("file[name == '${fname}' && DseDiagram]") != NULL)
+	fname = fname + "_";
+
+    gde_builtin("EditorSetFileName \"" + fname + "\"");
+
+    start = gde_node_create(nodetype, 250, 50);
+    gde_node_set_label(start, name);
+
+    if (basename != to_oms_string(name)) 
+    {
+	start = gde_node_create(nodetype, 250, 200);
+	gde_node_set_label(start, basename);
+    }
+
+    gde_builtin("BufferCenter");   
+    gde_end_edit_transaction(GDE_CMD_INSERT, txn, False);
+
+    return;
+}
+
+
+
+void
+InitializeDseDiagramWithScope(int id)
+{
+
+    gde_node kid, parent;
+    gde_arc arc;
+    int txn, x, y;
+    string fname;
+    node node;
+
+    node = find_by_query("node[id = ${id}]");
+
+    gde_builtin("BufferClear");
+
+    if (list_count(gde_all_symbols()) != 0)
+    {
+	// must have pressed cancel!
+	print_error("Initialization of `" + node.name + "' cancelled.");
+	return;
+    }
+
+    gde_save_state();
+    txn = gde_start_edit_transaction();
+
+    EditorShowOnNavReceive();
+
+    fname = to_oms_string(strip_suffix(node.name));
+    while (find_by_query("file[name == '${fname}' && DseDiagram]") != NULL)
+	fname = fname + "_";
+
+    gde_builtin("EditorSetFileName \"" + fname + "\"");
+
+    x = 250;
+    y = 1000;
+    kid = gde_node_create(node.type, x, y);
+    gde_node_set_label(kid, node.name);
+
+
+    while (node.scope_node_id != 0)
+    {
+	node = find_by_query("node[id = ${node.scope_node_id}]");
+
+	if (node.type == "SEFile")
+	    gde_node_set_prop(kid, "SEFile", node.name);
+	else if (node.type == "SEDirectory")
+	    gde_node_set_prop(kid, "SEDirectory", node.name);
+	else
+	{
+	    y -= 200;
+	    parent = gde_node_create(node.type, x, y);    
+            gde_node_set_label(parent, node.name);
+	    gde_arc_create("Component", parent, kid);
+	    kid = parent;	    
+	}
+    }
+
+    gde_builtin("BufferCenter");   
+    gde_end_edit_transaction(GDE_CMD_INSERT, txn, False);
+
+    return;
+}
+
+
+
+//
+// retrieves all the various children of the given node and
+// inserts links to them on the given diagram.
+
+void
+InsertAllDseChildren(node oms_node, gde_node gnode)
+{
+    string query;
+    gde_node child_node;
+    int x_coord, count, i;
+    node child, filenode, dirnode;
+    list nodes;
+
+    query = "node[in_links[Component && from_node_id=${oms_node.id}]]";
+
+    nodes = list_select(query);
+    count = list_count(nodes);
+    x_coord = 350 - (count/2)*175;
+      
+    for (i = 0; i < count; i = i + 1)
+    {
+	child = list_get(nodes, i);
+	child_node = gde_node_create(child.type, x_coord, 300);
+	gde_node_set_label(child_node, child.name);
+
+	// Add scope
+	filenode = find_by_query("node[id = ${child.scope_node_id}]");
+	if (filenode != NULL)
+	{
+	    dirnode = find_by_query("node[id = ${filenode.scope_node_id}]");
+	    gde_node_set_prop(gnode, "SEDirectory", dirnode.name);
+	    gde_node_set_prop(gnode, "SEFile", filenode.name);
+	}
+
+	x_coord = x_coord + 175;
+	gde_arc_create("Component", gnode, child_node);
+    }
+}
+
+
+
+// get all the children for each selected node.
+
+void
+GetAllChildren()
+{
+    list selnodes;
+    gde_node selnode;
+    node oms_node;
+    int i;
+
+    selnodes = gde_nodes_in_list(gde_selected_symbols());
+
+    for (i = 0; i < list_count(selnodes); i = i + 1)
+    {
+    	selnode = list_get(selnodes, i);
+	oms_node = get_oms_seq_sel_iter(selnode);
+	if (oms_node != NULL)
+            InsertMissingDseChildren(oms_node, selnode);
+    }
+    print_message("Show All Children completed.");
+}
+
+
+
+boolean
+node_already_a_kid(set gde_set, string name)
+
+{
+    int i;
+    gde_node gn;
+
+    for (i = 0; i < set_count(gde_set); i++)
+    {
+	gn = set_get_element(gde_set, i);
+	if (gde_node_label(gn) == name)
+	    return True;
+    }
+    return False;
+}
+
+
+//
+// Gets a list of all the children missing from the diagram filename
+// and inserts it into the current diagram.  Gets all children if
+// filename is NULL.
+//
+void
+InsertMissingDseChildren(node oms_node, gde_node parent)
+{
+    string query, nt;
+    node   child, dir_node, filenode, dirnode, node_elem;
+    int    startx = -10000, x, y = -10000, txn, i, j;
+    gde_node child_gn;
+    set gde_set, node_set;
+    gde_arc arc;
+    list outarcs, links;
+    gde_link lk;
+    node next_node;
+    
+
+    // get all children for node in repository
+    gde_set = set_create("gde_node");
+    node_set = set_select("node[in_links[Component && from_node_id=${oms_node.id}] && node_refs]");
+
+    outarcs = gde_node_outarcs_no_comments(parent);
+    for (i = 0; i < list_count(outarcs); i++)
+    {
+	arc = list_get(outarcs, i);
+	links = gde_arc_links(arc);
+	for (j = 0; j < list_count(links); j++)
+	{
+	    lk = list_get(links, j);
+	    child_gn = gde_link_tonode(lk);
+	    set_add(gde_set, child_gn);
+	    x = gde_node_x(child_gn);
+	    if (x > startx)
+		startx = x; 
+	    y = gde_node_y(child_gn);
+	}
+    }
+
+    gde_save_state();
+    txn = gde_start_edit_transaction();
+    print_message("Showing all children of `" + gde_node_label(parent) + "'.");
+
+    // we would like to do a set difference based on the names, but it is not worth the
+    // overhead of parallel sets.
+
+    if (startx == -10000)
+	startx = gde_node_x(parent) - 200 - (100 * set_count(node_set));
+    if (y == -10000)
+	y = gde_node_y(parent) + 200;
+
+    for (i = 0; i < set_count(node_set); i++)
+    {
+	next_node = set_get_element(node_set, i);
+	if (node_already_a_kid(gde_set, next_node.name))
+	    continue;
+
+	child_gn = gde_node_create(next_node.type, startx + 200, y);
+	gde_node_set_label(child_gn, next_node.name);
+	gde_arc_create("Component", parent, child_gn);
+	startx += 200;
+    }
+
+    gde_end_edit_transaction(GDE_CMD_INSERT, txn, False);
+
+    return;
+}
+
+
+
+
+node
+get_proper_oms_node(gde_node gnode)
+
+{
+    list nlist;
+    node node;
+    int i;
+
+    nlist = gde_node_oms_nodes(gnode);
+
+    if (list_count(nlist) == 0)
+	return NULL;
+
+    for (i = 0; i < list_count(nlist); i = i + 1)
+    {
+	node = list_get(nlist, i);
+	if (node.type == "Sequence" || node.type == "Selection" || node.type == "Typedef" || node.type == "Enumeration" || node.type == "Global")
+	    return node;
+    }
+    return NULL;
+
+} // end of get_proper_oms_node() 
+
+
+
+
+
+boolean
+DSELeafTypeDisplayMarkCond()
+{
+    return True;
+}
+ 
+
+
+int
+idehook_dse_t_props_active_func()
+ 
+{
+    list symbols;
+    gde_node gn;
+    gde_symbol sym;
+    int i;
+ 
+    symbols = gde_selected_symbols();
+    if (list_count(symbols) == 0)
+        return ACTIVE_FUNC_IS_INACTIVE;
+ 
+    if (list_count(symbols) ==
+        (list_count(gde_symbols_find_with_types(symbols, string_to_list("Sequence Selection", " ")))))
+    {
+	for (i = 0; i < list_count(symbols); i++)
+	{
+	    gn = to_gde_node(list_get(symbols, i));
+	    if (list_count(gde_node_outarcs_no_comments(gn)) != 0)
+                return ACTIVE_FUNC_IS_INACTIVE;
+	}
+	// if they are all kids, ok
+        return ACTIVE_FUNC_IS_ACTIVE;
+    }
+
+    return ACTIVE_FUNC_IS_INACTIVE;
+} 
+
+
+int
+idehook_dse_structure_props_active_func()
+ 
+{
+    list symbols;
+    gde_node gnode;
+    gde_symbol sym;
+    int i;
+ 
+    symbols = gde_selected_symbols();
+    if (list_count(symbols) == 0)
+        return ACTIVE_FUNC_IS_INACTIVE;
+ 
+    if (list_count(symbols) ==
+        (list_count(gde_symbols_find_with_types(symbols, string_to_list("Sequence Selection Enumeration Typedef", " ")))))
+        return ACTIVE_FUNC_IS_ACTIVE;
+
+    return ACTIVE_FUNC_IS_INACTIVE;
+ 
+} 
+
+
+int
+idehook_show_children_active_func ()
+{
+    list symbols;
+    gde_node gnode;
+    gde_symbol sym;
+    int i;
+ 
+    symbols = gde_selected_symbols();
+    if (list_count(symbols) == 0)
+        return ACTIVE_FUNC_IS_INACTIVE;
+ 
+    if (list_count(symbols) ==
+        (list_count(gde_symbols_find_with_types(symbols, string_to_list("Sequence Selection Enumeration", " ")))))
+        return ACTIVE_FUNC_IS_ACTIVE;
+
+    return ACTIVE_FUNC_IS_INACTIVE;
+ 
+} // end of idehook_change_selector_tag_dse_active_func()
+
+
+
+
+
+boolean
+dse_precondition_is_parent(gde_mapsymbol ms)
+
+{
+    gde_node gn = to_gde_node(ms);
+    gde_arc ga;
+    int i;
+    list arcl;
+    string val, nt = gde_nt_name(gde_node_nt(gn));
+
+    // if it has no inlinks of type Component, it is a parent
+    arcl = gde_node_inarcs_no_comments(gn);
+    for (i = 0; i < list_count(arcl); i++)
+    {
+        ga = list_get(arcl, i);
+	if (gde_lt_name(gde_arc_lt(ga)) == "Component")
+	{
+	    val = gde_node_prop(gn, "SEFile");
+	    if (val != NULL && val != "")
+	        gde_node_clear_prop(gn, "SEFile");
+
+	    val = gde_node_prop(gn, "SEDirectory");
+	    if (val != NULL && val != "")
+	        gde_node_clear_prop(gn, "SEDirectory");
+
+	    return False;
+	}
+    }
+
+    return True;
+}
+
+
+
+//boolean
+//dse_precondition_is_parent_link(gde_mapsymbol ms)
+//
+//{
+//    gde_link gl = to_gde_link(ms);
+//    gde_node parent, child;
+//    string val, pval;
+//
+//    // true if the from end is a child
+//
+//    parent = gde_link_fromnode(gl);
+//    child = gde_link_tonode(gl);
+//
+//    if (list_count(gde_node_inarcs_no_comments(parent)) == 0)
+//    {
+//	gde_node_clear_prop(child, "SEDirectory");
+//	gde_node_clear_prop(child, "SEFile");
+//    }
+//
+//    val = gde_node_prop(child, "SEDirectory");
+//    if (val != NULL && val != "")
+//    {
+//	pval = gde_node_prop(parent, "SEDirectory");
+//	if (pval == NULL || pval == "")
+//	    gde_node_set_prop(parent, "SEDirectory", val);
+//
+//	gde_node_clear_prop(child, "SEDirectory");
+//    }
+//
+//    val = gde_node_prop(child, "SEFile");
+//    if (val != NULL && val != "")
+//    {
+//	pval = gde_node_prop(parent, "SEFile");
+//	if (pval == NULL || pval == "")
+//	    gde_node_set_prop(parent, "SEFile", val);
+//
+//	gde_node_clear_prop(child, "SEFile");
+//    }
+//
+//    return True;
+//}
+
+
+// Property sheet hooks
+
+void
+DSE_t_props_show()
+
+{ 
+    gde_builtin("PropertySheetShow TObjectDialog"); 
+
+    TObjectDialog_Reset(NULL, NULL, -99, NULL);
+
+    dse_t_props_init();
+}
+
+void
+DSE_structure_props_show()
+
+{ 
+    gde_builtin("PropertySheetShow ObjectDialog"); 
+
+    DseObjectDialog_Reset(NULL, NULL, -99, NULL);
+
+    dse_structure_props_init();
+}
+
+
+void
+TObjectDialog_ActionDone()
+
+{
+    TObjectDialog_Reset(NULL, NULL, -99, NULL);
+
+    return;
+}
+
+void
+DseObjectDialog_ActionDone()
+
+{
+    DseObjectDialog_Reset(NULL, NULL, -99, NULL);
+    return;
+}
+
+ 
+boolean DSETObjectPropsInitted = False;
+
+void
+dse_t_props_init()
+ 
+{
+    if (DSETObjectPropsInitted)
+      return;
+    DSETObjectPropsInitted = True;
+     
+    ui_text_set_readonly(to_ui_prop("TObjectDialog", "TObjName"), True);  
+
+    // This sets the callback to reset the dialog when one object is choosen
+    gde_builtin("EditorActionDone 0214951148 TObjectDialog_ActionDone();");
+
+    return;
+}
+
+boolean DSEObjectPropsInitted = False;
+
+void
+dse_structure_props_init()
+ 
+{
+    if (DSEObjectPropsInitted)
+      return;
+    DSEObjectPropsInitted = True;
+     
+    ui_text_set_readonly(to_ui_prop("ObjectDialog", "DseObjName"), True);  
+
+    // This sets the callback to reset the dialog when one object is choosen
+    gde_builtin("EditorActionDone 0214951138  DseObjectDialog_ActionDone();");
+
+    return;
+}
+
+// and the double click hook
+
+void
+dse_structure_double_click(gde_mapsymbol ms)
+{
+    DSE_structure_props_show();
+}
+
+
+
+void
+DSE_2167A_props_show()
+
+{ 
+    //gde_builtin("PropertySheetShow 2167ADialog"); 
+
+    print_error("2167A property sheet not yet available.  Use OAE instead.");
+    return;
+}
+
+
+
+
+// check semantics func for dse
+
+void
+checkDseSemantics()
+{
+    checkDseSemanticsFromDse(1, 1, 1);
+}
+ 
+void
+checkDseSemanticsSelect()
+{
+    gde_builtin("PropertySheetShow DSESemanticChecks");
+}
+
+
+node
+sequence_oms_node(gde_node gnode)
+ 
+{
+    list nlist;
+    node node;
+    int i;
+ 
+    nlist = gde_node_oms_nodes(gnode);
+ 
+    if (list_count(nlist) == 0)
+        return NULL;
+ 
+    for (i = 0; i < list_count(nlist); i = i + 1)
+    {
+        node = list_get(nlist, i);
+        if (node.type == "Sequence")
+            return node;
+    }
+ 
+    return NULL;
+} 
+
+
+
+// extra syntax checks
+//
+// Does the following:
+//
+// Checks enums for only one level of kids. 
+// Checks for no types on enums and enum kids
+//
+
+boolean
+DseCheckSyntax()
+
+{
+    boolean fine = True;
+    gde_node gn;
+    gde_arc arc;
+    gde_link link;
+    list kidarcs, links, enums = gde_nodes_find_by_type(gde_all_symbols(), "Enumeration");
+    int i, j, k;
+    node oms_node;
+    item item;
+
+
+    for (i = 0; i < list_count(enums); i++)
+    {
+	gn = list_get(enums, i);
+	kidarcs = gde_node_outarcs_no_comments(gn);
+	if (list_count(kidarcs) == 0)
+	{
+	    print_error("Enumeration `" + gde_node_label(gn) + "' must have at least one child", gde_node_psymid(gn));
+	    fine = False;
+	    continue;
+	}
+
+	for (j = 0; j < list_count(kidarcs); j++)
+	{
+	    links = gde_arc_links(list_get(kidarcs, j));
+	    for (k = 0; k < list_count(links); k++)
+	    {
+		link = list_get(links, k);
+		gn = gde_link_tonode(link);
+		if (list_count(gde_node_outarcs_no_comments(gn)) > 0)
+		{
+		    print_error("Enumeration Value `" + gde_node_label(gn) + "' must not have children.", 
+                                gde_node_psymid(gn));
+		    fine = False;
+		}
+		
+		oms_node = sequence_oms_node(gn);
+		if (oms_node)
+		{
+		    item = find_by_query("item[DataType && obj_id = ${oms_node.id}]");
+		    if (item && (item.value != NULL) && item.value != "") 
+		    {
+			print_error("Enumeration Value `" + gde_node_label(gn) + "' must not have a type.", 
+				    gde_node_psymid(gn));
+			fine = False;
+		    }
+		}
+	    }
+	}
+    }
+
+    if (gde_default_check_syntax() == False)
+	fine = False;
+
+    return fine;
+}
+		    
+
+//  Add any user customizations to the file included below:
+#include_if_exists "user/se/rules/qrl/user_dse.qrl"
+
+

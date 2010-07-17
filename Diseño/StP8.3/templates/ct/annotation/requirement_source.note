@@ -1,0 +1,36 @@
+Note 801572
+{
+        { AppType REQSourceNote }
+        { PrintName "Requirement Source" }
+        { HelpText "The origin of the requirement."}
+        { Bounds { Min 1 } { Max 1 } }
+        { Item
+                { AppType RequirementDocument }
+                { HelpText "The document of origin for requirement."}
+                { PrintName "Document" }
+                { Bounds { Min 0 } { Max 1 } }
+                { InitValue "" }
+        }
+        { Item
+                { AppType RequirementParagraph }
+                { HelpText "The paragraph of origin for requirement."}
+                { PrintName "Paragraph" }
+                { Bounds { Min 0 } { Max 1 } }
+                { InitValue "" }
+        }
+
+        { Item
+	    { AppType Author }
+	    { HelpText "The Author item specifies the name of the user who is annotating the object. When you annotate an object, the value of the user system variable is inserted into the Author item." }
+	    { PrintName "Author" }
+            { Bounds { Min 0 } { Max 1 } }
+	    { InitValue "${user}" }
+    }
+        { Item
+	    { AppType Generated }
+	    { HelpText "The Generated item specifies the time and date the annotation was generated. The value of this item is read from the time and date system variables when it is added to an annotation." }
+	    { PrintName "Generated" }
+            { Bounds { Min 0 } { Max 1 } }
+	    { InitValue "${time} ${date}" }
+        }
+}

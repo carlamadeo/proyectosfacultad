@@ -1,0 +1,52 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP Core
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1995
+//      All rights reserved
+//
+////////////////////////////////////////////////////////////////////////////////
+
+Menu HelpMenu
+{
+    { InMenuBar True }
+    { Label "&Help" }
+    { Pin True }
+    { HelpMenu True }
+    { MenuEntry
+        { Name ContentsAndIndex }
+//         { Label "&Contents and Index" }
+        { Label "&Online Manuals" }
+        { Builtin "EditorHelp HelpOnlineManuals" }
+    }
+//     { MenuEntry
+//         { Name WhatsThis }
+//         { Label "What's &This?" }
+//         { Builtin "EditorHelp HelpOnWindow" }
+//     }
+    { Spacer { Name Spacer1 } }
+// ECR 4034 - begin
+    { MenuEntry
+        { Name TechSupport }
+        { Label "&Technical Support" }
+        { Builtin "TechSupport" }
+    }
+// ECR 4034 - end
+
+// ECR 6605 begin
+    { MenuEntry
+        { Name SubmitBug }
+        { Label "&Submit bug/enhancement" }
+        { Builtin "SubmitBug" }
+    }
+    { Spacer { Name Spacer2 } }
+// ECR 6605 end
+
+    { MenuEntry
+        { Name AboutStP }
+        { Label "&About StP" }
+        { Builtin "EditorVersion" }
+    }
+}
+

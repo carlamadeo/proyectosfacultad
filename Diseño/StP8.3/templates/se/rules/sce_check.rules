@@ -1,0 +1,150 @@
+//
+//      sccsid[] = @(#)sce_check.rules
+//      StP/SE
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1995
+//      All rights reserved
+//
+
+// sce_check.rules
+//
+//	Contains the properties used for sce semantic checks
+//	from both the sce editor and the desktop.
+
+Global 1 SceCheckOne
+{
+    { Properties
+        { Choice
+            { Name "check_one" }
+            { Label "" }
+            { Type CheckBox }
+            { ChoiceItem
+		{ Label "Modules have a formal SCE definition" }
+                { OnValue "-x check_one '1'" }
+                { OffValue "-x check_one '0'" }
+                { Init On }
+            }
+        }
+    }
+}
+
+Global 1 SceCheckTwo
+{
+    { Properties
+        { Choice
+            { Name "check_two" }
+            { Label "" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Label "Modules not formally defined have a PDL definition" }
+                { OnValue "-x check_two '1'" }
+                { OffValue "-x check_two '0'" }
+                { Init On }
+            }
+        }
+    }    
+}
+
+Global 1 SceCheckThree
+{
+    { Properties 
+        { Choice
+            { Name "check_three" } 
+            { Label "" }
+            { Type CheckBox }
+            { ChoiceItem    
+                { Label "Actual parameters do NOT have Data Type annotations" }
+                { OnValue "-x check_three '1'" }
+                { OffValue "-x check_three '0'" }
+                { Init On }
+            }
+        }
+    }    
+}
+
+Global 1 SceCheckFour
+{
+    { Properties 
+        { Choice
+            { Name "check_four" } 
+            { Label "" }
+            { Type CheckBox }
+            { ChoiceItem    
+                { Label "Formal parameters have valid Data Type annotations" }
+                { OnValue "-x check_four '1'" }
+                { OffValue "-x check_four '0'" }
+                { Init On }
+            }
+        }
+    }    
+}
+
+Global 1 SceCheckFive
+{
+    { Properties 
+        { Choice
+            { Name "check_five" } 
+            { Label "" }
+            { Type CheckBox }
+            { ChoiceItem    
+                { Label "Modules have same number of formal and actual parameters" }
+                { OnValue "-x check_five '1'" }
+                { OffValue "-x check_five '0'" }
+                { Init On }
+            }
+        }
+    }    
+}
+
+Global 1 SceCheckSix
+{
+    { Properties 
+        { Choice
+            { Name "check_six" } 
+            { Label "" }
+            { Type CheckBox }
+            { ChoiceItem    
+                { Label "Modules and globals have valid Data Type annotations" }
+                { OnValue "-x check_six '1'" }
+                { OffValue "-x check_six '0'" }
+                { Init On }
+            }
+        }
+    }    
+}
+
+Global 1 SceCheckSeven
+{
+    { Properties 
+        { Choice
+            { Name "check_seven" } 
+            { Label "" }
+            { Type CheckBox }
+            { ChoiceItem    
+                { Label "Offpage connectors with outgoing links have corresponding ones with ingoing links" }
+                { OnValue "-x check_seven '1'" }
+                { OffValue "-x check_seven '0'" }
+                { Init On }
+            }
+        }
+    }    
+}
+
+
+Global 1 SceCheckVerbose
+{
+    { Properties
+        { Choice
+            { Name "verbose" }
+            { Label "" }
+            { Type CheckBox }
+            { ChoiceItem
+		{ Label "Verbose" }
+                { OnValue "-x verbose '1'" }
+                { OffValue "-x verbose '0'" }
+                { Init Off }
+            }
+        }
+    }
+}
+

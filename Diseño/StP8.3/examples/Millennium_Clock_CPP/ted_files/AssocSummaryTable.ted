@@ -1,0 +1,588 @@
+FillTable TedTable
+{
+{ Hsect { Appid 2 }
+{ Hidden False }
+{ NumRows 19 }
+{ Vsect { Appid 3 }
+{ NumCols 7 }
+{ NumVisRows 19 }
+{ Hidden False }
+{ NumVisCols 7 }
+{ Row     { Appid 4 }
+{ Cell { Appid 5 }
+{ Width 140 }
+{ Label "Class A" }
+{ Shading Shade1 }
+}
+{ Cell { Appid 6 }
+{ Width 100 }
+{ Label "Role" }
+{ Shading Shade1 }
+}
+{ Cell { Appid 7 }
+{ Width 65 }
+{ Label "Mult. A" }
+{ Shading Shade1 }
+}
+{ Cell { Appid 8 }
+{ Width 140 }
+{ Label "Class B" }
+{ Shading Shade1 }
+}
+{ Cell { Appid 9 }
+{ Width 65 }
+{ Label "Mult. B" }
+{ Shading Shade1 }
+}
+{ Cell { Appid 10 }
+{ Width 140 }
+{ Label "Association" }
+{ Shading Shade1 }
+}
+{ Cell { Appid 11 }
+{ Width 240 }
+{ Label "Description" }
+{ Shading Shade1 }
+}
+}
+{ Row     { Appid 12 }
+{ Cell { Appid 13 }
+{ Width 140 }
+{ Label "ClockBird" }
+}
+{ Cell { Appid 14 }
+{ Width 100 }
+{ Label "- none -" }
+}
+{ Cell { Appid 15 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 16 }
+{ Width 140 }
+{ Label "Display" }
+}
+{ Cell { Appid 17 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 18 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 19 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+{ Row     { Appid 20 }
+{ Cell { Appid 21 }
+{ Width 140 }
+{ Label "ClockBird" }
+}
+{ Cell { Appid 22 }
+{ Width 100 }
+{ Label "- none -" }
+}
+{ Cell { Appid 23 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 24 }
+{ Width 140 }
+{ Label "Door" }
+}
+{ Cell { Appid 25 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 26 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 27 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+{ Row     { Appid 28 }
+{ Cell { Appid 29 }
+{ Width 140 }
+{ Label "Clockwork" }
+}
+{ Cell { Appid 30 }
+{ Width 100 }
+{ Label "- none -" }
+}
+{ Cell { Appid 31 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 32 }
+{ Width 140 }
+{ Label "Cuckoo" }
+}
+{ Cell { Appid 33 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 34 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 35 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+{ Row     { Appid 36 }
+{ Cell { Appid 37 }
+{ Width 140 }
+{ Label "Clockwork" }
+}
+{ Cell { Appid 38 }
+{ Width 100 }
+{ Label "- none -" }
+}
+{ Cell { Appid 39 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 40 }
+{ Width 140 }
+{ Label "Door" }
+}
+{ Cell { Appid 41 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 42 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 43 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+{ Row     { Appid 44 }
+{ Cell { Appid 45 }
+{ Width 140 }
+{ Label "Clockwork" }
+}
+{ Cell { Appid 46 }
+{ Width 100 }
+{ Label "clockwork" }
+}
+{ Cell { Appid 47 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 48 }
+{ Width 140 }
+{ Label "Pendulum" }
+}
+{ Cell { Appid 49 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 50 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 51 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+{ Row     { Appid 52 }
+{ Cell { Appid 53 }
+{ Width 140 }
+{ Label "Clockwork" }
+}
+{ Cell { Appid 54 }
+{ Width 100 }
+{ Label "- none -" }
+}
+{ Cell { Appid 55 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 56 }
+{ Width 140 }
+{ Label "Display" }
+}
+{ Cell { Appid 57 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 58 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 59 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+{ Row     { Appid 60 }
+{ Cell { Appid 61 }
+{ Width 140 }
+{ Label "Clockwork" }
+}
+{ Cell { Appid 62 }
+{ Width 100 }
+{ Label "- none -" }
+}
+{ Cell { Appid 63 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 64 }
+{ Width 140 }
+{ Label "Owl" }
+}
+{ Cell { Appid 65 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 66 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 67 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+{ Row     { Appid 68 }
+{ Cell { Appid 69 }
+{ Width 140 }
+{ Label "Cuckoo" }
+}
+{ Cell { Appid 70 }
+{ Width 100 }
+{ Label "cuckoo" }
+}
+{ Cell { Appid 71 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 72 }
+{ Width 140 }
+{ Label "Clockwork" }
+}
+{ Cell { Appid 73 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 74 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 75 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+{ Row     { Appid 76 }
+{ Cell { Appid 77 }
+{ Width 140 }
+{ Label "Display" }
+}
+{ Cell { Appid 78 }
+{ Width 100 }
+{ Label "display" }
+}
+{ Cell { Appid 79 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 80 }
+{ Width 140 }
+{ Label "Door" }
+}
+{ Cell { Appid 81 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 82 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 83 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+{ Row     { Appid 84 }
+{ Cell { Appid 85 }
+{ Width 140 }
+{ Label "Display" }
+}
+{ Cell { Appid 86 }
+{ Width 100 }
+{ Label "display" }
+}
+{ Cell { Appid 87 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 88 }
+{ Width 140 }
+{ Label "ClockBird" }
+}
+{ Cell { Appid 89 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 90 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 91 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+{ Row     { Appid 92 }
+{ Cell { Appid 93 }
+{ Width 140 }
+{ Label "Display" }
+}
+{ Cell { Appid 94 }
+{ Width 100 }
+{ Label "display" }
+}
+{ Cell { Appid 95 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 96 }
+{ Width 140 }
+{ Label "Clockwork" }
+}
+{ Cell { Appid 97 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 98 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 99 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+{ Row     { Appid 100 }
+{ Cell { Appid 101 }
+{ Width 140 }
+{ Label "Door" }
+}
+{ Cell { Appid 102 }
+{ Width 100 }
+{ Label "door" }
+}
+{ Cell { Appid 103 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 104 }
+{ Width 140 }
+{ Label "Clockwork" }
+}
+{ Cell { Appid 105 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 106 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 107 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+{ Row     { Appid 108 }
+{ Cell { Appid 109 }
+{ Width 140 }
+{ Label "Door" }
+}
+{ Cell { Appid 110 }
+{ Width 100 }
+{ Label "- none -" }
+}
+{ Cell { Appid 111 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 112 }
+{ Width 140 }
+{ Label "Display" }
+}
+{ Cell { Appid 113 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 114 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 115 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+{ Row     { Appid 116 }
+{ Cell { Appid 117 }
+{ Width 140 }
+{ Label "Door" }
+}
+{ Cell { Appid 118 }
+{ Width 100 }
+{ Label "door" }
+}
+{ Cell { Appid 119 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 120 }
+{ Width 140 }
+{ Label "ClockBird" }
+}
+{ Cell { Appid 121 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 122 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 123 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+{ Row     { Appid 124 }
+{ Cell { Appid 125 }
+{ Width 140 }
+{ Label "Owl" }
+}
+{ Cell { Appid 126 }
+{ Width 100 }
+{ Label "owl" }
+}
+{ Cell { Appid 127 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 128 }
+{ Width 140 }
+{ Label "Clockwork" }
+}
+{ Cell { Appid 129 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 130 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 131 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+{ Row     { Appid 132 }
+{ Cell { Appid 133 }
+{ Width 140 }
+{ Label "Pendulum" }
+}
+{ Cell { Appid 134 }
+{ Width 100 }
+{ Label "- none -" }
+}
+{ Cell { Appid 135 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 136 }
+{ Width 140 }
+{ Label "Clockwork" }
+}
+{ Cell { Appid 137 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 138 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 139 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+{ Row     { Appid 140 }
+{ Cell { Appid 141 }
+{ Width 140 }
+{ Label "Pendulum" }
+}
+{ Cell { Appid 142 }
+{ Width 100 }
+{ Label "pend" }
+}
+{ Cell { Appid 143 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 144 }
+{ Width 140 }
+{ Label "Weight" }
+}
+{ Cell { Appid 145 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 146 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 147 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+{ Row     { Appid 148 }
+{ Cell { Appid 149 }
+{ Width 140 }
+{ Label "Weight" }
+}
+{ Cell { Appid 150 }
+{ Width 100 }
+{ Label "- none -" }
+}
+{ Cell { Appid 151 }
+{ Width 65 }
+{ Label "?" }
+}
+{ Cell { Appid 152 }
+{ Width 140 }
+{ Label "Pendulum" }
+}
+{ Cell { Appid 153 }
+{ Width 65 }
+{ Label "1" }
+}
+{ Cell { Appid 154 }
+{ Width 140 }
+{ Label "unnamed" }
+}
+{ Cell { Appid 155 }
+{ Width 240 }
+{ Label "- none -" }
+}
+}
+} } }

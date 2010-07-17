@@ -1,0 +1,259 @@
+/////////////////////////////////////////////////////////////////////////////
+// Export the current system into a XML file
+/////////////////////////////////////////////////////////////////////////////
+void stp2xmi(string output_file, boolean generate_imf, boolean export_rose_ext, string selected_packages)
+{
+    string sys;
+    string proj;
+    string imf_file;
+    string tdl_path;
+    string tdl_file;
+    string syscall;
+    string output_dir; // ECR 6791
+    string XMI_gen_charset; // ECR 5969
+
+    output_file = path_normalize(output_file);
+    output_dir = path_part(output_file); // ECR 6791
+
+    proj = current_projdir();
+    sys = current_system();
+
+    tdl_path = toolinfo_variable("tdl_path");
+    if (tdl_path == NULL)
+    {
+        print_error("ToolInfo Variable 'tdl_path' not defined, exiting!");
+        return;
+    }
+    tdl_path = path_compose(tdl_path, "xmi");
+    tdl_file = path_compose(tdl_path, "xmi11.tdl");
+    if (!file_exists(tdl_file))
+    {
+        print_error("Template '" + tdl_file + "' not found, exiting!");
+        return;
+    }
+
+    imf_file = path_compose(proj, sys, "qrl_files", sys + ".imf");
+    if (generate_imf)
+    {
+        print_message("Generating IMF File '" + imf_file + "' ...");
+        syscall = "qrp " + forward_messages_arg() + 
+                    "  -p " + proj +
+                    "  -s " + sys +
+                    "  -o " + imf_file +
+                    "  qrl/code_gen/uml2interface.qrl";
+        system(syscall);
+    }
+
+    if (!file_exists(imf_file))
+    {
+        print_error("IMF File '" + imf_file + "'does not exist, exiting!");
+        return;
+    }
+
+    // ECR 5969
+    XMI_gen_charset = toolinfo_variable("XMI_gen_charset");
+    if (XMI_gen_charset == NULL)
+    if (is_windows_platform())
+        XMI_gen_charset = "ISO-8859-1"; // ECR 7489
+    else
+        XMI_gen_charset = "UTF-8";
+
+    print_message("Generating XMI File '" + output_file + "' ...");
+    syscall = "acd -f " + imf_file +
+                "  -t " + tdl_file +
+                "  -T " + tdl_path +
+                "  -var 'outfile=" + output_file + "= " +
+                "        export_extensions=" + export_rose_ext + "= " +
+                "        XMI_gen_charset=\""   + XMI_gen_charset + "\"= " + // ECR 5969
+                "        selected_packages=" + selected_packages + "'";
+
+    syscall = "stdout2msgd " + forward_messages_arg() + " " + syscall; // ECR 4057
+    system(syscall);
+    // ECR 6791 begin
+    copy_file(path_compose(tdl_path, "uml11k.dtd"),
+              path_compose(output_dir, "uml11k.dtd"));
+    // ECR 6791 end
+    print_message("Done");
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Imports a XMI file into a StP system
+/////////////////////////////////////////////////////////////////////////////
+//ECR5169
+void xmi2stp(string input_file, string target_projdir, boolean fast)
+{
+    string sys;
+    string proj;
+    string imf_file;
+    string tdl_path;
+    string tdl_file;
+    string qrl_files;
+    string syscall;
+
+	input_file = path_normalize(input_file);
+    target_projdir = path_normalize(target_projdir);
+
+    if (target_projdir == NULL || target_projdir == "")
+        target_projdir = current_projdir();
+    proj = target_projdir;
+
+    sys = file_part(input_file);
+    sys = file_rootname(sys);
+
+    tdl_path = toolinfo_variable("tdl_path");
+    if (tdl_path == NULL)
+    {
+        print_error("ToolInfo Variable 'tdl_path' not defined, exiting!");
+        return;
+    }
+    tdl_path = path_compose(tdl_path, "xmi");
+    tdl_file = path_compose(tdl_path, "interface2stp.tdl");
+    if (!file_exists(tdl_file))
+    {
+        print_error("Template '" + tdl_file + "' not found, exiting!");
+        return;
+    }
+
+    if (!file_exists(input_file) || !read_file_access(input_file))
+    {
+        print_error("Cannot open source file '" + input_file + "', exiting!");
+        return;
+    }
+
+    if (!read_dir_access(proj))
+    {
+        print_error("Cannot open target directory '" + proj + "', exiting!");
+        return;
+    }
+
+    proj = path_compose(target_projdir, sys);
+    if (!read_dir_access(proj))
+    {
+        mkdir(proj);
+        if (!read_dir_access(proj))
+        {
+            print_error("Cannot create system directory '" + proj + "', exiting!");
+            return;
+        }
+    }
+
+    qrl_files = path_compose(proj, "qrl_files");
+    if (!read_dir_access(qrl_files))
+    {
+        mkdir(qrl_files);
+        if (!read_dir_access(qrl_files))
+        {
+            print_error("Cannot create directory '" + qrl_files + "', exiting!");
+            return;
+        }
+    }
+
+    imf_file = path_compose(proj, "qrl_files", sys + ".imf");
+    print_message("Generating IMF File '" + imf_file + "' ...");
+    syscall = "xml2imf " + input_file + " " + imf_file;
+    syscall = "stdout2msgd " + forward_messages_arg() + " " + syscall; // ECR 4057
+    system(syscall);
+
+    if (!file_exists(imf_file))
+    {
+        print_error("Cannot create IMF File '" + imf_file + "', exiting!");
+        return;
+    }
+
+    print_message("Generating StP system '" + proj + "' ...");
+    syscall = "acd -f " + imf_file +
+                "  -t " + tdl_file +
+                "  -T " + tdl_path +
+                "  -var 'ProjectDir=" + proj + "/'";
+
+    syscall = "stdout2msgd " + forward_messages_arg() + " " + syscall; // ECR 4057
+    system(syscall);
+
+	//ECR5169
+    sys_recover_rep(target_projdir, sys, True, fast);
+    print_message("Done");
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Helper functions
+/////////////////////////////////////////////////////////////////////////////
+string file_rootname(string strFile)
+{
+    int i;
+    int nDotPos;
+    int nLen;
+
+    if (strFile == NULL || strFile == "")
+        return "";
+
+    nLen = string_length(strFile);
+    i = string_find(strFile, 0, ".");
+    nDotPos = nLen;
+    while (i < nLen)
+    {
+        nDotPos = i;
+        if (i == nLen - 1)
+            break;
+        i = string_find(strFile, i + 1, ".");
+    }
+
+    return string_extract(strFile, 0, nDotPos);
+}
+
+// ECR 4506 start
+int select_xml_input_file_callback(ui_event_tp event, ui_prop theprop, int id, string value)
+{
+    select_xml_file_callback(theprop, "input_file", "Open XML File");
+    return 0;
+}
+
+int select_xml_output_file_callback(ui_event_tp event, ui_prop theprop, int id, string value)
+{
+    select_xml_file_callback(theprop, "output_file", "Save As File");
+    return 0;
+}
+
+void select_xml_file_callback(ui_prop theprop, string dest_field, string title)
+{
+    string str;
+    string strPath;
+    ui_owner uiOwner;
+
+    uiOwner = to_ui_owner(theprop);
+    str = ui_get_value(to_ui_prop(uiOwner, dest_field));
+
+    strPath = str;
+    if (strPath == NULL || string_length(strPath) == 0)
+        strPath = path_compose(current_projdir(), current_system(), "src_files");
+
+    str = editor_show_filechooser(title, strPath,
+                                  "XML Files (*.xml)|*.xml|All Files (*.*)|*");
+
+    if (str != NULL && string_length(str) != 0)
+    {
+        str = path_normalize(str);
+        ui_set_value(to_ui_prop(uiOwner, dest_field), str);
+    }
+}
+
+int select_output_projdir_callback(ui_event_tp event, ui_prop theprop, int id, string value)
+{
+    string str;
+    ui_owner uiOwner;
+
+    uiOwner = to_ui_owner(theprop);
+    str = ui_get_value(to_ui_prop(uiOwner, "target_projdir"));
+
+    str = editor_show_dirchooser("Select Target directory", str);
+
+    if (str != NULL && string_length(str) != 0)
+    {
+        str = path_normalize(str);
+        ui_set_value(to_ui_prop(uiOwner, "target_projdir"), str);
+    }
+
+    return 0;
+}
+// ECR 4506 end
+

@@ -1,0 +1,137 @@
+#include "rules/qrl/uml.inc"
+#include "rules/qrl/oper_parse.inc"
+
+boolean test_uml_args_to_canonical_format()
+{
+	boolean testSucceeded = True;
+	list inputList = list_create("string",0);
+	list outputList = list_create("string",0);
+
+	list_append(inputList,"int i");
+	list_append(outputList,"i:int");
+
+	list_append(inputList,"int i, string s=\"Howdy\"" );
+	list_append(outputList, "i:int, s:string=\"Howdy\"" );
+
+	list_append(inputList,"i : int = 3" );
+	list_append(outputList, "i:int=3" );
+
+	list_append(inputList,"jjjjj ddddd" );
+	list_append(outputList, "ddddd:jjjjj" );
+
+	list_append(inputList,"(void *f)(int), string s" );
+	list_append(outputList, "(void *f)(int), s:string");
+
+	list_append(inputList,"(void *c::f)(int)" );
+	list_append(outputList, "(void *c::f)(int)");
+
+	list_append(inputList,"(int i=3, string s=\"boo\")" );
+	list_append(outputList, "(int i=3, string s=\"boo\")" );
+
+	list_append(inputList,"int:5 i" );
+	list_append(outputList, "int:5 i");
+
+	list_append(inputList,"(int *func)(i:int),string s=\"sdfs\", string t=\"foo:bar\"");
+	list_append(outputList, "(int *func)(i:int), s:string=\"sdfs\", string t=\"foo:bar\"");
+
+	list_append(inputList,"struct   mojo * mojInst=NULL" );
+	list_append(outputList, "mojInst:struct mojo *=NULL");
+
+	list_append(inputList,"i" );
+	list_append(outputList, "i");
+
+	list_append(inputList,"" );
+	list_append(outputList, "");
+
+	list_append(inputList,"char *s" );
+	list_append(outputList, "s:char *");
+
+	list_append(inputList,"void *" );
+	list_append(outputList, "void *");
+
+	list_append(inputList,"char *[] foo" );
+	list_append(outputList, "foo:char *[]");
+
+	list_append(inputList,"char *[]" );
+	list_append(outputList, "char *[]");
+	
+	list_append(inputList,"char [] foo" );
+	list_append(outputList, "foo:char []");
+	
+	list_append(inputList,"char [] *foo" );
+	list_append(outputList, "foo:char [] *");
+
+	int i;
+	int len = list_count(inputList);
+	string sIn, sOut, sExpected;
+	for(i=0;i<len;i++) {
+		sIn = list_get(inputList,i);
+		sOut = uml_args_to_format(sIn, Canonical);
+		sExpected = list_get(outputList,i);
+		
+		if (sOut != sExpected) {
+			testSucceeded = False;
+			print_error("Error: [" + sIn + "] became [" + sOut + "].\n Expected result was [" + sExpected + "].");
+		}
+	}
+	return testSucceeded;
+}
+
+boolean
+test_instantiated_parse()
+{
+	boolean testSucceeded = True;
+	list inputList = list_create("string",0);
+	list outputList = list_create("string",0);
+
+	list_append(inputList,"I1");
+	list_append(outputList,"I1");
+
+	list_append(inputList,"P1<i1>");
+	list_append(outputList,"P1<i1>");
+
+	list_append(inputList,"P1<i1,P2<6>>");
+	list_append(outputList,"P1<i1, P2<6>>");
+
+	list_append(inputList,"P1<\"<\\\">\",P2<6>>");
+	list_append(outputList,"P1<\"<\\\">\", P2<6>>");
+
+	list_append(inputList,"P1<");
+	list_append(outputList,NULL);
+
+	list_append(inputList,"P1<\">");
+	list_append(outputList,NULL);
+
+	int i;
+	int len = list_count(inputList);
+	list ret;
+	string sIn, sOut, sExpected;
+	for(i=0;i<len;i++) {
+		sIn = list_get(inputList,i);
+		ret = uml_parse_instantiated_class(sIn);
+		sOut = uml_format_instantiated_class(ret);
+		sExpected = list_get(outputList,i);
+		
+		if (sOut != sExpected) {
+			testSucceeded = False;
+			print_error("Error: [" + sIn + "] became [" + sOut + "].\n Expected result was [" + sExpected + "].");
+		}
+	}
+	return testSucceeded;
+}
+
+void main()
+{
+	print_message("Begin test of uml_args_to_canonical_format");
+	if (test_uml_args_to_canonical_format()) {
+		print_message("Test of uml_args_to_canonical_format passed.");
+	} else {
+		print_error("Test of uml_args_to_canonical_format failed.");
+	}
+	print_message("Begin test of uml_parse_instantiated_class");
+	if (test_instantiated_parse()) {
+		print_message("Test of uml_parse_instantiated_class passed.");
+	} else {
+		print_error("Test of uml_parse_instantiated_class failed.");
+	}
+}

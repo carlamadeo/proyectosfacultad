@@ -1,0 +1,44 @@
+FileObject 1
+{
+    { Name "a479" }
+    { Type ObjectAnnotation }
+    { GUID "UID_E0D931F9-C886-11d5-90AA-0050045C27F0" }
+}
+
+FileObject 99999
+{
+    { Name "ShowClockBehaviour__1" }
+    { Type UmlSequenceDiagram }
+    { ObjectId 310 }
+    { AnnotFileId 1 }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 873 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 875 }
+    { DescLine "The only object that needs explanation is Clockbird." }
+    { DescLine "It's used only because it is the generalisation of Owl and Coocoo to" }
+    { DescLine "keep the diagram simple. In fact either owl or coocoo is crying." }
+    { DescLine "When they will cry is defined as part of the state diagram" }
+    { DescLine "of class Clockwork." }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "ShowClockBehaviour__1" }
+    { NoteId 3 }
+    { ObjectId 876 }
+}
+

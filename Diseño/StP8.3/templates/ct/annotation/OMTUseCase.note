@@ -1,0 +1,74 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1994
+// 	All rights reserved
+//
+
+//
+//	FILE:	OMTUseCase.note
+//
+
+Note 801590
+{
+    { AppType OMTUseCaseDefinition }
+    { HelpText "The Use Case Definition note lets you add use case description." }
+    { PrintName "Use Case Definition" }
+    { Bounds { Min 1 } { Max 1 } }
+    // moved to individual notes for beta
+    { Item
+	{ AppType OMTUseCasePreCond }
+	{ IsVisible False }
+    }
+    { Item
+	{ AppType OMTUseCasePostCond }
+	{ IsVisible False }
+    }
+    { Item
+	{ AppType OMTUseCaseException }
+	{ IsVisible False }
+    }
+}
+
+Note 801597
+{
+    { AppType OMTUseCasePreCondDefinition }
+    { PrintName "Use Case Precondition" }
+    { HelpText "The Precondition on a Use Case lets you define the conditions which have to be satisfied before invoking this Use Case." }
+    { Item
+	{ AppType OMTUseCasePreCond }
+	{ HelpText "The Precondition item lets you assign a name to a precondition." }
+	{ PrintName "Precondition" }
+	{ IsKey True }
+	{ Bounds { Min 1 } { Max 1 } }
+    }
+}
+
+Note 801598
+{
+    { AppType OMTUseCasePostCondDefinition }
+    { PrintName "Use Case Postcondition" }
+    { HelpText "The Postcondition note on a Use Case lets you define the conditions which have to be satisfied after invoking this Use Case." }
+    { Item
+	{ AppType OMTUseCasePostCond }
+	{ HelpText "The Postcondition item lets you assign a name to a postcondition." }
+	{ PrintName "Postcondition" }
+	{ IsKey True }
+	{ Bounds { Min 1 } { Max 1 } }
+    }
+}
+
+Note 801596
+{
+    { AppType OMTUseCaseExceptionDefinition }
+    { PrintName "Use Case Exception" }
+    { HelpText "The Exception note on a Use Case lets you define the exceptions associated with this Use Case." }
+    { Item
+	{ AppType OMTUseCaseException }
+	{ HelpText "The Exception item lets you assign a name to an exception." }
+	{ PrintName "Exception" }
+	{ IsKey True }
+	{ Bounds { Min 1 } { Max 1 } }
+    }
+}

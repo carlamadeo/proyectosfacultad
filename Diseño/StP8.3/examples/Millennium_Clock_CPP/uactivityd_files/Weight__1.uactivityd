@@ -1,0 +1,485 @@
+Diagram UmlActivityDiagram
+{
+    { Name "Weight__1" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -346 }
+    { PanY -318 }
+    { Alignment 32 }
+    { GUID "UID_17E82A95-C887-11d5-90AA-0050045C27F0" }
+    { Summary
+        { Nodes 10 }
+        { Arcs 9 }
+    }
+}
+
+Node 2
+{
+    { Type StateMachine }
+    { Loc -219 -269 }
+    { Scale 230.00 115.00 }
+    { Label
+        { Text "Weight" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 615 }
+        { GUID "UID_98A7016C-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 3
+{
+    { Type State }
+    { Loc 18 -281 }
+    { Scale 268.00 128.00 }
+    { Label
+        { Text "Raise" }
+        { Text "Weight" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 913 }
+        { GUID "UID_9DE7AF6F-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 4
+{
+    { Type Object }
+    { Loc -218 -182 }
+    { Scale 362.00 171.00 }
+    { Label
+        { Text "Weight" }
+        { Text "has potential" }
+        { Text "Energy" }
+    }
+    { PropertyList
+        { Property
+            { Name "AnonymousNameClass" }
+            { Value "%%class%%934377408_0_308" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 3302 }
+        { GUID "UID_12DE8F41-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 3304 }
+        { GUID "UID_9DE7AF78-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 3303 }
+        { GUID "UID_9DE7AF75-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 5
+{
+    { Type State }
+    { Loc 18 -75 }
+    { Scale 306.00 128.00 }
+    { Label
+        { Text "Weight" }
+        { Text "is sinking" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 3305 }
+        { GUID "UID_12DE8F42-544E-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Node 6
+{
+    { Type InitialState }
+    { Loc 283 -285 }
+    { Scale 38.00 38.00 }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 3306 }
+        { GUID "UID_12DE8F43-544E-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Node 7
+{
+    { Type Decision }
+    { Loc 18 115 }
+    { Scale 128.00 64.00 }
+    { PropertyList
+        { Property
+            { Name "AnonymousName" }
+            { Value "%%UmlDecision%%1011359568_383" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 3307 }
+        { GUID "UID_12DE8F44-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3309 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName Default }
+        { ID 3310 }
+    }
+}
+
+Node 8
+{
+    { Type Vertex }
+    { Loc 214 115 }
+    { Scale 128.00 128.00 }
+}
+
+Node 9
+{
+    { Type Vertex }
+    { Loc 214 -72 }
+    { Scale 128.00 128.00 }
+}
+
+Node 10
+{
+    { Type FinalState }
+    { Loc 18 296 }
+    { Scale 51.00 51.00 }
+    { Label
+        { Text "Stopped sinking" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 3311 }
+        { GUID "UID_12DE8F45-544E-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Node 11
+{
+    { Type Note }
+    { Loc -117 56 }
+    { Scale 576.00 203.00 }
+    { Label
+        { Text "Decrease Energy" }
+    }
+}
+
+Arc 12
+{
+    { Type OutputLink }
+    { From
+        { ID 3 }
+        { Loc -29 -260 }
+        { Offset 13 -2 }
+    }
+    { To
+        { ID 4 }
+        { Loc -148 -212 }
+        { Offset -22 5 }
+    }
+}
+
+Arc 13
+{
+    { Type InputLink }
+    { From
+        { ID 4 }
+        { Loc -148 -152 }
+        { Offset -12 -8 }
+    }
+    { To
+        { ID 5 }
+        { Loc -34 -97 }
+        { Offset 5 5 }
+    }
+}
+
+Arc 14
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 6 }
+        { Loc 276 -287 }
+        { Offset 3 -2 }
+    }
+    { To
+        { ID 3 }
+        { Loc 71 -287 }
+        { Offset 18 -6 }
+    }
+}
+
+Arc 15
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 5 }
+        { Loc 17 -50 }
+        { Offset -1 0 }
+    }
+    { To
+        { ID 7 }
+        { Loc 17 103 }
+        { Offset -1 -1 }
+    }
+    { Label
+        { Text "/decrease(e), pend.takeEvent(move)" }
+    }
+}
+
+Arc 16
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 7 }
+        { Loc 44 115 }
+        { Offset -2 0 }
+    }
+    { To
+        { ID 8 }
+        { Loc 214 115 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "[Energy > 0]" }
+    }
+}
+
+Arc 17
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 8 }
+        { Loc 214 115 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 9 }
+        { Loc 214 -72 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 18
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 9 }
+        { Loc 214 -72 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 5 }
+        { Loc 79 -72 }
+        { Offset 18 3 }
+    }
+}
+
+Arc 19
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 7 }
+        { Loc 16 126 }
+        { Offset -2 -4 }
+    }
+    { To
+        { ID 10 }
+        { Loc 16 287 }
+        { Offset -2 -1 }
+    }
+    { Label
+        { Text "[Energy == 0]" }
+    }
+}
+
+Arc 20
+{
+    { Type StateTransitionLink }
+    { From
+        { ID 3 }
+        { Loc 18 -256 }
+        { Offset 0 -1 }
+    }
+    { To
+        { ID 5 }
+        { Loc 18 -100 }
+        { Offset 0 0 }
+    }
+}
+
+Link 21
+{
+    { FirstArc 12 }
+    { LastArc 12 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 3317 }
+        { GUID "UID_12DE8F47-544E-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Link 22
+{
+    { FirstArc 13 }
+    { LastArc 13 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 3318 }
+        { GUID "UID_12DE8F48-544E-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Link 23
+{
+    { FirstArc 14 }
+    { LastArc 14 }
+    { Object
+        { PDMType Link }
+        { MappingName Transition }
+        { ID 3324 }
+        { GUID "UID_12DE8F4A-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3326 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionGuard }
+        { ID 3328 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionAction }
+        { ID 3327 }
+    }
+}
+
+Link 24
+{
+    { FirstArc 15 }
+    { LastArc 15 }
+    { Object
+        { PDMType Link }
+        { MappingName Transition }
+        { ID 3319 }
+        { GUID "UID_12DE8F49-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3321 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionGuard }
+        { ID 3323 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionAction }
+        { ID 3322 }
+    }
+}
+
+Link 25
+{
+    { FirstArc 16 }
+    { LastArc 18 }
+    { Object
+        { PDMType Link }
+        { MappingName Transition }
+        { ID 3334 }
+        { GUID "UID_12DE8F4C-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3336 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionGuard }
+        { ID 3338 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionAction }
+        { ID 3337 }
+    }
+}
+
+Link 26
+{
+    { FirstArc 19 }
+    { LastArc 19 }
+    { Object
+        { PDMType Link }
+        { MappingName Transition }
+        { ID 3329 }
+        { GUID "UID_12DE8F4B-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3331 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionGuard }
+        { ID 3333 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionAction }
+        { ID 3332 }
+    }
+}
+
+Link 27
+{
+    { FirstArc 20 }
+    { LastArc 20 }
+    { Object
+        { PDMType Link }
+        { MappingName Transition }
+        { ID 3312 }
+        { GUID "UID_12DE8F46-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3314 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionGuard }
+        { ID 3316 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName TransitionAction }
+        { ID 3315 }
+    }
+}

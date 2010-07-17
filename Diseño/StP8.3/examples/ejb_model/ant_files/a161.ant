@@ -1,0 +1,58 @@
+FileObject 1
+{
+    { Name "a161" }
+    { Type ObjectAnnotation }
+    { GUID "UID_A4ABA681-2CD3-4a22-9F1E-FBB3E941F032" }
+}
+
+NodeObject 99999
+{
+    { Name "Credit" }
+    { Type UmlClass }
+    { ObjectId 457 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_050B8BD9-130F-11d5-8C72-000000000000" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 459 }
+}
+
+ItemObject 3
+{
+    { Type UmlStereotype }
+    { Value "EntityBean" }
+    { NoteId 2 }
+    { ObjectId 460 }
+}
+
+ItemObject 4
+{
+    { Type UmlTaggedValue }
+    { Value "ejb_Persistence=Bean" }
+    { NoteId 2 }
+    { ObjectId 461 }
+}
+
+NoteObject 5
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 463 }
+}
+
+ItemObject 6
+{
+    { Type ObjectName }
+    { Value "Credit" }
+    { NoteId 5 }
+    { ObjectId 464 }
+}
+

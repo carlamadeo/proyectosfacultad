@@ -1,0 +1,40 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Note 800012
+{
+    { AppType InformixIndex }
+    { HelpText "The Informix Index note provides the notes and items needed to declare an Informix index object. This information is used in SQL generation." }
+    { Bounds { Min 0 } }
+    { PrintName "Informix Index" }
+    { Item
+	{ IsKey True }
+	{ AppType SqlName }
+	{ HelpText "The Index Name item specifies the name of the index.  You can include columns in the index by using the Index Name item under the In Index note to associate the name of the index with an attribute." }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Index Name" }
+	{ InitValue "${sym_label} index" }
+    }
+    { Item
+	{ AppType IsClustered }
+	{ HelpText "The Clustered Index? item indicates that this index is clustered." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Clustered Index?" }
+	{ InitValue "True" }
+    }
+    { Item
+	{ AppType IsUnique }
+	{ HelpText "The Unique Index? item specifies that all column values in this index must be unique." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Unique Index?" }
+	{ InitValue "True" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_informix_index.note"

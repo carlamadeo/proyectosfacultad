@@ -1,0 +1,15 @@
+
+Note 801901
+{
+  	{ AppType ConnectionDefinition }
+  	{ HelpText "The Connection Definition note lets you add items that capture modeling information about connection." }
+  	{ PrintName "Connection Definition" }
+  	{ Bounds { Min 0 } { Max 1 } }
+	{ Item
+		{ AppType Stereotype }
+                { HelpText "The Stereotype item lets you specify a stereotype name for the connection." }
+		{ PrintName "Stereotype" }
+		{ Bounds { Min 0 } { Max 1 } }
+		{ InitValue "" }
+	}
+}

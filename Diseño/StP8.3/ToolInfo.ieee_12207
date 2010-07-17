@@ -1,0 +1,57 @@
+%------------------------------------------------------------------------------
+%
+%ToolInfo file for StP/Core 7.0-based Aonix products
+%Copyright (c) Aonix 1984-1998
+%
+%@(#)ToolInfo.ieee_12207
+%
+%------------------------------------------------------------------------------
+
+% Development Processes 
+   ProcessImplementation=False
+   SystemRequirementsAnalysis=False
+   SystemArchitecturalDesign=False
+   SoftwareRequirementsAnalysis=True
+   SoftwareArchitecturalDesign=True
+   SoftwareDetailedDesign=True
+   SoftwareCodingAndTesting=True
+   SoftwareIntegration=False
+   SoftwareQualificationTesting=True
+   SystemIntegration=False
+   SystemQualificationTesting=False
+   SoftwareInstallation=False
+   SoftwareAcceptanceSupport=False
+
+% Modeling Categories
+   SysRqtsModeler=True
+   SwRqtsModeler=True
+   DeploymentModeler=True
+   ComponentModeler=True
+   ClassModeler=True
+
+% Built-In Tools
+   RqtTable=True
+
+% Third-Party Tools
+   TestDirector=True
+   WinRunner=True
+   SysDOORS=True
+   SwDOORS=True
+   SysDocExpress=True
+   SwDocExpress=True
+   Segue=True
+
+% Programming Tools
+   JavaCode=True
+   CPPCode=True
+   AdaCode=True
+   IDLCode=True
+
+% Operation Profiles
+   PeriodOfOperation=1 hour
+
+% Enable Validator
+   validator=True
+
+ToolInfo=ToolInfo.W32NTX86
+

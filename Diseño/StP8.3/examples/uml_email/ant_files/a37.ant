@@ -1,0 +1,61 @@
+FileObject 1
+{
+    { Name "a37" }
+    { Type ObjectAnnotation }
+    { GUID "UID_31CFBD89-6CA6-4edf-B945-AEB36E84002C" }
+}
+
+NodeObject 99999
+{
+    { Name "MailSystem" }
+    { Type UmlClass }
+    { ObjectId 333 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_CFF94412-538F-11d4-8777-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "find_user" }
+    { Type UmlOperation }
+    { ObjectId 610 }
+    { AnnotFileId 1 }
+    { Sig "s:char*" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_CFF94416-538F-11d4-8777-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlOperationCxxCode }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 612 }
+    { DescLine "return (User*) users.find(s);" }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 614 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 616 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "find_user" }
+    { NoteId 4 }
+    { ObjectId 617 }
+}
+

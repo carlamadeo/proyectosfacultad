@@ -1,0 +1,5 @@
+viewfile1
+Find Symbols with Type: Comment
+Include in/out Links: Comment Link
+Operator: HIDE
+Apply view (all diag types): HideUnconnectedAnchors

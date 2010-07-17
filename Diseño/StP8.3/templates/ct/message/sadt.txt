@@ -1,0 +1,61 @@
+%
+% 	sccsid[] = @(#)sadt.txt	4.1  94/01/14
+% 	StP/Core
+% 	Confidential property of Interactive Development Environments, Inc.
+% 	Copyright (c) 1992-1993
+% 	All rights reserved
+%
+
+% Messages related to the SADT editor
+8500;Data Item has no Decomposition
+8501;Create Decomposed Data Item
+8502;Create Data Item Spec
+8503;Activity has no Decomposition
+8504;Create Decomposed Activity
+8505;Create Activity Spec
+8506;Label line has been lost: %s
+8507;I%d
+8508;C%d
+8509;M%d
+8510;O%d
+8511;Node:
+8512;Cannot terminate arrows at floating labels or notes
+8513;Illegal cycle in arc, tracking direction changed from horizontal to vertical
+8514;Illegal cycle in arc, tracking direction changed from vertical to horizontal
+8515;Invalid node name: %s
+8516;A-0
+8517;D-0
+8518;A0
+8519;D0
+8520;Cannot enter a label on an arrow segment with an attached label
+8521;Can only insert vertices and anchors onto arrow segments
+8522;Can only do label type operations on floating labels
+8523;Must pick on a label point first
+8524;Label is already attached
+8525;Can only attach floating labels to arrow segments
+8526;Arrow segment already has an attached label
+8527;Both the arrow segment and the label have text
+8528;Diagram does not contain squiggles
+8529;There are no squiggles attached to this node
+8530;There are no squiggles attached to this arrow segment
+8531;Must pick on a floating label
+8532;Label picked is not attached
+8533;Must pick on a label point
+8534;Label picked is not attached
+8535;error while reading floating label proportion
+8536;reading floating label index
+8537;bad flabel node number in arc record
+8538;LABEL
+8539;Cannot attach endpoints to floating labels or notes
+8540;Illegal cycle in arrow network
+8541;label
+8542;Terminate the squiggle please
+8543;Can only attach notes to activity boxes or arrow segments
+8544;That end of a squiggle must be attached to a floating label or note
+8545;Arrow segments can only be attached to one floating label at a time
+8546;Cannot place labels on squiggles
+8547;incorrect number of entries in squiggle definition
+8548;ambiguous destination in squiggle definition
+8549;squiggle invis
+8550;missing arrow segment number in segment definition
+8551;segment mismatch

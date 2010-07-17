@@ -1,0 +1,190 @@
+external string use_case_name;
+
+external string STWSource;
+external string STWActivation;
+external string STWEvaluationCommand;
+external string STWEvaluation;
+external string STWEnvironment;
+external string STWTermination;
+
+#include "qrl/tsdl_extract.inc"
+#include "qrl/basic_textract_dt.inc"
+#include "qrl/include/error.inc"
+
+#include "val/qrl/include/TConfig.inc"
+#include "val/qrl/include/TUseCase.inc"
+#include "val/qrl/include/CreateDir.inc"
+
+  list ScenarioList;
+  list testcaselist;
+
+  string OUTPUTPATH = current_projdir() + current_system() + "/test_files/";
+  string OUTPUTDIR;
+  string FILETEXT;
+  const string SEPARATOR = "###";
+  const string SEPARATOR2 = "@@@";
+
+void 
+main ()
+{
+  message ("Creating ATS File  \"" + use_case_name + ".ats\"");
+
+  string test_unit_id;
+
+  string filetext;
+
+  string path;
+  string inputfile;
+
+
+  test_unit_id = Get_T_test_unit_id(use_case_name, "");
+
+  ScenarioList = GetScenarioList(use_case_name);
+
+
+  OUTPUTDIR = OUTPUTPATH + test_unit_id;
+
+  testcaselist = GetTestCaseList(OUTPUTDIR);
+
+  print("define group " + use_case_name + "\n  {\n");
+
+  PrintScenarios();
+
+  print("\n}\n");
+}
+
+void
+PrintScenarios()
+{
+  int i,count;
+  node scenario;
+
+  count = list_count(ScenarioList);
+
+  for (i=0;i<count;i++)
+    {
+      scenario = list_get(ScenarioList, i);
+
+      print("  define group " + scenario.name + "\n      {\n");
+      message ("  " + scenario.name);
+
+      PrintTestCases(scenario.name);
+
+      print("\n      }\n");
+    }
+
+
+}
+
+
+void
+PrintTestCases(string name)
+{
+  int i,count;
+  string testcase;
+  list textlist;
+  list actiondata;
+  string  scenario, testunitid;
+  string testcommand;
+
+  count = list_count(testcaselist);
+
+  for (i=0;i<count;i++)
+    {
+
+      testcase = list_get(testcaselist,i);
+
+      textlist = string_to_list (testcase, "\n");
+
+      actiondata = string_to_list ( list_get(textlist,0), SEPARATOR);
+      scenario = list_get(actiondata, 0);
+
+      testunitid = list_get(actiondata, 2);
+
+      if (name == scenario)
+        {
+           print("    define case TC_" + testunitid + "\n");
+           print("      {\n");
+           GetSourceClause();
+           GetEnvironmentClause();
+
+           testcommand = scenario + "/" + "TC_" + testunitid;
+           GetActivationClause( testcommand);
+
+           GetEvaluationClause();
+           GetTerminationClause();
+           print("      }\n");
+
+        }
+    }
+
+}
+
+
+void
+GetSourceClause()
+{
+   print("        source\n");
+   print("          \"" + STWSource + "\";\n");
+}
+
+
+void
+GetEnvironmentClause()
+{
+  if (STWEnvironment != "NONE")
+    {
+       print("        environment\n");
+       print("          \"" + STWEnvironment + "\";\n");
+    }
+}
+
+void
+GetActivationClause(string command)
+{
+
+  string activation;
+
+  print("        activation\n");
+
+  activation = string_search_and_replace(STWActivation, "TESTCASE", command) ;
+
+
+  print("          \"" + activation + "\";\n");
+}
+
+
+void
+GetEvaluationClause()
+{
+
+  if (STWEvaluationCommand == "TrueFalseFalseFalse")
+    print("        noevaluation;\n");
+  else if (STWEvaluationCommand == "FalseTrueFalseFalse")
+    print("        evaluation with user;\n");
+  else if (STWEvaluationCommand == "FalseFalseTrueFalse")
+    {
+      print("        evaluation with baseline\n");
+      print("          " + STWEvaluation + ";\n");
+    }
+  else if (STWEvaluationCommand == "FalseFalseFalseTrue")
+    {
+      print("        evaluation with function\n");
+      print("          " + STWEvaluation + ";\n");
+    }
+
+}
+
+
+void
+GetTerminationClause()
+{
+
+  if (STWTermination != "NONE")
+    {
+      print("        termination\n");
+      print("          \"" + STWTermination + "\";\n");
+    }
+}
+
+

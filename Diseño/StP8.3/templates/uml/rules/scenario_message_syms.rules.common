@@ -1,0 +1,101 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+
+// shared symbol, no ID specified here
+LinkSymbol	MessageSymbols
+{
+    { NameCompletion
+	{ MappingName MessageInstanceMapping }
+        { NameCompletionFunc uml_message_name_completion_func }
+    }
+    { CanHaveLabel True }
+    { Uncentered True }
+    { Connects { From Object } { To Object } }
+    { Connects { From Actor } { To Object } }
+    { Connects { From Object } { To Actor } }
+    //{ Align False }
+    { NoteMapping
+ 	{ Owner
+ 	    { MappingName MessageInstanceMapping }
+ 	    { Symbol Self }
+ 	}
+ 	{ AppType UmlMessageNote }
+	{ NameFunc uml_MessageNote_name }
+    }
+    { ItemMapping
+ 	{ MappingName MessageName }
+ 	{ AppType UmlObjectName }
+ 	{ NoteAppType UmlMessageNote }
+ 	{ ValueFunc uml_message_MessageName }
+ 	{ InverseMapFunc gde_no_op_inverse_item_map_func }
+    }
+    { ItemMapping
+ 	{ MappingName ReturnType }
+ 	{ AppType UmlReturnType }
+ 	{ NoteAppType UmlMessageNote }
+ 	{ ValueFunc uml_message_ReturnType }
+ 	{ InverseMapFunc gde_no_op_inverse_item_map_func }
+    }
+    { ItemMapping
+ 	{ MappingName MessageArgs }
+ 	{ AppType UmlMessageArgs }
+ 	{ NoteAppType UmlMessageNote }
+ 	{ ValueFunc uml_message_MessageArgs }
+ 	{ InverseMapFunc gde_no_op_inverse_item_map_func }
+    }
+     { ItemMapping
+ 	{ MappingName PredecessorGuard }
+ 	{ AppType UmlPredecessorGuard }
+ 	{ NoteAppType UmlMessageNote }
+ 	{ ValueFunc uml_message_PredecessorGuard }
+ 	//{ InverseMapFunc gde_no_op_inverse_item_map_func }
+ 	{ InverseMapFunc uml_message_inverse_mapping_items }
+     }
+    { ItemMapping
+ 	{ MappingName MessageSequence }
+ 	{ AppType UmlSequenceExpression }
+ 	{ NoteAppType UmlMessageNote }
+ 	{ ValueFunc uml_message_SequenceVal }
+ 	//{ InverseMapFunc gde_no_op_inverse_item_map_func }
+ 	{ InverseMapFunc uml_message_inverse_mapping_items }
+    }
+     { ItemMapping
+ 	{ MappingName MessageRecurrence }
+ 	{ AppType UmlMessageRecurrence }
+ 	{ NoteAppType UmlMessageNote }
+ 	{ ValueFunc uml_message_Recurrence }
+ 	//{ InverseMapFunc gde_no_op_inverse_item_map_func }
+ 	{ InverseMapFunc uml_message_inverse_mapping_items }
+     }
+    { DisplayMark
+	{ Name Creation }
+// 	{ ItemCond (UmlMessageIsCreation UmlMessageDirection) }
+	{ ItemCond (UmlMessageIsCreation) }
+	{ CallUncond True }
+	{ StringMarkFunc "uml_get_message_display_mark_to(gde_dmark_matched_items);" }
+	{ Anchor ToEnd } //LabelLowerCenter
+	{ HAdjust Center }
+	{ VAdjust Center } // Top 
+	{ XPixelOffset -10 }
+	{ YPixelOffset -10 }
+	{ Help "Object Creation Display Mark" }
+    }
+    { DisplayMark
+	{ Name Destruction }
+	{ ItemCond (UmlMessageIsDestruction UmlMessageDirection) }
+	{ CallUncond True }
+	//{ StringMarkFunc "uml_get_display_mark_if_item_true(gde_dmark_matched_items,\"C\");" }
+	{ StringMarkFunc "uml_get_message_display_mark_from(gde_dmark_matched_items);" }
+	{ Anchor FromEnd } //LabelLowerCenter
+	{ HAdjust Center }
+	{ VAdjust Center } // Top 
+	{ XPixelOffset -10 }
+	{ YPixelOffset -10 }
+	{ Help "Object Destruction Display Mark" }
+    }
+    { RenameFunc uml_interact_message_rename }
+}

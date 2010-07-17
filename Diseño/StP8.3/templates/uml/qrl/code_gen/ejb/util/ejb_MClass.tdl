@@ -1,0 +1,421 @@
+/***********************************************
+ *
+ * Helper-Routines for Classes
+ * 
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    11/18/2000
+ *
+ * History:
+ * =============================================
+ * DATE        WHO      CHANGE
+ * ---------------------------------------------
+ * 20/02/2002  Lippert  genExtendsStatement() now
+ *                      uses variables instead of
+ *                      the hardcoded "Bean"
+ **********************************************/
+ 
+USES util/ejb_MAttribute;
+USES util/ejb_MOperation;
+ 
+ 
+// -------------------------------------------------------------
+//  Procedures for the preparation of attributes.
+// -------------------------------------------------------------
+ 
+// Cycles through the Attributes of the class.
+// Sets default values for access and binding,
+// sets modifier.
+proc setAttributeDefaults(MClass)
+    loop(MClass->MAttribute)
+        isAttributeTransient([MAttribute]);
+        isAttributeFinal([MAttribute]);
+        isAttributeReadonly([MAttribute]);
+        genAttributeVisibility([MAttribute]);
+        genAttributeBinding([MAttribute]);
+        genAttributeModifier([MAttribute]);
+        prepareAccessMethods([MAttribute]);
+    end loop
+end proc
+ 
+ 
+ 
+// Generates Acess-methods (getter/setter) for
+// a classes attributes. If "withbody" is "False"
+// no implementation is generated (for RemoteInterface).
+template MClass.genAccessMethods(withbody)
+    [loop(MClass->MAttribute)]
+        [if ([MAttribute:access_methods] != "False")]
+            [if ([withbody] == "False")]
+[genAccessMethodsDeclaration([MAttribute])]
+            [else]
+[genAccessMethods([MAttribute])]
+            [end if]
+        [end if]
+    [end loop]
+end template
+
+
+
+// Generates a string list of attribute names
+// separated by comma. Add the list as a metaproperty
+proc MClass.genAccessMethodsList()
+    loop(MClass->MAttribute Where [MAttribute:access_methods] == "True"; setDelim(""); setDelim(", "))
+        [MClass:access_attr_list] = [MClass:access_attr_list] delim() [MAttribute.name];
+    end loop
+end proc
+
+
+
+// Determines whether this class has attributes
+// If yes, determines, whether the class has
+// static attributes. Sets the values in a class property.
+proc attributeCount(MClass)
+    if (loopCount(MClass->MAttribute) == 0)
+        [MClass:has_attributes] = "False";
+        return;
+    end if
+    if (loopCount(MClass->MAttribute Where [MAttribute.binding] == "static") > 0)
+        [MClass:has_static_attributes] = "True";
+    end if
+    if (loopCount(MClass->MAttribute Where [MAttribute.binding] == "") > 0)
+        [MClass:has_normal_attributes] = "True";
+    end if
+end proc
+
+
+
+// -------------------------------------------------------------
+//  Procedures for the Preparation of Operations
+// -------------------------------------------------------------
+
+// prepares the operations of this class:
+// Sets default values for visibility and
+// binding, extracts modifiers and exceptions.
+proc setOperationDefaults(MClass)
+    loop(MClass->MOperation)
+        genOperationVisibility([MOperation]);
+        genOperationBinding([MOperation]);
+        isOperationFinal([MOperation]);
+        genOperationModifier([MOperation]);
+        genOperationReturnType([MOperation]);
+        genOperationThrows([MOperation]);
+    end loop
+end proc
+
+// Determines whether this class has operations
+// If yes, determines, whether the class has
+// static operations. Sets the values in a class property
+proc operationCount(MClass)
+    if (loopCount(MClass->MOperation) == 0)
+        [MClass:has_operations] = "False";
+        return;
+    end if
+    if (loopCount(MClass->MOperation Where [MOperation.binding] == "static") > 0)
+        [MClass:has_static_operations] = "True";
+    end if
+    if (loopCount(MClass->MOperation Where [MOperation.binding] == "") > 0)
+        [MClass:has_normal_operations] = "True";
+    end if
+end proc
+
+// Extract all create(...)-, findBy<METHOD>()-methods and the
+// business methods. Store the operation-IDs in a class properties.
+// We must differentiate here between
+//  1) Entity- and SessionBeans
+//  2) Stateful and Stateless SessionBeans
+// Todo: Issue a warning, if user has modeled methods, which aren't
+// conformant to the EJB Spec 1.1
+proc extractMethods(MClass) 
+    loop(MClass->MOperation)
+        // create, find and business-methods must be "public" and 
+        // can neither be "static" nor "final".
+        if ([MOperation.access] == "public" && [MOperation.binding] != "static" && [MOperation:final] != "True")
+            if (regexp([MOperation.name], "create.*") != "")
+                if ([MClass:session_type] == "Stateless")
+                    info = "Stateless Session Bean has create-method!\n";
+                    exit();
+                else 
+                    [MClass:create_methods] = [MClass:create_methods] " " [MOperation.id];
+                    opCount([MOperation]);
+                end if
+            end if
+            if (regexp([MOperation.name], "findBy.*") != "")
+                [MClass:find_methods] = [MClass:find_methods] " " [MOperation.id];
+                opCount([MOperation]);
+            end if
+            if ((regexp([MOperation.name], "(findBy.*|create.*)") == ""))
+                [MClass:business_methods] = [MClass:business_methods] " " [MOperation.id];
+            end if
+        end if
+        if ([MOperation.access] != "public" || [MOperation.binding] == "static" || [MOperation:final] == "True")
+            [MClass:bean_private_methods] = [MClass:bean_private_methods] " " [MOperation.id];
+        end if 
+    end loop
+end proc
+
+
+// Returns the type of a finder-method
+proc genFinderReturntype(MClass)
+    loop(Instances->MOperation([MClass:find_methods]))
+        if ([MOperation.returnType] == "")
+            [MOperation:finder_rettype] = [MClass:pk_class];            
+        end if
+        if ([MOperation.returnType] != [MClass.name])
+            [MOperation:finder_rettype] = [MOperation.returnType];
+        else
+            [MOperation:finder_rettype] = [MClass:pk_class];
+        end if
+    end loop
+end proc
+
+
+
+// -------------------------------------------------------------
+//  Various PrimaryKey Attribute Lists
+// -------------------------------------------------------------
+
+// Extractes the IDs of PrimaryKey-attributes in
+// the class. Writes them to a class property
+proc genPKAttributes(MClass)
+    // primary key Attributes can only be "public" and cannot be "static" or "final" or "transient".
+    loop(MClass->MAttribute Where [MAttribute.access] == "public" && [MAttribute.binding] == "" && [MAttribute:final] == "False"  && [MAttribute:transient] == "False")
+        loop(MAttribute->TaggedValue AS TG Where ([TG.tag] == "ejb_PKField" && [TG.value] == "True") || ([TG.tag] == "ejb_PKClass" && [TG.value] == "True"))
+            if (hasLoop(MAttribute->TaggedValue AS TV Where [TV.tag] == "ejb_CMP" && [TV.value] == "False"))
+                info = "Attribute cannot simultanously be a PK field or -class and has no CMP.\n";
+            else
+                [MClass:pk_attributes] = [MClass:pk_attributes] " " [MAttribute.id];
+            end if
+        end loop
+    end loop
+end proc
+
+
+// Extractes the names of PrimaryKey-attributes in
+// the class. Concatenates them to comma-separated list
+proc genPKAttributesList(MClass)
+    [MClass:pk_attr_list] = "";
+    // primary key Attributes can only be "public" and cannot be "static" or "final" or "transient".
+    loop(MClass->MAttribute Where [MAttribute.access] == "public" && [MAttribute.binding] == "" && [MAttribute:final] == "False"  && [MAttribute:transient] == "False")
+        loop(MAttribute->TaggedValue AS TG Where ([TG.tag] == "ejb_PKField" && [TG.value] == "True") || ([TG.tag] == "ejb_PKClass" && [TG.value] == "True"); setDelim(""); setDelim(", "))
+            if (hasLoop(MAttribute->TaggedValue AS TV Where [TV.tag] == "ejb_CMP" && [TV.value] == "False"))
+                info = "Attribute cannot simultanously be a PK field or -class and has no CMP.\n";                
+            else
+                [MClass:pk_attr_list] = [MAttribute.name] delim() [MClass:pk_attr_list];
+            end if
+        end loop
+    end loop
+end proc
+
+
+// Extractes the names of PrimaryKey-attributes in
+// the class. Concatenates them to comma-separated list
+proc genPKAttributesWithTypeList(MClass)
+    [MClass:pk_attr_with_type_list] = "";
+    // primary key Attributes can only be "public" and cannot be "static" or "final" or "transient".
+    loop(MClass->MAttribute Where [MAttribute.access] == "public" && [MAttribute.binding] == "" && [MAttribute:final] == "False"  && [MAttribute:transient] == "False")
+        loop(MAttribute->TaggedValue AS TG Where ([TG.tag] == "ejb_PKField" && [TG.value] == "True") || ([TG.tag] == "ejb_PKClass" && [TG.value] == "True"); setDelim(""); setDelim(", "))
+            if (hasLoop(MAttribute->TaggedValue AS TV Where [TV.tag] == "ejb_CMP" && [TV.value] == "False"))
+                info = "Attribute cannot simultanously be a PK field or -class and has no CMP.\n";
+            else
+                [MClass:pk_attr_with_type_list] = [MAttribute.type] " " [MAttribute.name] delim() [MClass:pk_attr_with_type_list];
+            end if
+        end loop
+    end loop
+end proc
+
+
+
+// Generates the name of the primary key class.
+// If an Attribute has an primary key-class property
+// the type of that class is the primary-key-class
+proc preparePKClassName(MClass)
+    loop(MClass->MAttribute Where [MAttribute.access] == "public" && [MAttribute.binding] == "" && [MAttribute:final] == "False"  && [MAttribute:transient] == "False")
+        loop(MAttribute->TaggedValue As TG Where [TG.tag] == "ejb_PKClass" && [TG.value] == "True")
+            if (hasLoop(MAttribute->TaggedValue AS TV Where [TV.tag] == "ejb_CMP" && [TV.value] == "False")) 
+                info = "Attribute cannot simultanously be a PK field class and has no CMP.\n";
+            else
+                [MClass:pk_class] = [MAttribute.type];
+                [MClass:pk_var_name] = [MAttribute.name];
+                [MClass:gen_pk_class] = "False";
+            end if
+        end loop
+    end loop
+    if ([MClass:pk_class] == "")
+        [MClass:pk_class] = [MClass.name] [pk_name_suffix];
+        [MClass:gen_pk_class] = "True"; 
+    end if
+end proc
+
+
+
+// -------------------------------------------------------------
+//  Properties for Enterprise Beans
+// -------------------------------------------------------------
+
+// Preparates properties for the code generation and the 
+// DeploymentDescriptor which relates to Bean as a whole (EntityBean only)
+proc prepareEntityProperties(MClass)
+    if (getTaggedValueTag([MClass], "ejb_Persistence") == "True")
+        if (getTaggedValueValue([MClass], "ejb_Persistence") == "Container")
+            [MClass:persistence] = "Container";
+        end if
+        if (getTaggedValueValue([MClass], "ejb_Persistence") == "Bean")
+            [MClass:persistence] = "Bean";
+        end if
+    end if
+    // DefaultValue for persistence is container ! (change it if you want)
+    if ([MClass:persistence] == "")
+        [MClass:persistence] = "Container";
+    end if
+    if (getTaggedValueTag([MClass], "ejb_Reentrant") == "True")
+        [MClass:reentrant] = getTaggedValueValue([MClass], "ejb_Reentrant");
+    end if
+    if ([MClass:reentrant] == "")
+        [MClass:reentrant] = "False"; 
+    end if
+    if (getTaggedValueTag([MClass], "ejb_BulkAccessors") == "True")
+        [MClass:bulk_accessors] = "True";
+    end if
+end proc
+
+
+
+// Prepares the generation of attributes for which Container Managed Persistence (CMP)
+// is to be applied in the Deployment Descriptor. 
+// 
+// Note: Should be only invoked if [MClass:persistence] is "Container".
+// Note: See function is similar, but not equal to prepareAccessMethods().
+//   because access methods must be generated for SessionBeans too.
+//   It is therefore not redundant!
+proc prepareAttributeCMP(MClass)
+    loop(MClass->MAttribute Where [MAttribute.access] == "public" && [MAttribute.binding] == "" && [MAttribute:final] == "False"  && [MAttribute:transient] == "False")
+        if (! hasLoop(MAttribute->TaggedValue As TG Where [TG.tag] == "ejb_CMP" && [TG.value] == "False"))
+            [MAttribute:cmp] = "True";
+        else
+            [MAttribute:cmp] = "False";
+        end if
+    end loop
+end proc
+
+
+
+// Preparates properties for the code generation and the 
+// DeploymentDescriptor which relates to Bean as a whole (SessionBean only)
+proc prepareSessionProperties(MClass)
+    local session_type = "";
+    local transaction_type = "";
+    local transaction_aware = "";
+    
+    if (getTaggedValueTag([MClass], "ejb_SessionType") == "True")
+        [session_type] = getTaggedValueValue([MClass], "ejb_SessionType");
+        switch ([session_type])
+            case "Stateful" :
+            case "Stateless" :
+            [MClass:session_type] = [session_type];
+                break;
+            default :
+                break;
+        end switch 
+    end if
+    // DefaultValue for session_type is "Stateless" (change it if you want)
+    if ([MClass:session_type] == "")
+        [MClass:session_type] = "Stateless";
+    end if
+    if (getTaggedValueTag([MClass], "ejb_TransactionType") == "True")
+        [transaction_type] = getTaggedValueValue([MClass], "ejb_TransactionType");
+        switch ([transaction_type])
+            case "Bean" :
+            case "Container" :
+            [MClass:transaction_type] = [transaction_type];
+                break;
+            default :
+                break;
+        end switch
+    end if
+    // DefaultValue for transaction_type is "Container" (change it if you want)
+    if ([MClass:transaction_type] == "")
+        [MClass:transaction_type] = "Container";
+    end if
+    if (getTaggedValueTag([MClass], "ejb_TransactionAware") == "True")
+        // The following point makes only sense for Stateful SessionBeans
+        // with container-managed transaction demarcation.
+        if ([MClass:session_type] == "Stateful" && [MClass:transaction_type] == "Container")
+            [MClass:transaction_aware] = getTaggedValueValue([MClass], "ejb_TransactionAware");
+        end if
+    end if
+end proc
+
+
+// Creates attributes from references 
+// (works with StP 8.x only!)
+proc createAttributesFromRefs(MClass)
+// Do nothing if Partner-Class has DataSource stereotype
+if (hasLoop(MClass->Role As FromRole->MAssociation->MAssociationEnd As ToRole->MClass As Partner Where [FromRole.id] != [ToRole.id] && [Partner.stereotype] != [datasource_stereo]))
+    [MClass:has_attributes] = "True";
+    [MClass:has_normal_attributes] = "True";
+    loop(MClass->Role As FromRole->MAssociation->MAssociationEnd As ToRole->MClass As Partner Where [FromRole.id] != [ToRole.id] && [Partner.stereotype] != [datasource_stereo])
+        // [stereo] = getStereotype([Partner]);
+        // if ([stereo] == [entity_bean_stereo] || [stereo] == [session_bean_stereo])
+            if (checkNavigability([FromRole], [ToRole]) == "True")
+                metaCreate(MAttribute As refAttr);
+                if ([ToRole.name] == "" || [ToRole.name] == [Partner.name])
+                    [refAttr.name] = lowercase_firstchar([Partner.name]);
+                else
+                    [refAttr.name] = [ToRole.name];
+                end if
+                if (getMultiplicity([ToRole.multiplicity]) == "One")
+                    [refAttr.type] = [Partner.name];
+                else
+                    [refAttr.type] = [def_coll_class];
+                end if
+                [refAttr.binding] = "";
+                [refAttr:final]   = "False";
+                [refAttr.access] = "public";
+                [refAttr:access_methods] = "True";
+                [refAttr:readonly] = "False";
+                metaInsert([MClass], MAttribute, [refAttr]);
+            end if
+        // end if
+    end loop      
+end if  
+end proc
+
+
+// Creates superclass statement
+proc genSuperClassName(MClass) 
+    loop(MClass->SuperClass)
+        [MClass:superclass_name] = [SuperClass.name];
+    end loop
+end proc
+
+
+// Superclass statement. Empty if no inheritance relationship
+proc getExtendsStatement(MClass, class)
+    if([MClass:superclass_name] == "")
+        return "";
+    else
+        if ([class] == [bean_name_suffix])
+            return " extends " [MClass:superclass_name][bean_name_suffix];
+        else
+            return ", " [MClass:superclass_name][remote_name_suffix];
+        end if
+    end if
+end proc
+
+
+// Generates class properties like Full Qualified Package Name
+// the filename and the directory hierarchy.
+proc genPackageHierarchy(MClass)
+    local package_list = "";
+    
+    loop(MClass->MPackage)
+		[package_list] = getIdListRec(MPackage->Domain) [MPackage.id];
+	end loop
+    loop(Instances->MPackage([package_list]); setDelim(""); setDelim("."))
+        [MClass:package_name] = [MClass:package_name] delim() [MPackage.name];
+    end loop
+    loop(Instances->MPackage([package_list]))
+        [MClass:dir_name] = [MClass:dir_name] [MPackage.name] "/";
+    end loop
+end proc

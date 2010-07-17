@@ -1,0 +1,32 @@
+  Action Logic Table|		.alt	ALT	stp_alt_class
+  Attribute Table|		.ate	ATE	stp_ate_class
+  Bachman Diagram|		.bach	BACH	stp_bach_class
+  Chen Diagram|			.chen	CHEN	stp_chen_class
+  CRUD Table|			.crud	CRUD	stp_crud_class
+  Class Diagram|		.class	CLASS	stp_class_class
+  Data Element Table|		.dete	DETE	stp_dete_class
+  Decision Table|		.det	DET	stp_det_class
+  Data Flow Diagram|		.dfe	DFE	stp_dfe_class
+  Domain Table|			.dmte	DMTE	stp_dmte_class
+  Data Structure Diagram|	.dse	DSE	stp_dse_class
+  Event Logic Table|		.elt	ELT	stp_elt_class
+  Inherited Key File|		.ikf	IKF	stp_ikf_class
+  Annotation File|		.ant	ANT	stp_ant_class
+  Class Table|			.cte	CTE	stp_cte_class
+  Functional Model Diagram|	.fme	FME	stp_fme_class
+  Module Diagram|		.module	MODULE	stp_module_class
+  Object Model Diagram|		.ome	OME	stp_ome_class
+  Object/Interaction Diagram|	.object	OBJECT	stp_object_class
+  State Diagram|		.dme	DME	stp_dme_class
+  State Table|			.stbl	STBL	stp_stbl_class
+  Process Activation Matrix|	.pam	PAM	stp_pam_class
+  Process Activation Table|	.pat	PAT	stp_pat_class
+  Process Editor|		.process	PROCESS stp_process_class
+  Structure Chart Diagram|	.sce	SCE	stp_sce_class
+  Software Process Table|	.spt	SPT	stp_spt_class
+  Software Process Diagram|	.spe	SPE	stp_spe_class
+  State Event Matrix|		.sem	SEM	stp_sem_class
+  State Transition Table|	.stt	STT	stp_stt_class
+  State Transition Diagram|	.ste	STE	stp_ste_class
+  Table|			.ted	TED	stp_ted_class
+  Use Case Diagram|		.omt	OMT	stp_omt_class

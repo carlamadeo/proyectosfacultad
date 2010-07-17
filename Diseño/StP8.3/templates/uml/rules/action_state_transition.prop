@@ -1,0 +1,514 @@
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 2000
+//      All rights reserved
+
+// New File for ECR 3786
+ 
+Global 1 UmlTransitionObjectName
+{
+    { Properties
+        { Text
+            { Name "ObjectName" }
+            { Label "Label:" }
+            { MinLength 1 }
+            { DispLength 61 }
+            { Resizable ResizeNone }
+        }
+    }
+}
+
+Global 1 UmlActivityTransitionObjectName
+{
+    { Properties
+        { Text
+            { Name "TransitionGuard" }
+            { Label "Guard:" }
+            { MinLength 0 }
+            { DispLength 30 }
+            { Resizable ResizeNone }
+            { Event
+                { Type Text }
+                { Callback "ps_TransitionValueChanged_cb" }
+            }
+        }
+        { Button
+        	{ Name "ChooseGuard" }
+        	{ Label "Choose..." }
+        	{ Event
+        		{ Type Select }
+        		{ Callback "ps_ChooseGuard_cb" }
+        	}
+        }
+        { Text
+            { Name "TransitionAction" }
+            { Label "Action List (one per line):" }
+            { MinLength 0 }
+            { DispRows 3 }
+            { DispLength 21 }
+            { Resizable ResizeNone }
+            { Event
+                { Type Text }
+                { Callback "ps_TransitionValueChanged_cb" }
+            }
+        }
+        { Button
+        	{ Name "ChooseAction" }
+        	{ Label "Choose..." }
+        	{ Event
+        		{ Type Select }
+        		{ Callback "ps_ChooseAction_cb" }
+        	}
+        }
+        { Group
+            { Name TransitionGuardGroup }
+            { HorizontalSpacing 5 }
+            { Type Horizontal }
+            { Members ( TransitionGuard ChooseGuard ) }
+        }
+        { Group
+            { Name TransitionActionGroup }
+            { Type Horizontal }
+            { HorizontalSpacing 5 }
+            { VerticalAlign Center }
+            { Members ( TransitionAction ChooseAction ) }
+        }
+        { Group
+            { Name ActivityTransitionAttributes }
+            { Label "Transition Attributes" }
+            { Type Vertical }
+            { VerticalSpacing 5 }
+            { HorizontalAlign AlignLabels }
+            { Members ( TransitionGuardGroup 
+                        TransitionActionGroup ) }
+        }
+    }
+}
+
+Global 1 UmlStateTransitionObjectName
+{
+    { Properties
+        { Text
+            { Name "TransitionName" }
+            { Label "Name Component:" }
+            { MinLength 0 }
+            { DispLength 30 }
+            { Resizable ResizeNone }
+            { Event
+                { Type Text }
+                { Callback "ps_TransitionValueChanged_cb" }
+            }
+        }
+        { Text
+            { Name "TransitionEvent" }
+            { Label "Event:" }
+            { MinLength 0 }
+            { DispLength 30 }
+            { Resizable ResizeNone }
+            { Event
+                { Type Text }
+                { Callback "ps_TransitionValueChanged_cb" }
+            }
+        }
+        { Button
+        	{ Name "ChooseInEvent" }
+        	{ Label "Choose..." }
+        	{ Event
+        		{ Type Select }
+        		{ Callback "ps_ChooseInEvent_cb" }
+        	}
+        }
+        { Text
+            { Name "TransitionGuard" }
+            { Label "Guard:" }
+            { MinLength 0 }
+            { DispLength 30 }
+            { Resizable ResizeNone }
+            { Event
+                { Type Text }
+                { Callback "ps_TransitionValueChanged_cb" }
+            }
+        }
+        { Button
+        	{ Name "ChooseGuard" }
+        	{ Label "Choose..." }
+        	{ Event
+        		{ Type Select }
+        		{ Callback "ps_ChooseGuard_cb" }
+        	}
+        }
+        { Text
+            { Name "TransitionAction" }
+            { Label "Action List (one per line):" }
+            { MinLength 0 }
+            { DispRows 3 }
+            { DispLength 21 }
+            { Resizable ResizeNone }
+            { Event
+                { Type Text }
+                { Callback "ps_TransitionValueChanged_cb" }
+            }
+        }
+        { Button
+        	{ Name "ChooseAction" }
+        	{ Label "Choose..." }
+        	{ Event
+        		{ Type Select }
+        		{ Callback "ps_ChooseAction_cb" }
+        	}
+        }
+        { Text
+            { Name "TransitionSend" }
+            { Label "Send Events (one per line):" }
+            { MinLength 0 }
+            { DispRows 3 }
+            { DispLength 21 }
+            { Resizable ResizeNone }
+            { Event
+                { Type Text }
+                { Callback "ps_TransitionValueChanged_cb" }
+            }
+        }
+        { Button
+        	{ Name "ChooseOutEvent" }
+        	{ Label "Choose..." }
+        	{ Event
+        		{ Type Select }
+        		{ Callback "ps_ChooseOutEvent_cb" }
+        	}
+        }
+        { Group
+            { Name TransitionEventGroup }
+            { Type Horizontal }
+            { HorizontalSpacing 5 }
+            { Align Labels } // ECR 5774
+            { Members ( TransitionEvent ChooseInEvent ) }
+        }
+        { Group
+            { Name TransitionGuardGroup }
+            { Type Horizontal }
+            { HorizontalSpacing 5 }
+            { Align Labels } // ECR 5774
+            { Members ( TransitionGuard ChooseGuard ) }
+        }
+        { Group
+            { Name TransitionActionGroup }
+            { Type Horizontal }
+            { HorizontalSpacing 5 }
+            { VerticalAlign Center }
+            { Align Labels } // ECR 5774
+            { Members ( TransitionAction ChooseAction ) }
+        }
+        { Group
+            { Name TransitionSendGroup }
+            { Type Horizontal }
+            { HorizontalSpacing 5 }
+            { VerticalAlign Center }
+            { Align Labels } // ECR 5774
+            { Members ( TransitionSend ChooseOutEvent ) }
+        }
+        { Group
+            { Name StateTransitionObjectName }
+            { Label "Transition Attributes" }
+            { Type Vertical }
+            { VertiaclSpacing 10 }
+            { HorizontalAlign AlignLabels }
+            { Members ( TransitionName
+                        TransitionEventGroup
+                        TransitionGuardGroup
+                        TransitionActionGroup
+                        TransitionSendGroup ) } 
+
+        }
+    }
+}
+
+PropertySheet GuardChooser
+{
+	{ Name "GuardChooser" }
+    { Label "Choose Guard" }
+    { OwnerActionCallback GuardChooser_deactivate } // ECR 6880
+    { Properties
+        { Qrl { QrlFile "rules/qrl/uml_choosers.ps.qrl" } }
+        { Button 
+    		{Name "Reset" }
+    		{ Label "Refresh" }
+    		{ Event 
+    			{ Type Select }
+    			{ Callback "ps_ChangeGuardGroup_cb" }
+    		}
+    	}
+        { Button 
+    		{Name "OK" } // Name must be "OK", otherwise the sheet
+    					 // will not be closed
+    		{ Label "OK" }
+    		{ Event 
+    			{ Type Select }
+    			{ Callback "ps_TransitionGuardChooser_OK_cb" }
+    		}
+    	}
+    	{ Text
+            { Name "ParentClass" }
+            { Label "Parent-Class:" }
+            { LabelAbove True }
+            { DispRows 1 }
+            { DispLength 30 }
+            { Resizable ResizeNone }
+    	}
+        { Button
+        	{ Name "OpenClass" }
+        	{ Label "GoTo Class" }
+        	{ Event
+        		{ Type Select }
+        		{ Callback "ps_OpenClass_cb" }
+        	}
+        }
+        { Group
+            { Name ClassGroup }
+            { HorizontalSpacing 5 }
+            { Type Horizontal }
+            { VerticalAlign Bottom }
+            { Members ( ParentClass OpenClass ) }
+        }
+        { Choice
+            { Name GuardTypeGroupChoice }
+            { Label "Type:" }
+            { LabelAbove True }
+            { Type AbbrMenu }
+            { ChoiceItem { Label "Attributes    " } }
+            { ChoiceItem { Label "Operations    " } }
+            { ChoiceItem { Label "States        " } }
+            { Event
+                { Type Select }
+                { Callback "ps_ChangeGuardGroup_cb" }
+            }
+        }
+    	{ List
+            { Name GuardList }
+            { Label "Available Guards:" }
+            { Rows 10 }
+            { Width 60 }
+            { Exclusive True }
+            { LabelAbove True }
+        	{ Resizable ResizeNone }
+     	}
+        { Group
+        	{ Name GuardChooserMain }
+        	{ Type Vertical }
+        	{ Label "Selection" }
+    		{ ChildSizePolicy ResizeAny }
+            { Resizable ResizeAny }
+            { VerticalSpacing 5 }
+           	{ Members ( ClassGroup GuardTypeGroupChoice GuardList ) }
+        }
+        
+    }
+}
+
+PropertySheet InEventChooser
+{
+	{ Name "InEventChooser" }
+    { Label "Choose Transition Event" }
+    { OwnerActionCallback InEventChooser_deactivate } // ECR 6880
+    { Properties
+        { Qrl { QrlFile "rules/qrl/uml_choosers.ps.qrl" } }
+        { Button 
+    		{Name "Reset" }
+    		{ Label "Refresh" }
+    		{ Event 
+    			{ Type Select }
+    			{ Callback "ps_InEventChooser_Refresh_cb" }
+    		}
+        }
+        { Button 
+    		{Name "OK" } // Name must be "OK", otherwise the sheet
+    					 // will not be closed
+    		{ Label "OK" }
+    		{ Event 
+    			{ Type Select }
+    			{ Callback "ps_InEventChooser_OK_cb" }
+    		}
+    	}
+    	{ Text
+            { Name "ParentClass" }
+            { Label "Parent-Class:" }
+            { LabelAbove True }
+            { DispRows 1 }
+            { DispLength 30 }
+            { Resizable ResizeNone }
+    	}
+        { Button
+        	{ Name "OpenClass" }
+        	{ Label "GoTo Scenario" }
+        	{ Event
+        		{ Type Select }
+        		{ Callback "ps_OpenScenario_cb" }
+        	}
+        }
+        { Group
+            { Name ClassGroup }
+            { HorizontalSpacing 5 }
+            { Type Horizontal }
+            { VerticalAlign Bottom }
+            { Members ( ParentClass OpenClass ) }
+        }
+    	{ List
+            { Name InEventList }
+            { Label "Available In Events:" }
+            { Rows 10 }
+            { Width 60 }
+            { Exclusive True }
+            { LabelAbove True }
+        	{ Resizable ResizeNone }
+     	}
+        { Group
+        	{ Name GuardChooserMain }
+        	{ Type Vertical }
+        	{ Label "Selection" }
+    		{ ChildSizePolicy ResizeAny }
+            { Resizable ResizeAny }
+            { VerticalSpacing 5 }
+           	{ Members ( ClassGroup InEventList ) }
+        }
+        
+    }
+}
+
+PropertySheet OutEventChooser
+{
+	{ Name "OutEventChooser" }
+    { Label "Choose Transition Event" }
+    { OwnerActionCallback InEventChooser_deactivate } // ECR 6880
+    { Properties
+        { Qrl { QrlFile "rules/qrl/uml_choosers.ps.qrl" } }
+        { Button 
+    		{Name "Reset" }
+    		{ Label "Refresh" }
+    		{ Event 
+    			{ Type Select }
+    			{ Callback "ps_OutEventChooser_Refresh_cb" }
+    		}
+        }
+        { Button 
+    		{Name "OK" } // Name must be "OK", otherwise the sheet
+    					 // will not be closed
+    		{ Label "OK" }
+    		{ Event 
+    			{ Type Select }
+    			{ Callback "ps_OutEventChooser_OK_cb" }
+    		}
+    	}
+    	{ Text
+            { Name "ParentClass" }
+            { Label "Parent-Class:" }
+            { LabelAbove True }
+            { DispRows 1 }
+            { DispLength 30 }
+            { Resizable ResizeNone }
+    	}
+        { Button
+        	{ Name "OpenClass" }
+        	{ Label "GoTo Scenario" }
+        	{ Event
+        		{ Type Select }
+        		{ Callback "ps_OpenScenario_cb" }
+        	}
+        }
+        { Group
+            { Name ClassGroup }
+            { HorizontalSpacing 5 }
+            { Type Horizontal }
+            { VerticalAlign Bottom }
+            { Members ( ParentClass OpenClass ) }
+        }
+    	{ List
+            { Name OutEventList }
+            { Label "Available Send Events:" }
+            { Rows 10 }
+            { Width 60 }
+            { Exclusive True }
+            { LabelAbove True }
+        	{ Resizable ResizeNone }
+     	}
+        { Group
+        	{ Name GuardChooserMain }
+        	{ Type Vertical }
+        	{ Label "Selection" }
+    		{ ChildSizePolicy ResizeAny }
+            { Resizable ResizeAny }
+            { VerticalSpacing 5 }
+           	{ Members ( ClassGroup OutEventList ) }
+        }
+        
+    }
+}
+
+PropertySheet ActionChooser
+{
+	{ Name "ActionChooser" }
+    { Label "Choose Action" }
+    { OwnerActionCallback ActionChooser_deactivate } // ECR 6880
+    { Properties
+        { Qrl { QrlFile "rules/qrl/uml_choosers.ps.qrl" } }
+        { Button 
+    		{Name "Reset" }
+    		{ Label "Refresh" }
+    		{ Event 
+    			{ Type Select }
+    			{ Callback "ps_ActionChooser_Refresh_cb" }
+    		}
+        }
+        { Button 
+    		{Name "OK" } // Name must be "OK", otherwise the sheet
+    					 // will not be closed
+    		{ Label "OK" }
+    		{ Event 
+    			{ Type Select }
+    			{ Callback "ps_ActionChooser_OK_cb" }
+    		}
+    	}
+    	{ Text
+            { Name "ParentClass" }
+            { Label "Parent-Class:" }
+            { LabelAbove True }
+            { DispRows 1 }
+            { DispLength 30 }
+            { Resizable ResizeNone }
+    	}
+        { Button
+        	{ Name "OpenClass" }
+        	{ Label "GoTo Class" }
+        	{ Event
+        		{ Type Select }
+        		{ Callback "ps_OpenClass_cb" }
+        	}
+        }
+        { Group
+            { Name ClassGroup }
+            { HorizontalSpacing 5 }
+            { Type Horizontal }
+            { VerticalAlign Bottom }
+            { Members ( ParentClass OpenClass ) }
+        }
+    	{ List
+            { Name ActionList }
+            { Label "Available Operations:" }
+            { Rows 10 }
+            { Width 60 }
+            { Exclusive True }
+            { LabelAbove True }
+        	{ Resizable ResizeNone }
+     	}
+        { Group
+        	{ Name ActionChooserMain }
+        	{ Type Vertical }
+        	{ Label "Selection" }
+    		{ ChildSizePolicy ResizeAny }
+            { Resizable ResizeAny }
+            { VerticalSpacing 5 }
+           	{ Members ( ClassGroup ActionList ) }
+        }
+        
+    }
+}
+

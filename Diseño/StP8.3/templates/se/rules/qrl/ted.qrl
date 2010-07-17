@@ -1,0 +1,3 @@
+// for hideshow dialog active func
+
+#include "rules/qrl/gte_qrl_std.inc"

@@ -1,0 +1,60 @@
+// ECR 3556 start
+
+Toolbar DefaultArcType
+{
+    //ECR 6380 begin
+    //{ Position Top }
+    //{ IsFloating True }
+    { Position Left }
+    //ECR 6380 end
+    { Group
+        { Exclusive True }
+        { Entry
+            { Name "StateTransitionLink" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType StateTransitionLink" }
+            { HelpTip "StateTransition Link" }
+            { Image "statetransitionlink" }
+        }
+// ECR 4998 start
+//        { Entry
+//            { Name "SplitControlLink" }
+//            { Type Toggle }
+//            { Builtin "SetDefaultArcType SplitControlLink" }
+//            { HelpTip "SplitControl Link" }
+//            { Image "splitcontrollink" }
+//        }
+//        { Entry
+//            { Name "MergeControlLink" }
+//            { Type Toggle }
+//            { Builtin "SetDefaultArcType MergeControlLink" }
+//            { HelpTip "MergeControl Link" }
+//            { Image "mergecontrollink" }
+//        }
+// ECR 4998 end
+        { Entry
+            { Name "OutputLink" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType OutputLink" }
+            { HelpTip "Output Link" }
+            { Image "outputlink" }
+        }
+        { Entry
+            { Name "InputLink" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType InputLink" }
+            { HelpTip "Input Link" }
+            { Image "inputlink" }
+        }
+        { Entry
+            { Name "NoteLink" }
+	    { Type Toggle }
+            { Builtin "SetDefaultArcType NoteLink" }
+            { HelpTip "Note Link" }
+            { Image "notelink" }
+        }
+    }
+}
+
+// ECR 3556 end
+

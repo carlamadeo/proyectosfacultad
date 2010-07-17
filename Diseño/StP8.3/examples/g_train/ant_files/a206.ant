@@ -1,0 +1,70 @@
+FileObject 1
+{
+    { Name "a206" }
+    { Type ObjectAnnotation }
+    { GUID "UID_653EC835-3219-4d1f-B8F4-2125BC8119F7" }
+}
+
+NodeObject 99999
+{
+    { Name "." }
+    { Type SEDirectory }
+    { ObjectId 2744 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_EC87D812-675F-4d56-950D-3302FC4EC087" }
+}
+
+NodeObject 99998
+{
+    { Name "artificial_data_file.c" }
+    { Type SEFile }
+    { ObjectId 2914 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_5365B6F1-D4FE-4859-B88A-4D368524955B" }
+}
+
+NodeObject 99997
+{
+    { Name "artificial data file" }
+    { Type DataModule }
+    { ObjectId 2915 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_A96CA1D8-2632-4af1-9965-CD9BAA5380F6" }
+}
+
+NoteObject 2
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2917 }
+}
+
+ItemObject 3
+{
+    { Type ObjectName }
+    { Value "artificial data file" }
+    { NoteId 2 }
+    { ObjectId 2918 }
+}
+
+NoteObject 4
+{
+    { Type GlobalDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2920 }
+}
+
+ItemObject 5
+{
+    { Type DataType }
+    { Value "file" }
+    { NoteId 4 }
+    { ObjectId 2921 }
+}
+

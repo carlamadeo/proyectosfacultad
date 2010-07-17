@@ -1,0 +1,460 @@
+//*****************************************************************************
+// $RCSfile: ada_genspec.tdl,v $
+// $Revision: 1.4 $
+// $Date: 2002/03/08 16:03:54 $
+// Author: Peter Kleiner
+//*****************************************************************************
+
+/*
+genSpec: generates the package specification for an instance of meta type MClass.
+genGroupSpec: generates the package specification for a group of instances of meta type
+              MClass.
+genInstanceSpec: generates the package specification of an instance of meta type
+		 MInstantiatedClass
+genPublicAccessSpec: <<TBD>>
+genPrivateAccessSpec: <<TBD>>
+genSpec, genGroupSpec, and genInstanceSpec, genPublicAccessSpec, and genPrivateAccessSpec
+    are called by main (defined in ada_main.tdl).
+*/
+
+template genSpec(MClass)
+[/* StartPackage sets a global flag to false which is used to control the generation
+    of a dummy subprogram specification which in terms enforces compilation of the
+    package body. StartPackage is defined below  */]
+[startPackage()]
+[/* mark This place is an insertion point (named "include") for include 
+    statements. Include statements are inserted here during generation of the 
+    class content by using the insert procedure. */]
+[mark("include","include_proc")]
+[mergeOut("UDIF","includes","")]
+[if([MClass].isGeneric())]
+generic
+	[genTemplateParameters([MClass])]
+[end if]
+package [MClass:cuName] is
+
+	[mark("renames","rename_proc")]
+	[mergeOut("UDUFPD","package first public declarations","")]
+\
+	[genPublicSpecTForward([MClass],FALSE)]
+\
+	[mergeOut("UDUSPD","package second public declarations","")]
+\
+	[genPublicSpec([MClass])]
+\
+	[mergeOut("UDULPD","package last public declarations","")]
+\
+private
+\
+	[mergeOut("UDPFPD","package first private declarations","")]
+\
+	[genPrivateSpec([MClass])]
+\
+	[mergeOut("UDPLPD","package last private declarations","")]
+\
+	[genElabDummySpec()]
+
+end [MClass:cuName];
+	
+end template
+
+
+
+
+
+
+
+/* like genSpec for a single class, we generate in genGroupSpec a package for a whole
+   group of classes. Note that these classes are grouped together due to cyclic 
+   dependencies onto each other, thus the class types all have to be declared before
+   operations, relations, and attributes can refer to one of the other classes in the
+   group. */
+template genGroupSpec(Group)
+[startPackage()]
+[mark("include","include_proc")]
+[mergeOut("UDIF","includes", "")]
+
+[/* getCuNameOfGroup determines the compilation unit name of [Group] */]
+package [getCuNameOfGroup([Group])] is
+
+	[mark("renames","rename_proc")]
+	[mergeOut("UDUFPD","package first public declarations","")]
+\
+	[/* loop over each instance of MClass which belongs to the group for
+	    which the currently generated package is build */]
+\
+	[loop(Instances->MClass(MClass_by_group([Group])))]
+
+	[genPublicSpecTForward([MClass],TRUE)]
+
+	[end loop]
+\
+	[mergeOut("UDUSPD","package second public declarations","")]
+
+	[/* loop again over each instance of MClass which belongs to the group
+	    to create the remaining public part. genPublicSpec is defined below */]
+\
+	[loop(Instances->MClass(MClass_by_group([Group])) where [MClass].isGeneric() == FALSE && [MClass].isInstance() == FALSE)]
+
+	[genPublicSpec([MClass])]
+\
+	[end loop]
+
+	[mergeOut("UDULPD","package last public declarations","")]
+\
+private
+
+	[mergeOut("UDPFPD","package first private declarations","")]
+\
+	[/* loop again over each instance of MClass which belongs to the group
+	    to create the private part. genPrivateSpec is defined below */]
+	[loop(Instances->MClass(MClass_by_group([Group])) where [MClass].isGeneric() == FALSE && [MClass].isInstance() == FALSE)]
+	
+	[genPrivateSpec([MClass])]
+\
+	[end loop]
+
+	[mergeOut("UDPLPD","package last private declarations","")]
+\
+	[genElabDummySpec()]
+
+end [getCuNameOfGroup([Group])];
+end template
+
+
+
+
+
+/* Generates the package specification for an instance of meta type MInstantiatedClass.
+   The name of the template classes package is stored in :referenceName (computed in ada_std.tdl).
+   genGenericAssoc outputs the association list of the instance (defined in ada_gensupp.tdl) */
+template genInstanceSpec(MClass)
+[mark("include","include_proc")]
+[mergeOut("UDIF","includes","")]
+[loop(MClass->MInstantiatedClass->MTemplateClass)]
+[insert("include",[MTemplateClass.id])]
+package [MInstantiatedClass:packageName] is new [MTemplateClass:referenceName][genGenericAssoc([MInstantiatedClass])];
+[end loop]
+end template
+
+
+/* Generates the public child package specification for an instance of meta type MNormalClass.
+   <<TBD>> */
+template genPublicAccessSpec(MClass)
+[mark("include","include_proc")]
+[mergeOut("UDIF","includes","")]
+package [MClass:packageName].AccessOps is
+
+	[genAttributeOperationSpecs([MClass],"public-child")]
+	[genRelationOperationSpecs([MClass],"public-child")]
+
+end [MClass:packageName].AccessOps;
+end template
+
+
+
+
+/* Generates the private child package specification for an instance of meta type MNormalClass.
+   <<TBD>> */
+template genPrivateAccessSpec(MClass)
+[mark("include","include_proc")]
+[mergeOut("UDIF","includes","")]
+private package [MClass:packageName].PrivateAccessOps is
+
+	[genAttributeOperationSpecs([MClass],"private-child")]
+	[genRelationOperationSpecs([MClass],"private-child")]
+
+end [MClass:packageName].PrivateAccessOps;
+end template
+
+
+
+/*==========================================================================*/
+/* local support
+   startPackage, bodyIsRequired, genElabDummySpec:
+	handle generation of a dummy subprogram declaration for package
+	specification that do not require a body
+   setGenerationLevel:
+   	sets the attribute genLevel of an MClass in order to control ordering
+   	of inter dependent MClass in a group
+   genTemplateParameters:
+	generate the parameter list for the package specification of an instance
+	of MTemplateClass
+   genPublicSpecTForward:
+   	generate for a class MClass all declarations in package specification
+	for single Class (genSpec) or group (genGroupSpec) which are independent
+	of other classes type completion.
+	This is either the type forward declaration, e.g. incomplete type,
+	or the subtype for an interface class, or the local generic package or
+	the local generic instance            
+   genLocalTemplateSpec:
+	Generates the local package specification for an instance of meta type MTemplateClass.
+   genLocalInstanceSpec:
+	Generates the local package specification for an instance of meta type MInstantiatedClass.
+   genPublicSpec:
+   	generate for a class MClass all remaining declarations in the public
+   	part
+   genPrivateSpec:
+   	generate for a class MClass all declarations in the private part
+*/
+
+/* control generation of a dummy procedure to enforce body compilation */
+proc startPackage()
+   [bodyRequired] = FALSE;
+end proc
+
+proc bodyIsRequired()
+   [bodyRequired] = TRUE;
+end proc
+
+template genElabDummySpec()
+[if(![bodyRequired])]
+procedure Force_Body;
+[end if]
+end template
+
+
+/* control ordering of classes in a group */
+proc setGenerationLevel(MClass,level)
+
+   [MClass:genLevel] = [level];
+   
+end proc
+
+
+/* generate the generic parameter list for an instance of MTemplateClass
+   genParameterType produces an Ada subtype indication
+   for the type specification given in the model (defined in ada_std.tdl) */
+template genTemplateParameters(MClass)
+
+[loop(MClass->MTemplateClass where [MTemplateClass.id] == [MClass.id])]
+[   loop(MTemplateClass->TemplatePara)]
+[      if([TemplatePara.type] == "class" || [TemplatePara.type] == "")]
+type [TemplatePara.name] is private;
+[      else]
+[//         if([TemplatePara.defaultValue] != "")]
+[//TBD]
+[//         else]
+[TemplatePara.name] : [genParameterType([TemplatePara.type])];
+[//         end if]
+[      end if]
+[   end loop]
+[end loop]
+
+end template
+
+
+/* generate first public piece of an MClass */
+template genPublicSpecTForward(MClass,isGroup)
+[if(isEnumeration([MClass]))]
+[genEnumerationType([MClass])]
+[else]
+[   if([MClass:group] != 0)]
+[// we may have to generate a local super class first if this is visible here]
+[// we may have to generate our implementation in case of an interface first]
+[      if([MClass:genLevel] != "")]
+[         return]
+[      end if]
+[      setGenerationLevel([MClass],"TForward")]
+[      loop(MClass->Supplier)]
+[        loop(Supplier->MClass As SupplierClass where [SupplierClass:group] == [MClass:group] && isCOMClass([MClass]) == FALSE)]
+[genPublicSpecTForward([SupplierClass],[isGroup])]
+[      end loop]
+[      end loop]
+[      loop(MClass->SuperClass where [SuperClass:group] == [MClass:group] && (getClassPrivacy([MClass]) == "public" || getClassPrivacy([MClass]) == "private extension"))]
+[genPublicSpecTForward([SuperClass],[isGroup])]
+[      end loop]
+[      loop(MClass->MInterface->Implementation As ImplClass where [ImplClass:group] == [MClass:group])]
+[genPublicSpecTForward([ImplClass],[isGroup])]
+[      end loop]
+[      loop(MClass->MAttribute where isDiscriminant([MAttribute]) && getClass([MAttribute.type]) != 0)]
+[         loop(Instances->MClass(getClass([MAttribute.type])) As DClass where [DClass:group] == [MClass:group])] 
+[genPublicSpecTForward([DClass],[isGroup])]
+[         end loop]
+[      end loop]
+[   end if]
+
+
+[   if(isDatatype([MClass]))]
+[genDataTypeForwardDecls([MClass])]
+[   else if(isInterface([MClass]))]
+[genInterfaceType([MClass])]
+[genInterfaceCptr([MClass])]
+[genInterfacePtr([MClass])]
+[   else if([isGroup] && [MClass].isGeneric())]
+[genLocalTemplateSpec([MClass])]
+[   else if([isGroup] && [MClass].isInstance())]
+[genLocalInstanceSpec([MClass])]
+[   else if(!isArray([MClass]))]
+[genClassTypesForwardDecls([MClass])]
+[genClassCptr([MClass])]
+[genClassPtr([MClass])]
+[   end if end if end if end if end if]
+[end if]
+end template
+
+
+/* Generates the package specification for an instance of meta type MTemplateClass.
+   The name of the template classes package is stored in :referenceName (computed in ada_std.tdl).
+   genGenericAssoc outputs the association list of the instance (defined in ada_gensupp.tdl) */
+template genLocalTemplateSpec(MClass)
+generic
+	[genTemplateParameters([MClass])]
+package [MClass:packageName] is
+
+	[mergeOut("UDUFPD::" getUniqueId([MClass]),"package first public declarations","")]
+
+[setGenerationLevel([MClass],"")]
+	[genPublicSpecTForward([MClass],FALSE)]
+\
+	[genPublicSpec([MClass])]
+\
+	[mergeOut("UDULPD::"  getUniqueId([MClass]),"package last public declarations","")]
+\
+private
+
+	[mergeOut("UDPFPD::" getUniqueId([MClass]),"package first private declarations","")]
+\
+	[genPrivateSpec([MClass])]
+
+	[mergeOut("UDPLPD::" getUniqueId([MClass]),"package last private declarations","")]
+
+end [MClass:packageName];
+	
+end template
+
+
+
+/* Generates the package specification for an instance of meta type MInstantiatedClass.
+   The name of the template classes package is stored in :referenceName (computed in ada_std.tdl).
+   genGenericAssoc outputs the association list of the instance (defined in ada_gensupp.tdl) */
+template genLocalInstanceSpec(MClass)
+[loop(MClass->MInstantiatedClass->MTemplateClass)]
+[insert("include",[MTemplateClass.id])]
+package [MInstantiatedClass:packageName] is new [MTemplateClass:referenceName][genGenericAssoc([MInstantiatedClass])];
+[end loop]
+end template
+
+
+
+
+/* Generates the second piece of the package public part for each instance of 
+   meta type MClass */
+template genPublicSpec(MClass)
+
+
+[if(isEnumeration([MClass]))]
+[genClassOperationsSpecs([MClass],"public")]
+[else]
+[   if([MClass:group] != 0)]
+[// we may have to generate a local super class first if this is visible here]
+[// we may have to generate our composites' type first]
+[// we may have to generate our implementation in case of an interface first]
+[      if([MClass:genLevel] != "TForward")]
+[         return]
+[      end if]
+[   setGenerationLevel([MClass],"public")]
+[      loop(MClass->Supplier)]
+[        loop(Supplier->MClass As SupplierClass where [SupplierClass:group] == [MClass:group]  && isCOMClass([MClass]) == FALSE)]
+[genPublicSpec([SupplierClass])]
+[      end loop]
+[      end loop]
+[      loop(MClass->SuperClass where [SuperClass:group] == [MClass:group] && (getClassPrivacy([MClass]) == "public" || getClassPrivacy([MClass]) == "private extension"))]
+[genPublicSpec([SuperClass])]
+[      end loop]
+[      loop(MClass->Role As FromRole->MAssociation->MAssociationEnd As ToRole->MClass As ToClass Where [FromRole.id] != [ToRole.id] && ([ToRole:adaName] != "" || isArray([MClass]) == TRUE) && [FromRole.aggregation] == "Composition")]
+[genPublicSpec([ToClass])]
+[      end loop]
+[      loop(MClass->MInterface->Implementation As ImplClass where [ImplClass:group] == [MClass:group])]
+[genPublicSpec([ImplClass])]
+[      end loop]
+[      loop(MClass->MAttribute where isDiscriminant([MAttribute])==FALSE && getClass([MAttribute.type]) != 0)]
+[         loop(Instances->MClass(getClass([MAttribute.type])) As AClass where isArray([AClass]) && [AClass:group] == [MClass:group])] 
+[genPublicSpec([AClass])]
+[         end loop]
+[      end loop]
+[   end if]
+[   if(isDatatype([MClass]))]
+[genDataType([MClass])]
+[   else if(isArray([MClass]))]
+[genArrayType([MClass])]
+[genClassPtr([MClass])]
+[genConstructorSpec([MClass])]
+[genDestructorSpec([MClass])]
+[genClassOperationsSpecs([MClass],"public")]
+[   else if(isInterface([MClass]))]
+[genConstructorSpec([MClass])]
+[genDestructorSpec([MClass])]
+[genClassOperationsSpecs([MClass],"public")]
+[genAttributeOperationSpecs([MClass],"public")]
+[genRelationOperationSpecs([MClass],"public")]
+[   else]
+--=============================================================================
+-- Class [MClass.name]
+--=============================================================================
+[genContextType([MClass],"public")]
+[genClassWideAttributes1([MClass],"public")]
+[genStateMachinePreType([MClass],"public")]
+[mark("publicsupptypes_"[MClass.name],"")]
+[genClassTypes([MClass],"public")]
+[genStateMachinePostType([MClass],"public")]
+[genConstructorSpec([MClass])]
+[genDestructorSpec([MClass])]
+[genClassOperationsSpecs([MClass],"public")]
+[genAttributeOperationSpecs([MClass],"public")]
+[genRelationOperationSpecs([MClass],"public")]
+[genStateMachineSpec([MClass],"public")]
+[genClassWideAttributes2([MClass],"public")]
+[   end if end if end if]
+[end if]
+end template
+
+
+
+
+
+/* Generates the package public part for each instance of 
+   meta type MClass. */
+template genPrivateSpec(MClass)
+
+
+[if(isEnumeration([MClass]) == TRUE || isArray([MClass]) == TRUE)]
+[genClassOperationsSpecs([MClass],"private")]
+[else if(isDatatype([MClass]))]
+[else]
+[   if([MClass:group] != 0)]
+[// we may have to generate a local super class first if this is visible here]
+[// we may have to generate our composites' type first]
+[      if([MClass:genLevel] != "public")]
+[         return]
+[      end if]
+[   setGenerationLevel([MClass],"private")]
+[      loop(MClass->SuperClass where [SuperClass:group] == [MClass:group] && (getClassPrivacy([MClass]) != "implementation"))]
+[genPrivateSpec([SuperClass])]
+[      end loop]
+[      loop(MClass->Role As FromRole->MAssociation->MAssociationEnd As ToRole->MClass As ToClass Where [FromRole.id] != [ToRole.id] && ([ToRole:adaName] != "" || isArray([MClass]) == TRUE) && [FromRole.aggregation] == "Composition")]
+[genPrivateSpec([ToClass])]
+[      end loop]
+[   end if]
+[   if(isInterface([MClass]))]
+--=============================================================================
+--Interface [MClass.name]
+--=============================================================================
+[genClassOperationsSpecs([MClass],"private")]
+[genAttributeOperationSpecs([MClass],"private")]
+[genRelationOperationSpecs([MClass],"private")]
+[   else]
+--=============================================================================
+--Class [MClass.name]
+--=============================================================================
+[genContextType([MClass],"private")]
+[genClassWideAttributes1([MClass],"private")]
+[genStateMachinePreType([MClass],"private")]  
+[genClassTypes([MClass],"private")]
+[genStateMachinePostType([MClass],"private")]
+[genClassOperationsSpecs([MClass],"private")]
+[genStateMachineSpec([MClass],"private")]
+[genClassWideAttributes2([MClass],"private")]
+[   end if]
+[end if end if]
+end template

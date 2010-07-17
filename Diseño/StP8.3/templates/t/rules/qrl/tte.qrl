@@ -1,0 +1,13 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/T
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1994
+//      All rights reserved
+//
+ 
+// This file is required to resolve all references for the Type Table 
+// Editor.  It also includes routines called with stpem from the desktop.
+
+#include "rules/qrl/ttables.inc"
+

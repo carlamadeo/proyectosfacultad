@@ -1,0 +1,79 @@
+FileObject 1
+{
+    { Name "a73" }
+    { Type ObjectAnnotation }
+    { GUID "UID_4CC5B10F-E82B-416b-ADE9-3896CCE72581" }
+}
+
+NodeObject 99999
+{
+    { Name "Account,Transaction" }
+    { Type UmlAssociation }
+    { ObjectId 526 }
+    { Sig ":" }
+    { ScopeNodeId 0 }
+    { GUID "UID_DBA191A3-0FDB-11d5-8C6E-000000000000" }
+}
+
+NodeObject 99998
+{
+    { Name "Transaction" }
+    { Type UmlClass }
+    { ObjectId 475 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_41F11F90-0B6F-11d5-8C6A-000000000000" }
+}
+
+LinkObject 99997
+{
+    { Name "" }
+    { Type UmlRole }
+    { ObjectId 544 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_DBA191AB-0FDB-11d5-8C6E-000000000000" }
+}
+
+NoteObject 2
+{
+    { Type UmlRoleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 546 }
+}
+
+ItemObject 3
+{
+    { Type UmlAggregationType }
+    { Value "None" }
+    { NoteId 2 }
+    { ObjectId 547 }
+}
+
+NoteObject 4
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 549 }
+}
+
+NoteObject 5
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 551 }
+}
+
+ItemObject 6
+{
+    { Type ObjectName }
+    { Value "" }
+    { NoteId 5 }
+    { ObjectId 552 }
+}
+

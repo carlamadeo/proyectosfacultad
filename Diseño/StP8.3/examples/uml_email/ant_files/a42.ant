@@ -1,0 +1,52 @@
+FileObject 1
+{
+    { Name "a42" }
+    { Type ObjectAnnotation }
+    { GUID "UID_417DABE9-D72C-4cf6-9C36-9415DB22F391" }
+}
+
+NodeObject 99999
+{
+    { Name "Message" }
+    { Type UmlClass }
+    { ObjectId 435 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_CFF9441C-538F-11d4-8777-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "~Message" }
+    { Type UmlOperation }
+    { ObjectId 662 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_CFF94422-538F-11d4-8777-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 664 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 666 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "~Message" }
+    { NoteId 3 }
+    { ObjectId 667 }
+}
+

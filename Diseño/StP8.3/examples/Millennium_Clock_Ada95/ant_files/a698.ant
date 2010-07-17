@@ -1,0 +1,55 @@
+FileObject 1
+{
+    { Name "a698" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65D09-34FB-11d6-8DB9-00500445CF96" }
+}
+
+FileObject 99999
+{
+    { Name "Overview" }
+    { Type UmlClassDiagram }
+    { ObjectId 390 }
+    { AnnotFileId 1 }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1663 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1665 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Overview" }
+    { NoteId 3 }
+    { ObjectId 1666 }
+}
+
+NoteObject 5
+{
+    { Type UmlSubsystem }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1668 }
+}
+
+ItemObject 6
+{
+    { Type UmlSubsystemName }
+    { Value "CoocooClock" }
+    { NoteId 5 }
+    { ObjectId 1669 }
+}
+

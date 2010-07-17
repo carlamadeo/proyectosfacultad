@@ -1,0 +1,748 @@
+// ECR 3484, new file
+
+Menu MenuBarEdit
+{
+    { MenuEntry
+	{ Name EditSignatureMenu }
+	{ PlaceAfter LabelMenu }
+	{ Label "Edit Signature..." }
+	{ Builtin "EditorQrlEval gte_edit_signature();" }
+	{ ActiveFunc gte_signature_search_active_func }
+    }
+    { MenuEntry
+	{ Name FillTypeMenu }
+	{ PlaceAfter EditSignatureMenu }
+	{ Label "Fill Type..." }
+	{ Builtin "EditorQrlEval gte_fill_type();" }
+	{ ActiveFunc gte_fill_type_search_active_func }
+    }
+}
+
+Menu Edit
+{
+    { MenuEntry
+	{ Name EditSignatureMenu }
+	{ PlaceAfter LabelMenu }
+	{ Label "Edit Signature..." }
+	{ Builtin "EditorQrlEval gte_edit_signature();" }
+	{ ActiveFunc gte_signature_search_active_func }
+    }
+    { MenuEntry
+	{ Name FillTypeMenu }
+	{ PlaceAfter EditSignatureMenu }
+	{ Label "Fill Type..." }
+	{ Builtin "EditorQrlEval gte_fill_type();" }
+	{ ActiveFunc gte_fill_type_search_active_func }
+    }
+}
+
+PropertySheet GteEditSignature
+{
+    { Name GteEditSignature }
+    { Label "StP/UML Class Table Editor - Edit Signature" }
+    { OwnerActionCallback gte_edit_signature_owneraction_cb }
+    { Properties
+	{ Text
+	    { Name FilterText }
+	    { Label "Filter" }
+	    { LabelAbove True }
+	    { DispLength 20 }
+	    { Event
+		{ Type Text }
+		{ Callback "gte_edit_signature_type_filter_cb" }
+	    }
+	}
+	{ List
+	    { Name SignatureTypeList }
+	    { Label "Type Names" }
+	    { Rows 10 }
+	    { Width 25 }
+	    { Exclusive True }
+	    { LabelAbove True }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_list_select_cb" }
+	    }
+	}
+	{ Space
+	    { Name SpaceFilter }
+	}
+	{ Choice
+	    { Name TypeLangFilter }
+	    { Label "Language" }
+	    { LabelAbove True }
+	    { Type AbbrMenu }
+	    { ChoiceItem
+	        { Name "StP" }
+	        { Label "StP" }
+		{ Init Off }
+	    }
+        // Predefined types list
+        // The order of these elements need to match the numerical IDs 
+        // in uclasst_pick.qrl:unsorted_uclasst_type_name_completion_func
+	    { ChoiceItem
+	        { Name "C++" }
+	        { Label "C++" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "Java" }
+	        { Label "Java" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "IDL" }
+	        { Label "IDL" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "Ada95-Std" }
+	        { Label "Ada 95 (Std)" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "Ada95-Ada" }
+	        { Label "Ada 95 (Ada)" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "Ada95-If" }
+	        { Label "Ada 95 (If)" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "Ada95-Sys" }
+	        { Label "Ada 95 (Sys)" }
+		{ Init Off }
+	    }
+//	    { ChoiceItem
+//	        { Name "TOOL" }
+//	        { Label "TOOL" }
+//		{ Init Off }
+//	    }
+//	    { ChoiceItem
+//	        { Name "STL" }
+//	        { Label "STL" }
+//			{ Init Off }
+//	    }
+//	    { ChoiceItem
+//	        { Name "RW" }
+//	        { Label "Rogue Wave" }
+//			{ Init Off }
+//	    }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_langfilter_select_cb" }
+	    }
+	}
+	{ Group
+	    { Name GroupFilter }
+	    { Type Horizontal }
+	    { Align Bottom }
+	    { Members ( TypeLangFilter SpaceFilter FilterText ) }
+	}
+	{ Group
+	    { Name GroupList }
+	    { Type Vertical }
+	    { Align Left }
+	    { Members ( SignatureTypeList GroupFilter ) }
+	}
+	{ Button
+	    { Name Sig1 }
+	    { Label "->" }
+	    { Active False }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_sig_select_cb" }
+	    }
+	}
+	{ Space
+	    { Name Space1 }
+	}
+	{ Message
+	    { Name InOutType }
+	    { Label "IN/OUT" }
+	}
+	{ Choice
+	    { Name InOut1 }
+	    { Type CheckBox }
+	    { ChoiceItem
+	        { Name "IN1" }
+	        { Label "" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "OUT1" }
+	        { Label "" }
+		{ Init Off }
+	    }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_inout_select_cb" }
+	    }
+	}
+	{ Message
+	    { Name Arguments }
+	    { Label "Operation Arguments" }
+	}
+	{ Text
+	    { Name Type1 }
+	    { Label "1" }
+	    { LabelAbove False }
+	    { DispLength 30 }
+	    { Event
+		{ Type Text }
+		{ Callback "gte_edit_signature_type_text_cb" }
+	    }
+	}
+	{ Group
+	    { Name GroupArguments }
+	    { Type Vertical }
+	    { Align Left }
+	    { Members ( Arguments Type1 ) }
+	}
+	{ Group
+	    { Name GroupInOut }
+	    { Type Vertical }
+	    { Align Left }
+	    { Members ( InOutType InOut1 ) }
+	}
+	{ Group
+	    { Name Group1 }
+	    { Type Horizontal }
+	    { Align Bottom }
+	    { Members ( Sig1 Space1 GroupInOut GroupArguments ) }
+	}
+	{ Button
+	    { Name Sig2 }
+	    { Label "->" }
+	    { Active False }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_sig_select_cb" }
+	    }
+	}
+	{ Space
+	    { Name Space2 }
+	}
+	{ Choice
+	    { Name InOut2 }
+	    { Type CheckBox }
+	    { ChoiceItem
+	        { Name "IN2" }
+	        { Label "" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "OUT2" }
+	        { Label "" }
+		{ Init Off }
+	    }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_inout_select_cb" }
+	    }
+	}
+	{ Text
+	    { Name Type2 }
+	    { Label "2" }
+	    { LabelAbove False }
+	    { DispLength 30 }
+	    { Event
+		{ Type Text }
+		{ Callback "gte_edit_signature_type_text_cb" }
+	    }
+	}
+	{ Group
+	    { Name Group2 }
+	    { Type Horizontal }
+	    { Align Left }
+	    { Members ( Sig2 Space2 InOut2 Type2 ) }
+	}
+	{ Button
+	    { Name Sig3 }
+	    { Label "->" }
+	    { Active False }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_sig_select_cb" }
+	    }
+	}
+	{ Space
+	    { Name Space3 }
+	}
+	{ Text
+	    { Name Type3 }
+	    { Label "3" }
+	    { LabelAbove False }
+	    { DispLength 30 }
+	    { Event
+		{ Type Text }
+		{ Callback "gte_edit_signature_type_text_cb" }
+	    }
+	}
+	{ Choice
+	    { Name InOut3 }
+	    { Type CheckBox }
+	    { ChoiceItem
+	        { Name "IN3" }
+	        { Label "" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "OUT3" }
+	        { Label "" }
+		{ Init Off }
+	    }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_inout_select_cb" }
+	    }
+	}
+	{ Group
+	    { Name Group3 }
+	    { Type Horizontal }
+	    { Align Left }
+	    { Members ( Sig3 Space3 InOut3 Type3 ) }
+	}
+	{ Button
+	    { Name Sig4 }
+	    { Label "->" }
+	    { Active False }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_sig_select_cb" }
+	    }
+	}
+	{ Space
+	    { Name Space4 }
+	}
+	{ Choice
+	    { Name InOut4 }
+	    { Type CheckBox }
+	    { ChoiceItem
+	        { Name "IN4" }
+	        { Label "" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "OUT4" }
+	        { Label "" }
+		{ Init Off }
+	    }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_inout_select_cb" }
+	    }
+	}
+	{ Text
+	    { Name Type4 }
+	    { Label "4" }
+	    { LabelAbove False }
+	    { DispLength 30 }
+	    { Event
+		{ Type Text }
+		{ Callback "gte_edit_signature_type_text_cb" }
+	    }
+	}
+	{ Group
+	    { Name Group4 }
+	    { Type Horizontal }
+	    { Align Left }
+	    { Members ( Sig4 Space4 InOut4 Type4 ) }
+	}
+	{ Button
+	    { Name Sig5 }
+	    { Label "->" }
+	    { Active False }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_sig_select_cb" }
+	    }
+	}
+	{ Space
+	    { Name Space5 }
+	}
+	{ Choice
+	    { Name InOut5 }
+	    { Type CheckBox }
+	    { ChoiceItem
+	        { Name "IN5" }
+	        { Label "" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "OUT5" }
+	        { Label "" }
+		{ Init Off }
+	    }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_inout_select_cb" }
+	    }
+	}
+	{ Text
+	    { Name Type5 }
+	    { Label "5" }
+	    { DispLength 30 }
+	    { LabelAbove False }
+	    { Event
+		{ Type Text }
+		{ Callback "gte_edit_signature_type_text_cb" }
+	    }
+	}
+	{ Group
+	    { Name Group5 }
+	    { Type Horizontal }
+	    { Align Left }
+	    { Members ( Sig5 Space5 InOut5 Type5 ) }
+	}
+	{ Button
+	    { Name Sig6 }
+	    { Label "->" }
+	    { Active False }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_sig_select_cb" }
+	    }
+	}
+	{ Space
+	    { Name Space6 }
+	}
+	{ Choice
+	    { Name InOut6 }
+	    { Type CheckBox }
+	    { ChoiceItem
+	        { Name "IN6" }
+	        { Label "" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "OUT6" }
+	        { Label "" }
+		{ Init Off }
+	    }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_inout_select_cb" }
+	    }
+	}
+	{ Text
+	    { Name Type6 }
+	    { Label "6" }
+	    { LabelAbove False }
+	    { DispLength 30 }
+	    { Event
+		{ Type Text }
+		{ Callback "gte_edit_signature_type_text_cb" }
+	    }
+	}
+	{ Group
+	    { Name Group6 }
+	    { Type Horizontal }
+	    { Align Left }
+	    { Members ( Sig6 Space6 InOut6 Type6 ) }
+	}
+	{ Button
+	    { Name Sig7 }
+	    { Label "->" }
+	    { Active False }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_sig_select_cb" }
+	    }
+	}
+	{ Space
+	    { Name Space7 }
+	}
+	{ Choice
+	    { Name InOut7 }
+	    { Type CheckBox }
+	    { ChoiceItem
+	        { Name "IN7" }
+	        { Label "" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "OUT7" }
+	        { Label "" }
+		{ Init Off }
+	    }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_inout_select_cb" }
+	    }
+	}
+	{ Text
+	    { Name Type7 }
+	    { Label "7" }
+	    { LabelAbove False }
+	    { DispLength 30 }
+	    { Event
+		{ Type Text }
+		{ Callback "gte_edit_signature_type_text_cb" }
+	    }
+	}
+	{ Group
+	    { Name Group7 }
+	    { Type Horizontal }
+	    { Align Left }
+	    { Members ( Sig7 Space7 InOut7 Type7 ) }
+	}
+	{ Button
+	    { Name Sig8 }
+	    { Label "->" }
+	    { Active False }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_sig_select_cb" }
+	    }
+	}
+	{ Space
+	    { Name Space8 }
+	}
+	{ Choice
+	    { Name InOut8 }
+	    { Type CheckBox }
+	    { ChoiceItem
+	        { Name "IN8" }
+	        { Label "" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "OUT8" }
+	        { Label "" }
+		{ Init Off }
+	    }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_inout_select_cb" }
+	    }
+	}
+	{ Text
+	    { Name Type8 }
+	    { Label "8" }
+	    { LabelAbove False }
+	    { DispLength 30 }
+	    { Event
+		{ Type Text }
+		{ Callback "gte_edit_signature_type_text_cb" }
+	    }
+	}
+	{ Group
+	    { Name Group8 }
+	    { Type Horizontal }
+	    { Align Left }
+	    { Members ( Sig8 Space8 InOut8 Type8 ) }
+	}
+	{ Text
+	    { Name Type9 }
+	    { Label "..." }
+	    { LabelAbove False }
+	    { DispLength 35 }
+	    { Event
+		{ Type Text }
+		{ Callback "gte_edit_signature_type_text_cb" }
+	    }
+	}
+	{ Group
+	    { Name GroupArgs }
+	    { Type Vertical }
+	    { Align Right }
+	    { Members ( Group1 Group2 Group3 Group4 Group5 Group6 Group7 Group8 Type9 ) }
+	}
+	{ Space
+	    { Name SpaceList }
+	}
+	{ Group
+	    { Name GroupUpper }
+	    { Type Horizontal }
+	    { Align Center }
+	    { Members ( GroupList SpaceList GroupArgs ) }
+	}
+	{ Text
+	    { Name "Signature" }
+	    { Resizeable "ResizeWidth" }
+//	    { DispLength 73 }
+	}
+	{ Group
+	    { Name GroupAll }
+	    { Type Vertical }
+	    { Align Left }
+	    { Members ( GroupUpper Signature ) }
+	}
+	{ Button
+	    { Name OK }
+	    { Label "OK" }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_ok_select_cb" }
+	    }
+	}
+	{ Button
+	    { Name Apply }
+	    { Label "Apply" }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_edit_signature_apply_select_cb" }
+	    }
+	}
+	{ Button
+	    { Name Cancel }
+	    { Label "Cancel" }
+	}
+    }
+}
+
+PropertySheet GteFillType
+{
+    { Name GteFillType }
+    { Label "StP/UML Class Table Editor - Fill Type" }
+    { OwnerActionCallback gte_fill_type_owneraction_cb }
+    { Properties
+	{ Text
+	    { Name FilterText }
+	    { Label "Filter" }
+	    { LabelAbove True }
+	    { DispLength 20 }
+	    { Event
+		{ Type Text }
+		{ Callback "gte_fill_type_type_filter_cb" }
+	    }
+	}
+	{ List
+	    { Name TypeTypeList }
+	    { Label "Type Names" }
+	    { Rows 10 }
+	    { Width 25 }
+	    { Exclusive True }
+	    { LabelAbove True }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_fill_type_list_select_cb" }
+	    }
+	}
+	{ Space
+	    { Name SpaceFilter }
+	}
+	{ Choice
+	    { Name TypeLangFilter }
+	    { Label "Language" }
+	    { LabelAbove True }
+	    { Type AbbrMenu }
+	    { ChoiceItem
+	        { Name "StP" }
+	        { Label "StP" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "C++" }
+	        { Label "C++" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "Java" }
+	        { Label "Java" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "IDL" }
+	        { Label "IDL" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "Ada95-Std" }
+	        { Label "Ada 95 (Std)" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "Ada95-Ada" }
+	        { Label "Ada 95 (Ada)" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "Ada95-If" }
+	        { Label "Ada 95 (If)" }
+		{ Init Off }
+	    }
+	    { ChoiceItem
+	        { Name "Ada95-Sys" }
+	        { Label "Ada 95 (Sys)" }
+		{ Init Off }
+	    }
+//	    { ChoiceItem
+//	        { Name "TOOL" }
+//	        { Label "TOOL" }
+//		{ Init Off }
+//	    }
+//	    { ChoiceItem
+//	        { Name "STL" }
+//	        { Label "STL" }
+//			{ Init Off }
+//	    }
+//	    { ChoiceItem
+//	        { Name "RW" }
+//	        { Label "Rogue Wave" }
+//			{ Init Off }
+//	    }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_fill_type_langfilter_select_cb" }
+	    }
+	}
+	{ Group
+	    { Name GroupFilter }
+	    { Type Horizontal }
+	    { Align Bottom }
+	    { Members ( TypeLangFilter SpaceFilter FilterText ) }
+	}
+	{ Text
+	    { Name SelectionText }
+	    { Label "Selection" }
+	    { LabelAbove True }
+	    { DispLength 30 }
+	}
+	{ Group
+	    { Name GroupList }
+	    { Type Vertical }
+	    { Align Left }
+	    { Members ( SignatureTypeList GroupFilter SelectionText ) }
+	}
+	{ Button
+	    { Name OK }
+	    { Label "OK" }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_fill_type_ok_select_cb" }
+	    }
+	}
+	{ Button
+	    { Name Apply }
+	    { Label "Apply" }
+	    { Event
+		{ Type Select }
+		{ Callback "gte_fill_type_apply_select_cb" }
+	    }
+	}
+	{ Button
+	    { Name Cancel }
+	    { Label "Cancel" }
+	}
+    }
+}
+
+CellType 11 AttributeType
+{
+    { NameCompletion
+	{ MappingName Operation }
+	{ NameCompletionFunc uclasst_type_name_completion_func }
+    }
+}
+
+CellType 112 OperationReturnType
+{
+    { NameCompletion
+	{ MappingName Operation }
+	{ NameCompletionFunc uclasst_type_name_completion_func }
+    }
+}

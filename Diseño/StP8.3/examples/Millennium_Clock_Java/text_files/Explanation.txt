@@ -1,0 +1,59 @@
+Aktor
+- Gewicht aufziehen,
+- Pendel anstossen
+
+Gewicht treibt das Pendel an, solange es Æber potentielle Energie verfÆgt.
+
+Gewicht:
+	Zustände: 	hatPotentielleEnergie
+					hatKeinePotentielleEnergie
+
+Wie wird ein vollständiger Event aufgel•st?
+Bsp:
+
+	absenken(e)[Energie-e > 0]/decrease(e)^Pendulum.takeEvent.bewegen
+	
+	- was passiert wenn kein Parameter angegeben wird?
+	 
+	- wie wird mit dem Eventparameter umgegangen?
+		- von welchem Typ ist der Eventparameter, wo wird der initialisiert?
+		- mu¤ evtl. der Parametertyp mit angegeben werden, wo kommt dann der Wert her?
+		=> modelliert werden mu¤ in der Form 'int e'. Gesendet wird dann der 
+			konkrete Wert, entweder im Modell oder im Source (manuell).
+	
+	- wie wird der Guard behandelt (if, switch-case)?
+		=> Guard ist Boolsche Bedingung, daher reicht ein if Statement, wenn der Guard
+		als True aufgel•st wird, wird die evtl. vorhandene Operation aufgerufen, 
+		fÆr den ggf. vorhandenen Event gilt das gleiche.
+		- was passiert dann mit dem else Statement?
+	
+	- wo findet der Methodenaufruf statt?
+		=> s. oben
+	
+	- wo wird der Event an andere SM abgesetzt?
+		=> s. oben
+
+
+Problem - s. SM Clockwork__1
+	- Der State NichtVolleStunde erhält zweimal den gleichen Event
+		'tick[time<60]/addMinute(15)'. DafÆr wird im Moment zweimal das
+		gleiche case Statement generiert.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					

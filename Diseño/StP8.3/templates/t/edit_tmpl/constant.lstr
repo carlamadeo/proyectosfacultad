@@ -1,0 +1,5 @@
+Constant                 <ConstantID>
+    is valuetype         stringlong;
+    has internal value   <s_valuelong>; 
+    has description      <description_string>;
+.

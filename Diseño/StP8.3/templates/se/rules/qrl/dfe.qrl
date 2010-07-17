@@ -1,0 +1,1400 @@
+
+//     StP/SE
+//     Confidential property of Aonix
+//     Copyright (c) 1992-1999
+//     All rights reserved
+
+#include "rules/qrl/gde_qrl_std.inc"
+#include "qrl/include/dfe_defs.inc"
+#include "rules/qrl/decomp.inc"
+#include "rules/qrl/move_decomp.inc"
+#include "rules/qrl/change_pindex.inc"
+#include "rules/qrl/pspec.inc"
+#include "rules/qrl/dfe_split_merge.inc"
+#include "rules/qrl/explode.inc"
+#include "rules/qrl/collapse.inc"
+#include "qrl/include/decomp.inc"
+#include "rules/qrl/anchors.inc"
+#include "rules/qrl/cspec.inc"
+#include "rules/qrl/se_rename.inc"
+#include "rules/qrl/se_scope.inc"
+#include "ct/qrl/include/files.inc"
+#include "ct/qrl/include/appids.inc"
+#include "qrl/req_trace/export_to_doors.inc"
+
+#include "qrl/check/newcheck_dfe.impl"
+#include "qrl/check/check_dfe.impl"
+#include "qrl/check/dfe_syntax.inc"
+#include "rules/qrl/dfe_navigate.inc"
+#include "rules/qrl/requirements_nav.inc"
+#include "rules/qrl/doors_nav.inc"
+#include "rules/qrl/pdl.inc" // for pspecs
+
+#include "rules/qrl/default_arc_type.inc" //ECR 6469
+
+// This function is from the background navigation from ste
+
+void 
+NavSteDfe(int id, int cspec)
+{
+    node_ref nr;
+    file f, stef;
+   
+    stef = find_by_query("file[id = ${id}]"); 
+    f = find_by_query("file[DfeDiagram && name = '" + to_oms_string(stef.name) + "']");
+
+    if (f == NULL)
+    {
+    print_error("Data Flow diagram `" + stef.name + "' not found");
+    return;
+    }
+    if (cspec == 1)
+    {
+     nr = find_by_query("node_ref[node[Cspec] && file[id = ${f.id}]]");
+     if (nr != NULL)
+     {
+         NavLoadAndFind(stef.name, nr.appid);
+         return;
+     }
+    }
+    NavLoadAndFind(stef.name, NULL);
+    return;
+}
+
+
+// Old Semantics checks
+
+void
+DfeCheckSemanticsSelect()
+{
+    gde_builtin("PropertySheetShow DfeSemantics");
+}
+
+
+void
+DfeCheckSemantics()
+{
+    string  filename = gde_diagram_name();
+    list    nodes = gde_all_mapped_oms_nodes();
+    list    links = gde_all_mapped_oms_links();
+
+    if (str_no_val(filename))
+    {
+        print_error("Please save diagram before running Check Semantics.");    
+        return;
+    }
+    DfeCheckSemanticsOp(file_list("DfeDiagram", filename),
+            nodes, 
+            links, 
+            1, 1, 1, 1, 0);
+}
+
+
+// New semantics checks
+
+void
+NewDfeCheckSemanticsSelect()
+{
+    gde_builtin("PropertySheetShow NewDfeSemantics");
+}
+
+void
+NewDfeCheckSemantics()
+{
+    string  filename = gde_diagram_name();
+    // These guys were returning an extra Anchor
+    //list    nodes = gde_all_mapped_oms_nodes();
+    //list    links = gde_all_mapped_oms_links();
+
+    if (str_no_val(filename))
+    {
+        print_error("Please save diagram before running Check Semantics.");    
+        return;
+    }
+
+    DfeCheckSemanticsNow(file_list("DfeDiagram", filename), 1, 1, 1, 1, 0, 1, 0);
+}
+
+
+
+
+list
+FindBusinessProcess(string node_name)
+{
+   string    query;
+   list        list;
+   node        n;
+
+   query = "node[BusinessProcess && name == '" + to_oms_string(node_name) + "']";
+   n = find_by_query(query);
+   
+   if (n == NULL) 
+       return list_create("node", 0);
+
+   query = "node_ref[node_id == ${n.id}]";
+   list = list_select(query);
+   return list;
+}
+
+list
+FindEntityGroup(string name)
+{
+   string    query;
+   list        list;
+   node        n;
+
+   query = "node[EntityGroup && name == '" + to_oms_string(name) + "']";
+   n = find_by_query(query);
+
+   if (n == NULL) return 
+       list_create("node",0);
+
+   query = "node_ref[node_id == ${n.id}]";
+   list = list_select(query);
+   return list;
+}
+
+list
+FindBusinessData(string node_name)
+{
+   string    query;
+   list        list;
+   node        n;
+
+   query = "node[BusinessData && name == '" + to_oms_string(node_name) + "']";
+   n = find_by_query(query); 
+
+   if (n == NULL) 
+       return list_create("node",0);
+
+   query = "node_ref[node_id == ${n.id}]";
+   list = list_select(query);
+   return list;
+}
+
+int SavePindex;
+int SavePid = -1;
+
+
+// Looks for the docomp first, then the pspec.
+list
+FindDecompositionOrPspec(string filename, int pindex, int id)
+{
+    int handle;
+    note note;
+    file file;
+    list l;
+
+    if (filename == NULL || filename == "")
+    {
+        print_error("Please save diagram before decomposing.");
+    SavePid = -1;
+        return NULL;
+    }
+    // This is a hack because the pindex is not set properly in the Command rule
+
+    SavePindex = pindex;
+    SavePid = id;
+
+    l = list_create("file", 0);
+    file = FindDecomposition(filename, pindex);
+
+    if (file)
+    list_append(l, file);
+    else
+    {
+        note = find_by_query("note[Pspec && obj_id == ${id}]");
+
+        if (note != NULL)
+        {
+            PThingEdit(0);
+        SavePid = -1;
+            return NULL;
+        }
+    }
+
+    return l;
+}
+
+
+
+
+void 
+DecomposeDfeDiagram(string filename, int pindex, int id)
+{
+    string decompname, query, dname = gde_diagram_name();
+    int    dodefer;
+    list   syms;
+    gde_symbol gsym;
+    gde_node gnode;
+
+    if ((SavePid == id) && (id != -1))
+    pindex = SavePindex;
+
+    if (str_no_val(dname))
+    {
+        print_error("Please save diagram before decomposing.");
+        return;
+    }
+ 
+    if (gde_is_modified())
+    {
+        if (editor_confirm("Diagram \"" + dname + "\" has been modified.\nSave and continue decomposition?", "Yes", "No"))
+            gde_builtin("FileSave");
+        else if (! editor_confirm("Continue decomposition without saving?", "Yes", "No"))
+            return;
+    }
+ 
+    gde_save_state();
+    dodefer = gde_start_edit_transaction();
+
+    // If called from STE 
+    if (pindex == NULL)
+        decompname = filename;
+    else 
+    decompname = "\"" + FindDecompositionName(filename, pindex) + "\"";
+
+    gde_builtin("EditorSetFileName " + decompname);
+    general_decomp(PROCESS);
+
+    syms = gde_selected_symbols();
+    gsym = list_get(syms, 0);
+    gnode = to_gde_node(gsym);
+    gde_builtin("SymbolAdjust AppId " + gde_node_psymid(gnode));
+    gde_end_edit_transaction(GDE_CMD_REPLACE, dodefer, False);
+}
+
+// CALLBACKS FOR GENERAL_DECOMP
+
+//  Clearing a node
+
+void 
+clear_node(gde_node the_node)
+{
+    gde_node_clear_all_prop(the_node);
+    gde_node_set_prop(the_node, "pindex", "1");
+    gde_node_set_label(the_node, NULL);
+}
+
+//  Replacing a node
+
+void 
+off_node_replace(gde_node old_node)
+{
+    string old_pindex;
+    string type = gde_nt_name(gde_node_nt(old_node));    
+
+    // don't do anything to these symbols
+
+    if (type == OFFPAGE_PROCESS || 
+    type == OFFPAGE_EXTERNAL ||
+    type == DATA_STORE || 
+    type == ANCHOR || 
+    //type == SPLIT_FLOW ||
+    type == COMMENT)
+    return;
+
+    // replace other node types
+
+    type = replace_node(old_node);
+
+    // clear any current properties of other nodes
+
+    gde_node_clear_all_prop(old_node); 
+}
+
+//  If appropriate, replace the node with a different type.
+
+string
+replace_node (gde_node old_node)
+{
+    string type = gde_nt_name(gde_node_nt(old_node));    
+    string new_type = NULL;
+    string label, use_offpages = toolinfo_variable("use_offpages");
+    list l;
+    int i;
+    gde_arc arc;
+
+    // Don't replace these
+
+    if (type == OFFPAGE_PROCESS || 
+    type == OFFPAGE_EXTERNAL ||
+    type == DATA_STORE || 
+    type == ANCHOR || 
+    //type == SPLIT_FLOW ||
+    type == COMMENT)
+    return type;
+
+    // Use anchors unless otherwise specified
+
+    if (use_offpages != NULL && to_lower(use_offpages) != "true")
+        new_type = ANCHOR;
+    else if (type == PROCESS)
+        new_type = OFFPAGE_PROCESS;
+    else if (type == EXTERNAL)
+        new_type = OFFPAGE_EXTERNAL;
+    else 
+        new_type = ANCHOR;
+    
+    if (new_type == ANCHOR && type != SPLIT_FLOW)
+    gde_node_set_label(old_node, NULL);
+
+    gde_node_replace_nt(old_node, new_type);
+    return(gde_nt_name(gde_node_nt(old_node)));
+}
+
+//  Preserving inherited arc labels.
+//
+//  If the arc has no label and has an end_node that would allow it
+//  to have inherited a name, set the label to be that name.
+//  Assumes that the arc maps to 1 oms link and that end_nodes contains
+//  only one node.
+
+void
+label_arc(gde_arc arc, list end_nodes)
+{
+    link        cur_link;
+    list        oms_links;
+    int         i;
+    string      name = "";
+    gde_node    end_node;
+
+    // Arc is already labelled.
+    if (gde_arc_label(arc) != "")
+        return;
+
+    if (list_count(end_nodes) != 1)
+    {
+        print_error("Label arc " + gde_arc_label(arc)+ ": has " + 
+          list_count(end_nodes) + " end nodes!");
+        return;
+    }
+
+    // a link can inherit names only across SplitFlows
+    end_node = list_get(end_nodes, 0);
+
+    if ((gde_nt_name(gde_node_nt(end_node)) != SPLIT_FLOW) &&
+        (gde_nt_name(gde_node_nt(end_node)) != "ExternalStore"))
+        return;
+    
+    oms_links = gde_link_oms_links(list_get(gde_arc_links(arc),0));
+
+    for (i = 0; i < list_count(oms_links); i++)
+    {
+        cur_link = list_get(oms_links, i);
+
+        name = name + cur_link.name;
+
+        if (i < list_count(oms_links) - 1)
+    {
+            name = name + ",";
+    }
+    }
+    if (name != "")
+    {
+        gde_arc_set_label(arc, name);
+    }
+}
+
+// Parent Navigation
+
+list 
+DfeParent (string filename)
+{
+    parent_node parent = FindParentInfo(filename);
+ 
+    if (parent == NULL)
+    {
+    print_error("Parent Diagram for `" + filename + "' not found.");
+        return NULL;
+    } 
+    return list_select("file[DfeDiagram && name == '${parent.filename}']");
+}
+
+void
+DfeParentFromBackground(string filename)
+{
+    list l;
+    file f;
+
+    l = DfeParent(filename);
+
+    if (l != NULL && list_count(l) > 0)
+    {
+    f = list_get(l, 0);
+    gde_builtin("FileLoad " + f.name);
+    }
+    return;
+}
+
+// these are precalculated whenever updating pindexes.  Better to make 
+// them too big than too complex is the theory here.
+
+list current_decomp_filenames = NULL;
+list current_process_w_pspecs = NULL;
+
+void 
+GetAllProcessesWithPspecs()
+{
+    current_process_w_pspecs = list_select("node[Process && notes[Pspec]]");
+    current_decomp_filenames = list_select("file[DfeDiagram]");
+
+    return;
+}
+
+boolean
+FindPspecProcess(string process_name)
+{
+    string query;
+    int    i;
+    node   current_process;
+
+    if (current_process_w_pspecs == NULL)
+        return False;
+   
+    for (i = 0; i < list_count(current_process_w_pspecs); i++)
+    {
+        current_process = list_get(current_process_w_pspecs, i);
+
+        if (current_process.name == process_name)
+            return True;
+    }
+    return False;
+} 
+
+boolean
+FindDecompositionFile(string decomp_name)
+{
+    int  i;
+    file current_file;
+
+    if (current_decomp_filenames == NULL)
+        return False;
+   
+    for (i = 0; i < list_count(current_decomp_filenames); i++)
+    {
+        current_file = list_get(current_decomp_filenames, i);
+
+        if (current_file.name == decomp_name)
+            return True;
+    }
+    return False;
+} 
+
+//  Pindex display mark.  Looks for a decomp first, then a pspec
+
+string
+PindexMark(string filename, int pindex, string process_name)
+{
+    string showrelative = toolinfo_variable("relative_pindex");
+    string mark, decomp;
+
+    if (filename == NULL || filename == "")
+        return to_string(pindex);        
+
+    decomp = FindDecompositionName(filename, pindex);
+
+    if (showrelative != NULL && to_lower(showrelative) == "true")
+        mark = to_string(pindex);
+    else
+        mark = decomp;
+
+    if (FindDecompositionFile(decomp))
+        return mark + "*";
+
+    if (FindPspecProcess(se_repname(process_name)))
+        return mark + "p";
+
+
+    return mark;
+}
+
+string 
+dfe_flow_endmark(list items)
+{
+    item one_item;
+    int i;
+
+    for (i = 0; i < list_count(items); i++)
+    {
+    one_item = list_get(items, i);
+
+    if (one_item.svalue == "continuous")
+    {
+        return("DoubleArrow");
+    }
+    }
+    return("Arrow");
+}
+
+//  Crud Link Navigation
+//
+//  Find any reference to a link in a CrudInfo table which joins nodes
+//  which have the same names as the endpoints of the given link symbol.
+
+list
+FindCrudLink(string file_name)
+{
+    string query, proc_name, store_name;
+    node from_node, to_node;
+    link the_link;
+    list oms_links, glinks;
+    file file;
+
+    if (file_name == "")
+        return list_create("node",0);
+
+    glinks = gde_arc_links(to_gde_arc(list_get(gde_selected_symbols(), 0)));
+    oms_links = gde_link_oms_links(list_get(glinks, 0));
+
+    // Note: the link symbol could map to multiple OMS links, but they
+    // will all have the same end nodes.
+
+    the_link = list_get(oms_links, 0);
+    query = "file[DfeDiagram && name == '${file_name}']";
+    file = find_by_query(query);
+
+    if (file == NULL)
+    {
+        print_error("No file object for " + to_oms_string(file_name) + 
+            ".  Has the file been saved?");
+        return NULL;
+    }
+    query = "node[(Process || Store) && node_refs[file_id=${file.id}] && " 
+        + "out_links[id == ${the_link.id}]]";
+    from_node = find_by_query(query);
+
+    query = "node[(Process || Store) && node_refs[file_id=${file.id}] && " 
+        + "in_links[id == ${the_link.id}]]";
+    to_node = find_by_query(query);
+
+    // One endpoint is neither a Store nor a Process
+
+    if (from_node == NULL || to_node == NULL)
+    {
+        return list_create("node", 0);
+    }
+    if (from_node.type == PROCESS)
+    {
+        proc_name = from_node.name;
+        store_name = to_node.name;
+    } else
+    {
+        store_name = from_node.name;
+        proc_name = to_node.name;
+    }
+
+    query = "link_ref[file[CrudTable] && " + 
+        "link[CrudInfo && from_node[name == '" + 
+        to_oms_string(proc_name) + "'] && " + 
+        "to_node[name == '" + to_oms_string(store_name) + "']]]";
+
+    return list_select(query);
+}
+
+void
+InitializeCseTables (string name)
+{
+    editor_item_selector(CSE_TABLE_TYPES, 
+             "InitializeSelectedCseTables(\"" + name +"\");",
+                     "Initialize Selected Table Types", 
+             False);
+}
+
+void
+InitializeSelectedCseTables(string name)
+{
+    int    i;
+    string cmd;
+    list   types = editor_selector_selected_names();
+
+    for (i = 0; i < list_count(types); i++)
+    {
+        cmd = "EditorQrlEval \"InitializeCseTable(\\\"" + 
+          name + "\\\", \\\"" + list_get(types, i) + "\\\");\"";
+        editor_send_msg("cse", cmd, CH_FIRST);
+    }
+}   
+
+void
+DfeReverseFlows()
+{
+    list arcs, somelinks, alllinks = list_create("gde_link", 0);
+    gde_arc a;
+    int i, txn;
+    gde_node split, gn;
+
+    // only reverse arcs
+    arcs = gde_arcs_in_list(gde_selected_symbols());
+    a = list_get(arcs, 0);
+
+    // split node??
+    gn = gde_arc_get_real_fromnode(a, False, NULL, NULL);
+    if (gde_nt_name(gde_node_nt(gn)) == SPLIT_FLOW)
+    split = gn;
+    else
+    {
+        gn = gde_arc_get_real_tonode(a, False, NULL, NULL);
+        if (gde_nt_name(gde_node_nt(gn)) == SPLIT_FLOW)
+        split = gn;
+        else
+        split = NULL;
+    }
+    if (split != NULL)
+    {
+    list_concatenate(arcs, gde_node_inarcs_no_comments(split));
+    list_concatenate(arcs, gde_node_outarcs_no_comments(split));
+    }
+    for (i = 0; i < list_count(arcs); i++)
+    {
+        a = list_get(arcs, i);
+        
+    // note that there will be duplicates in here, a set is created
+        // out of these inside gde_links_reverse to take care of this
+    somelinks = gde_arc_links(a);
+        list_concatenate(alllinks, somelinks);
+    }
+
+    // SPR 3512 - Reverse links redraw bug
+    gde_enable_xor_text();
+
+    gde_save_state();
+    txn = gde_start_edit_transaction();
+
+    gde_links_reverse(alllinks);
+
+    gde_end_edit_transaction(GDE_CMD_INSERT, txn, False);
+
+    // SPR 3512 - Reverse links redraw bug
+    gde_disable_xor_text();
+}
+
+gde_link
+selected_link(list syms)
+{
+    list arcs, links;
+    set slink = set_create("gde_link");
+    int i, j;
+
+    if (syms == NULL)
+    return NULL;
+
+    arcs = gde_arcs_in_list(syms);
+    for (i = 0; i < list_count(arcs); i++)
+    {
+        links = gde_arc_links(list_get(arcs, i));
+    for (j = 0; j < list_count(links); j++)
+    {
+        set_add(slink, list_get(links, j));
+    }
+    }
+    if (set_count(slink) != 1)
+    return NULL;
+
+    return set_get_element(slink, 0);
+}
+
+
+int
+idehook_dfe_show_all_qualifications_active_func()
+
+{
+    if (str_has_val(gde_diagram_name()))
+    return ACTIVE_FUNC_IS_ACTIVE;
+    else
+    return ACTIVE_FUNC_IS_INACTIVE;
+}
+
+
+// 6/10/99 MHS Changes for request 2655
+
+void 
+DfeUnQualifyAll()
+
+{
+    list syml, labell;
+    gde_symbol sym;
+    gde_arc ga;
+    gde_node gn;
+    string prop, label;
+    int i, j;
+    boolean work = False;
+
+    //gde_builtin("MsgLogShow");
+
+    syml = gde_symbols_find_with_types(gde_all_symbols(), string_to_list("ControlFlow DataFlow Store", " ")); 
+    for (i = 0; i < list_count(syml); i++)
+    {
+    sym = list_get(syml, i);
+    if (gde_symbol_is_node(sym))
+    {
+        gn = to_gde_node(sym);
+        prop = gde_node_prop(gn, "Qualifier"); 
+        if (str_has_val(prop))
+        {
+        print_error("Qualification for store `" + gde_node_label(gn) + "' removed.");
+        gde_node_clear_prop(gn, "Qualifier");
+                work=True;
+        }
+    }
+    else
+    {
+        ga = to_gde_arc(sym);
+        label = gde_arc_label(ga);
+        if (str_has_val(label))
+        {
+        labell = string_to_list(label, ",");
+        for (j = 0; j < list_count(labell); j++)
+        {
+            label = se_repname(string_strip(list_get(labell, j), "B", " \n\t"));
+            prop = gde_arc_prop(ga, "Qualifier-" + label);
+            if (str_has_val(prop))
+            {
+            print_error("Qualification for flow `" + label + "' removed.");
+                gde_arc_clear_prop(ga, "Qualifier-" + label);
+                        work=True;
+            }
+        }
+        }
+    }
+    }
+
+    if (work)
+        print_error("All qualifications removed.");
+    else
+        print_error("No qualifications to remove.");
+
+    return;
+}
+
+
+
+struct arc_str_tp
+{
+    gde_arc a;
+    string s;
+};
+
+// for mapping properties to signatures
+// The core currently (11/2/95) does not support multiple labels on a link having
+// more then one signature.  When it does, this function will need some work. Now,
+// if you have more then one qualification on a link it is ignored.
+
+string 
+dfe_qualifier_flow_signature(gde_mapsymbol ms)
+
+{
+    gde_link gl = to_gde_link(ms);
+    gde_arc ga;
+    string label, prop, sig = "";
+    list arcl, strl = list_create("arc_str_tp", 0), labell;
+    arc_str_tp arc_str;
+    int i, j;
+
+    arcl = gde_link_arcs(gl);
+    for (i = 0; i < list_count(arcl); i++)
+    {
+    ga = list_get(arcl, i);
+    label = gde_arc_label(ga);
+    labell = string_to_list(label, ",");
+    for (j = 0; j < list_count(labell); j++)
+    {
+        arc_str.a = ga;
+        arc_str.s = list_get(labell, j);
+        list_append(strl, arc_str);
+    }
+    }
+
+    if (list_count(strl) != 1)
+    {
+    // This stuff keeps things consistent
+    for (i = 0; i < list_count(strl); i++)
+    {
+        arc_str = list_get(strl, i);
+            prop = gde_arc_prop(arc_str.a, "Qualifier-" + arc_str.s);
+            if (str_has_val(prop))
+        {
+        print_error("Removing qualifier for `" + arc_str.s + 
+                            "' because link has more then one label.");
+                prop = gde_arc_clear_prop(arc_str.a, "Qualifier-" + arc_str.s);
+        }
+    }
+    return NULL;
+    }
+
+    arc_str = list_get(strl, 0);
+    prop = gde_arc_prop(arc_str.a, "Qualifier-" + arc_str.s); 
+    if (str_has_val(prop))
+    return prop;
+
+    return NULL;
+}
+
+
+
+
+string 
+dfe_qualifier_store_signature(gde_mapsymbol ms)
+
+{
+    //gde_node gn = to_gde_node(ms);
+    //string prop;
+
+    //prop = gde_node_prop(gn, "Qualifier");
+
+    //if (str_has_val(prop))
+    //    return prop;
+
+    return NULL;
+}
+
+
+
+// make sure at least one flow is selected.  The reversing routine
+// will ignore the rest.
+
+int
+idehook_reverse_flow_active_func()
+{
+    if (list_count(gde_arcs_in_list(gde_selected_symbols())) >= 1)
+        return ACTIVE_FUNC_IS_ACTIVE;
+
+    return ACTIVE_FUNC_IS_INACTIVE;
+}
+
+
+boolean
+GSCondFunc(int id)
+
+{
+    list l = list_select("node_ref[node_id = ${id}]"); 
+
+    if (list_count(l) > 1)
+    return True;
+
+    return False;
+}
+
+
+
+node
+gde_node_oms_process(gde_node gnode)
+
+{
+    list nlist;
+    node n;
+    int i;
+
+    nlist = gde_node_oms_nodes(gnode);
+
+    if (list_count(nlist) == 0)
+        return NULL;
+
+    for (i = 0; i < list_count(nlist); i++)
+    {
+        n = list_get(nlist, i);
+        if (n.type == "Process")
+            return n;
+    }
+    return NULL;
+}
+
+
+// used to detect loops in split flow recursive calls
+set VisitedGns;
+
+set
+split_flow_to_dependencies(gde_node gn, set deplinks)
+
+{
+    list l, linkl;
+    gde_node gn2;
+    gde_arc ga;
+    gde_link gl;
+    int i, j;
+
+    if (set_is_member(VisitedGns, gn))
+    return deplinks;
+    set_add(VisitedGns, gn);
+
+    l = gde_node_outarcs_no_comments(gn);
+
+    for (i = 0; i < list_count(l); i++)
+    {
+    ga = list_get(l, i);
+    linkl = gde_arc_links(ga);
+        for (j = 0; j < list_count(linkl); j++)
+        {
+        gl = list_get(linkl, j);
+        set_add(deplinks, gl);
+
+        gn2 = gde_arc_get_real_tonode(ga, True, NULL, NULL);
+        if (gde_nt_name(gde_node_nt(gn2)) == SPLIT_FLOW)
+        deplinks = split_flow_to_dependencies(gn2, deplinks);
+    }
+    }
+    return deplinks;
+}
+
+
+
+set
+split_flow_from_dependencies(gde_node gn, set deplinks)
+
+{
+    list l, linkl;
+    gde_node gn2;
+    gde_arc ga;
+    gde_link gl;
+    int i, j;
+
+    if (set_is_member(VisitedGns, gn))
+    return deplinks;
+    set_add(VisitedGns, gn);
+
+    l = gde_node_inarcs_no_comments(gn);
+
+    for (i = 0; i < list_count(l); i++)
+    {
+    ga = list_get(l, i);
+    linkl = gde_arc_links(ga);
+        for (j = 0; j < list_count(linkl); j++)
+        {
+        gl = list_get(linkl, j);
+        set_add(deplinks, gl);
+
+        gn2 = gde_arc_get_real_fromnode(ga, True, NULL, NULL);
+        if (gde_nt_name(gde_node_nt(gn2)) == SPLIT_FLOW)
+        deplinks = split_flow_from_dependencies(gn2, deplinks);
+    }
+    }
+    return deplinks;
+}
+
+
+
+
+// symbolic dependent function for flows.  We need to make a list of 
+// potentially dependent links for Split Flows
+
+list
+dfe_flow_depend_func(gde_mapsymbol ms)
+{
+    gde_arc ga;
+    list glinks, dependents = list_create("gde_mapsymbol", 0);
+    set deplinks = set_create("gde_link");
+    gde_link gl;
+    gde_node gn;
+    int i;
+ 
+    gl = to_gde_link(ms);
+
+    if (gl == NULL)
+    return dependents;
+
+    // Be sure that we are not looking at a link that has no arcs.
+    // This happens if you reverse a flow on a syntactically incorrect arc 
+    // network. 
+    if (list_count(gde_link_arcs(gl)) == 0)
+    return dependents;
+
+    ga = list_get(gde_link_arcs(gl), 0);
+
+    if (ga == NULL)
+    return dependents;
+
+    // using the one arc is OK here  
+    gn = gde_arc_get_real_fromnode(ga, True, NULL, NULL);
+    VisitedGns = set_create("gde_node");
+    if (gde_nt_name(gde_node_nt(gn)) == SPLIT_FLOW)
+    deplinks = split_flow_from_dependencies(gn, deplinks);
+
+    gn = gde_arc_get_real_tonode(ga, True, NULL, NULL);
+    VisitedGns = set_create("gde_node");
+    if (gde_nt_name(gde_node_nt(gn)) == SPLIT_FLOW)
+    deplinks = split_flow_to_dependencies(gn, deplinks);
+    
+    for (i = 0; i < set_count(deplinks); i++)
+    {
+    gl = set_get_element(deplinks, i);
+        list_append(dependents, to_gde_mapsymbol(gl));
+    }
+
+    return dependents;
+}
+
+
+
+
+// Function called if no data definition was found
+
+void 
+DfeInitializeDseDiagram(string name)
+
+{
+    string cmd;
+
+    name = to_oms_string(name);
+    cmd = "EditorQrlEval \"InitializeDseDiagram(\\\"" + name + "\\\", NULL);\"";
+    editor_send_msg("dse", cmd, CH_FIRST);
+    return;
+}
+
+
+
+// DFE flow/store name functions
+// 6/10/99  MHS No qualifiers, means the sig part is always NULL
+
+gde_name_sig_pair
+determine_name_pair(string rawlabel, gde_arc ga, gde_node gn)
+
+{
+    gde_name_sig_pair pair;
+
+    pair.name = se_repname(string_strip(rawlabel, "B", " \n\t"));
+
+    if (pair.name == "")
+    return pair;
+
+    //if (ga != NULL)
+        //pair.sig = gde_arc_prop(ga, "Qualifier-" + pair.name);
+    //else
+    //pair.sig = gde_node_prop(gn, "Qualifier");
+    
+    //if (pair.sig == NULL)
+    pair.sig = "";    
+
+    /*  This is no longer needed!
+    if (pair.sig != "")
+    {
+    if (! valid_qualification(pair.name, pair.sig))
+    {
+        print_error("Removing invalid qualification for `" + pair.name + "'.");
+        if (ga != NULL)
+        gde_arc_clear_prop(ga, "Qualifier-" + pair.name);
+        else
+        gde_node_clear_prop(gn, "Qualifier");
+        pair.sig = "";
+    }
+    } */
+    return pair;
+}
+
+
+
+
+// 6/10/99 MHS  Since there are no longer qualifications, which make up the qualifier,
+// This dude only needs to be a NameFunc, not a NameSigFunc.  Instead of changing the
+// rules, the signatures are always NULL.
+
+list
+dfe_flow_name_sig_func(gde_mapsymbol ms)
+{
+    string label, prop;
+    list name_sig_l = list_create("gde_name_sig_pair", 0), name_l, ga_l;
+    gde_name_sig_pair pair;
+    int i, j, icnt, jcnt;
+    gde_arc ga;
+    gde_link gl;
+    gde_node to_gn, from_gn;
+
+    gl = to_gde_link(ms);
+    ga_l = gde_link_arcs(gl);
+
+    for (i = 0, icnt = list_count(ga_l); i < icnt; i++)
+    {
+    ga = list_get(ga_l, i);
+        label = gde_arc_label(ga);
+
+    name_l = string_to_list(label, ",");
+    for (j = 0, jcnt = list_count(name_l); j < jcnt; j++)
+    {
+        pair = determine_name_pair(list_get(name_l, j), ga, NULL);
+        if (pair.name != "")
+        list_append(name_sig_l, pair);
+    }
+    }
+
+    if (list_count(name_sig_l) == 0)
+    {
+    // There was no label.  We want to get all the name/sig pairs that come either from 
+    // labels in the from or to path to either a store or a process.  So we do not want
+        // to search the whole network, just both directions, accumulating all the labels
+        // as the search continues.
+
+    // to node a store?
+    to_gn = gde_link_tonode(gl);
+    if (gde_nt_name(gde_node_nt(to_gn)) == "Store")
+    {
+        pair = determine_name_pair(gde_node_label(to_gn), NULL, to_gn);
+        if (pair.name != "")
+        list_append(name_sig_l, pair);
+
+    }
+
+    // from node a store?
+    from_gn = gde_link_fromnode(gl);
+    if (gde_nt_name(gde_node_nt(from_gn)) == "Store")
+    {
+        pair = determine_name_pair(gde_node_label(from_gn), NULL, from_gn);
+        if (pair.name != "")
+        list_append(name_sig_l, pair);
+    }
+
+
+    VisitedGns = set_create("gde_node");
+    // try the to node as a split flow
+    list_concatenate(name_sig_l, find_split_to_labels(to_gn));
+
+    VisitedGns = set_create("gde_node");
+    // try the from node as a split flow
+    list_concatenate(name_sig_l, find_split_from_labels(from_gn));
+    }
+    
+    return name_sig_l;
+}
+
+
+
+list 
+find_split_from_labels(gde_node gn)
+
+{
+    list name_sig_l = list_create("gde_name_sig_pair", 0);
+    list ga_l, more_ga_l, gl_l, labell;
+    gde_link gl;
+    gde_arc ga;
+    string label, prop;
+    int i, icnt, j, jcnt, k, kcnt, l, lcnt;
+    set end_gn_set = set_create("gde_node");
+    gde_name_sig_pair pair;
+
+    if (set_is_member(VisitedGns, gn))
+    return name_sig_l;
+    set_add(VisitedGns, gn);
+
+    if (gde_nt_name(gde_node_nt(gn)) != "SplitFlow")
+    return name_sig_l;
+
+    ga_l = gde_node_inarcs_no_comments(gn);
+    for (i = 0, icnt = list_count(ga_l); i < icnt; i++)
+    {
+    gl_l = gde_arc_links(list_get(ga_l, i));
+    for (j = 0, jcnt = list_count(gl_l); j < jcnt; j++)
+    {
+        gl = list_get(gl_l, j);
+        more_ga_l = gde_link_arcs(gl);
+        for (k = 0, kcnt = list_count(more_ga_l); k < kcnt; k++)
+        {
+        ga = list_get(more_ga_l, k);
+        label = gde_arc_label(ga);
+        if (str_has_val(label))
+        {
+            labell = string_to_list(label, ",");    
+            for (l = 0, lcnt = list_count(labell); l < lcnt; l++)
+            {
+            pair = determine_name_pair(list_get(labell, l), ga, NULL);
+            if (pair.name != "")
+                list_append(name_sig_l, pair);
+            }
+        }    
+        else
+        {
+            // For each arc that has no label, setup to recursively continue 
+            set_add(end_gn_set, gde_link_fromnode(gl));
+        }
+        }
+    }
+    }
+
+    // now it is time to check the endpoints of the unlabelled arcs
+    for (i = 0, icnt = set_count(end_gn_set); i < icnt; i++)
+    {
+    gn = set_get_element(end_gn_set, i);
+
+    label = gde_node_label(gn);
+    if (gde_nt_name(gde_node_nt(gn)) == "Store" && str_has_val(label))
+    {
+        // store??
+        pair = determine_name_pair(label, NULL, gn);
+        if (pair.name != "")
+        list_append(name_sig_l, pair);
+    }
+    else
+    {
+        // or another split flow??
+        list_concatenate(name_sig_l, find_split_from_labels(gn));
+    }
+    }
+
+    return name_sig_l;
+}
+
+
+list 
+find_split_to_labels(gde_node gn)
+
+{
+    list name_sig_l = list_create("gde_name_sig_pair", 0);
+    list ga_l, more_ga_l, gl_l, labell;
+    gde_link gl;
+    gde_arc ga;
+    string label, prop;
+    int i, icnt, j, jcnt, k, kcnt, l, lcnt;
+    set end_gn_set = set_create("gde_node");
+    gde_name_sig_pair pair;
+
+    if (set_is_member(VisitedGns, gn))
+    return name_sig_l;
+    set_add(VisitedGns, gn);
+
+    if (gde_nt_name(gde_node_nt(gn)) != "SplitFlow")
+    return name_sig_l;
+
+    ga_l = gde_node_outarcs_no_comments(gn);
+    for (i = 0, icnt = list_count(ga_l); i < icnt; i++)
+    {
+    gl_l = gde_arc_links(list_get(ga_l, i));
+    for (j = 0, jcnt = list_count(gl_l); j < jcnt; j++)
+    {
+        gl = list_get(gl_l, j);
+        more_ga_l = gde_link_arcs(gl);
+        for (k = 0, kcnt = list_count(more_ga_l); k < kcnt; k++)
+        {
+        ga = list_get(more_ga_l, k);
+        label = gde_arc_label(ga);
+        if (str_has_val(label))
+        {
+            labell = string_to_list(label, ",");    
+            for (l = 0, lcnt = list_count(labell); l < lcnt; l++)
+            {
+            pair = determine_name_pair(list_get(labell, l), ga, NULL);
+            if (pair.name != "")
+                list_append(name_sig_l, pair);
+            }
+        }    
+        else
+        {
+            // For each arc that has no label, setup to recursively continue 
+            set_add(end_gn_set, gde_link_tonode(gl));
+        }
+        }
+    }
+    }
+
+    // Now it is time to recurse down any Split Flows
+
+    for (i = 0, icnt = set_count(end_gn_set); i < icnt; i++)
+    {
+    gn = set_get_element(end_gn_set, i);
+
+    label = gde_node_label(gn);
+    if (gde_nt_name(gde_node_nt(gn)) == "Store" && str_has_val(label))
+    {
+        // store??
+        pair = determine_name_pair(label, NULL, gn);
+        if (pair.name != "")
+        list_append(name_sig_l, pair);
+    }
+    else
+    {
+        // or another split flow??
+        list_concatenate(name_sig_l, find_split_to_labels(gn));
+    }
+    }
+
+    return name_sig_l;
+}
+
+
+void
+dfe_process_double_click(gde_mapsymbol ms)
+
+{
+    gde_node gn;
+    list nlist, l;
+    node n;
+    int index;
+    file f;
+    string  filename = gde_diagram_name();
+    
+    gn = to_gde_node(ms);
+    nlist = gde_node_oms_nodes(gn);
+
+    if (nlist == NULL || list_count(nlist) == 0)
+    {
+    print_error("Please name the process before decomposing.");
+    return;
+    }
+
+    if (str_no_val(filename))
+    {
+    print_error("Please save diagram before decomposing.");
+    return;
+    }
+
+    n = list_get(nlist, 0);
+    index = to_int(gde_node_prop(gn, "pindex")); 
+
+    l = FindDecompositionOrPspec(gde_diagram_name(), index, n.id);
+
+    if (l != NULL && list_count(l) == 0) // no pspec, no decomp
+    {
+    // create
+        if (editor_confirm("Create Decomposition?", "Yes", "No"))
+    {
+        DecomposeDfeDiagram(gde_diagram_name(), index, n.id);
+        print_message("Create Decomposition completed.");
+    }
+    else
+        print_message("Create Decomposition cancelled.");
+    }
+    else if (l != NULL && list_count(l) != 0)  // no pspec, yes decomp
+    {
+    // switch to the file
+    f = list_get(l, 0);
+    gde_builtin("FileLoad " + f.name);
+    }
+    return;
+}
+
+
+// This function is redefined for dfe, dse and sce. 
+
+ 
+node
+get_proper_oms_node(gde_node gnode)
+ 
+{
+    list nlist;
+    node node;
+    int i;
+ 
+    nlist = gde_node_oms_nodes(gnode);
+ 
+    if (list_count(nlist) == 0)
+        return NULL;
+ 
+    for (i = 0; i < list_count(nlist); i = i + 1)
+    {
+        node = list_get(nlist, i);
+        if (node.type == "Process")
+            return node;
+    }
+ 
+    return NULL;
+ 
+} // end of get_proper_oms_node()
+
+
+string
+GetDfeFileStoreDir()
+{
+    return path_compose(current_projdir(), current_system(), "dfe_files");
+}
+
+
+
+//  Add any user customizations to the file included below:
+#include_if_exists "user/se/rules/qrl/user_dfe.qrl"
+

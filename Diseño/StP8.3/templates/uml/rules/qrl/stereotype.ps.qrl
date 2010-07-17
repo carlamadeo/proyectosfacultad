@@ -1,0 +1,534 @@
+//  ECR 3162 begin
+// The include file below contains the definitions of the 
+// predefined stereotypes and a routine to initialize the
+// list builtin_stereotypes, that contains the list
+//
+#include "uml/rules/qrl/stereotype.ps.inc"
+
+// This include file is needed to get info about symbols
+// 
+
+#include "ct/rules/qrl/drag_drop.inc"
+
+// We have to remember what property sheet called us, so
+// that we can refresh the "Stereotype" field in that sheet
+// upon clicking on the OK Button
+//
+string calling_ps ="";
+
+// This is mainly to cache the list of system wide defined 
+// stereotypes (in the stereotype diagrams)
+//
+list userdefined_stereotypes;
+
+// We need to remember this. As we cannot close PSs from within
+// StP, we have to rembember the symbol and deactivate the ps
+// if a different symbol is selected.
+//
+gde_symbol sc_target_symbol;
+
+// Sometimes we have to know, what list ( predfined or userdefined )
+// of stereotypes is currently displayed. This routine find this
+// out by checking the value of the choice box.
+//
+string
+displayed_list( )
+{
+	int val;
+	
+	val = ui_choice_value( to_ui_prop("StereotypeChooser", "StereoTypeGroupChoice" ) );
+	
+	if( val == 0 )
+		return "predefineds";
+	else
+		return "userdefineds";
+
+}
+
+// When opening the property sheet, we need to find out, if the stereotype
+// that has been set for this object previously is predefined or user defined,
+// so we can display the correct list on initialization.
+// This routine simply searches the list of predefined stereotypes and then
+// the stereotypes in the repository.
+// Predefineds are looked up first, because stereotypes defined in the UML
+// reference should be redefined in the model. They might only be used as
+// the source of a stereotype inheritance.
+//
+string 
+stereotype_type( string name )
+{
+	node n;
+	int i;
+	
+	stereot_def sd;
+	
+	if( name == "" )
+		return "";
+	
+	for( i = list_count( builtin_stereotypes ) -1; i >=0 ; i--)
+	{
+		sd = list_get( builtin_stereotypes , i );
+		if( sd.name == name )
+			return "predefined";
+	}
+	
+	n = find_by_query("node[UmlStereotype && name = '${name}' && node_refs ]" );
+	if( n != NULL )
+		return "userdefined";
+		
+	return "undefined";
+	
+}
+
+// Searches the list of predefined stereotypes and returns the
+// definition structure.
+//
+stereot_def
+find_stereot_def( string name, string stp_symbol )
+{
+	int i;
+	stereot_def sd;
+	
+	for( i = list_count( builtin_stereotypes )-1; i>=0; i-- )
+	{
+		sd = list_get( builtin_stereotypes, i );
+		if( sd.name == name )
+		{
+			if( stp_symbol == "" )
+				return sd;
+				
+			if( stp_symbol == sd.stp_symbol )
+				return sd;
+		}
+	}
+	
+	return NULL;
+}
+
+// Fills the stereotype list with the information from the
+// list of predefined stereotypes
+//
+void
+fill_stereotype_list_with_predefineds( )
+{
+	stereot_def sd;
+	int i;
+	SymbolInfoType symi;  // This is from drag_drop.inc. A useful utility!
+   	list symbols;
+    gde_symbol symbol;
+
+	// We need to find out, what type the currently selected symbol is
+	// This is necessary, because the UML Reference defines some
+	// stereotypes for certain modelling elements. So we want to know
+	// what modelling element is currently being edited to display
+	// the correct list of stereotypes
+	// 
+    // ECR 6880 Property sheets from table editors
+    if (PropSheet__editor_type() == "gte") {
+        node gte_node = list_get(gte_cell_mapped_oms_nodes(1, 1, _ps_LastFill.cur_row, _ps_LastFill.cur_col), 0);
+        symi.type = string_extract(gte_node.type, 3, string_length(gte_node.type) - 3);
+    }
+    else {
+    	symbols = gde_selected_symbols();
+        if (list_count(symbols) != 1)
+        	return;
+        	
+        // The following is a helper from drag_drop.inc. We are mainly interested
+        // in the type of the current symbol
+        //
+        symi = get_symbol_info( list_get( symbols, 0 ) ) ;
+    }
+    // ECR 6880 end
+
+	ui_list_clear( to_ui_prop("StereotypeChooser", "StereotypeList") );
+	
+	// Now loop through the list of all predefined stereotypes and check
+	// for each item, if we want to display it
+	//
+	for( i = 0; i < list_count( builtin_stereotypes ); i++ )
+	{
+		sd = list_get( builtin_stereotypes, i );
+
+		// We only want stereotypes that are valid for the symbol type
+		//
+		//if( sd.stp_symbol == symi.type )
+		if( list_find( string_to_list( sd.stp_symbol, "#" ), 0, symi.type ) <
+			list_count( string_to_list( sd.stp_symbol, "#" ) ) )
+		{
+			// Some stereotypes are further specified not only by the modelling element
+			// but also by the context, e.g. it often makes a difference for the valid
+			// stereotypes of a Dependency, what elements are linked by that Dependency.
+			// So the definition structure contains a "constraint" field that is 
+			// qrl_eval'ed if not-empty and returning True or False, indicating if the
+			// stereotype is valid in that context.
+			// In that case, we show invalid stereotypes in brackets (), so the user
+			// does not miss them in the list, but sees, that they are not valid in
+			// the given situation
+			//
+			if( sd.constraint == "" )
+				ui_list_append( to_ui_prop("StereotypeChooser", "StereotypeList"), sd.name );
+			else if ( True == qrl_eval( sd.constraint ) )
+				ui_list_append( to_ui_prop("StereotypeChooser", "StereotypeList"), sd.name );
+			else
+				ui_list_append( to_ui_prop("StereotypeChooser", "StereotypeList"), "("+sd.name+")" );
+		}
+	}
+
+}
+
+// This fills the list of stereotypes with all Stereotypes defined in the
+// current system. Straightforward.
+//
+void
+fill_stereotype_list_with_userdefineds( )
+{
+	int i;
+	node n;
+	
+	userdefined_stereotypes=list_select( "node[UmlStereotype && node_refs]" );
+	ui_list_clear( to_ui_prop("StereotypeChooser", "StereotypeList") );
+
+	for( i = 0; i < list_count( userdefined_stereotypes ); i++ )
+	{
+			n = list_get( userdefined_stereotypes , i );
+			ui_list_append( to_ui_prop("StereotypeChooser", "StereotypeList"), n.name );
+	}			
+			
+}
+
+// This is called from the Callback in the Choose... Button that
+// has been added to the extensibility Group in extensibility.prop
+// This initializes the sheet by selecting the right stereotypes
+// to be displayed
+//
+void 
+fill_stereot_ps( string c_ps )
+{
+	int i;
+
+	// This builds the list of predefined stereotypes, if it hasn't already
+	// been built
+	//
+	init_stereot_def( );
+
+	// We need to remember the calling property sheet at the time the OK
+	// button is pressed. 
+	//
+	calling_ps = c_ps;
+	string oldval;
+	string oldtype;
+	
+	// Get the value and type of the stereotype that has been set
+	// in the calling property sheet so we can determine how to init
+	// the StereotypeChooser sheet
+	//
+	oldval = ui_text_value( to_ui_prop( calling_ps, "Stereotype" ) );
+	oldtype = stereotype_type( oldval );
+
+	// If predefined or unset display predefined list
+	//
+	if( oldval =="" || "predefined" == oldtype || "undefined" == oldtype )
+	{
+		fill_stereotype_list_with_predefineds( );
+		ui_choice_set_value( to_ui_prop("StereotypeChooser", "StereoTypeGroupChoice" ), 0 );
+	}
+	else if( oldtype == "userdefined" )
+	{
+		fill_stereotype_list_with_userdefineds( );
+		ui_choice_set_value( to_ui_prop("StereotypeChooser", "StereoTypeGroupChoice" ), 1 );
+	}
+	
+	// If the stereotype is not defined, we issue a warning, so that such a thing
+	// does not go unnoticed. A stereotype might become invalid in the following cases:
+	// - Stereotype is created in a stereotype diagram, then used on an object. Now
+	//   it is deleted from the diagram. It will be still the stereotype of the object.
+	//	
+	if( oldtype == "undefined" )
+	{
+		ps_err( "Warning: The current value for the stereotype is invalid for this object" );
+		ps_err( "This might be a result from deleting a stereotype or of changing the type of an object" );
+	}
+	else
+	{
+		// Highlight the selected stereotype
+		//
+		list l = ui_list_value( to_ui_prop( "StereotypeChooser", "StereotypeList" ) );
+		for( i = list_count( l ) -1; i >=0 ; i-- )
+			if( oldval == list_get( l, i ) )
+			{
+				ui_list_set_selected( to_ui_prop( "StereotypeChooser", "StereotypeList" ), i );
+				break;
+			}
+    	// ECR 6197 start
+        if (i < 0)  // no selected stereotype found
+        {
+            ui_text_set_value( to_ui_prop( "StereotypeChooser", "StereotypeUMLRefPage" ), "" );
+    	    ui_text_set_value( to_ui_prop( "StereotypeChooser", "StereotypeDescription" ), "" );
+        }
+    	// ECR 6197 end
+	}
+
+    // ECR 6880 Property sheets from table editors
+    if (PropSheet__editor_type() != "gte") {
+//        sc_target_cell = list_get(gte_cell_mapped_oms_nodes(1, 1, _ps_LastFill.cur_row, _ps_LastFill.cur_col), 0);
+//    }
+//    else
+//    {
+    	if(list_count( gde_selected_symbols() ) == 1 )
+    		sc_target_symbol = list_get( gde_selected_symbols(), 0 );
+    	else
+    		sc_target_symbol = NULL;
+    }
+    // End ECR 6880
+}
+
+// This function is called when the user selects a stereotype from the
+// list. It updates the displayed information
+//
+void
+ps_StereotypeList_cb( ui_event_tp event, ui_prop prop, int id, string value)
+{
+	list l;
+	string st;
+	stereot_def sd;
+    l = ui_list_selected_items(prop);
+    
+    if( l == NULL )
+    	return;
+    	
+    st = list_get( l , 0 );
+    st = string_strip( st, "B", "(" );
+    st = string_strip( st, "B", ")" );
+
+	if( displayed_list() == "userdefineds" )
+	{
+		int i;
+		node n;
+		note not;
+		
+    	ui_text_set_value( to_ui_prop( "StereotypeChooser", "StereotypeUMLRefPage" ), "N/A" );
+    	// Diesen Loop durch find ersetzen
+    	
+    	// Check if the stereotype has an object description. If so, display it in the
+    	// description box.
+    	//
+		for( i = 0; i < list_count( userdefined_stereotypes ); i++ )
+		{
+			n = list_get( userdefined_stereotypes, i );
+			if( n.name == st )
+			{
+				not = find_by_query("note[GenericObject && obj_id = "+n.id+"]" );
+				if( not != NULL )
+					ui_text_set_value( to_ui_prop( "StereotypeChooser", "StereotypeDescription" ), 
+						not.desc );
+				else	
+					ui_text_set_value( to_ui_prop( "StereotypeChooser", "StereotypeDescription" ), 
+						"" );
+					
+				break;
+			}				
+		}
+	}
+    else
+    {
+    sd = find_stereot_def( st, "" );
+    
+    // Lookup the information of the selected stereotype in the predefined list and
+    // display the corresponding information in the documentation fields
+    //
+    if( sd != NULL )
+    {
+    	ui_text_set_value( to_ui_prop( "StereotypeChooser", "StereotypeUMLRefPage" ), sd.page );
+    	ui_text_set_value( to_ui_prop( "StereotypeChooser", "StereotypeDescription" ), text_split(sd.desc,40 ) );
+
+    }
+    else
+    {
+    	//ps_error( "Builtin stereotype not found!" );
+    	ui_text_set_value( to_ui_prop( "StereotypeChooser", "StereotypeUMLRefPage" ), "N/A" );
+    	ui_text_set_value( to_ui_prop( "StereotypeChooser", "StereotypeDescription" ), "N/A" );
+    }
+    
+    // If the user picked a stereotype that is not valid in this context, he can go on
+    // nonetheless.
+    //
+    if( sd.constraint != "" && False == qrl_eval( sd.constraint ) )
+    {
+    	ps_err( "This stereotype is semantically wrong in this context." );
+    	ps_err( "Please reference the documentation for more detailed information." );
+    }
+    }
+}
+
+// Example constraint function
+//
+boolean
+stereo_access_cons()
+{
+	return True;
+}
+
+// ECR 7170 begin
+void
+ps_StereotypeList_DoubleClick_cb( ui_event_tp event, ui_prop prop, int id, string value)
+{
+    if(ps_StereoTypeChooser_OK_cb(NULL, NULL, NULL, NULL))
+        ui_owner_dismiss(to_ui_owner(prop));
+}
+// ECR 7170 end
+
+// Called when the user clicks ok
+//
+int
+ps_StereoTypeChooser_OK_cb( ui_event_tp event, ui_prop prop, int id, string value)
+{
+	// Set the value of the stereotype box to the selected stereotype
+	//
+	list l;
+	string nv;
+	
+	l = ui_list_selected_items( to_ui_prop( "StereotypeChooser", "StereotypeList" ) );
+	
+//ECR 4540 begin
+    if( l != NULL )
+		if( list_count(l) > 0 )
+            nv = list_get( l, 0 );
+        else
+            nv = "";
+	else
+		nv = "";
+//ECR 4540 end
+	
+	// Only set the value if it changed
+	//	
+	if( nv != ui_text_value(to_ui_prop( calling_ps, "Stereotype" ) ) )
+	{
+		ui_text_set_value( to_ui_prop( calling_ps, "Stereotype" ), 
+						nv );
+
+		// The call below is necessary, because without it, the calling property sheet
+		// would not set the new stereotype value when clicked on OK. This below
+		// invokes the same mechanism as when the user would have entered the stereotype
+		// by hand, thus setting the correct fields in the property sheet handling
+		// in uml/rules/qrl/ps.inc (i.e. the modified flag in its internal structures )
+		//
+   		ps_ValueChanged_cb( event, to_ui_prop(calling_ps, "Stereotype") , id, value );
+	}
+	return 1;
+}
+
+// Callback for the combox box defining the list of properties that are displayed
+//
+int
+ps_ChangeStereotypeGroup_cb( ui_event_tp event, ui_prop prop, int id, string value)
+{
+	int val;
+	
+	val = ui_choice_value( prop );
+	
+	if( val == 0 )
+		fill_stereotype_list_with_predefineds( );
+	else
+		fill_stereotype_list_with_userdefineds( );
+		
+ 	return 0;	
+}
+
+// This is just a simple routine to format the descriptive
+// strings in the display window. This is because the text input field
+// cannot be set to do automatic line breaking, so we have to
+// to it on our own. This is suboptimal, because obviously, it cannot
+// take into acount sizes of different glyphs in the font, but
+// works
+//
+string text_split( string t, int width )
+{
+	// Build a list of words first
+	//
+	list l = string_to_list( t, " " );
+	list lines = list_create( "string", 0 );
+	int i;
+	int lc = 0;
+	string lin = "";
+
+	// Loop through all the words
+	//
+	for( i = 0; i < list_count( l ); i++ )
+	{
+		// If we have an empty line we add the word no matter what
+		// This also solves the problems of words with length > width
+		//
+		if( lin == "" )
+		{
+			lin = list_get( l, i );
+		}
+		else
+		{
+			// If the word still fits into the line, append it
+			//
+			if( string_length( lin + " " + list_get( l, i ) ) < width )
+				lin  = lin +" " + list_get( l, i );
+			else
+			{
+				// Append the line to the list of lines and start
+				// a new line with the word that did not fit anymore
+				list_append( lines, lin );
+				lin = list_get( l, i );
+			}
+		}
+	}  
+	
+	// There might be one line left, that has not be appended yet.
+	//
+	if( lin != "" )
+		list_append( lines, lin );
+		
+	return list_to_string( lines, "\n" );
+}
+
+// Loops through the fields and (de) activates the fields of the
+// sheet
+//
+void
+StereotypeChooser_activate( boolean t_or_f )
+{
+	// Modify this string if fields are modified
+	//
+	list elements = string_to_list("StereotypeList,StereotypeGroupChoice,StereotypeUMLRefPage,StereotypeDescription,OK",
+									"," );
+	int i;
+	
+	for( i = list_count( elements )-1; i>=0;i-- )
+	ui_activate( to_ui_prop( "StereotypeChooser", 
+				list_get(elements,i)
+	 			), t_or_f );
+	
+}
+
+// This is called from the gde engine when an object is selected. Note
+// that we check if the selected symbol is different from the symbol
+// for which the property sheet has been opened. This is because of
+// a "feature" in the engine, which sends multiple events for one
+// object at strange times, so we cannot rely on a new symbol being
+// selected just on the fact that the routine is invoked
+//
+void
+StereotypeChooser_deactivate()
+{
+    // ECR 6880 Property sheets from table editors
+    if (PropSheet__editor_type() == "gte") {
+        if(_ps_LastFill != NULL
+            && _ps_LastFill.cur_row == gte_get_current_cell_row()
+            && _ps_LastFill.cur_col == gte_get_current_cell_col()
+            && _ps_LastFill.label == gte_get_current_cell_label())
+            return;
+    }
+    else
+    // ECR 6880 end
+	if(list_count( gde_selected_symbols() ) == 1 &&  
+		sc_target_symbol == list_get( gde_selected_symbols(), 0 ) )
+		return;
+
+	StereotypeChooser_activate( False );
+}
+//  ECR 3162 end
