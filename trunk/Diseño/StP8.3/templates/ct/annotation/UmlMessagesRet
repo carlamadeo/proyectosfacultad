@@ -1,0 +1,12 @@
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+
+Include "annotation/UmlMessagesRet.note"
+Include "annotation/UmlGenericObject"
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_UmlMessagesRet"
+IncludeIfExists "val/WinRunner/annotation/WinRunner"

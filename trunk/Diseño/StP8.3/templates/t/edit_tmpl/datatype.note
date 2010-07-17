@@ -1,0 +1,83 @@
+DataType notes:
+
+<description_string> must be the name of a constant of subtype stringlong
+   or double-quoted text "...".
+The data_format must be the name of a constant of subtype string
+   or double-quoted text "...".
+The data_units must be the name of a constant of subtype stringshort
+   or double-quoted text "...".
+The sdom_label must be the name of a constant of subtype stringshort
+   or double-quoted text "...".
+Format or units specifications here are assumed for instantiated dataitems,
+   unless superseded in the dataitem definition.
+
+
+DataType `string' notes:
+
+<p_value> must be the name of a constant of subtype string or
+   double-quoted text "...".
+The "has placeholder value" clause allows a textual description in place
+   of an actual domain or structure specification.
+
+
+DataType `integer' notes:
+
+<min_ivalue>, <max_ivalue>, and <res_ivalue> must be the name of a constant of
+   subtype integer or actual integer numbers.
+Either these three clauses
+   "has value range minimum,"
+   "has value range maximum,"
+   "has value range resolution"
+   or this one clause
+   "has values"
+   may be present in a single sentence, but not all four; that is,
+   either a value range or a list of values may be specified, but not both.
+<i_valueset> is a comma-separated list of i_values; each i_value must
+   be the name of a constant of subtype integer or an actual integer number.
+<res_ivalue> is the resolution, or smallest difference between
+   successive values.
+
+
+DataType `real' notes:
+
+<min_rvalue>, <max_rvalue>, and <res_rvalue> must be the name of a constant of
+   subtype real or actual real numbers.
+Either these three clauses
+   "has value range minimum,"
+   "has value range maximum,"
+   "has value range resolution"
+   or this one clause
+   "has values"
+   may be present in a single sentence, but not all four; that is,
+   either a value range or a list of values may be specified, but not both.
+The r_valueset is a comma-separated list of r_values; each r_value must
+   be the name of a constant of subtype real or an actual real number.
+The res_rvalue is the resolution, or smallest difference between
+   successive values.
+
+
+DataType `character' notes:
+
+<c_valueset> is a comma-separated list of <c_values> or it is a character
+   regular expression; a <c_value> must be the name of a constant of subtype
+   character or single-quoted text '...'.
+
+
+DataType `string' notes:
+
+<s_valueset> is a comma-separated list of <s_values> or it is a string
+   regular expression; a <s_value> must be the name of a constant of subtype
+   string or double-quoted text "...".
+
+
+DataType `boolean' notes:
+
+<false_value> must be the name of a constant of subtype string
+   or double-quoted text "...".
+<true_value> must be the name of a constant of subtype string
+   or double-quoted text "...".
+<unknown_value> must be the name of a constant of subtype string
+   or double-quoted text "...".
+<false_value> is a representation of boolean FALSE, <true_value> is a
+   representation of boolean TRUE, and <unknown_value> is a representation
+   of indeterminate.

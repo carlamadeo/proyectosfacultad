@@ -1,0 +1,676 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html><head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.7 [en] (Win98; I) [Netscape]">
+   <meta name="UnknownBody_0_1_0" content="aLink=#ff0000"><title>Trimble How GPS Works</title></head>
+
+<body alink="#ff0000" bgcolor="#ffffff" link="#3366ff" text="#000000" vlink="#666666">
+
+<center>
+<h2>
+<u>Como funciona el sistema GPS, en cinco pasos lógicos<br>
+</u><font face="Arial"><font size="-2">Copyright <a href="http://www.trimble.com/lib/copy.htm">©</a>
+1996, 1997, 1998, 1999 by Trimble Navigation Limited. All rights reserved.
+Traducido al español por <a href="mailto:pedro@gutovnik.com">Pedro
+Gutovnik</a></font></font></h2></center>
+
+<ol>
+<li>
+<b><font size="+1"><a href="#1">Triangulación</a></font></b>. La base
+del GPS es la "triangulación" desde los satélites</li>
+
+<li>
+<b><font size="+1"><a href="#2">Distancias</a></font></b>. Para "triangular",
+el receptor de GPS mide distancias utilizando el tiempo de viaje de señales
+de radio.</li>
+
+<li>
+<b><font size="+1"><a href="#3">Tiempo</a></font></b>. Para medir el tiempo
+de viaje de estas señales, el GPS necesita un control muy estricto
+del tiempo y lo logra con ciertos trucos.</li>
+
+<li>
+<b><font size="+1"><a href="#4">Posición</a></font></b>. Además
+de la distancia, el GPS necesita conocer exactamente donde se encuentran
+los satélites en el espacio. Orbitas de mucha altura y cuidadoso
+monitoreo, le permiten hacerlo.</li>
+
+<li>
+<b><font size="+1"><a href="#5">Corrección</a></font></b>. Finalmente
+el GPS debe corregir cualquier demora en el tiempo de viaje de la señal
+que esta pueda sufrir mientras atraviesa la atmósfera.</li>
+</ol>
+Veamos cada uno de estos puntos en detalle.
+<br>&nbsp;
+<p><a name="1"></a><b><font size="+2">Paso 1:</font></b> <b><font size="+2">La
+Triangulación desde los satélites</font></b>
+</p><p>Aunque pueda parecer improbable, la idea general detrás del GPS
+es utilizar los satélites en el espacio como puntos de referencia
+para ubicaciones aquí en la tierra.
+</p><p>Esto se logra mediante una muy, pero muy exacta, medición de
+nuestra distancia hacia al menos tres satélites, lo que nos permite
+"triangular" nuestra posición en cualquier parte de la tierra.
+</p><p>Olvidémonos por un instante sobre cómo mide nuestro GPS
+dicha distancia. Lo veremos luego. Consideremos primero como la medición
+de esas distancias nos permiten ubicarnos en cualquier punto de la tierra.
+</p><p><b>La gran idea, Geométricamente, es:</b>
+</p><p>Supongamos que medimos nuestra distancia al primer satélite y
+resulta ser de 11.000 millas (20.000 Km)
+</p><p>Sabiendo que estamos a 11.000 millas de un satélite determinado,
+no podemos por lo tanto estar en cualquier punto del universo sino que
+esto limita nuestra posición a la superficie de una esfera que tiene
+como centro dicho satélite y cuyo radio es de 11.000 millas.
+</p><center>
+<p><img src="gps%20-%205%20pasos%20logicos_files/aa_ov6.gif" height="102" width="240"></p></center>
+
+<p>A continuación medimos nuestra distancia a un segundo satélite
+y descubrimos que estamos a 12.000 millas del mismo.
+</p><p>Esto nos dice que no estamos solamente en la primer esfera, correspondiente
+al primer satélite, sino también sobre otra esfera que se
+encuentra a 12.000 millas del segundo satélite. En otras palabras,
+estamos en algún lugar de la circunferencia que resulta de la intersección
+de las dos esferas.
+</p><center>
+<p><img src="gps%20-%205%20pasos%20logicos_files/aa_ov7.gif" height="127" width="161"></p></center>
+
+<p>Si ahora medimos nuestra distancia a un tercer satélite y descubrimos
+que estamos a 13.000 millas del mismo, esto limita nuestra posición
+aún mas, a los dos puntos en los cuales la esfera de 13.000 millas
+corta la circunferencia que resulta de la intersección de las dos
+primeras
+esferas.
+</p><center>
+<p><img src="gps%20-%205%20pasos%20logicos_files/aa_ov8.gif" height="167" width="160"></p></center>
+
+<p>O sea, que midiendo nuestra distancia a tres satélites limitamos
+nuestro posicionamiento a solo dos puntos posibles.
+</p><p>Para decidir cual de ellos es nuestra posición verdadera, podríamos
+efectuar una nueva medición a un cuarto satélite. Pero normalmente
+uno de los dos puntos posibles resulta ser muy improbable por su ubicación
+demasiado lejana de la superficie terrestre y puede ser descartado sin
+necesidad de mediciones posteriores.
+</p><p>Una cuarta medición, de todos modos es muy conveniente por otra
+razón que veremos mas adelante.
+</p><p>Veamos ahora como el sistema mide las distancias a los satélites.
+<br>
+</p><hr width="53%">
+<p><font color="#ff0000"><font size="+1">En Resumen: </font></font><b><font size="+2">Triangulación</font></b>
+</p><ol>
+<li>
+Nuestra posición se calcula en base a la medición de las
+distancias a los satélites</li>
+
+<li>
+Matemáticamente se necesitan cuatro mediciones de distancia a los
+satélites para determinar la posición exacta</li>
+
+<li>
+En la práctica se resuelve nuestra posición con solo tres
+mediciones si podemos descartar respuestas ridículas o utilizamos
+ciertos trucos.</li>
+
+<li>
+Se requiere de todos modos una cuarta medición por razones técnicas
+que luego veremos.</li>
+</ol>
+
+<h2>
+<a name="2"></a>Paso 2: Midiendo las distancias a los satélites</h2>
+Sabemos ahora que nuestra posición se calcula a partir de la medición
+de la distancia hasta por lo menos tres satélites. Pero, ¿cómo
+podemos medir la distancia hacia algo que está flotando en algún
+lugar en el espacio?. Lo hacemos midiendo el tiempo que tarda una señal
+emitida por el satélite en llegar hasta nuestro receptor de GPS.
+<p><b>La gran idea, Matemáticamente, es:</b>
+</p><p>Toda la idea bulle alrededor de aquellos problemas sobre la velocidad
+que resolvíamos en la secundaria, Recordemos que "Si un auto viaja
+a 60 kilómetros por hora durante dos horas, ¿qué distancia
+recorrió?
+</p><center>
+<p><b><i>Velocidad (60 km/h) x Tiempo (2 horas) = Distancia (120 km)</i></b></p></center>
+
+<p>En el caso del GPS estamos midiendo una señal de radio, que sabemos
+que viaja a la velocidad de la luz, alrededor de 300.000 km por segundo.
+</p><p>Nos queda el problema de medir el tiempo de viaje de la señal
+(Que, obviamente, viene muy rápido)
+</p><p><b>Sincronicemos nuestros relojes</b>
+</p><p>El problema de la medición de ese tiempo es complicado. Los tiempos
+son extremadamente cortos. Si el satélite estuviera justo sobre
+nuestras cabezas, a unos 20.000 km de altura, el tiempo total de viaje
+de la señal hacia nosotros sería de algo mas de 0.06 segundos.
+Estamos necesitando relojes muy precisos. Ya veremos como lo resolvemos.
+</p><p>Pero, aún admitiendo que tenemos relojes con la suficiente precisión,
+¿cómo medimos el tiempo de viaje de la señal?
+</p><p>Supongamos que nuestro GPS, por un lado, y el satélite, por otro,
+generan una señal auditiva en el mismo instante exacto. Supongamos
+también que nosotros, parados al lado de nuestro receptor de GPS,
+podamos oír ambas señales (Obviamente es imposible "oír"
+esas señales porque el sonido no se propaga en el vacío).
+</p><p>Oiríamos dos versiones de la señal. Una de ellas inmediatamente,
+la generada por nuestro receptor GPS y la otra con cierto atraso, la proveniente
+del satélite, porque tuvo que recorrer alrededor de 20.000 km para
+llegar hasta nosotros. Podemos decir que ambas señales no están
+sincronizadas.
+</p><p>Si quisiéramos saber cual es la magnitud de la demora de la señal
+proveniente del satélite podemos retardar la emisión de la
+señal de nuestro GPS hasta lograr la perfecta sincronización
+con la señal que viene del satélite.
+</p><p>El tiempo de retardo necesario para sincronizar ambas señales
+es igual al tiempo de viaje de la señal proveniente del satélite.
+Supongamos que sea de 0.06 segundos. Conociendo este tiempo, lo multiplicamos
+por la velocidad de la luz y ya obtenemos la distancia hasta el satélite.
+</p><p><b><i>Tiempo de retardo (0.06 seg) x Vel. de la luz (300.000 km/seg)
+= Dist. (18.000 km)</i></b>
+</p><p>Así es, básicamente, como funciona el GPS.
+</p><p>La señal emitida por nuestro GPS y por el satélite es
+algo llamado "Código Pseudo Aleatorio" (Pseudo Random Code). La
+palabra "Aleatorio" significa algo generado por el azar.
+</p><p><b>¿Un Código Aleatorio?</b>
+</p><p>Este Código Pseudo Aleatorio es una parte fundamental del GPS.
+Físicamente solo se trata de una secuencia o código digital
+muy complicado. O sea una señal que contiene una sucesión
+muy complicada de pulsos "on" y "off", como se pueden ver:
+</p><center>
+<p><img src="gps%20-%205%20pasos%20logicos_files/aa_ov11.gif" height="34" width="188"></p></center>
+
+<p>La señal es tan complicada que casi parece un ruido eléctrico
+generado por el azar. De allí su denominación de "Pseudo-Aleatorio".
+</p><p>Hay varias y muy buenas razones para tal complejidad. La complejidad
+del código ayuda a asegurarnos que el receptor de GPS no se sintonice
+accidentalmente con alguna otra señal. Siendo el modelo tan complejo
+es altamente improbable que una señal cualquiera pueda tener exactamente
+la misma secuencia.
+</p><p>Dado que cada uno de los satélites tiene su propio y único
+Código Pseudo Aleatorio, esta complejidad también garantiza
+que el receptor no se confunda accidentalmente de satélite. De esa
+manera, también es posible que todos los satélites trasmitan
+en la misma frecuencia sin interferirse mutuamente. Esto también
+complica a cualquiera que intente interferir el sistema desde el exterior
+al mismo. El Código Pseudo Aleatorio le da la posibilidad al Departamento
+de Defensa de EEUU de controlar el acceso al sistema GPS.
+</p><p>Pero hay otra razón para la complejidad del Código Pseudo
+Aleatorio, una razón que es crucial para conseguir un sistema GPS
+económico.
+</p><p>El código permite el uso de la "teoría de la información"
+para amplificar las señales de GPS. Por esa razón las débiles
+señales emitidas por los satélites pueden ser captadas por
+los receptores de GPS sin el uso de grandes antenas.
+</p><p>Cuando comenzamos a explicar el mecanismo de emisión de las señales
+por el GPS y el satélite, asumimos que ambos comenzaban la emisión
+de la señal exactamente al mismo tiempo. ¿Pero cómo
+podemos asegurarnos que todo esté perfectamente sincronizado?
+</p><p>Ya veremos...
+<br>
+</p><hr width="53%">
+<p><font color="#ff0000"><font size="+1">En Resumen: </font></font><b><font size="+2">Midiendo
+la distancia</font></b>
+</p><ol>
+<li>
+La distancia al satélite se determina midiendo el tiempo que tarda
+una señal de radio, emitida por el mismo, en alcanzar nuestro receptor
+de GPS.</li>
+
+<li>
+Para efectuar dicha medición asumimos que ambos, nuestro receptor
+GPS y el satélite, están generando el mismo Código
+Pseudo Aleatorio en exactamente el mismo momento.</li>
+
+<li>
+Comparando cuanto retardo existe entre la llegada del Código Pseudo
+Aleatorio proveniente del satélite y la generación del código
+de nuestro receptor de GPS, podemos determinar cuanto tiempo le llevó
+a dicha señal llegar hasta nosotros.</li>
+
+<li>
+Multiplicamos dicho tiempo de viaje por la velocidad de la luz y obtenemos
+la distancia al satélite.</li>
+</ol>
+
+<h2>
+<a name="3"></a>Paso 3: Control perfecto del tiempo</h2>
+Si la medición del tiempo de viaje de una señal de radio
+es clave para el GPS, los relojes que empleamos deben ser exactísimos,
+dado que si miden con un desvío de un milésimo de segundo,
+a la velocidad de la luz, ello se traduce en un error de 300 km!
+<p>Por el lado de los satélites, el timing es casi perfecto porque
+llevan a bordo relojes atómicos de increíble precisión.
+</p><p>¿Pero que pasa con nuestros receptores GPS, aquí en la
+tierra?
+</p><p>Recordemos que ambos, el satélite y el receptor GPS, deben ser
+capaces de sincronizar sus Códigos Pseudo Aleatorios para que el
+sistema funcione.
+</p><p>Si nuestros receptores GPS tuvieran que alojar relojes atómicos
+(Cuyo costo está por encima de los 50 a 100.000 U$S) la tecnología
+resultaría demasiado costosa y nadie podría acceder a ellos.
+</p><p>Por suerte los diseñadores del sistema GPS encontraron una brillante
+solución que nos permite resolver el problema con relojes mucho
+menos precisos en nuestros GPS. Esta solución es uno de los elementos
+clave del sistema GPS y, como beneficio adicional, significa que cada receptor
+de GPS es en esencia un reloj atómico por su precisión.
+</p><p>El secreto para obtener un timing tan perfecto es efectuar una medición
+satelital <b>adicional</b>.
+</p><p>Resulta que si <b>tres mediciones perfectas</b> pueden posicionar un
+punto en un espacio tridimensional, <b>cuatro mediciones imperfectas</b>
+pueden lograr lo mismo.
+</p><p>Esta idea es fundamental para el funcionamiento del sistema GPS, pero
+su explicación detallada excede los alcances de la presente exposición.
+De todos modos, aquí va un resumen somero:
+</p><p><b>Una medición adicional remedia el desfasaje del timing.</b>
+</p><p>Si todo fuera perfecto (es decir que los relojes de nuestros receptores
+GPS lo fueran), entonces todos los rangos (distancias) a los satélites
+se intersectarían en un único punto (que indica nuestra posición).
+Pero con relojes imperfectos, una cuarta medición, efectuada como
+control cruzado, NO intersectará con los tres primeros.
+</p><p>De esa manera la computadora de nuestro GPS detectará la discrepancia
+y atribuirá la diferencia a una sincronización imperfecta
+con la hora universal.
+</p><p>Dado que cualquier discrepancia con la hora universal afectará
+a las cuatro mediciones, el receptor buscará un factor de corrección
+único que siendo aplicado a sus mediciones de tiempo hará
+que los rangos coincidan en un solo punto.
+</p><p>Dicha corrección permitirá al reloj del receptor ajustarse
+nuevamente a la hora universal y de esa manera tenemos un reloj atómico
+en la palma de nuestra mano!
+</p><p>Una vez que el receptor de GPS aplica dicha corrección al resto
+de sus mediciones, obtenemos un posicionamiento preciso.
+</p><p>Una consecuencia de este principio es que cualquier GPS decente debe
+ser capaz de sintonizar al menos cuatro satélites de manera simultánea.
+En la práctica, casi todos los GPS en venta actualmente, acceden
+a mas de 6, y hasta a 12, satélites simultáneamente.
+</p><p>Ahora bien, con el Código Pseudo Aleatorio como un pulso confiable
+para asegurar la medición correcta del tiempo de la señal
+y la medición adicional como elemento de sincronización con
+la hora universal, tenemos todo lo necesario para medir nuestra distancia
+a un satélite en el espacio.
+</p><p>Pero, para que la triangulación funcione necesitamos conocer
+no sólo la distancia sino que debemos conocer dónde están
+los satélites con toda exactitud.
+</p><p>Veremos cómo lo conseguimos.
+<br>
+</p><hr width="53%">
+<p><font color="#ff0000"><font size="+1">En Resumen: </font></font><b><font size="+2">Obtener
+un Timing Perfecto</font></b>
+</p><ol>
+<li>
+Un timing muy preciso es clave para medir la distancia a los satélites</li>
+
+<li>
+Los satélites son exactos porque llevan un reloj atómico
+a bordo.</li>
+
+<li>
+Los relojes de los receptores GPS no necesitan ser tan exactos porque la
+medición de un rango a un satélite adicional permite corregir
+los errores de medición.</li>
+</ol>
+
+<h2>
+<a name="4"></a>Paso 4: Conocer dónde están los satélites
+en el espacio</h2>
+A lo largo de este trabajo hemos estado asumiendo que conocemos dónde
+están los satélites en sus órbitas y de esa manera
+podemos utilizarlos como puntos de referencia.
+<p>¿Pero, cómo podemos saber donde están exactamente?
+Todos ellos están flotando a unos 20.000 km de altura en el espacio.
+</p><p><b>Un satélite a gran altura se mantiene estable</b>
+</p><p>La altura de 20.000 km es en realidad un gran beneficio para este caso,
+porque algo que está a esa altura está bien despejado de
+la atmósfera. Eso significa que orbitará de manera regular
+y predecible mediante ecuaciones matemáticas sencillas.
+</p><p>La Fuerza Aérea de los EEUU colocó cada satélite
+de GPS en una órbita muy precisa, de acuerdo al Plan Maestro de
+GPS.
+</p><p>En tierra, todos los receptores de GPS tienen un almanaque programado
+en sus computadoras que les informan donde está cada satélite
+en el espacio, en cada momento.
+</p><p><b>El Control Constante agrega precisión</b>
+</p><p>Las órbitas básicas son muy exactas pero con el fin de
+mantenerlas así, los satélites de GPS son monitoreados de
+manera constante por el Departamento de Defensa.
+</p><center>
+<p><img src="gps%20-%205%20pasos%20logicos_files/aa_ov21.gif" alt="Monitoring Satellites" height="143" width="183"></p></center>
+
+<p>Ellos utilizan radares muy precisos para controlar constantemente la
+exacta altura, posición y velocidad de cada satélite.
+</p><p>Los errores que ellos controlan son los llamados errores de efemérides,
+o sea evolución orbital de los satélites. Estos errores se
+generan por influencias gravitacionales del sol y de la luna y por la presión
+de la radiación solar sobre los satélites.
+</p><p>Estos errores son generalmente muy sutiles pero si queremos una gran
+exactitud debemos tenerlos en cuenta.
+<br>&nbsp;
+<br>&nbsp;
+</p><p><b>Corrigiendo el mensaje</b>
+</p><p>Una vez que el Departamento de Defensa ha medido la posición
+exacta de un satélite, vuelven a enviar dicha información
+al propio satélite. De esa manera el satélite incluye su
+nueva posición corregida en la información que transmite
+a través de sus señales a los GPS.
+</p><center>
+<p><img src="gps%20-%205%20pasos%20logicos_files/aa_ov22.gif" alt="Error Message" height="170" width="203"></p></center>
+
+<p>Esto significa que la señal que recibe un receptor de GPS no
+es solamente un Código Pseudo Aleatorio con fines de timing. También
+contiene un mensaje de navegación con información sobre la
+órbita exacta del satélite
+</p><p>Con un timing perfecto y la posición exacta del satélite
+podríamos pensar que estamos en condiciones de efectuar cálculos
+perfectos de posicionamiento. Sin embargo debemos resolver otros problemas.
+<br>
+</p><hr width="53%">
+<p><font color="#ff0000"><font size="+1">En Resumen: </font></font><b><font size="+2">Posicionamiento
+de los Satélites</font></b>
+</p><ol>
+<li>
+Para utilizar los satélites como puntos de referencia debemos conocer
+exactamente donde están en cada momento.</li>
+
+<li>
+Los satélites de GPS se ubican a tal altura que sus órbitas
+son muy predecibles.</li>
+
+<li>
+El Departamento de Defensa controla y mide variaciones menores en sus órbitas.</li>
+
+<li>
+La información sobre errores es enviada a los satélites para
+que estos a su vez retransmitan su posición corregida junto con
+sus señales de timing.</li>
+</ol>
+
+<h2>
+<a name="5"></a>Paso 5: Corrigiendo Errores</h2>
+Hasta ahora hemos estado tratando los cálculos del sistema GPS de
+manera muy abstracta, como si todo el proceso ocurriera en el vacío.
+Pero en el mundo real hay muchas cosas que le pueden suceder a una señal
+de GPS para transformarla en algo menos que matemáticamente perfecta.
+<p>Para aprovechar al máximo las ventajas del sistema un buen receptor
+de GPS debe tener en cuenta una amplia variedad de errores posibles. Veamos
+que es lo que debemos enfrentar.
+</p><p><b>Un Rudo Viaje a través de la atmósfera</b>
+</p><p>En primer lugar, una de las presunciones básicas que hemos estado
+usando a lo largo de este trabajo no es exactamente cierta. Hemos estado
+afirmando que podemos calcular la distancia a un satélite multiplicando
+el tiempo de viaje de su señal por la velocidad de la luz. Pero
+la velocidad de la luz sólo es constante en el vacío.
+</p><p>Una señal de GPS pasa a través de partículas cargadas
+en su paso por la ionosfera y luego al pasar a través de vapor de
+agua n la troposfera pierde algo de velocidad, creando el mismo efecto
+que un error de precisión en los relojes.
+</p><center>
+<p><img src="gps%20-%205%20pasos%20logicos_files/aa_ov24.gif" alt="GPS Signal" height="148" width="271"></p></center>
+
+<p>Hay un par de maneras de minimizar este tipo de error. Por un lado,
+podríamos predecir cual sería el error tipo de un día
+promedio. A esto se lo llama modelación y nos puede ayudar pero,
+por supuesto, las condiciones atmosféricas raramente se ajustan
+exactamente el promedio previsto.
+</p><p>Otra manera de manejar los errores inducidos por la atmósfera
+es comparar la velocidad relativa de dos señales diferentes. Esta
+medición de doble frecuencia es muy sofisticada y solo es posible
+en receptores GPS muy avanzados.
+</p><p><b>Un Rudo Viaje sobre la tierra</b>
+</p><p>Los problemas para la señal de GPS no terminan cuando llega a
+la tierra. La señal puede rebotar varias veces debido a obstrucciones
+locales antes de ser captada por nuestro receptor GPS.
+</p><center>
+<p><img src="gps%20-%205%20pasos%20logicos_files/aa_ov25.gif" alt="Multipath Error" height="140" width="194"></p></center>
+
+<p>Este error es similar al de las señales fantasma que podemos
+ver en la recepción de televisión. Los buenos receptores
+GPS utilizan sofisticados sistemas de rechazo para minimizar este problema.
+</p><p><b>Problemas en el satélite</b>
+</p><p>Aún siendo los satélites muy sofisticados no tienen en
+cuenta minúsculos errores en el sistema.
+</p><p>Los relojes atómicos que utilizan son muy, pero muy, precisos,
+pero no son perfectos. Pueden ocurrir minúsculas discrepancias que
+se transforman en errores de medición del tiempo de viaje de las
+señales.
+</p><p>Y, aunque la posición de los satélites es controlada permanentemente,
+tampoco pueden ser controlados a cada segundo. De esa manera pequeñas
+variaciones de posición o de efemérides pueden ocurrir entre
+los tiempos de monitoreo.
+</p><p><b>Algunos ángulos son mejores que otros</b>
+</p><p>La geometría básica por si misma puede magnificar estos
+errores mediante un principio denominado "Dilación Geométrica
+de la Precisión", o DGDP
+</p><p>Suena complicado pero el principio es simple.
+</p><p>En la realidad suele haber mas satélites disponibles que los
+que el receptor GPS necesita para fijar una posición, de manera
+que el receptor toma algunos e ignora al resto.
+</p><p>Si el receptor toma satélites que están muy juntos en
+el cielo, las circunferencias de intersección que definen la posición
+se cruzarán a ángulos con muy escasa diferencia entre sí.
+Esto incrementa el área gris o margen de error acerca de una posición.
+</p><center>
+<p><img src="gps%20-%205%20pasos%20logicos_files/aa_ov26.gif" alt="Close Together" height="133" width="188"></p></center>
+
+<p>Si el receptor toma satélites que están ampliamente separados,
+las circunferencias intersectan a ángulos prácticamente rectos
+y ello minimiza el margen de error.
+</p><center>
+<p><img src="gps%20-%205%20pasos%20logicos_files/aa_ov27.gif" alt="Widely Separated" height="113" width="197"></p></center>
+
+<p>Los buenos receptores son capaces de determinar cuales son los satélites
+que dan el menor error por Dilución Geométrica de la Precisión.
+</p><p><b>¡Errores Intencionales!</b>
+</p><p>Aunque resulte difícil de creer, el mismo Gobierno que pudo gastar
+12.000 Millones de dólares para desarrollar el sistema de navegación
+más exacto del mundo, está degradando intencionalmente su
+exactitud. Dicha política se denomina "Disponibilidad Selectiva"
+y pretende asegurar que ninguna fuerza hostil o grupo terrorista pueda
+utilizar el GPS para fabricar armas certeras.
+</p><p>Básicamente, el Departamento de Defensa introduce cierto "ruido"
+en los datos del reloj satelital, lo que a su vez se traduce en errores
+en los cálculos de posición. El Departamento de Defensa también
+puede enviar datos orbitales ligeramente erróneos a los satélites
+que estos reenvían a los receptores GPS como parte de la señal
+que emiten.
+</p><p>Estos errores en su conjunto son la mayor fuente unitaria de error del
+sistema GPS. Los receptores de uso militar utilizan una clave encriptada
+para eliminar la Disponibilidad Selectiva y son, por ello, mucho más
+exactos.
+</p><p><b>La línea final</b>
+</p><p>Afortunadamente todos esos errores no suman demasiado error total. Existe
+una forma de GPS, denominada GPS Diferencial, que reduce significativamente
+estos problemas.
+<br>&nbsp;
+</p><p>
+</p><hr width="53%">
+<p><font color="#ff0000"><font size="+1">En Resumen: </font></font><b><font size="+2">Corrección
+de Errores</font></b>
+</p><ol>
+<li>
+La ionosfera y la troposfera causan demoras en la señal de GPS que
+se traducen en errores de posicionamiento.</li>
+
+<li>
+Algunos errores se pueden corregir mediante modelación y correcciones
+matemáticas.</li>
+
+<li>
+La configuración de los satélites en el cielo puede magnificar
+otros errores</li>
+
+<li>
+El GPS Diferencial puede eliminar casi todos los errores</li>
+</ol>
+<b><font size="+2">Resumen de las fuentes de error del sistema GPS</font></b>
+<br><i>Errores típicos, en Metros (Por cada satélite)</i>
+<center><table border="1" width="530">
+<tbody><tr>
+<td bgcolor="#ffffff" valign="CENTER" width="41%">
+<div align="right"><b>Fuentes de Error</b></div>
+</td>
+
+<td bgcolor="#ffffff" valign="CENTER" width="31%">
+<center><b><font size="-1">GPS Standard</font></b></center>
+</td>
+
+<td bgcolor="#ffffff" valign="CENTER" width="28%">
+<center><b><font size="-1">GPS Diferencial</font></b></center>
+</td>
+</tr>
+
+<tr>
+<td valign="CENTER" width="41%">
+<div align="right"><font size="-1">Reloj del Satélite</font></div>
+</td>
+
+<td valign="CENTER" width="31%">
+<center><font size="-1">1.5</font></center>
+</td>
+
+<td valign="CENTER" width="28%">
+<center><font size="-1">0</font></center>
+</td>
+</tr>
+
+<tr>
+<td valign="CENTER" width="41%">
+<div align="right"><font size="-1">Errores Orbitales</font></div>
+</td>
+
+<td valign="CENTER" width="31%">
+<center><font size="-1">2.5</font></center>
+</td>
+
+<td valign="CENTER" width="28%">
+<center><font size="-1">0</font></center>
+</td>
+</tr>
+
+<tr>
+<td valign="CENTER" width="41%">
+<div align="right"><font size="-1">Ionosfera</font></div>
+</td>
+
+<td valign="CENTER" width="31%">
+<center><font size="-1">5.0</font></center>
+</td>
+
+<td valign="CENTER" width="28%">
+<center><font size="-1">0.4</font></center>
+</td>
+</tr>
+
+<tr>
+<td valign="CENTER" width="41%">
+<div align="right"><font size="-1">Troposfera</font></div>
+</td>
+
+<td valign="CENTER" width="31%">
+<center><font size="-1">0.5</font></center>
+</td>
+
+<td valign="CENTER" width="28%">
+<center><font size="-1">0.2</font></center>
+</td>
+</tr>
+
+<tr>
+<td valign="CENTER" width="41%">
+<div align="right"><font size="-1">Ruido en el Receptor</font></div>
+</td>
+
+<td valign="CENTER" width="31%">
+<center><font size="-1">0.3</font></center>
+</td>
+
+<td valign="CENTER" width="28%">
+<center><font size="-1">0.3</font></center>
+</td>
+</tr>
+
+<tr>
+<td valign="CENTER" width="41%">
+<div align="right"><font size="-1">Señal Fantasma</font></div>
+</td>
+
+<td valign="CENTER" width="31%">
+<center><font size="-1">0.6</font></center>
+</td>
+
+<td valign="CENTER" width="28%">
+<center><font size="-1">0.6</font></center>
+</td>
+</tr>
+
+<tr>
+<td valign="CENTER" width="41%">
+<div align="right"><font size="-1">Disponibilidad Selectiva</font></div>
+</td>
+
+<td valign="CENTER" width="31%">
+<center><font size="-1">30</font></center>
+</td>
+
+<td valign="CENTER" width="28%">
+<center><font size="-1">0</font></center>
+</td>
+</tr>
+
+<tr>
+<td valign="CENTER" width="41%">&nbsp;</td>
+
+<td valign="CENTER" width="31%">&nbsp;</td>
+
+<td valign="CENTER" width="28%">&nbsp;</td>
+</tr>
+
+<tr>
+<td bgcolor="#ffffff" valign="CENTER" width="41%">
+<div align="right"><b>Exactitud Promedio de Posición</b></div>
+</td>
+
+<td valign="CENTER" width="31%">
+<center>&nbsp;</center>
+</td>
+
+<td valign="CENTER" width="28%">&nbsp;</td>
+</tr>
+
+<tr>
+<td valign="CENTER" width="41%">
+<div align="right"><font size="-1">Horizontal</font></div>
+</td>
+
+<td valign="CENTER" width="31%">
+<center><font size="-1">50</font></center>
+</td>
+
+<td valign="CENTER" width="28%">
+<center><font size="-1">1.3</font></center>
+</td>
+</tr>
+
+<tr>
+<td valign="CENTER" width="41%">
+<div align="right"><font size="-1">Vertical</font></div>
+</td>
+
+<td valign="CENTER" width="31%">
+<center><font size="-1">78</font></center>
+</td>
+
+<td valign="CENTER" width="28%">
+<center><font size="-1">2.0</font></center>
+</td>
+</tr>
+
+<tr>
+<td valign="CENTER" width="41%">
+<div align="right"><font size="-1">3-D</font></div>
+</td>
+
+<td valign="CENTER" width="31%">
+<center><font size="-1">93</font></center>
+</td>
+
+<td valign="CENTER" width="28%">
+<center><font size="-1">2.8</font></center>
+</td>
+</tr>
+</tbody></table></center>
+
+</body></html>

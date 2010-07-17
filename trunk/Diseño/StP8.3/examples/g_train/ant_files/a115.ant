@@ -1,0 +1,279 @@
+FileObject 1
+{
+    { Name "a115" }
+    { Type ObjectAnnotation }
+    { GUID "UID_5E6FABC8-E080-417d-A679-2D267A612751" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "delay.h" }
+    { Type SEFile }
+    { ObjectId 842 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_02A48203-6169-4d58-8BD4-1ABD745F826B" }
+}
+
+NodeObject 99997
+{
+    { Name "delay" }
+    { Type Sequence }
+    { ObjectId 843 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_1B1236C4-6FBB-48d2-9C5A-75AC101A5FE9" }
+}
+
+NoteObject 2
+{
+    { Type DataDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 845 }
+    { DescLine "(time_1-time_2)" }
+}
+
+ItemObject 3
+{
+    { Type DataType }
+    { Value "boolean" }
+    { NoteId 2 }
+    { ObjectId 846 }
+}
+
+ItemObject 4
+{
+    { Type SystemType }
+    { Value "False" }
+    { NoteId 2 }
+    { ObjectId 847 }
+}
+
+ItemObject 5
+{
+    { Type Constraint }
+    { Value "None" }
+    { NoteId 2 }
+    { ObjectId 848 }
+}
+
+ItemObject 6
+{
+    { Type DataLocation }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 849 }
+}
+
+ItemObject 7
+{
+    { Type DataSize }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 850 }
+}
+
+ItemObject 8
+{
+    { Type Representation }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 851 }
+}
+
+ItemObject 9
+{
+    { Type Legality }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 852 }
+}
+
+ItemObject 10
+{
+    { Type Units }
+    { Value "Seconds" }
+    { NoteId 2 }
+    { ObjectId 853 }
+}
+
+ItemObject 11
+{
+    { Type Scaling }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 854 }
+}
+
+ItemObject 12
+{
+    { Type Precision }
+    { Value "100 %" }
+    { NoteId 2 }
+    { ObjectId 855 }
+}
+
+ItemObject 13
+{
+    { Type Accuracy }
+    { Value "Fixed" }
+    { NoteId 2 }
+    { ObjectId 856 }
+}
+
+ItemObject 14
+{
+    { Type Conventions }
+    { Value "US" }
+    { NoteId 2 }
+    { ObjectId 857 }
+}
+
+ItemObject 15
+{
+    { Type Frequency }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 858 }
+}
+
+NoteObject 16
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 860 }
+}
+
+ItemObject 17
+{
+    { Type ObjectName }
+    { Value "delay" }
+    { NoteId 16 }
+    { ObjectId 861 }
+}
+
+NoteObject 18
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 863 }
+}
+
+ItemObject 19
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 18 }
+    { ObjectId 864 }
+}
+
+ItemObject 20
+{
+    { Type RequirementName }
+    { Value "speed-sub-system" }
+    { NoteId 18 }
+    { ObjectId 865 }
+}
+
+ItemObject 21
+{
+    { Type RequirementDocument }
+    { Value "g_train_specifications" }
+    { NoteId 18 }
+    { ObjectId 866 }
+}
+
+ItemObject 22
+{
+    { Type RequirementParagraph }
+    { Value "speed" }
+    { NoteId 18 }
+    { ObjectId 867 }
+}
+
+ItemObject 23
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 18 }
+    { ObjectId 868 }
+}
+
+ItemObject 24
+{
+    { Type QualificationMethod }
+    { Value "" }
+    { NoteId 18 }
+    { ObjectId 869 }
+}
+
+ItemObject 25
+{
+    { Type QualificationLevel }
+    { Value "" }
+    { NoteId 18 }
+    { ObjectId 870 }
+}
+
+ItemObject 26
+{
+    { Type FormalTestParagraph }
+    { Value "" }
+    { NoteId 18 }
+    { ObjectId 871 }
+}
+
+NoteObject 27
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 873 }
+}
+
+ItemObject 28
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 27 }
+    { ObjectId 874 }
+}
+
+ItemObject 29
+{
+    { Type DocumentName }
+    { Value "SDD" }
+    { NoteId 27 }
+    { ObjectId 875 }
+}
+
+ItemObject 30
+{
+    { Type DocumentNumber }
+    { Value "7" }
+    { NoteId 27 }
+    { ObjectId 876 }
+}
+
+ItemObject 31
+{
+    { Type ParagraphNumber }
+    { Value "4" }
+    { NoteId 27 }
+    { ObjectId 877 }
+}
+

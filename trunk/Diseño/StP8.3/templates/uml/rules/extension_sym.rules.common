@@ -1,0 +1,69 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+
+// shared symbol, no ID specified here
+NodeSymbol ExtensionPoint
+{
+    // annotations store the name of the parent use case
+    { PrintName "Extension Point" }
+    { Shape
+        { Predefined BachLabel }
+        { ToolbarImage "extension_point" }
+    }
+    { DefaultSize 0.7 0.4 }
+    { AutoScaleLarger True }
+    { AutoScaleSmaller True }
+    //{ ShowTypeLabel True }
+    { CanApplyScaleCmd False }
+    { NodeMapping
+        { MappingName MessageInstanceMapping } // ExtensionPointMapping
+        { AppType UmlExtensionPoint }
+        // use default name func - allow special chars - the label syntax
+        { NameFunc uml_extensionPoint_name } // uml_gde_noop_node_name_func 
+        { NameIsRequired True }
+        { InverseMapFunc uml_extensionPoint_inverse_mapping }
+    }
+    { NoteMapping
+         { Owner
+             { MappingName MessageInstanceMapping }
+             { Symbol Self }
+         }
+         { AppType        UmlMessageDefinition }
+     }
+    { ItemMapping
+        { MappingName SequenceExpressionMapping }
+        { AppType UmlSequenceExpression }
+        { NoteAppType UmlMessageDefinition }
+        { ValueFunc uml_message_SequenceVal }
+        { InverseMapFunc gde_no_op_inverse_item_map_func }
+    }
+    { ItemMapping
+        { MappingName MessageRecurrence }
+        { AppType UmlMessageRecurrence }
+        { NoteAppType UmlMessageDefinition }
+        { ValueFunc uml_message_Recurrence }
+        { InverseMapFunc gde_no_op_inverse_item_map_func }
+    }
+    { NameCompletion
+        { MappingName MessageInstanceMapping }
+        { NameCompletionFunc ExtensionPoint_name_completion_func }
+    }
+    { CanAdjustLabel True }
+    { ReplaceSet ( None ) }
+   { Navigation
+     { Name RequirementTableFromNode }
+     { UseMappings ( MessageInstanceMapping) }
+   }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { UseMappings ( MessageInstanceMapping ) }
+    }
+}
+

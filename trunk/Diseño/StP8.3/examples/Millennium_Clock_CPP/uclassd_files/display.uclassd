@@ -1,0 +1,514 @@
+Diagram UmlClassDiagram
+{
+    { Name "display" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -331 }
+    { PanY -229 }
+    { Alignment 32 }
+    { GUID "UID_F924775D-C886-11d5-90AA-0050045C27F0" }
+    { Summary
+        { Nodes 13 }
+        { Arcs 9 }
+    }
+}
+
+Node 1
+{
+    { Type Class }
+    { Loc 0 0 }
+    { Scale 386.00 112.00 }
+    { Label
+        { Text "Display" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 486 }
+        { GUID "UID_04328C60-544E-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Node 2
+{
+    { Type Class }
+    { Loc 0 -128 }
+    { Scale 446.00 112.00 }
+    { Label
+        { Text "Clockwork" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 468 }
+        { GUID "UID_378C31F0-544B-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Node 7
+{
+    { Type Class }
+    { Loc 192 192 }
+    { Scale 757.00 145.00 }
+    { Label
+        { Text "ClockBird" }
+    }
+    { DynamicSegments
+        { Segment
+            { Type Line }
+            { Style Solid }
+            { Fill None }
+            { Loc -153 -1 }
+            { End 149 -1 }
+        }
+        { Segment
+            { Type Line }
+            { Style Solid }
+            { Fill None }
+            { Loc -153 -4 }
+            { End 149 -4 }
+        }
+        { Segment
+            { Type Line }
+            { Style Solid }
+            { Fill None }
+            { Loc -153 -31 }
+            { End -153 27 }
+        }
+        { Segment
+            { Type Line }
+            { Style Solid }
+            { Fill None }
+            { Loc -153 27 }
+            { End 149 27 }
+        }
+        { Segment
+            { Type Line }
+            { Style Solid }
+            { Fill None }
+            { Loc 149 -31 }
+            { End 149 27 }
+        }
+        { Segment
+            { Type Line }
+            { Style Solid }
+            { Fill None }
+            { Loc -153 -31 }
+            { End 149 -31 }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 416 }
+        { GUID "UID_378C31F2-544B-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Node 8
+{
+    { Type Vertex }
+    { Loc 183 113 }
+    { Scale 128.00 128.00 }
+}
+
+Node 10
+{
+    { Type Vertex }
+    { Loc 38 113 }
+    { Scale 128.00 128.00 }
+}
+
+Node 18
+{
+    { Type Class }
+    { Loc -160 192 }
+    { Scale 757.00 145.00 }
+    { Label
+        { Text "Door" }
+    }
+    { DynamicSegments
+        { Segment
+            { Type Line }
+            { Style Solid }
+            { Fill None }
+            { Loc -153 -1 }
+            { End 149 -1 }
+        }
+        { Segment
+            { Type Line }
+            { Style Solid }
+            { Fill None }
+            { Loc -153 -4 }
+            { End 149 -4 }
+        }
+        { Segment
+            { Type Line }
+            { Style Solid }
+            { Fill None }
+            { Loc -153 -31 }
+            { End -153 27 }
+        }
+        { Segment
+            { Type Line }
+            { Style Solid }
+            { Fill None }
+            { Loc -153 27 }
+            { End 149 27 }
+        }
+        { Segment
+            { Type Line }
+            { Style Solid }
+            { Fill None }
+            { Loc 149 -31 }
+            { End 149 27 }
+        }
+        { Segment
+            { Type Line }
+            { Style Solid }
+            { Fill None }
+            { Loc -153 -31 }
+            { End 149 -31 }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 425 }
+        { GUID "UID_378C31F6-544B-11d4-8778-00C04F8DEC45" }
+    }
+}
+
+Node 19
+{
+    { Type Vertex }
+    { Loc -165 107 }
+    { Scale 128.00 128.00 }
+}
+
+Node 21
+{
+    { Type Vertex }
+    { Loc -31 107 }
+    { Scale 128.00 128.00 }
+}
+
+Node 32
+{
+    { Type Operation }
+    { Loc -181 204 }
+    { Scale 929.00 62.00 }
+    { Label
+        { Text "setDisplay( display:Display )" }
+    }
+    { IsIncluded True }
+    { Parent 18 }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 1186 }
+        { GUID "UID_3AB1AD9E-6010-11d5-AEEC-00C0DFC00963" }
+    }
+}
+
+Node 35
+{
+    { Type Operation }
+    { Loc 171 204 }
+    { Scale 929.00 62.00 }
+    { Label
+        { Text "setDisplay( display:Display )" }
+    }
+    { IsIncluded True }
+    { Parent 7 }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 1172 }
+        { GUID "UID_3AB1ADA5-6010-11d5-AEEC-00C0DFC00963" }
+    }
+}
+
+Arc 3
+{
+    { Type Association }
+    { From
+        { ID 2 }
+        { Loc 6 -202 }
+        { Offset 6 -11 }
+    }
+    { To
+        { ID 1 }
+        { Loc 6 -118 }
+        { Offset 6 -6 }
+    }
+}
+
+Arc 9
+{
+    { Type Association }
+    { From
+        { ID 7 }
+        { Loc 183 67 }
+        { Offset -9 -15 }
+    }
+    { To
+        { ID 8 }
+        { Loc 183 17 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 11
+{
+    { Type Association }
+    { From
+        { ID 8 }
+        { Loc 183 17 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 10 }
+        { Loc 38 17 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 12
+{
+    { Type Association }
+    { From
+        { ID 10 }
+        { Loc 38 17 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 1 }
+        { Loc 38 -74 }
+        { Offset 38 -4 }
+    }
+}
+
+Arc 20
+{
+    { Type Association }
+    { From
+        { ID 18 }
+        { Loc -165 67 }
+        { Offset -5 -12 }
+    }
+    { To
+        { ID 19 }
+        { Loc -165 11 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 22
+{
+    { Type Association }
+    { From
+        { ID 19 }
+        { Loc -165 11 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 21 }
+        { Loc -31 11 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 23
+{
+    { Type Association }
+    { From
+        { ID 21 }
+        { Loc -31 11 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 1 }
+        { Loc -31 -74 }
+        { Offset -31 -7 }
+    }
+}
+
+Arc 33
+{
+    { Type Contains }
+    { From
+        { ID 18 }
+        { Loc -160 96 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 32 }
+        { Loc -181 108 }
+        { Offset 0 0 }
+    }
+    { IsInclusion True }
+}
+
+Arc 36
+{
+    { Type Contains }
+    { From
+        { ID 7 }
+        { Loc 168 82 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 35 }
+        { Loc 147 94 }
+        { Offset 0 0 }
+    }
+    { IsInclusion True }
+}
+
+Cntx 6
+{
+    { Type RelLabelTo }
+    { Loc 42 -42 }
+    { Scale 231.00 62.00 }
+    { Label
+        { Text "display" }
+    }
+    { Parent 3 }
+    { Object
+        { PDMType Link }
+        { MappingName ToMapping }
+        { ID 1522 }
+        { GUID "UID_EEFFC7B3-0C14-11d6-90CF-0050045C27F0" }
+    }
+}
+
+Cntx 17
+{
+    { Type RelLabelTo }
+    { Loc 73 34 }
+    { Scale 231.00 62.00 }
+    { Label
+        { Text "display" }
+    }
+    { Parent 12 }
+    { Object
+        { PDMType Link }
+        { MappingName ToMapping }
+        { ID 1524 }
+        { GUID "UID_EEFFC7B9-0C14-11d6-90CF-0050045C27F0" }
+    }
+}
+
+Cntx 26
+{
+    { Type RelLabelTo }
+    { Loc 14 46 }
+    { Scale 231.00 62.00 }
+    { Label
+        { Text "display" }
+    }
+    { Parent 23 }
+    { Object
+        { PDMType Link }
+        { MappingName ToMapping }
+        { ID 1526 }
+        { GUID "UID_EEFFC7BF-0C14-11d6-90CF-0050045C27F0" }
+    }
+}
+
+Link 4
+{
+    { FirstArc 3 }
+    { LastArc 3 }
+    { Object
+        { PDMType Node }
+        { MappingName AssociationNodeMapping }
+        { ID 1521 }
+        { GUID "UID_04328C63-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName FromMapping }
+        { ID 1527 }
+        { GUID "UID_04328C62-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName ToMapping }
+        { ID 1522 }
+        { GUID "UID_EEFFC7B3-0C14-11d6-90CF-0050045C27F0" }
+    }
+}
+
+Link 13
+{
+    { FirstArc 9 }
+    { LastArc 12 }
+    { Object
+        { PDMType Node }
+        { MappingName AssociationNodeMapping }
+        { ID 1523 }
+        { GUID "UID_04328C66-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName FromMapping }
+        { ID 1528 }
+        { GUID "UID_04328C65-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName ToMapping }
+        { ID 1524 }
+        { GUID "UID_EEFFC7B9-0C14-11d6-90CF-0050045C27F0" }
+    }
+}
+
+Link 24
+{
+    { FirstArc 20 }
+    { LastArc 23 }
+    { Object
+        { PDMType Node }
+        { MappingName AssociationNodeMapping }
+        { ID 1525 }
+        { GUID "UID_04328C69-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName FromMapping }
+        { ID 1530 }
+        { GUID "UID_04328C68-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName ToMapping }
+        { ID 1526 }
+        { GUID "UID_EEFFC7BF-0C14-11d6-90CF-0050045C27F0" }
+    }
+}
+
+Link 34
+{
+    { FirstArc 33 }
+    { LastArc 33 }
+    { Object
+        { PDMType Link }
+        { MappingName ContainsMapping }
+        { ID 1529 }
+        { GUID "UID_3AB1ADA1-6010-11d5-AEEC-00C0DFC00963" }
+    }
+}
+
+Link 37
+{
+    { FirstArc 36 }
+    { LastArc 36 }
+    { Object
+        { PDMType Link }
+        { MappingName ContainsMapping }
+        { ID 1427 }
+        { GUID "UID_3AB1ADA8-6010-11d5-AEEC-00C0DFC00963" }
+    }
+}

@@ -1,0 +1,61 @@
+FileObject 1
+{
+    { Name "a17" }
+    { Type ObjectAnnotation }
+    { GUID "UID_043E9996-B292-41a5-AF81-509830958927" }
+}
+
+NodeObject 99999
+{
+    { Name "User" }
+    { Type UmlClass }
+    { ObjectId 361 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_CFF94440-538F-11d4-8777-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "send_msg" }
+    { Type UmlOperation }
+    { ObjectId 380 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_CFF94449-538F-11d4-8777-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlOperationCxxCode }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 382 }
+    { DescLine "const bufsize = 80;char buf[bufsize];Message *msg = new Message(name);cout << \"To:\";cin >> buf;Receiver* rx = HasMembers->findUserOrConf(buf);if (rx != NULL){	cin.getline(buf, bufsize); // to clear newline	msg->fromTerminal();	msg->sendTo(rx);}else{	cout << buf << \" is not a user or conference\n\";	cin.getline(buf, bufsize); // to clear newline	delete msg;}" }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 384 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 386 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "send_msg" }
+    { NoteId 4 }
+    { ObjectId 387 }
+}
+

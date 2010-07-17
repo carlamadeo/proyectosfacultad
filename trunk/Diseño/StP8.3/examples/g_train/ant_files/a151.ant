@@ -1,0 +1,166 @@
+FileObject 1
+{
+    { Name "a151" }
+    { Type ObjectAnnotation }
+    { GUID "UID_7BAB60D5-8D34-47cd-A8B2-FC0D2250108E" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "time.h" }
+    { Type SEFile }
+    { ObjectId 2486 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_DBD2BAAF-02FD-483c-942C-796949D6DA92" }
+}
+
+NodeObject 99997
+{
+    { Name "time" }
+    { Type Sequence }
+    { ObjectId 2487 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_2B25B3F2-4692-4526-AF47-41E6FABEDC38" }
+}
+
+NoteObject 2
+{
+    { Type DataDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2489 }
+}
+
+ItemObject 3
+{
+    { Type DataType }
+    { Value "integer" }
+    { NoteId 2 }
+    { ObjectId 2490 }
+}
+
+ItemObject 4
+{
+    { Type SystemType }
+    { Value "False" }
+    { NoteId 2 }
+    { ObjectId 2491 }
+}
+
+ItemObject 5
+{
+    { Type Constraint }
+    { Value "" }
+    { NoteId 2 }
+    { ObjectId 2492 }
+}
+
+ItemObject 6
+{
+    { Type DataLocation }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 2493 }
+}
+
+ItemObject 7
+{
+    { Type DataSize }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 2494 }
+}
+
+ItemObject 8
+{
+    { Type Representation }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 2495 }
+}
+
+ItemObject 9
+{
+    { Type Legality }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 2496 }
+}
+
+ItemObject 10
+{
+    { Type Units }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 2497 }
+}
+
+ItemObject 11
+{
+    { Type Scaling }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 2498 }
+}
+
+ItemObject 12
+{
+    { Type Precision }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 2499 }
+}
+
+ItemObject 13
+{
+    { Type Accuracy }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 2500 }
+}
+
+ItemObject 14
+{
+    { Type Conventions }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 2501 }
+}
+
+ItemObject 15
+{
+    { Type Frequency }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 2502 }
+}
+
+NoteObject 16
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2504 }
+}
+
+ItemObject 17
+{
+    { Type ObjectName }
+    { Value "time" }
+    { NoteId 16 }
+    { ObjectId 2505 }
+}
+

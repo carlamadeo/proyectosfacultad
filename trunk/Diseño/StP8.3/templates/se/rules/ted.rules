@@ -1,0 +1,21 @@
+TableType 101 TedTable
+{ 
+    { Hsect
+    	{ Vsect
+    	    { Row
+    	    	{ Cell
+    	    	    { RepeatToEnd True } } } } } }
+
+
+Include "rules/gte_menu_bar.std"
+Include "rules/gte_edit_menu.std"
+Include "se/rules/feature.rule"
+
+ 
+Menu Repository
+{
+    { InMenuBar False }
+}
+
+PassWord "F1759F3B"
+

@@ -1,0 +1,357 @@
+
+/* generates all the runtime environment files which are the same for all models */
+
+proc genRuntimeEnvironment()
+
+	output([srcdir] "/ACD_runtime/ACD_Runtime.ads");
+	info = "generate " getOutput() "\n";
+	out = genAcdRuntimeSpec();
+	   
+	output([srcdir] "/ACD_runtime/ACD_Runtime.adb");
+	info = "generate " getOutput() "\n";
+	out = genAcdRuntimeBody();
+	
+	if(True)
+		/* we might try to suppress this if not needed: */
+		
+		/* Support for smart pointers */
+		output([srcdir] "/ACD_runtime/ACD_Runtime.Synchronized_Counter_pkg.ads");
+		info = "generate " getOutput() "\n";
+		out = genSynchronizedCounterSpec();
+		
+		output([srcdir] "/ACD_runtime/ACD_Runtime.Synchronized_Counter_pkg.adb");
+		info = "generate " getOutput() "\n";
+		out = genSynchronizedCounterBody();
+		
+		output([srcdir] "/ACD_runtime/ACD_Runtime.Smart_Pointer_pkg.ads");
+		info = "generate " getOutput() "\n";
+		out = genSmartPointerSpec();	
+		
+		output([srcdir] "/ACD_runtime/ACD_Runtime.Smart_Pointer_pkg.adb");
+		info = "generate " getOutput() "\n";
+		out = genSmartPointerBody(TRUE); // HandleExceptions=TRUE			
+        end if
+	if(StateMachineRequiresSignals())
+		output([srcdir] "/ACD_runtime/ACD_Runtime.signals.ads");
+		info = "generate " getOutput() "\n";
+		out = genSignals();			
+
+		output([srcdir] "/ACD_runtime/ACD_Runtime.signal_queue.ads");
+		info = "generate " getOutput() "\n";
+		out = genSignalQueueSpec();			
+
+		output([srcdir] "/ACD_runtime/ACD_Runtime.signal_queue.adb");
+		info = "generate " getOutput() "\n";
+		out = genSignalQueueBody();			
+
+		output([srcdir] "/ACD_runtime/ACD_Runtime.queued_signals.ads");
+		info = "generate " getOutput() "\n";
+		out = genQueuedSignalsSpec();			
+
+		output([srcdir] "/ACD_runtime/ACD_Runtime.queued_signals.adb");
+		info = "generate " getOutput() "\n";
+		out = genQueuedSignalsBody();
+	end if		
+
+end proc
+
+/******************************************************************************
+generates /ACD_runtime/ACD_Runtime.ads which contains the base classes ActiveInstance and
+InactiveInstance.
+******************************************************************************/
+template genAcdRuntimeSpec()
+
+package ACD_Runtime is
+	-- This is the root package for all stuff that is used implicitly from the ACD templates.
+	-- This reduces the chance of namespace conflicts with the application.
+	
+	
+	-- Report a fatal Exception (typically terminating a task).
+	-- Call should be like 
+	-- Report_Exception (Context   => "Task XXX",
+	--                   Excp_Name => Ada.Exceptions.Exception_Name(Ex),
+	--                   Excp_Info => Ada.Exceptions.Exception_Information(Ex);
+	--
+	procedure Report_Exception (Context, Excp_Name, Excp_Info : string);
+	
+end ACD_Runtime;
+
+[if([doCallStp] == TRUE)]
+with Managed_Base_Classes;
+package ACD_Runtime.Active_Base_Class is
+
+	type ActiveInstance is abstract new Managed_Base_Classes.ManagedInstance with private;
+	type ActiveLimitedInstance is abstract new Managed_Base_Classes.ManagedLimitedInstance with private;
+
+	type ActiveInstancePtr is access all ActiveInstance'class;
+	type ActiveLimitedInstancePtr is access all ActiveLimitedInstance'class;
+		
+private
+
+	type ActiveInstance is abstract new Managed_Base_Classes.ManagedInstance with 
+		 record
+			[mergeOut("UDAI", "Active  Instance Declarations", "null;")]
+		 end record;
+
+	type ActiveLimitedInstance is abstract new Managed_Base_Classes.ManagedLimitedInstance with 
+		 record
+			[mergeOut("UDALI", "Active Limited Instance Declarations", "null;")]
+		end record;
+
+end ACD_Runtime.Active_Base_Class;
+[else]
+package ACD_Runtime.Active_Base_Class is
+
+	type ActiveInstance is tagged private;
+	type ActiveLimitedInstance is tagged limited private;
+
+private
+
+	type ActiveInstance is tagged 
+		record
+			[mergeOut("UDAI", "Active Instance Declarations", "null;")]
+		end record;
+	type ActiveLimitedInstance is tagged limited 
+		record
+			[mergeOut("UDALI", "Active Limited Instance Declarations", "null;")]
+		end record;
+
+
+end ACD_Runtime.Active_Base_Class;
+[end if]
+package ACD_Runtime.Inactive_Base_Class is
+
+	type InactiveInstance is tagged private;
+	type InactiveLimitedInstance is tagged limited private;
+
+private
+
+	type InactiveInstance is tagged 
+		record
+			[mergeOut("UDII", "Inactive Instance Declarations", "null;")]
+		end record;
+	type InactiveLimitedInstance is tagged limited
+		record
+			[mergeOut("UDILI", "Inactive Limited Instance Declarations", "null;")]
+		end record;
+
+end ACD_Runtime.Inactive_Base_Class;
+end template
+
+/******************************************************************************
+generates /ACD_runtime/ACD_Runtime.ads which contains the base classes ActiveInstance and
+InactiveInstance.
+******************************************************************************/
+template genAcdRuntimeBody()
+with Ada.Text_Io;
+package body ACD_Runtime is
+	procedure Report_Exception (Context, Excp_Name, Excp_Info : string) is
+	begin
+		Ada.Text_Io.Put_Line (Context & " got " & Excp_Name);
+		Ada.Text_Io.Put_Line ("Info => " & Excp_Info);
+	end Report_Exception;
+end ACD_Runtime;
+end template
+
+/******************************************************************************
+generates /ACD_runtime/ACD_Runtime.Synchronized_Counter_pkg.adb 
+which contains the syncronized counter specification
+******************************************************************************/
+template genSynchronizedCounterSpec()
+package ACD_Runtime.Synchronized_counter_pkg is
+	
+	-- These counters are essentially natural numbers that can be incremented and decremented
+	-- under mutual exclusion.
+	-- They have an initial value of ONE by default.
+	-- This is because when you create them you have one reference, apparently;
+	-- thus we need not explicitly increment them upon their first use.
+	--
+	-- They can be incremented and decremented under mutual exclusion.
+	-- We do NOT implement the reference counter itself as a protected object but use one global PO to synchronize
+	-- This is done because we want to avoid the overhead (in terms of memory and lock resources)
+	-- and because the operations are extremely fast.
+	
+	type counter is limited private;
+
+	type counter_access is access all counter;
+	-- We must pass an access to make sure the assignment is made under mutual exclusion.
+	
+	procedure increment(item : counter_access);
+	
+	function decrement_returns_zero (item : counter_access) return boolean;
+	
+	[genInlinePragma("increment, decrement_returns_zero")]
+
+private
+	-- Using a record type we can apply an initial value.
+	type counter is record
+		i : natural := 1;
+		end record;
+end ACD_Runtime.Synchronized_counter_pkg;	
+end template
+
+/******************************************************************************
+generates /ACD_runtime/ACD_Runtime.Synchronized_Counter_pkg.adb 
+which contains the syncronized counter implementation
+******************************************************************************/
+template genSynchronizedCounterBody()	
+package body ACD_Runtime.Synchronized_counter_pkg is
+	
+	protected mutex is
+		procedure increment(item : in out counter);
+		
+		procedure decrement_returns_zero (item : in out counter; result : out boolean);
+	end mutex;
+		
+
+	protected body mutex is
+		
+		procedure increment(item : in out counter) is
+		begin
+			item.i := item.i + 1;
+		end increment;
+
+		procedure decrement_returns_zero (item : in out counter; result : out boolean) is
+		begin
+			item.i := item.i - 1;
+			result := item.i = 0;
+		end decrement_returns_zero;
+
+	end mutex;
+	
+
+	procedure increment(item : counter_access) is
+	begin
+		mutex.increment (item.all);
+	end increment;
+	
+	function decrement_returns_zero (item : counter_access) return boolean is
+		result : boolean;
+	begin
+		mutex.decrement_returns_zero (item.all, result);
+		return result;
+	end decrement_returns_zero;
+	
+end ACD_Runtime.Synchronized_counter_pkg;
+end template
+
+/******************************************************************************
+generates /ACD_runtime/ACD_Runtime.Smart_Pointer_pkg.ads 
+which contains the smart pointer specification
+******************************************************************************/
+template genSmartPointerSpec()	
+with Ada.Finalization;
+generic
+	type Element_Cptr is private;
+	null_value : Element_Cptr;
+	-- We expect Element_Cptr to be an access type but don't really care for the referenced type.
+
+	with procedure free (item : in out Element_cptr);
+
+package ACD_Runtime.Smart_Pointer_pkg is
+
+	type Smart_Pointer is new Ada.Finalization.Controlled with private;
+
+	function Create(Contents : in Element_Cptr) return Smart_Pointer;
+
+	procedure Move (From : in out Element_Cptr; To : out Smart_Pointer);
+	-- Move(P,S) is a shortcut for S:=Create(X); X := null;
+	-- This was introduced to make clear that the original value X must not be used after converting
+	-- to a smart pointer.
+
+	function Read(This : Smart_Pointer) return Element_Cptr;
+	function "=" (L : Smart_Pointer; R : Element_Cptr) return Boolean;
+	function "+"(This : Smart_Pointer) return Element_Cptr renames Read;
+
+	procedure Adjust   (Object : in out Smart_Pointer);
+	procedure Finalize (Object : in out Smart_Pointer);
+
+private
+	type Counted_Data;
+	type Counted_Data_Ptr is access Counted_Data;
+	type Smart_Pointer is new Ada.Finalization.Controlled with
+		record
+			Ptr : Counted_Data_Ptr;
+		end record;
+end ACD_Runtime.Smart_Pointer_pkg;
+end template
+
+/******************************************************************************
+generates /ACD_runtime/ACD_Runtime.Smart_Pointer_pkg.adb 
+which contains the smart pointer implementation
+******************************************************************************/
+template genSmartPointerBody(HandleExceptions)	
+with unchecked_deallocation;
+with ACD_Runtime.Synchronized_counter_pkg;
+[if([HandleExceptions])]
+with ada.text_io;
+with ada.exceptions;
+[end if]
+
+package body ACD_Runtime.Smart_Pointer_pkg is
+
+	type Counted_Data is record
+		Counter : aliased Synchronized_counter_pkg.counter;
+		Data    : Element_Cptr := null_value;
+	end record;
+	
+	procedure Free is new Unchecked_Deallocation (Counted_Data, Counted_Data_Ptr);
+	
+	procedure Adjust (Object : in out Smart_Pointer) is
+	begin
+		if Object.Ptr /= null then
+			Synchronized_counter_pkg.increment(Object.Ptr.Counter'access);
+		end if;
+	end Adjust;
+	
+	procedure Finalize (Object : in out Smart_Pointer) is
+	begin
+		if Object.Ptr /= null then
+			if Synchronized_counter_pkg.decrement_returns_zero(Object.Ptr.Counter'access) then
+				begin
+					Free(Object.Ptr.Data); -- implies: Finalize (Object.Ptr.Data);
+[if([HandleExceptions])]
+				exception -- just for easier debugging        
+					when Ex : others =>
+						Ada.Text_Io.Put_Line ("Element_Smart_Cptr.Finalize " & Ada.Exceptions.Exception_Name(Ex));
+						Ada.Text_Io.Put_Line ("Info " & Ada.Exceptions.Exception_Information(Ex));
+[end if]
+				end;
+				Free(Object.Ptr);
+			end if;
+		end if;
+	end Finalize;
+
+	function Create(Contents : in Element_Cptr) return Smart_Pointer is
+		Result : Smart_Pointer := (Ada.Finalization.Controlled with Ptr => null);
+	begin
+		if Contents /= null_value then
+			Result.Ptr := new Counted_Data; -- Ref counter is implicitly 1.
+			Result.Ptr.Data := Contents;
+		end if; -- This way, equality for Smart_Pointer makes sense: Create(null) = Create(null)
+		return Result;
+	end Create;
+
+	procedure Move (From : in out Element_Cptr; To : out Smart_Pointer) is
+	begin
+		To   := Create (from);
+		From := null_value;
+	end Move;
+
+	function Read(This : Smart_Pointer) return Element_Cptr is
+		Result : Element_Cptr;
+	begin
+		if This.Ptr = null
+		then Result := null_value;
+		else Result := This.Ptr.Data;
+		end if;
+		return Result;
+	end Read;
+
+	function "=" (L : Smart_Pointer; R : Element_Cptr) return Boolean is
+	begin
+		return Read(L) = R;
+	end;
+
+end ACD_Runtime.Smart_Pointer_pkg;
+end template

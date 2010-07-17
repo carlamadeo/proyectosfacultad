@@ -1,0 +1,20 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+// This Script is a wrapper for the html report (StP/UML),
+// because the Script Manager always looks in 
+// uml/qrl/report for scripts.
+//
+// The real script is installed in include/uml/qrl/report.
+//
+////////////////////////////////////////////////////////////////////////////////
+#include "uml/qrl/include/HTML_Report.inc"
+
+void main()
+{
+    //================================================           
+    // call the html generation 
+    //================================================           
+    rep_start();
+
+    return;
+}

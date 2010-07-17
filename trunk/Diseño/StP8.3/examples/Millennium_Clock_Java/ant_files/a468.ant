@@ -1,0 +1,41 @@
+FileObject 1
+{
+    { Name "a468" }
+    { Type ObjectAnnotation }
+    { GUID "UID_7CAD265B-0206-11d6-AE65-000000000000" }
+}
+
+FileObject 99999
+{
+    { Name "clockwork" }
+    { Type UmlClassDiagram }
+    { ObjectId 316 }
+    { AnnotFileId 1 }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1044 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1046 }
+    { DescLine "In this class diagram only the clockwork classes (domain classes)" }
+    { DescLine "are considered." }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "clockwork" }
+    { NoteId 3 }
+    { ObjectId 1047 }
+}
+

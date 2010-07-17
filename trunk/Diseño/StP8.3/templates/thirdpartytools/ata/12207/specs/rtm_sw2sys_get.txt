@@ -1,0 +1,11 @@
+
+TYPE=REQTable
+
+
+# Generate a Section Title
+SECTION=$NAME
+
+
+NOTE=%ATAHOME%\doc\ctools\stp\specs\uml\defaults\note.txt
+
+Node=%ATAHOME%\doc\ctools\stp\specs\LifeCycleDesktop\sw2sys_node.txt

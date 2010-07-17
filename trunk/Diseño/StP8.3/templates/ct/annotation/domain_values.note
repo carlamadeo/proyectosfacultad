@@ -1,0 +1,24 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Note 800001
+{
+    { AppType DomainValues }
+    { HelpText "The Values Set note lets you add items specifying valid domain values. This information is used in SQL generation." }
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Values Set" }
+    { Item
+	{ AppType DomainValue }
+	{ HelpText "The Value item lets you specify valid domain values. You can add an item with a corresponding value for each domain value you want to represent." }
+	{ Bounds { Min 1 } }
+	{ PrintName "Value" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_domain_values.note"

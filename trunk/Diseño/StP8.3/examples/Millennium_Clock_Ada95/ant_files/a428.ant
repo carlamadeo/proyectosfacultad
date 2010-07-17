@@ -1,0 +1,42 @@
+FileObject 1
+{
+    { Name "a428" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65C2E-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "Clockwork,Display" }
+    { Type UmlAssociation }
+    { ObjectId 993 }
+    { AnnotFileId 1 }
+    { Sig ":display" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD9318-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 995 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 997 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Clockwork,Display" }
+    { NoteId 3 }
+    { ObjectId 998 }
+}
+

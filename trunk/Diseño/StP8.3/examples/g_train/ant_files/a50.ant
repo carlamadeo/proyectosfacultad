@@ -1,0 +1,370 @@
+FileObject 1
+{
+    { Name "a50" }
+    { Type ObjectAnnotation }
+    { GUID "UID_51D51416-F60D-454e-BCD0-E891887B6DF0" }
+}
+
+NodeObject 99999
+{
+    { Name "display screen" }
+    { Type External }
+    { ObjectId 3335 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_E82A8573-AB30-4f87-A68D-1DE041CF0C4F" }
+}
+
+NodeObject 99998
+{
+    { Name "control g_train" }
+    { Type Process }
+    { ObjectId 3290 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_568D2BAB-E1BE-4138-9BBA-EBBA70597B20" }
+}
+
+LinkObject 99997
+{
+    { Name "display information" }
+    { Type DataFlow }
+    { ObjectId 3502 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_1A6F7597-0ACE-43c1-BC4C-24C613529883" }
+}
+
+NoteObject 2
+{
+    { Type InterfaceRequirement }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3504 }
+    { DescLine "The display information is sent to a 25 feet X 25 feet screen. All the signals are computer controlled. The screen is refreshed every time a sensor signal is received." }
+}
+
+ItemObject 3
+{
+    { Type InterfaceName }
+    { Value "display_information" }
+    { NoteId 2 }
+    { ObjectId 3505 }
+}
+
+ItemObject 4
+{
+    { Type Execution }
+    { Value "Sequential" }
+    { NoteId 2 }
+    { ObjectId 3506 }
+}
+
+ItemObject 5
+{
+    { Type Synchronization }
+    { Value "set" }
+    { NoteId 2 }
+    { ObjectId 3507 }
+}
+
+ItemObject 6
+{
+    { Type InterruptPriority }
+    { Value "enabled" }
+    { NoteId 2 }
+    { ObjectId 3508 }
+}
+
+ItemObject 7
+{
+    { Type PriorityLevel }
+    { Value "enabled" }
+    { NoteId 2 }
+    { ObjectId 3509 }
+}
+
+NoteObject 8
+{
+    { Type InterfaceDesign }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3511 }
+}
+
+ItemObject 9
+{
+    { Type InterfaceName }
+    { Value "display_system" }
+    { NoteId 8 }
+    { ObjectId 3512 }
+}
+
+ItemObject 10
+{
+    { Type InterfacePriority }
+    { Value "N/A" }
+    { NoteId 8 }
+    { ObjectId 3513 }
+}
+
+NoteObject 11
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3515 }
+    { DescLine "The computer processes all the information it receives and sends specific information to the display screen." }
+}
+
+ItemObject 12
+{
+    { Type ObjectName }
+    { Value "display information" }
+    { NoteId 11 }
+    { ObjectId 3516 }
+}
+
+ItemObject 13
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 11 }
+    { ObjectId 3517 }
+}
+
+NoteObject 14
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 3519 }
+    { DescLine "Verified." }
+}
+
+ItemObject 15
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 14 }
+    { ObjectId 3520 }
+}
+
+ItemObject 16
+{
+    { Type RequirementName }
+    { Value "display-sub-system" }
+    { NoteId 14 }
+    { ObjectId 3521 }
+}
+
+ItemObject 17
+{
+    { Type RequirementDocument }
+    { Value "SSS" }
+    { NoteId 14 }
+    { ObjectId 3522 }
+}
+
+ItemObject 18
+{
+    { Type RequirementParagraph }
+    { Value "display" }
+    { NoteId 14 }
+    { ObjectId 3523 }
+}
+
+ItemObject 19
+{
+    { Type ParagraphNumber }
+    { Value "4" }
+    { NoteId 14 }
+    { ObjectId 3524 }
+}
+
+ItemObject 20
+{
+    { Type QualificationMethod }
+    { Value "Test X" }
+    { NoteId 14 }
+    { ObjectId 3525 }
+}
+
+ItemObject 21
+{
+    { Type QualificationLevel }
+    { Value "D-" }
+    { NoteId 14 }
+    { ObjectId 3526 }
+}
+
+ItemObject 22
+{
+    { Type FormalTestParagraph }
+    { Value "42" }
+    { NoteId 14 }
+    { ObjectId 3527 }
+}
+
+NoteObject 23
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 3529 }
+}
+
+ItemObject 24
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 23 }
+    { ObjectId 3530 }
+}
+
+ItemObject 25
+{
+    { Type DocumentName }
+    { Value "SRS" }
+    { NoteId 23 }
+    { ObjectId 3531 }
+}
+
+ItemObject 26
+{
+    { Type DocumentNumber }
+    { Value "1" }
+    { NoteId 23 }
+    { ObjectId 3532 }
+}
+
+ItemObject 27
+{
+    { Type ParagraphNumber }
+    { Value "8" }
+    { NoteId 23 }
+    { ObjectId 3533 }
+}
+
+NoteObject 28
+{
+    { Type Document }
+    { Name "1" }
+    { OwnerId 99997 }
+    { ObjectId 3535 }
+}
+
+ItemObject 29
+{
+    { Type NoteKey }
+    { Value "1" }
+    { NoteId 28 }
+    { ObjectId 3536 }
+}
+
+ItemObject 30
+{
+    { Type DocumentName }
+    { Value "IRS" }
+    { NoteId 28 }
+    { ObjectId 3537 }
+}
+
+ItemObject 31
+{
+    { Type DocumentNumber }
+    { Value "8" }
+    { NoteId 28 }
+    { ObjectId 3538 }
+}
+
+ItemObject 32
+{
+    { Type ParagraphNumber }
+    { Value "9" }
+    { NoteId 28 }
+    { ObjectId 3539 }
+}
+
+NoteObject 33
+{
+    { Type Document }
+    { Name "2" }
+    { OwnerId 99997 }
+    { ObjectId 3541 }
+}
+
+ItemObject 34
+{
+    { Type NoteKey }
+    { Value "2" }
+    { NoteId 33 }
+    { ObjectId 3542 }
+}
+
+ItemObject 35
+{
+    { Type DocumentName }
+    { Value "SDD" }
+    { NoteId 33 }
+    { ObjectId 3543 }
+}
+
+ItemObject 36
+{
+    { Type DocumentNumber }
+    { Value "4" }
+    { NoteId 33 }
+    { ObjectId 3544 }
+}
+
+ItemObject 37
+{
+    { Type ParagraphNumber }
+    { Value "5" }
+    { NoteId 33 }
+    { ObjectId 3545 }
+}
+
+NoteObject 38
+{
+    { Type Document }
+    { Name "3" }
+    { OwnerId 99997 }
+    { ObjectId 3547 }
+}
+
+ItemObject 39
+{
+    { Type NoteKey }
+    { Value "3" }
+    { NoteId 38 }
+    { ObjectId 3548 }
+}
+
+ItemObject 40
+{
+    { Type DocumentName }
+    { Value "IDD" }
+    { NoteId 38 }
+    { ObjectId 3549 }
+}
+
+ItemObject 41
+{
+    { Type DocumentNumber }
+    { Value "2" }
+    { NoteId 38 }
+    { ObjectId 3550 }
+}
+
+ItemObject 42
+{
+    { Type ParagraphNumber }
+    { Value "6" }
+    { NoteId 38 }
+    { ObjectId 3551 }
+}
+

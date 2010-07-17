@@ -1,0 +1,539 @@
+Diagram UmlComponentDiagram
+{
+    { Name "Application1" }
+    { Format "1.6" }
+    { Scale 0.77 }
+    { PanX -335 }
+    { PanY -328 }
+    { Alignment 32 }
+    { GUID "UID_E3496F32-D2EE-4392-BF1C-618A919EBD71" }
+    { Summary
+        { Nodes 12 }
+        { Arcs 12 }
+    }
+}
+
+Node 2
+{
+    { Type sourceComponent }
+    { Loc -5 -41 }
+    { Scale 254.00 176.00 }
+    { Label
+        { Text "MailSystem" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88B0-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName SourceComponent }
+        { ID 3602 }
+        { GUID "UID_0B652BE4-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 3
+{
+    { Type sourceComponent }
+    { Loc 181 -186 }
+    { Scale 254.00 175.00 }
+    { Label
+        { Text "Conference" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88B1-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName SourceComponent }
+        { ID 3603 }
+        { GUID "UID_0B652BE7-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 4
+{
+    { Type sourceComponent }
+    { Loc -180 -187 }
+    { Scale 270.00 180.00 }
+    { Label
+        { Text "User" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88B2-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName SourceComponent }
+        { ID 3604 }
+        { GUID "UID_0B652BEA-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 6
+{
+    { Type interfaceComponent }
+    { Loc 7 -301 }
+    { Scale 32.00 32.00 }
+    { Label
+        { Text "Termnal" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88B3-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName InterfaceComponent }
+        { ID 3605 }
+        { GUID "UID_0B652BED-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 9
+{
+    { Type Vertex }
+    { Loc -20 -165 }
+    { Scale 128.00 128.00 }
+}
+
+Node 13
+{
+    { Type Vertex }
+    { Loc 49 -186 }
+    { Scale 128.00 128.00 }
+}
+
+Node 17
+{
+    { Type sourceComponent }
+    { Loc -3 102 }
+    { Scale 267.00 181.00 }
+    { Label
+        { Text "Receiver" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88B4-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName SourceComponent }
+        { ID 3606 }
+        { GUID "UID_0B652BF0-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 18
+{
+    { Type sourceComponent }
+    { Loc -159 253 }
+    { Scale 246.00 177.00 }
+    { Label
+        { Text "Mailbox" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88B5-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName SourceComponent }
+        { ID 3607 }
+        { GUID "UID_0B652BF3-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 19
+{
+    { Type sourceComponent }
+    { Loc 180 254 }
+    { Scale 271.00 181.00 }
+    { Label
+        { Text "Message" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88B6-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName SourceComponent }
+        { ID 3608 }
+        { GUID "UID_0B652BF6-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 20
+{
+    { Type Vertex }
+    { Loc -147 129 }
+    { Scale 128.00 128.00 }
+}
+
+Node 24
+{
+    { Type Vertex }
+    { Loc -163 102 }
+    { Scale 128.00 128.00 }
+}
+
+Node 28
+{
+    { Type Vertex }
+    { Loc 170 110 }
+    { Scale 128.00 128.00 }
+}
+
+Arc 7
+{
+    { Type Interface }
+    { From
+        { ID 6 }
+        { Loc 6 -296 }
+        { Offset -1 0 }
+    }
+    { To
+        { ID 2 }
+        { Loc 6 -105 }
+        { Offset 11 5 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88BB-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 10
+{
+    { Type Dependency }
+    { From
+        { ID 2 }
+        { Loc -20 -105 }
+        { Offset -15 -13 }
+    }
+    { To
+        { ID 9 }
+        { Loc -20 -165 }
+        { Offset 0 0 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88B8-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 11
+{
+    { Type Dependency }
+    { From
+        { ID 9 }
+        { Loc -20 -165 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 4 }
+        { Loc -86 -165 }
+        { Offset 68 22 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88B8-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 14
+{
+    { Type Dependency }
+    { From
+        { ID 2 }
+        { Loc 49 -105 }
+        { Offset 54 -7 }
+    }
+    { To
+        { ID 13 }
+        { Loc 49 -186 }
+        { Offset 0 0 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88B7-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 15
+{
+    { Type Dependency }
+    { From
+        { ID 13 }
+        { Loc 49 -186 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 3 }
+        { Loc 93 -188 }
+        { Offset -49 -2 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88B7-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 21
+{
+    { Type Dependency }
+    { From
+        { ID 17 }
+        { Loc -96 129 }
+        { Offset -20 27 }
+    }
+    { To
+        { ID 20 }
+        { Loc -147 129 }
+        { Offset 0 0 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88BC-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 22
+{
+    { Type Dependency }
+    { From
+        { ID 20 }
+        { Loc -147 129 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 18 }
+        { Loc -144 189 }
+        { Offset 16 -3 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88BC-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 25
+{
+    { Type Dependency }
+    { From
+        { ID 4 }
+        { Loc -163 -122 }
+        { Offset 17 49 }
+    }
+    { To
+        { ID 24 }
+        { Loc -163 102 }
+        { Offset 0 0 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88BA-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 26
+{
+    { Type Dependency }
+    { From
+        { ID 24 }
+        { Loc -163 102 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 17 }
+        { Loc -96 102 }
+        { Offset 0 0 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88BA-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 29
+{
+    { Type Dependency }
+    { From
+        { ID 3 }
+        { Loc 168 -122 }
+        { Offset -13 61 }
+    }
+    { To
+        { ID 28 }
+        { Loc 170 110 }
+        { Offset 0 0 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88B9-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 30
+{
+    { Type Dependency }
+    { From
+        { ID 28 }
+        { Loc 170 110 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 17 }
+        { Loc 90 112 }
+        { Offset 72 10 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88B9-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 32
+{
+    { Type Dependency }
+    { From
+        { ID 18 }
+        { Loc -73 296 }
+        { Offset 47 43 }
+    }
+    { To
+        { ID 19 }
+        { Loc 86 295 }
+        { Offset -35 41 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_F2CA88BD-538F-11d4-8777-00C04F8DEC45" }
+        }
+    }
+}
+
+Link 8
+{
+    { FirstArc 7 }
+    { LastArc 7 }
+    { Object
+        { PDMType Link }
+        { MappingName InterfaceMappingIS }
+        { ID 3613 }
+        { GUID "UID_0B652C05-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Link 12
+{
+    { FirstArc 10 }
+    { LastArc 11 }
+    { Object
+        { PDMType Link }
+        { MappingName DependencyMappingSS }
+        { ID 3610 }
+        { GUID "UID_0B652BFC-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Link 16
+{
+    { FirstArc 14 }
+    { LastArc 15 }
+    { Object
+        { PDMType Link }
+        { MappingName DependencyMappingSS }
+        { ID 3609 }
+        { GUID "UID_0B652BF9-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Link 23
+{
+    { FirstArc 21 }
+    { LastArc 22 }
+    { Object
+        { PDMType Link }
+        { MappingName DependencyMappingSS }
+        { ID 3614 }
+        { GUID "UID_0B652C08-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Link 27
+{
+    { FirstArc 25 }
+    { LastArc 26 }
+    { Object
+        { PDMType Link }
+        { MappingName DependencyMappingSS }
+        { ID 3612 }
+        { GUID "UID_0B652C02-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Link 31
+{
+    { FirstArc 29 }
+    { LastArc 30 }
+    { Object
+        { PDMType Link }
+        { MappingName DependencyMappingSS }
+        { ID 3611 }
+        { GUID "UID_0B652BFF-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Link 33
+{
+    { FirstArc 32 }
+    { LastArc 32 }
+    { Object
+        { PDMType Link }
+        { MappingName DependencyMappingSS }
+        { ID 3615 }
+        { GUID "UID_0B652C0B-AC52-11d4-BEDC-0060971B5EE0" }
+    }
+}

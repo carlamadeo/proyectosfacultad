@@ -1,0 +1,101 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+//
+
+Include "rules/componentDeployment_symbols.rules.common"
+
+TypeSet AllNoteableNodeTypes
+{
+	deploymentComponent
+	binaryComponent 
+	executableComponent
+	objectComponent
+	interfaceComponent
+// ECR947, ECR 4494
+	CommentAnchor
+	Class
+// End ECR947, ECR 4494
+}
+
+// ECR947, ECR 4494
+// Added CommentAnchor
+CntxSymbol CommentAnchor
+{
+    { ParentLink AllLinkSymbols }
+}
+// End ECR947, ECR 4494
+
+// ECR 4494 added possibility to add a vetex to all links
+TypeSet AllLinkSymbols
+{
+    StereotypeableLinkSet
+    Dependency
+    Interface
+    NoteLink // ECR 4496
+    Communicates
+}
+
+NodeSymbol deploymentComponent
+{
+    { PrintName "Deployment Node" }
+    { Shape
+        { Predefined ThreeDBox }
+        { ToolbarImage "deployment_component" }
+    }
+    { CanAdjustLabel False }
+    { DeleteDependents True }
+    { AutoScaleSmaller False }
+    { AutoScaleLarger True }
+    { CanApplyScaleCmd True }
+    
+	//ECR5056
+	{ LabelAnchor NorthWest }
+	{ DefaultSize 2.00 2.5 }
+
+    { DisplayMark
+	{ Name ComponentStereotype }
+	{ ItemCond (UmlStereotype) }
+	{ StringMark "«${annot.UmlExtensibilityDefinition.UmlStereotype}»" }
+    	{ Anchor LowerLeft }
+	{ Help "Component Stereotype" }
+    }
+    { ReplaceSet ( none ) }
+    // Begin Add ECR 6389
+    { DisplayMark
+        { Name DnDescription }
+        { CondFunc "symbol_has_description(0${node.id});" }
+        { Anchor LowerRight }
+        { VAdjust Bottom }
+        { HAdjust Center }
+        { YPixelOffset 19 }
+        { BitmapMark0 "descln0" }
+        { BitmapMark1 "descln1" }
+        { BitmapMark2 "descln2" }
+        { Help "Deployment Node has description." }
+    }
+    // End Add ECR 6389
+}
+
+NodeSymbol executableComponent
+{
+    { ReplaceSet ( binaryComponent ) }
+}
+
+NodeSymbol binaryComponent
+{
+    { ReplaceSet ( executableComponent ) }
+}
+
+DisplayMarkGroups
+{
+    // Begin Add ECR 6389
+	{ Group
+	    { Name Description }
+	    { DisplayMarks (BcDescription EcDescription DnDescription ODescription CDescription IfDescription) }
+	}
+	{ OnDemandDisplayMarks (Description) }
+	// End Add ECR 6389
+}

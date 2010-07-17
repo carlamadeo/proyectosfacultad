@@ -1,0 +1,649 @@
+// ECR 7389
+struct	tv_toolinfo_var
+{
+string	name;
+string	value;
+string	orig_value;
+boolean	enabled;
+boolean	deleted;
+boolean	orig_enabled;
+string file;
+int line;
+};
+
+list		tv_toolinfo_vars_list = NULL;
+boolean		tv_advanced_popped = False;
+ui_image_tp	tv_enabled_image = to_ui_image("check");
+ui_image_tp	tv_disabled_image = to_ui_image("bad");
+
+list tv_protected_vars = string_to_list( "stp_doc_path uml_stp_file_path se_stp_file_path all_stp_file_path projdir", " ");
+
+// Usefull Functions
+
+boolean tv_is_absolut_path( string path )
+{
+	if ( string_extract( path, 0, 1 ) == "/" )
+		return( True );
+	if ( string_extract( path, 0, 1 ) == "\\" )
+		return( True );
+	if ( string_extract( path, 1, 1 ) == ":" )
+		return( True );
+	return( False );
+}
+
+boolean tv_is_toolinfo_vars_list_changed( )
+{
+tv_toolinfo_var		tv_actual;
+int					i;
+	
+	for ( i = 0; i < list_count( tv_toolinfo_vars_list ); i++ )
+	{
+		tv_actual = list_get( tv_toolinfo_vars_list, i );
+		if ( tv_actual.deleted == True || tv_actual.value != tv_actual.orig_value || tv_actual.orig_enabled != tv_actual.enabled ) {
+			return( True );
+		}
+	}
+	return( False );
+}
+
+boolean tv_is_tv_name_in_main( string tv_name )
+{
+	return	( tv_name == "system" ) ||
+			( tv_name == "projdir" ) ||
+			( tv_name == "scriptman_script_editor" ) ||
+			( tv_name == "postscript_conversion" ) ||
+			( tv_name == "dateformat" ) ||
+			( tv_name == "cpp_code_gen" ) ||
+			( tv_name == "java_code_gen" ) ||
+			( tv_name == "ejb_code_gen" ) ||
+			( tv_name == "ada95_code_gen" ) ||
+			( tv_name == "msgd_host" ) ||
+			( tv_name == "msgd_port" );
+}
+
+string tv_get_filename( string filename )
+{
+	if ( filename == NULL )
+		return( "" );
+	if ( filename == "" )
+		return( "" );
+	return( string_extract( filename, 0, string_find( filename, 0, " " ) ) );
+}
+
+int tv_search_tv_name( string tv_name )
+{
+tv_toolinfo_var		tv_actual;
+int					i;
+
+	i = 0;
+	
+	for ( i = 0; i < list_count( tv_toolinfo_vars_list ); ++ i )
+	{
+		tv_actual = list_get( tv_toolinfo_vars_list, i );
+		if ( tv_actual.name == tv_name )
+			return i;
+	}
+
+    return( -1 );
+}
+
+string tv_get_tv_value( string tv_name, boolean only_enabled )
+{
+tv_toolinfo_var		tv_actual;
+int					i;
+
+	i = tv_search_tv_name( tv_name );
+	
+	if ( i != -1 )
+	{
+		tv_actual = list_get( tv_toolinfo_vars_list, i );
+        if(only_enabled == False || tv_actual.enabled == True)
+            return( tv_actual.value );
+	}
+    return( "" );
+}
+
+void tv_set_tv_value( string tv_name, string tv_value, boolean enable )
+{
+tv_toolinfo_var		tv_actual;
+int					i;
+
+	i = tv_search_tv_name( tv_name );
+    if( i == -1 )
+        i = tv_search_tv_name( tv_name );
+	
+	if ( i != -1 )
+	{
+		tv_actual = list_get( tv_toolinfo_vars_list, i );
+		if ( tv_actual.value != tv_value || tv_actual.enabled != enable )
+		{
+			if(enable == True || tv_actual.enabled != enable)
+                tv_actual.value = tv_value;
+			tv_actual.enabled = enable;
+			list_set( tv_toolinfo_vars_list, i, tv_actual );
+		}
+	}
+}
+
+boolean tv_get_tv_enabled( string tv_name )
+{
+tv_toolinfo_var		tv_actual;
+int					i;
+
+	i = tv_search_tv_name( tv_name );
+    if( i != -1 ) {
+		tv_actual = list_get( tv_toolinfo_vars_list, i );
+        return tv_actual.enabled;
+    }
+    return False;
+}
+
+boolean tv_get_tv_changed( string tv_name )
+{
+tv_toolinfo_var		tv_actual;
+int					i;
+
+	i = tv_search_tv_name( tv_name );
+	
+	if ( i != -1 )
+	{
+		tv_actual = list_get( tv_toolinfo_vars_list, i );
+		return( tv_actual.value != tv_actual.orig_value );
+	}
+
+    return( False );
+}
+
+#include "rules/qrl/toolinfo_edit_scanner.qrl"
+
+string tv_get_ui_value( string propsheet, string ui_name )
+{
+	return( ui_get_value( to_ui_prop(	"tv_" + propsheet,
+										"tv_" + ui_name ) ) );
+}
+
+int tv_get_ui_intvalue( string propsheet, string ui_name )
+{
+	return( ui_get_value( to_ui_prop(	"tv_" + propsheet,
+										"tv_" + ui_name ) ) );
+}
+
+void tv_set_ui_value( string propsheet, string ui_name, string new_value )
+{
+	ui_set_value(	to_ui_prop(	"tv_" + propsheet,
+								"tv_" + ui_name ),
+					new_value );
+}
+
+void tv_set_ui_intvalue( string propsheet, string ui_name, int new_value )
+{
+	ui_set_value(	to_ui_prop(	"tv_" + propsheet ,
+								"tv_" + ui_name ),
+					new_value );
+}
+
+void tv_make_ui_readonly( string propsheet, string ui_name, boolean protect )
+{
+	ui_activate(	to_ui_prop(	"tv_" + propsheet ,
+								"tv_" + ui_name ),
+					protect );
+}
+
+void tv_set_advanced_values( )
+{
+tv_toolinfo_var		tv_actual;
+ui_list_item_tp		tv_actual_item;
+int					i;
+
+	ui_list_clear( to_ui_prop( "tv_advanced", "tv_toolinfo_list" ) );
+	
+	if ( tv_toolinfo_vars_list == NULL )
+		return;
+	
+	for ( i=0; i<list_count( tv_toolinfo_vars_list ); i++ )
+	{
+		tv_actual = list_get( tv_toolinfo_vars_list, i );
+		if ( !tv_is_tv_name_in_main( tv_actual.name ) )
+		{
+			tv_actual_item.label = "  " + tv_actual.name + " = " + tv_actual.value;
+			if ( tv_actual.enabled )
+				tv_actual_item.image = tv_enabled_image;
+			else
+				tv_actual_item.image = tv_disabled_image;
+			ui_list_append( to_ui_prop( "tv_advanced", "tv_toolinfo_list" ), tv_actual_item );
+		}
+	}
+}
+
+void tv_load_values( )
+{
+	tv_set_ui_value( "main", "projdir", tv_get_tv_value("projdir", True) );
+
+	tv_set_ui_value( "main", "system", tv_get_tv_value("system", True) );
+
+	tv_set_ui_value( "main", "scriptman_script_editor", tv_get_tv_value("scriptman_script_editor", True) );
+
+	tv_set_ui_value( "main", "postscript_conversion", tv_get_tv_value("postscript_conversion", True) );
+
+	tv_set_ui_value( "main", "msgd_host", tv_get_tv_value("msgd_host", True) );
+
+	tv_set_ui_value( "main", "msgd_port", tv_get_tv_value("msgd_port", True) );
+
+	if ( tv_get_tv_value( "dateformat", True ) == "%D/%M/%Y" )
+		tv_set_ui_intvalue( "main", "dateformat", 1 );
+	else 
+		tv_set_ui_intvalue( "main", "dateformat", 0 );
+
+	int codegen;
+    if ( tv_get_tv_value( "cpp_code_gen", True ) == "True" )
+        codegen = 1;
+    else
+        codegen = 0;
+    if ( tv_get_tv_value( "java_code_gen", True ) == "True" )
+        codegen += 2;
+    if ( tv_get_tv_value( "ejb_code_gen", True ) == "True" )
+        codegen += 4;
+    if ( tv_get_tv_value( "ada95_code_gen", True ) == "True" )
+        codegen += 8;
+	tv_set_ui_intvalue( "main", "code_gen_enabled", codegen );
+
+	if ( tv_advanced_popped )
+		tv_set_advanced_values( );
+}
+
+void tv_save_values( )
+{
+    string value;
+	value = tv_get_ui_value( "main", "projdir" );
+	tv_set_tv_value( "projdir", value, (value != "") );
+
+	value = tv_get_ui_value( "main", "system" );
+	tv_set_tv_value( "system", value, (value != "") );
+
+	value = tv_get_ui_value( "main", "scriptman_script_editor" );
+	tv_set_tv_value(	"scriptman_script_editor", value, (value != "") );
+
+	value = tv_get_ui_value( "main", "postscript_conversion" );
+	tv_set_tv_value(	"postscript_conversion", value, (value != "") );
+
+	value = tv_get_ui_value( "main", "msgd_host" );
+	tv_set_tv_value( "msgd_host", value, (value != "") );
+
+	value = tv_get_ui_value( "main", "msgd_port" );
+	tv_set_tv_value( "msgd_port", value, (value != "") );
+
+	if ( tv_get_ui_intvalue( "main", "dateformat" ) == 0 )
+		tv_set_tv_value( "dateformat", "%M/%D/%Y", True );
+	else
+		tv_set_tv_value( "dateformat", "%D/%M/%Y", True );
+
+	int codegen = tv_get_ui_intvalue( "main", "code_gen_enabled" );
+    if( odd( codegen ) )
+		tv_set_tv_value( "cpp_code_gen", "True", True );
+	else
+		tv_set_tv_value( "cpp_code_gen", "False", True );
+    codegen /= 2;
+    if( odd( codegen ) )
+		tv_set_tv_value( "java_code_gen", "True", True );
+	else
+		tv_set_tv_value( "java_code_gen", "False", True );
+    codegen /= 2;
+    if( odd( codegen ) )
+		tv_set_tv_value( "ejb_code_gen", "True", True );
+	else
+		tv_set_tv_value( "ejb_code_gen", "False", True );
+    codegen /= 2;
+    if( odd( codegen ) )
+		tv_set_tv_value( "ada95_code_gen", "True", True );
+	else
+		tv_set_tv_value( "ada95_code_gen", "False", True );
+}
+
+
+// Main Property Sheet
+
+int tv_projdir_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+string	tv_projdir_choice;
+
+	tv_projdir_choice = tv_get_ui_value( "main", "projdir" );
+    if( tv_projdir_choice != "" ) {
+        string last_char = string_extract( tv_projdir_choice, string_length( tv_projdir_choice ) - 1, 1);
+        if( last_char != "\\" && last_char != "/" )
+            tv_projdir_choice += "/";
+	}
+    tv_projdir_choice = editor_show_dirchooser( "Choose Project Directory ...", tv_projdir_choice );
+	if ( tv_projdir_choice != "" )
+		tv_set_ui_value( "main", "projdir", tv_projdir_choice );
+	
+	return( 0 );
+}
+
+int tv_system_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+string	tv_projdir_choice;
+string	tv_system_choice;
+
+	tv_projdir_choice = string_strip( tv_get_ui_value( "main", "projdir" ), "T", "/\\");
+	tv_system_choice = editor_show_systemchooser( "Choose System ...", tv_projdir_choice );
+    if (	( tv_system_choice != "" ) ) {
+        tv_set_ui_value( "main", "projdir", path_part( tv_system_choice ) );
+		tv_set_ui_value( "main", "system", file_part( tv_system_choice ) );
+    }
+	
+	return( 0 );
+}
+
+int tv_scriptman_script_editor_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+string tv_scriptman_script_editor_choice;
+
+	tv_scriptman_script_editor_choice = tv_get_ui_value( "main", "scriptman_script_editor" );
+	tv_scriptman_script_editor_choice = editor_show_filechooser(	"Choose Script Editor ...",
+																	tv_get_filename( tv_scriptman_script_editor_choice ),
+																	"Executables (*.exe)|*.exe" );
+	if ( tv_scriptman_script_editor_choice != "" )
+		tv_set_ui_value(	"main", "scriptman_script_editor",
+							tv_scriptman_script_editor_choice + " ${scriptpath}"	);
+	
+	return( 0 );
+}
+
+int tv_postscript_conversion_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+    if(is_unix_platform()) {
+        tv_set_ui_value(	"main", "postscript_conversion",
+                            "gs -q -dBATCH -dNOPAUSE -dHIDE -sDEVICE=jpeg -r70x70" +
+                                " -g<width>x<height> -sOutputFile=<OutputFile> <PSFile>"	);
+    }
+    else {
+    string tv_postscript_conversion_choice;
+    
+        tv_postscript_conversion_choice = tv_get_ui_value( "main", "postscript_conversion" );
+        tv_postscript_conversion_choice = editor_show_filechooser(	"Choose Postscript Conversion Utility ...",
+                                                                    tv_get_filename( tv_postscript_conversion_choice ),
+                                                                    "Executables (*.exe)|*.exe" );
+        if ( tv_postscript_conversion_choice != "" ) {
+            string fonts = parent_directory( parent_directory( path_part( tv_postscript_conversion_choice ) ) ) + "fonts";
+            tv_set_ui_value(	"main", "postscript_conversion",
+                                tv_postscript_conversion_choice + 
+                                    " -q -dBATCH -dNOPAUSE -dHIDE -sDEVICE=jpeg -r70x70 -I" +
+                                    fonts +
+                                    " -g<width>x<height> -sOutputFile=<OutputFile> <PSFile>"	);
+        }
+    }
+	return( 0 );
+}
+
+int tv_advanced_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+	ui_prop_sheet_pop_up( "tv_advanced" );
+	ui_button_set_as_default( ui_cancel_button( "tv_advanced" ), True );
+	tv_advanced_popped = True;
+	tv_set_advanced_values( );
+
+	return( 0 );
+}
+
+int tv_toolinfo_list_select_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+	return( 0 );
+}
+
+int tv_reset_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+
+	tv_load_tv_list( );
+	tv_load_values( );
+	
+	return( 0 );
+}
+
+int tv_activation_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+	if ( tv_toolinfo_vars_list == NULL )
+		tv_load_tv_list( );
+	tv_load_values( );
+
+	return( 0 );
+}
+
+int tv_ok_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+	ui_owner_dismiss( to_ui_owner( "tv_advanced" ) );
+	ui_owner_dismiss( to_ui_owner( "tv_advanced_add" ) );
+	ui_owner_dismiss( to_ui_owner( "tv_advanced_edit" ) );
+
+	tv_save_values( );
+
+	if ( tv_is_toolinfo_vars_list_changed( ) )
+	{
+		if( tv_save_tv_list( ) == True ) {
+                    message(	"qrp -C \"sleep(2); system( \\\"stpem -ed stp -p " + 
+                                    string_search_and_replace( current_projdir( ), "\\", "\\\\") + " -C EditorStart\\\" )\"" );
+
+            if ( editor_confirm(	"Your changes have been written to " + environment_variable("ToolInfo") + ".\n\n" +
+                                    "StP has to be restarted before the changes take affect.\n" +
+                                    "Do you want to restart StP now?",
+                                    "Yes, I want StP to restart now!", "No, I will restart StP later." ) )
+            {
+                if ( current_system( ) != "" )
+                    system_async(	"qrp -C \"sleep(2); system( \\\"stpem -ed stp -p " + 
+                                    string_search_and_replace( current_projdir( ), "\\", "\\\\") + " -s " + current_system( ) + " -C EditorStart\\\" )\"" );
+                else
+                    system_async(	"qrp -C \"sleep(2); system( \\\"stpem -ed stp -p " + 
+                                    string_search_and_replace( current_projdir( ), "\\", "\\\\") + " -C EditorStart\\\" )\"" );
+                
+                editor_builtin( "StPShutdown" );
+            }
+            else
+            {
+                tv_load_tv_list( );
+                tv_load_values( );
+            }
+		}
+        else
+            return( 1 );
+	}
+
+	return( 0 );
+}
+
+int tv_cancel_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+	ui_owner_dismiss( to_ui_owner( "tv_advanced" ) );
+	ui_owner_dismiss( to_ui_owner( "tv_advanced_add" ) );
+	ui_owner_dismiss( to_ui_owner( "tv_advanced_edit" ) );
+
+	tv_load_tv_list( );
+	tv_load_values( );
+
+    return( 0 );
+}
+
+
+// Advanced Property Sheet
+
+int tv_advanced_add_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+    ui_prop_sheet_pop_up( "tv_advanced_add" );
+	tv_set_ui_value( "advanced_add", "add_name", "" );
+	tv_set_ui_value( "advanced_add", "add_value", "" );
+	tv_set_ui_intvalue( "advanced_add", "add_enabled", 1 );
+
+	return( 0 );
+}
+
+int tv_advanced_delete_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+list				selection_list;
+string				selection_first;
+int idx;
+tv_toolinfo_var		tv_actual;
+	
+	selection_list = ui_list_selected_items( to_ui_prop( "tv_advanced", "tv_toolinfo_list" ) );
+	if ( list_count( selection_list ) == 0 )
+		return( 0 );
+	
+	selection_first = list_get( selection_list, 0 );
+	selection_first = string_extract( selection_first, 2, string_find( selection_first, 2, " " ) - 2 );
+    if( list_find( tv_protected_vars, 0, selection_first ) < list_count( tv_protected_vars ) )
+    {
+        editor_confirm( "Removing this ToolInfo variable would disable StP from working!\n" +
+                        "You cannot delete it!",
+                        "OK", "Cancel" );
+        return 0;
+    }
+
+	idx = tv_search_tv_name( selection_first );
+    if( idx != -1 )
+    {
+       tv_actual = list_get( tv_toolinfo_vars_list, idx );
+       if( tv_actual.file != NULL && tv_actual.file != tv_main_toolinfo_file )
+       {
+          editor_confirm( "This variable is not in the first ToolInfo file of the ToolInfo chain!\n" +
+                          "You cannot delete it!",
+                          "OK", "Cancel" );
+          return 0;
+       }
+       tv_actual.deleted = True;
+       list_set( tv_toolinfo_vars_list, idx, tv_actual );
+    }
+	
+	ui_list_delete(	to_ui_prop( "tv_advanced", "tv_toolinfo_list" ), 
+					ui_list_selected( to_ui_prop( "tv_advanced", "tv_toolinfo_list" ) ) );
+
+	return( 0 );
+}
+
+int tv_advanced_edit_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+list				selection_list;
+string				selection_first;
+tv_toolinfo_var		tv_actual;
+int idx;
+
+	selection_list = ui_list_selected_items( to_ui_prop( "tv_advanced", "tv_toolinfo_list" ) );
+	if ( list_count( selection_list ) == 0 )
+		return( 0 );
+	
+	ui_prop_sheet_pop_up( "tv_advanced_edit" );
+	
+	selection_first = list_get( selection_list, 0 );
+	selection_first = string_extract( selection_first, 2, string_find( selection_first, 2, " " ) - 2 );
+	
+	idx = tv_search_tv_name( selection_first );
+    tv_actual = list_get( tv_toolinfo_vars_list, idx );
+    tv_make_ui_readonly( "advanced_edit", "edit_enabled",
+        ( list_find( tv_protected_vars, 0, selection_first ) == list_count(tv_protected_vars) && tv_actual.file == tv_main_toolinfo_file) );
+
+    tv_set_ui_value( "advanced_edit", "edit_name", selection_first );
+	tv_set_ui_value( "advanced_edit", "edit_value", tv_get_tv_value( selection_first, False ) );
+	if ( tv_get_tv_enabled( selection_first ) )
+		tv_set_ui_intvalue( "advanced_edit", "edit_enabled", 1 );
+	else
+		tv_set_ui_intvalue( "advanced_edit", "edit_enabled", 0 );
+
+	return( 0 );
+}
+
+int tv_advanced_done_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+	ui_owner_dismiss( to_ui_owner( "tv_advanced_add" ) );
+	ui_owner_dismiss( to_ui_owner( "tv_advanced_edit" ) );
+
+	return( 1 );
+}
+
+int tv_advanced_add_ok_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+tv_toolinfo_var		tv_actual, tv_tmp_actual;
+ui_list_item_tp		tv_actual_item;
+int idx;
+
+	tv_actual.name = tv_get_ui_value( "advanced_add", "add_name" );
+    if(tv_actual.name == NULL || tv_actual.name == "")
+        return 1;
+	tv_actual.value = tv_get_ui_value( "advanced_add", "add_value" );
+	if ( tv_get_ui_intvalue( "advanced_add", "add_enabled" ) == 1 )
+		tv_actual.enabled = True;
+	else
+		tv_actual.enabled = False;
+	tv_actual.orig_value = "";
+	tv_actual.deleted = False;
+	tv_actual.orig_enabled = False;
+	tv_actual.file = NULL;
+
+	idx = tv_search_tv_name( tv_actual.name );
+    if ( idx != -1 )
+    {
+        tv_tmp_actual = list_get( tv_toolinfo_vars_list, idx );
+        if( tv_tmp_actual == False && editor_confirm( "A ToolInfo Variable '" + tv_actual.name + "' already exists!\n" +
+                                                      "Do you want to replace it?",
+                                                      "Yes", "Cancel" ) == False )
+            return( 0 );
+        list_set( tv_toolinfo_vars_list, idx, tv_actual );
+    }
+    else
+        list_append( tv_toolinfo_vars_list, tv_actual );
+
+	tv_actual_item.label = "  " + tv_actual.name + " = " + tv_actual.value;
+	if ( tv_actual.enabled )
+		tv_actual_item.image = tv_enabled_image;
+	else
+		tv_actual_item.image = tv_disabled_image;
+
+	ui_list_append( to_ui_prop( "tv_advanced", "tv_toolinfo_list" ), tv_actual_item );
+
+	return( 0 );
+}
+
+int tv_advanced_add_cancel_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+	return( 0 );
+}
+
+int tv_advanced_edit_ok_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+tv_toolinfo_var		tv_actual;
+ui_list_item_tp		tv_actual_item;
+string				row_name;
+int					i;
+
+	tv_actual.name = tv_get_ui_value( "advanced_edit", "edit_name" );
+	tv_actual.value = tv_get_ui_value( "advanced_edit", "edit_value" );
+	if ( tv_get_ui_intvalue( "advanced_edit", "edit_enabled" ) == 1 )
+		tv_actual.enabled = True;
+	else
+		tv_actual.enabled = False;
+
+	tv_set_tv_value( tv_actual.name, tv_actual.value, tv_actual.enabled );
+
+	for ( i=0; i<ui_list_num_items( to_ui_prop( "tv_advanced", "tv_toolinfo_list" ) ); i++ )
+	{
+		tv_actual_item = ui_list_row( to_ui_prop( "tv_advanced", "tv_toolinfo_list" ), i );
+		row_name = string_extract( tv_actual_item.label, 2, string_find( tv_actual_item.label, 2 , " " ) - 2 );
+
+		if ( row_name == tv_actual.name )
+		{
+			tv_actual_item.label = "  " + tv_actual.name + " = " + tv_actual.value;
+
+			if ( tv_actual.enabled )
+				tv_actual_item.image = tv_enabled_image;
+			else
+				tv_actual_item.image = tv_disabled_image;
+
+			ui_list_delete( to_ui_prop( "tv_advanced", "tv_toolinfo_list" ), i );
+			ui_list_insert( to_ui_prop( "tv_advanced", "tv_toolinfo_list" ), i, tv_actual_item );
+
+			break;
+		}
+	}
+
+	return( 0 );
+}
+
+int tv_advanced_edit_cancel_callback( ui_event_tp event, ui_prop theprop, int id, string value )
+{
+	return( 0 );
+}

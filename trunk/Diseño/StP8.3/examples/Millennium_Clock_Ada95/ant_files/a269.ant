@@ -1,0 +1,62 @@
+FileObject 1
+{
+    { Name "a269" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65BD4-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "ClockBird" }
+    { Type UmlClass }
+    { ObjectId 679 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD92B2-6EAE-11d4-8044-00104BF16798" }
+}
+
+NodeObject 99998
+{
+    { Name "isDoorOpened" }
+    { Type UmlOperation }
+    { ObjectId 701 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_98D34F52-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlOperationAda95Code }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 703 }
+    { DescLine "begin" }
+    { DescLine "   return door_pkg.getdoorStatus (acc_this.door_asc.all);" }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 705 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 707 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "isDoorOpened" }
+    { NoteId 4 }
+    { ObjectId 708 }
+}
+

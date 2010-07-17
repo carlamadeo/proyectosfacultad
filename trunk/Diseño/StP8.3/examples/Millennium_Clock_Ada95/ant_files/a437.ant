@@ -1,0 +1,62 @@
+FileObject 1
+{
+    { Name "a437" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65C3A-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "Display" }
+    { Type UmlClass }
+    { ObjectId 570 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD9312-6EAE-11d4-8044-00104BF16798" }
+}
+
+NodeObject 99998
+{
+    { Name "showDoorState" }
+    { Type UmlOperation }
+    { ObjectId 1030 }
+    { AnnotFileId 1 }
+    { Sig "s:String" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_98D34F6D-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlOperationAda95Code }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1032 }
+    { DescLine "begin" }
+    { DescLine "   text_io.put (s);" }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1034 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1036 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "showDoorState" }
+    { NoteId 4 }
+    { ObjectId 1037 }
+}
+

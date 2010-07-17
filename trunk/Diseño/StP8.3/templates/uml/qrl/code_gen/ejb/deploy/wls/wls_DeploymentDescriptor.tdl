@@ -1,0 +1,267 @@
+/************************************************
+ *
+ * Generates DeploymentDescriptors specific for 
+ * the Weblogic Application Server (v5.10)
+ *
+ *
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    03/26/2000
+ ***********************************************/
+
+USES util/wls_DeplDesc; 
+
+// The first of the Weblogic specific Deployment
+// Descriptors. Codes mainly information about 
+// the server behaviour, like caching and clustering.
+// This information acts upon every EJB Bean referenced
+// in this DeploymentDescriptor.
+template genWlsEJB_JAR_XML(MPackage)
+<?xml version="1.0" encoding="Cp1252"?>
+<!DOCTYPE weblogic-ejb-jar PUBLIC 
+ "-//BEA Systems, Inc.//DTD WebLogic 5.1.0 EJB//EN"
+ "http://www.beasys.com/j2ee/dtds/weblogic-ejb-jar.dtd"
+>
+
+<weblogic-ejb-jar>
+	<description></description>
+	<weblogic-version>[wls_type_version]</weblogic-version>
+	
+	[if (! [MPackage:marked])]
+	[loop(Instances->MPackage([MPackage:descendants]) As SubPack)]
+        [loop(SubPack->MClass Where getStereotype([MClass]) == [entity_bean_stereo] || getStereotype([MClass]) == [session_bean_stereo])]
+        
+	[genWlsBeanDescriptor([MClass])]
+        [end loop]
+    [end loop]
+    [loop(MPackage->MClass Where getStereotype([MClass]) == [entity_bean_stereo] || getStereotype([MClass]) == [session_bean_stereo])]
+    
+	[genWlsBeanDescriptor([MClass])]
+    [end loop]
+  [else]
+      [loop(Instances->MPackage([MPackage:descendants]) As SubPack)]
+          [loop(SubPack->MClass Where [MClass:marked] && (getStereotype([MClass]) == [entity_bean_stereo] || getStereotype([MClass]) == [session_bean_stereo]))]
+	[genWlsBeanDescriptor([MClass])]
+          [end loop]
+      [end loop]
+      [loop(MPackage->MClass Where [MClass:marked] && (getStereotype([MClass]) == [entity_bean_stereo] || getStereotype([MClass]) == [session_bean_stereo]))]
+	[genWlsBeanDescriptor([MClass])]
+      [end loop]
+  [end if]
+    [loop(Instances->MClass Where getStereotype([MClass]) == "SecurityRole")]
+    <security-role-assignment>
+    	<role-name>[MClass.name]</role-name>
+    	<!--
+    	//#ACD# M(UDSecRole::[MClass.guid]) -- add Principals manually
+    	-->
+    	<!-- edit this entry !             -->
+    	<principal-name>dummy</principal-name>
+    	<!-- add other Principals below!   -->
+    	
+    	<!--
+    	//#end ACD#
+    	-->
+    </security-role-assignment>
+    [end loop]
+</weblogic-ejb-jar>
+end template
+
+
+template genWlsBeanDescriptor(MClass)
+<weblogic-enterprise-bean>
+	<ejb-name>[MClass.name][ejbjar_name_suffix]</ejb-name>
+	[genWlsCachingDescriptor([MClass])]
+	[if (getStereotype([MClass]) == [entity_bean_stereo])]
+	[genWlsPersistenceDescriptor([MClass])]
+	[end if]
+	[genWlsClusteringDescriptor([MClass])]
+	<transaction-descriptor>
+		<trans-timeout-seconds>600</trans-timeout-seconds>
+	</transaction-descriptor>
+	[genWlsReferenceDescriptor([MClass])]
+	<enable-call-by-reference>true</enable-call-by-reference>
+	<jndi-name>Server.[MClass.name]</jndi-name>
+</weblogic-enterprise-bean>
+end template
+
+template genWlsCachingDescriptor(MClass)
+<caching-descriptor>
+	[if ([MClass:session_type] == "Stateless")]
+	<max-beans-in-free-pool>500</max-beans-in-free-pool>
+	<initial-beans-in-free-pool>50</initial-beans-in-free-pool>
+	[end if]
+	[if ([MClass:session_type] != "Stateless")]
+	<max-beans-in-cache>100</max-beans-in-cache>
+	<idle-timeout-seconds>600</idle-timeout-seconds>
+	[end if]
+	[if (getStereotype([MClass]) == [entity_bean_stereo])]
+	[// MClass:wls_CacheStrategy ??]
+	<cache-strategy>Read-Write</cache-strategy>
+	<read-timeout-seconds>600</read-timeout-seconds>
+	[end if]
+</caching-descriptor>
+end template
+
+template genWlsPersistenceDescriptor(MClass)
+<persistence-descriptor>
+	[if ([MClass:is_modified_method] != "")]
+	<is-modified-method-name>[MClass:is_modified_method]</is-modified-method-name>
+	[end if]
+	<delay-updates-until-end-of-tx>true</delay-updates-until-end-of-tx>
+	<finders-call-ejbload>false</finders-call-ejbload>
+	[if ([MClass:persistence] == "Container")]
+	<persistence-type>
+		<type-identifier>[wls_type_identifier]</type-identifier>
+		<type-version>[wls_type_version]</type-version>
+		<type-storage>META-INF/weblogic-cmp-rdbms-[MClass.name]-jar.xml</type-storage>
+	</persistence-type>
+	[end if]
+	<db-is-shared>true</db-is-shared>
+	[if ([MClass:persistence] == "Container")]
+	<persistence-use>
+		<type-identifier>[wls_type_identifier]</type-identifier>
+		<type-version>[wls_type_version]</type-version>
+	</persistence-use>
+	[end if]
+</persistence-descriptor>
+end template
+
+template genWlsClusteringDescriptor(MClass)
+<clustering-descriptor>
+	<home-is-clusterable>true</home-is-clusterable>
+	[if ([MClass:session_bean] == "Stateless")]
+	<stateless-bean-is-clusterable>true</stateless-bean-is-clusterable>
+	<stateless-bean-methods-are-idempotent>false</stateless-bean-methods-are-idempotent>
+	[end if]
+</clustering-descriptor>
+end template
+
+template genWlsReferenceDescriptor(MClass)
+<reference-descriptor>
+	[genWlsReferencesDD([MClass])]
+</reference-descriptor>
+end template
+
+// Generates a reference to another Enterprise Bean
+proc genWlsReferencesDD(MClass)
+    local result = "";
+    
+    loop(MClass->Role As FromRole->MAssociation->MAssociationEnd As ToRole->MClass As Partner Where [FromRole.id] != [ToRole.id] && [Partner.stereotype] == [datasource_stereo])
+        [result] = [result] doWlsDataSourceRef([Partner]);
+    end loop
+    loop(MClass->Role As FromRole->MAssociation->MAssociationEnd As ToRole->MClass As Partner Where [FromRole.id] != [ToRole.id] && ([Partner.stereotype] == [entity_bean_stereo] || [Partner.stereotype] == [session_bean_stereo]))
+        if (checkNavigability([FromRole], [ToRole]) == "True")
+            [result] = [result] doWlsEjbRef([Partner]);
+        end if
+    end loop
+    
+    return [result];
+end proc
+
+// Generates a reference to another Enterprise Bean.
+template doWlsEjbRef(MClass)
+<ejb-reference-description>
+    <ejb-ref-name>ejb/[MClass.name][jndi_name_suffix]</ejb-ref-name>
+    <jndi-name>Server.[MClass.name]</jndi-name>
+</ejb-reference-description>
+end template
+
+
+// Generates a reference to an external Database resource
+template doWlsDataSourceRef(MClass)
+<resource-description>
+    <res-ref-name>jdbc/[MClass.name][jndi_name_suffix]</res-ref-name>
+    <jndi-name>Server.[MClass.name]</jndi-name>
+</resource-description>
+end template
+
+
+
+
+// generates the second of the Weblogic specific
+// DeploymentDescriptors. This Descriptor must be
+// created for every single EJB Bean.
+template genWlsRDBMS_JAR_XML(MClass)
+[/*]<?xml version="1.0" encoding="Cp1252"?>[*/]
+<!DOCTYPE weblogic-rdbms-bean PUBLIC 
+ "-//BEA Systems, Inc.//DTD WebLogic 5.1.0 EJB RDBMS Persistence//EN"
+ "http://www.bea.com/servers/wls510/dtd/weblogic-rdbms-persistence.dtd"
+>
+
+<weblogic-rdbms-bean>
+    <pool-name>[wls_db_pool]</pool-name>
+    [/*]<schema-name>[wls_schema_name]</schema-name>[*/]
+    <table-name>[toUpper([MClass.name])]</table-name>
+    <attribute-map>
+    [genAttributeMap([MClass])]
+    </attribute-map>
+	<finder-list>
+	[genFinderList([MClass])]
+	</finder-list>
+	<options>
+		<use-quoted-names>false</use-quoted-names>
+		<transaction-isolation>TRANSACTION_SERIALIZABLE</transaction-isolation>
+	</options>
+</weblogic-rdbms-bean>
+end template
+
+
+// Maps all container managed attributes to names of
+// table columns in a database. A simple uppercase
+// mechanism is used.
+template genAttributeMap(MClass)
+	[loop(MClass->MAttribute Where [MAttribute:cmp] == "True")]
+	<object-link>
+		<bean-field>[MAttribute.name]</bean-field>
+		<dbms-column>[toUpper([MAttribute.name])]</dbms-column>
+	</object-link>
+	[end loop]
+end template
+ 
+
+template genFinderList(MClass)
+	[loop(Instances->MOperation([MClass:find_methods]))]
+	<finder>
+		<method-name>[MOperation.name]</method-name>
+		[if (hasLoop(MOperation->OpPara))]
+		<method-params>
+			[loop(MOperation->OpPara)]
+			<method-param>[getWlsMethodParameter([OpPara.type])]</method-param>
+			[end loop]
+		</method-params>
+		[end if]
+		<finder-query>
+			[genFinderQuery([MOperation])]
+		</finder-query>
+	</finder>
+	[end loop]
+end template
+
+proc genFinderQuery(MOperation)
+	local b_retval = "<![CDATA[";
+	local e_retval = "]]>";
+	local query    = "";
+	local retval   = "";
+	
+	setCount("0");
+	loop(MOperation->OpPara; setDelim(""); setDelim("&"))
+		[query] = [query] delim() " (= " [OpPara.name] " $" getCount() ")";
+		addCount("1"); 
+	end loop
+	
+	[retval] = [b_retval] [query] [e_retval];
+	return [retval];
+end proc
+
+template egal(MOperation)
+<!--
+		//#ACD# M(UDFEX::[MOperation.guid]) -- user defined queries and expressions
+		-->
+		
+<!--
+		//#end ACD#
+		-->
+		<finder-expression>
+		</finder-expression>
+		<finder-option><find-for-update>false</find-for-update></finder-option>
+end template

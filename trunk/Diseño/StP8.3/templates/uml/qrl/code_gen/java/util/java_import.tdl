@@ -1,0 +1,135 @@
+/************************************************** 
+ * java_import.tdl
+ * ---------------
+ *
+ * Import functions for various MetaClasses including
+ * normal classes, interfaces, datatypes and simple
+ * strings. It is important that only classes not in
+ * the package of the current class are imported.
+ * 
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    17.12.2001
+ *
+ * Copyright 2001, Aonix, San Diego
+ **************************************************/
+
+
+/* Generates an "import <package>.<class>;" for the given class
+ */
+proc MClass.import_proc()
+  // 1. Return an inport statement if the class is part of a package
+  loop(Instances->MClass As Sibling Where [Sibling.id] == [currentClass])
+    if ([MClass:package_name] != "")
+      if (! isInSamePackage([MClass], [Sibling]))
+        return "import " [MClass:package_name] "." [MClass.name] ";\n";
+      end if
+    else
+      if (! isInSamePackage([MClass], [Sibling]))
+        return "import " [MClass.name] ";\n";
+      end if
+    end if
+  end loop
+  
+  // 2. Return nothing if there is no package given for the class
+  // return "";  // No package given -> no import necessary 
+end proc
+
+
+
+/* The same for a MDataType
+ */
+proc MDataType.import_proc()
+  // 1. If there is a package name associated with this data type
+  //    then retun an import statement
+  loop (MDataType->TaggedValue Where [TaggedValue.tag] == [JAVA_PACKAGE])
+    return "import " [TaggedValue.value] "." getDataType([MDataType.name]) ";\n";
+  end loop
+
+  // 2. If there is a package associated with this data type
+  //    then retun an import statement based on that package
+  //local packageName = packageName([MDataType]);
+  //if ([packageName] != "")
+  //  return "import " [packageName] "." getDataType([MDataType.name]) ";\n";
+  //end if
+  
+  // 3. There is no package defined for the datatype, so return nothing
+  return "";
+end proc
+
+
+
+// importStatement
+// ---------------
+// The same for a string that denotes the package to be imported
+// Expects a fully referenced name for a class
+proc TokenSet.import_proc()
+  // 1. Return an inport statement for the given class
+  return "import " [TokenSet.line] ";\n";
+end proc
+
+
+
+// importType
+// ----------
+// adds the class with the given name to the import list
+proc importType(type)
+  local basetype = getBaseType([type]);
+  loop (Instances->MClass Where [MClass.name] == [basetype])
+    // 1. Suppress the statement if it is the current class
+    // 2. Do not import if class is in the same package as the current class.
+    if ([MClass.id] != [currentClass])
+      insert("import", [MClass.id]);
+    end if
+  end loop
+  switch ([basetype])
+    case "Vector" :
+    case "List" :
+    case "AbstractList":
+    case "Collection" :
+    case "Map" :
+    case "HashMap" :
+      insert("import", "java.util.*");
+     break;
+  end switch
+end proc
+
+
+
+// importExceptions
+// ----------------
+// Import each exception class contained in the given list if defined
+// in the design. Exceptions in the list must be separated by colons.
+//
+proc importExceptions(exceptions)
+  // 1. Translate the list to a newline-separated list by replacing all 
+  //    commas and optional white space in the list by new line characters  
+  local exceptionList = replace([exceptions], ", *", "\n");
+
+  // 2. For each line in the list import the type it names
+  loop (Instances -> TokenSet([exceptionList]))
+    importType([TokenSet.line]);
+  end loop
+end proc
+
+
+
+proc MClass.depends_proc()
+  return [MClass].import_proc();  
+end proc
+
+
+
+proc MPackage.depends_proc()
+  return "import " [MPackage:package_name] ".*;\n";  
+end proc
+
+
+
+proc isInSamePackage(MClass As Current, MClass As Sibling)
+  local is_sibling = "FALSE";
+  if ([Current:package_name] == [Sibling:package_name])
+    [is_sibling] = "TRUE";
+  end if
+  return [is_sibling];
+end proc

@@ -1,0 +1,77 @@
+Diagram UmlClassDiagram
+{
+    { Name "credit_package_overview" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -189 }
+    { PanY -127 }
+    { Alignment 32 }
+    { GUID "UID_AEA7BAFB-9623-4976-99E9-A0FBCB5DEFD4" }
+    { Summary
+        { Nodes 2 }
+        { Arcs 1 }
+    }
+}
+
+Node 1
+{
+    { Type Package }
+    { Loc 0 6 }
+    { Scale 627.00 393.00 }
+    { LabelDims 121 91 }
+    { Label
+        { Text "credit" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 683 }
+        { GUID "UID_050B8BD0-130F-11d5-8C72-000000000000" }
+    }
+}
+
+Node 2
+{
+    { Type Class }
+    { Loc -14 10 }
+    { Scale 238.00 90.00 }
+    { Label
+        { Text "Credit" }
+    }
+    { IsIncluded True }
+    { Parent 1 }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 457 }
+        { GUID "UID_050B8BD9-130F-11d5-8C72-000000000000" }
+    }
+}
+
+Arc 5
+{
+    { Type Contains }
+    { From
+        { ID 1 }
+        { Loc 0 0 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 2 }
+        { Loc 0 0 }
+        { Offset 0 0 }
+    }
+    { IsInclusion True }
+}
+
+Link 6
+{
+    { FirstArc 5 }
+    { LastArc 5 }
+    { Object
+        { PDMType Link }
+        { MappingName ContainsMapping }
+        { ID 684 }
+        { GUID "UID_050B8BE0-130F-11d5-8C72-000000000000" }
+    }
+}

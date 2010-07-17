@@ -1,0 +1,246 @@
+FileObject 1
+{
+    { Name "a20" }
+    { Type ObjectAnnotation }
+    { GUID "UID_0C2575A1-BC3E-4e83-8AF1-BBF9779925A1" }
+}
+
+NodeObject 99999
+{
+    { Name "calculate delay" }
+    { Type Process }
+    { ObjectId 2838 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_B1D57930-51C9-4387-B98A-BB30487DD9DD" }
+}
+
+NoteObject 2
+{
+    { Type Pspec }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 2840 }
+    { DescLine "This process is activated for every other signal received from the speed sensor. Whenever this process is initiated it gets the time the previous signal was received from the data store 'time' and calculates the delay between the two signals. The value of the delay is sent to another process called calculate speed. Almost simultaneously a signal is sent to the pulse counter to keep track of the location of the g_train." }
+}
+
+ItemObject 3
+{
+    { Type ProcessSpec }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 2841 }
+}
+
+NoteObject 4
+{
+    { Type PerformanceRequirement }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 2843 }
+}
+
+ItemObject 5
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 4 }
+    { ObjectId 2844 }
+}
+
+ItemObject 6
+{
+    { Type PerformanceRequirementName }
+    { Value "fixed" }
+    { NoteId 4 }
+    { ObjectId 2845 }
+}
+
+NoteObject 7
+{
+    { Type DerivedRequirement }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 2847 }
+    { DescLine "There are no derived requirements for this system." }
+}
+
+ItemObject 8
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 7 }
+    { ObjectId 2848 }
+}
+
+ItemObject 9
+{
+    { Type DerivedRequirementName }
+    { Value "N/A" }
+    { NoteId 7 }
+    { ObjectId 2849 }
+}
+
+NoteObject 10
+{
+    { Type SystemState }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 2851 }
+}
+
+ItemObject 11
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 10 }
+    { ObjectId 2852 }
+}
+
+ItemObject 12
+{
+    { Type SystemState }
+    { Value "real-time" }
+    { NoteId 10 }
+    { ObjectId 2853 }
+}
+
+NoteObject 13
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 2855 }
+    { DescLine "This process calculates the delay between the pulses. As soon as two consecutive pulses are registered, the difference between the times the pulses were noted gives us the delay." }
+}
+
+ItemObject 14
+{
+    { Type ObjectName }
+    { Value "calculate delay" }
+    { NoteId 13 }
+    { ObjectId 2856 }
+}
+
+ItemObject 15
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 13 }
+    { ObjectId 2857 }
+}
+
+NoteObject 16
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 2859 }
+    { DescLine "Standard" }
+}
+
+ItemObject 17
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 16 }
+    { ObjectId 2860 }
+}
+
+ItemObject 18
+{
+    { Type RequirementName }
+    { Value "speed-sub-system" }
+    { NoteId 16 }
+    { ObjectId 2861 }
+}
+
+ItemObject 19
+{
+    { Type RequirementDocument }
+    { Value "SSS" }
+    { NoteId 16 }
+    { ObjectId 2862 }
+}
+
+ItemObject 20
+{
+    { Type RequirementParagraph }
+    { Value "speed" }
+    { NoteId 16 }
+    { ObjectId 2863 }
+}
+
+ItemObject 21
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 16 }
+    { ObjectId 2864 }
+}
+
+ItemObject 22
+{
+    { Type QualificationMethod }
+    { Value "Test II" }
+    { NoteId 16 }
+    { ObjectId 2865 }
+}
+
+ItemObject 23
+{
+    { Type QualificationLevel }
+    { Value "C+" }
+    { NoteId 16 }
+    { ObjectId 2866 }
+}
+
+ItemObject 24
+{
+    { Type FormalTestParagraph }
+    { Value "10" }
+    { NoteId 16 }
+    { ObjectId 2867 }
+}
+
+NoteObject 25
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 2869 }
+}
+
+ItemObject 26
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 25 }
+    { ObjectId 2870 }
+}
+
+ItemObject 27
+{
+    { Type DocumentName }
+    { Value "SRS" }
+    { NoteId 25 }
+    { ObjectId 2871 }
+}
+
+ItemObject 28
+{
+    { Type DocumentNumber }
+    { Value "1" }
+    { NoteId 25 }
+    { ObjectId 2872 }
+}
+
+ItemObject 29
+{
+    { Type ParagraphNumber }
+    { Value "10" }
+    { NoteId 25 }
+    { ObjectId 2873 }
+}
+

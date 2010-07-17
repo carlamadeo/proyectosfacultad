@@ -1,0 +1,21 @@
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+
+LinkSymbol SimpleMessage
+{
+{ ParseCondition "is_validator_available(\"integrated\") || is_validator_available(\"standalone\");" }
+  { DisplayMark
+      { Name HasExpectedOutput }
+      { MappingName MessageInstanceMapping }
+      { ItemCond (HasExpectedOutput) }
+      { StringMark "O" }
+      { Anchor ToEnd }
+      { VAdjust Top }
+      { HAdjust Center }
+      { XPixelOffset 20 }
+      { YPixelOffset 0 }
+  }
+}

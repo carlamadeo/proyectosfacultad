@@ -1,0 +1,1332 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/T
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1994
+//      All rights reserved
+//
+//      omt_t.qrl -- Script to extract omt design and analysis 
+//      information into TSDL.
+//
+/*
+ * Public Functions:
+ *	class_op_defined_as_func
+ *	extract_classes
+ *	extract_processes
+ *	extract_states
+ *	extract_testable_objects
+ *	get_associated_classes
+ *	get_inher_classes
+ *	get_omt_type_info
+ *	get_testunit_info
+ *	main
+ *	more_allows_actions
+ *	print_class_actions
+ *	print_process_actions
+ *	print_state_actions
+ *	process_flow_list
+*/
+
+// The basics
+
+#include "rules/qrl/omt.inc"
+#include "qrl/basic_textract_dt.inc"
+#include "qrl/tsdl_extract.inc"
+#include "qrl/include/error.inc"
+
+
+script_help = "This script generates TSDL (IEEE 1175 based) from OMT Models.";
+
+const string    SCRIPT_DESCRIPTION = "StP/OMT -> StP/T Software Description File";
+const boolean OmtMode = True;
+
+// Command line arguments
+
+external string Tversion = "False";
+external_help = "Set Tversion to True to see the entire version number";
+ 
+external string TTestUnit = "";
+external_help = "The TestUnit is the basis for extraction of information from the repository";
+ 
+// These lists hold the input values from the TUT editor for the kinds of
+// things to operate on.
+list ClassList;
+list StateList;
+list ProcessList;
+
+// These hold the rest of the properties in the TUT editor.
+string TType = "";
+string TAssoc = "";
+string TInher = "";
+
+// class related extraction ///////////////////////////////////////////////////
+//
+
+list 
+extract_classes()
+
+{
+    list cl_list, temp_cl_list, all;
+    int i;
+    object_tp cl;
+    string query, next_name, op;
+    node class;
+
+    query = "node[type = OMTClass && node_refs[file[OMTClassTable]]]";
+    cl_list = list_select(query);
+
+    all = list_create("object_tp", 0);
+
+    // first build a list of classes to operate on
+    if (ClassList == NULL)
+    {
+	query = "node[type = OMTClass && node_refs[file[OMTClassTable]]]";
+	cl_list = list_select(query);
+    }
+    else
+    {
+        cl_list = list_create("node", 0);
+        for (i = 0; i < list_count(ClassList); i++)
+        {
+            next_name = list_get(ClassList, i);
+            op = which_op(next_name);
+            query = "node[type = OMTClass && node_refs[file[OMTClassTable]]" +
+                    " && name ${op} '${next_name}']";
+            temp_cl_list = list_select(query);
+            if (temp_cl_list == NULL || list_count(temp_cl_list) == 0)
+                print_warning("[T-1] Warning: Class `" + next_name + "' not found.");
+            else
+                list_concatenate(cl_list, temp_cl_list);
+	}
+    }
+
+    // now do the thang
+    for (i = 0; i < list_count(cl_list); i++)
+    { 
+        class = list_get(cl_list, i);
+        cl.class = class;
+	
+        // CLASS_ATTRIBUTES and CLASS_OPERATIONS defined in omt.inc
+        // Types are found by attribute_type() and operation_type() in omt.inc
+	cl.attributes = list_select(CLASS_ATTRIBUTES);
+	cl.operations = list_select(CLASS_OPERATIONS);
+	list_append(all, cl);
+    }
+
+    return all;
+}
+
+
+
+// state related extraction ///////////////////////////////////////////////////
+//
+
+list
+extract_states()
+
+{    	
+    list st_list, temp_st_list, all;
+    node state;
+    int i;
+    state_tp st;
+    string query, next_name, op;
+
+    // first build a list of states to operate on
+    if (StateList == NULL)
+    {
+        query = "node[OMTState && node_refs && scope_node_id = 0]";
+	st_list = list_select(query);
+    }
+    else
+    {
+        st_list = list_create("node", 0);
+        for (i = 0; i < list_count(StateList); i++)
+        {
+            next_name = list_get(StateList, i);
+            op = which_op(next_name);
+            query = "node[OMTState && node_refs && scope_node_id = 0 && " +
+                     "name ${op} '${next_name}']";
+            temp_st_list = list_select(query);
+            if (temp_st_list == NULL || list_count(temp_st_list) == 0)
+                print_warning("[T-2] Warning: State `" + next_name + "' not found.");
+            else
+                list_concatenate(st_list, temp_st_list);
+	}
+    }
+
+    all = list_create("state_tp", 0);
+ 
+    for (i = 0; i < list_count(st_list); i=i+1)
+    {
+	state=list_get(st_list, i);
+	st.super = state; 
+
+        query = "node[OMTState && node_refs && scope_node_id = ${state.id}]";
+	st.states = list_select(query);
+
+        query = "node[OMTStartState && node_refs && " + 
+                     "scope_node_id = ${state.id}]";
+	st.start = find_by_query(query);
+
+        query = "node[OMTFinalState && node_refs && " + 
+                     "scope_node_id = ${state.id}]";
+	st.stop =  find_by_query(query);
+ 
+	list_append(all, st);
+    }
+
+    return all;
+}
+
+
+
+// process related extraction /////////////////////////////////////////////////
+//
+
+list
+extract_processes()
+
+{    	
+    list pr_list, temp_pr_list, all;
+    node process;
+    int i;
+    process_tp proc;
+    string query, next_name, op;
+
+    // first build a list of states to operate on
+    if (ProcessList == NULL)
+    {
+	query = "node[OMTProcess && node_refs]";
+	pr_list = list_select(query);
+    }
+    else
+    {
+        pr_list = list_create("node", 0);
+        for (i = 0; i < list_count(ProcessList); i++)
+        {
+            next_name = list_get(ProcessList, i);
+            op = which_op(next_name);
+            query = "node[OMTProcess && node_refs && " +
+			 "name ${op} '${next_name}']";
+            temp_pr_list = list_select(query);
+            if (temp_pr_list == NULL || list_count(temp_pr_list) == 0)
+                print_warning("[T-3] Warning: Process `" + next_name + 
+                              "' not found.");
+            else
+                list_concatenate(pr_list, temp_pr_list);
+	}
+    }
+
+    all = list_create("process_tp", 0);
+
+    for(i = 0; i < list_count(pr_list); i++)
+    {
+	proc.process = list_get(pr_list, i);
+	proc.fname = get_procs_fname(proc.process);
+ 
+	// flows in
+        query = "link[OMTDataFlow && link_refs && to_node_id = ${proc.process.id} && (! items[TParticipates && value = 'False'])]";
+	proc.flows_in = list_select(query);
+
+	// flows out
+
+        query = "link[OMTDataFlow && link_refs && from_node_id = ${proc.process.id} && (! items[TParticipates && value = 'False'])]";
+	proc.flows_out = list_select(query);
+	
+	list_append(all, proc);
+    }
+
+    return all;
+
+} // end of extract_processes() 
+     
+
+
+
+
+// extract_testable_objects() /////////////////////////////////////////////////
+//
+// get the basic information about omt models
+//
+///////////////////////////////////////////////////////////////////////////////
+
+master_tp
+extract_testable_objects()
+
+{
+    master_tp master;
+
+    list ob_list, all;
+    node class, state, process;
+
+    print_warning("Extracting Object Model ...");
+    master.objects = extract_classes();
+    master.states = NULL;
+    master.processes = NULL;
+
+    // states
+
+    if (TType == "ALL" || TType == "DME")
+    {  
+	print_warning("Extracting Dynamic Model ...");
+	master.states = extract_states();
+    }
+
+    // processes
+
+    if (TType == "ALL" || TType == "FME")
+    {  
+        print_warning("Extracting Functional Model ...");
+	master.processes = extract_processes();
+    }
+
+    return master;
+
+} // end extract_testable_objects()
+
+
+
+
+// since the mapping from OME to FME does not handle signature too well, we
+// look for a process named op.name_op.sig
+boolean 
+class_op_defined_as_func(node op, list proc_list)
+
+{
+    int i;
+    process_tp proc;
+    string opname;
+
+    if ((TType != "FME" && TType != "ALL") || proc_list == NULL)
+	return False;
+
+    // Need to handle overloading here eventually
+    opname = op.name;
+
+    for (i = 0; i < list_count(proc_list); i++)
+    {
+	proc = list_get(proc_list, i);
+	if (proc.process.name == opname)
+	    return True;
+    }
+    return False;
+
+} // end of class_op_defined_as_func()
+
+
+
+
+
+object_tp
+find_corresponding_class(int id, list classl)
+
+{
+    int i;
+    object_tp cl;
+
+    for (i = 0; i < list_count(classl); i++)
+    {
+	cl = list_get(classl, i);
+	if (cl.class.id == id)
+	    return cl;
+    }
+    return NULL;
+
+} // end of find_corresponding_class
+
+
+
+
+
+node
+find_corresponding_op(string procname, list opl)
+
+{
+    int i;
+    node op;
+
+    for (i = 0; i < list_count(opl); i++)
+    {
+	op = list_get(opl, i);
+	
+	// note that we really need to be able to match up 
+        // signatures to handle overloading, but mappings in
+        // FME do not currently allow this. 
+
+	if (op.name == procname)
+	    return op;
+    }
+
+    return NULL;
+
+} // end of find_corresponding_op()
+
+
+
+
+set
+get_inher_classes(node class)
+
+{
+    int i;
+    string query;
+    set class_s, inher_s;
+
+    inher_s = set_create("node");
+
+    if (TInher == "False")
+	return inher_s;
+
+    query = "node[OMTClass && node_refs[file[OMTObjectDiagram] || file[BoochClassDiagram]] && in_links[link_refs && OMTSuperClass && from_node_id = ${class.id} && (! items[TParticipates && value = 'False'])]]";
+
+    class_s = set_select(query);
+    for (i = 0; i < set_count(class_s); i++)
+    {
+        class = set_get_element(class_s, i);
+	if (! set_is_member(inher_s, class))
+	{
+	    set_add(inher_s, class);
+	    set_union(inher_s, get_inher_classes(class));
+	}
+    }
+
+    return inher_s;
+
+} // end of get_inher_classes()
+
+
+
+
+// The first query here gets the association links, and the second gets 
+// the associated classes.  We need to have different queries based upon the
+// value of TAssoc
+
+set 
+get_associated_classes(node class)
+
+{
+    int i;
+    string query;
+    list assoc_l;
+    set class_s;
+    node the_assoc;
+
+    class_s = set_create("node");
+
+    if (TAssoc == "NONE")
+	return class_s;
+
+    if (TAssoc == "11" || TAssoc == "1M")
+	query = "node[OMTAssociation && node_refs[file[OMTObjectDiagram] || file[BoochClassDiagram]] && in_links[OMTRole && from_node_id = ${class.id} && ( items[OMTMultiplicity && value = 'ExactlyOne' ] || ! items[OMTMultiplicity] )] && (! items[TParticipates && value = 'False'])]";
+    else if (TAssoc == "M1" || TAssoc == "MM")
+	query = "node[OMTAssociation && node_refs[file[OMTObjectDiagram] || file[BoochClassDiagram]] && in_links[OMTRole && from_node_id = ${class.id} && items[OMTMultiplicity && value = 'Many' ]] && (! items[TParticipates && value = 'False'])]";
+    else // ALL
+	query = "node[OMTAssociation && node_refs[file[OMTObjectDiagram] || file[BoochClassDiagram]] && in_links[OMTRole && from_node_id = ${class.id}] && (! items[TParticipates && value = 'False'])]";
+    assoc_l = list_select(query);
+
+    for (i = 0; i < list_count(assoc_l); i++)
+    {
+	the_assoc = list_get(assoc_l, i);
+
+	if (TAssoc == "1M" || TAssoc == "MM" )
+            query = "node[OMTClass && id != ${class.id} && node_refs[file[OMTObjectDiagram] || file[BoochClassDiagram]] && out_links[OMTRole && to_node_id = ${the_assoc.id} && items[OMTMultiplicity && value = 'Many' ]]]";
+	else if (TAssoc == "11" || TAssoc == "M1")
+            query = "node[OMTClass && id != ${class.id} && node_refs[file[OMTObjectDiagram] || file[BoochClassDiagram]] && out_links[OMTRole && to_node_id = ${the_assoc.id} && ( items[OMTMultiplicity && value = 'ExactlyOne' ] || ! items[OMTMultiplicity] ) ]]";
+	else
+            query = "node[OMTClass && id != ${class.id} && node_refs[file[OMTObjectDiagram] || file[BoochClassDiagram]] && out_links[OMTRole && to_node_id = ${the_assoc.id}]]";
+
+	set_union(class_s, set_select(query));
+    }
+
+    if (TDebug)
+    {
+	for (i=0; i<set_count(class_s); i++)
+	{
+	    class = set_get_element(class_s, i);
+	    print_error("...Association class used: " + class.name);
+	}
+    }
+ 
+    return class_s;
+
+} // end of get_associated_classes()
+
+
+
+string
+print_class_actions(list class_l, list proc_l)
+
+{
+    int i, j, k, l, n, index;
+    object_tp cl;
+    node op, att, class;
+    string out, aname, asentence, tout, id, dtype;
+    list ob_list, itemlist, notelist, ulist, plist, 
+         assoc_att_list, inher_att_list;
+    set assoc_class_s, inher_class_s;
+    item di, dt;
+    type_detail_tp td;
+
+    out = "/* OMT Object Model Action sentences */\n\n";
+
+    // for each class, create an action for each operation that has 
+    // dataitems used and produced for each attribute.
+
+    for(i = 0; i < list_count(class_l); i++) 
+    { 
+        cl = list_get(class_l, i);
+
+	out += "/* OMT class: " + cl.class.name + " */\n\n";
+
+	// get associated and inherited attributes
+
+	if (list_count(cl.operations) > 0)
+	{
+	    assoc_class_s = get_associated_classes(cl.class);
+	    inher_class_s = get_inher_classes(cl.class);
+	}
+	else
+	    out += "/* No operations defined for this class */\n\n";
+
+        for (j = 0; j < list_count(cl.operations); j++) 
+	{
+	    op = list_get(cl.operations, j);
+	    aname = cl.class.name + "_" + op.name;
+	    if (TDebug)
+		print_error("...Creating action for " + cl.class.name + ", operation " + op.name);
+	    // overloaded functions not handled well because
+            // of limitations in DME.
+
+	    if (class_op_defined_as_func(op, proc_l))
+	    {
+		out += "/* Action " + aname + " suppressed, corresponding operation defined\n   in the functional model. */\n\n\n"; 
+                continue;
+	    }
+
+	    ulist = list_create("int", 0);
+	    plist = list_create("int", 0);
+
+	    asentence = start_action_sentence(aname);
+
+	    // signature information. Since this stuff is not formated,
+	    // we utilize annotation information for this, NOT the 
+            // signature directly.  This could of course be conflicting info,
+            // as it is not enforced by the model.
+	    // Note that this is the basically the same as the code in 
+            // process_flow_list, for handling flows in FME.
+
+	    notelist = get_notes_from_obj(op.id, "TestDataItem");
+
+	    for (k = 0; 
+		 (notelist != NULL && k < list_count(notelist)); 
+		 k++)
+	    {
+		itemlist = get_items_from_note(list_get(notelist, k));
+		di = get_particular_item(itemlist, "TDataItemName");
+		if (di == NULL || di.value == NULL)
+		    break;
+
+		dt = get_particular_item(itemlist, "TDataTypeName");
+		if (dt != NULL && dt.value != NULL)
+		    dtype = dt.value;
+		else
+                {
+                    // Issue a warning and skip this one
+                    print_warning("[T-4] Warning: `" + cl.class.name + "::" + op.name + "', Parameter `" + di + "': skipped.\n\tNo type information in model.");
+                    continue;
+                }
+
+		id = Tid(di.value);
+		td = clear_td();
+		td.name = dtype;
+		td.scope = "";
+		index = add_dataitem(id, td, "");
+
+		if (get_specific_bool_item(itemlist, "TUsed") != 2)
+		    list_append(ulist, index);
+
+		if (get_specific_bool_item(itemlist, "TProduced") != 2)
+		    list_append(plist, index);
+	    }
+
+	    // now go through the attributes.  Here, the notes come from
+            // the class table. 
+	    for (k = 0; k < list_count(cl.attributes); k++) 
+	    {
+		att = list_get(cl.attributes, k);
+		id = Tid(att.name);
+
+		// Add to the dataitem list
+		td = clear_td();
+		td.from_node = att; 
+		td.annot_id = att.id;
+		td.scope = "";
+		index = add_dataitem(id, td, "");
+
+		// Add to the uses list unless participates annotation 
+                // specifies no
+
+		itemlist = get_items_from_obj(att.id, "TestDataItem"); 
+
+		if (get_specific_bool_item(itemlist, "TUsed") != 2)
+		    list_append(ulist, index);
+
+		if (get_specific_bool_item(itemlist, "TProduced") != 2)
+		    list_append(plist, index);
+	    }
+	    
+	    for (k = 0; k < set_count(assoc_class_s); k++)
+            {
+		class = set_get_element(assoc_class_s, k);
+
+                if (TDebug)
+		    print_error("...Getting association dataitems from " + class.name);
+
+		assoc_att_list = list_select(CLASS_ATTRIBUTES);
+
+		// now add the attributes in the same fashion, except put
+                // the class name in front of them all.
+		for (l = 0; (assoc_att_list != NULL) && l < list_count(assoc_att_list); l++)
+		{
+		    att = list_get(assoc_att_list, l);
+		    id = class.name + "_" + Tid(att.name);
+
+		    // Add to the dataitem list
+		    td = clear_td();
+		    td.from_node = att; 
+		    td.annot_id = att.id;
+		    td.scope = "";
+		    index = add_dataitem(id, td, "");
+
+		    // Add to the uses list unless participates annotation 
+		    // specifies no
+
+		    itemlist = get_items_from_obj(att.id, "TestDataItem"); 
+
+		    if (get_specific_bool_item(itemlist, "TUsed") != 2)
+			list_append(ulist, index);
+
+		    if (get_specific_bool_item(itemlist, "TProduced") != 2)
+			list_append(plist, index);
+		}
+	    }
+
+	    for (k = 0; k < set_count(inher_class_s); k++)
+            {
+		class = set_get_element(inher_class_s, k);
+
+                if (TDebug)
+		    print_error("...Getting inheritance dataitems from " + class.name);
+
+		inher_att_list = list_select(CLASS_ATTRIBUTES);
+
+		// now add the attributes in the same fashion, except put
+                // the class name in front of them all.
+		for (l = 0; 
+                     (inher_att_list != NULL) && l < list_count(inher_att_list);
+                     l = l + 1)
+		{
+		    att = list_get(inher_att_list, l);
+		    id = class.name + "_" + Tid(att.name);
+
+		    // Add to the dataitem list
+		    td = clear_td();
+		    td.from_node = att; 
+		    td.annot_id = att.id;
+		    td.scope = "";
+		    index = add_dataitem(id, td, "");
+
+		    itemlist = get_items_from_obj(att.id, "TestDataItem"); 
+
+		    if (get_specific_bool_item(itemlist, "TUsed") != 2)
+			list_append(ulist, index);
+
+		    if (get_specific_bool_item(itemlist, "TProduced") != 2)
+			list_append(plist, index);
+		}
+	    }
+
+	    tout = print_u_p(ulist, 1);
+
+	    if (tout == "")
+                out += "/* action sentence for " + aname + " suppressed, no uses dataitems. */\n\n";
+	    else
+		out += asentence + tout + 
+                      print_u_p(plist, 2) +
+                      action_annots_and_end(op.id);
+	}
+    }
+
+    return out;
+
+} // end print_class_actions()
+
+
+
+
+// again, very similar to that in se_t.qrl, except that there we also have 
+// cntx's 
+
+string
+more_allows_actions(string cname, string out, link transition)
+ 
+{
+    int index;
+    node action, class;
+    string aname, query;
+ 
+    index = string_find(transition.name, 0, "/");
+ 
+    if (index == string_length(transition.name))
+        return out;
+ 
+    aname = string_extract(transition.name, index + 1,
+                             string_length(transition.name) - index - 1);
+
+    // we want to issue a warning here if there is no corresponding operation
+    // in the class
+
+    query = "node[OMTOperation && node_refs[file[OMTClassTable]] && name = '${aname}']";
+    class = find_by_query(query);
+
+    if (class == NULL)
+	print_warning("[T-5] Error: State transition `" + transition.name + "': action `" + aname + "'\n\tdoes not exist as an operation of class table for superclass\n\t`" + cname + "'."); 
+
+    // cname is the parent class (superstate)
+    if (cname != NULL)
+	aname = cname + "_" + aname;
+
+    if (out == "")
+        out += "\tallows action\n\t\t" + Tid(aname);
+    else
+        out += ",\n\t\t" + Tid(aname);
+ 
+    return out;
+ 
+} // end of more_allows_actions()
+
+
+// this is very similar to state extraction for SE.  Be sure to reflect 
+// changes in se_t.qrl also.
+
+string
+print_state_actions(list state_l, list class_l)
+
+{
+    list ob_list;
+    int i, j, k;
+    state_tp st;
+    node state;
+    string out, query, act_out, statesent, these_st;
+    string statetrans = "";
+    list transition_l;
+    link transition;
+
+    out = "/* OMT Dynamic Model State and State Transition sentences */\n\n";
+
+    // STL for states
+
+    for (i = 0; i < list_count(state_l); i++) 
+    { 
+        st = list_get(state_l, i);
+	out += "/* OMT superstate: " + st.super.name + " */\n\n";
+
+	// first handle the start and end states //
+
+	if (st.start == NULL || st.stop == NULL)
+	{
+	    out += 
+"/* No start and/or final state.  Cannot extract dynamic information for \n\tthis class. */\n\n\n";
+	    continue;
+	}
+
+	// do the start state
+	act_out = "";
+	statesent = print_state_sentence(st.super.name, "Start", st.super.id); 
+	query = "link[OMTTransition && link_refs && name != '' && from_node_id = ${st.start.id}]";
+	transition = find_by_query(query);
+
+	if (transition == NULL)
+	{
+	    out += 
+"/* No named transition from start state.  Cannot extract dynamic\n\tinformation for this class. */\n\n\n";
+	    print_warning("[T-6] Warning: Superstate `" + st.super.name + "': No named start transition.\n\tCannot extract dynamic information for this class.");
+	    continue;
+	}
+
+	these_st = print_st_sentence(st.super.name, transition);
+	act_out = more_allows_actions(st.super.name, act_out, transition);
+	if (act_out == "")
+            print_warning("[T-51] Error: State `" + st.super.name + 
+                " (Start)': No actions on event/action bar.");
+	else
+	{
+	    out += statesent + act_out + ";\n" + end_sentence();
+	    statetrans = statetrans + these_st;
+	}
+
+	// do the middle states 
+	for (j = 0; j < list_count(st.states); j++)
+	{
+    	    act_out = "";
+	    state = list_get(st.states, j);
+
+	    statesent = print_state_sentence(st.super.name, state.name, 
+					     st.super.id);
+	    query = "link[OMTTransition && link_refs && name != '' && from_node_id = ${state.id}]";
+	    transition_l = list_select(query);
+     
+	    these_st = "";
+	    for (k = 0; transition_l != NULL && k < list_count(transition_l);
+		 k++)
+	    {
+		transition = list_get(transition_l, k);
+		// make a state transition_sentence for each
+		these_st = these_st + print_st_sentence(st.super.name, 
+                                                        transition);
+     
+		// and get the list of actions.  
+		act_out = more_allows_actions(st.super.name, act_out, 
+                                              transition);
+	    }
+
+	    if (act_out == "")
+	    {
+		print_warning("[T-51] Error: State `" + state.name + 
+		    "': No actions on event/action bar.");
+	    }
+	    else
+	    {
+		out += statesent + act_out + ";\n" + end_sentence();
+		statetrans = statetrans + these_st;
+	    }
+	}
+
+	// do the final state.  Here we do not have much choice but to 
+        // put in a placeholder state. 
+	act_out = "";
+	out += print_state_sentence(st.super.name, "Final", st.super.id); 
+	out += "\tallows action placeholder_action;\n";
+	PrintPlaceholder = 1;
+        out += end_sentence();
+	// no need to print another transition.
+    }
+
+    return out + statetrans;
+
+} // end print_state_actions()
+
+
+
+
+
+// 1 for in, 0 for out
+string 
+process_flow_list(list flows, int in_or_out, node pclass, node operation)
+
+{
+    int i, k, index, done = 0;
+    string out, id, query, n;
+    link flow;
+    type_detail_tp td;
+    list uplist, notelist, itemlist, used_l;
+    node attribute, other_class;
+    item di, dt;
+
+    out = "";
+
+    uplist = list_create("int", 0);
+    used_l = list_create("string", 0);
+
+    notelist = get_notes_from_obj(operation.id, "TestDataItem");
+
+    // For each flow, we follow the following to determine where the data
+    // comes from:  
+    // 1.  Look for a corresponding named attribute
+    // 2.  Look for a corresponding named dataitem of an operation
+    // 3.  Find the class on the other end of the flow, and look for the
+    //     attribute there.
+    // 4.  Issue a warning that this data is not correctly modelled, and 
+    //     skip it.
+
+    for (i = 0; i < list_count(flows); i++)
+    {
+	flow = list_get(flows, i);
+
+	if (flow.name == "" || flow.name == NULL)
+	    continue;
+
+	// step 1
+	query = "node[OMTAttribute && name = '${flow.name}' && scope_node_id = ${pclass.id}]";
+	attribute = find_by_query(query);
+
+	if (attribute != NULL)
+	{
+	    id = Tid(flow.name);
+
+	    // check for already in list
+	    if (list_find(used_l, 0, id) != list_count(used_l))
+		continue;
+	    list_append(used_l, id);
+	    
+	    // add to dataitem list
+
+	    td = clear_td();
+	    td.from_node = attribute; 
+	    td.annot_id = attribute.id;
+	    td.scope = "";
+	    index = add_dataitem(id, td, "");
+	    list_append(uplist, index);
+	    continue;
+	}
+
+	// step 2 
+	// Note that this is basically the same as some code in
+        // print_class_actions
+
+	// notelist precalculated above. Should precalculate itemlist for
+        // efficiency concerns.
+
+	for (k = 0; (notelist != NULL && k < list_count(notelist)); k++)
+	{
+	    done = 0;
+	    itemlist = get_items_from_note(list_get(notelist, k));
+	    di = get_particular_item(itemlist, "TDataItemName");
+
+	    if (di == NULL || di.value == NULL)
+		break;
+
+            if (di.value != flow.name) // wrong one
+	    {
+		if (k == (list_count(notelist) - 1))
+		    done = 1;
+		continue;
+	    }
+
+	    dt = get_particular_item(itemlist, "TDataTypeName");
+	    if (dt == NULL || dt.value == NULL)
+	    {
+		// Issue a warning and skip this one
+		print_warning("[T-7] Warning: Class `" + pclass.name + "', Flow `" + flow.name + "': skipped.\n\tNo type information in model.");
+		done = 1; 
+		continue;
+	    }
+
+	    // check for already in list
+	    if (list_find(used_l, 0, flow.name) != list_count(used_l))
+	    {
+		done = 1;
+		break;
+	    }
+	    list_append(used_l, flow.name);
+
+	    td = clear_td();
+	    td.name = dt.value;
+	    td.scope = "";
+	    index = add_dataitem(flow.name, td, "");
+	    list_append(uplist, index);
+	    done = 1; 
+	}
+	if (done == 1)
+	    continue;
+
+	// step 3
+	// first the actor
+	query = "node[OMTActorObject && (id = ${flow.to_node_id} || id = ${flow.from_node_id}) ]";
+	other_class = find_by_query(query);
+
+	if (other_class != NULL)
+	{
+	    query = "node[OMTAttribute && name = '${flow.name}' && scope_node[name = '${other_class.name}' && node_refs[file[OMTClassTable]]]]";
+	    attribute = find_by_query(query);
+
+	    if (attribute != NULL)
+	    {
+		id = Tid(other_class.name + "_" + flow.name);
+
+		// check for already in list
+		if (list_find(used_l, 0, id) != list_count(used_l))
+		    continue;
+		list_append(used_l, id);
+
+		// add to dataitem list
+
+		td = clear_td();
+		td.from_node = attribute; 
+		td.annot_id = attribute.id;
+		td.scope = "";
+		index = add_dataitem(id, td, "");
+		list_append(uplist, index);
+		continue;
+	    }
+	}
+
+	// Getting here means that we could not find where the flow originates 
+
+	if (other_class == NULL)
+	{
+	    query = "node[name != '${operation.name}' && (id = ${flow.to_node_id} || id = ${flow.from_node_id}) ]";
+	    other_class = find_by_query(query);
+	}
+
+	if (other_class != NULL)
+	    n = other_class.name;
+	else
+	    n = "??";
+
+	print_warning("[T-8] Warning: Flow `" + flow.name + "' between `" + operation.name + "' and `" + n + "':\n\tCould not find definition of flow as an attribute of parent class\n\t`" + pclass.name + "', a parameter of `" + operation.name + "',\n\tor an attached ActorObject. Skipping flow.");
+    }
+
+    if (in_or_out == 1)
+	out += print_u_p(uplist, 1);
+    else
+	out += print_u_p(uplist, 2);
+
+    return out;
+
+} // end process_flow_list()
+
+
+
+string
+print_process_actions(list proc_list, list classl)
+
+{
+    list ob_list;
+    int i;
+    process_tp proc;
+    string out, asentence, tout, pname, query;
+    file the_file;
+    node the_node;
+    node class, operation;
+    object_tp cl;
+
+    out = "/* OMT Functional Model Action sentences */\n\n";
+
+    for(i = 0; i < list_count(proc_list); i++) 
+    { 
+        proc = list_get(proc_list, i);
+
+	// find the class to which this process (operation) belongs to.
+
+	if (proc.process.scope_node_id == 0)
+	{
+	    out += "/* OMT Process: `" + proc.process.name + 
+                "' must be modelled as an operation\nof a class in order to extract testable information. */\n\n";
+	    print_warning("[T-9] Warning: Process `" + proc.process.name + "': Extraction skipped.\n\tProcess is not modelled as an operation on a class.");
+	    continue;
+	}
+
+        class = NULL;	
+	cl = find_corresponding_class(proc.process.scope_node_id, classl);
+	if (cl != NULL)
+	    class = cl.class;
+
+	if (class == NULL)
+	{
+	    out += "/* OMT Process: `" + proc.process.name + 
+                "': Object Model information not extracted,\n  Process skipped. */\n\n";
+	    print_warning("[T-10] Warning: process `" + proc.process.name + "': Extraction skipped.\n\tObject Model information not extracted, or does not exist.");
+	    continue;
+	}
+
+	// and the operation
+	operation = find_corresponding_op(proc.process.name, cl.operations);
+	if (operation == NULL)
+	{
+	    out += "/* OMT Process: `" + proc.process.name + 
+                "': No corresponding operation in\nclass `" + class.name + 
+                "', testable information not generated. */\n\n";
+	    print_warning("[T-11] Warning: process `" + proc.process.name + 
+       "': Extraction skipped.\n\tCorresponding operation does not exist in parent class `" 
+       + class.name + "'.");
+	    continue;
+	}
+
+	// So now get on with it 
+
+	pname = class.name + "_" + proc.process.name;
+	out += "/* OMT process: " + pname + " */\n\n";
+
+	asentence = start_action_sentence(pname);
+
+	tout = process_flow_list(proc.flows_in, 1, class, operation);
+	if (tout == "")
+	    out += "/* action sentence for " + pname + " suppressed, no uses dataitems. */\n\n";
+	else
+	    out += asentence + tout + 
+                  process_flow_list(proc.flows_out, 0, class, operation) + 
+                  action_annots_and_end(operation.id);
+    }
+
+    return out;
+
+} // end print_process_actions()
+
+
+
+
+// get_omt_type_info()
+//
+// We utilize the T type table to get all type related information. There 
+// are nodes of type TTestType, which have names corresponding to the specified
+// type of the attribute or parameter.  There are corresponding notes called
+// TestDataType, each of which have items corresponding to the values in a 
+// T type definition. 
+//
+// There is no signature for a type other then simple name matching.
+//
+// This routine fetches returns the list of items that make up the definition
+// of the type, and also the 
+//
+
+list
+get_omt_type_info(datatype_tp dy)
+
+{
+    list item_l;
+    string query;
+    note the_note;
+
+    query = "note[TestDataType && node[TTestType && node_refs[file[TTypeTable]] && name = '${dy.name}']]";
+    the_note = find_by_query(query);
+
+    if (the_note == NULL)
+    {
+	print_warning("[T-12] Warning: Testability information for DataType `" + dy.name + "' not found.");
+	return NULL;
+    }
+
+    item_l = items_from_note(the_note);
+    if (item_l == NULL || list_count(item_l) == 0)
+    {
+	print_warning("[T-12] Warning: Testability information for DataType " + dy.name + " not found.");
+	return NULL;
+    }
+    return item_l;
+
+} // end of get_omt_type_info()
+
+    
+
+string InitStuf;
+
+// Get all the info about this testunit out of the repository.  Also
+// be certain it exists.
+// Note that there is a very similar function in se_t.qrl that needs to be
+// updated as this one does.
+
+list
+get_testunit_info()
+
+{
+    string query;
+    node TUTnode;
+    list itemlist;
+    item the_item;
+
+    print_warning("Using TestUnit: " + TTestUnit);
+    InitStuf = "\n/*\n\tUsing TestUnit: " + TTestUnit + "\n";
+
+    query = "node[TTestUnit && node_refs && name = '${TTestUnit}']";
+
+    TUTnode = find_by_query(query);
+
+    if (TUTnode == NULL)
+    {
+	print_warning("[T-29] Error: TestUnit `" + TTestUnit + 
+            "' does not exist in repository.");
+	return(NULL);
+    }
+
+    // Now get all the items
+    itemlist = get_items_from_obj(TUTnode.id, "TUTInfo");
+    if (itemlist == NULL)
+    {
+	print_warning("[T-30] Error: TestUnit `" + TTestUnit + 
+            "' not completely defined in repository.");
+	return(NULL);
+    }
+
+    // TType
+    the_item = get_particular_item(itemlist,  "TExtractProps");
+    if (the_item != NULL)
+    {
+	if (the_item.value == "Object Model Only")
+	    TType = "OME";
+	else if (the_item.value == "Dynamic and Object Model")
+	    TType = "DME";
+	else if (the_item.value == "Functional and Object Model")
+	    TType = "FME";
+	else
+	    TType = "ALL";
+    }
+    else
+	TType = "ALL";
+    print_warning("Extracting model information from " + the_item.value);
+    InitStuf = InitStuf + "\tExtracting model information from " + the_item.value + "\n";
+
+    // TAssoc
+    the_item = get_particular_item(itemlist,  "TAssociation");
+    if (the_item != NULL)
+    {
+	if (the_item.value == "Exactly 1 to Exactly 1 Only")
+	    TAssoc = "11";
+	else if (the_item.value == "Exactly 1 to Many Only")
+	    TAssoc = "1M";
+	else if (the_item.value == "Many to Many Only")
+	    TAssoc = "MM";
+	else if (the_item.value == "None")
+	    TAssoc = "NONE";
+	else
+	    TAssoc = "ALL";
+    }
+    else
+	TAssoc = "ALL";
+    print_warning("Using association types: " + the_item.value);
+    InitStuf = InitStuf + "\tUsing association types: " + the_item.value + "\n";
+
+    // TInher
+    the_item = get_particular_item(itemlist,  "TInheritance");
+    if ((the_item != NULL) && (the_item.value == "False"))
+    {
+	TInher = "False";
+	print_warning("Not utilizing Inheritance relationships");
+        InitStuf = InitStuf + "\tNot utilizing Inheritance relationships\n*/\n";
+    }
+    else
+    {
+	TInher = "True";
+	print_warning("Utilizing Inheritance relationships");
+	InitStuf = InitStuf + "\tUtilizing Inheritance relationships\n*/\n\n";
+    }
+
+    return(itemlist);
+
+} // end of get_testunit_info() 
+
+
+
+boolean TDebug = False;
+int
+main()
+{
+    master_tp master;
+    string out,
+           outfile, outdir, syscmd;
+    datatype_tp dy;
+    list itemlist;
+
+    if (toolinfo_variable("TDebug") == "True")
+	TDebug = True;
+
+    DataTypes = list_create("datatype_tp", 0);
+    DataItems = list_create("dataitem_tp", 0);
+    Constants = list_create("constant_tp", 0);
+
+    //ClassList = NULL;
+    StateList = NULL;
+    ProcessList = NULL;
+
+    name_and_copyright();
+    out = print_header("StP/OMT");
+
+    dy.name = "int";
+    dy.scope = "";
+
+    list_append(DataTypes, dy);
+
+    if ((itemlist = get_testunit_info()) == NULL)
+        return(1);
+
+    print_warning("");
+
+    out += InitStuf;
+
+    ClassList = build_input_list("TClassName", itemlist);
+
+    if (TType == "ALL")
+    {
+	StateList = build_input_list("TStateName", itemlist);
+
+	ProcessList = build_input_list("TProcessName", itemlist); 
+    }
+    else if (TType == "DME")
+    {
+	StateList = build_input_list("TStateName", itemlist);
+    }
+    else if (TType == "FME")
+    {
+	ProcessList = build_input_list("TProcessName", itemlist);
+    }
+
+    outdir = current_projdir() + current_system() + "/test_files/" + TTestUnit;
+    outfile = outdir + "/sdf";
+
+    if (write_file_access(outfile) == False)
+    {
+	if (write_file_access(outdir) == False)
+	{
+//	    syscmd = "mkdir " + outdir;
+//	    system(syscmd);
+	    mkdir(outdir);
+	    if (write_file_access(outdir) == False)
+	    {
+		print_warning("[T-14] Error: TestUnit directory `" + 
+                      outdir + "' not writeable.");
+		return(1);
+	    }
+	}
+        syscmd = "touch " + outfile;
+	system(syscmd);
+        if (write_file_access(outfile) == False)
+	{
+	    print_warning("[T-15] Error: `" + outfile + "' not createable.");
+	    return(1);
+	}
+    }
+
+    print_warning("Cleaning testunit ...");
+    if (clean_testunit_files(TTestUnit) != 0)
+    {
+	print_warning(
+            "[T-13] Error: Cannot clean testunit.  Check file permissions.");
+	return(1);
+    }
+
+    out += print_S_Packet(itemlist);
+    out += print_std_include();
+    out += print_user_include_files(itemlist);
+
+    if ((master = extract_testable_objects()) != NULL)
+    {
+	print_warning("Completing Object Model ...");
+	out += print_class_actions(master.objects, master.processes);
+
+	if (TType == "ALL" || TType == "DME")
+	{
+	    print_warning("Completing Dynamic Model ...");
+	    out += print_state_actions(master.states, master.objects);
+	}
+
+	if (TType == "ALL" || TType == "FME")
+	{
+	    print_warning("Completing Functional Model ...");
+	    out += print_process_actions(master.processes, master.objects);
+	}
+
+        out += "/* OMT cross-model sentences */\n\n";
+
+        out += print_remaining_stuff(PrintPlaceholder);
+
+	write_file(outfile, out);
+	print_warning("OMT-->T Extract: complete.\n\n"); 
+
+	return 0;
+    }
+    else
+    {
+	print("OMT-->T Extract: fix errors and try again.\n\n"); 
+	return 1;
+    }
+}

@@ -1,0 +1,55 @@
+%
+% 	sccsid[] = @(#)ted.txt	4.1  94/01/14
+% 	StP/Core
+% 	Confidential property of Interactive Development Environments, Inc.
+% 	Copyright (c) 1992-1993
+% 	All rights reserved
+%
+
+% TED related messages
+5700;set borders
+5701;align label
+% Border Menu
+5702;Borders
+5703;Left
+5704;Right
+5705;Top
+5706;Bottom
+% Align Menu
+5707;Adjust Label
+5708;Left
+5709;Center
+5710;Right
+% Diagram title
+5711;Matrix:
+% Read / write ted matrix
+5712;Cell flags expected
+% Menu entries
+5713;show gridlines
+5714;Delete
+5715;Label
+5716;Format
+5717;All
+5718;
+5719;Cell Format
+5720;Constrain Label to Cell
+5721;constrain labels
+5722;No Matrix name
+5850;Unable to open LEAF output file %s for writing
+5852;Could not open Interleaf preamble file %.30s
+5853;illegal usage
+5854;Can't open %s \n
+5856;Usage: tedpost..\n
+5857;Usage: cspost..\n
+5858; : Ted 
+5859;Usage: tedpic ..
+5860;Unable to open pic output file %s for writing
+
+5970;Must leave at least one row in a section
+5971;Must leave at least one column in a section
+5972;Must leave at least one row visible in a section
+5973;Must leave at least one column visible in a section
+5974;Must leave at least one %s  visible in a section
+5975;Must leave at least one %s in a section
+5976;Cannot shrink section any further
+

@@ -1,0 +1,6 @@
+State notes:
+
+<description_string> must be the name of a constant of subtype stringlong
+   or double-quoted text "...".
+In the "allows" clause, the action must be of subtype internal.
+An action state identifies those actions which are accessible in it.

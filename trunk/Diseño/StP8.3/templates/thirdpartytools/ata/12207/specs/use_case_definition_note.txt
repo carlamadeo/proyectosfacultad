@@ -1,0 +1,18 @@
+
+Type=Note
+
+Name=UmlUseCaseDefinition
+
+Section=Condition Definitions
+
+Section=$INCREMENT Precondition
+Tag=paragraph
+Item=UmlUseCasePrecondition
+
+Section=$INCREMENT Postcondition
+Tag=paragraph
+Item=UmlUseCasePostcondition
+
+Section=$INCREMENT Exception
+Tag=paragraph
+Item=UmlUseCaseException

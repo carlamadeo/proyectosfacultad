@@ -1,0 +1,170 @@
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+
+// shared symbol, no ID specified here
+NodeSymbol Object
+{
+    { PrintName "Object" }
+    { Shape
+        { Predefined Rectangle }
+        { ToolbarImage "object" }
+    }
+    { AutoScaleLarger True }
+    { AutoScaleSmaller True } // ECR 7550
+    { LabelAnchor North }
+    { DisplayMark
+        { Name UnderlineEffect }
+        { LabelMark Underscore }
+        //{ XPixelOffset 5 }
+        { YPixelOffset 6 }
+        { Help "Underline Object label" }
+    }
+    // Begin Add ECR 6389
+    { DisplayMark
+        { Name ODescription }
+		{ MappingName ObjectMapping }
+        { CondFunc "symbol_has_description(0${node.id});" }
+        { Anchor LowerRight }
+        { VAdjust Bottom }
+        { HAdjust Center }
+        { YPixelOffset 19 }
+        { BitmapMark0 "descln0" }
+        { BitmapMark1 "descln1" }
+        { BitmapMark2 "descln2" }
+        { Help "Object has description." }
+    }
+    // End add ECR 6389
+    // --- START PATCH ECR 6726 ---
+     { DisplayMark
+     	{ Name ObjectStereotype }
+     	{ ItemCond (UmlStereotype) }
+     	{ StringMark "«${annot.UmlExtensibilityDefinition.UmlStereotype}»" }
+     	{ Anchor LabelUpperCenter }
+     	{ HAdjust Center }
+     	{ VAdjust Bottom }
+     	{ Help "Object Stereotype" }
+     }
+     { DisplayMark
+     	{ Name ObjectConstraint }
+     	{ ItemCond (UmlConstraintItem) }
+     	{ Anchor LowerCenter }
+     	{ HAdjust Center }
+     	{ VAdjust Top }
+     	{ Help "Object constraints" }
+  	{ StringMarkFunc "uml_dpymark_list_formatter(gde_dmark_matched_items,\"{\",\"}\",\",\");" }
+     }
+     { DisplayMark
+     	{ Name ObjectProperties }
+     	{ ItemCond (UmlTaggedValue) }
+     	{ Anchor LabelLowerRight }
+     	{ HAdjust Left }
+     	{ VAdjust Top }
+  	{ StringMarkFunc "uml_dpymark_list_formatter(gde_dmark_matched_items,\"{\",\"}\",\",\n\");" } 
+     }
+    // --- END PATCH ECR 6726 ---
+    { NodeMapping
+        { MappingName ObjectScope }
+        { AppType UmlObjectClassScope }
+        { NameFunc uml_instance_owner_name }
+        { NameIsRequired True }
+        { InverseMapFunc object_instance_label }
+    }
+    { NodeMapping
+        { MappingName ObjectStatesMapping }
+        { AppType UmlObjectInState }
+        { NameFunc uml_object_states_name }
+        // { NameIsRequired True }
+        { Scope
+             { Symbol Self }
+             { MappingName ObjectScope }
+        }
+        { InverseMapFunc object_instance_label }
+    }
+    { NodeMapping
+        { MappingName ObjectMapping }
+        { AppType UmlObjectInstance }
+        { NameFunc uml_qualified_object_name }
+        { NameIsRequired True }
+        { Scope
+             { Symbol Self }
+             { MappingName ObjectScope }
+        }
+        { InverseMapFunc object_instance_label }
+    }
+    { NameCompletion
+        { MappingName ObjectMapping } // ObjectScope
+        { NameCompletionFunc object_name_completion_func }
+    }
+    { Components
+                { Space 2 }
+                { Adjust Center }
+                { XOffset 20 }
+                { YOffset 7 }
+                { ScaleWidth Fit } // ECR 7550
+                { ScaleHeight Fit }
+                { Type InstanceAttribute  }
+                { LineAbove True }
+                { LineBelow False }
+                { ScaleDmarks True }
+    }
+   { Navigation
+     { Name RequirementTableFromNode }
+     { UseMappings ( ObjectMapping) }
+   }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { UseMappings ( ObjectMapping ) }
+    }
+    { RenameFunc uml_object_instance_rename } //ECR 6433     
+}
+
+NodeSymbol InstanceAttribute
+{
+    // The visible text in the symbol list says Attribute otherwise...
+    { PrintName "Value of Attribute" }
+    { Shape
+        { Predefined BachLabel }
+        { ToolbarImage "value_of_attribute" }
+    }
+    { AutoScaleLarger True }
+    { AutoScaleSmaller True } // ECR 7550
+    { DefaultSize 2.1 0.40 }
+    { LabelAnchor Center }
+    { CenterIncludes True }
+    { SizeIsLabelBox True }
+    { CanApplyScaleCmd False }
+    { Align False }
+    { ShowTypeLabel True }
+    { ReplaceSet ( None ) }
+    { NodeMapping
+        { MappingName ObjectInstanceValue }
+        { AppType UmlObjectInstanceAttribute }
+        { NameFunc object_instance_attr_name }
+        { SigFunc object_instance_attr_value }
+        { InScopeLink Contains }
+        { Scope { MappingName ObjectMapping } }
+        { InverseMapFunc object_instance_attr_label }
+    }
+    // force each of these to have 1 link to its container (i.e. to
+    // have a container
+    { Cardinality
+        { Min 1 }
+        { Max 1 }
+        { InLinks Contains }
+    }
+
+}
+
+LinkSymbol Contains  
+{
+        { Connects
+                { From Object }
+                { To InstanceAttribute }
+        }
+}

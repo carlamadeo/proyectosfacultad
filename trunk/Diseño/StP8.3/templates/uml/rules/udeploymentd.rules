@@ -1,0 +1,156 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+//
+////////////////////////////////////////////////////////////////////////////////
+
+Include "rules/uml.feature"
+
+////////////////////////////////////////////////////////////////////////////////
+
+Include "rules/udeploymentd_symdefs.rules"
+Include "rules/udeploymentd_symbols.rules"
+Include "rules/udeploymentd_links.rules"
+Include "rules/udeploymentd_mappings.rules"
+//Include "rules/udeploymentd_navigations.rules"
+Include "rules/udeploymentd_prop.gui"
+Include "rules/udeploymentd.prop"
+Include "rules/udeploymntd_toolbar_acr_types.rules" // ECR 3556
+// ECR 5184 start
+Include "rules/uclassd_navigations.rules" 
+Include "rules/uclassd.prop"
+Include "rules/re_navigate.prop"
+// ECR 5184 end
+
+////////////////////////////////////////////////////////////////////////////////
+
+SymbolList
+{
+    { OrthogonalArcsAreAllowed True }
+    { OrthogonalArcsAreDefault False }
+    { ShowStraightArc True }
+    { ShowSpline True }
+    { Symbols
+	(
+	    Note
+            SEPARATOR
+	    deploymentComponent
+            SEPARATOR
+	    executableComponent
+	    binaryComponent
+            SEPARATOR
+	    interfaceComponent
+	    objectComponent
+            SEPARATOR
+            Class
+	)
+    }
+}
+
+
+Include "rules/gde_menu_bar.std"
+Include "rules/comment.rules.common"
+Include "rules/gde_edit_menu.std"
+Include "rules/udeploymentd.gui"
+
+Include "rules/default_arc_type.rules" //ECR 6469
+
+// SPR 4969 - Model Management
+// used for Model Management to have one common display mark
+TypeSet AllLockableNodeTypes
+{
+    deploymentComponent
+    binaryComponent 
+    executableComponent
+    objectComponent
+    interfaceComponent
+}
+
+TypeSet StereotypeableNodeSet
+{
+    binaryComponent
+    executableComponent
+    objectComponent
+    interfaceComponent
+    deploymentComponent
+}
+
+NodeSymbol StereotypeableNodeSet
+{
+    { Methods
+        { Method
+            { Name DoubleClick }
+            { MethodFunc UmlDeployment_ps_double_click }
+        }
+    }
+}
+
+TypeSet StereotypeableLinkSet
+{
+    deploys
+    Dependency
+    Interface
+    isComponentOf
+}
+
+LinkSymbol StereotypeableLinkSet
+{
+    { Methods
+        { Method
+            { Name DoubleClick }
+            { MethodFunc UmlDeploymentLink_ps_double_click }
+        }
+    }
+}
+
+// Begin Add ECR3785
+// TypeSet for all kind of uml node symbols
+// ECR 5184 start
+// TypeSet NavigationNodeTypes
+TypeSet NavigationDeploymentNodeTypes
+// ECR 5184 end
+{
+    binaryComponent
+    executableComponent
+    sourceComponent
+    objectComponent
+    interfaceComponent
+}
+// ECR 5184 start
+NodeSymbol NavigationDeploymentNodeTypes
+{
+    { Navigation
+		{ Name AnyNodeSymbolWithTheSameName }
+		{ Label "Any Symbol With The Same Name" }
+		{ TargetFunc "FindAnyNodeSymbolWithTheSameName(\"${node.name}\",${file.id});" }
+    }
+    { Navigation
+		{ Name AnyViewOfSelectedNodeSymbol }
+		{ Label "Any Reference Of The Selected Symbol" }
+		{ TargetFunc "FindAnyViewOfSelectedNodeSymbol(${node.id},${file.id});" }
+    }
+}
+// ECR 5184 end
+// Included navigation targets for all kind of uml node symbols
+Include "uml/rules/uml_navigation.rules"
+// End Add ECR3785
+
+// ECR 4052 Model Management
+Include "rules/model_management.common"
+
+// Begin add ECR 7287
+DisplayMarkGroups
+{
+	{ Group
+		{ DisplayMarks ( ComponentStereotype CommunicatesStereotype DeploysStereotype DependencyStereotype) }
+		{ Name Stereotype }
+    }
+}
+// End add ECR 7287    
+
+IncludeIfExists "user/uml/rules/user_uimplementationd.rules"
+
+PassWord "AD1CC7D5"

@@ -1,0 +1,664 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1995
+// 	All rights reserved
+//
+////////////////////////////////////////////////////////////////////////////////
+
+Include "rules/recent.prop"
+Include "rules/version_menu.std"
+
+
+Menu File
+{
+    { InMenuBar True }
+    { Label "&File" }
+    { Pin True }
+    
+    // Begin Add ECR4048
+    { MenuEntry
+        { Name New }
+        { Label "&New" }
+        { Builtin "EditorQrlEval new_file();" }
+    	{ Accelerator
+             { Label "Ctrl+N" }
+             { Value "Ctrl<Key>n" }
+        }
+    }
+    // End Add ECR4048
+    { MenuEntry
+	{ Name Load }
+	{ Label "&Open..." }
+	{ Builtin "LoadDialogShow" }
+	{ Accelerator
+             { Label "Ctrl+O" }
+             { Value "Ctrl<Key>o" }
+        }
+    }
+    // ECR 6683
+    { MenuEntry
+        { Name LoadInNewEditor }
+        { Label "Open in new E&ditor..." }
+        { Builtin "LoadInNewDialogShow" }
+    }
+    { MenuEntry
+	{ Name Insert }
+	{ Label "&Insert..." }
+	{ Builtin "ImportDialogShow" }
+	{ Accelerator
+             { Label "Ctrl+I" }
+             { Value "Ctrl<Key>i" }
+        }
+    }
+    { MenuEntry
+	{ Name Save }
+	{ Label "&Save" }
+	{ Builtin "EditorQrlEvalNoSave FileSaveAndCommit(False);" }
+	{ Accelerator
+	     { Label "Ctrl+S" }
+             { Value "Ctrl<Key>s" }
+        }
+    }
+    { MenuEntry
+	{ Name SaveAs }
+	{ Label "S&ave As..." }
+	{ Builtin "SaveasDialogShow" }
+    }
+    { Spacer { Name Spacer1 } }
+
+  // ECR6476
+  { SubMenu
+	{ ParseCondition "!is_windows_platform();" }
+	{ Name Vcc }
+	{ Label "&Version" }
+    }
+    { Spacer 
+        { ParseCondition "!is_windows_platform();" }
+	{ Name Spacer0 } 
+    }
+
+    { MenuEntry
+	{ Name Print }
+	{ Label "&Print..." }
+	{ Builtin "FilePrint" }
+	{ Accelerator
+             { Label "Ctrl+P" }
+             { Value "Ctrl<Key>p" }
+        }
+    }
+    { MenuEntry
+	{ Name PrintAs }
+	{ Label "P&rint As..." }
+	{ Builtin "FilePrintAs" }
+	{ Accelerator
+             { Label "Ctrl+Shift+P" }
+             { Value "Ctrl Shift<Key>p" }
+        }
+        { ParseCondition "is_windows_platform();" } // ECR 6217
+    }
+    { MenuEntry
+	{ Name PageSetup }
+	{ Label "Page Set&up..." }
+	{ Builtin "FilePageSetup" }
+    }
+    { Spacer { Name BeforeRecent } }
+    { Spacer { Name AfterRecent } }
+    { MenuEntry
+	{ Name Quit }
+	{ Label "E&xit" }
+	{ Builtin "EditorQuit" }
+	// ECR 6184 begin
+        // Commented out the following block
+        // { Accelerator
+    	//      { ParseCondition "!is_windows_platform();" }
+        //      { Label "Ctrl+E" }
+        //      { Value "Ctrl<Key>E" }
+        // }
+	// ECR 6184 end
+	{ Accelerator
+             // ECR 6184 begin
+             // Commented out the following line
+             // { ParseCondition "is_windows_platform();" }
+             // ECR 6184 end
+             { Label "Alt+F4" }
+             { Value "Alt<Key>F4" }
+        }
+    }
+   { GenerationFunc idehook_file_menu_gen_func }
+}
+
+Menu MenuBarEdit
+{
+    { InMenuBar True }
+    { Label "&Edit" }
+    { Pin True }
+    { MenuEntry
+	{ Name Undo }
+	{ Label "&Undo" }  // Default value
+	{ Builtin "BufferUndo" }
+	{ Accelerator
+             { Label "Ctrl+Z" }
+             { Value "Ctrl<Key>z" }
+	}
+	{ ActiveFunc idehook_diag_undo_active_func }
+	{ LabelFunc idehook_diag_undo_label_func }
+    }
+    { MenuEntry
+	{ Name Redo }
+	{ Label "&Redo" }  // Default value
+	{ Accelerator
+             { Label "Ctrl+Y" }
+             { Value "Ctrl<Key>Y" }
+	}
+	{ Builtin "BufferRedo" }
+	{ ActiveFunc idehook_diag_redo_active_func }
+	{ LabelFunc idehook_diag_redo_label_func }
+    }
+    { Spacer { Name Spacer1 } }
+    { MenuEntry
+	{ Name Cut }
+	{ Label "Cu&t" }
+	{ Builtin "SymbolCut" }
+	{ Accelerator
+             { Label "Ctrl+X" }
+             { Value "Ctrl<Key>x" }
+	}
+	{ ActiveFunc idehook_ok_to_cut_active_func }
+    }
+    { MenuEntry
+	{ Name Copy }
+	{ Label "&Copy" }
+	{ Builtin "SymbolCopy" }
+	{ Accelerator
+             { Label "Ctrl+C" }
+             { Value "Ctrl<Key>c" }
+	}
+// ECR#6041 {{
+// 	{ ActiveFunc idehook_any_node_selected_item_active_func }
+	{ ActiveFunc idehook_ok_to_copy_active_func }
+// }} ECR#6041
+    }
+    { MenuEntry
+	{ Name Paste }
+	{ Label "&Paste" }
+	{ Builtin "BufferPaste" }
+	{ Accelerator
+             { Label "Ctrl+V" }
+             { Value "Ctrl<Key>V" }
+	}
+	{ ActiveFunc idehook_diag_paste_active_func }
+    }
+    { MenuEntry
+	{ Name Delete }
+	{ Label "Delete" }
+	{ Builtin "SymbolDelete" }
+	{ Accelerator
+             { Label "Del" }
+             { Value "<Key>Delete" }
+	}
+	{ ActiveFunc idehook_ok_to_delete_active_func }
+    }
+    { MenuEntry
+	{ Name ClearDiagram }
+	{ Label "Clear Diagram" }
+	{ Builtin "BufferClear" }
+    }
+    { Spacer }
+    //ECR 3853 begin
+    { MenuEntry
+        { ParseCondition "is_windows_platform();" }
+        { Name DrawDiagramToClipboard }
+        { Label "Draw Diagram To Clipboard" }
+        // ECR 7464
+        // { Builtin "EditorQrlEval draw_diagram_to_clipboard();" }
+        { Builtin "EditorQrlEvalNoSave draw_diagram_to_clipboard();" }
+    }
+    { MenuEntry
+        { ParseCondition "is_windows_platform();" }
+        { Name DrawSelectionToClipboard }
+        { Label "Draw Selection To Clipboard" }
+        // ECR 7464
+        // { Builtin "EditorQrlEval draw_selection_to_clipboard();" }
+        { Builtin "EditorQrlEvalNoSave draw_selection_to_clipboard();" }
+    }
+    { Spacer }
+    //ECR 3853 end
+    { MenuEntry
+	{ Name Find }
+	{ Label "&Find..." }
+	{ Builtin "FindDialogShow" }
+	{ Accelerator
+             { Label "Ctrl+F" }
+             { Value "Ctrl<Key>f" }
+	}
+    }
+//     { MenuEntry
+// 	{ Name FindNext }
+//         { Show False }
+//         { Label "Find Ne&xt" }
+//         { Active False }
+// 	{ Builtin "FindDialogShow" }
+// 	{ Accelerator
+//              { Label "F3" }
+//              { Value "<Key>F3" }
+// 	}
+//     }
+//     { MenuEntry
+// 	{ Name FindPrevious }
+//         { Show False }
+//         { Label "Find Pre&vious" }
+//         { Active False }
+// 	{ Builtin "FindDialogShow" }
+// 	{ Accelerator
+//              { Label "Shft+F3" }
+//              { Value "Shft<Key>F3" }
+// 	}
+//     }
+    { MenuEntry
+	{ Name Replace }
+	{ Label "R&eplace..." }
+	{ Builtin "SymbolReplace" }
+	{ ActiveFunc idehook_replace_active_func }
+	{ Accelerator
+             { Label "Ctrl+R" }
+             { Value "Ctrl<Key>r" }
+	}
+    }
+    { Spacer { Name Spacer3 } }
+    // Changed for ECR 4110
+    { MenuEntry
+        // all editors except UmlSequenceDiagram and UmlCollaborationDiagram
+        // added UmlStateDiagram and UmlActivityDiagram for ECR 3786
+        { ParseCondition "current_editor_apptype() != \"UmlSequenceDiagram\" && current_editor_apptype() != \"UmlCollaborationDiagram\" && current_editor_apptype() != \"UmlStateDiagram\" && current_editor_apptype() != \"UmlActivityDiagram\";" }
+    	{ Name ListLabels }
+        // ECR 4061
+	    // { Label "&List Labels..." }
+	    { LabelFunc SymbolNameSearchLabelFunc }
+	    { Builtin "SymbolNameSearch" }
+	    { ActiveFunc gde_name_search_active_func }
+    	{ Accelerator
+             { Value "Ctrl<Key>Tab" }
+    	}
+	}
+    { MenuEntry  
+        { ParseCondition "current_editor_apptype() == \"UmlSequenceDiagram\" || current_editor_apptype() == \"UmlCollaborationDiagram\";" }
+    	{ Name ListLabels }
+        // ECR 4061
+	    // { Label "&List Labels..." }
+	    { LabelFunc SymbolNameSearchLabelFunc }
+        // ECR 7464
+        // { Builtin "EditorQrlEval useq_ucollab_name_search();" }
+        { Builtin "EditorQrlEvalNoSave useq_ucollab_name_search();" }
+    	{ ActiveFunc gde_name_search_active_func }
+    	{ Accelerator
+             { Value "Ctrl<Key>Tab" }
+    	}
+    }
+    // End ECR 4110
+    // Begin Add ECR 3786
+    { MenuEntry  
+        { ParseCondition "current_editor_apptype() == \"UmlStateDiagram\" || current_editor_apptype() == \"UmlActivityDiagram\";" }
+    	{ Name ListLabels }
+        // ECR 4061
+	    // { Label "&List Labels..." }
+	    { LabelFunc SymbolNameSearchLabelFunc }
+        // ECR 7464
+        // { Builtin "EditorQrlEval uactivityd_ustated_name_search();" }
+        { Builtin "EditorQrlEvalNoSave uactivityd_ustated_name_search();" }
+    	{ ActiveFunc gde_name_search_active_func }
+    	{ Accelerator
+             { Value "Ctrl<Key>Tab" }
+    	}
+    }
+    // End Add ECR 3786
+    { MenuEntry  
+	{ Name GlobalObjectRename }
+	// { Label "Rena&me Object Systemwide..." } ECR 7475
+        { LabelFunc SymbolRenameLabelFunc } // ECR 7475
+	{ ActiveFunc idehook_rename_object_systemwide_active_func } 
+	{ Builtin "SymbolStartGlobalObjectRename" } 
+    }
+    { Spacer { Name Spacer4 } }
+    { MenuEntry 
+	{ Name EditDiagAnnot }
+	{ Label "Diagram A&nnotation" }
+	{ Builtin "FileAnnotEdit" }
+    }
+    // ECR 3789 begin
+    { MenuEntry
+        { ParseCondition "is_product_uml();" }
+    	{ Name EditNoteDescEM }
+    	{ Show True }
+    	{ Label "Object Descrip&tion..." }
+    	// ECR 7464
+    	// { Builtin "EditorQrlEval ps_NoteDescription_cb_acc(\"GenericObject\");" }
+    	{ Builtin "EditorQrlEvalNoSave ps_NoteDescription_cb_acc(\"GenericObject\");" }
+    	{ Accelerator
+                 { Value "Ctrl<Key>t" }
+    	}
+    	{ ActiveFunc idehook_one_semantic_sym_selected_item_active_func }
+    }
+    // ECR 3789 end
+    { MenuEntry
+	{ Name EditAnnot }
+	{ Label "Object &Annotation..." }
+	{ Builtin "SymbolAnnotEdit" }
+	{ Accelerator
+             { Label "Ctrl+A" }
+             { Value "Ctrl<Key>a" }
+	}
+	{ ActiveFunc idehook_one_semantic_sym_selected_item_active_func }
+    }
+    { MenuEntry
+        { Name ObjectProperties }
+        { Show False }
+        { Label "Pr&operties" }
+        //{ Builtin "EditorQrlEvalNoSave UmlPopUpPropSheet(\"uusecased\");" }
+        //{ ActiveFunc UmlUsecaseObjectPropsActive }
+    }
+    { MenuEntry
+	{ Name CurrentSymbol }
+	{ Label "Current &Symbol Options..." } // ECR 7293 - added ellipsis
+	{ Builtin "CurrentSymbolPropsShow" }
+	{ ActiveFunc idehook_any_sym_selected_item_active_func }
+    }
+}
+
+Menu View
+{
+    { InMenuBar True }
+    { Label "&View" }
+    { Pin True }
+    { MenuEntry
+	{ Name NormalView }
+	{ Label "&Normal" }
+	{ ActiveFunc idehook_view_normalview_active_func }
+	{ Builtin "EditorPrintPreviewToggle" }
+	//{ LabelFunc idehook_print_preview_label_func }
+    }
+    { MenuEntry
+	{ Name PageLayout }
+	{ Label "Page &Layout" }
+	{ ActiveFunc idehook_view_pagelayout_active_func }
+	{ Builtin "EditorPrintPreviewToggle" }
+    }
+//     { MenuEntry
+// 	{ Name PrintPreview }
+// 	{ Label "Sho&w/Hide Print Preview" }
+// 	{ Builtin "EditorPrintPreviewToggle" }
+// 	{ LabelFunc idehook_print_preview_label_func }
+//     }
+    { Spacer }
+    { MenuEntry
+	{ Name Center }
+	{ Label "&Center" }
+	{ Builtin "BufferCenter" }
+    }
+    { Spacer }
+    { MenuEntry
+	{ Name ShowStandardToolbar }
+ 	{ LabelFunc showStdToolbar_label_func }
+	{ Builtin "ToggleStandardToolbar" }
+    }
+    { MenuEntry
+	{ Name ShowSymbolToolbar }
+	{ LabelFunc showSymbolToolbar_label_func }
+	{ Builtin "ToggleSymbolToolbar" }
+    }
+    { Spacer }
+    { MenuEntry
+	{ Name ShowLog }
+        { LabelFunc ShowMessageLogLabelFunc }
+	{ Builtin "ToggleMsgDialog" }
+	{ Accelerator
+             { Label "Ctrl+M" }
+             { Value "Ctrl<Key>M" }
+        }
+    }
+    { MenuEntry
+	{ Name Panner }
+	{ Label "Show &Panner" }
+	{ Builtin "PannerShow" }
+    }
+    { MenuEntry
+	{ Name ShowDesktop }
+	{ Label "Show Desk&top" }
+	// ECR 7464
+        // { Builtin "EditorQrlEval editor_send_msg(\"stp\",\"EditorShowDeiconify\",-1);" }
+        { Builtin "EditorQrlEvalNoSave editor_send_msg(\"stp\",\"EditorShowDeiconify\",-1);" }
+    }
+    { MenuEntry
+	{ ParseCondition "!is_windows_platform();" }
+	{ Name CollaborationWindow }
+	{ Label "Manage Collabo&ration Windows..." }
+	{ Builtin "EditorQrlEvalNoSave remote_canvas();" }
+    }
+    { Spacer }
+    { MenuEntry
+	{ Name ApplyFilter }
+	{ Label "&Apply Filter..." }
+	{ Builtin "ApplyFilterDialogShow" }
+    }
+    { MenuEntry
+	{ Name DefineFilter }
+	{ Label "Define &Filter..." }
+	{ Builtin "DefineFilterDialogShow" }
+    }
+    { Spacer { Name Spacer3 } }
+    { SubMenu
+	{ Name ZoomMenu }
+	{ Label "&Zoom" }
+    }
+    { MenuEntry
+	{ Name ZoomUp5 }
+	{ Label "Zoom &In" }
+	{ Builtin "BufferZoom +" }
+	{ Accelerator
+              //ECR6162
+              { Label "Alt+Ctrl+I" }
+              { Value "Alt Ctrl<Key>i" }
+        }
+    }
+    { MenuEntry
+	{ Name ZoomDown5 }
+	{ Label "Zoom &Out" }
+	{ Builtin "BufferZoom -" }
+	{ Accelerator
+              //ECR6162
+              { Label "Alt+Ctrl+O" }
+              { Value "Alt Ctrl<Key>o" }
+        }
+    }
+    { MenuEntry
+	{ Name ZoomToSelection }
+	{ Label "Fit S&election in Drawing Area" }
+	{ Builtin "BufferZoom FitSelection" }
+	{ Accelerator
+             { Label "Alt+Ctrl+S" }
+             { Value "Alt Ctrl<Key>s" }
+        }
+    }
+    { MenuEntry
+	{ Name ZoomToFitDiagram }
+	{ Label "Fit &Diagram in Drawing Area" }
+	{ Builtin "BufferZoom FitDiagram" }
+	{ Accelerator
+             { Label "Alt+Ctrl+D" }
+             { Value "Alt Ctrl<Key>d" }
+        }
+    }
+    { Spacer }
+    { MenuEntry 
+	{ Name UpdateDmarks }
+	{ Label "&Refresh Display Marks" } 
+	{ Builtin "BufferUpdateDmarks" }
+	{ ActiveFunc gde_update_dmarks_active_func }
+	{ Accelerator
+             { Label "F5" }
+             { Value "<Key>F5" }
+        }
+    }
+}
+
+// we can keep this menu to a minimum now, as the entries are overridden
+// when the true zoom settings are found for perfect font display. The
+// values here will only be used if there is some problem loading fonts.
+//
+Menu ZoomMenu
+{
+    { Pin True }
+    { MenuEntry
+	{ Name Zoom100 }
+	{ Label "100%" }
+	{ Builtin "BufferZoom 100" }
+    }
+    { MenuEntry
+	{ Name Zoom75 }
+	{ Label "75%" }
+	{ Builtin "BufferZoom 75" }
+    }
+    { MenuEntry
+	{ Name Zoom60 }
+	{ Label "60%" }
+	{ Builtin "BufferZoom 60" }
+    }
+    { MenuEntry
+	{ Name Zoom50 }
+	{ Label "50% " }
+	{ Builtin "BufferZoom 50" }
+    }
+    { MenuEntry
+	{ Name Zoom20 }
+	{ Label "20% " }
+	{ Builtin "BufferZoom 20" }
+    }
+}
+
+
+
+Menu Navigation
+{
+    { InMenuBar True }
+    { Label "&GoTo" }
+    { Pin True }
+    { GenerationFunc idehook_navigation_menu_gen_func }
+}
+
+Menu ProductMenu
+{
+    { InMenuBar True }
+    { Label "" }
+}
+
+Menu Tools
+{
+    { InMenuBar True }
+    { Label "&Tools" }
+    { Pin True }
+    { MenuEntry
+	    { Name CheckSyntax }
+	    { Label "Check Synta&x" } 
+	    { Builtin "EditorQrlEvalNoSave gde_check_syntax(True);" } 
+	    { Accelerator
+            { Label "F7" }
+            { Value "<Key>F7" }
+        }
+    }
+    { MenuEntry
+	    { Name CheckSemantics }
+	    { Label "Check &Semantics" }
+	    { Builtin "EditorExecCommand CheckSemantics" }
+	    { Accelerator
+            { Label "Shift+F7" }
+            { Value "Shift<Key>F7" }
+        }
+    }
+    { Spacer }
+    { MenuEntry
+	{ Name Align }
+	{ Label "&Align..." }
+	{ Builtin "AlignDialogShow" }
+	{ ActiveFunc idehook_any_sym_selected_item_active_func }
+    }
+    { MenuEntry
+	{ Name DeleteSplinePoints }
+	{ Label "Delete Spline Points" }
+	{ Builtin "SymbolDeleteSplineControls" }
+	{ ActiveFunc idehook_one_plus_spline_selected_item_active_func }
+    }
+    { MenuEntry
+	{ Show False } // Default is to hide this entry
+	{ Name DeleteUnconnectedAnchors }
+    	{ Label "Delete Unconnected Anchors" }
+	{ Builtin "EditorQrlEval DeleteUnconnectedAnchors();" }
+    }
+    { MenuEntry
+	{ Name AttachToArc }
+	{ Label "Attac&h to Arc" }
+	{ Builtin "SymbolAttachParams" }
+	{ ActiveFunc idehook_one_arc_plus_cntx_selected_item_active_func }
+    }
+    { Spacer }
+    { MenuEntry
+// 	{ Name HoldView }
+	{ Name RemoteAccess }
+//      { Label "Reject/Accept Re&mote Access" }
+//      { Active False }
+	{ Builtin "EditorToggleNavigationState" }
+	{ LabelFunc idehook_hold_view_label_func }
+    }
+//     { MenuEntry  
+// 	{ Name GlobalObjectRename }
+// 	{ Label "&Rename Object Systemwide..." } 
+// 	{ ActiveFunc idehook_rename_object_systemwide_active_func } 
+// 	{ Builtin "SymbolStartGlobalObjectRename" } 
+//     }
+    { Spacer
+	{ IsDebug True }
+    }
+    { MenuEntry  
+	{ Name MapAllObjects }
+	{ Label "Map &Entire Diagram" } 
+	{ Builtin "EditorQrlEvalNoSave gde_map_all_symbols();" } 
+	{ IsDebug True }
+    }
+    { MenuEntry  
+	{ Name DumpObjects }
+	{ Label "&Dump Objects" } 
+	{ Builtin "EditorQrlEvalNoSave  gde_dump_objects(False);" } 
+	{ IsDebug True }
+    }
+    { MenuEntry  
+	{ Name DumpObjectsVerbose }
+	{ Label "Dump Objects (&Verbose)" } 
+	{ Builtin "EditorQrlEvalNoSave gde_dump_objects(True);" } 
+	{ IsDebug True }
+    }
+    { Spacer }
+    { MenuEntry
+	{ Name Options }
+	{ Label "&Options..." }
+	{ Builtin "EditorPropsShow" }
+    }
+}
+
+
+Include "rules/help_menu.std"
+Include "rules/gde_toolbar.rules"
+Include "rules/gde_object_rename.std"
+
+Menu ProductMenu
+{
+    { ParseCondition "!is_product_se();" }
+    { Show False }
+    // { Active False }
+    { Label "&UML" }
+}
+
+
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/rules/user_gde_menu_bar.std"
+

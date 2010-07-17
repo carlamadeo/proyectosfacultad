@@ -1,0 +1,34 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/T
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1994
+// 	All rights reserved
+//
+
+// this note is currently only used to specify used and produced information 
+// on SE data modules.
+
+Note 804002
+{
+    { AppType TestDataType }
+    { HelpText "The Test Used or Produced note provides a way of specifying if an object should be used or produced by a test cases.  It is utilized where this is not apparant from the context of the diagram." }
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Test Used or Produced" }
+    { Item
+        { AppType TUsed }
+        { HelpText "This field is used to determine whether this data module is used and/or produced by the model." }
+        { Bounds { Min 0 } { Max 1 } }
+        { PrintName "Used" }
+        { InitValue "True" }
+    }
+    { Item
+        { AppType TProduced }
+        { HelpText "This field is used to determine whether this data module is used and/or produced by the model." }
+        { Bounds { Min 0 } { Max 1 } }
+        { PrintName "Produced" }
+        { InitValue "True" }
+    }
+}
+
+

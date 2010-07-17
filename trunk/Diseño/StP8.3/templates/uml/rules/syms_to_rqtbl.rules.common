@@ -1,0 +1,153 @@
+NodeSymbol MultiSelectionNavigation
+{
+    { PrintName "Hook for navigations with multiselection" }
+    { Shape { Predefined Rectangle }}
+    { ReadOnly True }
+
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+        //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { FailureCmd GoToDOORSFromMulti }
+    }
+}
+
+NodeSymbol RequirementToNodeNodeSymbols
+{
+    { Navigation
+        { Name RequirementTableFromNode }
+        { Label "Allocate Requirements"}
+        { FailureCmd NodeGoToRequirementsTable }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+        //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { FailureCmd GoToDOORSFromNode }
+    }
+}
+
+
+LinkSymbol RequirementToLinkLinkSymbols
+{
+    { Navigation
+        { Name RequirementTableFromLink }
+        { Label "Allocate Requirements"}
+        { FailureCmd LinkGoToRequirementsTable }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+        //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { FailureCmd GoToDOORSFromLink }
+    }
+}
+
+LinkSymbol RequirementToNodeLinkSymbols
+{
+    { Navigation
+        { Name RequirementTableFromLink }
+        { Label "Allocate Requirements"}
+        { FailureCmd NodeGoToRequirementsTable }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+        //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { FailureCmd GoToDOORSFromNode }
+    }
+}
+
+//ECR 4892 begin
+CntxSymbol RequirementToLinkCntxSymbols
+{
+    { Navigation
+        { Name RequirementTableFromCntx }
+        { Label "Allocate Requirements"}
+        { FailureCmd LinkGoToRequirementsTable }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+        //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { FailureCmd GoToDOORSFromCntx }
+    }
+}
+//ECR 4892 end
+
+CntxSymbol RequirementToNodeCntxSymbols
+{
+    { Navigation
+        { Name RequirementTableFromCntx }
+        { Label "Allocate Requirements"}
+        { FailureCmd NodeGoToRequirementsTable }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+        //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { FailureCmd GoToDOORSFromNode }
+    }
+}
+
+Command NodeGoToRequirementsTable
+{
+    // ECR 7464
+   // { Builtin "EditorQrlEval to_requirements_table_from_node(${node.id});" }
+   { Builtin "EditorQrlEvalNoSave to_requirements_table_from_node(${node.id});" }
+}
+
+Command LinkGoToRequirementsTable
+{
+    // ECR 7464
+   // { Builtin "EditorQrlEval to_requirements_table_from_link(${link.id});" }
+   { Builtin "EditorQrlEvalNoSave to_requirements_table_from_link(${link.id});" }
+}
+
+Command CntxGoToRequirementsTable
+{
+    // ECR 7464
+   // { Builtin "EditorQrlEval to_requirements_table_from_cntx(${cntx.id});" }
+   { Builtin "EditorQrlEvalNoSave to_requirements_table_from_cntx(${cntx.id});" }
+}
+ 
+Command GoToDOORSFromNode
+{
+   { Builtin "EditorQrlEvalNoSave node_navigate_to_doors(0${node.id});" }
+}
+
+ 
+Command GoToDOORSFromLink
+{
+   { Builtin "EditorQrlEvalNoSave link_navigate_to_doors(0${link.id});" }
+}
+ 
+Command GoToDOORSFromCntx
+{
+   { Builtin "EditorQrlEvalNoSave cntx_navigate_to_doors(0${cntx.id});" }
+}
+
+Command GoToDOORSFromMulti
+{
+   { Builtin "EditorQrlEvalNoSave doors_export_selected();" }
+}
+
+

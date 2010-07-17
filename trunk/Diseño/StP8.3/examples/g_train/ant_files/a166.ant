@@ -1,0 +1,34 @@
+FileObject 1
+{
+    { Name "a166" }
+    { Type ObjectAnnotation }
+    { GUID "UID_2F4DB6C8-5F0E-4257-876A-5889A2043132" }
+}
+
+NodeObject 99999
+{
+    { Name "count" }
+    { Type LibraryModule }
+    { ObjectId 2627 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_D9B5AFB2-2CB4-4800-99CE-485A9B155D34" }
+}
+
+NoteObject 2
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 2629 }
+}
+
+ItemObject 3
+{
+    { Type ObjectName }
+    { Value "count" }
+    { NoteId 2 }
+    { ObjectId 2630 }
+}
+

@@ -1,0 +1,30 @@
+/* XPM */
+static char* classes_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 8 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #000000	c #00ffff",
+"o	m #000000	c #0000ff",
+"x	m #ffffff	c #c0c0c0",
+"+	m #000000	c #ffff00",
+"*	m #000000	c #000080",
+/* pixels */
+"................",
+"XXXXXXXXXXXXXXX.",
+"XOOOOOOOOOOOOoXx",
+"XOOOOOOOOOOOOoXx",
+"XOOOOOOOOOOOOoXx",
+"XXXXXXXXXXXXXXXx",
+"X++++++++++++oXx",
+"X++++++++++++oXx",
+"X++++++++++++oXx",
+"XXXXXXXXXXXXXXXx",
+"Xoooooooooooo*Xx",
+"XoooooooooooooXx",
+"Xoooooooooooo*Xx",
+"XXXXXXXXXXXXXXXx",
+".xxxxxxxxxxxxxxx",
+"................"};

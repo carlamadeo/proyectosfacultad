@@ -1,0 +1,60 @@
+FileObject 1
+{
+    { Name "a11" }
+    { Type ObjectAnnotation }
+    { GUID "UID_7CAD261D-0206-11d6-AE65-000000000000" }
+}
+
+NodeObject 99999
+{
+    { Name "ClockBird" }
+    { Type UmlClass }
+    { ObjectId 421 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_378C31F2-544B-11d4-8778-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "cry" }
+    { Type UmlOperation }
+    { ObjectId 422 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_378C31FD-544B-11d4-8778-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 424 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 426 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "cry" }
+    { NoteId 3 }
+    { ObjectId 427 }
+}
+
+ItemObject 5
+{
+    { Type UniqueID }
+    { Value "156" }
+    { NoteId 3 }
+    { ObjectId 428 }
+}
+

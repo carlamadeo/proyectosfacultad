@@ -1,0 +1,1447 @@
+
+//      StP/Uml
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+//
+
+// Master include -- includes everything else
+// general qrl utility functions
+#include "rules/qrl/ct.inc"
+
+// some more stuff from ct
+#include "rules/qrl/gde_qrl_std.inc"
+#include "rules/qrl/requirements_nav.inc"
+
+// the UML stuff
+#include "rules/qrl/uml.inc"
+#include "rules/qrl/oper_parse.inc"
+#include "rules/qrl/uml_stereotypes.inc"
+#include "rules/qrl/uclassd_decorate_class.inc"
+#include "rules/qrl/uclassd_syntax.inc"
+#include "rules/qrl/uclassd_semantics.inc"
+#include "rules/qrl/package_sym_rename.inc"
+#include "rules/qrl/uclassd_rename.inc"
+#include "rules/qrl/gde_uml_object_rename.inc"
+#include "rules/qrl/uclassd.ps.qrl"
+#include "rules/qrl/uclassd_drag_and_drop.inc"
+#include "qrl/include/export_to_doors.inc"
+
+// Reverse Engineering Stuff
+#include "rules/qrl/pe_nav.inc"
+#include "rules/qrl/cc_update.inc"
+
+// shared symbols
+#include "rules/qrl/object_instance.inc"
+
+// ObjectAda Navigation code
+#include "rules/qrl/re_pe_label_funcs.inc"
+#include "rules/qrl/objectcenter_nav.inc"
+
+// local definitions needed for generic navigation code
+#include "rules/qrl/uml_ada_nav.inc"
+// Begin Add ECR 4179
+#include "rules/qrl/navtostp.inc"
+#include "rules/qrl/navtosniff.inc"
+// End Add ECR 4179
+
+// ECR 5184 start
+#include "rules/qrl/uclassd.inc"
+// ECR 5184 end
+
+// ECR4052 Model Management
+#include "rules/qrl/model_management.inc"
+
+// ECR3609 UclassD Auto-Draw
+#include "rules/qrl/uclassd_draw.qrl"
+
+//  Add any user customizations to the file included below:
+#include_if_exists "user/uml/rules/qrl/user_uclassd.qrl"
+
+#include "rules/qrl/uclassd_marks.inc" // ECR 5184
+
+#include "rules/qrl/default_arc_type.inc" //ECR 6469
+
+// ECR 3856 begin
+boolean AggregationInit(int psymid, int linkId) // ECR 6502, 6503
+{
+    gde_arc ga = gde_arc_find_by_psymid(psymid); // ECR 6502, 6503
+    gde_arc_replace_at(ga, "Association"); // ECR 6502, 6503
+    gde_map_all_symbols(); // ECR 7765
+    item aggItem, oppItem;
+    link oppRole;
+    aggItem = find_by_query("item[UmlAggregationType && link[id==${linkId}]]" );
+    if(NULL != aggItem)
+        return True;
+    oppRole = find_by_query("link[id != ${linkId} && to_node[UmlAssociation && in_links[id==${linkId}]]]" );
+    if(NULL != oppRole) // Reflexive association
+    {
+        oppItem = find_by_query("item[UmlAggregationType && link[id==${oppRole.id}]]" );
+        if(NULL != oppItem)
+            return True;
+    }
+    editor_send_msg(NGOAE_CLASS, OAE_CMD_ANNOT_EDIT + linkId, CH_FIRST);
+    editor_send_msg(NGOAE_CLASS, OAE_CMD_NOTE_SEL + "UmlRoleDefinition", CH_FIRST);
+    editor_send_msg(NGOAE_CLASS, OAE_CMD_ITEM_SEL + "UmlAggregationType", CH_FIRST);
+    editor_send_msg(NGOAE_CLASS, OAE_CMD_ITEM_SETVAL + "\"Aggregation\"", CH_FIRST);
+    editor_send_msg(NGOAE_CLASS, OAE_CMD_FILE_SAVE, CH_FIRST);
+    editor_send_msg(NGOAE_CLASS, OAE_CMD_ANNOT_UNLOAD, CH_FIRST);
+    return True;
+}
+// ECR 3856 end
+
+// ECR 7480 start
+boolean DirectedAssociationInit(int psymid, int linkId)
+{
+    gde_arc ga = gde_arc_find_by_psymid(psymid);
+    gde_arc_replace_at(ga, "Association");
+    gde_map_all_symbols(); // ECR 7765
+    item aggItem, oppItem;
+    link oppRole;
+    aggItem = find_by_query("item[UmlRoleNavigability && link[id==${linkId}]]" );
+    if(NULL != aggItem)
+        return True;
+    oppRole = find_by_query("link[id != ${linkId} && to_node[UmlAssociation && in_links[id==${linkId}]]]" );
+    if(NULL != oppRole) // Reflexive association
+    {
+        oppItem = find_by_query("item[UmlRoleNavigability && link[id==${oppRole.id}]]" );
+        if(NULL != oppItem)
+            return True;
+    }
+    editor_send_msg(NGOAE_CLASS, OAE_CMD_ANNOT_EDIT + linkId, CH_FIRST);
+    editor_send_msg(NGOAE_CLASS, OAE_CMD_NOTE_SEL + "UmlRoleDefinition", CH_FIRST);
+    editor_send_msg(NGOAE_CLASS, OAE_CMD_ITEM_SEL + "UmlRoleNavigability", CH_FIRST);
+    editor_send_msg(NGOAE_CLASS, OAE_CMD_ITEM_SETVAL + "\"True\"", CH_FIRST);
+    editor_send_msg(NGOAE_CLASS, OAE_CMD_FILE_SAVE, CH_FIRST);
+    editor_send_msg(NGOAE_CLASS, OAE_CMD_ANNOT_UNLOAD, CH_FIRST);
+    return True;
+}
+// ECR 7480 end
+
+string uml_has_qualifier(string qual_val)
+{
+	if (NULL != qual_val && "" != qual_val) {
+		return "OpenBox";
+	}
+	return "None";
+}
+
+// Added for ECR 75
+boolean role_is_ordered(string val)
+{
+	if (val == "True" ) {
+		return True;
+	}
+	return False;
+}
+
+// This function returns the display marks that are appended to the
+// atttribute name. This is in the format:
+// : typestr = defval
+//
+string
+uml_attribute_type_and_defval(list matched_items)
+{
+    item            one_item;
+    int             i;
+    string          type = "", default = "";
+	int             numItems = list_count(matched_items);
+
+    for (i = 0; i < numItems; i = i + 1)
+    {
+		one_item = list_get(matched_items, i);
+
+		if (one_item.type == "UmlAttributeType")
+		{
+			type = " : " + one_item.value;
+		} else
+		{
+			if (one_item.type == "UmlAttributeDefaultValue")
+				default = " = " + one_item.value;
+		}
+    }
+    return type + default;
+}
+
+
+// This returns the return type string of an operation.
+string
+uml_operation_return_type(list matched_items)
+{
+    item            one_item;
+    int             i;
+	int             numItems = list_count(matched_items);
+
+    for (i = 0; i < numItems; i = i + 1)
+    {
+		one_item = list_get(matched_items, i);
+		if (one_item.type == "UmlOperationReturnType")
+		{
+			return " : " + one_item.value;
+		}
+    }
+    return "";
+}
+
+// This returns the LabelMark attribute for the IsClass display mark
+string
+uml_member_is_class(list matched_items)
+{
+    item            one_item;
+    int             i;
+	int             numItems = list_count(matched_items);
+
+    for (i = 0; i < numItems; i = i + 1)
+    {
+		one_item = list_get(matched_items, i);
+		if (one_item.type == "UmlMemberIsClass")
+		{
+			if ("True" == one_item.value) {
+				return "BottomBar";
+			} else {
+				return "None";
+			}
+		}
+    }
+    return "None";
+}
+
+string
+uml_package_str(int classid)
+{
+	if (classid == 0)
+		return "";
+
+        // SPR 308 - missing ')'
+	list packs;
+	packs = uml_get_containing_packages(find_by_query("node[" + classid + "]"));
+	if (NULL != packs && 1==list_count(packs)) {
+		node package = list_get(packs,0);
+		return "(" + package.name + ")";
+	}
+	return "";
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+// this function will remove everything but the name from an attribute. By
+// necessity, it will parse the attribute into UML format and then
+// take just the name portion
+string uml_attribute_name(gde_mapsymbol attr)
+{
+	gde_node gn = to_gde_node(attr);
+	string cur_lbl = gde_node_label(gn);
+
+	if (NULL == cur_lbl || "" == cur_lbl) {
+		return NULL;
+	}
+
+	uml_argument arg = uml_arg_string_to_struct(cur_lbl);
+
+	// OK - time for a hack
+	// See uml_operation_signature for an explanation
+	arg.argName = string_translate(arg.argName, UML_BAD_CH,
+			UML_GOOD_CH);
+
+    // ECR 5736 begin
+    arg.argName = strip_whitespace(arg.argName);
+    // ECR 5736 end
+
+	if (cur_lbl != arg.argName && !gde_rename_in_progress()) {
+		gde_node_set_label(gn, arg.argName);
+	}
+	return arg.argName;
+}
+
+// same sort of thing for operations.
+
+// This function does NOT handle C-style operation input with
+// parentheses in the return type (i.e. function pointer return type)
+
+string uml_operation_name(gde_mapsymbol op)
+{
+	gde_node gn = to_gde_node(op);
+	string cur_lbl = gde_node_label(gn);
+
+	if (NULL == cur_lbl || "" == cur_lbl) {
+		return NULL;
+	}
+
+	uml_operation parsed_op = uml_parse_operation(cur_lbl);
+
+    // ECR 5736 begin
+    parsed_op.opName = strip_whitespace(parsed_op.opName);
+    // ECR 5736 end
+
+	// to prevent mapping if there is a parse error, return NULL on error
+	if (parsed_op.error) {
+		return NULL;
+	} else {
+		return parsed_op.opName;
+	}
+}
+
+string uml_format_op_name(string name, string sig)
+{
+	string label = NULL;
+	if (NULL != name) {
+		label = name;
+
+		if (NULL != sig && "" != sig) {
+			label += "( " + sig + " )";
+		} else {
+			label += "()";
+		}
+	}
+	return label;
+}
+// same for the signature
+
+string uml_operation_signature(gde_mapsymbol op)
+{
+	gde_node gn = to_gde_node(op);
+	string cur_lbl = gde_node_label(gn);
+        string good_name;
+        string good_args;
+        string good_ret_type;
+
+	if (NULL == cur_lbl || "" == cur_lbl) {
+		return NULL;
+	}
+
+	uml_operation parsed_op = uml_parse_operation(cur_lbl);
+
+	// OK - time for a hack
+	// we want to update the label, but GDE doesn't have a facility
+	// for doing that. Although it is not specified, the SigFunc is
+	// always called AFTER the NameFunc. So, we can safely set the
+	// label of operations here.
+        good_name = string_translate(parsed_op.opName,
+                                     UML_OPER_BAD_CH,
+                                     UML_OPER_GOOD_CH);
+        good_args = string_translate(parsed_op.opArgs,
+                                     // ECR 4882 - begin
+                                     // UML_OPER_BAD_CH_NO_COL,
+                                     // UML_OPER_GOOD_CH_NO_COL);
+                                     UML_OPER_BAD_CH_NO_COL_QUAT,
+                                     UML_OPER_GOOD_CH_NO_COL_QUAT);
+                                     // ECR 4882 - end
+	string new_lbl = uml_format_op_name(good_name,good_args);
+	if ("" != parsed_op.opRetType) {
+            good_ret_type = string_translate(parsed_op.opRetType,
+                                             UML_BAD_CH,
+                                             UML_GOOD_CH);
+            new_lbl += ": " + good_ret_type;
+	}
+	if (new_lbl != cur_lbl && !gde_rename_in_progress() && !parsed_op.error) {
+		gde_node_set_label(gn, new_lbl);
+	}
+	// to prevent mapping if there is a parse error, return NULL on error
+	if (parsed_op.error) {
+		return NULL;
+	} else {
+		return parsed_op.opArgs;
+	}
+}
+
+
+string uml_instantiated_class_name(gde_mapsymbol cls)
+{
+	gde_node gn = to_gde_node(cls);
+	string cur_lbl = gde_node_label(gn);
+
+	if (NULL == cur_lbl || "" == cur_lbl) {
+		return NULL;
+	}
+
+	int args = string_find(cur_lbl,0,"<");
+	if (string_length(cur_lbl) != args) {
+		if (args > 0) {
+			cur_lbl = string_extract(cur_lbl,0,args);
+		} else {
+			cur_lbl = "";
+		}
+	}
+	cur_lbl = strip_whitespace(cur_lbl);
+	if ("" == cur_lbl)
+		cur_lbl = NULL;
+	else
+		cur_lbl = uml_base_name(cur_lbl);
+	return cur_lbl;
+}
+
+string uml_instantiated_class_signature(gde_mapsymbol cls)
+{
+	gde_node gn = to_gde_node(cls);
+	string cur_lbl = gde_node_label(gn);
+	int len;
+
+	if (NULL == cur_lbl || "" == cur_lbl) {
+		return NULL;
+	}
+	list parsed_class = uml_parse_instantiated_class(cur_lbl);
+	if (NULL == parsed_class) {
+		gde_print_error("Mapping error: unable to parse " +
+				"instantiated class label", gde_node_psymid(gn));      
+		return NULL;
+	}
+	string new_lbl = uml_format_instantiated_class(parsed_class);
+	string params = uml_format_instantiated_class_arguments(parsed_class);
+
+	if (new_lbl != cur_lbl && !gde_rename_in_progress()) {
+		gde_node_set_label(gn, new_lbl);
+	}
+	return params;
+}
+
+// JED - some cloned booch code
+
+string
+uml_class_name_from_qualified_name(gde_mapsymbol cc)
+{
+    string          result = strip_whitespace(uml_qualifiedname_name_part(to_gde_node(cc)));
+
+    if (result == "")
+	return (NULL);
+    else
+	return (result);
+}
+
+string
+uml_cat_name_from_qualified_name(gde_mapsymbol cc)
+{
+    string          result = strip_whitespace(uml_qualifiedname_qualifier_part(to_gde_node(cc)));
+
+    if (result == "")
+	return (NULL);
+    else
+	return (result);
+}
+
+gde_mapsymbol
+uml_only_if_symbol_is_unqualified(gde_mapsymbol s)
+{
+    QualifiedName   n;
+
+    if (!(gde_mapsymbol_is_node(s)))
+	return NULL;
+    QualifiedName__ctor(n, to_gde_node(s));
+    if (n.qualifier == NULL)
+	return s;
+    return NULL;
+}
+
+string
+uml_qualifiedname_qualifier_part(gde_node s)
+{
+    QualifiedName   n;
+
+    QualifiedName__ctor(n, s);
+    return n.qualifier;
+}
+
+string
+uml_qualifiedname_name_part(gde_node s)
+{
+    QualifiedName   n;
+
+    QualifiedName__ctor(n, s);
+    return n.name;
+}
+
+struct	QualifiedName
+{
+    string	qualifier;
+    string	name;
+};
+
+const string    QualifiedName__delimiter = "::";
+const int       QualifiedName__delimiterLength = 2;
+const string    UML_ASSOCIATION_NAME_DELIMITER1 = ":";
+const string    UML_ASSOCIATION_NAME_DELIMITER2 = ",";
+
+void
+QualifiedName__ctor(QualifiedName q, gde_node n)
+{
+    q.name = "";
+    q.qualifier = NULL;		/* distinguish ::cl and cl */
+
+    if (n == NULL)
+	return;
+
+    QualifiedName__string_ctor(q, gde_node_label(n));
+    return;
+}
+
+void
+QualifiedName__string_ctor(QualifiedName q, string s)
+{
+    q.name = "";
+    q.qualifier = NULL;		/* distinguish ::cl and cl */
+
+    if (s == NULL)
+	return;
+
+    q.name = strip_whitespace(s);
+    if (q.name == "")
+	return;
+
+    int             d = string_find(q.name, 0, QualifiedName__delimiter);
+    if (d == string_length(q.name))
+	return;
+
+    q.qualifier = strip_whitespace(string_extract(q.name, 0, d));
+    if (d + QualifiedName__delimiterLength >= string_length(q.name))
+	q.name = "";
+    else
+	q.name = strip_whitespace(string_extract(q.name, d + QualifiedName__delimiterLength, string_length(q.name) - (d + QualifiedName__delimiterLength)));
+
+    return;
+}
+
+
+string
+QualifiedName_to_string(QualifiedName q)
+{
+    if (q.qualifier == NULL)
+	return(q.name);
+    if (q.name == NULL)
+	return(q.qualifier + QualifiedName__delimiter);
+    return(q.qualifier + QualifiedName__delimiter + q.name);
+}
+
+string
+QualifiedName_to_node_label(QualifiedName q)
+{
+    string	l = QualifiedName_to_string(q);
+    return(make_multi_line_label_from_string(l));
+}
+
+
+string
+uml_binary_association_name(gde_mapsymbol assoc_sym)
+{
+    /*
+     * construct a name for an association node from the association link
+     * label and the names of the endpoint classes
+     */
+
+    list            arcs;
+    string          linkname, label, result;
+    int             i;
+    gde_link        assoc;
+    string          from_class_name, to_class_name;
+
+  if (!gde_mapsymbol_is_link(assoc_sym))
+    return (NULL);
+
+  // get association link from mapsymbol
+  assoc = to_gde_link(assoc_sym);
+
+  from_class_name = strip_whitespace(uml_qualifiedname_name_part(gde_link_fromnode(assoc)));
+  to_class_name = strip_whitespace(uml_qualifiedname_name_part(gde_link_tonode(assoc)));
+
+  if (from_class_name == NULL || from_class_name == "") {
+    // both of the endpoints of an association must be labeled
+    gde_print_mapping_error("Mapping error: all classes participating in an association must be labeled", gde_node_psymid(gde_link_fromnode(assoc)));      
+    return NULL;
+  }
+  if (to_class_name == NULL || to_class_name == "") {
+    // both of the endpoints of an association must be labeled
+    gde_print_mapping_error("Mapping error: all classes participating in an association must be labeled", gde_node_psymid(gde_link_tonode(assoc)));      
+    return NULL;
+  }
+
+  // the linkname is the concatenation of the arc segment labels
+  linkname = "";
+  arcs = gde_link_arcs(assoc);
+  for (i = 0; i < list_count(arcs); i = i + 1) {
+    label = strip_whitespace(gde_arc_label(list_get(arcs, i)));
+    if (label != NULL && label != "") {
+      linkname = linkname + label;
+    }
+  }
+
+  // because the link is non-directional I alphabetize the class names
+  // to identify 2 identically named binary associations between the same pair of classes
+    result = "";
+  if (linkname != "")
+    result = linkname + UML_ASSOCIATION_NAME_DELIMITER1;
+
+  if (from_class_name <= to_class_name)
+    result = result + from_class_name + UML_ASSOCIATION_NAME_DELIMITER2 + to_class_name;
+  else
+    result = result + to_class_name + UML_ASSOCIATION_NAME_DELIMITER2 + from_class_name;
+
+  return result;
+}
+
+string
+uml_nary_association_signature(gde_mapsymbol assoc_sym)
+{
+	/*
+	 * construct a sig for an association hub from the names of
+	 * the roles
+	 */
+
+	list            arcs;
+	list            links;
+	string          rolename, result;
+	int             i, j, k;
+	gde_node        assoc;
+	gde_arc         arc;
+	gde_link        lnk;
+	string          role_name, tmp;
+	// ECR 7157: commented next line
+	// list            all_rolenames = list_create("string",0);
+
+	// make sure it's the association hub
+	if (!gde_mapsymbol_is_node(assoc_sym))
+		return (NULL);
+
+	// get association node from mapsymbol
+	assoc = to_gde_node(assoc_sym);
+
+	// JED
+	// get classname/rolename pairs from outarcs into lists
+	// abort if duplicate class names
+	// copy & sort class names
+	// for i=0 to n
+	// get class for sorted lists
+	// get class's position is unsorted list
+	// get rolename from that position
+	// concat to the string.
+	// get outarcs. 
+	list classnames = list_create("string",0);
+	list rolenames = list_create("string",0);
+	list sorted_classnames = list_create("string",0);
+	list sorted_rolenames = list_create("string",0); // ECR 7157;
+	string clsname;
+	gde_node cls;
+	// ECR 7157 begin
+	string str;
+	int first, last;
+	// ECR 7157 end
+
+	arcs = gde_node_outarcs(assoc);
+	for(i=0;i<list_count(arcs);i++) {
+		arc = list_get(arcs,i);
+		// ECR 6742 begin
+		if (gde_lt_name(gde_arc_lt(arc)) == "AssociationClassLink")
+			continue;
+		// ECR 6742 end
+		cls = gde_arc_tonode(arc);
+		// ECR 6682, 6742 begin
+		if(gde_nt_name(gde_node_nt(cls)) == "Vertex") {
+			// a vertex can have more than one outgoing links,
+			// so add these links to the list and process them later
+			list_concatenate(arcs, gde_node_outarcs(cls));
+			continue;
+		}
+		// ECR 6682, 6742 end
+		clsname = gde_node_label(cls);
+		if (clsname == "" || clsname == NULL) {
+			gde_print_mapping_error("Mapping error: all classes participating in an association must be labeled", gde_node_psymid(cls));      
+			return NULL;
+		}
+		// ECR 7157 begin
+		// commented the following lines:
+		// if (list_find(classnames,0,clsname) != list_count(classnames)) {
+		// 	gde_print_mapping_error("Mapping error: duplicate class name '"+
+		// 			clsname + "' in nary association", gde_node_psymid(cls));      
+		// 	return NULL;
+		// }
+		// ECR 7157 end
+		list_append(classnames,clsname);
+		links = gde_arc_links(arc);
+		for(j=0;j<list_count(links);j++) {
+			lnk = list_get(links,j);
+			role_name = uml_binary_association_signature_from_link(lnk);
+			role_name = string_strip(role_name, "B", ":"); // ECR 7157
+			if (NULL == role_name)
+				role_name = "";
+		}
+		list_append(rolenames,role_name);
+	}
+
+	// ECR 7157 begin
+	// sorted_classnames = list_sort(classnames);
+	//
+	// for(i=0;i<list_count(sorted_classnames);i++) {
+	// 	clsname = list_get(sorted_classnames,i);
+	// 	j = list_find(classnames,0,clsname);
+	// 	// ECR 6682, 6742 begin
+	// 	// list_append(all_rolenames,list_get(rolenames,j));
+	// 	if (list_get(rolenames,j) != NULL && list_get(rolenames,j) != "")
+	// 		list_append(all_rolenames,list_get(rolenames,j));
+	// 	// ECR 6682, 6742 end
+	// }
+	//
+	// if (list_count(all_rolenames) == 0 ) {
+	// 	return NULL;
+	// }
+	//
+	// result = list_to_string(all_rolenames,UML_ASSOCIATION_NAME_DELIMITER1);
+
+// ECR 7473 begin
+/*
+	while(list_count(classnames) > 0)
+	{
+		clsname = list_get(classnames, 0);
+		rolename = list_get(rolenames, 0);
+
+		// first find the range of the current class
+		j = list_count(sorted_classnames);
+		first = j;
+		last = j;
+		for (i = 0; i < j; i++)
+		{
+			str = list_get(sorted_classnames, i);
+			if (str == clsname)
+			{
+				if (first == j)
+					first = i;
+			}
+			else if (str > clsname)
+			{
+				last = i;
+				break;
+			}
+		}
+
+		// now find the position of the current role
+		k = last;
+		for (i = first; i < last; i++)
+		{
+			str = list_get(sorted_rolenames, i);
+			// this coundition should be
+			// if (str >= rolename) {...}
+			// BUT IdeTString's operator >=() returns
+			// true if the left operand is empty and
+			// false if the right operand is empty.
+			if (rolename == "" || (str != "" && str >= rolename))
+			{
+				k = i;
+				break;
+			}
+		}
+
+		if (j == k)
+		{
+			list_append(sorted_classnames, clsname);
+			list_append(sorted_rolenames, rolename);
+		}
+		else
+		{
+			list_insert(sorted_classnames, k, clsname);
+			list_insert(sorted_rolenames, k, rolename);
+		}
+
+		list_delete(classnames, 0);
+		list_delete(rolenames, 0);
+	}
+*/
+    uml_nary_association_get_sorted_classnames_and_roles(classnames, rolenames, 
+                                                         sorted_classnames, sorted_rolenames);
+// ECR 7473 end
+
+	result = "";
+	j = list_count(sorted_rolenames);
+	for (i = 0; i < j; i++)
+	{
+		if (i != 0)
+			result = result + UML_ASSOCIATION_NAME_DELIMITER1;
+		result = result + list_get(sorted_rolenames, i);
+	}
+
+	list_clear(classnames);
+	list_clear(rolenames);
+	list_clear(sorted_classnames);
+	list_clear(sorted_rolenames);
+	// ECR 7157 end
+	return result;
+}
+
+string
+uml_binary_association_signature(gde_mapsymbol assoc_sym)
+{
+  // construct a signature for an association node
+  // from the association link label and the names of the endpoint classes
+
+  gde_link assoc;
+
+  if (!gde_mapsymbol_is_link(assoc_sym))
+    return ("");
+
+  // get association link from mapsymbol
+  assoc = to_gde_link(assoc_sym);
+  return uml_binary_association_signature_from_link(assoc);
+}
+
+string
+uml_binary_association_signature_from_link(gde_link assoc)
+{ 
+  /* construct a signature for an association node from the association roles */
+
+  list cntxs;
+  gde_cntx cntx;
+  string fromrole, torole, result;
+  int i;
+
+  /* search for from and to roles in the list of attached contexts */
+  fromrole = "";
+  torole = "";
+  cntxs = gde_link_cntxs(assoc);
+  for (i = 0; i < list_count(cntxs); i = i + 1) {
+    cntx = list_get(cntxs, i);
+    if (gde_ct_name(gde_cntx_ct(cntx)) == "RelLabelFrom" ) {
+      fromrole = gde_cntx_label(cntx);
+      continue;
+    }
+    if (gde_ct_name(gde_cntx_ct(cntx)) == "RelLabelTo" ) {
+      torole =  gde_cntx_label(cntx);
+      continue;
+    }
+  }
+  string from_class_name = strip_whitespace(uml_qualifiedname_name_part(gde_link_fromnode(assoc)));
+  string to_class_name = strip_whitespace(uml_qualifiedname_name_part(gde_link_tonode(assoc)));
+  /* The order of the roles in the association signature
+   * should agree with the order of the class names in the association name.
+   * */
+	// ECR 7157 begin
+	// commented the following lines:
+	// if ("" == fromrole || "" == torole) {
+	//   result = fromrole + torole;
+	// } else {
+	// ECR 7157 end
+	  if (from_class_name != NULL && to_class_name != NULL && 
+			  from_class_name != to_class_name && // ECR 6682, 6742
+			  from_class_name != "" && to_class_name != "") {
+		if (from_class_name <= to_class_name)
+			result = fromrole + UML_ASSOCIATION_NAME_DELIMITER1 + torole;
+		else
+			result = torole + UML_ASSOCIATION_NAME_DELIMITER1 + fromrole;
+	  } else {
+		// ECR 7157 begin
+		// if (fromrole <= torole)
+		//
+		// this coundition was changed because
+		// IdeTString's operator <=() returns
+		// false if the left operand is empty and
+		// true if the right operand is empty.
+    // ECR 7707 begin
+        if (from_class_name == to_class_name) // reflexive association
+	        result = fromrole + UML_ASSOCIATION_NAME_DELIMITER1 + torole;
+        else
+    // ECR 7707 end
+		if (fromrole == "" || (torole != "" && fromrole <= torole))
+		// ECR 7157 end
+			result = fromrole + UML_ASSOCIATION_NAME_DELIMITER1 + torole;
+		else
+			result = torole + UML_ASSOCIATION_NAME_DELIMITER1 + fromrole;
+	  }
+	// ECR 7157 begin
+	// commented the following line:
+	// }
+	// ECR 7157 end
+	result = replace_whitespace(result, "_");
+	return result;
+}
+
+
+
+void
+uml_association_inverse_map_func(gde_mapsymbol ms, node n, list rninfo,
+				 gocha_tp gocha_type)
+{
+    int		i;
+    gde_link	gl = NULL;
+    gde_node	gn = NULL;
+    string	oldlabel = NULL;
+    string	label = NULL;
+    rename_data the_rename_data;
+
+    if ( gocha_type != gochaRename ) {
+		print_error( "uml_association_inverse_map_func() can only handle renames" );
+		return; 
+    }
+
+    // n-ary association node mappings
+    if (gde_mapsymbol_is_node(ms))
+    {
+		gn = to_gde_node(ms);
+		oldlabel = gde_node_label(gn);
+    } else if (gde_mapsymbol_is_link(ms)) // association, aggregation, using
+    {
+		gl = to_gde_link(ms);
+		oldlabel = gde_link_label(gl);
+    } else
+		return;
+
+
+    for(i = 0; i < list_count(rninfo); i = i + 1)
+    {
+		the_rename_data = list_get(rninfo, i);
+
+		// print_message("JED - rename name: " + the_rename_data.dependency_name);
+		// print_message("JED - rename field: " + the_rename_data.updated_attr);
+		// print_message("JED - rename label: " + the_rename_data.label);
+		// print_message("JED - rename obj_id: " + the_rename_data.obj_id);
+		// print_message("JED - rename src_obj_id: " + the_rename_data.src_obj_id);
+		if (the_rename_data.dependency_name == "Self" &&
+				   n.id == the_rename_data.src_obj_id && 
+				   the_rename_data.updated_attr == "name")
+		{
+			label = the_rename_data.label;
+			if (gl != NULL)
+			{
+				int	indx = string_find(label, 0, UML_ASSOCIATION_NAME_DELIMITER1);
+				if (indx < string_length(label))
+				{
+					label = string_extract(label, 0, indx);
+				}
+				// print_message("JED - setting link label to:" + label);
+				if (oldlabel != label)
+					gde_link_set_label(gl, label);
+			} else if (gn != NULL)
+			{
+				int	indx = string_find(label, 0, UML_ASSOCIATION_NAME_DELIMITER1);
+				if (indx < string_length(label))
+				{
+					label = string_extract(label, 0, indx);
+				}
+				// print_message("JED - setting node label to:" + label);
+				if (oldlabel != label)
+					gde_node_set_label(gn, label);
+			}
+			gde_print_rename_notification_message(ms,
+			gde_mapsymbol_symbol_type_printname(ms) +
+				" renamed from '" + oldlabel + "' to '" + label + "'");
+			break;
+		}
+    }
+}
+
+
+string
+uml_nary_association_name(gde_mapsymbol assoc_sym)
+{
+    /*
+     * construct a name for an association hub from the names of
+     * the endpoint classes and the hub label
+     */
+
+    list            arcs;
+    string          linkname, label, result;
+    int             i, j;
+    gde_node        assoc;
+    gde_arc         arc;
+    gde_node        class;
+    string          class_name, tmp;
+    list            all_classnames = list_create("string", 0);
+
+    // make sure it's the association hub
+    if (!gde_mapsymbol_is_node(assoc_sym))
+        return NULL;
+
+    // get association node from mapsymbol
+    assoc = to_gde_node(assoc_sym);
+    string sym_name = gde_node_label(assoc);
+
+    // get outarcs. 
+    arcs = gde_node_outarcs(assoc);
+// ECR 4950 start
+// print_message("JED - there are " + list_count(arcs) + " outarcs");
+    for(i = 0; i < list_count(arcs); ++ i) {
+        arc = list_get(arcs, i);
+// print_message("WF - " + gde_lt_name(gde_arc_lt(arc)));
+        if(gde_lt_name(gde_arc_lt(arc)) == "AssociationClassLink")
+            continue;
+        class = gde_arc_tonode(arc);
+        if(gde_nt_name(gde_node_nt(class)) == "Vertex") {
+// print_message("WF - " + gde_nt_name(gde_node_nt(class)));
+            // a vertex can have more than one outgoing links,
+            // so add these links to the list and process them later
+            list_concatenate(arcs, gde_node_outarcs(class));
+            continue;
+        }
+// ECR 4950 end
+        class_name = strip_whitespace(uml_qualifiedname_name_part(class));
+// print_message("JED - type:" + gde_nt_name(gde_node_nt(class)) + " name:" + class_name);
+        if (class_name == NULL || class_name == "") {
+            // all of the endpoints of an association must be labeled
+            gde_print_mapping_error("Mapping error: all classes participating in an association must be labeled",
+                gde_node_psymid(class));
+            return NULL;
+        }
+        // insert the name in alphabetical order into the list
+        for(j = 0; j < list_count(all_classnames); ++ j) {
+            tmp = list_get(all_classnames, j);
+            // ECR 7157 begin
+            // if (tmp == class_name) {
+            //     // already in the list. Remove it and loop again
+            //     list_delete(all_classnames, j);
+            //     -- j;
+            //     continue;
+            // }
+            // if (class_name < tmp)
+            //     break;
+            if (class_name <= tmp)
+                break;
+            // ECR 7157 end
+        }
+
+        if (list_count(all_classnames) == j)
+            // add to end
+            list_append(all_classnames, class_name);
+        else
+            list_insert(all_classnames, j, class_name);
+    }
+
+    if (list_count(all_classnames) == 0 ) {
+        // JED - not an error. gde_print_mapping_error("Mapping error: No classes associated with hub.", gde_node_psymid(assoc));      
+        return NULL;
+    } 
+    result = list_to_string(all_classnames, UML_ASSOCIATION_NAME_DELIMITER2);
+
+    // prepend the label of the symbol (the name typed by the user
+    if (NULL != sym_name && "" != sym_name)
+        result = sym_name + UML_ASSOCIATION_NAME_DELIMITER1 + result;
+
+    return result;
+}
+
+// JED cloned stuff for creating attrs/ops from the UML menu
+string
+AttributeLabel(node attr)
+{
+  return (attr.name);
+}
+ 
+string
+OperationLabel(node op)
+{
+	return uml_format_op_name(op.name, op.sig);
+}
+
+list
+uml_nary_hub_deps(gde_mapsymbol theHub)
+{
+	if (!gde_mapsymbol_is_node(theHub))
+		return NULL;
+	list ret = gde_node_outarcs(theHub);
+	int i;
+	// replace each arc with its symbol
+	for(i=0;i<list_count(ret);i++) {
+		list_set(ret,to_gde_mapsymbol(list_get(ret,i)),i);
+	}
+	return ret;
+}
+
+list
+uml_nary_link_deps(gde_mapsymbol theLink)
+{
+	if (!gde_mapsymbol_is_link(theLink)) {
+		return NULL;
+	}
+	gde_node hub = gde_link_fromnode(to_gde_link(theLink));
+	list ret = list_create("gde_mapsymbol",0);
+	list_append(ret,to_gde_mapsymbol(hub));
+	return ret;
+}
+
+list
+uml_nary_class_deps(gde_mapsymbol theClass)
+{
+	if (!gde_mapsymbol_is_node(theClass)) {
+		return NULL;
+	}
+	list inarcs = gde_node_inarcs(to_gde_node(theClass));
+	int i;
+	for(i=0;i<list_count(inarcs);i++) {
+		if (gde_lt_name(gde_arc_lt(list_get(inarcs,i))) != "NaryAssociationRole") {
+			list_delete(inarcs,i);
+			i--;
+		}
+	}
+	// now only Nary associations remain
+	// add each of their hubs to the list
+	if (list_count(inarcs) == 0) {
+		return NULL;
+	}
+print_message("JED - got " + list_count(inarcs) + " dependent inarcs");
+
+	list ret = list_create("gde_mapsymbol",0);
+	gde_arc theArc;
+	gde_node theHub;
+	string lbl;
+	for(i=0;i<list_count(inarcs);i++) {
+		theArc = list_get(inarcs,i);
+		theHub = gde_arc_fromnode(theArc);
+		lbl = gde_node_label(theHub);
+		// JED - add only if unlabelled. I don't know why, but it is
+		// needed
+		if (NULL == lbl || "" == lbl)
+			list_append(ret,to_gde_mapsymbol(theHub));
+	}
+	return ret;
+}
+
+// JED - this is used on navigation from uclasst to create a diagram
+void
+UmlCreateClassDiagram(int node_id)
+{
+	node class;
+
+	EditorShowOnNavReceive();
+
+	class = node_from_oid(node_id);
+
+	if (NULL == class) {
+			print_error("Cannot find class by id: " + node_id);
+			return;
+	}
+	// clear the diagram
+	gde_builtin("BufferClear");
+
+	gde_node new_class = gde_node_create("Class",0,0);
+
+	// now set its label
+	gde_node_set_label(new_class,class.name);
+}
+
+
+void
+uml_operation_inverse_node_map_func(gde_mapsymbol ms, node n, list rninfo,
+				   gocha_tp gocha_type)
+{
+    int		i;
+    gde_node	gn;
+    string	oldlabel = NULL;
+    string	label = NULL;
+    rename_data the_rename_data;
+
+    if ( gocha_type != gochaRename ) {
+		print_error( "uml_operation_inverse_node_map_func() can only handle renames" );
+		return; 
+    }
+
+    if (!gde_mapsymbol_is_node(ms)) {
+		return;
+    }
+    gn = to_gde_node(ms);
+    oldlabel = gde_node_label(gn);
+
+    for(i = 0; i < list_count(rninfo); i = i + 1)
+    {
+		the_rename_data = list_get(rninfo, i);
+
+		// message("the_rename_data: " + the_rename_data);
+
+		if (n.id == the_rename_data.obj_id && 
+				   (the_rename_data.updated_attr == "name" || 
+				the_rename_data.updated_attr == "sig")) {
+			label = uml_format_op_name(n.name, n.sig);
+			if (label != oldlabel) {
+				gde_node_set_label(gn, label);
+				gde_print_rename_notification_message(ms,
+				gde_mapsymbol_symbol_type_printname(ms) +
+				" renamed from '" + oldlabel + "' to '" + label + "'");
+			}
+			break;
+		}
+    }
+
+// ECR 6744 begin
+    if (label == NULL)
+    {
+        label = uml_format_op_name(n.name, n.sig);
+        if (label != oldlabel)
+	        do_global_node_op(gn, label, gocha_type);
+        do_rename_notification(gocha_type, ms, oldlabel, label);
+    }
+// ECR 6744 end
+}
+
+void
+uml_instantiated_class_inverse_node_map_func(gde_mapsymbol ms, node n,
+		list rninfo, gocha_tp gocha_type)
+{
+    int		i;
+    gde_node	gn;
+    string	oldlabel = NULL;
+    string	label = NULL;
+    rename_data the_rename_data;
+
+    if ( gocha_type != gochaRename ) {
+		print_error( "uml_instantiated_class_inverse_node_map_func() can only handle renames" );
+		return; 
+    }
+
+    if (!gde_mapsymbol_is_node(ms)) {
+		return;
+    }
+    gn = to_gde_node(ms);
+    oldlabel = gde_node_label(gn);
+
+	label = uml_instantiated_class_node_to_string(n);
+
+	if (label != oldlabel) {
+		gde_node_set_label(gn, label);
+		gde_print_rename_notification_message(ms,
+		gde_mapsymbol_symbol_type_printname(ms) +
+		" renamed from '" + oldlabel + "' to '" + label + "'");
+	}
+}
+
+
+
+
+
+list
+uclassd_cntx_role_depends_func(gde_mapsymbol ms)
+{
+    gde_mapsymbol	resms;
+    list	dep = list_create("gde_mapsymbol", 0);
+    string	tp;
+    gde_link	rl;
+    gde_cntx	cx;
+    gde_node	tnode;
+    gde_arc	a;
+    list	role_links;
+    int		k;
+
+    // message("cntx_role_depends_func");
+
+    if (!gde_mapsymbol_is_cntx(ms))
+    {
+	return(NULL);
+    }
+    cx = to_gde_cntx(ms);
+    a = gde_cntx_parent(cx);
+    if (a == NULL)
+	return(NULL);
+
+    role_links = gde_arc_links(a);
+    for(k = 0; k < list_count(role_links); k = k + 1)
+    {
+		rl = list_get(role_links, k);
+		resms = to_gde_mapsymbol(rl);
+		if (list_find(dep, 0, resms) == list_count(dep))
+		{
+			list_append(dep, resms);
+		}
+
+		tnode = gde_link_tonode(rl);
+		tp = gde_nt_name(gde_node_nt(tnode));
+		if (tp == "NaryAssociationHub" )
+		{
+			resms = to_gde_mapsymbol(tnode);
+			if (list_find(dep, 0, resms) == list_count(dep))
+			{
+				list_append(dep, resms);
+			}
+		}
+    }
+
+    // debug_mapsyms("cntx_role_depends_func", dep);
+
+    return(dep);
+}
+
+//
+// Change role labels if roles on association or aggregation change
+//
+
+
+void
+uml_role_link_inverse_map_func(gde_mapsymbol ms, link l, list rninfo, string tp)
+{
+    list	cntxs;
+    gde_cntx	c;
+    int		i;
+    gde_link	gl = to_gde_link(ms);
+    string	label = NULL;
+    string	oldlabel = NULL;
+    rename_data the_rename_data;
+
+    for(i = 0; i< list_count(rninfo) && label == NULL; i = i + 1)
+    {
+	the_rename_data = list_get(rninfo,i);
+	if (the_rename_data.dependency_name == "Self" && 
+		the_rename_data.updated_attr == "name")
+	{
+	    label = the_rename_data.label;
+	}
+    }
+    // no name dependency ....
+    if (label == NULL)
+    {
+	return;
+    }
+	    
+    cntxs = gde_link_cntxs(gl);
+
+    for (i = 0; i < list_count(cntxs); i = i + 1)
+    {
+	c = list_get(cntxs, i);
+	if (gde_ct_name(gde_cntx_ct(c)) == tp)
+	{
+	    oldlabel = gde_cntx_label(c);
+	    gde_cntx_set_label(c, label);
+	    gde_print_rename_notification_message(to_gde_mapsymbol(c),
+                gde_mapsymbol_symbol_type_printname(to_gde_mapsymbol(c)) +
+                " renamed from '" + oldlabel + "' to '" + label + "'");
+	}
+    }
+}
+
+void
+uml_from_role_link_inverse_map_func(gde_mapsymbol ms, link l, list rninfo,
+				    gocha_tp gocha_type)
+{
+    if ( gocha_type != gochaRename )
+    {
+	print_error( "uml_from_role_link_inverse_map_func() can only handle renames" );
+	return; 
+    }
+
+    uml_role_link_inverse_map_func(ms, l, rninfo, "RelLabelFrom");
+}
+
+void
+uml_to_role_link_inverse_map_func(gde_mapsymbol ms, link l, list rninfo,
+				  gocha_tp gocha_type)
+{
+    if ( gocha_type != gochaRename )
+    {
+	print_error( "uml_to_role_link_inverse_map_func() can only handle renames" );
+	return; 
+    }
+
+    uml_role_link_inverse_map_func(ms, l, rninfo, "RelLabelTo");
+}
+
+
+list
+uclassd_name_completion_func(string pattern, string label, string extent,
+				 string apptype, int scopeid)
+{
+	// JED - first, fix the name from [x:]a,b,...,z* to [x]*:a,b,...,z
+	int colon = string_find(pattern,0,":");
+	int len = string_length(pattern);
+	string theRest;
+	string name;
+
+	if(colon != len) {
+		// not unnamed
+		name = string_extract(pattern,0,colon);
+		theRest = string_extract(pattern,colon+1,len-colon-2);
+	} else {
+		name = "";
+		theRest = string_extract(pattern,0,len-1);
+	}
+	pattern = name + "*:" + theRest;
+
+	// print_message("JED fixed:" + pattern);
+
+	list l = gde_default_name_completion_func(pattern,label,extent,apptype,scopeid);
+	// traverse the list and modify the labels
+	string s;
+	int i;
+	for(i=0;i<list_count(l);i++) {
+		s = list_get(l,i);
+		len = string_length(s);
+		colon = string_find(s,0,":");
+		if (len != colon) {
+			s = string_extract(s,0,colon);
+			list_set(l,i,s);
+		} else {
+			list_delete(l,i);
+			i--;
+		}
+	}
+	return l;
+}
+
+boolean
+uml_should_target_node_get_contain_link(gde_mapsymbol ms)
+{
+	return True;
+}
+
+list
+uclassd_operation_name_completion_func(string pattern, string label,
+		string extent, string apptype, int scopeid)
+{
+	list l = gde_default_name_completion_func(pattern,label,extent,apptype,scopeid);
+
+	// JED - now add the Messages
+	// find the parent class
+	node class = find_by_query("node[${scopeid}]");
+
+	if (NULL == class) {
+		// JED - something wrong
+		return l;
+	}
+	list_concatenate(l, uml_messages_for_class(pattern,class));
+	 
+	return l;
+}
+
+// ECR 5758 start
+list FindStateDiagramWithCorrespondingClass(int nodeId)
+{
+    node objClassScope = find_by_query("node[${nodeId}]");
+    // this would assume that state dg has explicit ref to a class ??
+    //string qFindClassRefs = "node_ref[file[UmlStateDiagram] && node[UmlClass && name=${objClassScope.name}]]";
+    //string qFindClassRefs = "node_ref[file[UmlStateDiagram] && node[id=${objClassScope.id}]]";
+    //list result = list_select(qFindClassRefs);
+    //
+    // check if there is a state machine with this name
+    string qFindNamedStateMachine = "node_ref[file[UmlStateDiagram] && node[UmlStateMachine && name='${objClassScope.name}']]";
+    list result = list_select(qFindNamedStateMachine);
+    if(list_count(result)==0)
+        print_message("Target (State Diagram Where The Class Is Referenced) not found");
+    return(result);
+}
+
+list FindActivityDiagramWithCorrespondingClass(int nodeId)
+{
+    node objClassScope = find_by_query("node[${nodeId}]");
+    // check if there is a state machine with this name
+    string qFindNamedStateMachine = "node_ref[file[UmlActivityDiagram] && node[UmlStateMachine && name='${objClassScope.name}']]";
+    list result = list_select(qFindNamedStateMachine);
+    if(list_count(result)==0)
+        print_message("Target (Activity Diagram Where The Class Is Referenced) not found");
+    return(result);
+}
+// ECR 5758 end
+
+
+
+
+// ECR 5861 begin
+gde_mapsymbol
+uml_role_fromnode_symbol(gde_mapsymbol role_sym)
+{
+    gde_arc theArc = gde_cntx_parent(to_gde_cntx(role_sym));
+    gde_node assoc_fromnode = gde_arc_fromnode(theArc);
+    if (assoc_fromnode)
+        return to_gde_mapsymbol(assoc_fromnode);
+    else
+        return NULL;
+}
+
+gde_mapsymbol
+uml_role_tonode_symbol(gde_mapsymbol role_sym)
+{
+    gde_arc theArc = gde_cntx_parent(to_gde_cntx(role_sym));
+    gde_node assoc_tonode = gde_arc_tonode(theArc);
+    if (assoc_tonode)
+        return to_gde_mapsymbol(assoc_tonode);
+    else
+        return NULL;
+}
+// ECR 5861 end

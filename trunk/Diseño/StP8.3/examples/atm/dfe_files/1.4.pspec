@@ -1,0 +1,28 @@
+Process 1.4: Initiate Transaction
+Pspec generated from the data flow diagram "1" of the "tutorial" system of the
+"/arch/evo/Project/" projdir at Wed Oct 11 19:17:18 1995 by barb@verdi
+
+
+This process has 3 data flows:
+    Transaction Data, Valid PIN, Transaction Data
+
+input data flows
+    Valid PIN : DataFlow
+    Transaction Data : DataFlow
+
+output data flows
+    Transaction Data : DataFlow
+
+This process has 1 control flow:
+    PIN Validated
+
+input control flows
+
+output control flows
+    PIN Validated : ControlFlow
+
+description
+
+The Initiate Transaction process validates the customer PIN.
+end pspec
+

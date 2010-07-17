@@ -1,0 +1,34 @@
+FileObject 1
+{
+    { Name "a157" }
+    { Type ObjectAnnotation }
+    { GUID "UID_AAE37D20-7529-4385-8221-C60AC07B699B" }
+}
+
+NodeObject 99999
+{
+    { Name "Specify Transaction Data" }
+    { Type Process }
+    { ObjectId 213 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_7C04BE54-AC56-11d4-BEDC-0060971B5EE0" }
+}
+
+NoteObject 2
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 215 }
+}
+
+ItemObject 3
+{
+    { Type ObjectName }
+    { Value "Specify Transaction Data" }
+    { NoteId 2 }
+    { ObjectId 216 }
+}
+

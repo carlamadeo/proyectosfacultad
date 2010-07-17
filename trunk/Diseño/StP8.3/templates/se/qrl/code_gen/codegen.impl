@@ -1,0 +1,2326 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/SE
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1995
+//      All rights reserved
+//
+
+#include "rules/qrl/ct.inc"
+#include "qrl/code_gen/codegen_format.inc"
+#include "qrl/include/files.inc"
+#include "ct/rules/qrl/subprocs.inc"
+
+struct prop_tp
+{
+    string obj_name;
+    string obj_type;
+    string kandr_or_ansi;
+    int delete_old_code;
+    int verbose;
+    int gen_code_body;
+    int gen_comment;
+    int alternate_directory;
+    string file_directory;
+    int alternate_file;
+    string file_name;
+    int view_file;
+    string view_editor;
+    string file_extension;
+    string file_interface_extension;
+    int check_only;
+};
+
+// ECR 5395 start
+// string        	SRC_DIR = path_compose(current_projdir(),
+//				       current_system(),
+//				       "src_files");
+// ECR 5395 end
+
+const string    DIAGRAM_FILE_TYPE = "SceDiagram";
+const string    PROTOTYPE_FILENAME = "protos.h";
+const string    MODULE_IDLIST = "MODULE_IDLIST";
+const string    MODULE_IDLIST_QUERY = "node[" + MODULE_IDLIST + "] sort by name";
+const string    NULL_QUERY = "node[id = 0]";  /* for creating empty idlist! */
+
+const string    DEFAULT_TYPE = "int";
+const string    DEFAULT_TAG_PREFIX = "UNNAMED_";
+
+const string	TAB = "    ";
+
+const string    START_FILE_HEADER_TAG = 
+"/*************************** StP/SE File ***************************";
+const string    END_HEADER_TAG = 
+" ******************************************************************/";
+
+const string    START_DATA_HEADER_TAG = 
+"/*************************** StP/SE Data Element *******************";
+
+const string    START_DATA_DEFINITION_TAG = "/* StP/SE data definition ";
+const string    END_DATA_DEFINITION_TAG = "/* StP/SE data definition end */";
+
+const string    START_FUNCTION_HEADER_TAG = 
+"/*************************** StP/SE Function ***********************";
+
+const string    START_MODULE_TAG = "/* StP/SE module ";
+const string    END_MODULE_TAG = "}\n/* StP/SE module end */";
+const string    START_CODE_TAG = TAB + "/* StP/SE code */";
+const string    END_CODE_TAG = TAB + "/* StP/SE code end */";
+
+const string	START_INCLUDES_TAG = "/* StP/SE include files needed by type references within */";
+const string	END_INCLUDES_TAG = "/* StP/SE include files end */";
+
+const string	START_PROTOS_TAG = "/* StP/SE function declarations */";
+const string	END_PROTOS_TAG = "/* StP/SE function declarations end */";
+
+const string	START_GLOBALS_TAG = "/* StP/SE globals */";
+const string	END_GLOBALS_TAG = "/* StP/SE globals end */";
+
+int END_HEADER_LENGTH = string_length(END_HEADER_TAG);
+int END_PROTOS_LENGTH = string_length(END_PROTOS_TAG);
+int END_INCLUDES_LENGTH = string_length(END_INCLUDES_TAG);
+int END_GLOBALS_LENGTH = string_length(END_GLOBALS_TAG);
+
+int END_MODULE_LENGTH = string_length(END_MODULE_TAG);
+int END_CODE_LENGTH = string_length(END_CODE_TAG);
+int START_FUNCTION_HEADER_LENGTH = string_length(START_FUNCTION_HEADER_TAG);
+
+int START_DATA_HEADER_LENGTH = string_length(START_DATA_HEADER_TAG);
+int END_DATA_LENGTH = string_length(END_DATA_DEFINITION_TAG);
+
+node FC = NULL;
+
+int ERRORS = 0;
+
+boolean		trace = False;
+boolean		DO_CHECK = False;
+
+//
+// The SE C module object
+//
+
+struct module_tp
+{
+    node      module;            // the root module
+    node_ref  ref_id;            // the root module reference
+    string    name;              // se module name
+    string    return_type;       // module return type
+    list      submodule_list;    // submodule calls
+    set       include_files; 	 // list of .h files to include
+    set       globals;           // globals accessed by this module
+    set       global_defs;       // globals with type accessed by this module
+    list      libcalls;          // library function calls
+    string    params;            // function's formal parameters with type
+    string    param_proto_str;   // params for function's prototype
+    string    param_kandr_str;   // params variables for kandr function def
+    string    filename;          // C source file name
+    node      scope_node;        // SEFile node for the module
+    string    directory;         // C source directory name
+    string    comment;         	 // string from ModuleComment annotation
+    string    code_body;         // string from CCodeBody note 
+    boolean   var_args;          // if true, the function accepts variable args
+    string    storage_class;	 // extern or static
+};
+
+//
+// The SE file object
+//
+
+struct file_tp
+{
+    string    	name;            // name of source file
+    string    	directory;       // name of source directory
+    string    	contents;        // string containing file contents
+    set       	file_components; // list of strings for components in file
+    list    	module_elements; // list of modules and globals for file
+    list    	data_elements;   // list of data elements for file
+    set       	includes;        // file names to be included in a string list
+    list     	protos; 	 // prototypes for static functions
+    list     	typedefs;        // definitions for typedefs in file
+    list     	enums;           // definitions for enums in file
+    set       	globals;         // globals variables for file
+    string   	type;         	 // either header, source, or proto
+};
+
+//
+// The SE C abstract data type object
+//
+
+struct adt_tp                   // info about data types encountered.
+{
+    node	element;        // the root
+    string	name;           // needed when there is no DSE definition
+    string	array_size;     // NULL unless this guy is an array
+    list	child_elements; // kids
+    set		include_files; 	// list of .h files to include
+    string	type;	        // the base type if no children
+    string	kind;		// one of typedef, struct, union, or enum
+    string	tag;		// tag name of the nested struct, union, or enum
+    string	filename;       // the filename to put this structure in
+    string    	directory;      // directory name
+};
+
+// module_def_tp is used to hold the contents of
+// a function definition. A struct is needed to avoid
+// messy string commands when generating incrementally.
+
+struct module_def_tp
+{
+    string	id;		// the unique id for the function
+    string	comment;	// the function comment
+    string	header;		// the function header
+    string	body;		// the body of the function
+    string	end;		// the closing bracket for the function
+};
+ 
+// adt_def_tp is used to hold the contents of
+// an adt definition. 
+
+struct adt_def_tp
+{
+    string	id;		// the unique id for the function
+    string	comment;	// the function comment
+    string	def;		// the body of the function
+};
+
+struct global_tp
+{
+    node	element;
+    string	str;
+    string	include;
+};
+
+string	ViewString = "";
+set     AbstractTypes = set_create("adt_tp");
+node    FormalCaller = NULL;
+list    AllDiagrams = list_create("file", 0);
+set     AllModules = set_create("module_tp");
+set     AllFiles = set_create("file_tp");
+set     AllAdts = set_create("adt_tp");
+set     AllExterns = set_create("global_tp");
+ 
+void
+generate_code_from_sce(prop_tp props)
+{
+    int i;
+    list all_nodes_list = list_create("node", 0);
+    list mapped_modules_list = list_create("node", 0);
+    node one_node;
+    string query, message, cmd;
+    file	fileobj = NULL;
+
+    ERRORS = 0;
+
+    if (trace)
+	trace("all");
+
+    if (props.check_only)
+	DO_CHECK = True;
+    else DO_CHECK = False;
+
+    all_nodes_list = gde_all_mapped_oms_nodes();
+
+    if (list_count(all_nodes_list) == 0)
+    {
+        print_error("Empty diagram. Code generation terminated.");
+        return;
+    }
+
+    props.obj_name = gde_substitute_string("${file}");
+
+    if (props.obj_name == "")
+    {
+        print_error("Null diagram name. Code generation terminated.");
+        return;
+    }
+
+    query = "file[SceDiagram && name == '${props.obj_name}']";
+    fileobj = find_by_query(query);
+
+    if (fileobj == NULL || file_history(fileobj))
+    {
+	print_error("File '" + props.obj_name + "' must be saved to the repository before generating code.");
+	return;
+    }
+
+    for (i = 0; i < list_count(all_nodes_list); i++)
+    {
+	one_node = list_get(all_nodes_list, i);
+	if (one_node.type == "Module")
+	    list_append(mapped_modules_list, one_node);
+    }
+
+    ERRORS = ERRORS + generate_code(props, mapped_modules_list);
+ 
+    if (DO_CHECK)
+	message = "Completed C code generation check with " + ERRORS + " error";
+    else
+	message = "Completed C code generation with " + ERRORS + " error";
+
+    if (ERRORS != 1)
+	message = message + "s.";
+
+    print_message(message);
+
+    if (props.view_file && !DO_CHECK)
+    {
+	print_message("Viewing code generated file(s)...");
+        if (is_windows_platform())
+            cmd = "cmd /c start /b " + props.view_editor + " " + ViewString;
+        else
+            cmd = "xterm -title 'CodeGen Results' " + " -e " + props.view_editor + " " + ViewString;
+        editor_system(cmd, NULL);
+    }
+
+    list_clear(AllDiagrams);
+    set_clear(AllModules);
+    set_clear(AllFiles);
+    set_clear(AllAdts);
+    set_clear(AllExterns);
+    set_clear(AbstractTypes);
+
+    if (trace)
+	untrace("all");
+
+    return; 
+
+}
+
+int
+generate_code_from_qrp(prop_tp props)
+{
+    int i;
+    node one_node, file_node, dir_node;
+    string	id, name;
+    list file_list = list_create("string", 0);
+    list dir_list = list_create("string", 0);
+    string cmd, query;
+    list module_list = list_create("node", 0);
+    list the_list = list_create("node", 0);
+
+    if (trace)
+	trace("all");
+
+    if (props.check_only)
+        DO_CHECK = True;
+
+    if (props.obj_name != "" && props.obj_type == "SEFile")
+	file_list = string_to_list(props.obj_name, " ");
+ 
+    else if (props.obj_name != "" && props.obj_type == "SEDirectory")
+    {
+	dir_list = string_to_list(props.obj_name, " ");
+ 
+	for (i = 0; i < list_count(dir_list); i++)
+	{
+	    name = list_get(dir_list, i);
+	    query = "node[name == '" + to_oms_string(name) + "' && SEDirectory]";
+	    dir_node = find_by_query(query);
+	    query = "node[scope_node_id=${dir_node.id}]";
+	    for_each_in_select(query, file_node)
+		list_append(file_list, file_node.name);
+	}
+    }  
+
+    else 
+    {
+	AllDiagrams = file_list(DIAGRAM_FILE_TYPE, props.obj_name);
+	check_file_history();
+    }
+
+    for(i = 0; i < list_count(file_list); i++)
+    {
+	name = list_get(file_list, i);
+	query = "node[name == '" + to_oms_string(name) + "' && SEFile]";
+	for_each_in_select(query, file_node)
+	{
+	    query = "node[Module && scope_node_id=${file_node.id} && node_refs]";
+	    the_list = list_select(query);
+	    if (the_list == NULL)
+	    {
+		++ERRORS;
+		print_error("No modules associated with file '" + file_node.name + "'. Skipping...");
+	    }
+	    else list_concatenate(module_list, the_list);
+	}
+
+    }
+ 
+    generate_code(props, module_list);
+
+    if (props.view_file && !DO_CHECK)
+    {
+        print_message("Viewing code generated file(s)...");
+        if (is_windows_platform())
+            cmd = "cmd /c start /b " + props.view_editor + " " + ViewString;
+        else
+            cmd = "xterm -title 'CodeGen Results' " + " -e " + props.view_editor + " " + ViewString + " &";
+        system(cmd);
+
+    }
+
+    if (trace)
+	untrace("all");
+
+    return ERRORS;
+
+}
+
+void
+generate_code(prop_tp props, list module_list)
+{
+    FC = find_by_query("node[FormalCaller]");
+
+    if (DO_CHECK)
+    {
+	print_message("\nPreparing for C code generation check...\n\n");
+	compile_modules(props, module_list);
+	compile_adts(props);
+	generate_global_files(props);
+	generate_module_files(props);
+	generate_adt_files(props);
+	return; 
+    }
+
+    // don't allow interface file = implementation file 
+    if (props.file_interface_extension == props.file_extension)
+    {
+	++ERRORS;
+        print_error("Interface (header) and implementation file extensions must be different.", NULL);
+        return;
+    }
+
+    print_message("\nPreparing for C code generation...\n\n");
+
+    if (props.verbose)
+	print_message("Querying repository for implementation details...\n\n");
+    compile_modules(props, module_list);
+
+    if (props.verbose)
+	print_message("\nQuerying repository for interface details...\n\n");
+    compile_adts(props);
+
+    if (props.verbose)
+	print_message("\nGenerating implementation files...\n");
+    generate_global_files(props);
+    generate_module_files(props);
+
+    if (props.verbose)
+	print_message("\nGenerating interface files...\n");
+    generate_adt_files(props);
+
+    print_files(props);
+
+    return; 
+}
+
+// compile_modules
+//	Create a module structure for every module which 
+//	qualifies as a root module. A root module is:
+//	1.  directly connected to a formalcaller node or 
+//	2.  has no in_links
+//	This will catch all decomps too since the queries
+//	look for nodes, not node_refs
+void
+compile_modules(prop_tp props, list module_list)
+{
+    set		root_set = set_create("node");
+    node	one_root = NULL;
+    node_ref	one_nr;
+    node	one_module, one_node;
+    file	one_file;
+    int		i, module_count;
+    string	query;
+    boolean	found;
+
+    FormalCaller = find_by_query("node[FormalCaller]");
+
+    if (list_count(module_list) == 0)
+    {
+	//  compile module list from all diagram files
+	for ( i = 0; i < list_count(AllDiagrams); i++)
+	{
+	    one_file = list_get(AllDiagrams, i);
+
+	    // get all modules in file
+	    query = "node[Module && node_refs[file_id=${one_file.id}] &&
+		    name!='NULL']";
+
+	    list_concatenate(module_list, list_select(query));
+	}
+    }
+
+    module_count = list_count(module_list);
+
+    if (module_count == 0)
+    {
+	++ERRORS;
+	print_error("No objects to generate code for.");
+	return;
+    }
+
+    for ( i = 0; i < module_count; i++)
+    {
+	one_module = list_get(module_list, i);
+ 
+	found = False;
+
+	// check if the module is linked directly to formalcaller node
+	if (FormalCaller != NULL)
+	{
+	    query = "node[${one_module.id} && in_links[link_refs && from_node_id=${FormalCaller.id}]]";
+	    one_root = find_by_query(query);
+
+	    if (one_root != NULL)
+	    {
+		set_add(root_set, one_root);
+		found = True;
+	    }
+	}
+
+	if ( found == False )
+	{
+	    // check for no in_links - do not use the negated query as it
+	    // is just way too slow, instead we get the one node, then see
+	    // if it has no in_link_refs
+	    //	query = "node_ref[node[${one_module.id}] && !in_link_refs]";
+	    query = "node_ref[node[${one_module.id}]]";
+    
+	    for_each_in_select(query, one_nr)
+	    {
+		if ( selection_count( "link_ref[ to_node_ref_id = ${one_nr.id}]" ) != 0 )
+		    continue;
+    
+		query = "node[${one_nr.node_id}]";
+		one_node = find_by_query(query);
+		set_add(root_set, one_node);
+		found = True;
+	    }
+	}
+
+	if (found == False)
+	{
+	    ++ERRORS;
+	    print_error("No definition found for SCE Module '" 
+	    + one_module.name + "'.\nCannot create function definition.\n\n");
+	}
+
+    }
+
+    if (set_count(root_set) == 0)
+    {
+	++ERRORS;
+	print_error("No modules to create definitions for.\nCode Generation Terminated.");
+	return;
+    }
+
+    // populate the module struct for each root
+    create_module_structure(props, root_set);
+
+    set_clear(root_set);
+
+    return;
+}
+
+void
+create_module_structure(prop_tp props, set root_set)
+{
+    module_tp	new_module;
+    int 	i;
+    node	one_root;
+    string	query;
+
+    for ( i = 0; i < set_count(root_set); i++)
+    {
+	one_root = set_get_element(root_set, i);
+
+	print_message("Creating module structure for module '" + one_root.name + "'...");
+
+	new_module.module = one_root;
+	new_module.name = to_c_identifier(one_root.name);
+
+	new_module = generate_file_and_dir_name(props, new_module);
+	new_module.filename = handle_extension(new_module.filename, props.file_extension);
+
+	new_module.include_files = generate_includes(new_module.scope_node.id);
+	new_module.libcalls = generate_libcalls(one_root.id);
+	new_module = generate_globals(props, new_module);
+	new_module.var_args = checkForVarArgs(one_root.id);
+
+	new_module = generate_params(props, new_module);
+
+	new_module = generate_return_type(props, new_module);
+
+	if (props.gen_comment)
+	    new_module.comment = generate_module_comment(one_root.id);
+	else new_module.comment = "";
+
+	if (props.gen_code_body)
+	    new_module.code_body = generate_module_code_body(one_root.id);
+	else new_module.code_body = "";
+
+	new_module.submodule_list = generate_submodule_list(one_root.id);
+
+	set_add(AllModules, new_module);
+    }
+}
+
+// handles cases where the user already adds the file extension 
+// to the filename annotation, so that it doesn't appear twice
+
+string
+handle_extension(string filename, string extension)
+{
+    int		pos;
+    string	ext = "";
+    string	last_quote = "";
+
+    if ( str_no_val( extension ))
+	return filename;
+
+    //  handles cases where the file ext is part of the SEFile node
+    pos = string_find(filename, 0, ".");
+
+    if (pos != string_length(filename))
+    {
+	last_quote = string_extract( filename, string_length( filename ) - 1,
+				     1 );
+	if ( last_quote != ">" && last_quote != "\"" )
+	    last_quote = "";
+	ext = string_extract(filename, pos, string_length(filename) -
+			     pos - string_length( last_quote ));
+	filename = string_extract( filename, 0, pos );
+    }
+
+    filename = filename + extension + last_quote;
+
+    return filename;
+}
+
+string
+remove_extension(string filename, string extension)
+{
+    int		pos;
+    string	ext = "";
+
+    pos = string_find(filename, 0, ".");
+
+    if (pos != string_length(filename))
+	ext = string_extract(filename, pos , string_length(filename) - pos);
+
+    if (ext == extension)
+	filename = string_extract(filename, 0 , pos);
+
+    return filename;
+}
+
+string
+handle_quotes(string file)
+{
+    int	strlen = string_length(file);
+
+    if (string_extract(file, 0, 1) == "\"" &&
+	string_extract(file, strlen - 1, 1) == "\"")
+	return file;
+
+    if (string_extract(file, 0, 1) == "<" &&
+	string_extract(file, strlen - 1, 1) == ">")
+	return file;
+
+    return "\"" + file + "\"";
+}
+
+
+string remove_include_quotes( string file )
+{
+    int	strlen = string_length(file);
+    if (string_extract(file, 0, 1) == "\"" || string_extract(file, 0, 1) == "<")
+	return string_extract( file, 1, strlen - 2 );
+    return file;
+}
+
+string
+handle_func_ptr(string var_name, string ptr_string, int id, boolean handle_array)
+{
+    if (handle_array)
+	return string_search_and_replace(ptr_string, "@", 
+	    to_c_identifier(var_name) + get_array_bounds(id));
+    else
+	return string_search_and_replace(ptr_string, "@", to_c_identifier(var_name));
+}
+
+
+// get_sce_scoped_type
+//
+//	Takes scoped types into account.
+//
+// 	If there is more than one def for a type, then the 
+//	file scope is compared to the module include file 
+//	list. If no matches are found, a warning is issued and
+// 	no def is created for the adt.
+//
+// 	If there is only one def, use that regardless if
+// 	there is a match in the include file list.
+
+node
+get_sce_scoped_type(string type_name, module_tp the_module_struct, string obj_name, string obj_type)
+{
+    string	query;
+    list	candidate_list = list_create("node", 0);
+    int		i, j, def_count;
+    node	one_def, scope_node;
+    string	one_filename;
+    boolean	found = False;
+
+    candidate_list = get_type_definition(type_name);
+
+    def_count = list_count(candidate_list);
+
+    if (def_count == 0)
+	return NULL;
+
+    // If there is only one def for the type, use that one
+    // Add it's file scope to the list of include_files
+    if (def_count == 1)
+    {
+	one_def = list_get(candidate_list, 0);
+	query = "node[SEFile && id=${one_def.scope_node_id}]";
+	scope_node = find_by_query(query);
+	set_add(the_module_struct.include_files, scope_node.name);
+	return one_def;
+    }
+
+    // If there is more than one def for the type, determine which
+    // is the correct one by looking at the module's include file list.
+    // If not found, assume the first entry in list.
+
+    for ( i = 0; found == False && i < def_count; i++)
+    {
+	one_def = list_get(candidate_list, i);
+	query = "node[SEFile && id=${one_def.scope_node_id}]";
+	scope_node = find_by_query(query);
+	for ( j = 0; j < set_count(the_module_struct.include_files); j++)
+	{
+	    one_filename = remove_include_quotes( 
+			set_get_element(the_module_struct.include_files, j));
+	    if (one_filename == scope_node.name)
+	    {
+		found = True;
+		break; 
+	    }
+	}
+    }
+
+    
+
+    // if !found, assume the first one
+    if (!found)
+    {
+	one_def = list_get(candidate_list, 0);
+	query = "node[SEFile && id=${one_def.scope_node_id}]";
+	scope_node = find_by_query(query);
+
+	    // this message appears whenever there is a typedef and a
+	    // struct of the same name
+	print_message("Warning: " + obj_type + " '" + obj_name + "' is of type 
+	'" + type_name + "', which has multiple definitions. " + "Assuming '" 
+	+ get_adt_kind(one_def) + " " + strip_prefix(one_def.name) + " <" 
+	+ scope_node.name + ">'...");
+	set_add(the_module_struct.include_files, scope_node.name);
+    }
+
+    return one_def;
+
+}
+
+// get_dse_scoped_type
+// 
+//      Takes scoped types into account.
+//
+//      If there is more than one def for a type, then it uses
+//	the def which is scoped to the same file as the parent
+//	structure.
+//
+//      If there is only one def, use that regardless of
+//      the parent node's file scope
+//
+//	If no match is found, use the first one.
+ 
+node
+get_dse_scoped_type(adt_tp the_adt)
+{
+    string      query, one_filename;
+    list        candidate_list;
+    int         i, def_count, j;
+    node        one_def, candidate_scope, scope_node = NULL;
+    boolean	found = False;
+
+    candidate_list = get_type_definition(the_adt.type);
+
+    def_count = list_count(candidate_list);
+
+    if (def_count == 0)
+	return NULL;
+
+    // If there is only one def for the type, use that one
+    if (def_count == 1)
+    {
+    	one_def = list_get(candidate_list, 0);
+        query = "node[SEFile && id=${one_def.scope_node_id}]";
+        scope_node = find_by_query(query);
+
+	if (scope_node != NULL && scope_node.name != the_adt.filename)
+	    if (!IsFunctionPtr(get_datatype_ann(one_def.id)))
+		set_add(the_adt.include_files, scope_node.name);
+
+        return one_def;
+    }
+
+    for ( i = 0; found == False && i < def_count; i++)
+    {
+	one_def = list_get(candidate_list, i);
+
+	query = "node[id=${one_def.scope_node_id} && SEFile]";
+	candidate_scope = find_by_query(query);
+	for( j = 0; j < set_count( the_adt.include_files); j++ )
+	{
+	    one_filename = remove_include_quotes( 
+			set_get_element(the_adt.include_files, j));
+	    if (one_filename == the_adt.filename)
+	    {
+		found = True;
+		break;
+	    }
+	}
+    }
+
+    // if !found, assume the first one
+    if (!found)
+    {
+        one_def = list_get(candidate_list, 0);
+	query = "node[id=${one_def.scope_node_id} && SEFile]";
+	candidate_scope = find_by_query(query);
+
+	    // this message appears whenever there is a typedef and a
+	    // struct of the same name
+        print_message("Warning: " + the_adt.kind + " '" + the_adt.name + "' is of type
+        '" + the_adt.type + "', which has multiple definitions. " + "Assuming 
+	'" + get_adt_kind(one_def) + " " + strip_prefix(one_def.name) 
+	+ " <" + candidate_scope.name + ">'...");
+	set_add(the_adt.include_files, candidate_scope.name);
+    }
+
+    return one_def;
+ 
+}
+
+set
+generate_includes(int id)
+{
+    string	query;
+    item	one_item;
+    set		include_files = set_create("string");
+
+    query = "item[IncludedFile && obj_id = ${id}]";
+
+    for_each_in_select(query, one_item)
+	set_add(include_files, one_item.value);
+
+    return include_files;
+
+}
+
+module_tp
+generate_globals(prop_tp props, module_tp the_module_struct)
+{
+    node	the_node, one_global, scope_node, the_type = NULL;
+    adt_tp	new_adt;
+    global_tp	new_global;
+    string	query, gtype, access_mode, storage_class = "", kind, gstr;
+
+    the_module_struct.globals = set_create("string");
+    the_module_struct.global_defs = set_create("string");
+
+    the_node = the_module_struct.module;
+
+    query = "node[DataModule && node_refs && in_links[link_refs && from_node_id=${the_node.id}]]";
+
+    for_each_in_select(query, one_global)
+    {
+	kind = "";
+	gtype = get_datatype_ann(one_global.id);
+	access_mode = get_access_mode(the_module_struct.module.id, one_global.id);
+
+	set_add(the_module_struct.globals, to_c_identifier(one_global.name) 
+		+ ";" + "  (" + access_mode + ")");
+
+        if (IsFunctionPtr(gtype))
+        {
+            gstr = handle_func_ptr(one_global.name, gtype, one_global.id, True);
+        }
+
+        else
+        {
+
+	    if (!IsBuiltInCType(gtype) && gtype!= "")
+	    {
+		the_type = get_sce_scoped_type(gtype, the_module_struct, 
+			    one_global.name, "Global");
+
+		if (the_type == NULL)
+		{
+		    ++ERRORS;
+		    print_error("\nNo type definition found for '" +
+			gtype + "'.\nCannot create data structure definition.\n\n");
+		}
+		else
+		{
+		    new_adt.element = the_type;
+		    new_adt.filename = "";
+		    new_adt.kind = get_adt_kind(the_type);
+
+		    if (!IsSystemType(the_type.id))
+		    {
+			set_add(AbstractTypes, new_adt);
+
+			if (new_adt.kind != "typedef")
+			    kind = new_adt.kind + " ";
+		    }
+		}
+
+	    }
+
+	    gstr = kind + to_c_type_identifier(gtype) + " " 
+		    + to_c_identifier(one_global.name)
+		    + get_array_bounds(one_global.id);
+	}
+
+	storage_class = get_global_storage_class(props, 
+						one_global, 
+						the_module_struct);
+
+	if (storage_class != "" && 
+	    string_find(storage_class, 0, "extern") != 
+					string_length(storage_class))
+	{
+	    new_global.element = one_global;
+	    new_global.str = gstr;
+	    new_global.include = "";
+
+	    if (the_type != NULL)
+	    {
+		query = "node[SEFile && id=${the_type.scope_node_id}]";
+		scope_node = find_by_query(query);
+		new_global.include = scope_node.name;
+	    }
+
+	    set_add(AllExterns, new_global);
+	}
+
+	set_add(the_module_struct.global_defs, storage_class 
+			+ gstr);
+    }
+
+    return the_module_struct;
+}
+
+list
+generate_libcalls(int id)
+{
+    node        one_libcall;
+    string      query;
+    list	libcalls = list_create("node", 0);
+
+    query = "node[LibraryModule && node_refs && in_links[link_refs && from_node_id=${id}]]";
+
+    for_each_in_select(query, one_libcall)
+	list_append(libcalls, one_libcall);
+
+    return libcalls;
+
+}
+
+module_tp
+generate_params(prop_tp props, module_tp the_module_struct)
+{
+    int         i;
+    string      query, ptype, sep_char, pname;
+    string      str = "", pstr = "", kstr = "", storage = "", kind;
+    node        the_node, the_type;
+    adt_tp	new_adt;
+    link_ref    one_link;
+    cntx_ref    one_cntx_ref;
+    cntx	one_cntx;
+    list        param_list = list_create("cntx_ref", 0);
+
+    if (FC == NULL)
+    {
+	the_module_struct.params = str;
+	the_module_struct.param_proto_str = pstr;
+	the_module_struct.param_kandr_str = kstr;
+        return the_module_struct;
+    }
+
+    the_node = the_module_struct.module;
+
+    // get all links to node from a formal caller node
+    query = "link_ref[link[to_node_id=${the_node.id} && from_node_id=${FC.id}]]";
+
+    for_each_in_select(query, one_link)
+    {
+        query = "cntx_ref[link_ref_id=${one_link.id}]";
+        list_concatenate(param_list, list_select(query));
+    }
+
+    sort_params_by_x_y(param_list);
+
+    if (props.kandr_or_ansi == "ansi")
+	sep_char = ", ";
+    else sep_char = ";\n";
+
+    for ( i = 0; i < list_count(param_list); i++)
+    {
+	kind = "";
+        one_cntx_ref = list_get(param_list, i);
+
+	query = "cntx[id=${one_cntx_ref.cntx_id}]";
+	one_cntx = find_by_query(query);
+ 
+        if (i > 0)
+        {
+	    str = str + sep_char;
+	    pstr = pstr + ", ";
+	    kstr = kstr + ", ";
+        }
+
+        ptype = get_datatype_ann(one_cntx.id);
+
+	storage = get_param_storage_class(one_cntx.id);
+
+	if (IsFunctionPtr(ptype))
+	{
+	    ptype = handle_func_ptr(one_cntx.name, ptype, 0, False);
+	    str = str + storage + ptype;
+	    kstr = kstr + to_c_identifier(one_cntx.name);
+	}
+
+        else 
+	{
+	    if (!IsBuiltInCType(ptype) && ptype != "")
+	    {
+		the_type = get_sce_scoped_type(ptype, the_module_struct, one_cntx.name, "Parameter");
+		if (the_type == NULL)
+		{
+		    ++ERRORS;
+		    print_error("\nNo type definition found for '"
+		 + ptype + "'.\nCannot create data structure definition.\n\n");
+		}
+		else
+		{
+		    new_adt.element = the_type;
+		    new_adt.filename = "";
+		    new_adt.kind = get_adt_kind(the_type);
+
+		    if (!IsSystemType(the_type.id))
+		    {
+			set_add(AbstractTypes, new_adt);
+
+			if (new_adt.kind != "typedef")
+			    kind = new_adt.kind + " ";
+		    }
+		}
+	    }
+
+	    ptype = to_c_type_identifier(ptype);
+	    pname = to_c_identifier(one_cntx.name) ;
+	    str = str + storage + kind + ptype + " " + pname;
+	    kstr = kstr + pname;
+	}
+
+	pstr = pstr + storage + kind + ptype;
+
+    }
+
+    if (props.kandr_or_ansi != "ansi" && str != "")
+	str = str + ";";
+
+    the_module_struct.params = str;
+    the_module_struct.param_proto_str = pstr;
+    the_module_struct.param_kandr_str = kstr;
+
+    if (the_module_struct.var_args == True)
+    {
+	if (props.kandr_or_ansi == "ansi")
+	{
+            if (str == "")
+	    {
+		++ERRORS;
+                print_error("\nModule " + the_module_struct.name + " is defined as having variable arguments, thus it must have at least one non-variable argument.\n\n");
+	    }
+	    else 
+	    {
+		the_module_struct.params = str + ", ...";
+		the_module_struct.param_proto_str = pstr + ", ...";
+	    }
+	}
+	else
+	{
+	    the_module_struct.params = "va_dcl";
+	    the_module_struct.param_kandr_str = "va_alist";
+	    the_module_struct.param_proto_str = "va_alist";
+	}
+    }
+
+    return the_module_struct;
+
+}
+
+module_tp
+generate_return_type(prop_tp props, module_tp the_module_struct)
+{
+    string	query, kind = "", ptr_str = "", value = "";
+    item	one_item = NULL;
+    node	the_node, the_type;
+    adt_tp	new_adt;
+    int		pos, s_length;
+
+    the_node = the_module_struct.module;
+
+    query = "item[ModuleReturnType && obj_id == ${the_node.id}]";
+    one_item = find_by_query(query);
+
+    if (one_item != NULL && one_item.value != NULL && one_item.value != "")
+    {
+	value = one_item.value;
+
+	if (IsFunctionPtr(one_item.value))
+	{
+	    s_length = string_length(one_item.value);
+	    pos = string_find(one_item.value, 0, " ");
+	    ptr_str = string_extract(one_item.value, pos, s_length - pos); 
+	    value = string_extract(one_item.value, 0, pos);
+	}
+
+	if (!IsBuiltInCType(value))
+	{
+	    the_type = get_sce_scoped_type(value, the_module_struct, the_node.name, "Module");
+	    if (the_type == NULL)
+	    {
+		++ERRORS;
+		print_error("\nNo type definition found for '" + 
+		value + "'.\nCannot create data structure definition.\n\n");
+	    }
+	    else
+	    {
+		new_adt.element = the_type;
+		new_adt.filename = "";
+		new_adt.kind = get_adt_kind(the_type);
+
+		if (!IsSystemType(the_type.id))
+		{
+		    set_add(AbstractTypes, new_adt);
+
+		    if (new_adt.kind != "typedef")
+			kind = new_adt.kind + " ";
+		}
+	    }
+	}
+    }
+
+    the_module_struct.storage_class = get_module_storage_class(the_node);
+
+    if (one_item != NULL && value != "")
+	the_module_struct.return_type = the_module_struct.storage_class 
+	+ kind + to_c_type_identifier(value) + ptr_str;
+
+    else the_module_struct.return_type = the_module_struct.storage_class + DEFAULT_TYPE;
+
+    return the_module_struct;
+
+}
+
+string
+generate_module_comment(int id)
+{
+    string	query;
+    note	note = NULL;
+
+    query = "note[ModuleComment && obj_id = ${id}]";
+
+    note = find_by_query(query);
+
+    if (note != NULL)
+	return string_search_and_replace(note.desc, "\n", "\n *" + TAB);
+
+    else return "";
+}
+
+string
+generate_data_comment(prop_tp props, int id)
+{
+    string      query;
+    note        note = NULL;
+
+    if (!props.gen_comment)
+	return "";
+
+    query = "note[DataStructureComment && obj_id = ${id}]";
+
+    note = find_by_query(query);
+
+    if (note != NULL)
+	return string_search_and_replace(note.desc, "\n", "\n *" + TAB);
+
+    else return "";
+}
+
+string
+generate_module_code_body(int id)
+{
+    string	query;
+    note	note = NULL;
+
+    query = "note[CCodeBody && obj_id = ${id}]";
+
+    note = find_by_query(query);
+
+    if (note != NULL)
+	return note.desc;
+
+    else return "";
+
+}
+
+list
+generate_submodule_list(int id)
+{
+    string	query;
+    node	new_node;
+    list	children = list_create("node", 0);
+
+    // get all children for the node
+
+    query = "node[(Module || Offpage) && node_refs 
+	    && in_links[link_refs && from_node_id=${id}]]";
+
+    // Recursively resolve all offpage connections.
+    // This is necessary for cases where an offpage
+    // connects to another offpage.
+
+    for_each_in_select(query, new_node)
+    {
+        if (new_node.type == "Offpage")
+            list_concatenate(children, 
+			    generate_submodule_list(new_node.id));
+        else if (new_node.type == "Module")
+            list_append(children, new_node);
+    }
+
+    return children;
+}
+
+
+module_tp
+generate_file_and_dir_name(prop_tp props, module_tp the_module_struct)
+{
+    string query;
+    node src_file, src_dir, the_module;
+
+    the_module = the_module_struct.module;
+
+    query = "node[${the_module.scope_node_id}]";
+    src_file = find_by_query(query);
+    the_module_struct.filename = src_file.name;
+    the_module_struct.scope_node = src_file;
+
+    query = "node[${src_file.scope_node_id}]";
+    src_dir = find_by_query(query);
+    the_module_struct.directory = src_dir.name;
+
+    // file_directory overrides directory scope node
+    if (props.file_directory != "")
+	the_module_struct.directory = props.file_directory;
+
+    // file_name overrides file scope node
+    if (props.file_name != "")
+	the_module_struct.filename = props.file_name;
+
+    return the_module_struct;
+
+}
+
+
+void
+generate_global_files(prop_tp props)
+{
+    int		i, j;
+    string	query, global_text;
+    global_tp	one_global;
+    node	file_node, directory_node;
+    file_tp	one_file, existing_file;
+    note	comment_note;
+
+    for ( i = 0; i < set_count(AllExterns); i++)
+    {
+        one_global = set_get_element(AllExterns, i);
+	query = "node[id == ${one_global.element.scope_node_id}]";
+	file_node = find_by_query(query);
+	query = "node[id == ${file_node.scope_node_id}]";
+	directory_node = find_by_query(query);
+
+        // file_directory overrides directory scope node
+	if (props.file_directory != "")
+	    one_file.directory = props.file_directory;
+	else
+	    one_file.directory = directory_node.name;
+
+        one_file.name = file_node.name;
+        one_file.contents = "";
+        one_file.module_elements = list_create("module_def_tp", 0);
+        one_file.data_elements = list_create("adt_def_tp", 0);
+        one_file.file_components = set_create("string");
+        one_file.protos = list_create("string", 0);
+        one_file.includes = set_create("string");
+        one_file.globals = set_create("string");
+        one_file.type = "source";
+
+        for ( j = 0; j < set_count(AllFiles); j++)
+        {
+	    existing_file = set_get_element(AllFiles, j);
+
+	    // if true, the file already exists so use it
+	    if (existing_file.name == one_file.name && existing_file.directory == one_file.directory)
+		one_file = existing_file;
+	}
+
+	set_delete(AllFiles, one_file);
+
+	global_text = one_global.str;
+	    // if there is a source comment note, then add it in here
+	if ( props.gen_comment )
+	{
+	    query = "note[GlobalComment && obj_id=${one_global.element.id}]";
+	    comment_note = find_by_query(query);
+	    if ( comment_note != NULL )
+		global_text = "\n/* " + comment_note.desc + " */\n" + global_text;
+	}
+	
+        set_add(one_file.globals, global_text);
+	
+	if (one_global.include != "")
+	    set_add(one_file.includes, one_global.include);
+
+	set_add(AllFiles, one_file);
+    }
+
+}
+
+
+void
+generate_module_files(prop_tp props)
+{
+    module_tp    one_module;
+    file_tp      one_file, existing_file, proto_file;
+    string       filename;
+    int          i, j;
+
+    for ( i = 0; i < set_count(AllModules); i++)
+    {
+        one_module = set_get_element(AllModules, i);
+
+        one_file.name = one_module.filename;
+        one_file.directory = one_module.directory;
+        one_file.contents = "";
+        one_file.module_elements = list_create("module_def_tp", 0);
+        one_file.data_elements = list_create("adt_def_tp", 0);
+        one_file.file_components = set_create("string");
+        one_file.protos = list_create("string", 0);
+        one_file.includes = set_create("string");
+        one_file.globals = set_create("string");
+        one_file.type = "source";
+
+	proto_file.name = remove_extension(one_file.name, props.file_extension)
+			    + "_" + PROTOTYPE_FILENAME;
+	proto_file.directory = one_module.directory;
+	proto_file.contents = "";
+	proto_file.module_elements = list_create("string", 0);
+        proto_file.type = "proto";
+
+        for ( j = 0; j < set_count(AllFiles); j++)
+        {
+	    existing_file = set_get_element(AllFiles, j);
+
+	    // if true, the file already exists so use it
+	    if (existing_file.name == proto_file.name && existing_file.directory == proto_file.directory)
+		proto_file = existing_file;
+
+	    // if true, the file already exists so use it
+	    if (existing_file.name == one_module.filename && existing_file.directory == one_module.directory)
+		one_file = existing_file;
+	}
+
+	set_delete(AllFiles, proto_file);
+	set_delete(AllFiles, one_file);
+
+	list_append(one_file.module_elements, generate_function(props, one_module));
+
+	if (one_module.var_args)
+	{
+	    if (props.kandr_or_ansi == "ansi")
+		set_add(one_file.includes, "<stdarg.h>");
+	    else set_add(one_file.includes, "<varargs.h>");
+	}
+
+        set_union(one_file.includes, one_module.include_files);
+        set_union(one_file.globals, one_module.global_defs);
+	set_add(one_file.file_components, one_module.name);
+
+	if (one_module.storage_class == "static " ||
+	    one_module.storage_class == "static const ")
+	    list_append(one_file.protos, generate_proto(props, one_module));
+	else
+	    list_append(proto_file.module_elements, "extern " + generate_proto(props, one_module));
+
+	set_add(AllFiles, one_file);
+	set_clear(one_file.file_components);
+	list_clear(one_file.protos);
+	set_add(AllFiles, proto_file);
+    }
+
+    return;
+}
+
+void
+print_files(prop_tp props)
+{
+    string protofn, c_files = "", h_files = "", p_files = "", fname;
+    file_tp one_file;
+    int i;
+    string	existing_file;
+    boolean	write_failed, one_c_file = False;
+    
+    if (props.verbose)
+	print_message("\nPrinting Files...\n\n");
+
+    for ( i = 0; i < set_count(AllFiles); i++)
+    {
+	write_failed = False;
+    	existing_file = " ";
+        one_file = set_get_element(AllFiles, i);
+
+	fname = one_file.name;
+
+	if (one_file.type == "source")
+	{
+	    if (!test_file_access(one_file.directory, fname, True))
+	    {
+		++ERRORS;		
+		write_failed = True;
+	    }
+
+	    else
+	    {
+	      // Remedy 2786. If it is windows OS, only need to have a single 
+	      // source file iin c_file because notepad editor can only handle
+	      // one file at a time. 
+		if ((props.view_file) && !one_c_file )
+		  if (is_windows_platform()) {
+		    c_files = path_compose(one_file.directory, fname);
+		    one_c_file = True;
+		  }
+		// For Unix os compile all c source files.
+		  else
+		    c_files = c_files + " " + 
+			path_compose(one_file.directory, fname);
+
+		if (file_exists(path_compose(one_file.directory,
+					     fname)))
+		    existing_file = 
+			read_file(path_compose(one_file.directory ,fname));
+
+		if (props.delete_old_code)
+		    existing_file = " ";
+
+		one_file.contents = 
+		    generate_c_file(props, existing_file, one_file); 
+	    }
+	}
+
+	else if (one_file.type == "header")
+	{
+
+	    if (!test_file_access(one_file.directory, fname, True))
+	    {
+		++ERRORS;
+		write_failed = True;
+	    }
+	    else
+	    {
+	      // Remedy 2786. Don't need to compile header file list if
+	      // we can view only one source file.
+		if ( (props.view_file) && !one_c_file )
+		     h_files = h_files + " " + 
+			 path_compose(one_file.directory ,fname);
+
+		if (file_exists(path_compose(one_file.directory, fname)))
+		    existing_file = 
+			read_file(path_compose(one_file.directory, fname));
+
+		if (props.delete_old_code)
+		    existing_file = " ";
+
+		one_file.contents = 
+		    generate_h_file(props, fname, existing_file, one_file); 
+
+	    }
+	}
+
+	else if (one_file.type == "proto")
+	{
+	    if (!test_file_access(one_file.directory, fname, True))
+	    {
+		++ERRORS;
+		write_failed = True;
+	    }
+
+	    else
+	    {
+	      // Remedy 2786. Don't need to compile proto file list if
+	      // we can view only one source file.
+		if ( (props.view_file) && !one_c_file )
+		     p_files = p_files + " " + 
+			 path_compose(one_file.directory, fname);
+
+		    one_file.contents = 
+			generate_proto_file(fname, existing_file, one_file); 
+	    }
+	}
+
+	write_file(path_compose(one_file.directory,fname), one_file.contents);
+
+
+	if (!write_failed)
+	    print_message("Done writing file " + 
+			  path_compose(one_file.directory, fname));
+
+    } 
+
+    // Remedy 2786. C.L. Notepad can only handle one file at a time. Therefore
+    // if it is windows platform only get the one element of c_files.
+    if (props.view_file)
+       if (is_windows_platform()) 
+	 ViewString = c_files;
+       else
+	 ViewString = c_files + h_files + p_files;
+	
+    return; 
+    
+}
+
+
+
+void
+check_file_history()
+{
+    int   i;
+    file  diag;
+    
+    // check histories to warn about an unrepsync'd file
+ 
+    for (i = 0; i<(list_count(AllDiagrams)); i++)
+    {
+        diag = list_get(AllDiagrams, i);
+        if (file_history(diag))
+        {
+            print_error("File '" + diag.name + "' is out of sync with repository. Skipping...\n", NULL);
+            ++ERRORS;
+            list_delete(AllDiagrams, i);
+        }
+ 
+    }
+ 
+    return;
+ 
+}
+
+string
+get_unique_id_annot(prop_tp props, node the_node)
+{
+    string	query, cmd;
+    item	item = NULL;
+    int		id;
+    file	file;
+    string	codegen_id;
+    boolean	found = True;
+
+    query = "item[obj_id=${the_node.id} && type=CodeGenId]";
+
+    item = find_by_query(query);
+
+    // if the unique id isn't set, need to set it 
+    if (item == NULL)
+    {
+	if (props.verbose)
+	    print_message("Adding CodeGenId annotation for node: " + the_node.name + "...");
+
+	id = generateProbablyUniqueId( "CodeGenId", "CodeGenId" );
+
+	add_unique_id_annot(props, the_node, id);
+
+	// need to get the node again to ensure the annot_file_id is current
+	query = "node[${the_node.id}]";
+	the_node = find_by_query(query);
+    }
+    else
+        id = to_int(item.value);
+
+    query = "file[ObjectAnnotation && id == ${the_node.annot_file_id}]";
+    file = find_by_query(query);
+
+    codegen_id = id + ":" + 
+		string_extract(file.name, 1, string_length(file.name) - 1);
+
+    return codegen_id;
+}
+
+void
+add_unique_id_annot(prop_tp props, node node, int codegen_id)
+{
+    string	cmd;
+    boolean	found = False;
+    string	query;
+    item	item = NULL;
+    int		tries_left = 5;
+
+    cmd = "-C 'AnnotEdit " + node.id + "' ";
+
+    if(node.type == "Module")
+	cmd = cmd + "-C 'NoteSelect ModuleDefinition' ";
+
+    else if(node.type == "Typedef")
+	cmd = cmd + "-C 'NoteSelect TypedefDefinition' ";
+
+    else if(node.type == "Enumeration")
+	cmd = cmd + "-C 'NoteSelect EnumDefinition' ";
+
+    else 
+	cmd = cmd + "-C 'NoteSelect DataDefinition' ";
+
+    cmd =  cmd + "-C 'ItemSelect CodeGenId' ";
+ 
+    cmd = cmd + "-C 'EditorSetValue " + codegen_id + "' ";
+
+    cmd = cmd + "-C 'FileSave' ";
+
+    cmd = cmd + "-C 'AnnotUnload'";
+ 
+    system("stpem -ed ngoae -s ${system} -p ${projdir} " + cmd );
+
+    // need to loop here to make sure we don't continue
+    // until the annot is added
+    while (!found && tries_left > 0)
+    {
+	query = "item[CodeGenId && value == '${codegen_id}']";
+	item = find_by_query(query);
+	if (item != NULL)
+	    found = True;
+	else 
+	    sleep(3);
+	tries_left--;
+    }
+}
+
+// Finds the annot file for the node, checks it out if
+// necessary and then executes the qrl_expression.  Finally,
+// checks it back in.
+
+//const string C_ANNOT_EDT = " -C 'vcc edit -e oae ${file.name}'";
+//const string C_PRG = "stputil -p ${projdir} -s ${system}";
+//const string REDIRECT_OUT = " > ${outfile} 2>&1";
+//const string REDIRECT_IN = " < ${infile}";
+
+void
+annotCheckoutThenExec (int id, string qrl_expression)
+{
+    file        file;
+    string      fname, cmd = C_PRG + C_ANNOT_EDT + REDIRECT_OUT;
+    string      outfile;
+    subproc_tp  proc;
+    string	query;
+
+    query = "file[annot_node[id=${id}]]";
+
+    file = find_by_query(query);
+
+    if (file!=NULL)
+    {
+        if (file.rev != "")
+        {
+	    fname = path_compose(current_projdir(),
+				 current_system(),
+				 "ant_files",
+				 file.name + ".ant");
+
+            if (!write_file_access(fname))
+            {
+                print_message("Annotation " + file.name + " is Versioned, " +
+                              "Attempting Check Out...");
+                outfile = tmpfile(file.name, 0);
+                proc.pid = editor_system(cmd, "AnnotCheckoutDoneProc");
+                proc.success_msg = "Check Out Succeeded.";
+                proc.failure_msg = "Check Out Annotation " +
+                                   file.name + " Failed.";
+                proc.tmpfile = NULL;
+                proc.outfile = outfile;
+                proc.client_data = file.name + ":" + qrl_expression;
+                list_append(subProcs, proc);
+                return;
+            }
+        }
+    qrl_eval(qrl_expression);
+    }
+ 
+}
+
+int
+AnnotCheckoutDoneProc(int pid, int status)
+{
+    subproc_tp  proc;
+    string      expression;
+    int         pos;
+ 
+    proc = subProc(pid);
+    doneProc(pid, status);
+
+    pos = string_find(proc.client_data, 0, ":");
+    expression = string_extract(proc.client_data, pos + 1,
+                                string_length(proc.client_data) - pos - 1);
+ 
+    qrl_eval(expression);
+ 
+    return(0);
+}
+
+//const string C_DELAY = "sleep 3; ";     // to avoid conflict with repsync
+//const string C_ANNOT_DTA = " -C 'vcc delta -e oae -u ${fname}'";
+//const string C_ANNOT_GET = " -C 'vcc get -e oae ${fname}'";
+ 
+int
+annot_checkin(string fname, string id)
+{
+    subproc_tp  proc;
+    string      infile, outfile = tmpfile(fname, 0);
+    string      cmd = C_DELAY + C_PRG + C_ANNOT_DTA + C_ANNOT_GET +
+                      REDIRECT_IN + REDIRECT_OUT;
+    file    file;
+    string  query;
+
+    query = "file[annot_node[id==${id}]]";
+
+    file = find_by_query(query);           
+
+    if (file!=NULL)
+    {
+
+      if ( file.rev != "" )
+      {
+ 
+        print_message("Attempting Check In of Annotation " + fname + "...");
+        infile =  outfile + "0";
+        write_file(infile, "New version created by StP\n");
+        proc.pid = editor_system(cmd, "doneProc");
+        proc.success_msg = "Check In Succeeded.";
+        proc.failure_msg = "Check In Failed.";
+        proc.tmpfile = infile;
+        proc.outfile = outfile;
+        proc.client_data = NULL;
+        list_append(subProcs, proc);
+
+        return(0);                       
+       }
+    }
+       
+    return (0);
+}
+
+boolean
+IsFunctionPtr(string type)
+{
+    int		pos;
+    int		s_length = string_length(type);
+
+    pos = string_find(type, 0, "*");
+
+    if (pos != s_length)
+    {
+	pos = string_find(type, 0, "(");
+
+	if (pos != s_length)
+	{
+	    pos = string_find(type, 0, ")");
+
+	    if (pos != s_length)
+		return True;
+	}
+    }
+
+    return False;
+}
+
+boolean
+IsSystemType(int id)
+{
+    string	query;
+    item	item = NULL;
+
+    query = "item[obj_id = ${id} && type = SystemType]";
+    item = find_by_query(query);
+
+    if (item == NULL || item.value == "False")
+	return False;
+
+    else return True;
+}
+
+void
+compile_adts(prop_tp props)
+{
+    adt_tp	one_adt;
+    int		i;
+ 
+    for (i = 0; i < set_count(AbstractTypes); i++)
+    {
+
+        one_adt = set_get_element(AbstractTypes, i);
+
+	print_message("Creating data structure for element '" + one_adt.element.name + "'...");
+
+	one_adt.filename = "";
+	one_adt.directory = "";
+
+	one_adt = fill_adt_structure(props, one_adt.element, one_adt.filename, one_adt.directory);
+
+	one_adt.child_elements = get_adt_children(props, one_adt);
+
+	// if adt has no children, it must have a type annotation
+	if (one_adt.child_elements == NULL)
+	    one_adt = get_type(one_adt);
+
+        set_add(AllAdts, one_adt);
+    }
+
+    return;
+
+}
+
+adt_tp
+fill_adt_structure(prop_tp props, node the_node, string filename, string directory)
+{
+    string	query;
+    node	scope_node = NULL;
+    adt_tp	new_adt;
+
+    new_adt.element = the_node;
+    new_adt.name = to_c_type_identifier(the_node.name);
+    new_adt.array_size = get_array_bounds(the_node.id);
+    new_adt.tag = to_c_type_identifier(get_adt_tag(the_node));
+    new_adt.kind = get_adt_kind(the_node);
+    new_adt.child_elements = NULL;
+    new_adt.include_files = set_create("string");
+
+    if (filename == "")
+    {
+	// must be a parent node with file and dir scope
+	query = "node[id=${the_node.scope_node_id} && SEFile]";
+	scope_node = find_by_query(query);
+
+	// the following condition should always be true
+	if (scope_node != NULL)
+	{
+	    filename = scope_node.name;
+	    query = "node[id=${scope_node.scope_node_id} && SEDirectory]";
+	    scope_node = find_by_query(query);
+	    directory = scope_node.name;
+	}
+
+	else 
+	{
+	    filename = "junk";
+	    directory = home_directory();
+	}
+    }
+
+    new_adt.filename = handle_extension(filename, props.file_interface_extension);
+    new_adt.directory = directory;
+
+    return new_adt;
+ 
+}
+
+string
+get_adt_kind(node the_node)
+{
+
+    if (the_node.type == "Sequence")
+	return "struct";
+
+    if (the_node.type == "Selection")
+	return "union";
+
+    if (the_node.type == "Enumeration")
+	return "enum";
+
+    if (the_node.type == "Typedef")
+	return "typedef";
+}
+ 
+ 
+list
+get_adt_children(prop_tp props, adt_tp one_adt)
+{
+    string	query;
+    int		i;
+    list 	children_nodes = list_create("node", 0);
+    node        one_child, the_type;
+    adt_tp 	child, enum_child_adt;
+    list 	children = list_create("adt_tp", 0);
+
+    query = "node[(Sequence || Selection || Enumeration) && node_refs && 
+	    scope_node_id = ${one_adt.element.id}]";
+             
+    children_nodes = list_select(query);
+
+    sort_children_by_x_position( children_nodes );
+ 
+    if (list_count(children_nodes) == 0)
+        return NULL;
+ 
+    for (i = 0; i < list_count(children_nodes); i++)
+    {
+        one_child = list_get(children_nodes, i);
+	child.filename = one_adt.filename;
+	child.directory = one_adt.directory;
+	child = fill_adt_structure(props, one_child, child.filename, child.directory);
+
+	if (child.kind != "enum")
+	{
+	    child.child_elements = NULL;
+	    child.child_elements = get_adt_children(props, child);
+
+	    // if child has no children, it must have a type annotation
+	    if (child.child_elements == NULL)
+		child = get_type(child);
+	}
+	else
+	{
+	    child.child_elements = list_create("adt_tp", 0);
+
+	    query = "node[Sequence && node_refs && scope_node_id = ${child.element.id}]";
+
+	    for_each_in_select(query, one_child)
+	    {
+		enum_child_adt.element = one_child;
+		enum_child_adt.name = one_child.name;
+		enum_child_adt.child_elements = NULL;
+		enum_child_adt.kind = "enum";
+		list_append(child.child_elements, enum_child_adt);
+	    }
+
+	}
+
+	set_union(one_adt.include_files, child.include_files);
+
+	list_append(children, child);
+    }
+
+    return children;
+}
+
+
+void
+sort_children_by_x_position(list children)
+{
+    int loop, i;
+    list positions = list_create( "node_ref", 0 );
+    node n;
+    node_ref nr, nra, nrb;
+
+    // get a corresponding list of positions - one for each child.
+    for( loop = 0; loop < list_count(children); loop++ )
+    {
+	n = list_get( children, loop );
+	nr = find_by_query( "node_ref[ node_id = " + n.id + " ] sort by file_id" );
+	if ( nr == NULL )
+	{
+	    print_error( "Cannot sort children - DSE children may not match diagram ordering." );
+	    return;
+	}
+	list_append( positions, nr );
+    }
+
+    // sort the list of positions, and make the same moves in the
+    // original list - its a yucky bubble sort, but there shouldn't
+    // be too many kids, so it should cope.
+
+    for( loop = 0; loop < list_count( positions ); loop++ )
+    {
+	for( i = loop + 1; i < list_count( positions ); i++ )
+	{
+	    nra = list_get( positions, loop );
+	    nrb = list_get( positions, i );
+
+	    if ( nra.xcoord > nrb.xcoord )
+	    {
+		list_insert( positions, loop, nrb );
+		list_delete( positions, i + 1 );
+		list_insert( children, loop, list_get( children, i ));
+		list_delete( children, i + 1 );
+	    }
+	}
+    }
+    return;
+}
+
+
+void
+generate_adt_files(prop_tp props)
+{
+    int 	i, j;
+    adt_tp 	adt;
+    file_tp 	one_file, existing_file;
+ 
+    for (i = set_count(AllAdts) - 1; i >= 0; i--)
+    {
+        adt = set_get_element(AllAdts, i);
+ 
+        one_file.name = adt.filename;
+
+	// file_directory overrides directory scope node
+	if (props.file_directory != "")
+	{
+	    one_file.directory = props.file_directory;
+	    adt.directory = props.file_directory;
+	}
+	else
+	    one_file.directory = adt.directory;
+
+        one_file.typedefs = list_create("adt_def_tp", 0);
+        one_file.enums = list_create("adt_def_tp", 0);
+        one_file.contents = "";
+        one_file.module_elements = list_create("module_def_tp", 0);
+        one_file.data_elements = list_create("adt_def_tp", 0);
+        one_file.type = "header";
+        one_file.file_components = set_create("string");
+        one_file.includes = set_create("string");
+
+        for (j = 0; j < set_count(AllFiles); j++)
+        {
+            existing_file = set_get_element(AllFiles, j);
+ 
+            // if true, the file already exists so use it
+            if (existing_file.name == adt.filename &&  
+		existing_file.directory == adt.directory)
+	    {
+		one_file = existing_file;
+		set_delete(AllFiles, existing_file);
+		break;
+	    }
+        }
+
+	if (adt.kind == "enum")
+	    list_append(one_file.enums, generate_adt(props, adt));
+
+	else if (adt.kind == "typedef")
+	    list_append(one_file.typedefs, generate_adt(props, adt));
+
+	else
+	    list_append(one_file.data_elements, generate_adt(props, adt));
+
+        set_add(one_file.file_components, adt.name);
+
+	if (adt.include_files != NULL)
+	    set_union(one_file.includes, adt.include_files);
+
+        set_add(AllFiles, one_file);
+        set_clear(one_file.file_components);
+    }
+    return;
+     
+}
+
+list
+sort_params_by_x_y(list the_list)
+{
+    cntx_ref	temp, temp2;
+    int 	i, j;
+ 
+    if (the_list == NULL || (list_count(the_list) == 0))
+        return the_list;
+ 
+    for (i = 0; i < list_count(the_list) - 1 ; ++i)
+    {
+	for (j = i + 1; j < list_count(the_list); ++j)
+	{
+	    temp = list_get(the_list, i);
+	    temp2 = list_get(the_list, j);
+
+	    if (temp2.ycoord < temp.ycoord)                                
+	    {
+		list_insert(the_list, i, temp2); 
+		list_delete(the_list, j + 1);
+	    }
+
+	    else if (temp2.ycoord == temp.ycoord)
+	    {
+		if (temp2.xcoord <  temp.xcoord)
+		{
+		    list_insert(the_list, i, temp2); 
+		    list_delete(the_list, j + 1);
+		}
+	    }
+
+	}
+    }
+
+    return the_list;
+}    
+
+// get specific annotations
+
+string
+get_array_bounds(int id)
+{
+
+    item item;
+
+    item = find_by_query("item[obj_id = ${id} && ArraySize]");
+
+    if (item == NULL)                                               
+        return "";
+    else
+        return SEArraySize(item.value);
+ 
+}
+                 
+string
+get_adt_tag(node the_node)
+{
+
+    item item;
+
+    item = find_by_query("item[obj_id = ${the_node.id} && Tag]");
+
+    if (item == NULL)                                               
+        return "";
+    else
+        return item.value;
+ 
+}
+                 
+
+string
+get_datatype_ann(int id)
+{
+
+    item item = NULL;
+
+    item = find_by_query("item[obj_id = ${id} && DataType]");
+
+    if (item == NULL || item.value == "")
+        return DEFAULT_TYPE;
+    else
+        return (item.value);
+}
+
+adt_tp
+get_type(adt_tp the_adt)
+{
+    node	the_type = NULL;
+    adt_tp	new_adt;
+    string	kind = "", type_str;
+
+    the_adt.type = get_datatype_ann(the_adt.element.id);
+
+    if (!IsBuiltInCType(the_adt.type))
+    {
+	type_str = the_adt.type;
+
+	if (IsFunctionPtr(type_str))
+	{
+	    the_adt.type = handle_func_ptr(the_adt.name, type_str, the_adt.element.id, True);
+	    the_adt.name = " ";
+	    return the_adt;
+	}
+
+	the_type = get_dse_scoped_type(the_adt);
+
+	if (the_type == NULL && the_adt.type != "")
+	{
+	    ++ERRORS;
+	    print_error("\nNo type definition found for '" +
+	    the_adt.type + "'.\nCannot create data structure definition.\n\n");
+	}
+	else
+	{   
+	    type_str = get_datatype_ann(the_type.id);
+
+	    if (IsFunctionPtr(type_str))
+	    {
+		the_adt.type = handle_func_ptr(the_type.name, type_str, the_type.id, True);
+		return the_adt;
+	    }
+
+	    new_adt.element = the_type;
+
+	    if (!IsSystemType(the_type.id))
+	    {
+		set_add(AbstractTypes, new_adt);
+
+		if (the_type.type != "Typedef")
+		    kind = get_adt_kind(the_type) + " ";
+	    }
+	}
+
+    }
+
+    the_adt.type =  kind + to_c_type_identifier(the_adt.type);
+
+    return the_adt;
+
+}
+
+string
+get_access_mode(int mod_id, int global_id)
+{
+    link	link;
+    item	item = NULL;
+    string	query;
+
+    query = "link[from_node_id=${mod_id} && to_node_id=${global_id}]";
+
+    link = find_by_query(query);
+
+    query = "item[obj_id=${link.id} && type = AccessMode]";
+
+    item = find_by_query(query);
+
+    if (item != NULL)
+	return item.value;
+
+    else return "read";
+}
+
+
+string   
+get_module_storage_class(node one_node)
+{
+    string      query;
+    item        item = NULL;    
+ 
+    query = "item[obj_id=${one_node.id} && StorageClass]";
+ 
+    item = find_by_query(query); 
+ 
+    if (item != NULL)
+        return item.value + " ";
+
+    return "";
+}
+
+string
+get_global_storage_class(prop_tp props, node one_node, module_tp the_module_struct)
+{
+    string	query, storage_class = "";
+    item	item = NULL;
+    node	file_scope, dir_scope;
+
+    query = "item[obj_id=${one_node.id} && StorageClass]";
+
+    item = find_by_query(query);
+
+    if (item != NULL)
+	storage_class = item.value + " ";
+
+    // If true, nothing is externed since it is generated all to same area
+    if (props.file_directory != "" && props.file_name != "")
+	return storage_class;
+
+    query = "node[SEFile && id=${one_node.scope_node_id}]";
+ 
+    file_scope = find_by_query(query);
+ 
+    query = "node[SEDirectory && id=${file_scope.scope_node_id}]";
+ 
+    dir_scope = find_by_query(query);
+ 
+    if ((file_scope.name == the_module_struct.filename) && 
+	(dir_scope.name == the_module_struct.directory))
+	return storage_class;
+
+    if ((storage_class == "static ") || 
+	(storage_class == "static const "))
+    {
+	++ERRORS;
+	print_error("\nModule '" + the_module_struct.name + "' in file '" + 
+		    path_compose(the_module_struct.directory,
+				 the_module_struct.filename) + "'\naccesses Global '" + one_node.name + "' which is defined as static to file '" + 
+		    path_compose(dir_scope.name, file_scope.name)
+		    + "'.\n\n");
+	return "extern ";
+    }
+
+    return "extern " + storage_class;
+}
+
+string
+get_param_storage_class(int id)
+{
+    string      query;
+    item        item = NULL;
+ 
+    query = "item[obj_id=${id} && ParamStorageClass]";
+ 
+    item = find_by_query(query);
+ 
+    if (item != NULL)
+        return item.value + " ";
+ 
+    return "";
+ 
+}
+
+// sort_params_by_x
+//
+// 	Params only have an x coord (i.e. y is always 0), so
+// 	this func sorts params from left to right only.
+
+void
+sort_params_by_x(set param_set)
+{
+    int		i, j, a, lowest=0;
+    string	query;
+    cntx	one_cntx;
+    cntx_ref	one_cntx_ref;
+    set		the_set = set_create("cntx_ref");
+
+    for (i = 0; i < set_count (param_set); i++)
+    {
+	one_cntx = set_get_element(param_set, i);
+	query = "cntx_ref[cntx_id = ${one_cntx.id}]";
+	one_cntx_ref = find_by_query(query);
+	set_add(the_set, one_cntx_ref);
+    }
+
+
+    for (i = 0; i < set_count(the_set); i++)
+    {
+	one_member= set_get_element(the_set, i);
+	a = one_member.xcoord;
+
+	if (a < lowest.xcoord || lowest == 0) lowest = a;
+
+
+    }
+}
+
+

@@ -1,0 +1,252 @@
+//*****************************************************************************
+// $RCSfile: corba_std.tdl,v $
+// $Revision: 1.4 $
+// $Date: 2002/04/04 14:48:44 $
+// Author: Markus Kern
+//*****************************************************************************
+
+USES ../tdl/std;
+
+////////////////////////////////////////////////////////////////////////////////
+// standard functions
+////////////////////////////////////////////////////////////////////////////////
+
+/* Generates a marked section in the output. The content of this section can 
+be changed by the user in the generated file. These changes will not be 
+overwritten in subsequent cycles of code generation */
+template mergeOut(uniqueId,desc)
+//#ACD# M([uniqueId]) [desc]
+
+	// [desc] to be added here ...
+
+//#end ACD#
+end template
+
+
+/* this procedure is called once by main (defined in cpp_main.tdl) before
+   any other procedure or template. It sets up the merge mechanism for 
+   incremental code generation (delMergeFile and appendMergeFile).
+   The current language for type mapping is defined (setLanguage) */
+proc init()
+	delMergeFile();
+	appendMergeFile("merge_config_JAVA.txt");
+	setLanguage("Java");
+end proc	
+
+template outDesc(Description)
+[loop(Instances->TokenSet([Description]))]
+[TokenSet.line]
+[end loop]
+end template
+
+/* return tag of tagged value with tag==str */
+proc getTaggedValueTag(MElement, str)
+	loop(MElement->TaggedValue AS TG Where [TG.tag] == [str])
+	return [TG.tag];
+	end loop
+end proc
+
+/* return value of tagged value with tag==str */
+proc getTaggedValueValue(MElement, str)
+	loop(MElement->TaggedValue AS TG Where [TG.tag] == [str])
+	return [TG.value];
+	end loop
+end proc
+
+template getOpTypeList(MOperation)
+[loop(MOperation->OpPara;setDelim("");setDelim(","))]
+[insert("import",[Class_[OpPara.type]])]
+[delim()] [getDataType([OpPara.type])] [OpPara.name]\
+[end loop]
+end template
+
+/* generate methods of the root interface, either IUnknown or IDispatch
+*/
+template getRootInterfaceMethodsForClassHeader(MClass)
+[getTheIdListRec([MClass])]
+[loop(Instances->MInterface([ID_LIST])AS superClass;setCount(0))]
+[if ((!hasLoop(superClass->SuperClass)) && (getCount() <= "0"))]
+[addCount(1)]
+[switch ([superClass.name])]
+[case "IUnknown":]
+[genIUnknownMethodsForCoClassHeader()]	[/* generate methods of IUnknown, s. below*/]
+[break]
+[case "IDispatch":]
+[genIDispatchMethodsForCoClassHeader()] [/* generate methods of IDispatch, s. below*/]
+[break]
+[end switch]
+[end if]
+[end loop]
+end template
+
+proc getTheIdListRec(MClass)
+[ID_LIST] = getIdListRec(MClass->Implement->SuperClass);
+end proc
+
+proc helpOutput()
+info = getCount()"\n";
+end proc
+
+/* generates methods of IUnknown in header for coclass
+*/
+template genIUnknownMethodsForCoClassHeader()
+	STDMETHODIMP QueryInterface(REFIID riid, void** ppv);
+	STDMETHODIMP_(ULONG) AddRef(void);
+	STDMETHODIMP_(ULONG) Release(void);
+end template
+
+/* generates methods of IUnknown in header for coclass
+*/
+template genIDispatchMethodsForCoClassHeader()
+	// Template for genIDispatchMethodsForCoClassHeader not yet implemented
+end template
+
+/* generate methods of the root interface, either IUnknown or IDispatch
+*/
+template getRootInterfaceMethodsForClass(MClass)
+[getTheIdListRec([MClass])]
+[loop(Instances->MInterface([ID_LIST])AS superClass;setCount(0))]
+[if ((!hasLoop(superClass->SuperClass)) && (getCount() <= "0"))]
+[addCount(1)]
+[switch ([superClass.name])]
+[case "IUnknown":]
+[genIUnknownMethodsForCoClass([MClass])] [/* generate methods of IUnknown, s. below*/]
+[break]
+[case "IDispatch":]
+[genIDispatchMethodsForCoClass([MClass])] [/* generate methods of IDispatch, s. below*/]
+[break]
+[end switch]
+[end if]
+[end loop]
+end template
+
+template genIUnknownMethodsForCoClass(MClass)
+STDMETHODIMP [MClass.name]::QueryInterface(REFIID riid, void** ppv)
+{
+	if (riid==IID_IUnknown) { *ppv=(IUnknown*)this; return S_OK; }
+[getImplClass([MClass])]
+	*ppv = NULL;	
+	return E_NOINTERFACE;
+}
+
+STDMETHODIMP_(ULONG) [MClass.name]::AddRef()
+{
+	localRefCounter++;
+	return localRefCounter;	
+}
+STDMETHODIMP_(ULONG) [MClass.name]::Release()
+{
+	localRefCounter--;
+	if (localRefCounter==0)
+	{
+		delete this;
+		return 0;	
+	}
+	return localRefCounter;
+}
+end template
+
+//get all interfaces the class implements
+template getImplClass(MClass)
+[loop(MClass->Implement)]
+    if (riid==IID_[Implement.name])
+    { 
+    	*ppv=([Implement.name]*) this;
+    	return S_OK;
+    }
+[end loop]
+end template
+
+template genIDispatchMethodsForCoClass(MClass)
+	// Template for genIDispatchMethodsForCoClass not yet implemented
+end template
+
+/* returns a string with all Interfaces, that coclass inherits from
+*/
+proc genImplementClass(MClass)
+    //get all interfaces the class implements
+	local ret;
+	[ret] = "";
+    loop(MClass->Implement;setDelim("");setDelim(", "))
+        [ret] = [ret] delim() "public "[Implement.name];
+    end loop
+	return [ret];
+end proc
+
+/* generates the string with default information for interface, if exists */
+proc isDefaultInterface(MInterface)
+	local ret;
+	[ret] = getTaggedValueTag([MInterface], "default");
+	if ([ret] != "")
+		return "["[ret]"] ";
+	end if		
+end proc
+
+/* generate string with name of default interface */
+proc getDefaultInterface(MClass)
+	local ret;
+	loop(MClass->Implement)
+		[ret] = getTaggedValueTag([Implement], "default");
+		if ([ret] != "")
+			return [Implement.name];
+		end if		
+	end loop
+
+end proc
+//--------------------------------------------------------------------------------------------
+tcl_proc exec_system(syscmd, arg1)
+	exec $syscmd $arg1;
+end proc
+
+tcl_proc get_uuid()
+	set file [open "\\Temp\\om.idl" "r"];
+	set uuid [read -nonewline $file];
+	close $file;
+	return $uuid;
+end proc
+
+proc hasFactory(MInterface)
+	local ret;
+	[ret] = getTaggedValueTag([MInterface], "HasFactory");
+	if ([ret] != "")
+		return "TRUE";
+	end if
+end proc
+
+proc getFactoryNameFromInterface(MInterface, debug)
+//info = [MInterface.name] "\n";
+	local ret;
+	[ret] = getTaggedValueValue([MInterface], "HasFactory");
+	if ([debug] == "TRUE")
+		info = [ret] "\n";
+	end if
+		return [ret];	// Es muß was zurückgehen, auch wenn's leer ist!
+end proc
+
+proc InterfaceHasStaticOps(MInterface, debug)
+	if (hasLoop(MInterface->MOperation WHERE [MOperation.binding] == "static"))
+		return "TRUE";
+	end if
+	return "FALSE";
+end proc
+
+template genStaticOperationsOfInterfaceHeader(MInterface, lang)
+[//# LOOP for all static operations of Time Interface class:]
+[loop (MInterface->MPackage)]
+	[MPackage.name]::[genStaticInterfaceOp([MInterface], [lang])]
+[end loop]
+[//# ENDLOOP]
+end template
+
+// extract static operations from interface, 
+// with type mapping of return value and signatures according to paramter lang
+proc genStaticInterfaceOp(MInterface, lang)
+	local retVal;
+	setLanguage([lang]);	/* sets the tag for typemapping. See TDL documentation for further information */
+	loop(MInterface->MOperation WHERE [MOperation.binding] == "static")
+		[retVal] = getDataType([MOperation.returnType]) " ";
+		[retVal] = [retVal] [MOperation.name]"("getOpTypeList([MOperation])")";
+	end loop
+	return [retVal];
+end proc
+

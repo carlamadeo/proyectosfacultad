@@ -1,0 +1,835 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+// This is the secured portion of the rules file.
+
+NodeSymbol 1 CoverPageSection
+{
+        { NodeMapping
+            { AppType CoverPageSection }
+            { NameIsRequired True } 
+        }
+        { PrintName "Cover Page" }
+        { VAdjust Top }
+        { CanAdjustLabel True }
+	{ LabelAnchor South }
+        { CanApplyScaleCmd False }
+        { Shape
+            { ToolbarImage "rme_cover_page" }
+	    { Draw
+		{ Polygon
+		    { Origin   0.00    0.00 }
+		    { Point   10.00  -30.00 }
+		    { Point  -24.00  -30.00 }
+		    { Point  -24.00   30.00 }
+		    { Point   20.00   30.00 }
+		    { Point   20.00  -20.00 }
+		    { LineStyle Solid }
+		}
+                { Line
+		    { Origin  10.00  -30.00 }
+		    { Point   10.00  -20.00 }
+                }
+                { Line
+		    { Origin  10.00  -20.00 }
+		    { Point   20.00  -20.00 }
+                }
+                { Line
+		    { Origin  11.00  -18.00 }
+		    { Point   11.00   28.00 }
+                }
+                { Line
+		    { Origin  13.00  -18.00 }
+		    { Point   13.00   28.00 }
+                }
+                { Line
+		    { Origin  15.00  -18.00 }
+		    { Point   15.00   28.00 }
+                }
+		{ Line   
+                    { Origin -14.00  -12.00 }
+                    { Point    6.00  -12.00 }
+                }
+		{ Line   
+                    { Origin -10.00   -6.00 }
+                    { Point    2.00   -6.00 }
+                }
+		{ Line   
+                    { Origin  -6.00    0.00 }
+                    { Point   -2.00    0.00 }
+                }
+	    }
+	}
+        { Cardinality
+            { Min 1 }
+            { Max 1 }
+            { OutLinks NextSection }
+        }
+        { Cardinality
+            { Max 0 }
+            { InLinks NextSection }
+        }
+}
+
+NodeSymbol 2 SingleDiagSection
+{
+        { NodeMapping
+            { AppType SingleDiagSection }
+            { NameIsRequired True } 
+        }
+        { PrintName "Diagram" }
+        { VAdjust Top }
+        { CanAdjustLabel True }
+        { LabelAnchor South }
+        { CanApplyScaleCmd False }
+	{ Shape
+	    { ToolbarImage "rme_diagram" }
+            { Draw
+                { Polygon
+                    { Origin   0.00    0.00 }
+                    { Point   10.00  -30.00 }
+                    { Point  -24.00  -30.00 }
+                    { Point  -24.00   30.00 }
+                    { Point   20.00   30.00 }
+                    { Point   20.00  -20.00 }
+                    { LineStyle Solid }
+                }
+                { Line
+                    { Origin  10.00  -30.00 }
+                    { Point   10.00  -20.00 }
+                }
+                { Line
+                    { Origin  10.00  -20.00 }
+                    { Point   20.00  -20.00 }
+                }
+		{ Ellipse
+		    { Origin  -8.00  -14.00 }
+		    { Size    16.00   16.00 }
+                    { LineStyle Solid }
+		}
+		{ Polygon
+		    { Origin   0.00    0.00 }
+		    { Point    0.00    4.00 }
+                    { Point   16.00    4.00 }
+		    { Point    8.00  -12.00 }
+		}
+		{ Rectangle
+		    { Origin  -2.00   18.00 }
+		    { Size    28.00   12.00 }
+		}
+		{ Line   
+                    { Origin  -8.00   12.00 }
+                    { Point   -8.00   -6.00 }
+                }
+		{ Line   
+                    { Origin   2.00   12.00 }
+                    { Point    9.00    4.00 }
+                }
+                { Line   
+                    { Origin   0.00   -8.00 }
+                    { Point    4.00   -4.00 }
+                }
+            }
+        }
+        { Cardinality 
+            { Min 0 }
+            { Max 1 } 
+            { InLinks NextSection }
+        }
+        { Cardinality
+            { Min 0 }
+            { Max 1 }
+            { OutLinks NextSection }
+        }
+}
+
+NodeSymbol 3 MultiDiagSection
+{
+        { NodeMapping
+            { AppType MultiDiagSection }
+            { NameIsRequired True } 
+        }
+        { PrintName "Diagram Set" }
+        { VAdjust Top }
+        { CanAdjustLabel True }
+        { LabelAnchor South }
+        { CanApplyScaleCmd False }
+	{ Shape 
+            { ToolbarImage "rme_diagram_set" } 
+            { Draw
+               { Polygon 
+                    { Origin   0.00    0.00 } 
+                    { Point   10.00  -30.00 } 
+                    { Point  -24.00  -30.00 } 
+                    { Point  -24.00   30.00 } 
+                    { Point   20.00   30.00 } 
+                    { Point   20.00  -20.00 } 
+                    { LineStyle Solid } 
+                }
+                { Line 
+                    { Origin  10.00  -30.00 } 
+                    { Point   10.00  -20.00 } 
+                } 
+                { Line 
+                    { Origin  10.00  -20.00 } 
+                    { Point   20.00  -20.00 } 
+                } 
+                { Line
+                    { Origin -22.00  -30.00 }
+                    { Point  -20.00  -32.00 }
+                }
+                { Line
+                    { Origin -20.00  -32.00 }
+                    { Point   12.00  -32.00 }
+                }
+                { Line
+                    { Origin  12.00  -32.00 }
+                    { Point   22.00  -22.00 }
+                }
+                { Line
+                    { Origin  22.00  -22.00 }
+                    { Point   22.00   28.00 }
+                }
+                { Line
+                    { Origin  22.00   28.00 }
+                    { Point   20.00   30.00 }
+                }
+                { Ellipse 
+                    { Origin  -8.00  -14.00 } 
+                    { Size    16.00   16.00 }  
+                    { LineStyle Solid }
+                } 
+                { Polygon 
+                    { Origin   0.00    0.00 }
+                    { Point    0.00    4.00 }
+                    { Point   16.00    4.00 }
+                    { Point    8.00  -12.00 }
+                }
+                { Rectangle
+                    { Origin  -2.00   18.00 }
+                    { Size    28.00   12.00 }
+                }
+                { Line   
+                    { Origin  -8.00   12.00 }
+                    { Point   -8.00   -6.00 }
+                }
+                { Line   
+                    { Origin   2.00   12.00 }
+                    { Point    9.00    4.00 }
+                }
+                { Line   
+                    { Origin   0.00   -8.00 }
+                    { Point    4.00   -4.00 }
+                }
+            } 
+        }
+        { Cardinality 
+            { Min 0 }
+            { Max 1 } 
+            { InLinks NextSection }
+        }
+        { Cardinality 
+            { Min 0 }
+            { Max 1 }
+            { OutLinks NextSection } 
+        }
+}
+
+NodeSymbol 4 SingleTableSection
+{
+        { NodeMapping
+            { AppType SingleTableSection }
+            { NameIsRequired True } 
+        }
+        { PrintName "Table" }
+        { VAdjust Top }
+        { CanAdjustLabel True }
+        { LabelAnchor South }
+        { CanApplyScaleCmd False }
+	{ Shape 
+            { ToolbarImage "rme_table" } 
+            { Draw
+             
+                { Polygon 
+                    { Origin   0.00    0.00 } 
+                    { Point   10.00  -30.00 } 
+                    { Point  -24.00  -30.00 } 
+                    { Point  -24.00   30.00 } 
+                    { Point   20.00   30.00 } 
+                    { Point   20.00  -20.00 } 
+                    { LineStyle Solid } 
+                }
+                { Line 
+                    { Origin  10.00  -30.00 } 
+                    { Point   10.00  -20.00 } 
+                } 
+                { Line 
+                    { Origin  10.00  -20.00 } 
+                    { Point   20.00  -20.00 } 
+                } 
+		{ Rectangle
+		    { Origin  -2.00    2.00 }
+		    { Size    32.00   30.00 }
+		}
+		{ Line   
+                    { Origin -18.00   -3.00 }
+                    { Point   14.00   -3.00 }
+                }
+		{ Line   
+                    { Origin -18.00    7.00 }
+                    { Point   14.00    7.00 }
+                }
+		{ Line   
+                    { Origin -10.00  -13.00 }
+                    { Point  -10.00   17.00 }
+                }
+		{ Line   
+                    { Origin  -2.00  -13.00 }
+                    { Point   -2.00   17.00 }
+                }
+                { Line    
+                    { Origin   6.00  -13.00 } 
+                    { Point    6.00   17.00 } 
+                }
+            } 
+        }
+        { Cardinality 
+            { Min 0 }
+            { Max 1 } 
+            { InLinks NextSection }
+        }
+        { Cardinality 
+            { Min 0 }
+            { Max 1 }
+            { OutLinks NextSection } 
+        }
+}
+
+NodeSymbol 5 MultiTableSection
+{
+        { NodeMapping
+            { AppType MultiTableSection }
+            { NameIsRequired True } 
+        }
+        { PrintName "Table Set" }
+        { VAdjust Top }
+        { CanAdjustLabel True }
+        { LabelAnchor South }
+        { CanApplyScaleCmd False }
+	{ Shape 
+            { ToolbarImage "rme_table_set" }
+            { Draw 
+            
+                { Polygon 
+                    { Origin   0.00    0.00 } 
+                    { Point   10.00  -30.00 } 
+                    { Point  -24.00  -30.00 } 
+                    { Point  -24.00   30.00 } 
+                    { Point   20.00   30.00 } 
+                    { Point   20.00  -20.00 } 
+                    { LineStyle Solid } 
+                }
+                { Line 
+                    { Origin  10.00  -30.00 } 
+                    { Point   10.00  -20.00 } 
+                } 
+                { Line 
+                    { Origin  10.00  -20.00 } 
+                    { Point   20.00  -20.00 } 
+                } 
+                { Line
+                    { Origin -22.00  -30.00 }
+                    { Point  -20.00  -32.00 }
+                }
+                { Line   
+                    { Origin -20.00  -32.00 }
+                    { Point   12.00  -32.00 }
+                }
+                { Line   
+                    { Origin  12.00  -32.00 }
+                    { Point   22.00  -22.00 }
+                }
+                { Line
+                    { Origin  22.00  -22.00 }
+                    { Point   22.00   28.00 }
+                }
+                { Line
+                    { Origin  22.00   28.00 }
+                    { Point   20.00   30.00 }
+                }
+                { Rectangle 
+                    { Origin  -2.00    2.00 } 
+                    { Size    32.00   30.00 }
+                } 
+                { Line    
+                    { Origin -18.00   -3.00 } 
+                    { Point   14.00   -3.00 } 
+                }
+                { Line    
+                    { Origin -18.00    7.00 } 
+                    { Point   14.00    7.00 } 
+                } 
+                { Line    
+                    { Origin -10.00  -13.00 } 
+                    { Point  -10.00   17.00 } 
+                }
+                { Line   
+                    { Origin  -2.00  -13.00 }
+                    { Point   -2.00   17.00 }
+                }
+                { Line   
+                    { Origin   6.00  -13.00 }
+                    { Point    6.00   17.00 }
+                }
+            } 
+        }
+        { Cardinality 
+            { Min 0 }
+            { Max 1 } 
+            { InLinks NextSection }
+        }
+        { Cardinality 
+            { Min 0 }
+            { Max 1 }
+            { OutLinks NextSection } 
+        }
+}
+
+NodeSymbol 6 TextSection
+{
+        { NodeMapping
+            { AppType TextSection }
+            { NameIsRequired True } 
+        }
+        { PrintName "Text Set" }
+        { VAdjust Top }
+        { CanAdjustLabel True }
+        { LabelAnchor South }
+        { CanApplyScaleCmd False }
+	{ Shape 
+            { ToolbarImage "rme_text_set" }
+            { Draw 
+            
+                { Polygon 
+                    { Origin   0.00    0.00 } 
+                    { Point   10.00  -30.00 } 
+                    { Point  -24.00  -30.00 } 
+                    { Point  -24.00   30.00 } 
+                    { Point   20.00   30.00 } 
+                    { Point   20.00  -20.00 } 
+                    { LineStyle Solid } 
+                }
+                { Line 
+                    { Origin  10.00  -30.00 } 
+                    { Point   10.00  -20.00 } 
+                } 
+                { Line 
+                    { Origin  10.00  -20.00 } 
+                    { Point   20.00  -20.00 } 
+                } 
+                { Line
+                    { Origin -22.00  -30.00 }
+                    { Point  -20.00  -32.00 }
+                }
+                { Line   
+                    { Origin -20.00  -32.00 }
+                    { Point   12.00  -32.00 }
+                }
+                { Line   
+                    { Origin  12.00  -32.00 }
+                    { Point   22.00  -22.00 }
+                }
+                { Line
+                    { Origin  22.00  -22.00 }
+                    { Point   22.00   28.00 }
+                }
+                { Line
+                    { Origin  22.00   28.00 }
+                    { Point   20.00   30.00 }
+                }
+		{ Line
+		    { Origin -16.00  -12.00 }
+                    { Point   12.00  -12.00 }
+                }
+		{ Line
+		    { Origin -16.00   -6.00 }
+                    { Point   12.00   -6.00 }
+                }
+		{ Line
+		    { Origin -16.00    0.00 }
+                    { Point   12.00    0.00 }
+                }
+		{ Line
+		    { Origin -16.00    6.00 }
+                    { Point   12.00    6.00 }
+                }
+		{ Line
+		    { Origin -16.00   12.00 }
+                    { Point   12.00   12.00 }
+                }
+		{ Line
+		    { Origin -16.00   18.00 }
+                    { Point   12.00   18.00 }
+                }
+            } 
+        }
+        { Cardinality 
+            { Min 0 }
+            { Max 1 } 
+            { InLinks NextSection }
+        }
+        { Cardinality 
+            { Min 0 }
+            { Max 1 }
+            { OutLinks NextSection } 
+        }
+}
+
+NodeSymbol 7 MultiObjectSection
+{
+        { NodeMapping
+            { AppType MultiObjectSection }
+            { NameIsRequired True } 
+        }
+        { PrintName "Object Set" }
+        { VAdjust Top }
+        { CanAdjustLabel True }
+        { LabelAnchor South }
+        { CanApplyScaleCmd False }
+	{ Shape 
+            { ToolbarImage "rme_object_set" }
+            { Draw 
+            
+                { Polygon 
+                    { Origin   0.00    0.00 } 
+                    { Point   10.00  -30.00 } 
+                    { Point  -24.00  -30.00 } 
+                    { Point  -24.00   30.00 } 
+                    { Point   20.00   30.00 } 
+                    { Point   20.00  -20.00 } 
+                    { LineStyle Solid } 
+                }
+                { Line 
+                    { Origin  10.00  -30.00 } 
+                    { Point   10.00  -20.00 } 
+                } 
+                { Line 
+                    { Origin  10.00  -20.00 } 
+                    { Point   20.00  -20.00 } 
+                } 
+                { Line
+                    { Origin -22.00  -30.00 }
+                    { Point  -20.00  -32.00 }
+                }
+                { Line   
+                    { Origin -20.00  -32.00 }
+                    { Point   12.00  -32.00 }
+                }
+                { Line   
+                    { Origin  12.00  -32.00 }
+                    { Point   22.00  -22.00 }
+                }
+                { Line
+                    { Origin  22.00  -22.00 }
+                    { Point   22.00   28.00 }
+                }
+                { Line
+                    { Origin  22.00   28.00 }
+                    { Point   20.00   30.00 }
+                }
+		{ Ellipse
+		    { Origin -2.00    -2.00 }
+		    { Size   30.00    10.00 }
+		}
+		{ Ellipse
+		    { Origin -2.00    10.00 }
+		    { Size   30.00    10.00 }
+		    { StartEndAngles 0.00 180.00 }
+		}
+                { Line
+		    { Origin -17.00   -2.00 }
+		    { Point  -17.00   10.00 }
+		}
+                { Line
+		    { Origin  13.00   -2.00 }
+		    { Point   13.00   10.00 }
+		}
+		{ Line
+                    { Origin  -2.00   -2.00 }
+                    { Point   -2.00  -18.00 }
+                }
+		{ Line
+                    { Origin  -2.00  -18.00 }
+                    { Point   -6.00  -15.00 }
+                }
+		{ Line
+                    { Origin  -2.00  -18.00 }
+                    { Point    1.00  -15.00 }
+                }
+            } 
+        }
+        { Cardinality 
+            { Min 0 }
+            { Max 1 } 
+            { InLinks NextSection }
+        }
+        { Cardinality 
+            { Min 0 }
+            { Max 1 }
+            { OutLinks NextSection } 
+        }
+}
+ 
+NodeSymbol 8 Comment
+{
+    { PrintName "Comment" }
+    { Shape { ToolbarImage "folder" }   }
+}
+
+NodeSymbol 9 Vertex
+{
+    { SeeThrough True }
+}
+
+LinkSymbol 10 NextSection
+{
+    { Connects { From AllNonCommentNodeTypes } { To AllNonCommentNodeTypes } }
+    { LinkMapping { AppType NextSection } }
+    { Cardinality
+	{ Min 0 }
+	{ Max 1 }
+    }
+}
+
+LinkSymbol 11 CommentLink
+{
+    { Connects { From Comment } { To AllNonCommentNodeTypes } }
+}
+
+TypeSet AllNonCommentNodeTypes
+{
+  CoverPageSection
+  SingleDiagSection
+  MultiDiagSection
+  SingleTableSection
+  MultiTableSection
+  TextSection
+  MultiObjectSection
+  Vertex
+}
+
+TypeSet AllNodeTypes
+{
+  AllNonCommentNodeTypes
+  Comment
+}
+
+Features
+{
+    { Feature "stpcore_nt" }
+    { Feature "stpcore_unix" }
+    { Feature "stpcore_any" }
+}
+
+NodeSymbol Comment
+{
+    { Shape { Predefined BachLabel } }
+    { DefaultSize 0.7 0.4 }
+    { AutoScaleLarger True }
+    { AutoScaleSmaller True }
+    { ShowTypeLabel True }
+    { CanApplyScaleCmd False }
+    { ReplaceSet ( None ) }
+}
+
+NodeSymbol Vertex
+{
+    { PrintName "Vertex" }
+    { Shape { Predefined Vertex } }
+    { ReadOnly True }
+    { CanHaveLabel False }
+}
+
+LinkSymbol NextSection
+{
+    { PrintName "Next Section" }
+    { CanHaveLabel False }
+    { ToArrow True }	
+}
+
+LinkSymbol CommentLink
+{
+    { PrintName "Comment Link" }
+    { Uncentered True }
+    { CanHaveLabel False }
+    { ToArrow True }
+    { Dashed True }
+}
+
+// This is the unsecured portion of the rules file.
+// Only a subset of the rules and attributes may be placed in this section.
+
+SymbolList
+{
+    { ShowStraightArc True }
+    { ShowSpline True }
+    { Symbols
+	(
+            CoverPageSection
+            SingleDiagSection
+            MultiDiagSection
+            SingleTableSection
+            MultiTableSection
+            TextSection
+            MultiObjectSection
+
+	    Comment
+	)
+    }
+}
+
+Include "rules/gde_menu_bar.std"
+
+Menu Repository
+{
+    { MenuEntry
+        { Name CheckSemantics }
+        { Builtin "EditorQrlEvalNoSave RmeCheckSemantics();" }
+    }
+}
+
+Menu Reports
+{
+    { InMenuBar True }
+    { Label "Reports" }
+    { Mnemonic "p" }
+    { Pin True }
+    { MenuEntry
+        { Name GenerateQRLReport }
+        { Label "Generate QRL Report" }
+        { Builtin "EditorExecCommand GenerateQRLReport" }
+    }
+    { MenuEntry
+        { Name EditGeneratedQRL }
+        { Label "Edit Generated QRL" }
+        { Builtin "EditorExecCommand EditQRLReport" }
+    }
+    { SubMenu
+        { Name RunReport }
+        { Label "Run Report" }
+    }
+}
+
+Menu RunReport
+{
+    { MenuEntry  
+        { Name RunAsciiGeneratedQRL }
+        { Label "Run Generated QRL (Ascii)" }
+        { Builtin "EditorExecCommand RunAsciiQRLReport" }
+    }
+    { MenuEntry  
+        { Name RunFrameGeneratedQRL }
+        { Label "Run Generated QRL (Frame)" }
+        { Builtin "EditorExecCommand RunFrameQRLReport" }
+    }
+    { MenuEntry  
+        { Name RunInterleafGeneratedQRL }
+        { Label "Run Generated QRL (Interleaf)" }
+        { Builtin "EditorExecCommand RunInterleafQRLReport" }
+    }
+    { MenuEntry
+        { Name RunRTFGeneratedQRL }
+        { Label "Run Generated QRL (RTF)" }
+        { Builtin "EditorExecCommand RunRTFQRLReport" }
+    }
+}
+
+Command GenerateQRLReport
+{
+    { PrintName         "Generate QRL Report" }
+    { StartMessage      "Generating QRL Report... " }
+    { FailureMessage    "Generating QRL Report Failed" }
+    { SuccessMessage    "Generating QRL Report Completed" }
+    { Builtin "FileSave" }
+    { OS
+        { UseOutputWindow True }
+        { CommandLine "qrp -p ${projdir} -s ${system} -ed ${editor} qrl/basic/rme_gen.qrl -x DIAGNAME ${file} -o '${projdir}${system}/${filestore}/${file}.qrl' ; ls" }
+    }
+}
+
+Command EditQRLReport
+{
+    { PrintName         "Edit QRL Report" }
+    { StartMessage      "Editing QRL Report... " }
+    { FailureMessage    "Editing QRL Report Failed" }
+    { SuccessMessage    "Editing QRL Report Completed" }
+    { OS
+        { UseOutputWindow False }
+        { CommandLine "(cd ${projdir}${system}/${filestore}; touch ${file}.qrl; viw ${file}.qrl)" }
+
+// for UNIX substitute the following line
+//        { CommandLine "(cd ${projdir}${system}/${filestore}; touch ${file}.qrl; xterm -e  vi ${file}.qrl)" }
+// for NT substitute the following line
+//        { CommandLine "(cd ${projdir}${system}/${filestore}; touch ${file}.qrl; viw ${file}.qrl)" }
+    }
+}
+
+Command RunAsciiQRLReport
+{
+    { PrintName         "Run Ascii QRL Report" } 
+    { StartMessage      "Running Ascii QRL Report... " } 
+    { FailureMessage    "Running Ascii QRL Report Failed" }  
+    { SuccessMessage    "Running Ascii QRL Report Completed" } 
+    { OS 
+        { UseOutputWindow True }
+        { CommandLine "qrp -p ${projdir} -s ${system} -ed ${editor} -t ascii ${projdir}${system}/${filestore}/${file}.qrl -o ${projdir}${system}/${filestore}/${file}.asc; echo 'Created file ${projdir}${system}/${filestore}/${file}.asc'" }
+    }
+}
+
+Command RunFrameQRLReport
+{
+    { PrintName         "Run Frame QRL Report" } 
+    { StartMessage      "Running Frame QRL Report... " } 
+    { FailureMessage    "Running Frame QRL Report Failed" }  
+    { SuccessMessage    "Running Frame QRL Report Completed" } 
+    { OS 
+        { UseOutputWindow True }
+        { CommandLine "qrp -p ${projdir} -s ${system} -ed ${editor} -t mif ${projdir}${system}/${filestore}/${file}.qrl -o ${projdir}${system}/${filestore}/${file}.mif; echo 'Created file ${projdir}${system}/${filestore}/${file}.mif'" }
+    }
+}
+Command RunInterleafQRLReport
+{ 
+    { PrintName         "Run Interleaf QRL Report" } 
+    { StartMessage      "Running Interleaf QRL Report... " } 
+    { FailureMessage    "Running Interleaf QRL Report Failed" }  
+    { SuccessMessage    "Running Interleaf QRL Report Completed" } 
+    { OS
+        { UseOutputWindow True }
+        { CommandLine "qrp -p ${projdir} -s ${system} -ed ${editor} -t ileaf ${projdir}${system}/${filestore}/${file}.qrl -o ${projdir}${system}/${filestore}/${file}.doc; echo 'Created file ${projdir}${system}/${filestore}/${file}.doc'" }
+    }
+}
+
+Command RunRTFQRLReport
+{
+    { PrintName         "Run RTF QRL Report" }
+    { StartMessage      "Running RTF QRL Report... " }
+    { FailureMessage    "Running RTF QRL Report Failed" }
+    { SuccessMessage    "Running RTF QRL Report Completed" }
+    { OS 
+        { UseOutputWindow True }
+        { CommandLine "qrp -p ${projdir} -s ${system} -ed ${editor} -t rtf ${projdir}${system}/${filestore}/${file}.qrl -o ${projdir}${system}/${filestore}/${file}.rtf; echo 'Created file ${projdir}${system}/${filestore}/${file}.rtf'" }
+    }
+}
+Include "rules/gde_accels.std"
+Include "rules/gde_edit_menu.std"
+
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/rules/user_rme.rules"
+
+PassWord "F818C8FA"

@@ -1,0 +1,29 @@
+/* XPM */
+static char* all_control_spec_tables_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 7 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #000000	c #808080",
+"o	m #ffffff	c #c0c0c0",
+"x	m #000000	c #800000",
+"+	m #000000	c #ff0000",
+/* pixels */
+"XXXXXXXXXXXXXXX.",
+"XOoOOOOOOXoOOOXo",
+"XXXXXXXXXXXXXXXo",
+"XOo           Xo",
+"XOo OOOOOOOOO Xo",
+"XOo OxxxOxxxO Xo",
+"XOo OxxxOxxxO Xo",
+"XOo OOOOOOOOO Xo",
+"XOo O+++O   O Xo",
+"XOo OOOOOOOOO Xo",
+"XOo O+++O   O Xo",
+"XOo O+++O   O Xo",
+"XOo OOOOOOOOO Xo",
+"XOo           Xo",
+"XXXXXXXXXXXXXXXo",
+".ooooooooooooooo"};

@@ -1,0 +1,43 @@
+
+ItemValType Predefined_DataType
+{
+    { ChoiceType
+        { Choice "boolean_string" }
+        { Choice "boolean_integer" }
+        { Choice "PrintableASCII" }
+        { Choice "Digit" }
+        { Choice "Bit" }
+        { Choice "Bit8string" }
+        { Choice "LocalPhone" }
+        { Choice "USPhone" }
+        { Choice "ZipCode5" }
+        { Choice "ZipCode9" }
+        { Choice "State_Abbreviations" }
+        { Choice "Date" }
+        { Choice "Time" }
+     }
+}
+
+
+ItemValType timeunit_type
+{
+    { ChoiceType
+        { Choice "hundredth_seconds" }
+        { Choice "tenth_seconds" }
+        { Choice "seconds" }
+        { Choice "minutes" }
+        { Choice "hours" }
+     }
+}
+
+ItemValType completion_status_type
+{
+    { ChoiceType
+        { Choice "Scenario Undefined" }
+        { Choice "Scenario Defined" }
+        { Choice "Test Cases Created" }
+        { Choice "Test Scripts Created" }
+        { Choice "Tests Executed" }
+        { Choice "All Tests Passed" }
+     }
+}

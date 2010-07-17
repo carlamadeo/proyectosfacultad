@@ -1,0 +1,6 @@
+Statetransition              <TransitionID>
+    is statetransitiontype   action;
+    has description          <description_string>;
+    goes from first state    <StateID>;
+    goes to second state     <StateID>; 
+.

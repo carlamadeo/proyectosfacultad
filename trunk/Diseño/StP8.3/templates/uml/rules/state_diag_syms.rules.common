@@ -1,0 +1,251 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+ 
+
+NodeSymbol State
+{
+  { AutoScaleLarger True }
+  { UniformScale False }
+  { Shape
+        { Predefined ArcRectangle }
+        { ToolbarImage "state" }
+    }
+  { DefaultSize 2.0 1.0 }
+  { LabelAnchor North }
+  { CanAdjustLabel True }
+    // Begin Add ECR 6389
+    { DisplayMark
+        { Name StDescription }
+        { CondFunc "symbol_has_description(0${node.id});" }
+        { Anchor LowerRight }
+        { VAdjust Bottom }
+        { HAdjust Center }
+        { YPixelOffset 19 }
+        { BitmapMark0 "descln0" }
+        { BitmapMark1 "descln1" }
+        { BitmapMark2 "descln2" }
+        { Help "State has description." }
+    }
+    // End Add ECR 6389
+}
+
+NodeSymbol InitialState
+{
+  { PrintName "Initial State" }
+  { CanBeRenamed False }
+  { UniformScale True }
+  { Shape
+        { Predefined FilledEllipse }
+        { ToolbarImage "initial_state" }
+  }
+  { CanHaveLabel True }
+  { LabelAnchor North }
+  { HAdjust     Center }
+  { VAdjust	Bottom }
+  { DefaultSize 0.3 0.3 }
+  { Cardinality { Min 1 } { OutLinks StateTransitionLink } }
+}
+
+NodeSymbol FinalState
+{
+  { PrintName "Final State" }
+  { UniformScale True }
+  { CanBeRenamed False }
+  { Shape
+        { Predefined DoubleEllipseInsideFilled }
+        { ToolbarImage "final_state" }
+  }
+  { DefaultSize 0.4 0.4 }
+  { Cardinality { Min 1 } { InLinks FinalStateTransitionLinks } }
+  // Changed to South, Top for ECR4271
+  { LabelAnchor South }
+  { HAdjust     Center }
+  { VAdjust	  Top }
+}
+
+
+NodeSymbol StateMachine
+{
+  { PrintName "State Machine" }
+  { ApplicationTag "StateMachine" }
+  { UniformScale False }
+  { Shape
+        { Predefined BachLabel }
+        { ToolbarImage "state_machine" }
+  }
+  { DefaultSize 1.8 .9 }
+  { ShowTypeLabel True }
+  { AutoScaleLarger True }
+  { LabelAnchor North }
+  { CanAdjustLabel True }
+  { Navigation
+      { Name ClassTable }
+      { Label "Class Table for Class" }
+      { TargetFunc "uml_state_machine_to_uclasst(\"${node.name}\");"}
+  }
+  { Navigation
+      { Name ClassSymbol }
+      { Label "Class Diagram for Class" }
+      { TargetFunc "uml_state_machine_to_uclassd(\"${node.name}\");"}
+  }
+// ECR 5184 start
+  { Navigation
+      { Name ClassSymbolInComponentDiagram }
+      { Label "Component Diagram for Class" }
+      { Query "node_ref[node[name = '${node.name}' && UmlClass] && file[UmlComponentDiagram]]" }
+  }
+  { Navigation
+      { Name ClassSymbolInDeploymentDiagram }
+      { Label "Deployment Diagram for Class" }
+      { Query "node_ref[node[name = '${node.name}' && UmlClass] && file[UmlDeploymentDiagram]]" }
+  }
+// ECR 5184 end
+  { Navigation
+      { Name Operation }
+      { Label "Operation" }
+      { TargetFunc "uml_state_machine_to_operation(\"${node.name}\");"}
+  }
+  { Navigation
+      { Name SequenceDiagram }
+      { Label "Sequence Diagram Where Class Is Used" }
+      { TargetFunc "uml_state_machine_to_usequenced(\"${node.name}\");"}
+  }
+  
+    { Navigation
+      { Name CollaborationDiagram }
+      { Label "Collaboration Diagram Where Class Is Used" }
+     { TargetFunc "uml_state_machine_to_ucollaborationd(\"${node.name}\");"}
+  }
+    { Navigation
+      { Name UseCaseDiagram }
+      { Label "Use Case with Same Name" }
+     { TargetFunc "uml_state_machine_to_uusecased(\"${node.name}\");"}
+  }
+    { SymbolicDependentsFunc state_machine_symbolic_dependents }
+    // Begin Add ECR 6389
+    { DisplayMark
+        { Name SmDescription }
+        { CondFunc "symbol_has_description(0${node.id});" }
+        { Anchor LowerRight }
+        { VAdjust Bottom }
+        { HAdjust Center }
+        { YPixelOffset 19 }
+        { BitmapMark0 "descln0" }
+        { BitmapMark1 "descln1" }
+        { BitmapMark2 "descln2" }
+        { Help "StateMachine has description." }
+    }
+    // End Add ECR 6389
+}
+
+NodeSymbol SplitControl
+{
+  // Begin Change ECR 4271, 6638
+  { PrintName "Synchronization Bar (fork)" }
+  { Shape 
+    { Predefined Bar }
+    { ToolbarImage "splitcontrol" }
+  }
+  { DefaultSize 2 1.0 }
+  { CanApplyScaleCmd True }
+  { CanBeRenamed False }
+  { CanHaveLabel False }
+  // ECR 7462 start
+  { Cardinality { Min 1 } { Max 1 } { InLinks StateTransitionInLinks } }
+  { Cardinality { Min 2 } { OutLinks SplitControlOutLinks } }
+  // ECR 7462 end
+  { ReadOnly True }
+//  { NeedsInOutLink True }
+  // End Change ECR4271, 6638
+  { ReplaceSet ( None ) }
+}
+
+NodeSymbol MergeControl
+{
+  // Begin change ECR 6638
+  { PrintName "Synchronization Bar (merge)" }
+  { Shape { Predefined Bar }
+    { Predefined Bar }
+    { ToolbarImage "mergecontrol" }
+  }
+  { DefaultSize 2 1.0 }
+  { CanApplyScaleCmd True }
+  { CanBeRenamed False }
+  { CanHaveLabel False }
+  { Cardinality { Min 1 } { InLinks StateTransitionLink } }
+  { Cardinality { Min 1 } { Max 1 } { OutLinks MergeControlLink } }
+  { ReadOnly True }
+//  { NeedsInOutLink True }
+  // End change ECR 6638
+  { ReplaceSet ( None ) }
+}
+
+
+LinkSymbol StateTransitionLink
+{
+  { PrintName "State Transition Link" }
+  { CanHaveLabel True }
+  { ToOpenArrow True } // ECR 4861	
+  { Uncentered True }
+   { Navigation
+     { Name RequirementTableFromLink }
+     { UseMappings ( Transition ) }
+   }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { UseMappings ( Transition ) }
+    }
+
+}
+
+LinkSymbol SplitControlLink
+{
+  { PrintName "Split Control Link" }
+  { CanHaveLabel False }
+  { ToOpenArrow True } // ECR 4861	
+  { Uncentered True }
+}
+
+
+LinkSymbol MergeControlLink
+{
+  { PrintName "Merge Control Link" }
+  { CanHaveLabel False }
+  { ToOpenArrow True } // ECR 4861	
+  { Uncentered True }
+}
+
+TypeSet ControlStates
+{
+  SplitControl
+  MergeControl
+}
+
+TypeSet FinalStateTransitionLinks
+{
+  StateTransitionLink
+  MergeControlLink
+  SplitControlLink // ECR 7462
+}
+
+// ECR 7462 start
+TypeSet SplitControlOutLinks
+{
+  StateTransitionLink
+  MergeControlLink
+  SplitControlLink
+}
+
+TypeSet StateTransitionInLinks
+{
+  StateTransitionLink
+  MergeControlLink
+  SplitControlLink
+}
+// ECR 7462 end

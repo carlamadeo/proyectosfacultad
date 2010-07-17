@@ -1,0 +1,234 @@
+Diagram UmlSequenceDiagram
+{
+    { Name "PendulumIsMoving__1" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -346 }
+    { PanY -226 }
+    { Alignment 32 }
+    { GUID "UID_140B8093-C887-11d5-90AA-0050045C27F0" }
+    { Summary
+        { Nodes 3 }
+        { Arcs 2 }
+    }
+}
+
+Node 2
+{
+    { Type ScenarioInstance }
+    { Loc 15 -148 }
+    { Scale 1424.00 50.00 }
+    { Label
+        { Text "PendulumIsMoving(UmlUseCase:PendulumIsMoving)" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ScenarioMapping }
+        { ID 2688 }
+        { GUID "UID_C27DF190-63AF-11d4-A4BA-00008606A51E" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2690 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2692 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ParentName }
+        { ID 2691 }
+    }
+}
+
+Node 3
+{
+    { Type PassiveObject }
+    { Loc 188 54 }
+    { Scale 128.00 1286.00 }
+    { Label
+        { Text "clockwork:Clockwork" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 740 }
+        { GUID "UID_7CFB96D1-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 2510 }
+        { GUID "UID_7CFB96D7-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 2693 }
+        { GUID "UID_7CFB96D4-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 4
+{
+    { Type ActiveObject }
+    { Loc -204 54 }
+    { Scale 128.00 1286.00 }
+    { Label
+        { Text "pend:Pendulum" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 711 }
+        { GUID "UID_7CFB96B5-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 712 }
+        { GUID "UID_7CFB96BB-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 725 }
+        { GUID "UID_7CFB96B8-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ActiveObjectMapping }
+        { ID 2694 }
+        { GUID "UID_7CFB96DB-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Arc 5
+{
+    { Type SynchronousMessage }
+    { From
+        { ID 4 }
+        { Loc 4 -166 }
+        { Offset 0 -70 }
+    }
+    { To
+        { ID 3 }
+        { Loc 387 -166 }
+        { Offset 0 -70 }
+    }
+    { Label
+        { Text "takeEvent(tick)" }
+    }
+}
+
+Arc 6
+{
+    { Type ReturnMessage }
+    { From
+        { ID 3 }
+        { Loc 387 -96 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 4 }
+        { Loc 4 -96 }
+        { Offset 0 0 }
+    }
+}
+
+Link 7
+{
+    { FirstArc 5 }
+    { LastArc 5 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 2704 }
+        { GUID "UID_C27DF193-63AF-11d4-A4BA-00008606A51E" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2706 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2712 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 2711 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 2710 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 2709 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 2708 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 2707 }
+    }
+}
+
+Link 8
+{
+    { FirstArc 6 }
+    { LastArc 6 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 2695 }
+        { GUID "UID_C27DF192-63AF-11d4-A4BA-00008606A51E" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2697 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2703 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 2702 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 2701 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 2700 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 2699 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 2698 }
+    }
+}

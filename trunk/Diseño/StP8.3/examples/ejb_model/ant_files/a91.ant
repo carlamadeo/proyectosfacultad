@@ -1,0 +1,42 @@
+FileObject 1
+{
+    { Name "a91" }
+    { Type ObjectAnnotation }
+    { GUID "UID_9CC2D79A-324A-4249-B432-B43FD11376A3" }
+}
+
+NodeObject 99999
+{
+    { Name "Address,Customer" }
+    { Type UmlAssociation }
+    { ObjectId 562 }
+    { AnnotFileId 1 }
+    { Sig ":" }
+    { ScopeNodeId 0 }
+    { GUID "UID_8A4E4DD8-1004-11d5-8C6E-000000000000" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 564 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 566 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Address,Customer" }
+    { NoteId 3 }
+    { ObjectId 567 }
+}
+

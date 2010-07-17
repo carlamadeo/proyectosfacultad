@@ -1,0 +1,64 @@
+//
+//      sccsid[] = @(#)dse_check.rules
+//      StP/SE
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1995
+//      All rights reserved
+//
+
+// dse_check.rules
+//
+//	Contains the properties used for dse semantic checks
+//	from both the dse editor and the desktop.
+
+Global 1 DseCheckOne
+{
+    { Properties
+        { Choice
+            { Name "check_one" }
+            { Label "" }
+            { Type CheckBox }
+            { ChoiceItem
+		{ Label "Typedefs and primitive sequences/selections have valid Data Type annotation" }
+                { OnValue "-x check_one '1'" }
+                { OffValue "-x check_one '0'" }
+                { Init On }
+            }
+        }
+    }
+}
+
+Global 1 DseCheckTwo
+{
+    { Properties
+        { Choice
+            { Name "check_two" }
+            { Label "" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Label "No non-primitive elements have a Data Type annotation" }
+                { OnValue "-x check_two '1'" }
+                { OffValue "-x check_two '0'" }
+                { Init On }
+            }
+        }
+    }    
+}
+
+Global 1 DseVerbose
+{
+    { Properties
+        { Choice
+            { Name "verbose" }
+            { Label "" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Label "Verbose" }
+                { OnValue "-x verbose '1'" }
+                { OffValue "-x verbose '0'" }
+                { Init Off }
+            }
+        }
+    }    
+}
+

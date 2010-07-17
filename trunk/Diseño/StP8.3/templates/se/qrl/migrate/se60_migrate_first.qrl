@@ -1,0 +1,137 @@
+ 
+//      sccsid[] = %W% %Y% %D%
+//      StP/SE
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1995
+//      All rights reserved
+//
+
+// qrl script to migrate call links for various typed objects to ModuleCalls,
+// and to create a list of things to change to Lexical Includes later.
+
+
+#include "qrl/include/opt_displaymark.inc"
+#include "qrl/include/error.inc"
+
+string IncludeList = "";
+
+int
+main()
+{
+    string filedir; 
+    list sce_files;
+    int i;
+    string fi;
+
+    filedir = path_compose(current_projdir(),
+			   current_system(),
+			   "sce_files");
+    sce_files = directory_files(filedir,"*.sce");
+    if (list_count(sce_files) == 0)
+    {
+	print_message("SE 6.0 initial migration: No SCE files to migrate.");
+	return 0;
+    }
+
+    print_message("SE 6.0 initial migration: Migrating all Structure Chart Diagrams in " + filedir + ".");
+
+    for (i = 0; i < list_count(sce_files); i = i + 1)
+    {
+	fi = list_get(sce_files, i);
+	print_message("Migrating " + fi + "...");
+	do_migrate(fi);
+    }
+
+    if (IncludeList != "")
+    {
+	fi = path_compose(current_projdir(),
+			  current_system(),
+			  ".SE_LexInclMigrate");
+	if (file_exists(fi) && ! write_file_access(fi))
+	{
+	    print_error("ERROR: Cannot save list of names for Lexical Modules. Change manually:");
+	    print_error(IncludeList);
+	}
+	else
+	    write_file(fi, IncludeList);
+    }
+    delete_file(tf);
+
+    return 0;
+}
+
+
+
+void do_migrate(string fname)
+
+{
+    list o_fcontents, n_fcontents;
+    string line, nodename, cmd;
+    int i, indx, endindx;
+    boolean look_for_name, clean;
+    node node;
+
+    o_fcontents = string_to_list(read_file(fname), "\n");
+    n_fcontents = list_create("string", 0);
+
+    look_for_name = False;
+    clean = True;
+    for (i = 0; i < list_count(o_fcontents); i = i + 1)
+    {
+	line = list_get(o_fcontents, i);
+
+	if (string_find(line, 0, "{ Type IncludedModule }") != string_length(line))
+	{
+	    look_for_name = True;
+	    clean = False;
+	    list_append(n_fcontents, "    { Type Module }");
+	}
+	else if (string_find(line, 0, "{ Type Inclusion }") != string_length(line))
+	{
+	    look_for_name = False;
+	    clean = False;
+	    list_append(n_fcontents, "    { Type ModuleCall }");
+	}
+	else if (string_find(line, 0, "{ Type OffpageConnection }") != string_length(line))
+	{
+	    look_for_name = False;
+	    clean = False;
+	    list_append(n_fcontents, "    { Type ModuleCall }");
+	}
+	else if (string_find(line, 0, "{ Type GlobalAccess }") != string_length(line))
+	{
+	    look_for_name = False;
+	    clean = False;
+	    list_append(n_fcontents, "    { Type ModuleCall }");
+	}
+	else 
+	{
+	    if ((string_find(line, 0, "Arc ") != string_length(line)) ||
+                (string_find(line, 0, "Node ") != string_length(line)) ||
+                (string_find(line, 0, "Cntx ") != string_length(line)))
+		line = "\n" + line;
+	    list_append(n_fcontents, line);
+	}
+
+	if (look_for_name && ((indx = string_find(line, 0, "{ Text \"")) != string_length(line))) // }
+	{
+	    endindx = string_find(line, indx + 8, "\"");
+	    nodename = string_extract(line, indx + 8, endindx - indx - 8);
+	    look_for_name = False;
+
+	    if (IncludeList != "")
+	        IncludeList += "\n";
+	    IncludeList += nodename;
+	}
+    if (! clean)
+    {
+	list_append(n_fcontents, "\n");
+    if (is_windows_platform())
+        system("cmd /c move " + fname + " " + fname + ".old");
+    else
+        system("mv " + fname + " " + fname + ".old");
+	write_file(fname, list_to_string(n_fcontents, "\n"));
+    }
+    }
+}
+

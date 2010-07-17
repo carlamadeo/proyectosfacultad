@@ -1,0 +1,28 @@
+/* XPM */
+static char* action_logic_tables_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 6 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #ffffff	c #c0c0c0",
+"o	m #000000	c #800000",
+"x	m #000000	c #ff0000",
+/* pixels */
+"XXXXXXXXXXXXXXX.",
+"X XO O O O O OXO",
+"XXXXXXXXXXXXXXXO",
+"X XoooooooooooXO",
+"XOXXXXXXXXXXXXXO",
+"X X           XO",
+"XOX X  X  XX  XO",
+"X X X  X X  X XO",
+"XOX X X  X  X XO",
+"X X X X   XX  XO",
+"XOX           XO",
+"X XXXXXXXXXXXXXO",
+"XOXoooooooooooXO",
+"X XxxxxxxxxxxxXO",
+"XXXXXXXXXXXXXXXO",
+".OOOOOOOOOOOOOOO"};

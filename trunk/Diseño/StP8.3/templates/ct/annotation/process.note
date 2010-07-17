@@ -1,0 +1,84 @@
+// 	DFE process note
+//
+
+Note 802003
+{
+    { AppType Pspec }
+    { HelpText "The Process Spec note lets you add information for your process specification.  Use the Note Description to add information." }
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Pspec" }
+    { Item
+    	{ AppType ProcessSpec }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Has Pspec?" }
+	{ IsReadOnly True }
+    	{ InitValue "True" }
+    }
+}
+
+
+Note 802011
+{
+    { AppType PerformanceRequirement }
+    { PrintName "Performance Requirement" }
+    { Bounds { Min 0 } }
+    { Item
+	{ AppType NoteKey }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Key" }
+	{ IsKey True }
+	{ IsVisible False }
+	{ InitValue "${unique_key}" }
+    }
+    { Item
+        { AppType PerformanceRequirementName }
+        { Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Name" }
+	{ InitValue "N/A" }
+    }
+}
+
+Note 802012
+{
+    { AppType DerivedRequirement }
+    { Bounds { Min 0 } }
+    { PrintName "Derived Requirement" }
+    { Item
+	{ AppType NoteKey }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Key" }
+	{ IsKey True }
+	{ IsVisible False }
+	{ InitValue "${unique_key}" }
+    }
+    { Item
+        { AppType DerivedRequirementName }
+        { Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Name" }
+	{ InitValue "N/A" }
+    }
+}
+
+Note 802013
+{
+    { AppType SystemState }
+    { Bounds { Min 0 } }
+    { PrintName "System State" }
+    { Item
+	{ AppType NoteKey }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Key" }
+	{ IsKey True }
+	{ IsVisible False }
+	{ InitValue "${unique_key}" }
+    }
+    { Item
+        { AppType SystemState }
+        { Bounds { Min 1 } { Max 1 } }
+	{ PrintName "System State" }
+	{ InitValue "N/A" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_process.note"

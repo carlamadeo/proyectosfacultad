@@ -1,0 +1,25 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Note 800028
+{
+    { AppType UniquenessConstraintColumn }
+    { HelpText "The In Uniqueness Constraint note lets you declare to which uniqueness constraint a column belongs." }
+    { PrintName "In Uniqueness Constraint" }
+    { Bounds { Min 0 } }
+    { Item
+	{ AppType DbmsObjectName }
+	{ HelpText "The Constraint Name item specifies the name of the uniqueness constraint to which a column belongs. The value of this item should be the name specified in the <RDBMS> Constraint note, Constraint Name item of the corresponding entity." }
+	{ PrintName "Constraint Name" }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ IsKey True }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_uniqueness_constraint_column.note"

@@ -1,0 +1,87 @@
+FileObject 1
+{
+    { Name "a260" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65BD1-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "ClockBird,Door" }
+    { Type UmlAssociation }
+    { ObjectId 672 }
+    { Sig ":door" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD92D3-6EAE-11d4-8044-00104BF16798" }
+}
+
+NodeObject 99998
+{
+    { Name "Door" }
+    { Type UmlClass }
+    { ObjectId 510 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD92B6-6EAE-11d4-8044-00104BF16798" }
+}
+
+LinkObject 99997
+{
+    { Name "door" }
+    { Type UmlRole }
+    { ObjectId 690 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_91DD92D1-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlRoleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 692 }
+}
+
+ItemObject 3
+{
+    { Type UmlMultiplicity }
+    { Value "1" }
+    { NoteId 2 }
+    { ObjectId 693 }
+}
+
+ItemObject 4
+{
+    { Type UmlRoleNavigability }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 694 }
+}
+
+NoteObject 5
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 696 }
+}
+
+NoteObject 6
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 698 }
+}
+
+ItemObject 7
+{
+    { Type ObjectName }
+    { Value "door" }
+    { NoteId 6 }
+    { ObjectId 699 }
+}
+

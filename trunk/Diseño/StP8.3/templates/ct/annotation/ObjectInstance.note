@@ -1,0 +1,27 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/Booch
+//	StP Core
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1995
+//      All rights reserved
+//
+
+//
+//	FILE:	ObjectInstance.note
+//
+
+Note 801702
+{
+  { AppType ObjectInstanceDefinition }
+  { HelpText "The Object Instance Definition note lets you add items that capture modeling information about the instantiated object." }
+  { PrintName "Object Definition" }
+  { Bounds { Min 0 } { Max 1 } }
+  { Item
+      { AppType ObjectConcurrency }
+      { HelpText "The Concurrency item lets you indicate the concurrency semantics of an object instance. An object takes on the concurrency semantics of the class the object is instantiated from. This item allows to explicitely define the concurrency for on object instance." }
+      { PrintName "Concurrency" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "Sequential" }
+  }
+}

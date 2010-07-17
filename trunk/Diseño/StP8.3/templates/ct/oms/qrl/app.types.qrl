@@ -1,0 +1,53 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/Core
+//      StP/OMT
+//      StP/Booch
+//      StP/SE
+//      StP/IM
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1995
+//      All rights reserved
+//
+
+//
+// DependentsFunc for: node REQRequirement
+//
+
+update_dependents
+REQRequirement_dependents(node theBase)
+{
+    update_dependents	dependents = update_dependents_create();
+    string	theBaseName = to_oms_string(theBase.name);
+    
+
+    //
+    // Dependent item objects of type REQAnalysisAssignmentItem
+    // Dependent item objects of type REQDesignAssignmentItem
+    // Dependent item objects of type REQTestAssignmentItem
+    // Dependent item objects of type REQImplementationAssignmentItem
+    // Dependency name: Name
+    //
+    item	dep_REQAnalysisAssignmentItem;
+    const	string	dep_REQAnalysisAssignmentItem_Name_query =
+			    "item[(REQAnalysisAssignmentItem||REQDesignAssignmentItem||REQTestAssignmentItem||REQImplementationAssignmentItem)&value='${theBaseName}']";
+    
+    for_each_in_select(dep_REQAnalysisAssignmentItem_Name_query, dep_REQAnalysisAssignmentItem)
+    {
+	update_dependents_append(dependents, dep_REQAnalysisAssignmentItem, "Name");
+    }
+
+
+
+    return(dependents);
+}
+
+#include "oms/qrl/uml.app.types.qrl"
+#include "oms/qrl/omt.app.types.qrl"
+#include "oms/qrl/booch.app.types.qrl"
+#include "oms/qrl/im.app.types.qrl"
+#include "oms/qrl/se.app.types.qrl"
+#include "ct/rules/qrl/ct.inc"
+ 
+//  Add any user customizations to the file included below:
+#include_if_exists "user/ct/oms/qrl/user_app.types.qrl"

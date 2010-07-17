@@ -1,0 +1,46 @@
+FileObject 1
+{
+    { Name "a469" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65C6D-34FB-11d6-8DB9-00500445CF96" }
+}
+
+FileObject 99999
+{
+    { Name "display" }
+    { Type UmlClassDiagram }
+    { ObjectId 388 }
+    { AnnotFileId 1 }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1219 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1221 }
+    { DescLine "In this diagram the focus is at the class display." }
+    { DescLine "The classes Door, Clockwork and Clockbird all send their output" }
+    { DescLine "to the central Display class." }
+    { DescLine "At a first approach the output will be send to a console window by " }
+    { DescLine "class Display." }
+    { DescLine "In a next, more elaborated version, the output could be graphical" }
+    { DescLine "that's why the output is encapsulated by Display." }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "display" }
+    { NoteId 3 }
+    { ObjectId 1222 }
+}
+

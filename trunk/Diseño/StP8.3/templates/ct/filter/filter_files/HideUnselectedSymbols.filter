@@ -1,0 +1,6 @@
+filterfile1
+Operator: Load Selected Symbols
+Operator: Include Complete Link
+Operator: Include Link Ends
+Operator on Set: Difference
+Operator: Hide

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0051)http://www.rad.com/networks/1997/nettut/router.html -->
+<HTML><HEAD><TITLE>Routers: Networks For Dummies</TITLE>
+<META content="text/html; charset=iso-8859-1" http-equiv=Content-Type>
+<META content="Gil Behar" name=Author>
+<META content="MSHTML 5.00.2919.6307" name=GENERATOR></HEAD>
+<BODY aLink=#ff0000 
+background="Routers Networks For Dummies_archivos/qs_rock.jpg" bgColor=#ffffff 
+link=#0000ee text=#000000 vLink=#551a8b>
+<CENTER>
+<H1><I><FONT color=#000099>Routers</FONT></I></H1></CENTER>
+<CENTER>
+<TABLE bgColor=#ff0000 border=2 cols=1 height=220 width=600>
+  <TBODY>
+  <TR align=middle>
+    <TD align=middle vAlign=center>
+      <CENTER><IMG alt="Router Animation" height=220 
+      src="Routers Networks For Dummies_archivos/router_animation.gif" 
+      width=600></CENTER></TD></TR></TBODY></TABLE></CENTER>
+<CENTER><B>An illustration of a router in operation</B></CENTER>
+<P><B><I><FONT face=Arial,Helvetica><FONT 
+color=#990000>General</FONT></FONT></I></B> 
+<P>In an heterogeneous environment, such as networks, a need of connection 
+devices which would inter-connect two different technologies is essential. In 
+this environment the router is that device. <BR>As it's name implies, the router 
+also serves as a routing switch-board.&nbsp; Routers connect two or more 
+networks and forward data packets between them.&nbsp; When data arrives from one 
+of the segments, the router decides, according to it's routing table, to which 
+segment to forward that data. <BR>Even though each of the routers' connections 
+is to one physical network, that one network could connect to other networks 
+through the use of other routers.&nbsp; This way, many networks can 
+interconnect.&nbsp; To understand how routing occurs in such networks, we'll 
+refer to the following diagram: <BR>&nbsp; 
+<CENTER><IMG alt="Four networks with five routers" height=155 
+src="Routers Networks For Dummies_archivos/router_config.gif" 
+width=530></CENTER>
+<P>In the above configuration, router B's table would say, for instance, that 
+data going to network 4 should go to router C.&nbsp; Packets going from network 
+1 to network 4 would go through router B into network 2 and so on, till they 
+reache their destination. <BR>&nbsp; 
+<P>We would like to emphesize that routers "know" only about networks, and not 
+about hosts.&nbsp; In IP networks, routers utilize the fact that each host's IP 
+address contains two parts: the host's network address, and the host's number on 
+that network.&nbsp; Routers examine the data destination address, extract, from 
+it, the target network address, and decide, based on this network address, where 
+to transfer the data. 
+<P>A router is actually a special computer which is dedicated to the task of 
+interconnecting networks.&nbsp; It moves information from its source to its 
+destination regardless of the middleware. 
+<P>Note: A router resembles a bridge (they both have conventional processor, 
+memory and few different I/O interfaces, each for another network it connects), 
+but while bridging occurs at the link layer, routing occurs at the network layer 
+(see: <A 
+href="http://www.rad.com/networks/1997/nettut/protocols.html">protocols</A>). 
+This difference provides information to the router that the bridge doesn't have 
+access to. 
+<P><B><I><FONT face=Arial,Helvetica><FONT color=#990000>Router 
+responsibilities</FONT></FONT></I></B> 
+<P>Routers have two major responsibilities 
+<OL>
+  <LI>Optimizing the routing paths. <BR>A router uses a routing algorithm to 
+  determine the optimal path to the destination. These algorithms maintain 
+  routing tables which contain route information such as destination/next hop 
+  association. Routing algorithms has several goals: 
+  <UL>
+    <LI><U>Optimality</U> - finding the "best" route depending on the metric 
+    weightings used by the specific router (there are several metrics used by 
+    routers, each assigns different weights to routing algorithm's parameters 
+    such as number of hops, delay) 
+    <LI><U>Simplicity and low overhead</U> - router algorithms must be as 
+    efficient as possible with minimum utilization overhead.&nbsp; An efficient 
+    algorithm is particularly important when using routing software on a limited 
+    resources computer. 
+    <LI><U>Robustness and stability </U>- routers are located at network 
+    junction points, therefore they must be robust with the ability to handle 
+    unusual behavior of hardware and software components. 
+    <LI><U>Rapid convergence</U> - routers must agree on the optimal paths over 
+    the net in order to avoid loops.&nbsp; When a network event (computer/router 
+    failure, network segment going down etc..)&nbsp; force changes in the 
+    router's routing tables, each router must perform recalculations based on 
+    the update messages it received from other routers on the net. 
+    <LI><U>Flexibility</U> - is the ability to adapt accurately and quickly to 
+    network changes and events. For example when the optimal routes are no 
+    longer accessible or even optimal, due to some change in the network 
+    (segments going down, change in bandwidth, router queue size, network delay, 
+    and other variables), the routing algorithms should quickly adjust to the 
+    new situation and choose the next best route to replace the old ones which 
+    are not accessible any more. </LI></UL>&nbsp; 
+  <LI>Switching - transport of packets over networks. <BR>When computer wants to 
+  send a packet over the net, it formats a packet with the router's physical 
+  address and the destination address (protocol address) of the target 
+  host.&nbsp; The router searches it's routing tables for the destination host. 
+  If there is no entry for the destination host the router usually drops the 
+  packet, otherwise (there is an entry for the destination host) it replaces the 
+  physical address with the next hop's address and retransmits the packet. 
+  <BR>The next hop isn't&nbsp; necessarily the ultimate destination host, it may 
+  be another router which performs the same routine again. A packet may "visit" 
+  few routers / hosts on its route, each time it's destination physical address 
+  changes. <BR>&nbsp;</LI></OL><B><I><FONT face=Arial,Helvetica><FONT 
+color=#660000>Related Topics</FONT></FONT></I></B> 
+<UL>
+  <LI><A href="http://www.rad.com/networks/1997/nettut/gls_i.html#IP">IP 
+  Addresses</A> 
+  <LI><A 
+  href="http://www.rad.com/networks/1997/nettut/gls_b.html#Bridge">Bridges</A> 
+  <LI><A 
+  href="http://www.rad.com/networks/1997/nettut/gateway.html">Gateways</A> 
+</LI></UL><B><I><FONT face=Arial,Helvetica><FONT color=#660000>See 
+Also</FONT></FONT></I></B> 
+<UL>
+  <LI><FONT face=Arial,Helvetica><FONT color=#000000>LANs:&nbsp;</FONT></FONT> 
+  <A href="http://www.rad.com/networks/1997/nettut/ethernet.html">Ethernet</A>, 
+  <A href="http://www.rad.com/networks/1997/nettut/token_ring.html">Token 
+  Ring</A> 
+  <LI><A href="http://www.rad.com/networks/1997/nettut/gls_w.html#WAN">WAN</A> 
+  </LI></UL></BODY></HTML>

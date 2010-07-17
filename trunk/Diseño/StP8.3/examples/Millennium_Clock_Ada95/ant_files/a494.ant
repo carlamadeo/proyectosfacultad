@@ -1,0 +1,58 @@
+FileObject 1
+{
+    { Name "a494" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65CA3-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "Clockwork" }
+    { Type UmlStateMachine }
+    { ObjectId 834 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_7A469DB0-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1255 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1257 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Clockwork" }
+    { NoteId 3 }
+    { ObjectId 1258 }
+}
+
+NoteObject 5
+{
+    { Type REQAssignmentNote }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1260 }
+}
+
+ItemObject 6
+{
+    { Type REQAnalysisAssignmentItem }
+    { Value "3. Clockwork" }
+    { NoteId 5 }
+    { ObjectId 1261 }
+}
+

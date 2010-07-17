@@ -1,0 +1,237 @@
+/****************************************
+ *
+ * Code for SessionBean.
+ *
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    11/20/2000
+ ***************************************/
+
+template genSessionBean(MClass)
+package [MClass:package_name];
+
+// JDK
+import java.rmi.RemoteException;
+
+// J2EE
+import javax.rmi.PortableRemoteObject;
+import javax.ejb.SessionBean;
+import javax.ejb.SessionContext;
+import javax.ejb.SessionSynchronization;
+import javax.ejb.EJBObject;
+import javax.ejb.CreateException;
+import javax.naming.NamingException;
+
+// Import statements from model
+[mark("import", "importStatement")]
+
+// User defined import statements
+[mergeOut("UDIMP", "user defined import statements")]
+
+
+public class [MClass.name]Bean implements SessionBean[if ([MClass:transaction_aware] == "True")], SessionSynchronization[end if] {
+
+    /******************************************************
+     * private attributes (from EJB specification)
+     *****************************************************/
+     
+    // Context for this bean instance, provided by container
+    public SessionContext sessionContext;
+
+
+    [if ([MClass:has_attributes] != "False")]
+    /******************************************************
+     * public attributes (from model)
+     *****************************************************/
+        [if ([MClass:has_static_attributes] == "True")]
+    
+    // Static Attributes
+            [loop(MClass->MAttribute Where [MAttribute.binding] == "static")]
+    [MAttribute.access] static [MAttribute:modifier] [MAttribute.type] [MAttribute.name][genDefVal([MAttribute])];
+            [end loop]
+        [end if]
+        [if ([MClass:has_normal_attributes] == "True")]
+    
+    // Instance Attributes
+            [loop(MClass->MAttribute Where [MAttribute.binding] == "")]
+    [MAttribute.access] [MAttribute:modifier] [MAttribute.type] [MAttribute.name];
+            [end loop]
+    
+    
+    /******************************************************
+     * access methods for instance attributes
+     *****************************************************/
+     
+    [[MClass].genAccessMethods("True")]
+        [end if]
+    [end if]
+    
+    
+    /******************************************************
+     * create methods
+     *****************************************************/
+     
+    [if ([MClass:session_type] == "Stateful")]
+    // "create"- and "postCreate"-methods
+    [loop(Instances->MOperation([MClass:create_methods]))]
+        [importExceptions([MOperation:throws])]
+    public void ejbCreate([genOpParaList([MOperation])])
+        throws CreateException 
+    {
+        [mergeOut("UDCREAT::" [MOperation.guid], "-- body of ejbCreate method")]
+    }
+    public void ejbPostCreate([genOpParaList([MOperation])])
+        throws CreateException[genExceptions([MOperation:throws])]
+    {
+        [mergeOut("UDPOSTCREAT::" [MOperation.guid], "-- body of ejbPostCreate method")]
+    }
+    [end loop]
+    [else]
+    public void ejbCreate() { }
+    [end if]
+    
+    /******************************************************
+     * business methods
+     *****************************************************/
+     
+    [loop(Instances->MOperation([MClass:business_methods]))]
+        [importExceptions([MOperation:throws])]
+    [genOperationHeader([MOperation])] [MOperation.name]([genOpParaList([MOperation])])[if([MOperation:throws] != "")] throws [MOperation:throws][end if] 
+    {
+        //#ACD# M(UDBM::[MOperation.guid]) -- body of business method)]
+        // code manually to be added here
+        return[getDefaultReturn([MOperation])];
+        //#end ACD#
+    }
+    [end loop]
+    
+    /******************************************************
+     * other private Methods (defined only in Bean class)
+     *****************************************************/   
+     
+    [loop(Instances->MOperation([MClass:bean_private_methods]))]
+        [importExceptions([MOperation:throws])]
+    [genOperationHeader([MOperation])] [MOperation.name]([genOpParaList([MOperation])])[if([MOperation:throws] != "")] throws [MOperation:throws][end if] 
+    {
+        //#ACD# M(UDBP::[MOperation.guid]) -- body of bean private method)]
+        // code manually to be added here
+        return[getDefaultReturn([MOperation])];
+        //#end ACD#
+    }
+    [end loop]  
+
+
+    /******************************************************
+     * Implemented methods from javax.ejb.SessionBean.
+     *****************************************************/
+     
+    /**
+     * This method is called just after the successfull
+     * activation of a session bean.
+     */
+    public void ejbActivate() 
+    {
+        [mergeOut("UDACTV", "-- body of ejbActivate method")]
+    }
+     
+    /**
+     * This method is called just before the
+     * passivation of a session bean.
+     */
+    public void ejbPassivate() 
+    {
+        [mergeOut("UDPSVT", "-- body of ejbPassivate method")]
+    }
+     
+    /**
+     * This method is called if a session bean is
+     * about to be removed from the instance pool.
+     */
+    public void ejbRemove() 
+    {
+        [mergeOut("UDREMOVE", "-- body of ejbRemove method")]
+    }
+
+    /**
+     * Provides the session bean with information about
+     * it's home and remote interface and its transactional
+     * state.
+     */
+    public void setSessionContext(SessionContext sctx) {
+        sessionContext = sctx;
+    }
+    [if ([MClass:transaction_aware] == "True")]
+
+
+    [genSessionSynchronization()]
+    [end if]
+}
+end template
+
+
+// genSessionSynchronization()
+// ---------------------------
+/* Provides the operations of SessionSynchronization
+   if that interface is implemented by a Stateful
+   SessionBean.
+*/
+template genSessionSynchronization()
+/**********************************************************
+ * Implemented methods from javax.ejb.SessionSynchronization.
+ *
+ * The following methods make an SessionBean transaction 
+ * aware. They introduce a third state to the beans lifecycle,
+ * the Transactional Method-Ready state. The methods are 
+ * callbacks issued by the container just before or after
+ * a business method with transaction context is invoked. 
+ *
+ * This allows a bean to postpone database updates until the
+ * whole transaction has completed. Otherwise it would been
+ * required to synchronize its state every time a business
+ * method is invoked.
+ *
+ * Only Stateful SessionBeans with container-managed trans-
+ * action demarcation can implement this interface!
+ *********************************************************/
+ 
+/**
+ * The afterBegin method notifies a session Bean instance 
+ * that a new transaction has started, and that the subsequent 
+ * business methods on the instance will be invoked in the 
+ * context of the transaction.
+ *
+ * Can be used to initialize the database connection.
+ */
+public void afterBegin() 
+{
+    [mergeOut("UDSSAB", "-- body of afterBegin method")]
+}
+ 
+
+/**
+ * The beforeCompletion method notifies a SessionBean instance
+ * that a transaction is about to be committed.
+ *
+ * The SessionBean should write all cached state to the database,
+ * when notified by this callback.
+ */
+public void beforeCompletion() 
+{
+    [mergeOut("UDSSBC", "-- body of beforeCompletion method")]
+}
+ 
+
+/**
+ * The afterCompletion method notifies a session Bean instance
+ * that a transaction commit protocol has completed, and tells
+ * the instance whether the transaction has been committed or 
+ * rolled back.
+ *
+ * In case of a failed transaction, the bean has a chance to
+ * reset its conversational state (which is not transactional).
+ */
+public void afterCompletion(boolean commited) 
+{
+    [mergeOut("UDSSAC", "-- body of afterCompletion method")]
+}
+end template

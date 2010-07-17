@@ -1,0 +1,271 @@
+FileObject 1
+{
+    { Name "a110" }
+    { Type ObjectAnnotation }
+    { GUID "UID_22D52C50-AF3E-4117-A882-2675822ECDFB" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "location_of_train.h" }
+    { Type SEFile }
+    { ObjectId 765 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_E4371853-8F8E-4c95-B10A-B215F0C8630A" }
+}
+
+NodeObject 99997
+{
+    { Name "location of train" }
+    { Type Sequence }
+    { ObjectId 766 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_DAD415A5-FC28-4d5d-8D92-534E03B8892E" }
+}
+
+NoteObject 2
+{
+    { Type DataDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 768 }
+    { DescLine "The location of the train is calculated by counting the number of pulses that have been registered since the time of the trains departure." }
+}
+
+ItemObject 3
+{
+    { Type DataType }
+    { Value "integer" }
+    { NoteId 2 }
+    { ObjectId 769 }
+}
+
+ItemObject 4
+{
+    { Type SystemType }
+    { Value "False" }
+    { NoteId 2 }
+    { ObjectId 770 }
+}
+
+ItemObject 5
+{
+    { Type Constraint }
+    { Value "Limited" }
+    { NoteId 2 }
+    { ObjectId 771 }
+}
+
+ItemObject 6
+{
+    { Type DataSize }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 772 }
+}
+
+ItemObject 7
+{
+    { Type Legality }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 773 }
+}
+
+ItemObject 8
+{
+    { Type Units }
+    { Value "Km" }
+    { NoteId 2 }
+    { ObjectId 774 }
+}
+
+ItemObject 9
+{
+    { Type Scaling }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 775 }
+}
+
+ItemObject 10
+{
+    { Type Precision }
+    { Value "75%" }
+    { NoteId 2 }
+    { ObjectId 776 }
+}
+
+ItemObject 11
+{
+    { Type Accuracy }
+    { Value "None" }
+    { NoteId 2 }
+    { ObjectId 777 }
+}
+
+ItemObject 12
+{
+    { Type Conventions }
+    { Value "US" }
+    { NoteId 2 }
+    { ObjectId 778 }
+}
+
+ItemObject 13
+{
+    { Type Frequency }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 779 }
+}
+
+NoteObject 14
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 781 }
+}
+
+ItemObject 15
+{
+    { Type ObjectName }
+    { Value "location of train" }
+    { NoteId 14 }
+    { ObjectId 782 }
+}
+
+ItemObject 16
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 14 }
+    { ObjectId 783 }
+}
+
+NoteObject 17
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 785 }
+}
+
+ItemObject 18
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 17 }
+    { ObjectId 786 }
+}
+
+ItemObject 19
+{
+    { Type RequirementName }
+    { Value "speed-sub-system" }
+    { NoteId 17 }
+    { ObjectId 787 }
+}
+
+ItemObject 20
+{
+    { Type RequirementDocument }
+    { Value "g_train_specifications" }
+    { NoteId 17 }
+    { ObjectId 788 }
+}
+
+ItemObject 21
+{
+    { Type RequirementParagraph }
+    { Value "speed" }
+    { NoteId 17 }
+    { ObjectId 789 }
+}
+
+ItemObject 22
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 17 }
+    { ObjectId 790 }
+}
+
+ItemObject 23
+{
+    { Type QualificationMethod }
+    { Value "" }
+    { NoteId 17 }
+    { ObjectId 791 }
+}
+
+ItemObject 24
+{
+    { Type QualificationLevel }
+    { Value "" }
+    { NoteId 17 }
+    { ObjectId 792 }
+}
+
+ItemObject 25
+{
+    { Type FormalTestParagraph }
+    { Value "" }
+    { NoteId 17 }
+    { ObjectId 793 }
+}
+
+NoteObject 26
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 795 }
+}
+
+ItemObject 27
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 26 }
+    { ObjectId 796 }
+}
+
+ItemObject 28
+{
+    { Type DocumentName }
+    { Value "SRS" }
+    { NoteId 26 }
+    { ObjectId 797 }
+}
+
+ItemObject 29
+{
+    { Type DocumentNumber }
+    { Value "1" }
+    { NoteId 26 }
+    { ObjectId 798 }
+}
+
+ItemObject 30
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 26 }
+    { ObjectId 799 }
+}
+

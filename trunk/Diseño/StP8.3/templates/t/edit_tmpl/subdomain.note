@@ -1,0 +1,17 @@
+Subdomain expression forms in Datatype definition
+... has ( valid | invalid ) subdomain sdomexpression;
+
+sdomexpression ::=   sdom_label                 (any subdomain       )
+
+   sdom_label  ::= stringLiteral | constantID
+
+Use   #include <tsdl.std>   for predefined standard constantIDs.
+
+   For the valid subdomain:               as_specified
+   For the invalid subdomains:
+
+      NUMERIC  below_bounds      LEXICAL  not_in_list
+               above_bounds               out_of_type
+               out_of_bounds              abnormal
+               out_of_type
+               abnormal

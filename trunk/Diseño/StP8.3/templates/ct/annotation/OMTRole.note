@@ -1,0 +1,241 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1994
+// 	All rights reserved
+//
+
+//
+//	FILE:	OMTRole.note
+//
+
+Note 801509
+{
+  { AppType OMTRoleDefinition }
+  { HelpText "The Role Definition note lets you add items that capture modeling information about one role in an association between classes." }
+  { PrintName "Role Definition" }
+  { Bounds { Min 1 } { Max 1 } }
+  { Item
+      { AppType OMTMultiplicity }
+      { HelpText "The Multiplicity item lets you indicate how many instances of a class may relate to a single instance of another class. Note that an explicit multiplicity value (for example 4) must be set in the Explicit Multiplicity item." }
+      { PrintName "Multiplicity" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "Many" }
+  }
+  { Item
+      { AppType OMTExplicitMultiplicity }
+      { HelpText "The Explicit Multiplicity item lets you further specify multiplicity by giving an explicit value (for example 3 or 1-2,4) for it." }
+      { PrintName "Explicit Multiplicity" }
+      { Bounds { Min 0 } { Max 1 } }
+  }
+  { Item
+      { AppType OMTQualifier }
+      { HelpText "The Qualifiers item lets you reduce the multiplicity of a one-to-many or a many-to-many association. Each qualifier distinguishes among the set of objects at the many end (this end) of an association. More than one Qualifiers item may be entered for an association role." }
+      { PrintName "Qualifiers" }
+      { Bounds { Min 0 } }
+  }
+  { Item
+      { AppType OMTRoleIsOrdered }
+      { HelpText "The Ordered item lets you indicate that the objects at the many end of an association are explicitly ordered." }
+      { PrintName "Ordered" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "False" }
+  }
+  { Item
+      { AppType OMTRoleIsTraversed }
+      { HelpText "The Is Traversed item lets you indicate that this role will be traversed in the association implementation.  This is the means of specifiying directionality (one-way traversal) of an association.  An arrow display mark will appear on the diagram to indicate the direction of traversal.  This item can be added to both roles in an association, explicitly indicating two-way association." }
+      { PrintName "Is Traversed" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "True" }
+  }
+  { Item
+      { AppType OMTUnaryConstraint }
+      { HelpText "The Constraint item lets you indicate a constraint for a participant in an assocation. Use this item for general constraints expressed with natural language or equations. There are other items to specify contraints such as multiplicity, ordered, or derived." }
+      { PrintName "Constraint" }
+      { Bounds { Min 0 } { Max 1 } }
+    }
+  { Item
+      { AppType RelationshipIsStatic }
+      { HelpText "The Static item lets you specify whether or not the part of an aggregate (i.e., a Booch 'has' relationship) is static. A static part is one that is owned by the aggregate class itself, not its individual instances. This item has meaning (display mark, code generation, etc) only if it's set on the role at the 'whole' end (also known as the 'from' or 'source' end) of the aggregation." }
+      { PrintName "Static" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "True" }
+    }
+  { Item
+      { AppType RelationshipContainment }
+      { HelpText "The Containment item lets you indicate how an aggregate (i.e., Booch 'has' relationship) contains its part:  by value, by reference, or unspecified. This item has meaning (display mark, code generation, etc) only if it's set on the role at the 'whole' end (also known as the 'from' or 'source' end) of the aggregation." }
+      { PrintName "Containment" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "ByReference" }
+    }
+  { Item
+      { AppType RelationshipIsFriend }
+      { HelpText "The Friend item lets you indicate that the supplier (in a Booch 'using' relationship) has granted rights to the client to access its non-public parts. This item has meaning (display mark, code generation, etc) only if it's set on the role at the 'client' end (also known as the 'from' or 'source' end) of a 'using' relationship." } 
+      { PrintName "Friend" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "True" }
+    }
+}
+
+Note 801510
+{
+  { AppType OMTRoleCXXImplementation }
+  { HelpText "The Role C++ Implementation note lets you add items for an association role that are used for C++ code generation.  Remember that these items affect code for the association as it appears in the class at the other end of the association, relative to the role you're currently annotating." }
+  { PrintName "Role C++ Implementation" }
+  { Bounds { Min 0 } { Max 1 } }
+  { Item
+      { AppType OMTRolePrivilege }
+      { HelpText "The Privilege item lets you indicate the C++ privilege of constructs used to implement associations between classes." }
+      { PrintName "Privilege" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "Protected" }
+    }
+  { Item
+      { AppType OMTRoleImplementation }
+      { HelpText "The Implementation item lets you indicate how one end of the association is implemented in C++ code.  The choices are:  to suppress the code, to implement it as a pointer to the destination class, to implement it as an embedded instance of the destination class, or to implement it using one of the customizable template families, which typically are patterns of C++ template classes from some available class library, e.g., NIHCL.  Customizable templates are listed, and can be configured, in the ct/qrl/include/cxx_association_patterns.inc file." }
+      { PrintName "Implementation" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "Pointer" }
+    }
+  { Item
+      { AppType OMTRoleTemplateFamily }
+      { HelpText "The Template Family item lets you specify which customizable pattern family to use in the case that pattern families are specified for the Implementation item (see note Role C++ Implementation, item Implementation for more.) Customizable patterns are listed, and can be configured, in the ct/qrl/include/cxx_association_patterns.inc file." }
+      { PrintName "Template Family" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "Generic" }
+      { ValuesFunc "CxxRoleTemplateFamilyValuesFunc(the_item);" }
+    }
+  { Item
+      { AppType OMTRoleIsOwner }
+      { HelpText "The Owner item lets you indicate that the association role is the owning end of the association.  This item is now obsolete." }
+      { PrintName "Owner" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "True" }
+      { IsVisible False }
+  }
+}
+
+Note 801538
+{
+  { AppType OMTRolePersistenceImplementation }
+  { HelpText "The Role Persistence Implementation note lets you add items for an association that are used for Persistence code generation." }
+  { PrintName "Role Persistence Implementation" }
+  { Bounds { Min 0 } { Max 1 } }
+  { Item
+      { AppType OMTRoleImplement }
+      { HelpText "The Implement Association item lets you indicate whether or not you want the entire association implemented in Persistence.  You would have to set this to False, for example, if the associated class is not pesistent.  Since all relationships in Persistence are binary, a False value for either end (i.e., role) of the association will cause the association not to be implemented." }
+      { PrintName "Implement Association" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "True" }
+    }
+   { Item
+	{ AppType OMTRoleHookMethods }
+        { HelpText "The Notification Hooks item lets you specify the hook methods you want generated for this association (preChange, postChange, preFetch, postFetch, etcetera.)  Enter them as you would in Pesistence, i.e., a space-separated list of hook methods." }
+	{ PrintName "Notification Hooks" }
+        { Bounds { Min 0 } { Max 1 } }
+   }
+   { Item
+	{ AppType OMTRoleDeleteAction }
+        { HelpText "The Delete Action item lets you specify what happens to related instances of the destination class when an instance of the source class is deleted.  If nothing is specified, a default is selected based on the type of association and the multiplicity." }
+	{ PrintName "Delete Action" }
+        { Bounds { Min 0 } { Max 1 } }
+   }
+}
+
+Note 801545
+{
+  { AppType OMTRoleSmalltalkImplementation }
+  { HelpText "The Role Smalltalk Implementation note lets you add items for an association role that are used for Smalltalk code generation.  Remember that these items affect code for the association as it appears in the class at the other end of the association, relative to the role you're currently annotating." }
+  { PrintName "Role Smalltalk Implementation" }
+  { Bounds { Min 0 } { Max 1 } }
+  { Item
+      { AppType OMTRoleImplementationSmalltalk }
+      { HelpText "The Implementation item lets you indicate how one end of the association is implemented in Smalltalk code.  The choices are:  to suppress the code or to implement it as an instance variable." }
+      { PrintName "Implementation" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "Instance" }
+    }
+}
+
+Note 801711
+{
+  { AppType OMTRoleIDLImplementation }
+  { HelpText "The Role IDL Implementation note lets you add items for an association role that are used for IDL code generation.  Remember that these items affect code for the association as it appears in the class at the other end of the association, relative to the role you're currently annotating." }
+  { PrintName "Role IDL Implementation" }
+  { Bounds { Min 0 } { Max 1 } }
+  { Item
+      { AppType OMTRoleImplementationIDL }
+      { HelpText "The Implementation item lets you indicate how one end of the association is implemented in IDL code.  The choices are:  to suppress the code or to implement it as an instance variable (in which case the multiplicity determines whether or not it's declared as a simple type or sequence)." }
+      { PrintName "Implementation" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "Instance" }
+    }
+	{ Item
+		{ AppType OMTRoleReadOnlyIDL }
+		{ HelpText "The Read-Only item lets you indicate the association of this object as read-only for IDL code generation." }
+		{ PrintName "Read-Only" }
+		{ Bounds { Min 0 } { Max 1 } }
+		{ InitValue "True" }
+	}
+}
+
+Note 801823
+{
+  { AppType OMTRoleTOOLImplementation }
+  { HelpText "The Role TOOL Implementation note lets you add items for an association role that are used for TOOL code generation.  Remember that these items affect code for the association as it appears in the class at the other end of the association, relative to the role you're currently annotating." }
+  { PrintName "Role TOOL Implementation" }
+  { Bounds { Min 0 } { Max 1 } }
+  { Item
+      { AppType OMTTOOLRolePrivilege }
+      { HelpText "The Privilege item lets you indicate the TOOL privilege of constructs used to implement associations between classes." }
+      { PrintName "Privilege" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "Public" }
+    }
+  { Item
+      { AppType OMTTOOLRoleSuppress }
+      { HelpText "The Suppress item lets you indicate how one end of the association is implemented in TOOL code.  The choices are:  to suppress the code or to implement it as an attribute of the associated class (in which case the multiplicity determines whether or not it's declared as a simple class or array)." }
+      { PrintName "Suppress" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "False" }
+    }
+  { Item
+      { AppType OMTTOOLRoleUseLargeArray }
+      { HelpText "The Use Large Array item specifies what subclass of GenericArray to use when implementing associations with multiplicity greater that one."}
+      { PrintName "Use Large Array" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "True" }
+  }
+}
+
+Note 801828
+{
+  { AppType OMTRoleJavaImplementation }
+  { HelpText "The Role Java Implementation note lets you add items for an association role that are used for Java code generation.  Remember that these items affect code for the association as it appears in the class at the other end of the association, relative to the role you're currently annotating." }
+  { PrintName "Role Java Implementation" }
+  { Bounds { Min 0 } { Max 1 } }
+  { Item
+      { AppType OMTJavaRoleAccess }
+      { HelpText "The Access item lets you indicate the Java field access of constructs used to implement associations between classes." }
+      { PrintName "Access" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "Private" }
+    }
+  { Item
+      { AppType OMTJavaRoleImplementation }
+      { HelpText "The Implementation item lets you indicate how one end of the association is implemented in Java code.  The choices are:  to suppress the code, to implement it as an embedded instance of the destination class, or to implement it using one of the customizable template families.  Customizable templates are listed, and can be configured, in the ct/qrl/include/java_association_patterns.inc file." }
+      { PrintName "Implementation" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "Instance" }
+    }
+  { Item
+      { AppType OMTJavaRoleTemplateFamily }
+      { HelpText "The Template Family item lets you specify which customizable pattern family to use in the case that pattern families are specified for the Implementation item (see note Role Java Implementation, item Implementation for more.) Customizable patterns are listed, and can be configured, in the ct/qrl/include/java_association_patterns.inc file." }
+      { PrintName "Template Family" }
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "Generic" }
+      { ValuesFunc "JavaRoleTemplateFamilyValuesFunc(the_item);" }
+    }
+}
+

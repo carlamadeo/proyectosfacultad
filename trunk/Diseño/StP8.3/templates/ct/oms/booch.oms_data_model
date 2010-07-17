@@ -1,0 +1,95 @@
+// sccsid:  %W% %Y% %D%; Copyright (C) IDE 1984-1995
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+//
+// The "choices" are referenced by name in other places, e.g., 
+// the new property sheets.
+//
+// WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+//
+////////////////////////////////////////////////////////////////////////////////
+
+ItemValType StateHistoryType
+{
+    { ChoiceType
+	{ Choice "None" }
+	{ Choice "History" }
+	{ Choice "NestedHistory" }
+    }
+}	
+
+ItemValType BoochContainmentType
+{
+    { ChoiceType
+	{ Choice "ByValue" }
+	{ Choice "ByReference" }
+    }
+}	
+
+ItemValType ConcurrencyType
+{
+    { ChoiceType
+	{ Choice "Sequential" }
+	{ Choice "Guarded" }
+	{ Choice "Synchronous" }
+	{ Choice "Active" }
+    }
+}	
+
+ItemValType OperationConcurrencyType
+{
+    { ChoiceType
+	{ Choice "Sequential" }
+	{ Choice "Guarded" }
+	{ Choice "Synchronous" }
+    }
+}	
+
+ItemValType VisibilityType
+{
+    { ChoiceType
+	{ Choice "Global" }
+	{ Choice "Parameter" }
+	{ Choice "Field" }
+	{ Choice "Local" }
+	{ Choice "Association" }
+	{ Choice "SelfReference" }
+    }
+}	
+
+ItemValType ClassExportControlType
+{
+    { ChoiceType
+	{ Choice "Public" }
+	{ Choice "Implementation" }
+    }
+}	
+
+ItemValType ClassPersistenceType
+{
+    { ChoiceType
+	{ Choice "Transient" }
+	{ Choice "Persistent" }
+    }
+}	
+
+ItemValType ProcessorSchedulingType
+{
+    { ChoiceType
+	{ Choice "Preemptive" }
+	{ Choice "Nonpreemptive" }
+	{ Choice "Cyclic" }
+	{ Choice "Executive" }
+	{ Choice "Manual" }
+    }
+}	
+
+ItemValType IDLAssociationImplementationEnum
+{
+  { ChoiceType
+      { Choice "Suppress" }
+      { Choice "Instance" }
+    }
+}	

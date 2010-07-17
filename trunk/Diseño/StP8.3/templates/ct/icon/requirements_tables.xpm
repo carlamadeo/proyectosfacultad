@@ -1,0 +1,27 @@
+/* XPM */
+static char* requirements_tables_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 5 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #ffffff	c #c0c0c0",
+"o	m #000000	c #0000ff",
+/* pixels */
+"XXXXXXXXXXXXXXX.",
+"XOXO O O O O OXO",
+"XXXXXXXXXXXXXXXO",
+"X XO O O O ooOXO",
+"XOX O O O ooO XO",
+"X XO ooO ooO OXO",
+"XOX O ooooO O XO",
+"X XO O ooO O.OXO",
+"XOXXXXXXXXXXXXXO",
+"X XO O O O ooOXO",
+"XOX O O O ooO XO",
+"X XO ooO ooO OXO",
+"XOX O ooooO O XO",
+"X XO O ooO O OXO",
+"XXXXXXXXXXXXXXXO",
+".OOOOOOOOOOOOOOO"};

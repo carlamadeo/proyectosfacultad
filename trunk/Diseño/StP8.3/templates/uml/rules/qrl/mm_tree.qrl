@@ -1,0 +1,392 @@
+//
+// Model Management ObjectsFunc
+//
+
+list
+getSubsystemSequenceDiagrams(int id)
+{
+    list ret = list_create( "file", 0 );
+    set ass_files;
+    set impl_files;
+    node parent;
+    
+    parent = find_by_query("node[id = ${id}]");
+    
+    if (parent == NULL)
+        return ret;
+    
+// message ("find seq diagrams for id : " + id);
+
+    ret = list_select ("file[UmlSequenceDiagram && items[UmlSubsystemName && value = '${parent.name}']] sort by name");
+    
+    return ret;
+}
+
+list
+getSubsystemStateDiagrams(int id)
+{
+    list ret = list_create( "file", 0 );
+    list classes;
+    node one_class;
+    node parent;
+    int i, cnt = 0;
+    list class_names = list_create("string", 0);
+    list all_names = list_create("string", 0);
+    
+    parent = find_by_query("node[id = ${id}]");
+    
+    if (parent == NULL)
+        return ret;
+
+    // ECR 4983
+    classes = list_select( "node[(UmlClass||UmlUseCase) && in_links[UmlContains && " +
+        "link_refs && from_node[UmlPackage && id = ${id}]]] sort by type, name" ); 
+
+    for( i=0; i<list_count( classes ); i++ )
+    {
+        one_class = list_get( classes, i );
+        ++ cnt;
+        if(one_class.type == "UmlClass")
+            list_append(class_names, one_class.name + "::*");
+        list_append(all_names, one_class.name);
+
+        if(i == list_count( classes ) - 1 || cnt == 100 || list_count(class_names) >= 40) {
+        // State Machines for class
+            list_concatenate(ret, list_select("file[UmlStateDiagram && node_refs[node[UmlStateMachine && (name ='"
+                                              + list_to_string(all_names, "' || name = '" )+ "')]]] sort by name"));
+        // State Machines for class operations
+        // ECR 4983
+            if(list_count(class_names) > 0)
+                list_concatenate(ret, list_select("file[UmlStateDiagram && node_refs[node[UmlStateMachine && (name $ '"
+                                                  + list_to_string(class_names, "' || name $ '" )+ "')]]] sort by name"));
+            cnt = 0;
+            list_clear(all_names);
+            list_clear(class_names);
+        }
+    }
+
+    return ret;
+}
+
+list
+getSubsystemStateTables(int id)
+{
+    list ret = list_create( "file", 0 );
+    list classes;
+    node one_class;
+    node parent;
+    int i, cnt = 0;
+    list class_names = list_create("string", 0);
+    list all_names = list_create("string", 0);
+    
+    parent = find_by_query("node[id = ${id}]");
+    
+    if (parent == NULL)
+        return ret;
+
+    // ECR 4983
+    classes = list_select( "node[(UmlClass||UmlUseCase) && in_links[UmlContains && " +
+        "link_refs && from_node[UmlPackage && id = ${id}]]] sort by type, name" ); 
+
+    for( i=0; i<list_count( classes ); i++ )
+    {
+        one_class = list_get( classes, i );
+        ++ cnt;
+        if(one_class.type == "UmlClass")
+            list_append(class_names, one_class.name + "::*");
+        list_append(all_names, one_class.name);
+
+        if(i == list_count( classes ) - 1 || cnt == 100 || list_count(class_names) >= 40) {
+        // State Machines for class
+            list_concatenate(ret, list_select("file[UmlStateTable && node_refs[node[UmlStateMachine && (name ='"
+                                              + list_to_string(all_names, "' || name = '" )+ "')]]] sort by name"));
+        // State Machines for class operations
+        // ECR 4983
+            if(list_count(class_names) > 0)
+                list_concatenate(ret, list_select("file[UmlStateTable && node_refs[node[UmlStateMachine && (name $ '"
+                                                  + list_to_string(class_names, "' || name $ '" )+ "')]]] sort by name"));
+            cnt = 0;
+            list_clear(all_names);
+            list_clear(class_names);
+        }
+    }
+
+    return ret;
+}
+
+// ECR 5080
+list
+getSubsystemActivityDiagrams(int id)
+{
+    list ret = list_create( "file", 0 );
+    list classes;
+    node one_class;
+    file one_file;
+    node parent;
+    int i, j, cnt = 0;
+    list class_names = list_create("string", 0);
+    list all_names = list_create("string", 0);
+    
+    parent = find_by_query("node[id = ${id}]");
+    
+    if (parent == NULL)
+        return ret;
+
+    classes = list_select( "node[(UmlClass||UmlUseCase) && in_links[UmlContains && " +
+        "link_refs && from_node[UmlPackage && id = ${id}]]] sort by type, name" ); 
+
+    for( i=0; i<list_count( classes ); i++ )
+    {
+        one_class = list_get( classes, i );
+        ++ cnt;
+        if(one_class.type == "UmlClass")
+            list_append(class_names, one_class.name + "::*");
+        list_append(all_names, one_class.name);
+
+        if(i == list_count( classes ) - 1 || cnt == 100 || list_count(class_names) >= 40) {
+        // State Machines for class
+            list_concatenate(ret, list_select("file[UmlActivityDiagram && node_refs[node[UmlStateMachine && (name ='"
+                                              + list_to_string(all_names, "' || name = '" )+ "')]]] sort by name"));
+        // State Machines for class operations
+        // ECR 4983
+            if(list_count(class_names) > 0)
+                list_concatenate(ret, list_select("file[UmlActivityDiagram && node_refs[node[UmlStateMachine && (name $ '"
+                                                  + list_to_string(class_names, "' || name $ '" )+ "')]]] sort by name"));
+            cnt = 0;
+            list_clear(all_names);
+            list_clear(class_names);
+        }
+    }
+
+    for( i=0; i<list_count( ret ); ++i )
+    {
+        one_file = list_get( ret, i );
+        classes = list_select("node[UmlActionState && node_refs[file_id = ${one_file.id}]]");
+        for( j=0; j<list_count(classes); ++j )
+	{
+	    one_class = list_get( classes, j );
+	    // State Machine for Action State
+	    list_concatenate(ret, list_select("file[UmlActivityDiagram && node_refs[node[UmlStateMachine && name = '${one_class.name}']]]"));
+	}
+    }
+
+    return ret;
+}
+
+// 
+// Unassigned stuff
+//
+
+string
+get_unassigned_folder_name( int id )
+{
+    file F = find_by_query("file[id = ${id}]");
+    if(F.type == "UmlUseCaseDiagram")
+        return "Use Case";
+    if(F.type == "UmlClassDiagram")
+        return "Class";
+    if(F.type == "UmlSequenceDiagram")
+        return "Sequence";
+    if(F.type == "UmlCollaborationDiagram")
+        return "Collaboration";
+    if(F.type == "UmlComponentDiagram")
+        return "Component";
+    if(F.type == "UmlDeploymentDiagram")
+        return "Deployment";
+    if(F.type == "UmlStereotypeDiagram")
+        return "Stereotype";
+    if(F.type == "REQTable")
+        return "Requirements";
+
+    return( "Unassigned Diagrams" );
+}
+
+//ECR 5142 begin
+string
+get_unassigned_folder_name_no_id( int id )
+{
+    return "Unassigned Diagrams";
+}
+//ECR 5142 end
+
+// ECR 4991 start
+list
+getUnassignedDiagramFolder(string diagramType)
+{
+    list ret = list_create( "file", 0 );
+    file F;
+
+    F = find_by_query("file[${diagramType} && !items[UmlSubsystemName && value != 'unassigned']]");
+
+    if (F != NULL)
+        list_append(ret, F);
+
+    return ret;
+}
+
+// ECR 4991 end
+
+//
+// Prop Sheet Functions
+//
+
+void
+CreateBaselineFromSubSys( string subsystem )
+{
+    // ECR 5441
+    if(selection_count("item[UmlSubsystemIsLocked & value = 'True' & node[UmlPackage & name = '${subsystem}']]") > 0) {
+        print_error("Subsystem '" + subsystem + "' is locked, please unlock before creating a baseline");
+        return;
+    }
+    // ECR 5441 end
+    ui_prop_sheet_pop_up( "CreateBaselineDirectProp" );
+    ui_prop myProp = to_ui_prop( "CreateBaselineDirectProp", "basename" );
+
+    // set the intial baseline name
+    ui_text_set_value( myProp, subsystem );
+    // set the intial baseline directory
+    SetBaselineDir( "CreateBaselineDirectProp", "basedir" );
+}
+
+int
+CreateBaseline_cb(ui_event_tp event, ui_prop theprop, int id, string v)
+{
+    ui_owner uiOwner = to_ui_owner(theprop);
+    string subsystem = ui_text_value(to_ui_prop( uiOwner, "basename" ));
+    
+    // ECR 5012
+    return CreateSubsystemBaseLineDoit(uiOwner, subsystem);
+}
+
+// we need that globally because we can't pass hidden variables between
+// a prop sheet and a callback
+// ECR 4991, changed a lot here to support assignment of multiple files
+string AssignDiagramToSubSystemIds;
+
+void
+AssignDiagramToSubSystem( string file_name, string editor_type )
+{
+    string file_type = diag_type_from_editor_type( editor_type );
+    string file_names = list_to_string(string_to_list(file_name, " "), "' | name = '");
+    list the_files = list_select( "file[${file_type} & (name == '${file_names}')]" );
+    if( the_files == NULL || list_count(the_files) == 0 )
+    {
+        // ECR 5012
+        print_error( "File not found." );
+        return;
+    }
+
+    int i;
+    file F;
+    AssignDiagramToSubSystemIds = "";
+    for( i=0; i<list_count(the_files); ++ i ) {
+        if(AssignDiagramToSubSystemIds != "")
+            AssignDiagramToSubSystemIds += " ";
+        F = list_get(the_files, i);
+        AssignDiagramToSubSystemIds += to_string(F.id);
+    }
+    
+    ui_prop_sheet_pop_up( "AssignDiagramProp" );
+    ui_prop myProp = to_ui_prop( "AssignDiagramProp", "subsystems" );
+    string new_filename;
+
+    if ( myProp != NULL ) 
+    {
+    	ui_list_clear(myProp);
+    
+        list subsystems;
+        node subsystem;
+
+        ui_list_append(myProp, "unassigned");
+
+        subsystems = list_select( "node[UmlPackage & node_refs & items[UmlStereotype & value = 'subsystem']] sort by name" );
+        for( i=0; i<list_count(subsystems); ++ i )
+        {
+            subsystem = list_get( subsystems, i );
+            ui_list_append( myProp, subsystem.name );
+        }
+    }
+}
+
+int
+AssignDiagramToSubSystem_cb(ui_event_tp event, ui_prop theprop, int id, string v)
+{
+    ui_owner uiOwner = to_ui_owner(theprop);   
+    ui_prop mySubSysList = to_ui_prop( uiOwner, "subsystems" );
+    list selectedList = ui_list_selected_items(mySubSysList);
+    
+    if(selectedList == NULL || list_count(selectedList) == 0) 
+    {
+        // ECR 5012
+        print_error("Select a subsystem.");
+        return -1;
+    }
+
+    if( AssignDiagramToSubSystemIds == "" )
+    {
+        print_error( "No file selected." );
+        return -1;
+    }
+
+    string subsystem = list_get(selectedList, 0);
+    if(subsystem != "unassigned") {
+        if(selection_count( "node[UmlPackage & name = '${subsystem}' & items[UmlSubsystemIsLocked & value = 'True']]" ) > 0) {
+            print_error("The subsystem " + subsystem + " is locked, you cannot assign a file to it");
+            return -1;
+        }
+    }
+    
+    list id_s = string_to_list(AssignDiagramToSubSystemIds, " ");
+    string refresh = "False";
+    int stpemHandle = -1;
+    string selected_file_id;
+    int i;
+    item I;
+
+    for(i = 0; i < list_count(id_s); ++ i) {
+        selected_file_id = list_get(id_s, i);
+        if(i + 1 == list_count(id_s))
+            refresh = "True";
+
+        // ECR 5076 start
+        I = find_by_query("item[UmlSubsystemName & obj_id = ${selected_file_id}]");
+
+        if(subsystem == "unassigned") {
+            if(I == NULL)
+                continue;
+        }
+        else {
+            if(I != NULL && I.value == subsystem)
+                continue;
+        }
+
+        if(I != NULL) {
+            if(selection_count( "node[UmlPackage & name = '${I.value}' & items[UmlSubsystemIsLocked & value = 'True']]" ) > 0) {
+                print_error("The file is assigned to the locked subsystem " + I.value + ", you cannot reassign this file");
+                continue;
+            }
+        }
+        // ECR 5076 end
+
+        print_message ("Assigning file to Subsystem " + subsystem + " ..." );
+
+        if(stpemHandle == -1)
+            stpemHandle = editor_send_msg("ngoae", "EditorStart " + to_string(editor_get_msgd_name()) + " "
+                            + to_string(editor_get_msgd_handle()), -1);
+        // ECR 5009
+        if( subsystem != "unassigned" )
+            editor_send_msg("ngoae",
+                        "EditorQrlEval setNoteAndItem(" + selected_file_id + ",\"UmlSubsystem\",\"UmlSubsystemName\",\"" + 
+                        subsystem + "\"," + refresh + ");", stpemHandle);
+        else
+            editor_send_msg("ngoae", "EditorQrlEval removeNote(" + selected_file_id + ",\"UmlSubsystem\"," + refresh + ");", 
+                stpemHandle);
+    }
+
+    if(stpemHandle != -1)
+        editor_send_msg("ngoae", "EditorQuit", stpemHandle);
+
+    AssignDiagramToSubSystemIds = "";
+    
+    return 0;
+}

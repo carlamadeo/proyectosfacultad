@@ -1,0 +1,78 @@
+// This code searches for a Module corresponding to the provided StP
+// system and for an object within that Module with the corresponding ID. If
+// the object is found, the module is opened for reading (sharable) and the
+// object is highlighted
+//
+
+string stp_nav_sysname = null
+string stp_nav_id = null
+
+void stp_nav_process_navigation()
+{
+	string modName = stp_find_modname_for_system (stp_nav_sysname)
+	
+	if(null modName) {
+		ack "No DOORS Module exists for StP system '" stp_nav_sysname "'."
+		halt
+	}
+
+	Module mod = share(modName,true);
+	if (null mod) {
+		ack "Unable to open DOORS Module '" modName "' for sharing."
+		halt
+	}
+
+
+	Object o = stp_find_object_with_ID(mod,stp_nav_id)
+
+	if (null o) {
+		ack "No DOORS object exists with StP ID '" stp_nav_id "'."
+		halt
+	}
+	current = mod
+	current = o
+
+	// now, select the object
+	// This form is used (rather than the one parameter version) because the
+	// other version doesn't move the highlight correctly
+	setSelection(o,o)
+
+    // this works around a bug in DOORS that doesn't paint the
+    // highlight correctly
+    refresh(mod)
+}
+
+void stp_nav_proj_continue_cb(DB dlg)
+{
+    if(!null(current Project)) {
+		hide(dlg)
+		stp_nav_process_navigation()
+    } 
+}
+void stp_nav_abort_cb(DB dlg)
+{
+    hide(dlg)
+}
+
+void stp_nav_to_doors(string sysname, string guid)
+{
+	// JED - NOTE: This code is cloned in stp_nav_to_stp because DOORS
+	// doesn't allow you to use show() in functions if you ever expect them to
+	// return
+	stp_nav_sysname = sysname
+	stp_nav_id = guid
+
+    if (null current Project) {
+        DB  proj_dlg = topMost("Warning!")
+        DBE msg = label(proj_dlg,"No Project is currently open.")
+        DBE msg2 = label(proj_dlg, "Please open one before continuing")
+        DBE okbtn = apply(proj_dlg,"Continue",stp_nav_proj_continue_cb)
+        DBE cancelbtn = apply(proj_dlg,"Abort",stp_nav_abort_cb)
+        close(proj_dlg,false,stp_nav_abort_cb)
+		// make it appear on top
+		raise(proj_dlg)
+        show(proj_dlg)
+    }
+	stp_nav_process_navigation()
+}
+

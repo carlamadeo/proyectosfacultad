@@ -1,0 +1,124 @@
+/************************************************** 
+ * java_Exception.tdl
+ * ------------------
+ *
+ * The "master" template for a Java exception.
+ * The order, in which indivual class members appear:
+ *
+ * 1) static attributes (constants too)
+ * 2) instance attributes (both modeled and from reference)
+ * 3) constructors
+ * 4) operations
+ *    a) modeled operations
+ *    b) methods from implemented interfaces
+ *    c) accessor methods coming from instance attributes
+ *    d) eventually "finalize()";
+ * 
+ * Exceptions bear much similarities with normal classes
+ * except their must always descents from a base exception.
+ * 
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    17.12.2001
+ *
+ * Copyright 2001, Aonix, San Diego
+ **************************************************/
+
+template gen_exception(MNormalClass)
+[genClassDependencies([MNormalClass])]
+  [if ([COMMENT_CLASSES])]
+[genJavaDocComment([MNormalClass])]
+  [end if]
+[string_trim(replace([MNormalClass:access]" "[MNormalClass:modifiers]" class "[MNormalClass.name]genExceptionBaseClass([MNormalClass]), "  +", " "))] {
+  [if (hasLoop(MNormalClass->MAttribute Where [MAttribute.binding] == "static"))]
+^
+  // ------------------------------------------------------------
+  // static attributes
+  // ------------------------------------------------------------
+    [loop(MNormalClass->MAttribute Where [MAttribute.binding] == "static")]
+      [importType([MAttribute.type])]
+      [if ([COMMENT_ATTRIBUTES])]
+  [genJavaDocComment([MAttribute])]
+      [end if]
+      [if ([MAttribute:defval] == "" || [MAttribute:derived])]
+  [string_trim(replace([MAttribute.access]" static "[MAttribute:modifiers]" "[MAttribute.type]" "[MAttribute.name], "  +", " "))];
+      [else]
+  [string_trim(replace([MAttribute.access]" static "[MAttribute:modifiers]" "[MAttribute.type]" "[MAttribute.name]" = "[MAttribute:defval], "  +", " "))];
+      [end if]
+    [end loop]
+  [end if]
+  [if (hasLoop(MNormalClass->MAttribute Where [MAttribute.binding] == ""))]
+^
+  // ------------------------------------------------------------
+  // instance attributes
+  // ------------------------------------------------------------
+    [loop(MNormalClass->MAttribute Where [MAttribute.binding] == "")]
+      [importType([MAttribute.type])]
+      [if ([COMMENT_ATTRIBUTES])]
+  [genJavaDocComment([MAttribute])]
+      [end if]
+      [if ([MAttribute:defval] == "" || [MAttribute:derived])]
+  [string_trim(replace([MAttribute.access]" "[MAttribute:modifiers]" "[MAttribute.type]" "[MAttribute.name], "  +", " "))];
+      [else]
+  [string_trim(replace([MAttribute.access]" "[MAttribute:modifiers]" "[MAttribute.type]" "[MAttribute.name], "  +", " "))] = [MAttribute:defval];    
+      [end if]
+    [end loop]
+  [end if]
+^
+  [mergeOut("UDAT::"[MNormalClass.guid], "---- additional attributes")]
+  [if (hasLoop(MNormalClass->MOperation Where [MOperation.name] == [MNormalClass.name]))]
+^
+  // ------------------------------------------------------------
+  // constructors
+  // ------------------------------------------------------------
+    [loop(MNormalClass->MOperation Where [MOperation.name] == [MNormalClass.name])]
+      [if ([COMMENT_METHODS])]
+  [genJavaDocComment([MOperation])]
+      [end if]
+  [string_trim(replace([MOperation.access]" "[MOperation.name], "  +", " "))]([getOpParas([MOperation])])[getExceptions([MOperation])] {
+    [mergeOutConstructor("UDCC::", [MOperation], "---- constructor body")]
+  }
+^
+    [end loop]
+  [end if]
+  [if (hasLoop(MNormalClass->MOperation Where [MOperation.name] != [MNormalClass.name]))]
+^
+  // ------------------------------------------------------------
+  // methods
+  // ------------------------------------------------------------
+    [loop(MNormalClass->MOperation Where [MOperation.name] != [MNormalClass.name])]
+      [importType([MOperation.returnType])]
+      [if ([COMMENT_METHODS])]
+  [genJavaDocComment([MOperation])]
+      [end if]
+      [if ([MOperation:abstract] || [MOperation:native])]
+      [else]
+  [string_trim(replace([MOperation.access]" "[MOperation.binding]" "[MOperation:modifiers]" "[MOperation.returnType], "  +", " "))] [MOperation.name]([getOpParas([MOperation])])[getExceptions([MOperation])] {
+    [mergeOutOperation("UDOP::", [MOperation], "---- method body")]
+  }
+^
+      [end if]
+    [end loop]
+  [end if]
+  [mergeOut("UDOP::"[MNormalClass.guid], "---- additional operations")]
+}
+end template
+
+
+/* Generates an "extends"-clause for the exception.
+ * Generates import statement for the SuperClass, in 
+ * case it resides in another package.
+ */
+proc genExceptionBaseClass(MNormalClass)
+  local ebcl;
+  loop(MNormalClass->SuperClass; setDelim(""); setDelim(", "))
+    insert("import", [SuperClass.id]);
+    [ebcl] = [ebcl] delim() [SuperClass.name];
+  end loop
+  if ([ebcl] != "")
+    [ebcl] = " extends " [ebcl];
+  else 
+    [ebcl] = " extends " [EXCEPTION_BASE_CLASS];
+  end if
+  return [ebcl];
+end proc

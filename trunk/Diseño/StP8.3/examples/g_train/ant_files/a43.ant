@@ -1,0 +1,80 @@
+FileObject 1
+{
+    { Name "a43" }
+    { Type ObjectAnnotation }
+    { GUID "UID_E5FBF493-6AD0-4b56-A7E2-E41573FA63D5" }
+}
+
+NodeObject 99999
+{
+    { Name "display on screen" }
+    { Type Process }
+    { ObjectId 3279 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_4AB6693B-44B9-4199-A627-EFEFF95341DD" }
+}
+
+NodeObject 99998
+{
+    { Name "calculate in km/hr" }
+    { Type Process }
+    { ObjectId 3280 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_2B8C9906-0B34-4bae-993D-5F1EC70E7746" }
+}
+
+LinkObject 99997
+{
+    { Name "Ts" }
+    { Type DataFlow }
+    { ObjectId 3281 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_52341821-3E03-4542-BA04-DD7B84B247CF" }
+}
+
+NoteObject 2
+{
+    { Type InterfaceDesign }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3283 }
+}
+
+ItemObject 3
+{
+    { Type InterfaceName }
+    { Value "Ts" }
+    { NoteId 2 }
+    { ObjectId 3284 }
+}
+
+ItemObject 4
+{
+    { Type InterfacePriority }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 3285 }
+}
+
+NoteObject 5
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3287 }
+    { DescLine "This is the speed in km/hr." }
+}
+
+ItemObject 6
+{
+    { Type ObjectName }
+    { Value "Ts" }
+    { NoteId 5 }
+    { ObjectId 3288 }
+}
+

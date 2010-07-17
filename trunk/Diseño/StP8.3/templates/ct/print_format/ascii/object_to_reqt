@@ -1,0 +1,69 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Document
+{
+    { StartingColumn 1 }
+    { EndingColumn 80 }
+    { LongLineHandling Allow }
+    { Alignment Left }
+    { FirstLineIndent 0 }
+
+    { TabSize 8 }
+    { Paginate False }
+    { NumberThePages False }
+    { LinesPerPage 80 }
+    { FirstPageNumber 1 }
+    { Header Null }
+}
+
+Paragraph "Heading 1"
+{
+    { Alignment Left }
+}
+
+Paragraph "Heading 2"
+{
+    { Alignment Left }
+}
+
+Paragraph "Heading 3"
+{
+    { Alignment Left }
+}
+
+Paragraph CellHeading
+{
+	{ Alignment Left }
+	{ FirstLineIndent 3 }
+}
+
+Paragraph CellBody
+{
+	{ Alignment Left }
+	{ FirstLineIndent 6 }
+}
+
+
+Paragraph DescriptionBody
+{
+	{ Alignment Left }
+	{ FirstLineIndent 6 }
+}
+
+
+Paragraph Figure
+{
+	{ Alignment Center }
+}
+
+Paragraph Body
+{
+	{ Alignment Left }
+}
+

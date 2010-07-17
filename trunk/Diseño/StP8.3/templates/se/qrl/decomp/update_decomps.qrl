@@ -1,0 +1,35 @@
+#include "qrl/decomp/update_decomps.inc"
+
+/* Callbacks for the command-line */
+#include "qrl/include/error.inc"
+
+external boolean verbose = False;
+external_help = "Display types and names of files being updated";
+
+external string file_names = "";
+external_help = "Limit update to file(s) named by this variable.";
+
+script_help = "Update the repository for any out-of-date DFE file which 
+fits the specified file_names.  Wildcards are accepted.";
+
+//
+// Updates the file(s) and all decomps.  If the filename has a wildcard,
+// it is assumed to represent decomps, and the parent file is not updated.
+//
+void
+main()
+{
+    list names;
+    string cur_name;
+    int ix, count;
+
+    names = string_to_list(file_names, ", ");
+    for (ix = 0, count = list_count(names); ix < count; ix = ix + 1)
+    {
+    	cur_name = list_get(names, ix);
+	// Make it a wildcard if it's not already
+	if (string_find(cur_name, 0, "*") == string_length(cur_name))
+	    list_append(names, cur_name + ".*");
+    }
+    update_message(update_decomps(names, verbose));
+}

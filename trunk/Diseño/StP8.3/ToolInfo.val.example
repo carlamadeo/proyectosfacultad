@@ -1,0 +1,13 @@
+%------------------------------------------------------------------------------
+%
+%	ToolInfo file for StP/Core 7.0-based Aonix products
+%	Copyright (c) Aonix 1984-1998
+%
+%	@(#) $Header: /devcore/cvsroot/source/ToolInfo.val.example,v 1.5 1999/07/30 14:27:14 kiv Exp $
+%
+%------------------------------------------------------------------------------
+%
+%
+validator=True
+%
+ToolInfo=ToolInfo.W32NTX86

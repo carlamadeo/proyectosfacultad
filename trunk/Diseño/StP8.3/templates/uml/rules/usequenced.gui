@@ -1,0 +1,350 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+Include "rules/gde_menu_bar.std"
+Include "rules/gde_accels.std"
+Include "rules/gde_edit_menu.std"
+Include "rules/interaction_dg_navigation.common"
+
+NodeSymbol 999 NoSelectionNavigation
+{
+    { PrintName "Hook for navigations without selection" }
+    { Shape { Predefined Rectangle } }
+    { ReadOnly True }
+}
+
+NodeSymbol NoSelectionNavigation
+{
+    { Navigation
+    { ParseCondition "!is_validator_available(\"standalone\");" }
+	{ Name collaborationNavigate }
+	{ Label "Collaboration Diagram" }
+	{ FailureCmd CollaborationNavigation }
+    }
+}
+
+Command CollaborationNavigation
+{
+    { ObjectRequired False }
+    { StartMessage "Deployment Diagram ..." }
+    { Builtin "EditorQrlEvalNoSave collaborationNavigation();" }
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// these override the gde_menu_bar.std to accomodate turning off
+// auto align when new files are read in or the diagram is cleared.  
+/////////////////////////////////////////////////////////////////////////////
+Menu File
+{
+// ECR 4901 begin
+    { MenuEntry
+	{ Name New }
+	{ Builtin "EditorQrlEval open_new_diag_andTurnAutoAlignOff();" }
+    }
+// ECR 4901 end
+    { MenuEntry
+	{ Name Load }
+	{ Builtin "EditorQrlEvalNoSave doBuiltinAndTurnAutoAlignOff(\"LoadDialogShow\");" }
+    }
+//     { MenuEntry
+// 	{ Name Recent }
+// 	{ Builtin "EditorQrlEvalNoSave recent_menu_show_diag_andTurnAutoAlignOff();" }
+//     }
+    { MenuEntry
+	{ Name Insert }
+	{ Builtin "EditorQrlEvalNoSave doBuiltinAndTurnAutoAlignOff(\"ImportDialogShow\");" }
+    }
+}
+
+Menu MenuBarEdit
+{
+    { MenuEntry
+	{ Name ClearDiagram }
+	{ Builtin "EditorQrlEvalNoSave doBuiltinAndTurnAutoAlignOff(\"BufferClear\");" }
+    }
+}
+
+Menu Tools //MenuBarEdit
+{
+//     { MenuEntry
+// 	{ Name DeleteSplinePoints }
+// 	{ Show False }
+//     }
+//     { MenuEntry
+// 	{ Name Replace }
+// 	{ Label "Replace" }
+// 	{ Builtin "EditorQrlEvalNoSave ReplaceObjectSymbol();" }
+// 	{ ActiveFunc idehook_replace_active_func }
+//     }
+}
+
+
+// Menu Edit
+// {
+//     { MenuEntry
+// 	{ Name Replace }
+// 	{ Builtin "EditorQrlEvalNoSave ReplaceObjectSymbol();" }
+//     }
+// }
+
+Menu Repository
+{
+    { MenuEntry
+	{ Name CheckSemantics }
+	{ Show True }
+    }
+}
+
+Command CheckSemantics
+{
+  { PrintName "Check Semantics" }
+  { StartMessage "Check Diagram Semantics" }
+  // ECR 7464
+  // { Builtin "EditorQrlEval uml_diag_check_semantics(\"usequenced_check_semantics\");" }
+  { Builtin "EditorQrlEvalNoSave uml_diag_check_semantics(\"usequenced_check_semantics\");" }
+}
+
+
+TypeSet RequirementToLinkLinkSymbols
+{
+    SimpleMessage
+    SynchronousMessage
+    BalkingMessage
+    TimeoutMessage
+    AsynchronousMessage
+    ReturnMessage
+}
+
+TypeSet RequirementToNodeNodeSymbols
+{
+    Actor
+    Package
+    System
+    ObjectSet
+    ExtensionPoint
+
+// added for Lifecycle desktop
+// StP/UML is missing a navigation to DOORS from scenario instances
+//
+ ScenarioInstance
+//
+}
+
+
+TypeSet DoubleClickNodeSymbols
+{
+    Actor
+    Package
+    System
+}
+
+
+NodeSymbol DoubleClickNodeSymbols
+{
+    { Methods
+         { Method
+             { Name DoubleClick }
+             { MethodFunc UmlSequence_ps_double_click }
+         }
+    }
+}
+
+
+LinkSymbol RequirementToLinkLinkSymbols
+{
+    { Methods
+         { Method
+             { Name DoubleClick }
+             { MethodFunc UmlSequenceLink_ps_double_click }
+         }
+    }
+}
+
+
+
+TypeSet RequirementToCntxCntxSymbols 
+{
+    TimeSent
+    TimeDelivered
+}
+
+TypeSet DOORS
+{
+    TimeSent
+    TimeDelivered
+    SimpleMessage
+    SynchronousMessage
+    BalkingMessage
+    TimeoutMessage
+    AsynchronousMessage
+    ReturnMessage
+    Actor
+    Package
+    System
+    ObjectSet
+    ExtensionPoint
+    ScenarioInstance
+}
+
+Include "rules/syms_to_rqtbl.rules.common"
+
+// Menu Navigation
+// {
+//     { InMenuBar True }
+//     { Label "&Navigation" }
+//     { Pin True }
+//     { GenerationFunc idehook_navigation_menu_gen_func }
+//     //{ GenerationFunc idehook_navigation_parent_menu_gen_func }
+// }
+
+Menu ProductMenu
+{
+    { InMenuBar True }
+    { Label "&UML" }
+    { Pin True }
+    { MenuEntry
+	{ Name sequenceACollaborationDiagram }
+	{ Label "Generate &Sequence from Collaboration" }
+	{ Builtin "EditorQrlEvalNoSave sequenceACollaborationDiagram();" }
+    }
+    { Spacer { Name Spacer1 } }
+    { MenuEntry
+	{ Name AutoAlignObjects }
+	{ LabelFunc autoAlignLabelFunc }
+	{ Builtin "EditorQrlEvalNoSave toggleAutoAlign();" }
+        { Accelerator
+             { Label "Alt+Ctrl+A" }
+             { Value "Alt Ctrl<Key>a" }
+        }
+    }
+    { MenuEntry
+	{ Name AllignAllObjects }
+	{ Label "&Align All Objects" }
+	{ Builtin "EditorQrlEvalNoSave alignAllObjects();" }
+	{ ActiveFunc diagramHasActorsOrObjectsActiveFunc }
+        { Accelerator
+             { Label "Alt+Shift+A" } 
+             { Value "Alt Shift<Key>a" }
+        }
+    }
+    { MenuEntry
+	{ Name ExpandAllNodes }
+	{ LabelFunc expandAllObjectsLabelFunc }
+	{ Builtin "EditorQrlEvalNoSave expandAllObjects();" } 
+	{ ActiveFunc diagramHasActorsOrObjectsActiveFunc }
+        { Accelerator
+             { Label "Alt+Ctrl+X" }
+             { Value "Alt Ctrl<Key>x" }
+        }
+    }
+    { Spacer { Name Spacer2 } }
+
+// Fixed Remedy Bug #2479 -- Duplicate Shortcut
+    { MenuEntry
+	{ Name DistributeAllArcs }
+	{ Label "&Distribute All Arcs" }
+	{ Builtin "EditorQrlEvalNoSave distributeAllArcs(\"compairArcsBasedOnYPosition\");" }
+	{ ActiveFunc diagramHasMessagesActiveFunc }
+        { Accelerator
+             { Label "Alt+Ctrl+L" }
+             { Value "Alt Ctrl<Key>l" }
+        }
+    }
+    { MenuEntry 
+	{ Name ShiftMessagesDown }
+	{ Label "&Shift Messages Down From Selected" }
+	{ ActiveFunc messageIsSelectedActiveFunc }
+	{ Builtin "EditorQrlEvalNoSave shiftMessagesDown();" }
+        { Accelerator
+             { Label "Alt+Shift+D" } 
+             { Value "Alt Shift<Key>d" }
+        }
+    }
+    { MenuEntry
+	{ Name ResequenceMessages }
+	{ Label "&Resequence All Messages" }
+	{ Builtin "EditorQrlEvalNoSave resequenceAllMessages();" }
+	{ ActiveFunc diagramHasMessagesActiveFunc }
+        { Accelerator
+             { Label "Alt+Ctrl+R" } 
+             { Value "Alt Ctrl<Key>r" }
+        }
+    }
+
+// Fixed Remedy Bug #2479 -- Duplicate Shortcut
+    { MenuEntry
+	{ Name SortMessages }
+	{ Label "&Sort Messages Based On Sequence" }
+	{ Builtin "EditorQrlEvalNoSave distributeAllArcs(\"compairArcsBasedOnSequenceNumber\");" }
+	{ ActiveFunc diagramHasMessagesActiveFunc }
+        { Accelerator
+             { Label "Alt+Ctrl+M" } 
+             { Value "Alt Ctrl<Key>m" }
+        }
+    }
+// Begin ECR947, ECR 4494
+    { MenuEntry
+	{ Name ConnectNoteToLink }
+	{ Label "Connect Note To Link" }
+	{ Builtin "EditorQrlEval ConnectNoteToLink();" }
+//    	{ Accelerator
+//             { Value "Ctrl<Key>n" }
+//	}
+	{ ActiveFunc idehook_note_link_active_func }
+    }
+// End ECR947, ECR 4494
+    { Spacer { Name Spacer3 } }
+    { MenuEntry
+	{ Name ShowOperationNameDialog }
+	{ Label "Set &Message Name..." }
+    // Changed for ECR 4110 (UmlMessageNameFromClassOperations is obsolete now)
+	// { Builtin "EditorQrlEvalNoSave UmlMessageNameFromClassOperations();" }
+    { Builtin "EditorQrlEvalNoSave UmlPopUpPropSheet(\"usequenced\");" }
+	{ ActiveFunc uml_message_prop_active }
+    }
+// ECR 4452 begin add Menu Entry for MakeObject Active/Passive
+    { MenuEntry
+	{ Name changeObjectActiveStatus }
+	{ LabelFunc objectActiveStatusLabel }
+	{ Builtin "EditorQrlEvalNoSave changeObjectActiveStatus();" }
+	{ ActiveFunc any_object_selected }
+    }
+// ECR 4452 end add Menu Entry for MakeObject Active/Passive
+//     { MenuEntry
+//         { Name ObjectProperties }
+//         { Label "Edit &Properties" }
+//         { Builtin "EditorQrlEvalNoSave UmlPopUpPropSheet(\"usequenced\");" }
+//         { ActiveFunc UmlSequenceObjectPropsActive }
+//         { Accelerator
+//              { Label "Alt+Ctrl+P" }
+//              { Value "Alt Ctrl<Key>p" }
+//         }
+//     }
+}
+
+Menu MenuBarEdit
+{
+    { MenuEntry
+        { Name ObjectProperties }
+        { Show True }
+        { Builtin "EditorQrlEvalNoSave UmlPopUpPropSheet(\"usequenced\");" }
+        { ActiveFunc UmlSequenceObjectPropsActive }
+    }
+}
+Menu ObjectContextMenu //Edit
+{
+    { MenuEntry
+        { Name ObjectProperties }
+        { Show True }
+        { Builtin "EditorQrlEvalNoSave UmlPopUpPropSheet(\"usequenced\");" }
+        { ActiveFunc UmlSequenceObjectPropsActive }
+    }
+}
+
+Include "rules/default_arc_type.rules" //ECR 6469
+
+Include "rules/usequenced_prop.gui"
+Include "rules/message_prop.gui"

@@ -1,0 +1,18 @@
+/************************************************** 
+ * java_Make.tdl
+ * -------------
+ *
+ * Prepares make file for UNIX make or Win nmake.
+ * Currently this templates are not implemented!
+ * 
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    17.12.2001
+ *
+ * Copyright 2001, Aonix, San Diego
+ **************************************************/
+
+
+proc create_makefile()
+  return;
+end proc

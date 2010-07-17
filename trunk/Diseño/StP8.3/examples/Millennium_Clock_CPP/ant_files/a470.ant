@@ -1,0 +1,41 @@
+FileObject 1
+{
+    { Name "a470" }
+    { Type ObjectAnnotation }
+    { GUID "UID_E0D931E1-C886-11d5-90AA-0050045C27F0" }
+}
+
+FileObject 99999
+{
+    { Name "clockbird" }
+    { Type UmlClassTable }
+    { ObjectId 280 }
+    { AnnotFileId 1 }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 825 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 827 }
+    { DescLine "At the moment ClockBird is only used to hold the reference to the " }
+    { DescLine "Singleton class Door. This reference is used from Owl and Coocoo." }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "clockbird" }
+    { NoteId 3 }
+    { ObjectId 828 }
+}
+

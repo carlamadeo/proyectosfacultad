@@ -1,0 +1,255 @@
+FileObject 1
+{
+    { Name "a32" }
+    { Type ObjectAnnotation }
+    { GUID "UID_B08E0EAA-246F-417f-BF2C-010C577FEBBF" }
+}
+
+NodeObject 99999
+{
+    { Name "accept weight" }
+    { Type Process }
+    { ObjectId 3119 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_764B1951-AC51-4e06-A970-DB9F670B6CCB" }
+}
+
+NoteObject 2
+{
+    { Type Pspec }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 3121 }
+    { DescLine "This process accepts as input the weight of a person when he steps on to the scales. A person steps on the scales when he sees a green light. As soon as the person steps on the scales a red light comes on indicating that the scales are being used." }
+}
+
+ItemObject 3
+{
+    { Type ProcessSpec }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 3122 }
+}
+
+NoteObject 4
+{
+    { Type PerformanceRequirement }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 3124 }
+    { DescLine "As specified in the Manual." }
+}
+
+ItemObject 5
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 4 }
+    { ObjectId 3125 }
+}
+
+ItemObject 6
+{
+    { Type PerformanceRequirementName }
+    { Value "fixed" }
+    { NoteId 4 }
+    { ObjectId 3126 }
+}
+
+NoteObject 7
+{
+    { Type DerivedRequirement }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 3128 }
+    { DescLine "There are no derived requirements for this system." }
+}
+
+ItemObject 8
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 7 }
+    { ObjectId 3129 }
+}
+
+ItemObject 9
+{
+    { Type DerivedRequirementName }
+    { Value "N/A" }
+    { NoteId 7 }
+    { ObjectId 3130 }
+}
+
+NoteObject 10
+{
+    { Type SystemState }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 3132 }
+}
+
+ItemObject 11
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 10 }
+    { ObjectId 3133 }
+}
+
+ItemObject 12
+{
+    { Type SystemState }
+    { Value "steady" }
+    { NoteId 10 }
+    { ObjectId 3134 }
+}
+
+NoteObject 13
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 3136 }
+    { DescLine "This process accepts the weight of a passenger and computes his weight in kilograms." }
+}
+
+ItemObject 14
+{
+    { Type ObjectName }
+    { Value "accept weight" }
+    { NoteId 13 }
+    { ObjectId 3137 }
+}
+
+ItemObject 15
+{
+    { Type Author }
+    { Value "ide" }
+    { NoteId 13 }
+    { ObjectId 3138 }
+}
+
+ItemObject 16
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 13 }
+    { ObjectId 3139 }
+}
+
+NoteObject 17
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 3141 }
+    { DescLine "Modified." }
+}
+
+ItemObject 18
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 17 }
+    { ObjectId 3142 }
+}
+
+ItemObject 19
+{
+    { Type RequirementName }
+    { Value "weight-sub-system" }
+    { NoteId 17 }
+    { ObjectId 3143 }
+}
+
+ItemObject 20
+{
+    { Type RequirementDocument }
+    { Value "SSS" }
+    { NoteId 17 }
+    { ObjectId 3144 }
+}
+
+ItemObject 21
+{
+    { Type RequirementParagraph }
+    { Value "weight" }
+    { NoteId 17 }
+    { ObjectId 3145 }
+}
+
+ItemObject 22
+{
+    { Type ParagraphNumber }
+    { Value "2" }
+    { NoteId 17 }
+    { ObjectId 3146 }
+}
+
+ItemObject 23
+{
+    { Type QualificationMethod }
+    { Value "Test II" }
+    { NoteId 17 }
+    { ObjectId 3147 }
+}
+
+ItemObject 24
+{
+    { Type QualificationLevel }
+    { Value "A+" }
+    { NoteId 17 }
+    { ObjectId 3148 }
+}
+
+ItemObject 25
+{
+    { Type FormalTestParagraph }
+    { Value "22" }
+    { NoteId 17 }
+    { ObjectId 3149 }
+}
+
+NoteObject 26
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 3151 }
+}
+
+ItemObject 27
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 26 }
+    { ObjectId 3152 }
+}
+
+ItemObject 28
+{
+    { Type DocumentName }
+    { Value "SRS" }
+    { NoteId 26 }
+    { ObjectId 3153 }
+}
+
+ItemObject 29
+{
+    { Type DocumentNumber }
+    { Value "1" }
+    { NoteId 26 }
+    { ObjectId 3154 }
+}
+
+ItemObject 30
+{
+    { Type ParagraphNumber }
+    { Value "22" }
+    { NoteId 26 }
+    { ObjectId 3155 }
+}
+

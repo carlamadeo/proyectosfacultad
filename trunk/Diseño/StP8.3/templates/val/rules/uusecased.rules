@@ -1,0 +1,11 @@
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+Include "val/rules/val.feature"
+
+Include "uml/rules/uusecased_impl.rules"
+
+PassWord "5D7F7A00"
+

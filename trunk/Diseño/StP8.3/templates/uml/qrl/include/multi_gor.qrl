@@ -1,0 +1,501 @@
+// -----------------------
+// Multiple Global Rename 
+// -----------------------
+
+
+
+// Help on Script
+const string SCRIPT_DESCRIPTION = "Multiple Global Rename";
+script_help = "";
+
+// Externals
+external string e_GorUmlType = "";
+external_help = "UML model element type to rename: Actor, UseCase, Package, Class, Attribute, Operation.";
+
+external string e_GorOldName = "";
+external_help = "Part of the name of the model-elements that should be renamed. In UNIX regular expressions are allowed, on Windows platforms the rename is restricted to Wildcards like *ABC*.";
+
+external string e_GorNewName = "";
+external_help = "The substitution string";
+
+// This one will come in via a toggle button in the multi gor prop sheet in 8.1
+// until then we can use it via scriptman only, the propsheet uses the default 0
+external int e_GorOccurrence = 0;
+external_help = "In a *xxx* replacement, if 0: replace the first occurrence of xxx, if 1: replace the last occurence of xxx, if 2: replace every occurrence of xxx.";
+
+external boolean e_GorCheckImpact = True;
+external_help = "If True, check the impact only and find out, how matching names would be renamed";
+
+// We need the optional dependencies defined here
+#include "rules/qrl/uml_optional_dependencies.inc"
+// We need several structs and functions defined in uml.inc and its included files
+// and referenced in uml.app.types.qrl
+#include "rules/qrl/uml.inc"
+
+// MAIN
+int main() 
+{
+    boolean checkQuery = False;
+
+    string appType, 
+           newName, 
+           replace, 
+           substitute;
+
+    list   objectList;
+
+    node   object, 
+           newObject;
+
+    int     ocnt, ox, mx, nx;
+    
+    // somehow it works only if the externals are used once 
+    // so we send a message explaining what we are going to rename
+    message("Renaming " + e_GorOldName + " to " + e_GorNewName + " in " + e_GorUmlType + "-Elements");
+
+    // ECR 4052
+    // set defaults, common for Model Management and multi gor
+    set_multi_gor_defaults();
+
+    // Map UML element types to StP appTypes
+    if   (e_GorUmlType == "Package") {
+	 appType = "UmlPackage";
+    } 
+    else if (e_GorUmlType == "Class") {
+	 appType = "UmlClass";
+    } 
+    else if (e_GorUmlType == "Attribute") {
+	 appType = "UmlAttribute";
+    } 
+    else if (e_GorUmlType == "Operation") {
+	 appType = "UmlOperation";
+    } 
+    else if (e_GorUmlType == "UseCase") {
+	 appType = "UmlUseCase";
+    } 
+    else if (e_GorUmlType == "Actor") {
+	 appType = "UmlActor";
+    } // Add further apptypes here and in the multi-gor propsheet in stp.rules
+    else 
+    {
+	message ("The element type " + e_GorUmlType + " is not supported !");
+	return (1);
+    }
+
+
+    // make sure we have a string to substitute and a replacement
+    if ((e_GorOldName == NULL) || (e_GorOldName == "") || (e_GorOldName == " "))
+    {
+       message ("Please enter a valid search pattern !");
+       return (1);
+    } 
+
+    if ((e_GorNewName == NULL) 
+    ||  (e_GorNewName == "")
+    ||  (e_GorNewName == " "))
+    {
+       message ("Please enter a valid rename pattern !");
+       return (1);
+    } 
+
+
+    // Only prefix/suffix substitution is allowed, so check the
+    // correctness of the match and replacement strings
+    substitute = check_replacement(e_GorOldName, True);
+    replace    = check_replacement(e_GorNewName, False);
+
+       if (substitute == "#")
+       {
+       message ("Invalid string to replace: " + e_GorOldName);
+          return (1);
+       } 
+       if (replace == "#")
+       {
+          message ("Invalid replacement string: " + e_GorNewName);
+          return (1);
+       } 
+
+
+    // Check if there are editors running for this system. If yes quit.
+    if (check_running_editors ()) 
+       return (1);
+
+    // report when running in check impact mode
+    if   (e_GorCheckImpact) 
+	 print_error ("Running impact check only ...\n");
+    else print_error ("Running multiple renames ...\n");
+    
+
+    // loop through the list of all elements to rename
+    objectList = list_create("node", 0);
+    objectList = list_select("node[" + appType + " && node_refs && " +
+				   "name $ '" + e_GorOldName + "']");
+    ocnt       = list_count(objectList);
+
+    // As long as queries like *xxx are treated like *xxx*
+    // we have to manualy filter our objects !!!
+    mx = string_length(substitute);
+    nx = string_length(e_GorOldName);
+    if (string_extract(e_GorOldName, nx - 1, 1) != "*")
+       checkQuery = True;
+
+    if (ocnt > 0) 
+    {
+       for (ox = 0; ox < ocnt; ox++) 
+       {
+	   object = list_get(objectList, ox);
+
+	   newName = object.name;
+           nx      = string_length(newName);
+
+           // As long as queries like *xxx are treated like *xxx*
+           // we have to manualy filter our objects !!!
+           if (checkQuery)
+           { 
+              if (string_extract(newName, nx - mx, mx) != substitute)
+                 continue;
+           }           
+
+           // get the new name 
+           newName = qrl_replace(newName, substitute, replace);
+
+	   message(object.name + " -> " + newName);
+
+	   if ( ! e_GorCheckImpact ) 
+           {
+	      newObject = object;
+	      node_name_set(newObject, newName); // builtin gor function
+	      node_rename(object, newObject);    // builtin gor function
+	   }
+       }
+    } 
+    else // list of elements to rename was empty
+    {
+	 message("\nNo model elements found matching your pattern > " + 
+		      e_GorOldName + " < !\n" );
+	 return(1);
+    }
+
+    list_clear(objectList);
+    return(0);
+	
+}
+    
+
+// The unix_replace function is based on UNIX sed. 
+// It can handle regular expressions. 
+//
+// Unfortunately a similar tool is not available on Windows platforms !
+// As long as we cannot handle regular expresions similarly for both 
+// platforms, we cannot use this replacement function to avoid different 
+// behaviour on unix and windows.
+//
+// I kept the function code here to remember the best solution !!
+//
+/*    THIS FUNCTION IS NOT USED  !!!!!!!
+
+string unix_replace( string wholeName, string match, string replace ) 
+{
+    string sys_cmd;
+    string tmp_file = temp_file("stp","gor");
+    string result;
+
+    string start = string_extract( match, 0, 1 );
+    if( start != "*" && start != "^" ) {
+	match = "^" + match;
+    }
+
+    string end = string_extract( match, string_length( match ) - 1, 1 );
+    if( end != "*" && end != "$" ) {
+	match = match + "$";
+    }
+
+    match = string_strip( match, "B", "*" );
+    match = string_strip( match, "B", " " );
+    
+    sys_cmd = "echo \"" + wholeName + "\" | sed 's/" + match + "/" + 
+	replace + "/' " + " > " + tmp_file;
+    system( sys_cmd );
+
+    result = read_file( tmp_file );
+    result = string_strip( result, "T", "\n" );
+    delete_file( tmp_file );
+
+    return( result );
+}
+    
+***********************************************/
+
+
+// The qrl_replace function is used on all platforms now. 
+// It is restricted to the replacement of simple prefix/suffix strings
+// For replacement strings like *xxx* it can handle the replacement occurrence
+string qrl_replace( string wholeName, string match, string replace ) 
+{
+    int    scnt, sx, tcnt, tx;
+    int    start = 0;
+    string result = wholeName;  // init with original name
+    string extract, prefix, postfix;
+
+    // match should be a part of wholeName, but just to be sure ...
+    scnt    = string_length(match);
+    tcnt    = string_length(wholeName);
+
+    if (tcnt < scnt) { return result; }
+
+    // reverse everything to replace last occurrence as the first
+    if (e_GorOccurrence == 1)
+    {
+       wholeName = reverse_string(wholeName);
+       match     = reverse_string(match);
+       replace   = reverse_string(replace);
+    }
+
+    start   = string_find (wholeName, 0, match);
+    if (start == tcnt) { return result; }
+
+    // replace everywhere
+    if   (e_GorOccurrence == 2)
+    {
+         result = string_search_and_replace(wholeName, match, replace);
+    }
+    // replace first occurrence
+    else
+    {        
+    if   (start == 0) 
+	 prefix  = ""; 
+    else prefix = string_extract(wholeName, 0, start);
+
+    start = start + scnt;
+    if   (start >= tcnt) 
+	 postfix  = ""; 
+    else postfix = string_extract(wholeName, start, tcnt - start);
+
+    result = prefix + replace + postfix;
+    }
+
+    // reverse again if it was reversed
+    if (e_GorOccurrence == 1)
+       result = reverse_string(result);
+
+    return( result );
+}
+
+// returns the reverse of the given original string
+string reverse_string(string original)
+{
+    int    scnt, sx;
+    string reversed = "";
+
+    scnt = string_length(original);
+
+    for (sx = scnt - 1; sx >= 0; sx--)
+        reversed = reversed + string_extract(original, sx, 1);
+
+    return reversed;
+}
+
+// checks if match and replacement strings are valid for prefix substitution,
+// returns the string withoud wildcards * or a # if invalid
+string check_replacement(string toCheck, boolean checkOccurrence)
+{
+    boolean repFirst,
+            repLast;
+    int    scnt, sx;
+    string extract;
+
+    repFirst = False;
+    repLast  = False;
+
+
+    // is the string valid ? 
+    // The first and/or last character may be a * but no other * are allowed. 
+    // Rexular Expressions are invalid, so check for ^, $ and ! also
+
+    // first make sure it is not empty
+    scnt = string_length(toCheck);
+    if (scnt == 0) { return "#";}
+
+    // now get rid of leading and tailing blanks
+    if (scnt > 0) {toCheck = string_strip( toCheck, "B", " " );}
+    // and make sure there is something left
+    scnt = string_length(toCheck);
+    if (scnt == 0) { return "#";}
+
+    // next get rid of the tailing * and remember to replace the first occurrence
+    if (string_extract(toCheck, scnt - 1, 1) == "*") 
+    {   
+       toCheck  = string_extract(toCheck, 0, scnt-1); 
+       repFirst = True;
+    }
+    // and make sure there is something left
+    scnt = string_length(toCheck);
+    if (scnt == 0) { return "#";}
+
+    // next get rid of the leading * and remember to replace the last occurrence
+    if (string_extract(toCheck, 0, 1) == "*") 
+    {   
+       toCheck = string_extract(toCheck, 1, scnt-1); 
+       repLast = True;
+    }
+    // and make sure there is something left
+    scnt = string_length(toCheck);
+    if (scnt == 0) { return "#";}
+
+    // next make sure it contains nothing forbidden
+    for (sx = 0; sx < scnt; sx++)
+    {
+        extract = string_extract(toCheck, sx, 1);
+        if ((extract == "*") 
+        ||  (extract == "$") 
+        ||  (extract == "^") 
+        ||  (extract == "!"))
+        { break; }
+    }
+    // If the match string contains invalid characters, return #
+    if (sx < scnt) { return "#";}
+    
+    // check where and how much to replace
+    if (checkOccurrence)
+    {
+        // query like xxx or xxx*
+        if (!repLast && (e_GorOccurrence != 0))
+           e_GorOccurrence = 0; 
+
+        // // query like *xxx 
+        if (!repFirst && repLast && (e_GorOccurrence != 1))
+           e_GorOccurrence = 1; 
+
+        if   (e_GorOccurrence == 0)
+             message("The first occurrence of " + e_GorOldName + " will be replaced !");
+        else if (e_GorOccurrence == 1)
+             message("The last occurrence of " + e_GorOldName + " will be replaced !");
+        else message("Every occurrence of " + e_GorOldName + " will be replaced !");
+
+    }
+
+    return (toCheck);
+}
+
+
+// check, if there are (auto-)locked files in the system and report them
+int check_running_editors() 
+{
+  boolean   isLocked = False;
+
+  file      lockedFile;
+
+  file_lock lock;
+
+  int       fcnt, fx;
+
+  list      fileLocks;
+
+  
+  fileLocks = list_create("file_lock", 0);
+  // ECR 4052 Changed for MM 
+  fileLocks = list_select("file_lock[(type == Automatic || type == System) && file]");
+  fcnt      = list_count(fileLocks);
+
+  if ( fcnt > 0 ) 
+  {
+     for (fx = 0; fx < fcnt; fx++) 
+     {
+         lock       = list_get(fileLocks, fx);
+         lockedFile = find_by_query("file[file_locks[id==${lock.id}]]");
+         if( lockedFile != NULL ) 
+         {   
+             if( isLocked == False )
+                message( "The follwing files are currently locked on this system:\n" );
+             message( lockedFile.type + " '" + lockedFile.name + "': " );
+             message( "--> " + lock.type + " locked by " + lock.user + " at " + lock.time );
+             isLocked = True;
+         }
+     }
+
+     message( "Please remove these locks (quit the editors) before running Multiple Global Rename.\n" );
+  }
+  list_clear(fileLocks);
+
+  if (isLocked) { return(1); }
+
+  return(0);  
+}
+
+
+// This function uses the msgd to check for running editors.
+// context is current_projdir() + current_system()
+//
+// msgd_check_running_editors is currently not used !
+/*
+int msgd_check_running_editors( string context ) 
+{
+    string tmp_file = temp_file("stp","gor");
+    string sys_cmd = "msgdiag -C '>#' > " + tmp_file;
+    int i, cl, pos;
+    boolean context_found = False;
+    boolean connection_appended = False;
+    list connections = list_create( "string", 0 );
+    list editors = list_create( "string", 0 );
+    string connection, editor;
+
+    system( sys_cmd );
+    string msgdiag_out = read_file( tmp_file );
+    delete_file( tmp_file );
+
+    list all_connections = string_to_list( msgdiag_out, "\n" );
+
+
+    for( i=0; i<list_count(all_connections); i++ ) {
+	connection = list_get( all_connections, i );
+	connection = string_strip( connection, "L", " " );
+	cl = string_length( connection );
+	if( string_find( connection, 0, "Context " + context ) < cl ) {
+	    context_found = True;
+	} else if( context_found ) {
+	    connection_appended = True;
+	    list_append( connections, connection );
+	} 
+	if( string_find( connection, 0, "Context " ) < cl && connection_appended ) {
+	    context_found = False;
+	    connection_appended = False;
+	    list_delete( connections, list_count( connections )-1 );
+	}
+    }
+
+    //    message( list_to_string( connections, "\n" ) );
+
+    for( i=0; i<list_count(connections); i++ ) {
+	connection = list_get( connections, i );
+	cl = string_length( connection );
+	pos = string_find( connection, 0, " " );
+	if( pos < cl ) {
+	    editor = string_extract( connection, 0, pos );
+	    if(editor != "msgdiag" && editor != "qrp" &&
+	       editor != "stp" && editor != "ngoae" ) {
+		list_append( editors, connection );
+	    }
+	}
+    }
+
+    if( list_count( editors ) > 0 ) {
+
+	message( "The following editors are running on the current system:\n" );
+
+	for( i=0; i<list_count( editors ); i++ ) {
+	    connection = list_get( editors, i );
+	    message( connection );
+	}
+	message( "\nPlease quit these editors before running Multi-GOR.\n" );
+	return( 0 );
+    } else {
+	return( 1 );
+    }
+}
+*******************************/
+
+
+
+
+
+

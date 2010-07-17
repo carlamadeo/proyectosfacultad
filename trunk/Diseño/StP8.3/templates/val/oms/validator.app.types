@@ -1,0 +1,40 @@
+
+// StP/Validator
+
+NoteObject	810002	TTestUnitDefinition {}
+NoteObject	810003	TScenarioDefinition {}
+NoteObject      810004  TScriptCommand {}
+NoteObject      810005  TScriptVariable {}
+NoteObject	810006  TInitScriptCommand {}
+NoteObject	810007  TTermScriptCommand {}
+NoteObject	810008	Measurements {}
+NoteObject	810009	ExpectedOutput {}
+
+NoteObject      810010  UmlActorDefinition {}
+NoteObject      810011  UmlScenarioDefinition {}
+NoteObject      810012  StartEndStates {}
+
+
+ItemObject	510001	TTestUnitID	{ { DataType "String" } }
+ItemObject	510002	TSubject	{ { DataType "String" } }
+ItemObject	510003	TIncludeFiles	{ { DataType "String" } }
+ItemObject	510004	TDataType	{ { DataType "Predefined_DataType" } }
+ItemObject	510005	TFixedValue	{ { DataType "String" } }
+ItemObject	510006	TExhaustiveTest	{ { DataType "Boolean" } }
+ItemObject	510007	TDataSequence	{ { DataType "int" } }
+ItemObject      510008  TScriptVariable { { DataType "String" } }
+ItemObject	510009	TScriptCommand	{ { DataType "Boolean" } }
+
+ItemObject	510010	OperationDuration { { DataType "string" } }
+ItemObject	510011	TestDuration { { DataType "string" } }
+ItemObject	510012	TimeUnit { { DataType "timeunit_type" } }
+ItemObject	510013	EvaluationTime { { DataType "string" } }
+ItemObject	510014	CompletionStatus { { DataType "completion_status_type" } }
+ItemObject	510015	HasExpectedOutput { { DataType "Boolean" } }
+ItemObject	510016	SetUpTime { { DataType "string" } }
+ItemObject	510017	ExpectedOutputCommand { { DataType "string" } }
+ItemObject	510018	ScenarioSequence	{ { DataType "int" } }
+ItemObject      510019  OutputArgumentList { { DataType "string" } }
+ItemObject      510020  OutputHasFixedValue  { { DataType "boolean" } }
+
+// End StP/Validator

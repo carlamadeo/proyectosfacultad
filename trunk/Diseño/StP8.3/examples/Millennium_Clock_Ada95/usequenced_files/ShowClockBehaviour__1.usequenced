@@ -1,0 +1,734 @@
+Diagram UmlSequenceDiagram
+{
+    { Name "ShowClockBehaviour__1" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -487 }
+    { PanY -331 }
+    { Alignment 32 }
+    { GUID "UID_3A23E04F-34FB-11d6-8DB9-00500445CF96" }
+    { Summary
+        { Nodes 7 }
+        { Arcs 8 }
+    }
+}
+
+Node 2
+{
+    { Type ScenarioInstance }
+    { Loc -10 -206 }
+    { Scale 1746.00 45.00 }
+    { Label
+        { Text "Show_Clock_Behaviour(UmlUseCase:ShowClockBehaviour)" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ScenarioMapping }
+        { ID 1282 }
+        { GUID "UID_6E951D6A-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3353 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 3355 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ParentName }
+        { ID 3354 }
+    }
+}
+
+Node 4
+{
+    { Type Actor }
+    { Loc 371 96 }
+    { Scale 128.00 1456.00 }
+    { Label
+        { Text "Watchuser" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 979 }
+        { GUID "UID_6E951D6B-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Node 61
+{
+    { Type PassiveObject }
+    { Loc 186 96 }
+    { Scale 128.00 1456.00 }
+    { Label
+        { Text ":Display" }
+    }
+    { PropertyList
+        { Property
+            { Name "AnonymousName" }
+            { Value "%%object%%934367638_282" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 3168 }
+        { GUID "UID_73727F31-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 3170 }
+        { GUID "UID_22462495-CE14-11d5-A046-0010A4B8EFF8" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 3356 }
+        { GUID "UID_22462507-CE14-11d5-A046-0010A4B8EFF8" }
+    }
+}
+
+Node 94
+{
+    { Type PassiveObject }
+    { Loc -184 96 }
+    { Scale 128.00 1456.00 }
+    { Label
+        { Text ":Door" }
+    }
+    { PropertyList
+        { Property
+            { Name "AnonymousName" }
+            { Value "%%object%%934466737_358" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 965 }
+        { GUID "UID_73727F35-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 3172 }
+        { GUID "UID_224624AE-CE14-11d5-A046-0010A4B8EFF8" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 1263 }
+        { GUID "UID_2246250C-CE14-11d5-A046-0010A4B8EFF8" }
+    }
+}
+
+Node 101
+{
+    { Type PassiveObject }
+    { Loc 1 96 }
+    { Scale 128.00 1456.00 }
+    { Label
+        { Text ":ClockBird" }
+    }
+    { PropertyList
+        { Property
+            { Name "AnonymousName" }
+            { Value "%%object%%934466798_358" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 3357 }
+        { GUID "UID_6E951D6E-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 3359 }
+        { GUID "UID_22462516-CE14-11d5-A046-0010A4B8EFF8" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 3358 }
+        { GUID "UID_22462513-CE14-11d5-A046-0010A4B8EFF8" }
+    }
+}
+
+Node 105
+{
+    { Type PassiveObject }
+    { Loc -369 96 }
+    { Scale 128.00 1456.00 }
+    { Label
+        { Text ":Clockwork" }
+    }
+    { PropertyList
+        { Property
+            { Name "AnonymousName" }
+            { Value "%%object%%934466897_358" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 951 }
+        { GUID "UID_73727F34-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 3112 }
+        { GUID "UID_2246246E-CE14-11d5-A046-0010A4B8EFF8" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 3360 }
+        { GUID "UID_2246251A-CE14-11d5-A046-0010A4B8EFF8" }
+    }
+}
+
+Arc 14
+{
+    { Type ReturnMessage }
+    { From
+        { ID 61 }
+        { Loc 192 18 }
+        { Offset 0 -78 }
+    }
+    { To
+        { ID 4 }
+        { Loc 369 18 }
+        { Offset 0 -78 }
+    }
+    { Label
+        { Text "showTime" }
+    }
+}
+
+Arc 16
+{
+    { Type ReturnMessage }
+    { From
+        { ID 61 }
+        { Loc 192 122 }
+        { Offset 0 26 }
+    }
+    { To
+        { ID 4 }
+        { Loc 369 122 }
+        { Offset 0 26 }
+    }
+    { Label
+        { Text "cry" }
+    }
+}
+
+Arc 40
+{
+    { Type ReturnMessage }
+    { From
+        { ID 61 }
+        { Loc 192 70 }
+        { Offset 0 -26 }
+    }
+    { To
+        { ID 4 }
+        { Loc 369 70 }
+        { Offset 0 -26 }
+    }
+    { Label
+        { Text "Door opened" }
+    }
+}
+
+Arc 67
+{
+    { Type ReturnMessage }
+    { From
+        { ID 61 }
+        { Loc 192 174 }
+        { Offset 0 78 }
+    }
+    { To
+        { ID 4 }
+        { Loc 369 174 }
+        { Offset 0 78 }
+    }
+    { Label
+        { Text "Door closed" }
+    }
+}
+
+Arc 71
+{
+    { Type SimpleMessage }
+    { From
+        { ID 105 }
+        { Loc -363 -8 }
+        { Offset 0 -104 }
+    }
+    { To
+        { ID 61 }
+        { Loc 180 -8 }
+        { Offset 0 -104 }
+    }
+    { Label
+        { Text "showTime(hour, minute)" }
+    }
+}
+
+Arc 95
+{
+    { Type SimpleMessage }
+    { From
+        { ID 94 }
+        { Loc -178 44 }
+        { Offset 0 -52 }
+    }
+    { To
+        { ID 61 }
+        { Loc 180 44 }
+        { Offset 0 -52 }
+    }
+    { Label
+        { Text "Door opened" }
+    }
+}
+
+Arc 97
+{
+    { Type SimpleMessage }
+    { From
+        { ID 94 }
+        { Loc -178 148 }
+        { Offset 0 52 }
+    }
+    { To
+        { ID 61 }
+        { Loc 180 148 }
+        { Offset 0 52 }
+    }
+    { Label
+        { Text "Door closed" }
+    }
+}
+
+Arc 102
+{
+    { Type SimpleMessage }
+    { From
+        { ID 101 }
+        { Loc 7 96 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 61 }
+        { Loc 180 96 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "cry" }
+    }
+}
+
+Cntx 104
+{
+    { Type Constraint }
+    { Loc 54 78 }
+    { Scale 734.00 45.00 }
+    { Label
+        { Text "either owl or coocoo cries" }
+    }
+    { Parent 95 }
+    { Object
+        { PDMType Cntx }
+        { MappingName Default }
+        { ID 3362 }
+        { GUID "UID_6E951D70-6EAE-11d4-8044-00104BF16798" }
+    }
+}
+
+Link 15
+{
+    { FirstArc 14 }
+    { LastArc 14 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 3390 }
+        { GUID "UID_6E951D74-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3392 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 3398 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 3397 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 3396 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 3395 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 3394 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 3393 }
+    }
+}
+
+Link 17
+{
+    { FirstArc 16 }
+    { LastArc 16 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 3381 }
+        { GUID "UID_6E951D73-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3383 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 3389 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 3388 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 3387 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 3386 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 3385 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 3384 }
+    }
+}
+
+Link 41
+{
+    { FirstArc 40 }
+    { LastArc 40 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 3372 }
+        { GUID "UID_6E951D72-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3374 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 3380 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 3379 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 3378 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 3377 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 3376 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 3375 }
+    }
+}
+
+Link 68
+{
+    { FirstArc 67 }
+    { LastArc 67 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 3363 }
+        { GUID "UID_6E951D71-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3365 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 3371 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 3370 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 3369 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 3368 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 3367 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 3366 }
+    }
+}
+
+Link 72
+{
+    { FirstArc 71 }
+    { LastArc 71 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 3425 }
+        { GUID "UID_6E951D78-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3427 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 3433 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 3432 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 3431 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 3430 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 3429 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 3428 }
+    }
+}
+
+Link 96
+{
+    { FirstArc 95 }
+    { LastArc 95 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 3361 }
+        { GUID "UID_6E951D76-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3409 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 3415 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 3414 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 3413 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 3412 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 3411 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 3410 }
+    }
+}
+
+Link 98
+{
+    { FirstArc 97 }
+    { LastArc 97 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 3399 }
+        { GUID "UID_6E951D75-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3401 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 3407 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 3406 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 3405 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 3404 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 3403 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 3402 }
+    }
+}
+
+Link 103
+{
+    { FirstArc 102 }
+    { LastArc 102 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 3416 }
+        { GUID "UID_6E951D77-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3418 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 3424 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 3423 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 3422 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 3421 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 3420 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 3419 }
+    }
+}

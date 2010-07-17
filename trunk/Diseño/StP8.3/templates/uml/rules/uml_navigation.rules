@@ -1,0 +1,26 @@
+// New file for ECR3785
+
+// Several Navigation Targets for all node Symbols
+//
+// The TypeSet UserNavigationNodeTypes must be defined in the
+// rules files for all uml editors 
+//
+// These navigations do not pop up the disturbing error message
+// if no other navigation target is available but will simply 
+// highlight the selected node
+
+NodeSymbol NavigationNodeTypes
+{
+    // Navigate to any symbol with the same name
+    { Navigation
+		{ Name AnyNodeSymbolWithTheSameName }
+		{ Label "Any Symbol With The Same Name" }
+		{ TargetFunc "FindAnyNodeSymbolWithTheSameName(\"${node.name}\",${file.id});" }
+    }
+    // Navigate to any reference of the selected symbol
+    { Navigation
+		{ Name AnyViewOfSelectedNodeSymbol }
+		{ Label "Any Reference Of The Selected Symbol" }
+		{ TargetFunc "FindAnyViewOfSelectedNodeSymbol(${node.id},${file.id});" }
+    }
+}

@@ -1,0 +1,30 @@
+
+
+module	Finalize Transaction
+
+PDL generated
+	09/26/01 12:59:16 by joegun@LASERBEAK
+This module has 2 formal parameters:
+	AccountInformation
+	TransactionData
+
+input data params
+	AccountInformation
+	TransactionData
+
+input flags
+
+output data params
+
+output flags
+
+calls
+
+called by
+	
+
+description
+The Finalize Transaction module verifies the transaction and prints a receipt.
+
+end module
+

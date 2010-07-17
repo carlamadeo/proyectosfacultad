@@ -1,0 +1,113 @@
+FileObject 1
+{
+    { Name "a155" }
+    { Type ObjectAnnotation }
+    { GUID "UID_D3527F4C-6A6F-4c65-9D4B-EEADC4E7C7B7" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "process_weight.c" }
+    { Type SEFile }
+    { ObjectId 1717 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_1EEA8DB2-5254-4960-8D94-5294AEA4F70B" }
+}
+
+NodeObject 99997
+{
+    { Name "process weight" }
+    { Type Module }
+    { ObjectId 1718 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_42BCAD54-FAFB-4d34-A9C1-3A2D906F273F" }
+}
+
+NodeObject 99996
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99995
+{
+    { Name "process_statistics.c" }
+    { Type SEFile }
+    { ObjectId 605 }
+    { Sig "" }
+    { ScopeNodeId 99996 }
+    { GUID "UID_909BB126-1DBF-4360-9E6A-9464DF2E3214" }
+}
+
+NodeObject 99994
+{
+    { Name "process statistics" }
+    { Type Module }
+    { ObjectId 606 }
+    { Sig "" }
+    { ScopeNodeId 99995 }
+    { GUID "UID_E3D9AFEB-C6EC-4a53-A19A-B5DC053A0169" }
+}
+
+LinkObject 99993
+{
+    { Name "" }
+    { Type SubprogramCall }
+    { ObjectId 2507 }
+    { Sig "" }
+    { ToNodeId 99997 }
+    { FromNodeId 99994 }
+    { GUID "UID_697D8371-5C25-4329-82B6-CA136274936D" }
+}
+
+CntxObject 99992
+{
+    { Name "N_Kgs" }
+    { Type DataOut }
+    { ObjectId 2515 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { LinkId 99993 }
+    { GUID "UID_A1DD6E1D-18D9-4d4f-9E79-0DF75255D385" }
+}
+
+NoteObject 2
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99992 }
+    { ObjectId 2517 }
+}
+
+ItemObject 3
+{
+    { Type ObjectName }
+    { Value "N_Kgs" }
+    { NoteId 2 }
+    { ObjectId 2518 }
+}
+
+NoteObject 4
+{
+    { Type ParameterDefinition }
+    { Name "" }
+    { OwnerId 99992 }
+    { ObjectId 2520 }
+}
+

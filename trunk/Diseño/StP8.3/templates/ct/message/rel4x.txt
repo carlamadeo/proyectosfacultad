@@ -1,0 +1,74 @@
+%
+% 	sccsid[] = @(#)rel4x.txt	4.1  94/01/14
+% 	StP/Core
+% 	Confidential property of Interactive Development Environments, Inc.
+% 	Copyright (c) 1992-1993
+% 	All rights reserved
+%
+
+% misc. messages
+9500;Put
+9501;Get
+% linksvc messages
+9502;Symbol must have label -- Select canceled
+9503;Flow must have label -- Select canceled
+9504;Invalid label -- Select canceled
+9505;Select canceled
+9506;Selected %s
+9507;You can't select the background -- please select an object
+9508;Select a link target
+9509;NSE link
+9510;Can't select from this editor
+9511;You can't select this type of arc -- Select canceled
+9512;linksvc
+9513;Exit linksvc first
+9514;No linksvc available
+9515;Please save diagram first -- linksvc canceled
+9516;Please exit linksvc mode before editing diagram
+% More miscellaneous msgs
+9550;Annotation deleted
+% 9600 to 9750 reserved for dod_tabgen
+9802;License Server has died, Must exit program
+9803;License Server has died, Trying to reconnect
+9804;License Server Reconnected
+9805;cannot find license file
+9806;invalid license file syntax
+9807;cannot connect to a license server
+9808;max # of users reached - contact IDE Sales Rep for more licenses
+9809;no such feature exists
+9810;no TCP "license" service exists
+9811;no socket connection to license manager server
+9812;encryption code in license file is inconsistent
+9813;invalid host
+9814;feature has expired - contact IDE Sales Rep for extension
+9815;invalid date format in license file
+9816;invalid returned data from license server
+9817;no SERVER lines in license file
+9818;bad SERVER hostname in license file
+9819;cannot connect to license server
+9820;cannot read data from license server
+9821;cannot write data to license server
+9822;feature not supported - contact IDE Sales Rep to add
+9823;error in select system call
+9824;license server busy (no majority)
+9825;license file does not support this version - Call IDE Sales Rep
+9826;feature checkin failure detected at license server
+9827;license server temporarily busy (new server connecting)
+9828;users are queued for this feature
+9829;license server does not support this version of this feature
+9830;request for more licenses than this feature supports
+9831;cannot read /dev/kmem
+9832;cannot read /vmunix
+9833;undefined error
+9834;invocation is illegal for this binary, exiting
+9835;checkout failed
+9836;Maximum # users for \"%s\" reached - Try again later.
+9837;Users are:
+9838;%s at %s, started on %s %d/%d at %d:%s%d
+9839;IN QUEUE
+9840;licenses
+9841;disabling licensing
+9842;cannot get License Manager file data
+9843;FLM error
+9844;License file '%s' does not exist,\n
+9845;check your nlm_license_dat ToolInfo variable\n

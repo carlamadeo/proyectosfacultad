@@ -1,0 +1,6627 @@
+//
+
+//      StP/UML
+
+//      Confidential property of Aonix
+
+//      Copyright (c) 1998
+
+//      All rights reserved
+
+
+
+Include "uml/rules/uml.feature"
+
+Include "uml/rules/gte_uml_object_rename.rules"
+
+
+
+TableType 1 UmlClassTable
+
+{ 
+
+  { Label "Class Table" } 
+
+  { SyntaxCheckFunc CheckSyntax }
+
+  { Initialize
+
+      { Secured
+
+          // key positions in the table
+
+		  { MainDefinitionVsect 1 }
+
+       	  { SecondaryDefinitionVsect 2 }
+
+       	  { CxxDefinitionVsect 3 }
+
+       	  { Ada95DefinitionVsect 4 }
+
+       	  { JavaDefinitionVsect 5 }
+
+	  { IDLDefinitionVsect 6 }
+
+       	  { TOOLDefinitionVsect 7 }
+
+
+
+		  { ClassHsect 1 }
+
+		  { NameVsect 1 }
+
+		  { TypeVsect 2 } 
+
+		  { SignatureVsect 3 }
+
+
+
+		  { AttributeHsect 3 } 
+
+		  { AttributeNameCol 1 } 
+
+		  { AttributeTypeCol 2 }
+
+		  { AttributeDefaultCol 3 } 
+
+
+
+		  { OperationHsect 5 } 
+
+		  { OperationNameCol 1 }
+
+		  { OperationSignatureCol 2 }
+
+		  { OperationReturnTypeCol 3 } 
+
+
+
+		  { InheritedOperationHsect 7 }
+
+		  { InheritedOperationNameCol 1 }
+
+		  { InheritedOperationSignatureCol 2 }
+
+		  { InheritedOperationReturnTypeCol 3 } 
+
+
+
+		  { SignalReceivedHsect 9 }
+
+		  { SignalSentHsect 11 }
+
+		  { SignalNameCol 1 }
+
+		  { SignalSignatureCol 2 }
+
+
+
+
+
+		  // positions for design and implementation items
+
+		  // relative to their respective
+
+		  // hsects and vsects from above
+
+
+
+		  // design
+
+		  { AttributeDesignVisibilityCol 1 } 
+
+		  { AttributeDesignClassCol 2 } 
+
+		  { AttributeDesignDerivedCol 3 } 
+
+		  { OperationDesignVisibilityCol 1 } 
+
+		  { OperationDesignClassCol 2 } 
+
+		  { OperationDesignAbstractCol 3 } 
+
+		  { OperationDesignThrowsCol 4 } 
+
+		  // cxx
+
+		  { AttributeImplCxxConstCol 1 }
+
+		  { AttributeImplCxxPrivCol 2 } 
+
+		  { AttributeImplCxxVolatileCol 3 }
+
+		  { OperationImplCxxConstCol 1 }
+
+		  { OperationImplCxxPrivCol 2 } 
+
+		  { OperationImplCxxVirtCol 3 } 
+
+		  { OperationImplCxxInline 4 } 
+
+		  { OperationImplCxxCtorInitList 5 } 
+
+		  // Ada_95
+
+		  { AttributeImplAda95AliasedCol 1 } 
+
+		  { AttributeImplAda95ClassAttrVisibilityCol 2 } 
+
+		  { OperationImplAda95VisibilityCol 1 } 
+
+		  { OperationImplAda95SubunitCol 2 } 
+
+		  { OperationImplAda95InlineCol 3 }
+
+		  // Java
+
+		  { AttributeImplJavaVisibilityCol 1 } 
+
+		  { AttributeImplJavaFinalCol 2 } 
+
+		  { AttributeImplJavaTransientCol 3 } 
+
+		  { AttributeImplJavaVolatileCol 4 } 
+
+		  { OperationImplJavaVisibilityCol 1 } 
+
+		  { OperationImplJavaFinalCol 2 } 
+
+		  { OperationImplJavaNativeCol 3 } 
+
+		  { OperationImplJavaSynchronizedCol 4 } 
+
+ 	          // IDL
+
+	          { AttributeImplIDLTypeCol 1 }
+
+	          { AttributeImplIDLReadOnlyCol 2 }
+
+	          { OperationImplIDLSignatureCol 1 }
+
+	          { OperationImplIDLReturnTypeCol 2 }
+
+	          { OperationImplIDLAttributeCol 3 }
+
+	          { OperationImplIDLContextCol 4 }
+
+	          // TOOL
+
+	          { AttributeImplTOOLPrivilegeCol 1 } 
+
+	          { AttributeImplTOOLSetCol 2 } 
+
+	          { AttributeImplTOOLGetCol 3 } 
+
+	          { OperationImplTOOLPrivilegeCol 1 } 
+
+	          { OperationImplTOOLReturnEventCol 2 } 
+
+	          { OperationImplTOOLExceptionEventCol 3 } 
+
+	          { OperationImplTOOLCopyReturnCol 4 } 
+
+	          { OperationImplTOOLKindCol 5 } 
+
+      }
+
+  }
+
+
+
+  { ColWidth 80 }
+
+  { RowHeight 28 }
+
+
+
+  // The first section define the OMT class
+
+  // to which the attributes and operations are attached.
+
+  // We presume that these sections are initialized when the 
+
+  // able is first navigated to from an OMT diagram.
+
+
+
+  { Hsect 
+
+      { Label "Class" }
+
+      { Frozen True }
+
+      { ReadOnly True }	
+
+      { Scrollbar False }
+
+      { Shading Shade1 }
+
+      { RowHeight 35 }
+
+      { Vsect 
+
+          { Frozen True }
+
+		  { ColWidth 160 }
+
+		  { Row
+
+			  { RepeatToEnd True } 
+
+			  { Type Class } 
+
+			  { Cell
+
+				  { Type Class } 
+
+				  { ReadOnly False }	
+
+				  { HspanSection True } 
+
+				  { Bold True }
+
+			  }
+
+		  }
+
+	  }
+
+      { Vsect 
+
+          { Frozen True }
+
+		  { Row
+
+			  { RepeatToEnd True } 
+
+			  { Cell
+
+				  { Label "Analysis Items" }
+
+				  { HspanSection True } 
+
+				  { Bold True }
+
+			  }
+
+		  }
+
+	  }
+
+      { Vsect 
+
+		  { Frozen True }
+
+		  { Row
+
+			  { RepeatToEnd True } 
+
+			  { Cell
+
+				  { Label "C++ Items" }  
+
+				  { HspanSection True } 
+
+				  { Bold True }
+
+			  }
+
+		  }
+
+	  } 
+
+      { Vsect 
+
+		  { Frozen True }
+
+		  { Row
+
+			  { RepeatToEnd True } 
+
+			  { Cell
+
+				  { Label "Ada_95 Items" }
+
+				  { HspanSection True } 
+
+				  { Bold True }
+
+			  }
+
+		  }
+
+	  }
+
+      { Vsect 
+
+		  { Frozen True }
+
+		  { Row
+
+			  { RepeatToEnd True } 
+
+			  { Cell
+
+				  { Label "Java Items" }
+
+				  { HspanSection True } 
+
+				  { Bold True }
+
+			  }
+
+		  }
+
+	  }
+
+      { Vsect 
+
+		  { Frozen True }
+
+		  { Row
+
+			  { RepeatToEnd True } 
+
+			  { Cell
+
+				  { Label "IDL Items" }
+
+				  { HspanSection True } 
+
+				  { Bold True }
+
+			  }
+
+		  }
+
+	  }  
+
+      { Vsect 
+
+	          { Frozen True }
+
+	          { Row
+
+	                  { RepeatToEnd True } 
+
+	                  { Cell
+
+		                 { Label "TOOL Items" }
+
+		                 { HspanSection True } 
+
+		                 { Bold True } 
+
+                          } 
+
+                  } 
+
+     }  
+
+  } 
+
+
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  // attributes
+
+  { Hsect 
+
+      { Label "Attributes Header" }
+
+      { Frozen True }
+
+      { Scrollbar False } 
+
+      { ReadOnly True }
+
+      { Shading Shade1 }
+
+      { BottomBorder { Thickness Thin } }
+
+      { Vsect 
+
+		  { Label "Class Member Definitions" }
+
+		  { Row
+
+			  { Cell
+
+				  { Label "Attribute" }
+
+				  { Bold True }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Label "Type" } 
+
+				  { Bold True } 
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Label "Default Value" }
+
+				  { Bold True }
+
+				  { HorzAlignment Left }
+
+			  }
+
+		  }
+
+	  }
+
+      { Vsect 	
+
+		  { LeftBorder { Thickness Thin } }
+
+		  { Frozen True }
+
+		  { Hidden True }
+
+		  { Label "Analysis Items" }
+
+		  { Row
+
+			  { Cell
+
+				  { Label "Visibility" }
+
+				  { Width 90 }
+
+				  { Bold True }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Label "Class Attr?" }
+
+				  { Width 90 }
+
+				  { Bold True }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Label "Derived?" } 
+
+				  { Bold True } 
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { HspanSection True }
+
+			  }
+
+		  }
+
+	  }
+
+      { Vsect 	
+
+		  { LeftBorder { Thickness Thin } }
+
+		  { Frozen True }
+
+		  { Hidden True }
+
+		  { Label "C++ Implementation Items" }
+
+		  { Row
+
+			  { Cell
+
+				  { Label "Const?" }
+
+				  { Bold True }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Label "Visibility" }
+
+				  { Width 90 }
+
+				  { Bold True }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Label "Volatile?" }
+
+				  { Bold True }
+
+				  { HorzAlignment Left }
+
+			  } 
+
+			  { Cell
+
+				  { HspanSection True }
+
+			  }
+
+		  }
+
+	  } 
+
+      { Vsect 	
+
+		  { LeftBorder { Thickness Thin } }
+
+		  { Frozen True }
+
+		  { Hidden True }
+
+		  { Label "Ada_95 Implementation Items" }
+
+		  { Row
+
+			  { Cell
+
+				  { Label "Aliased?" }
+
+				  { Bold True }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Label "CA Visibility" }
+
+				  { Bold True }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { HspanSection True }
+
+			  }
+
+		  }
+
+	  }
+
+      { Vsect 	
+
+		  { LeftBorder { Thickness Thin } }
+
+		  { Frozen True }
+
+		  { Hidden True }
+
+		  { Label "Java Implementation Items" }
+
+		  { Row
+
+			  { Cell
+
+				  { Label "Visibility" }
+
+				  { Width 90 }
+
+				  { Bold True }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Label "Final?" } 
+
+				  { Bold True } 
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Label "Transient?" } 
+
+				  { Bold True } 
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Label "Volatile?" } 
+
+				  { Bold True } 
+
+				  { HorzAlignment Left }
+
+			  }
+
+		  }
+
+	  } 
+
+      { Vsect
+
+	  { LeftBorder { Thickness Thin } }
+
+	  { Frozen True }
+
+	  { Hidden True }
+
+	  { Label "IDL Implementation Items" }
+
+	  { Row
+
+	      { Cell
+
+		  { Label "Type" }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Label "Read Only?" } 
+
+	          { Width 100 }
+
+		  { Bold True } 
+
+		  { HorzAlignment Left } } 
+
+              { Cell
+
+		  { HspanSection True } } } } 
+
+      { Vsect 	
+
+	  { LeftBorder { Thickness Thin } }
+
+	  { Frozen True }
+
+	  { Hidden True }
+
+	  { Label "TOOL Implementation Items" }
+
+	  { Row
+
+	      { Cell
+
+		  { Label "Privilege" }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Label "Set Expr" } 
+
+		  { Bold True } 
+
+		  { HorzAlignment Left }
+
+		  { Width 160 } } 
+
+	      { Cell
+
+		  { Label "Get Expr" } 
+
+		  { Bold True } 
+
+		  { Width 160 } 
+
+		  { HorzAlignment Left } } 
+
+              { Cell
+
+		  { HspanSection True } } } } 
+
+  }
+
+  { Hsect 
+
+      { Type AttributeHsect }
+
+      { Label "Attributes" }
+
+      { Vsect 
+
+		  { Row
+
+			  { RepeatToEnd True }
+
+			  { Type AttributeDefinitionRow }
+
+			  { Cell
+
+				  { Type AttributeName }
+
+				  { HorzAlignment Left } }
+
+			  { Cell
+
+				  { Type AttributeType }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Type AttributeDefaultValue }
+
+				  { HorzAlignment Left }
+
+			  }
+
+		  }
+
+	  }
+
+      { Vsect 	
+
+		  { Row
+
+			  { RepeatToEnd True }
+
+			  { Cell
+
+				  { Type AttributeVisibility }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Type AttributeIsClass }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Type AttributeIsDerived }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { HspanSection True } 
+
+				  { VspanSection True } 
+
+				  { ReadOnly True }
+
+				  { Shading Shade1 }
+
+			  }
+
+		  }
+
+	  }
+
+      { Vsect 	
+
+		  { Row
+
+			  { RepeatToEnd True }
+
+			  { Type AttributeCxxDefinitionRow }
+
+			  { Cell
+
+				  { Type AttributeCxxIsConst }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Type AttributeCxxVisibility }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Type AttributeCxxIsVolatile }
+
+				  { HorzAlignment Left }
+
+			  } 
+
+			  { Cell
+
+				  { HspanSection True } 
+
+				  { VspanSection True } 
+
+				  { ReadOnly True }
+
+				  { Shading Shade1 }
+
+			  }
+
+		  }
+
+	  } 
+
+      { Vsect 	
+
+		  { Row
+
+			  { RepeatToEnd True }
+
+			  { Type AttributeAda95DefinitionRow }
+
+			  { Cell
+
+				  { Type AttributeAda95IsAliased }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Type AttributeAda95Visibility }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { HspanSection True } 
+
+				  { VspanSection True } 
+
+				  { ReadOnly True }
+
+				  { Shading Shade1 }
+
+			  }
+
+		  }
+
+	  } 
+
+      { Vsect 	
+
+		  { Row
+
+			  { RepeatToEnd True }
+
+			  { Type AttributeJavaDefinitionRow }
+
+			  { Cell
+
+				  { Type AttributeJavaVisibility }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Type AttributeJavaIsFinal }
+
+				  { HorzAlignment Left }
+
+			  } 
+
+			  { Cell
+
+				  { Type AttributeJavaIsTransient }
+
+				  { HorzAlignment Left }
+
+			  } 
+
+			  { Cell
+
+				  { Type AttributeJavaIsVolatile }
+
+				  { HorzAlignment Left }
+
+			  } 
+
+		  }
+
+	  }
+
+      { Vsect
+
+		{ Row
+
+			{ RepeatToEnd True }
+
+			{ Type AttributeIDLDefinitionRow }
+
+			{ Cell
+
+				{ Type AttributeIDLType }
+
+				{ HorzAlignment Left } }
+
+			{ Cell
+
+				{ Type AttributeIDLIsReadOnly }
+
+				{ HorzAlignment Left } }
+
+			{ Cell
+
+		  		{ HspanSection True } 
+
+		  		{ VspanSection True } 
+
+	          		{ ReadOnly True }
+
+	          		{ Shading Shade1 } }
+
+		}
+
+	}
+
+      { Vsect 	
+
+	        { Row
+
+	               { RepeatToEnd True }
+
+	               { Type AttributeTOOLImplementationRow }
+
+                       { Cell
+
+		                { Type UmlTOOLAttributePrivilege }
+
+		                { HorzAlignment Left } }
+
+                       { Cell
+
+		                { Type UmlTOOLVirtualAttributeSet }
+
+		                { HorzAlignment Left } } 
+
+                       { Cell
+
+		                { Type UmlTOOLVirtualAttributeGet }
+
+		                { HorzAlignment Left } } 
+
+                       { Cell
+
+		                { HspanSection True } 
+
+		                { VspanSection True } 
+
+	                        { ReadOnly True }
+
+	                        { Shading Shade1 } 
+
+                       } 
+
+                 } 
+
+      } 
+
+  }
+
+
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  // operations
+
+  { Hsect 
+
+      { Label "Operations Header" }
+
+      { Frozen True }
+
+      { Scrollbar False }
+
+      { ReadOnly True }
+
+      { Shading Shade1 }
+
+      { BottomBorder { Thickness Thin } }
+
+      { Vsect 
+
+	  { Row
+
+	      { Cell
+
+		  { Label "Operation" }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Label "Arguments" }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Label "Return Type" }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } } } }
+
+      { Vsect 	
+
+	  { Row
+
+	      { Cell
+
+		  { Label "Visibility" }
+
+		  { Width 90 }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Label "Class Op?" }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Label "Abstract?" } 
+
+		  { Bold True } 
+
+		  { HorzAlignment Left } } 
+
+	      { Cell
+
+		  { Label "Throws" }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } } } }
+
+      { Vsect 	
+
+	  { Row
+
+	      { Cell
+
+		  { Label "Const?" }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Label "Visibility" }
+
+		  { Width 90 }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } } 
+
+	      { Cell
+
+		  { Label "Virtual?" }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Label "Inline?" }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } } 
+
+	      { Cell
+
+		  { Label "Ctor Init List" }
+
+		  { Width 110 }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } } } }
+
+      { Vsect 	
+
+		  { Row
+
+			  { Cell
+
+				  { Label "Visibility" }
+
+				  { Width 90 }
+
+				  { Bold True }
+
+				  { HorzAlignment Left }
+
+			  } 
+
+			  { Cell
+
+				  { Label "Subunit?" }
+
+				  { Bold True }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Label "Inline?" }
+
+				  { Bold True }
+
+				  { HorzAlignment Left }
+
+			  }
+
+		  }
+
+	  }
+
+      { Vsect 	
+
+	  { Row
+
+	      { Cell
+
+		  { Label "Visibility" }
+
+		  { Width 90 }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } } 
+
+	      { Cell
+
+		  { Label "Final?" }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Label "Native?" }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Label "Synchronized?" }
+
+		  { Width 100 }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } } } }
+
+      { Vsect 	
+
+	  { Row
+
+	      { Cell
+
+		  { Label "Arguments" }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Label "Return Type" }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Label "Attribute" }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Label "Context" }
+
+	          { Bold True }
+
+		  { HorzAlignment Left } }
+
+	  }
+
+      }
+
+      { Vsect 	
+
+	  { Row
+
+	      { Cell
+
+		  { Label "Privilege" }
+
+		  { Bold True }
+
+		  { HorzAlignment Left } } 
+
+	      { Cell
+
+		  { Label "Return Event" }
+
+		  { Bold True }
+
+		  { Width 160 } 
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Label "Exception Event" }
+
+		  { Bold True }
+
+		  { Width 160 } 
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Label "Copy Return?" }
+
+		  { Bold True }
+
+		  { Width 95 }
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Label "Kind?" }
+
+		  { Bold True }
+
+		  { Width 90 }
+
+		  { HorzAlignment Left } } } } 
+
+  }
+
+
+
+  { Hsect 
+
+      { Type OperationHsect }
+
+      { Label "Operations" }
+
+      { Vsect 
+
+	  { Row
+
+	      { RepeatToEnd True }
+
+	      { Type OperationDefinitionRow }
+
+	      { Cell
+
+		  { Type OperationName }
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Type OperationSignature } 
+
+		  { HorzAlignment Left } }
+
+	      { Cell
+
+		  { Type OperationReturnType } 
+
+		  { HorzAlignment Left } } } }
+
+      { Vsect 	
+
+		  { Row
+
+			  { RepeatToEnd True }
+
+			  { Cell
+
+				  { Type OperationVisibility }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Type OperationIsClass }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Type OperationIsAbstract }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Type OperationThrows }
+
+				  { HorzAlignment Left }
+
+			  }
+
+		  }
+
+	  } 
+
+      { Vsect 	
+
+	  { Row
+
+	      { RepeatToEnd True }
+
+	      { Type OperationCxxDefinitionRow }
+
+              { Cell
+
+		  { Type OperationCxxIsConst }
+
+		  { HorzAlignment Left } }
+
+              { Cell
+
+		  { Type OperationCxxVisibility }
+
+		  { HorzAlignment Left } }
+
+              { Cell
+
+		  { Type OperationCxxIsVirtual }
+
+		  { HorzAlignment Left } }
+
+              { Cell
+
+		  { Type OperationCxxIsInline }
+
+		  { HorzAlignment Left } } 
+
+              { Cell
+
+		  { Type OperationCxxCtorInitList }
+
+		  { HorzAlignment Left } } } }
+
+      { Vsect 	
+
+		  { Row
+
+			  { RepeatToEnd True }
+
+			  { Type OperationAda95DefinitionRow }
+
+			  { Cell
+
+				  { Type OperationAda95Visibility }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Type OperationAda95IsSubunit }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Type OperationAda95IsInline }
+
+				  { HorzAlignment Left }
+
+			  }
+
+		  }
+
+	  }
+
+      { Vsect 	
+
+	  { Row
+
+	      { RepeatToEnd True }
+
+	      { Type OperationJavaDefinitionRow }
+
+              { Cell
+
+		  { Type OperationJavaVisibility }
+
+		  { HorzAlignment Left } }
+
+              { Cell
+
+		  { Type OperationJavaIsFinal }
+
+		  { HorzAlignment Left } }
+
+              { Cell
+
+		  { Type OperationJavaIsNative }
+
+		  { HorzAlignment Left } }
+
+              { Cell
+
+		  { Type OperationJavaIsSynchronized }
+
+		  { HorzAlignment Left } } } }
+
+	{ Vsect
+
+		{ Row
+
+			{ RepeatToEnd True }
+
+			{ Type OperationIDLDefinitionRow }
+
+			{ Cell
+
+				{ Type OperationIDLSignature }
+
+				{ HorzAlignment Left } }
+
+			{ Cell
+
+				{ Type OperationIDLReturnType }
+
+				{ HorzAlignment Left } }
+
+			{ Cell
+
+				{ Type OperationIDLAttribute }
+
+				{ HorzAlignment Left } }
+
+			{ Cell
+
+				{ Type OperationIDLContext }
+
+				{ HorzAlignment Left } }
+
+		}
+
+	}
+
+     { Vsect 	
+
+	        { Row
+
+	               { RepeatToEnd True }
+
+	               { Type OperationTOOLImplementationRow }
+
+                       { Cell
+
+		                { Type UmlTOOLOperationPrivilege }
+
+		                { HorzAlignment Left } }
+
+                       { Cell
+
+		                { Type UmlTOOLOperationReturnEvent}
+
+		                { HorzAlignment Left } }
+
+                       { Cell
+
+		                { Type UmlTOOLOperationExceptionEvent}
+
+		                { HorzAlignment Left } }
+
+                       { Cell
+
+		                { Type UmlTOOLOperationCopyReturn }
+
+		                { HorzAlignment Left } }
+
+                       { Cell
+
+		                { Type UmlTOOLOperationKind }
+
+		                { HorzAlignment Left } } 
+
+               } 
+
+     }
+
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  // inherited operations
+
+  { Hsect 
+
+      { Label "Inherited Operations Header" }
+
+      { Frozen True }
+
+      { Scrollbar False }
+
+      { ReadOnly True }
+
+      { Shading Shade1 }
+
+      { BottomBorder { Thickness Thin } }
+
+      { Hidden True }
+
+      { RowHeight 45 }
+
+      { Vsect 
+
+		  { Row
+
+			  { Cell
+
+				  { Label "Inherited\nClass::Operation" }
+
+				  { Bold True }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Label "Arguments" }
+
+				  { Bold True }
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { Label "Return Type" }
+
+				  { Bold True }
+
+				  { HorzAlignment Left }
+
+			  }
+
+		  }
+
+	  }
+
+		// these are dummy grey sections so that the cells that appear
+
+		// below the analysis items, c++ Items, Java Items, and Ada95
+
+		// items will be greyed out
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+  }
+
+  { Hsect 
+
+      { Label "Inherited Operations" }
+
+      { ReadOnly True }
+
+      { Hidden True }
+
+      { Vsect 
+
+		  { Row
+
+			  { RepeatToEnd True }
+
+			  { Cell
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { HorzAlignment Left }
+
+			  }
+
+			  { Cell
+
+				  { HorzAlignment Left }
+
+			  }
+
+		  }
+
+	  }
+
+		// these are dummy grey sections so that the cells that appear
+
+		// below the analysis items, c++ Items, Java Items, and Ada95
+
+		// items will be greyed out
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+                { Vsect 	
+
+	                { Row
+
+                                { Cell
+
+	                                { ReadOnly True }
+
+	                                { Shading Shade1 }
+
+		                        { HspanSection True } 
+
+		                        { VspanSection True } 
+
+                                } 
+
+                        } 
+
+                }
+
+ }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+	// JED - begin Signal sections
+
+	{ Hsect 
+
+		{ Label "Signals Received Header" }
+
+		{ Frozen True }
+
+		{ Hidden True }
+
+		{ Scrollbar False }
+
+		{ ReadOnly True }
+
+		{ Shading Shade1 }
+
+		{ BottomBorder { Thickness Thin } }
+
+		{ Vsect 
+
+			{ Row
+
+				{ Cell
+
+					{ Label "Signals Received" }
+
+					{ Bold True }
+
+					{ HorzAlignment Left }
+
+				}
+
+				{ Cell
+
+					{ Label "Arguments" }
+
+					{ Bold True }
+
+					{ HorzAlignment Left }
+
+				}
+
+				{ Cell
+
+					{ HspanSection True }
+
+				}
+
+					
+
+			}
+
+		}
+
+		// these are dummy grey sections so that the cells that appear
+
+		// below the analysis items, c++ Items, Java Items, and Ada95
+
+		// items will be greyed out
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+			
+
+	}
+
+		
+
+	{ Hsect 
+
+		{ Hidden True }
+
+		{ Type SignalReceivedHsect }
+
+		{ Label "Signals Received" }
+
+		{ Vsect 
+
+			{ Row
+
+				{ RepeatToEnd True }
+
+				{ Cell
+
+					{ Type SignalReceivedName }
+
+					{ HorzAlignment Left }
+
+				}
+
+				{ Cell
+
+					{ Type SignalReceivedParameters } 
+
+					{ HorzAlignment Left }
+
+				}
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		// these are dummy grey sections so that the cells that appear
+
+		// below the analysis items, c++ Items, Java Items, and Ada95
+
+		// items will be greyed out
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+	}
+
+
+
+	{ Hsect 
+
+		{ Label "Signals Sent Header" }
+
+		{ Frozen True }
+
+		{ Hidden True }
+
+		{ Scrollbar False }
+
+		{ ReadOnly True }
+
+		{ Shading Shade1 }
+
+		{ BottomBorder { Thickness Thin } }
+
+		{ Vsect 
+
+			{ Row
+
+				{ Cell
+
+					{ Label "Signals Sent" }
+
+					{ Bold True }
+
+					{ HorzAlignment Left }
+
+				}
+
+				{ Cell
+
+					{ Label "Arguments" }
+
+					{ Bold True }
+
+					{ HorzAlignment Left }
+
+				}
+
+				{ Cell
+
+					{ HspanSection True }
+
+				}
+
+			}
+
+		}
+
+		// these are dummy grey sections so that the cells that appear
+
+		// below the analysis items, c++ Items, Java Items, and Ada95
+
+		// items will be greyed out
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+	}
+
+		
+
+	{ Hsect 
+
+		{ Type SignalSentHsect }
+
+		{ Hidden True }
+
+		{ Label "Signals Sent" }
+
+		{ Vsect 
+
+			{ Row
+
+				{ RepeatToEnd True }
+
+				{ Cell
+
+					{ Type SignalSentName }
+
+					{ HorzAlignment Left }
+
+				}
+
+				{ Cell
+
+					{ Type SignalSentParameters } 
+
+					{ HorzAlignment Left }
+
+				}
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		// these are dummy grey sections so that the cells that appear
+
+		// below the analysis items, c++ Items, Java Items, and Ada95
+
+		// items will be greyed out
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+		{ Vsect
+
+			{ Row
+
+				{ Cell
+
+					{ Shading Shade1 }
+
+					{ ReadOnly True }
+
+					{ HspanSection True }
+
+					{ VspanSection True }
+
+				}
+
+			}
+
+		}
+
+	}
+
+
+
+
+
+} // end table definition
+
+
+
+// *** ROOT OBJECT SEMANTICS HERE
+
+
+
+RowType 1 Class {}
+
+
+
+CellType 1 Class
+
+{ 
+
+  { Semantics
+
+      { NodeMapping
+
+          { MappingName Class }
+
+		  { Name
+
+			  // { LabelSelector Label }
+
+			  { LabelFunc uml_class_table_name }
+
+			  { Cell
+
+				  { Hsect HSECT }
+
+				  { Vsect NameVsect }
+
+				  { Row ROW }
+
+				  { Col 1 }
+
+			  }
+
+		  }
+
+		  { Type UmlClass }
+
+		  // when the class changes, all the attributes and operations
+
+		  // must be remapped
+
+		  { DependentMapping
+
+			  { MappingName Attribute }
+
+			  { Cell
+
+				  { Hsect AttributeHsect }
+
+				  { Vsect MainDefinitionVsect }
+
+				  { Row ANY }
+
+				  { Col AttributeNameCol }
+
+			  }
+
+		  }
+
+		  { DependentMapping
+
+			  { MappingName Operation }
+
+				  { Cell
+
+				  { Hsect OperationHsect }
+
+				  { Vsect MainDefinitionVsect }
+
+				  { Row ANY }
+
+				  { Col OperationNameCol }
+
+				  }
+
+		  }
+
+	  } 
+
+
+
+//  Notes for incremental code generation -- code gen ID's
+
+
+
+      { NoteMapping
+
+          { MappingName UmlClassCxxTableNote }
+
+          { Type UmlClassCxxTableNote }
+
+          { Parent  
+
+              { MappingName Class }
+
+              { Cell
+
+                  { Hsect HSECT } 
+
+                  { Vsect NameVsect } 
+
+                  { Row ROW }
+
+                  { Col 1 }
+
+              }
+
+          }
+
+          { ContinuousUpdate True }
+
+      } 
+
+      { ItemMapping
+
+	{ MappingName UmlClassCxxCodeGenId }
+
+	{ Type UmlCxxCodeGenId }
+
+        { Value { LabelFunc UmlCxxCodeGenId } }
+
+	{ Note  
+
+	  { MappingName UmlClassCxxTableNote }
+
+	  { Cell 
+
+	    { Hsect HSECT }
+
+	    { Vsect NameVsect }
+
+	    { Row ROW } 
+
+	    { Col 1 } } } } 
+
+  } 
+
+  { RenameFunc uml_class_rename }	
+
+  { NameCompletion
+
+     { MappingName Operation }
+
+     { NameCompletionFunc uclasst_class_name_completion_func }
+
+  }
+
+}
+
+
+
+// *** ATTRIBUTE SEMANTICS HERE
+
+
+
+HsectType 10 AttributeHsect {}
+
+
+
+RowType 10 AttributeDefinitionRow {}
+
+
+
+CellType 10 AttributeName
+
+{
+
+	{ Semantics
+
+		{ NodeMapping
+
+			{ MappingName Attribute }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Name 
+
+				{ LabelSelector Label }
+
+			}
+
+			{ Type UmlAttribute }
+
+			{ Scope 
+
+				{ MappingName Class }
+
+				{ Cell
+
+					{ Hsect ClassHsect } 
+
+					{ Vsect MainDefinitionVsect }
+
+					{ Row 1 }
+
+					{ Col 1 }
+
+				}
+
+			}
+
+			// when the attribute changes, any attached notes and items
+
+			// must be remapped
+
+			{ DependentMapping
+
+				{ MappingName ANY }
+
+				{ Cell
+
+					{ Hsect HSECT }
+
+					{ Vsect ANY }
+
+					{ Row ROW }
+
+					{ Col ANY }
+
+				}
+
+			}
+
+			{ DependentMapping
+
+				{ MappingName ANY }
+
+				{ Row
+
+				{ Hsect HSECT }
+
+				{ Vsect ANY }
+
+				{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+		{ NoteMapping
+
+			{ MappingName AttributeDefinition }
+
+			{ Type UmlAttributeDefinition }
+
+			{ Parent  
+
+				{ MappingName Attribute }
+
+				{ Cell
+
+					{ Hsect HSECT } 
+
+					{ Vsect MainDefinitionVsect } 
+
+					{ Row ROW }
+
+					{ Col AttributeNameCol }
+
+				}
+
+			}
+
+			{ ContinuousUpdate True }
+
+		} 
+
+	}
+
+}
+
+
+
+CellType 11 AttributeType
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName AttributeType }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Type UmlAttributeType }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName AttributeDefinition }
+
+				{ Cell
+
+					{ Hsect HSECT } 
+
+					{ Vsect MainDefinitionVsect } 
+
+					{ Row ROW }
+
+					{ Col AttributeNameCol }
+
+				}
+
+			}
+
+			{ ContinuousUpdate True }
+
+		}
+
+	} 
+
+}
+
+
+
+CellType 12 AttributeDefaultValue
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName AttributeDefaultValue }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Type UmlAttributeDefaultValue }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName AttributeDefinition }
+
+				{ Cell
+
+					{ Hsect HSECT } 
+
+					{ Vsect MainDefinitionVsect } 
+
+					{ Row ROW }
+
+					{ Col AttributeNameCol }
+
+				}
+
+			}
+
+			{ ContinuousUpdate True }
+
+		}
+
+	}
+
+} 
+
+
+
+CellType 13 AttributeIsClass
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName AttributeIsClass }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Type UmlMemberIsClass }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName AttributeDefinition }
+
+				{ Cell
+
+					{ Hsect HSECT } 
+
+					{ Vsect MainDefinitionVsect } 
+
+					{ Row ROW }
+
+					{ Col AttributeNameCol }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType Boolean }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+} 
+
+
+
+CellType 14 AttributeIsDerived
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName AttributeIsDerived }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Type UmlAttributeIsDerived }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName AttributeDefinition }
+
+				{ Cell
+
+					{ Hsect HSECT } 
+
+					{ Vsect MainDefinitionVsect } 
+
+					{ Row ROW }
+
+					{ Col AttributeNameCol }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType Boolean }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+} 
+
+
+
+CellType 15 AttributeVisibility
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName AttributeVisibility }
+
+			{ Type UmlMemberVisibility }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName AttributeDefinition }
+
+				{ Cell 
+
+					{ Hsect HSECT }
+
+					{ Vsect MainDefinitionVsect }
+
+					{ Row ROW }
+
+					{ Col AttributeNameCol }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType UmlVisibilityEnum }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "private" }
+
+} 
+
+
+
+RowType 20 AttributeCxxDefinitionRow
+
+{
+
+	{ Semantics
+
+		{ NoteMapping
+
+			{ MappingName AttributeCxxDefinition }
+
+			{ Type UmlAttributeCxxDefinition }
+
+			{ Parent  
+
+				{ MappingName Attribute }
+
+				{ Cell
+
+					{ Hsect HSECT } 
+
+					{ Vsect MainDefinitionVsect } 
+
+					{ Row ROW }
+
+					{ Col AttributeNameCol }
+
+				}
+
+			}
+
+		}
+
+	}
+
+}
+
+
+
+CellType 20 AttributeCxxIsVolatile
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName AttributeCxxIsVolatile }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Type UmlAttributeCxxIsVolatile }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName AttributeCxxDefinition }
+
+				{ Row 
+
+					{ Hsect HSECT }
+
+					{ Vsect CxxDefinitionVsect }
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType Boolean }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+} 
+
+
+
+CellType 20 AttributeCxxVisibility
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName AttributeCxxVisibility }
+
+			{ Type UmlMemberCxxVisibility }
+
+			{ Value { LabelSelector Label } }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName AttributeCxxDefinition }
+
+				{ Row 
+
+					{ Hsect HSECT }
+
+					{ Vsect CxxDefinitionVsect }
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType UmlVisibilityEnum }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+} 
+
+
+
+CellType 21 AttributeCxxIsConst
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName AttributeCxxIsConst }
+
+			{ Type UmlMemberCxxIsConst }
+
+			{ Value { LabelSelector Label } }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName AttributeCxxDefinition }
+
+				{ Row 
+
+					{ Hsect HSECT }
+
+					{ Vsect CxxDefinitionVsect }
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType Boolean }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+} 
+
+
+
+
+
+
+
+RowType 70 AttributeAda95DefinitionRow
+
+{
+
+	{ Semantics
+
+		{ NoteMapping
+
+			{ MappingName AttributeAda95Definition }
+
+			{ Type UmlAttributeAda95Definition }
+
+			{ Parent  
+
+				{ MappingName Attribute }
+
+				{ Cell
+
+					{ Hsect HSECT } 
+
+					{ Vsect MainDefinitionVsect } 
+
+					{ Row ROW }
+
+					{ Col AttributeNameCol }
+
+				}
+
+			}
+
+		}
+
+	}
+
+}
+
+
+
+CellType 70 AttributeAda95IsAliased
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName AttributeAda95IsAliased }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Type UmlAttributeAda95IsAliased }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName AttributeAda95Definition }
+
+				{ Row
+
+					{ Hsect HSECT } 
+
+					{ Vsect Ada95DefinitionVsect } 
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType Boolean }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+} 
+
+
+
+CellType 71 AttributeAda95Visibility
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName AttributeAda95Visibility }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Type UmlMemberAda95Visibility }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName AttributeAda95Definition }
+
+				{ Row
+
+					{ Hsect HSECT } 
+
+					{ Vsect Ada95DefinitionVsect } 
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType UmlAda95VisibilityEnum }
+
+		{ AllowNull True }
+
+	} // only class attributes use this value
+
+	{ Label "" }
+
+} 
+
+
+
+RowType 80 AttributeJavaDefinitionRow
+
+{
+
+	{ Semantics
+
+		{ NoteMapping
+
+			{ MappingName AttributeJavaDefinition }
+
+			{ Type UmlAttributeJavaDefinition }
+
+			{ Parent  
+
+				{ MappingName Attribute }
+
+				{ Cell
+
+					{ Hsect HSECT } 
+
+					{ Vsect MainDefinitionVsect } 
+
+					{ Row ROW }
+
+					{ Col AttributeNameCol }
+
+				}
+
+			}
+
+		}
+
+	}
+
+}
+
+
+
+CellType 80 AttributeJavaVisibility
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName AttributeJavaVisibility }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Type UmlMemberJavaVisibility }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName AttributeJavaDefinition }
+
+				{ Row
+
+					{ Hsect HSECT } 
+
+					{ Vsect JavaDefinitionVsect } 
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ AllowNull True }         
+
+		{ ItemValType UmlJavaVisibilityEnum }
+
+	}
+
+	{ Label "" }
+
+} 
+
+
+
+CellType 81 AttributeJavaIsFinal
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName AttributeJavaIsFinal }
+
+			{ Type UmlMemberJavaIsFinal }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName AttributeJavaDefinition }
+
+				{ Row
+
+					{ Hsect HSECT } 
+
+					{ Vsect JavaDefinitionVsect } 
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType Boolean }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+} 
+
+
+
+CellType 82 AttributeJavaIsTransient
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName AttributeJavaIsTransient }
+
+			{ Type UmlAttributeJavaIsTransient }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName AttributeJavaDefinition }
+
+				{ Row
+
+					{ Hsect HSECT } 
+
+					{ Vsect JavaDefinitionVsect } 
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType Boolean }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+} 
+
+
+
+CellType 83 AttributeJavaIsVolatile
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName AttributeJavaIsVolatile }
+
+			{ Type UmlAttributeJavaIsVolatile }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName AttributeJavaDefinition }
+
+				{ Row
+
+					{ Hsect HSECT } 
+
+					{ Vsect JavaDefinitionVsect } 
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType Boolean }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+}
+
+
+
+RowType 90 AttributeIDLDefinitionRow
+
+{
+
+    { Semantics
+
+	{ NoteMapping
+
+	    { MappingName AttributeIDLDefinition }
+
+	    { Type UmlAttributeIDLDefinition }
+
+	    { Parent  
+
+		{ MappingName Attribute }
+
+		{ Cell
+
+			{ Hsect HSECT } 
+
+			{ Vsect MainDefinitionVsect } 
+
+			{ Row ROW }
+
+			{ Col AttributeNameCol }
+
+		}
+
+	    }
+
+	}
+
+    }
+
+}
+
+
+
+CellType 90 AttributeIDLType
+
+{
+
+    { Semantics
+
+	{ ItemMapping
+
+	    { MappingName AttributeIDLType }
+
+	    { Precondition { LabelSelector Label } }
+
+	    { Type UmlAttributeIDLType }
+
+	    { Value
+
+		{ LabelSelector Label }
+
+		{ Required False }
+
+	     }
+
+	    { Note
+
+		{ MappingName AttributeIDLDefinition }
+
+		{ Row
+
+		    { Hsect HSECT }
+
+		    { Vsect IDLDefinitionVsect }
+
+		    { Row ROW }
+
+		}
+
+	    }
+
+	}
+
+    }
+
+}
+
+
+
+CellType 91 AttributeIDLIsReadOnly
+
+{
+
+    { Semantics
+
+	{ ItemMapping
+
+	    { MappingName AttributeIDLIsReadOnly }
+
+	    { Type UmlAttributeIDLIsReadOnly }
+
+	    { Value
+
+		{ LabelSelector Label }
+
+		{ Required False }
+
+	     }
+
+	    { Note
+
+		{ MappingName AttributeIDLDefinition }
+
+		{ Row
+
+		  { Hsect HSECT } 
+
+		  { Vsect IDLDefinitionVsect } 
+
+		  { Row ROW }
+
+		}
+
+	    }
+
+	}
+
+    }
+
+    { ValidValues
+
+	{ ItemValType Boolean }
+
+	{ AllowNull True }
+
+    }
+
+    { Label "" }
+
+}
+
+RowType 100 AttributeTOOLImplementationRow
+
+{ { Semantics
+
+      { NoteMapping
+
+	  { MappingName AttributeTOOLImplementation }
+
+          { Type UmlAttributeToolImplementation }
+
+	  { Parent  
+
+	      { MappingName Attribute }
+
+	      { Cell
+
+		  { Hsect HSECT } 
+
+		  { Vsect MainDefinitionVsect } 
+
+		  { Row ROW }
+
+		  { Col AttributeNameCol } } } } } }
+
+
+
+CellType 100 UmlTOOLAttributePrivilege
+
+{ { Semantics
+
+      { ItemMapping
+
+          { MappingName UmlTOOLAttributePrivilege }
+
+	  { Precondition { LabelSelector Label } }
+
+          { Type UmlTOOLAttributePrivilege }
+
+          { Value { LabelSelector Label } }
+
+	  { Note  
+
+	      { MappingName AttributeTOOLImplementation }
+
+	      { Row
+
+		  { Hsect HSECT } 
+
+		  { Vsect TOOLDefinitionVsect } 
+
+		  { Row ROW } } } } }
+
+   { ValidValues
+
+      { ItemValType UmlTOOLClassComponentPrivacyEnum } }
+
+  { Label "private" } } 
+
+
+
+CellType 101 UmlTOOLVirtualAttributeSet
+
+{ { Semantics
+
+      { ItemMapping
+
+          { MappingName UmlTOOLVirtualAttributeSet }
+
+          { Precondition { LabelSelector Label } }	
+
+          { Type UmlTOOLVirtualAttributeSet }
+
+          { Value { LabelSelector Label } }
+
+	  { Note  
+
+	      { MappingName AttributeTOOLImplementation }
+
+	      { Row
+
+		  { Hsect HSECT } 
+
+		  { Vsect TOOLDefinitionVsect } 
+
+		  { Row ROW } } } } }
+
+}
+
+
+
+CellType 102 UmlTOOLVirtualAttributeGet
+
+{ { Semantics
+
+      { ItemMapping
+
+          { MappingName UmlTOOLVirtualAttributeGet }
+
+          { Precondition { LabelSelector Label } }	
+
+          { Type UmlTOOLVirtualAttributeGet }
+
+          { Value { LabelSelector Label } }
+
+	  { Note  
+
+	      { MappingName AttributeTOOLImplementation }
+
+	      { Row
+
+		  { Hsect HSECT } 
+
+		  { Vsect TOOLDefinitionVsect } 
+
+		  { Row ROW } } } } }
+
+}
+
+
+
+// *** OPERATION SEMANTICS HERE
+
+
+
+HsectType 110 OperationHsect {}
+
+
+
+RowType 110 OperationDefinitionRow {}
+
+
+
+CellType 110 OperationName
+
+{
+
+	{ Semantics
+
+		{ NodeMapping
+
+			{ MappingName Operation }
+
+			{ InverseMapFunc uml_operation_inverse_map_func }	
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Name 
+
+				{ LabelSelector Label } 
+
+				{ Cell
+
+					{ Hsect HSECT }
+
+					{ Vsect MainDefinitionVsect }
+
+					{ Row ROW }
+
+					{ Col OperationNameCol }
+
+				}
+
+			}
+
+			{ Type UmlOperation }
+
+			{ Scope 
+
+				{ MappingName Class }
+
+				{ Cell
+
+					{ Hsect ClassHsect } 
+
+					{ Vsect MainDefinitionVsect }
+
+					{ Row 1 }
+
+					{ Col 1 }
+
+				}
+
+			}
+
+			{ Signature 
+
+				{ Required False }
+
+				{ LabelFunc uclasst_canonical_args }
+
+				{ Cell
+
+					{ Hsect HSECT }
+
+					{ Vsect MainDefinitionVsect }
+
+					{ Row ROW }
+
+					{ Col OperationSignatureCol }
+
+				}
+
+			}
+
+			// when the operation changes, any attached notes and items 
+
+			// must be remapped
+
+			{ DependentMapping
+
+				{ MappingName ANY }
+
+				{ Cell
+
+					{ Hsect HSECT }
+
+					{ Vsect ANY }
+
+					{ Row ROW }
+
+					{ Col ANY }
+
+				}
+
+			}
+
+			{ DependentMapping
+
+				{ MappingName ANY }
+
+				{ Row
+
+					{ Hsect HSECT }
+
+					{ Vsect ANY }
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+		{ NoteMapping
+
+			{ MappingName OperationDefinition }
+
+			{ Type UmlOperationDefinition }
+
+			{ Parent  
+
+				{ MappingName Operation }
+
+				{ Cell
+
+					{ Hsect HSECT }
+
+					{ Vsect MainDefinitionVsect }
+
+					{ Row ROW }
+
+					{ Col OperationNameCol }
+
+				}
+
+			}
+
+			{ ContinuousUpdate True }
+
+		} 
+
+      { ItemMapping
+
+	{ MappingName UmlOperationCxxCodeGenId }
+
+	{ Type UmlCxxCodeGenId }
+
+        { Value { LabelFunc UmlCxxCodeGenId } }
+
+	{ Note  
+
+	  { MappingName OperationCxxDefinition }
+
+	  { Row 
+
+	    { Hsect HSECT }
+
+	    { Vsect CxxDefinitionVsect }
+
+	    { Row ROW } } } } 
+
+	}
+
+	{ RenameFunc uml_operation_rename }	
+
+	{ NameCompletion
+
+		{ MappingName Operation }
+
+		{ NameCompletionFunc uclasst_operation_name_completion_func }
+
+	}
+
+}
+
+
+
+CellType 111 OperationSignature
+
+{
+
+	// when the signature changes, the operation must be remapped
+
+	{ DependentMapping
+
+		{ MappingName Operation }
+
+		{ Cell
+
+			{ Hsect OperationHsect }
+
+			{ Vsect MainDefinitionVsect }
+
+			{ Row ROW }
+
+			{ Col OperationNameCol }
+
+		}
+
+	}
+
+}
+
+
+
+CellType 112 OperationReturnType
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName OperationReturnType }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Type UmlOperationReturnType }	
+
+			{ Value
+
+				{ LabelSelector Label }
+
+			}
+
+			{ Note  
+
+				{ MappingName OperationDefinition }
+
+				{ Cell
+
+					{ Hsect HSECT }
+
+					{ Vsect MainDefinitionVsect }
+
+					{ Row ROW }
+
+					{ Col OperationNameCol }
+
+				}
+
+			}
+
+		{ ContinuousUpdate True }
+
+		}
+
+	}
+
+}
+
+
+
+CellType 113 OperationIsClass
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName OperationIsClass }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Type UmlMemberIsClass }	
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName OperationDefinition }
+
+				{ Cell
+
+					{ Hsect HSECT }
+
+					{ Vsect MainDefinitionVsect }
+
+					{ Row ROW }
+
+					{ Col OperationNameCol }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType Boolean }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+}
+
+
+
+CellType 114 OperationIsAbstract
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName OperationIsAbstract }
+
+			{ Type UmlOperationIsAbstract }	
+
+			{ Value
+
+				{ LabelSelector Label }
+
+			}
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName OperationDefinition }
+
+				{ Cell
+
+					{ Hsect HSECT }
+
+					{ Vsect MainDefinitionVsect }
+
+					{ Row ROW }
+
+					{ Col OperationNameCol }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType Boolean }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+}
+
+
+
+CellType 115 OperationThrows
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName OperationThrows }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Type UmlOperationThrows }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName OperationDefinition }
+
+				{ Cell
+
+					{ Hsect HSECT } 
+
+					{ Vsect MainDefinitionVsect } 
+
+					{ Row ROW }
+
+					{ Col OperationNameCol }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ NameCompletion
+
+		{ NameCompletionFunc gte_col_item_name_completion_func }
+
+	}
+
+}
+
+
+
+CellType 120 OperationVisibility
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName OperationVisibility }
+
+			{ Type UmlMemberVisibility }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName OperationDefinition }
+
+				{ Cell 
+
+					{ Hsect HSECT }
+
+					{ Vsect MainDefinitionVsect }
+
+					{ Row ROW }
+
+					{ Col OperationNameCol }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ AllowNull True }
+
+		{ ItemValType UmlVisibilityEnum }
+
+	}
+
+	{ Label "public" }
+
+}
+
+
+
+
+
+RowType 120 OperationCxxDefinitionRow
+
+{
+
+	{ Semantics
+
+		{ NoteMapping
+
+			{ MappingName OperationCxxDefinition }
+
+			{ Type UmlOperationCxxDefinition }
+
+			{ Parent  
+
+				{ MappingName Operation }
+
+				{ Cell
+
+					{ Hsect HSECT }
+
+					{ Vsect MainDefinitionVsect }
+
+					{ Row ROW }
+
+					{ Col OperationNameCol }
+
+				}
+
+			}
+
+		}
+
+	}
+
+}
+
+
+
+
+
+CellType 121 OperationCxxIsConst
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName OperationCxxIsConst }
+
+			{ Type UmlMemberCxxIsConst }
+
+			{ Value { LabelSelector Label } }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName OperationCxxDefinition }
+
+				{ Row 
+
+					{ Hsect HSECT }
+
+					{ Vsect CxxDefinitionVsect }
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ AllowNull True }
+
+		{ ItemValType Boolean }
+
+	}
+
+	{ Label "" }
+
+} 
+
+
+
+CellType 122 OperationCxxIsVirtual
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName OperationCxxIsVirtual }
+
+			{ Type UmlOperationCxxIsVirtual }
+
+			{ Value { LabelSelector Label } }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName OperationCxxDefinition }
+
+				{ Row 
+
+					{ Hsect HSECT }
+
+					{ Vsect CxxDefinitionVsect }
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ AllowNull True }
+
+		{ ItemValType Boolean }
+
+	}
+
+	{ Label "" }
+
+} 
+
+
+
+CellType 123 OperationCxxIsInline
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName OperationCxxIsInline }
+
+			{ Type UmlOperationCxxIsInline }
+
+			{ Value { LabelSelector Label } }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName OperationCxxDefinition }
+
+				{ Row 
+
+					{ Hsect HSECT }
+
+					{ Vsect CxxDefinitionVsect }
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType Boolean }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+} 
+
+
+
+CellType 124 OperationCxxCtorInitList
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName OperationCxxCtorInitList }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Type UmlOperationCxxCtorInitList }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName OperationCxxDefinition }
+
+				{ Row 
+
+					{ Hsect HSECT }
+
+					{ Vsect CxxDefinitionVsect }
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	} 
+
+	{ NameCompletion
+
+		{ NameCompletionFunc gte_col_item_name_completion_func }
+
+	}
+
+}
+
+
+
+CellType 125 OperationCxxVisibility
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName OperationCxxVisibility }
+
+			{ Type UmlMemberCxxVisibility }
+
+			{ Value { LabelSelector Label } }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName OperationCxxDefinition }
+
+				{ Row 
+
+					{ Hsect HSECT }
+
+					{ Vsect CxxDefinitionVsect }
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType UmlVisibilityEnum }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+}
+
+
+
+RowType 131 OperationAda95DefinitionRow
+
+{
+
+	{ Semantics
+
+		{ NoteMapping
+
+			{ MappingName OperationAda95Definition }
+
+			{ Type UmlOperationAda95Definition }
+
+			{ Parent  
+
+				{ MappingName Operation }
+
+				{ Cell
+
+					{ Hsect HSECT }
+
+					{ Vsect MainDefinitionVsect }
+
+					{ Row ROW }
+
+					{ Col OperationNameCol }
+
+				}
+
+			}
+
+		}
+
+	}
+
+}
+
+
+
+CellType 133 OperationAda95Visibility
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName OperationAda95Visibility }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Type UmlMemberAda95Visibility }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName OperationAda95Definition }
+
+				{ Row 
+
+					{ Hsect HSECT }
+
+					{ Vsect Ada95DefinitionVsect }
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType UmlAda95VisibilityEnum }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+}
+
+
+
+CellType 134 OperationAda95IsSubunit
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName OperationAda95IsSubunit }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Type UmlOperationAda95IsSubunit }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName OperationAda95Definition }
+
+				{ Row 
+
+					{ Hsect HSECT }
+
+					{ Vsect Ada95DefinitionVsect }
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ AllowNull True }         // to allow global option to take effect
+
+		{ ItemValType Boolean }
+
+	}
+
+	{ Label "" }
+
+}
+
+
+
+CellType 135 OperationAda95IsInline
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName OperationAda95IsInline }
+
+			{ Type UmlOperationAda95IsInline }
+
+			{ Value { LabelSelector Label } }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName OperationAda95Definition }
+
+				{ Row 
+
+					{ Hsect HSECT }
+
+					{ Vsect Ada95DefinitionVsect }
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType Boolean }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+} 
+
+
+
+RowType 180 OperationJavaDefinitionRow
+
+{
+
+	{ Semantics
+
+		{ NoteMapping
+
+			{ MappingName OperationJavaDefinition }
+
+			{ Type UmlOperationJavaDefinition }
+
+			{ Parent  
+
+				{ MappingName Operation }
+
+				{ Cell
+
+					{ Hsect HSECT } 
+
+					{ Vsect MainDefinitionVsect } 
+
+					{ Row ROW }
+
+					{ Col OperationNameCol }
+
+				}
+
+			}
+
+		}
+
+	}
+
+}
+
+
+
+CellType 180 OperationJavaVisibility
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName OperationJavaVisibility }
+
+			{ Type UmlMemberJavaVisibility }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName OperationJavaDefinition }
+
+				{ Row
+
+					{ Hsect HSECT } 
+
+					{ Vsect JavaDefinitionVsect } 
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ AllowNull True }         
+
+		{ ItemValType UmlJavaVisibilityEnum }
+
+	}
+
+	{ Label "" }
+
+} 
+
+
+
+CellType 181 OperationJavaIsFinal
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName OperationJavaIsFinal }
+
+			{ Type UmlMemberJavaIsFinal }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName OperationJavaDefinition }
+
+				{ Row
+
+					{ Hsect HSECT } 
+
+					{ Vsect JavaDefinitionVsect } 
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType Boolean }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+} 
+
+
+
+
+
+CellType 183 OperationJavaIsNative
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName OperationJavaIsNative }
+
+			{ Type UmlOperationJavaIsNative }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName OperationJavaDefinition }
+
+				{ Row
+
+					{ Hsect HSECT } 
+
+					{ Vsect JavaDefinitionVsect } 
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType Boolean }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+} 
+
+
+
+CellType 184 OperationJavaIsSynchronized
+
+{
+
+	{ Semantics
+
+		{ ItemMapping
+
+			{ MappingName OperationJavaIsSynchronized }
+
+			{ Type UmlOperationJavaIsSynchronized }
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Value { LabelSelector Label } }
+
+			{ Note  
+
+				{ MappingName OperationJavaDefinition }
+
+				{ Row
+
+					{ Hsect HSECT } 
+
+					{ Vsect JavaDefinitionVsect } 
+
+					{ Row ROW }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ ValidValues
+
+		{ ItemValType Boolean }
+
+		{ AllowNull True }
+
+	}
+
+	{ Label "" }
+
+}
+
+
+
+RowType 190 OperationIDLDefinitionRow
+
+{
+
+    { Semantics
+
+	{ NoteMapping
+
+	    { MappingName OperationIDLDefinition }
+
+	    { Type UmlOperationIDLDefinition }
+
+	    { Parent
+
+		{ MappingName Operation }
+
+		{ Cell
+
+		    { Hsect HSECT } 
+
+		    { Vsect MainDefinitionVsect } 
+
+		    { Row ROW }
+
+		    { Col OperationNameCol }
+
+		}
+
+	    }
+
+	}
+
+    }
+
+}
+
+
+
+CellType 190 OperationIDLSignature
+
+{
+
+    { Semantics
+
+	{ ItemMapping
+
+	    { MappingName OperationIDLSignature }
+
+	    { Precondition { LabelSelector Label } }
+
+	    { Type UmlOperationIDLSignature }
+
+	    { Value
+
+		{ LabelSelector Label }
+
+		{ Required False }
+
+	     }
+
+	    { Note
+
+		{ MappingName OperationIDLDefinition }
+
+		{ Row
+
+		    { Hsect HSECT }
+
+		    { Vsect IDLDefinitionVsect }
+
+		    { Row ROW }
+
+		}
+
+	    }
+
+	}
+
+    }
+
+
+
+}
+
+
+
+CellType 191 OperationIDLReturnType
+
+{
+
+    { Semantics
+
+	{ ItemMapping
+
+	    { MappingName OperationIDLReturnType }
+
+	    { Type UmlOperationIDLReturnType }
+
+	    { Value
+
+		{ LabelSelector Label }
+
+		{ Required False }
+
+	    }
+
+	    { Note
+
+		{ MappingName OperationIDLDefinition }
+
+		{ Row
+
+		    { Hsect HSECT }
+
+		    { Vsect IDLDefinitionVsect }
+
+		    { Row ROW }
+
+		}
+
+	    }
+
+		{ Required False }
+
+	}
+
+    }
+
+}
+
+
+
+CellType 192 OperationIDLAttribute
+
+{
+
+    { Semantics
+
+	{ ItemMapping
+
+	    { MappingName OperationIDLAttribute }
+
+	    { Type UmlOperationIDLAttribute }
+
+	    { Value
+
+		{ LabelSelector Label }
+
+		{ Required False }
+
+	    }
+
+	    { Note
+
+		{ MappingName OperationIDLDefinition }
+
+		{ Row
+
+		    { Hsect HSECT }
+
+		    { Vsect IDLDefinitionVsect }
+
+		    { Row ROW }
+
+		}
+
+	    }
+
+	}
+
+    }
+
+}
+
+
+
+CellType 193 OperationIDLContext
+
+{
+
+    { Semantics
+
+	{ ItemMapping
+
+	    { MappingName OperationIDLContext }
+
+	    { Type UmlOperationIDLContext }
+
+	    { Value
+
+		{ LabelSelector Label }
+
+		{ Required False }
+
+	     }
+
+	    { Note
+
+		{ MappingName OperationIDLDefinition }
+
+		{ Row
+
+		    { Hsect HSECT }
+
+		    { Vsect IDLDefinitionVsect }
+
+		    { Row ROW }
+
+		}
+
+	    }
+
+	}
+
+    }
+
+}
+
+RowType 210 OperationTOOLImplementationRow
+
+{ { Semantics
+
+      { NoteMapping
+
+	  { MappingName OperationTOOLImplementation }
+
+	{ Type UmlOperationTOOLImplementation }
+
+	{ Parent  
+
+	    { MappingName Operation }
+
+	  { Cell
+
+	      { Hsect HSECT }
+
+	    { Vsect MainDefinitionVsect }
+
+	    { Row ROW }
+
+	    { Col OperationNameCol } } } } } }
+
+
+
+CellType 210 UmlTOOLOperationPrivilege
+
+{ { Semantics
+
+      { ItemMapping
+
+	  { MappingName UmlTOOLOperationPrivilege }
+
+	{ Precondition { LabelSelector Label } }
+
+	{ Type UmlTOOLOperationPrivilege }
+
+	{ Value { LabelSelector Label } }
+
+	{ Note  
+
+	    { MappingName OperationTOOLImplementation }
+
+	  { Row 
+
+	      { Hsect HSECT }
+
+		  { Vsect TOOLDefinitionVsect } 
+
+	    { Row ROW } } } } }
+
+   { ValidValues
+
+      { ItemValType UmlTOOLClassComponentPrivacyEnum } }
+
+  { Label "private" } }
+
+
+
+CellType 211 UmlTOOLOperationReturnEvent
+
+{ { Semantics
+
+      { ItemMapping
+
+	  { MappingName OperationTOOLReturnEvent }
+
+	{ Precondition { LabelSelector Label } }
+
+	{ Type UmlTOOLOperationReturnEvent }
+
+	{ Value { LabelSelector Label } }
+
+	{ Note  
+
+	    { MappingName OperationTOOLImplementation }
+
+	  { Row 
+
+	      { Hsect HSECT }
+
+		  { Vsect TOOLDefinitionVsect } 
+
+	    { Row ROW } } } } }
+
+  { NameCompletion
+
+      { NameCompletionFunc gte_col_item_name_completion_func } } }
+
+
+
+CellType 212 UmlTOOLOperationExceptionEvent
+
+{ { Semantics
+
+      { ItemMapping
+
+	  { MappingName OperationTOOLExceptionEvent }
+
+	{ Precondition { LabelSelector Label } }
+
+	{ Type UmlTOOLOperationExceptionEvent }
+
+	{ Value { LabelSelector Label } }
+
+	{ Note  
+
+	    { MappingName OperationTOOLImplementation }
+
+	  { Row 
+
+	      { Hsect HSECT }
+
+		  { Vsect TOOLDefinitionVsect } 
+
+	    { Row ROW } } } } }
+
+  { NameCompletion
+
+      { NameCompletionFunc gte_col_item_name_completion_func } } }
+
+
+
+CellType 213 UmlTOOLOperationCopyReturn
+
+{ { Semantics
+
+      { ItemMapping
+
+	  { MappingName UmlTOOLOperationCopyReturn }
+
+	{ Precondition { LabelSelector Label } }
+
+	{ Type UmlTOOLOperationCopyReturn }
+
+	{ Value { LabelSelector Label } }
+
+	{ Note  
+
+	    { MappingName OperationTOOLImplementation }
+
+	  { Row 
+
+	      { Hsect HSECT }
+
+		  { Vsect TOOLDefinitionVsect } 
+
+	    { Row ROW } } } } }
+
+ { ValidValues
+
+      { ItemValType Boolean } }
+
+  { Label "False" } }  
+
+
+
+CellType 214 UmlTOOLOperationKind
+
+{ { Semantics
+
+      { ItemMapping
+
+	  { MappingName UmlTOOLOperationKind }
+
+	{ Precondition { LabelSelector Label } }
+
+	{ Type UmlTOOLOperationKind }
+
+	{ Value { LabelSelector Label } }
+
+	{ Note  
+
+	    { MappingName OperationTOOLImplementation }
+
+	  { Row 
+
+	      { Hsect HSECT }
+
+		  { Vsect TOOLDefinitionVsect } 
+
+	    { Row ROW } } } } }
+
+  { ValidValues
+
+      { AllowNull True }
+
+      { ItemValType UmlTOOLOperationKindEnum } }
+
+  { Label "Method" } } 
+
+
+
+// JED
+
+// The signals map to nodes of type UmlSignal and links from the class
+
+// to the node. The UmlSignal nodes are not scoped to the class like
+
+// operations are, because they can be shared by multiple objects and
+
+// editors. There are 2 link types, corresponding to the two table
+
+// sections: UmlSignalSends and UmlSignalReceives
+
+
+
+CellType 200 SignalReceivedName
+
+{
+
+	{ Semantics
+
+		{ NodeMapping
+
+			{ MappingName SignalReceivedName }
+
+			{ InverseMapFunc uml_signal_inverse_map_func }	
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Name { LabelSelector Label } }
+
+			{ Type UmlSignal }
+
+			{ Signature 
+
+				{ Required False }
+
+				{ LabelFunc uclasst_canonical_args }
+
+				{ Cell
+
+					{ Hsect HSECT }
+
+					{ Vsect VSECT }
+
+					{ Row ROW }
+
+					{ Col SignalSignatureCol }
+
+				}
+
+			}
+
+		}
+
+		{ LinkMapping 
+
+			{ MappingName SignalReceivedLink }
+
+			{ Type UmlSignalReceives }
+
+			// from the class....
+
+			{ FromNode 
+
+				{ MappingName Class }
+
+				{ Cell
+
+					{ Hsect ClassHsect } 
+
+					{ Vsect MainDefinitionVsect }
+
+					{ Row 1 }
+
+					{ Col 1 }
+
+				}
+
+			}
+
+			// to the signal
+
+			{ ToNode 
+
+				{ MappingName SignalReceivedName }
+
+				{ Cell 
+
+					{ Hsect HSECT }
+
+					{ Vsect VSECT }
+
+					{ Row ROW }
+
+					{ Col COL }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ RenameFunc uml_operation_rename }	
+
+}
+
+
+
+CellType 205 SignalReceivedParameters
+
+{
+
+	{ DependentMapping
+
+		{ MappingName SignalReceivedName }
+
+		{ Cell
+
+			{ Hsect HSECT }
+
+			{ Vsect VSECT }
+
+			{ Row ROW }
+
+			{ Col SignalNameCol }
+
+		}
+
+	}
+
+}
+
+
+
+CellType 207 SignalSentParameters
+
+{
+
+	{ DependentMapping
+
+		{ MappingName SignalSentName }
+
+		{ Cell
+
+			{ Hsect HSECT }
+
+			{ Vsect VSECT }
+
+			{ Row ROW }
+
+			{ Col SignalNameCol }
+
+		}
+
+	}
+
+}
+
+
+
+CellType 210 SignalSentName
+
+{
+
+	{ Semantics
+
+		{ NodeMapping
+
+			{ MappingName SignalSentName }
+
+			{ InverseMapFunc uml_signal_inverse_map_func }	
+
+			{ Precondition { LabelSelector Label } }
+
+			{ Name { LabelSelector Label } }
+
+			{ Type UmlSignal }
+
+			{ Signature 
+
+				{ Required False }
+
+				{ LabelFunc uclasst_canonical_args }
+
+				{ Cell
+
+					{ Hsect HSECT }
+
+					{ Vsect VSECT }
+
+					{ Row ROW }
+
+					{ Col SignalSignatureCol }
+
+				}
+
+			}
+
+		}
+
+		{ LinkMapping 
+
+			{ MappingName SignalSentLink }
+
+			{ Type UmlSignalSends }
+
+			// from the class....
+
+			{ FromNode 
+
+				{ MappingName Class }
+
+				{ Cell
+
+					{ Hsect ClassHsect } 
+
+					{ Vsect MainDefinitionVsect }
+
+					{ Row 1 }
+
+					{ Col 1 }
+
+				}
+
+			}
+
+			// to the signal
+
+			{ ToNode 
+
+				{ MappingName SignalSentName }
+
+				{ Cell 
+
+					{ Hsect HSECT }
+
+					{ Vsect VSECT }
+
+					{ Row ROW }
+
+					{ Col COL }
+
+				}
+
+			}
+
+		}
+
+	}
+
+	{ RenameFunc uml_operation_rename }	
+
+}
+
+
+
+
+
+
+
+Include "rules/gte_menu_bar.std"
+
+Include "rules/gte_annot_menu.std"
+
+Include "rules/gte_edit_menu.std"
+
+
+
+//Include "rules/class_spec.prop"
+
+Include "rules/re_navigate.prop"
+
+//Include "rules/objectada.prop"
+
+
+
+Menu Navigation
+
+{
+
+  { InMenuBar True }
+
+//   { Label "&Navigation" }
+
+  { Pin True }	
+
+  { GenerationFunc idehook_table_methods_main_generation_func_by_type }
+
+  { Tag "Navigation" }
+
+}
+
+//ECR 3792 begin
+Menu NavigationSubmenu
+{
+    { GenerationFunc idehook_table_methods_main_generation_func_by_type }
+    { Tag "Navigation" }
+
+}
+//ECR 3792 end
+
+
+Menu ProductMenu//UML
+
+{
+
+    { InMenuBar True }
+
+    { Label "&UML" }
+
+    { Pin True }
+
+  
+
+  { SubMenu
+
+      { Name ConstructFromDiagram }
+
+    { Label "Construct Class from &Diagram Definitions" } 
+
+    { ActiveFunc idehook_table_decorator_active_func }
+
+  }
+
+  { SubMenu
+
+      { Name ConstructFromAll }
+
+    { Label "Construct Class from &All Definitions" } 
+
+    { ActiveFunc idehook_table_decorator_active_func }
+
+  }
+
+  { MenuEntry
+
+    { ParseCondition "is_smdb_available();" }
+
+    { Name RebuildFromPEViaCC }
+
+    { Label "Update from &Reverse Engineering" } 
+
+    { Builtin "EditorQrlEval ClassTableInitializeFromPEViaCC();" }
+
+    { PlaceAfter ConstructFromAll } 
+
+  }
+
+  
+
+  { Spacer { Name CteSpacer2 } }
+
+  { MenuEntry
+
+    { Name ConstructInheritedOperations }
+
+    { Label "Refresh Inherited Operations Section" }
+
+    { Builtin "EditorQrlEval UmlInheritedOperationsHsect();" }
+
+    { ActiveFunc idehook_table_decorator_active_func }
+
+  }
+
+// ECR3796 begin these invisible Menu Entries are used in the ToolBar !! 
+	{ MenuEntry
+
+		{ Name AddAttribute }
+
+		{ Label "Add Attribute" }
+
+		{ Builtin "EditorQrlEval create_new_attribute();" }
+
+		{ Accelerator
+
+			{ Label "Alt+Ctrl+A" }
+
+			{ Value "Alt Ctrl<Key>a" }
+
+		}
+
+		{ Show False }
+
+		{ Active True }
+
+	}
+
+	{ MenuEntry
+
+		{ Name AddOperation }
+
+		{ Label "Add Operation" }
+
+		{ Builtin "EditorQrlEval create_new_operation();" }
+
+		{ Accelerator
+
+			{ Label "Alt+Ctrl+O" }
+
+			{ Value "Alt Ctrl<Key>o" }
+
+		}
+
+		{ Show False }
+
+		{ Active True }
+
+	}
+// ECR3796 end: these invisible Menu Entries are used in the ToolBar !! 
+
+ 
+
+  //{ Spacer { Name CteSpacer3 } }
+
+
+
+  
+
+  //{ MenuEntry
+
+      //{ Name ShowClassDialog }
+
+    //{ Label "Edit Class Specification..." }
+
+    //{ Builtin "EditorQrlEvalNoSave ClassCRUD__interface();" }
+
+    //{ ActiveFunc idehook_table_decorator_active_func }
+
+  //}
+
+  
+
+}
+
+
+
+Menu ConstructFromDiagram
+
+{
+// ECR 6149
+    { Pin True }
+    { Label "Construct Class from Diagram" }
+// ECR 6149 end
+
+  { MenuEntry
+
+      { Name ConstructFromDiagramLocalOnly }
+
+    { Label "&Local Operations Only" } 
+
+    // Added implement_interface parameter for ECR3000
+
+    { Builtin "EditorQrlEval UmlClassTableReInitializeFromDiagramDefinitions(False,False);" }
+
+    { ActiveFunc idehook_table_decorator_active_func }
+
+  }
+
+  { MenuEntry
+
+      { Name ConstructFromDiagramInheritAbstract }
+
+    { Label "&Inherit Abstract Operations" } 
+
+    // Added implement_interface parameter for ECR3000
+
+    { Builtin "EditorQrlEval UmlClassTableReInitializeFromDiagramDefinitions(True,False);" }
+
+    { ActiveFunc idehook_table_decorator_active_func }
+
+  }
+
+  // New Menu Entry for ECR3000
+
+  { MenuEntry
+
+      { Name ConstructFromDiagramImplementInterface }
+
+    { Label "Im&plement Interface Operations" } 
+
+    { Builtin "EditorQrlEval UmlClassTableReInitializeFromDiagramDefinitions(True,True);" }
+
+    { ActiveFunc idehook_table_decorator_active_func }
+
+  }
+
+}
+
+
+
+Menu ConstructFromAll
+
+{
+// ECR 6149
+    { Pin True }
+    { Label "Construct Class from All Definitions" }
+// ECR 6149 end
+  { MenuEntry
+
+      { Name ConstructFromAllLocalOnly }
+
+    { Label "&Local Operations Only" } 
+
+    // Added implement_interface parameter for ECR3000
+
+    { Builtin "EditorQrlEval UmlClassTableReInitializeFromAllDefinitions(False,False);" }
+
+    { ActiveFunc idehook_table_decorator_active_func }
+
+  }
+
+  { MenuEntry
+
+      { Name ConstructFromAllInheritAbstract }
+
+    { Label "&Inherit Abstract Operations" } 
+
+    // Added implement_interface parameter for ECR3000
+
+    { Builtin "EditorQrlEval UmlClassTableReInitializeFromAllDefinitions(True,False);" }
+
+    { ActiveFunc idehook_table_decorator_active_func }
+
+  }
+
+  // New Menu Entry for ECR3000
+
+  { MenuEntry
+
+      { Name ConstructFromAllImplementInterface }
+
+    { Label "Im&plement Interface Operations" } 
+
+    { Builtin "EditorQrlEval UmlClassTableReInitializeFromAllDefinitions(True,True);" }
+
+    { ActiveFunc idehook_table_decorator_active_func }
+
+  }
+
+}
+
+
+
+// begin ECR 4476
+
+Menu ProductMenu//UML
+
+{
+
+    { MenuEntry
+
+	{ Name CopyToSubclassesMenu }
+
+	{ PlaceBefore CteSpacer2 }
+
+	{ Label "Copy Operation to Subclasses..." }
+
+	{ Builtin "EditorQrlEval gte_copy_to_subclasses();" }
+
+	{ ActiveFunc gte_copy_to_subclasses_search_active_func }
+
+    }
+
+}
+
+
+
+PropertySheet GteCopyToSubclasses
+
+{
+
+    { Name GteCopyToSubclasses }
+
+    { Label "Select the Subclasses" }
+
+    { OwnerActionCallback gte_copy_to_subclasses_owneraction_cb }
+
+    { Properties
+
+	{ List
+
+	    { Name SubclassesList }
+
+	    { Label "Subclasses" }
+
+	    { Rows 10 }
+
+	    { Width 25 }
+
+	    { Exclusive False }
+
+	    { LabelAbove True }
+
+	    { Event
+
+		{ Type Select }
+
+		{ Callback "gte_copy_to_subclasses_list_select_cb" }
+
+	    }
+
+	}
+
+	{ Button
+
+	    { Name OK }
+
+	    { Label "OK" }
+
+	    { Event
+
+		{ Type Select }
+
+		{ Callback "gte_copy_to_subclasses_ok_select_cb" }
+
+	    }
+
+	}
+
+	{ Button
+
+	    { Name Apply }
+
+	    { Label "Apply" }
+
+	    { Event
+
+		{ Type Select }
+
+		{ Callback "gte_copy_to_subclasses_apply_select_cb" }
+
+	    }
+
+	}
+
+	{ Button
+
+	    { Name Cancel }
+
+	    { Label "Cancel" }
+
+	}
+
+    }
+
+}
+
+// end ECR 4476
+
+
+
+Menu	UML
+
+{
+
+  // ECR 5887 begin - commented MenuEntry
+  // { ParseCondition "is_smdb_available();" }
+
+  // { MenuEntry
+
+  //   { Name RebuildFromPEViaCC }
+
+  //   { Label "Update from Reverse Engineering" } 
+
+  //   { Builtin "EditorQrlEval ClassTableInitializeFromPEViaCC();" }
+
+  //   { PlaceAfter ConstructFromAll } 
+
+  // }
+  // ECR 5887 end
+
+  
+
+  //  { MenuEntry 
+
+  //      { Name AllMappedNodes }
+
+  //      { Label "List All Mapped Nodes" }
+
+  //      { Builtin "EditorQrlEval ListAllMappedNodes();" }	
+
+  //    }
+
+}
+
+Menu	UML
+
+{
+
+  // uml - im integration
+
+  { MenuEntry  
+
+    { Name IMEntities }
+
+    { Label "Construct Class From &IM Entity..." } 
+
+//    { PlaceAfter ConstructFromDiagram }
+
+    { Builtin "EditorQrlEval UmlClassTableInitializeFromEntity();" }
+
+    // { ActiveFunc idehook_table_decorator_active_func }
+
+  }
+
+  { MenuEntry  
+
+    { Name IMEntitiesAdd }
+
+    { Label "Add &IM Entity Attributes as Attributes..." } 
+
+    { PlaceAfter IMEntities }
+
+    { Builtin "EditorQrlEval UmlClassTableAddIMEAAsAttributes();" }
+
+    // { ActiveFunc idehook_table_decorator_active_func }
+
+  }
+
+  
+
+}
+
+
+
+Menu Tools
+
+{
+
+    { MenuEntry
+
+        { Name CheckSemantics }
+
+        { Builtin "EditorQrlEval uclasst_check_semantics(\"${file}\");" }
+
+    }
+
+}
+
+
+// Begin Add ECR 3608 sort capability
+HsectType 10 AttributeHsect 
+{
+    { RowSorts
+        { Sort
+            { Name SortByNameTypeAlphaIncreasing }
+            { Label "Attributes By Name" }
+            { Key 	
+                { Value
+	                { LabelSelector Label }
+                    { Cell 
+                    	{ Hsect AttributeHsect }
+                        { Vsect MainDefinitionVsect }
+                        { Row ROW }
+                        { Col AttributeNameCol } 
+                    }
+                } 
+                { Ordering LexicographicalIncreasing } 
+            }
+        }
+        { Sort
+            { Name SortByTypeNameAlphaIncreasing }
+            { Label "Attributes By Type, Name" }
+            { Key 	
+                { Value
+                    { LabelSelector Label }
+                    { Cell 
+                        { Hsect AttributeHsect }
+                        { Vsect MainDefinitionVsect }
+                        { Row ROW }
+                        { Col AttributeTypeCol }
+                    }
+                } 
+                { Ordering LexicographicalIncreasing }
+            }
+            { Key 	
+                { Value
+                    { LabelSelector Label }
+                    { Cell 
+                        { Hsect AttributeHsect }
+                        { Vsect MainDefinitionVsect }
+                        { Row ROW }
+                        { Col AttributeNameCol }
+                     }
+                } 
+                { Ordering LexicographicalIncreasing }
+             }
+        }
+        { Sort
+            { Name SortByCurrentNameTypeAlphaIncreasing }
+            { Label "Attributes By Current Col, Name" }
+            { Key 	
+                { Value
+                    { LabelSelector Label }
+                    { Cell 
+                        { Hsect AttributeHsect }
+                        { Vsect VSECT }
+                        { Row ROW }
+                        { Col COL }
+                    }
+                } 
+                { Ordering LexicographicalIncreasing }
+            }
+            { Key 	
+                { Value
+                    { LabelSelector Label }
+                    { Cell 
+                        { Hsect AttributeHsect }
+                        { Vsect MainDefinitionVsect }
+                        { Row ROW }
+                        { Col AttributeNameCol }
+                    }
+                } 
+                { Ordering LexicographicalIncreasing }
+            }
+        }
+        { Sort
+            { Name SortByCurrentTypeNameAlphaIncreasing }
+            { Label "Attributes By Current Col, Type, Name" }
+            { Key 	
+                { Value
+                    { LabelSelector Label }
+                    { Cell 
+                        { Hsect AttributeHsect }
+                        { Vsect VSECT }
+                        { Row ROW }
+                        { Col COL }
+                    }
+                } 
+                { Ordering LexicographicalIncreasing }
+            }
+            { Key 	
+                { Value
+                    { LabelSelector Label }
+                    { Cell 
+                        { Hsect AttributeHsect }
+                        { Vsect MainDefinitionVsect }
+                        { Row ROW }
+                        { Col AttributeTypeCol }
+                    }
+                } 
+                { Ordering LexicographicalIncreasing }
+            }
+            { Key 	
+                { Value
+                    { LabelSelector Label }
+                    { Cell 
+                        { Hsect AttributeHsect }
+                        { Vsect MainDefinitionVsect }
+                        { Row ROW }
+                        { Col AttributeNameCol }
+                    }
+                } 
+                { Ordering LexicographicalIncreasing }
+            }
+        }
+    }
+}
+
+HsectType 110 OperationHsect
+{ 	
+  { RowSorts
+      { Sort
+	  { Name SortByConstructorsNameArgsAlphaIncreasing }
+	{ Label "Operations By Constructors, Name, Arguments" }
+	{ Key 	
+	    { Value
+		{ LabelFunc "OperationIsConstructor();" }
+	      { Cell 
+		  { Hsect OperationHsect }
+		{ Vsect MainDefinitionVsect }
+		{ Row ROW }
+		{ Col OperationNameCol } } } 
+	  { Ordering IntegerDecreasing } }
+	{ Key 	
+	    { Value
+		{ LabelSelector Label }
+	      { Cell 
+		  { Hsect OperationHsect }
+		{ Vsect MainDefinitionVsect }
+		{ Row ROW }
+		{ Col OperationNameCol } } } 
+	  { Ordering LexicographicalIncreasing } }
+	{ Key 	
+	    { Value
+		{ LabelSelector Label }
+	      { Cell 
+		  { Hsect OperationHsect }
+		{ Vsect MainDefinitionVsect }
+		{ Row ROW }
+		{ Col OperationSignatureCol } } } 
+	  { Ordering LexicographicalIncreasing } } }
+    { Sort
+	{ Name SortByNameArgsAlphaIncreasing }
+      { Label "Operations By Name, Arguments" }
+      { Key 	
+	  { Value
+	      { LabelSelector Label }
+	    { Cell 
+		{ Hsect OperationHsect }
+	      { Vsect MainDefinitionVsect }
+	      { Row ROW }
+	      { Col OperationNameCol } } } 
+	{ Ordering LexicographicalIncreasing } }
+      { Key 	
+	  { Value
+	      { LabelSelector Label }
+	    { Cell 
+		{ Hsect OperationHsect }
+	      { Vsect MainDefinitionVsect }
+	      { Row ROW }
+	      { Col OperationSignatureCol } } } 
+	{ Ordering LexicographicalIncreasing } } }
+    { Sort
+	{ Name SortByCurrentNameArgsAlphaIncreasing }
+      { Label "Operations By Current Col, Name, Arguments" }
+      { Key 	
+	  { Value
+	      { LabelSelector Label }
+	    { Cell 
+		{ Hsect OperationHsect }
+	      { Vsect VSECT }
+	      { Row ROW }
+	      { Col COL } } } 
+	{ Ordering LexicographicalIncreasing } }
+      { Key 	
+	  { Value
+	      { LabelSelector Label }
+	    { Cell 
+		{ Hsect OperationHsect }
+	      { Vsect MainDefinitionVsect }
+	      { Row ROW }
+	      { Col OperationNameCol } } } 
+	{ Ordering LexicographicalIncreasing } }
+      { Key 	
+	  { Value
+	      { LabelSelector Label }
+	    { Cell 
+		{ Hsect OperationHsect }
+	      { Vsect MainDefinitionVsect }
+	      { Row ROW }
+	      { Col OperationSignatureCol } } } 
+	{ Ordering LexicographicalIncreasing } } } } 
+}
+
+
+Menu Sort
+{
+  { InMenuBar True }
+  { Label "Sort" }
+  { Mnemonic "S" }
+  { Pin True }
+  { GenerationFunc idehook_table_sorts_main_generation_func_by_type }
+  { Tag "RowSorts" }
+}
+// End ECR 3608
+
+// ECR 3789 begin
+
+Menu MenuBarEdit
+{
+    { MenuEntry
+    	{ Name EditObjectDescription }
+        { Label "Cell Description..." }
+    	{ PlaceBefore AnnotEdit }
+        { Builtin "EditorQrlEval ps_EOD_cb(\"GenericObject\");" }
+        { Accelerator
+    	{ Label "Ctrl+T" }
+        { Value "Ctrl<Key>T" }
+        }
+        { ActiveFunc idehook_table_edit_annot_item_active_func }
+    }
+
+}
+
+Menu Edit
+{
+    { MenuEntry
+    	{ Name EditObjectDescription }
+    	{ PlaceBefore AnnotEdit }
+        { Label "Cell Description..." }
+        { Builtin "EditorQrlEval ps_EOD_cb(\"GenericObject\");" }
+        { Accelerator
+    	{ Label "Ctrl+T" }
+        { Value "Ctrl<Key>T" }
+        }
+        { ActiveFunc idehook_table_edit_annot_item_active_func }
+    }
+
+}
+
+Global 1 UmlExtensibilityPropsXXX
+{
+    { Properties
+        
+        { Button
+            { Name "ObjectDescriptionXXX" }
+            { Label "Description..." }
+            { Event
+                { Type Select }
+                { Callback "ps_NoteDescription_cb" }
+            }
+        }
+
+ 	    { Group
+            { Name Extensibility }
+            { Members ( Stereotype 
+                        Constraints
+                        TaggedValues ObjectDescriptionXXX) }
+        }
+    }
+}
+
+// ECR 8008
+// Removed 'UmlObjectDescriptionButton' and 'UmlObjectDescriptionSheet'
+// Instead, those from rules/extensibility.prop are used
+
+// ECR 3789 end
+
+
+Include "rules/uclasst_navigations.rules"
+
+
+
+// ECR3484, new include
+
+Include "rules/uclasst_pick.rules"
+
+// ECR 6880 Property sheets from table editors
+Include "rules/uclassd.prop"
+
+Menu Edit
+{ 
+    { MenuEntry
+        { Name ObjectProperties }
+        { Show True }
+        { Label "Pr&operties" }
+    	{ Accelerator { Value " " } }
+    	{ Builtin "EditorQrlEvalNoSave UmlPopUpPropSheet(\"uclasst\");" }
+    	{ ActiveFunc UmlClassObjectPropsActive }
+    }
+}
+
+Menu MenuBarEdit
+{
+    { MenuEntry
+        { Name ObjectProperties }
+        { Show True }
+        { Label "Pr&operties" }
+        { Builtin "EditorQrlEvalNoSave UmlPopUpPropSheet(\"uclasst\");" }
+	    { ActiveFunc UmlClassObjectPropsActive }
+    }
+}
+// ECR 6880 end
+
+
+IncludeIfExists "user/uml/rules/user_uclasst.rules"
+
+
+
+PassWord "20FD97F8"
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,24 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1994
+// 	All rights reserved
+//
+
+
+Note 801509
+{
+	{ AppType OMTFlowDefinition }
+        { HelpText "The Data/Control Flow note lets you add items that capture modeling information about a data or control flow." }
+	{ PrintName "Data/Control Flow" }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ Item
+		{ AppType OMTFlowUpdate }
+                { HelpText "The Access and Update item lets you indicate that a data flow represents both a read (access) and write (update) of the data value. When this item is set to true, it causes the data flow to be shown with an arrow head in both directions." }
+		{ PrintName "Access and Update" }
+		{ Bounds { Min 1 } { Max 1 } }
+		{ InitValue "False" }
+	}
+}
+

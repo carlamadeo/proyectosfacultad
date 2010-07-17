@@ -1,0 +1,30 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1995
+// 	All rights reserved
+//
+////////////////////////////////////////////////////////////////////////////////
+
+// This script should get run after running an stputil command to rename a 
+// diagrame or table in order to message the change to any active editors 
+
+external string filetype;
+external string name;
+
+// from oms_enum.h
+const int OMS_NAME_ATTR_ENUM = 0;
+
+void
+main()
+{
+  file r;
+  r = find_by_query("file[${filetype} && name='${name}']");
+
+  system("stpem -p " + current_projdir() + " -s " + current_system() + 
+         " -C 'SystemObjectAttributeChanged ${r.id} file ${r.id} Self " +
+	 to_string(OMS_NAME_ATTR_ENUM) + " \"${name}\" " + 
+	 to_string(gochaRename) + "'");
+}
+

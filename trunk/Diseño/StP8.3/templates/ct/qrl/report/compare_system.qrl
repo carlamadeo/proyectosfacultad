@@ -1,0 +1,2121 @@
+#include "qrl/include/all_files_formats.inc"
+
+script_help = "This report compares two versions of the same StP systems.";
+
+external string proj1 = "";
+external_help = "The project directory of the new system, uses the current project directory as default";
+
+external string system1 = "";
+external_help = "The new system's name, if neither system1 nor baseline1 are set the current system is used as default";
+
+external string baseline1 = "";
+external_help = "A baseline of the new system, will be used when system1 is not set";
+
+external string proj2 = "";
+external_help = "The project directory of the old system, uses the current project directory as default";
+
+external string system2 = "";
+external_help = "The old system's name";
+
+external string baseline2 = "";
+external_help = "A baseline of the old system, will be used when system2 is not set";
+
+// pair of indizes into sysdata.xxx lists, used to find pairs of notation elements.
+struct element_idx_pair {
+    int sys1;           // index into sysdata.system1.xxx
+    int sys2;           // index into sysdata.system2.xxx
+};
+
+// pair of element_ids and index to sysdata.system[12].xxx lists (sorted by id)
+struct id2idx {
+	int id;             // database id of the element
+	int idx;            // index into cmp_xxx lists
+};
+
+// a group of 
+struct cmp_note {
+    int obj_pair_idx;   // index into the element_idx_pair list of the objects
+//    int file_pair_idx;  // index into the element_idx_pair list of the files (only if not an annotation file)
+    string type;
+    string name;
+    int note_idx;       // index into sysdata.note
+};
+
+struct note_cmpidx {
+    int obj_pair_idx;   // index into the element_idx_pair list of the objects
+//    int file_pair_idx;  // index into the element_idx_pair list of the files (only if not an annotation file)
+    string type;
+    string name;
+	int sys1;           // index into sysdata.system1.xxx_notes
+	int sys2;           // index into sysdata.system2.xxx_notes
+	string element_guid;// guid of the annotated object
+};
+
+// a group of 
+struct cmp_item {
+    int obj_pair_idx;   // index into the element_idx_pair list of the objects
+    int note_pair_idx;  // index into the element_idx_pair list of the notes
+    string type;
+    int item_idx;       // index into sysdata.item
+};
+
+struct item_cmpidx {
+    int obj_pair_idx;   // index into the element_idx_pair list of the objects
+    int note_pair_idx;  // index into the element_idx_pair list of the notes
+    string type;
+	int sys1;           // index into sysdata.system1.xxx_notes
+	int sys2;           // index into sysdata.system2.xxx_notes
+	string element_guid;// guid of the annotated object
+};
+
+// a group of 
+struct cmp_ref {
+    int file_pair_idx;  // index into the element_idx_pair list of the files
+    int obj_pair_idx;   // index into the element_idx_pair list of the objects
+    int ref_idx;        // index into sysdata.system[12].xxx_ref
+};
+
+// pair of index groups into sysdata.xxx lists, used to find pairs of xxx_ref elements.
+struct refcmpidx {
+    int file_pair_idx;  // index into the element_idx_pair list of the files
+    int obj_pair_idx;   // index into the element_idx_pair list of the objects
+    int sys1;           // index into sysdata.system[12].xxx_ref
+    int sys2;           // index into sysdata.system[12].xxx_ref
+	string file_guid;
+};
+
+struct data {
+    list files;
+    list nodes;
+    list links;
+    list cntxs;
+    list node_refs;
+    list link_refs;
+    list cntx_refs;
+
+    list file_trans; // to find symbols by ID (eg. for scoping)
+    list node_trans;
+    list link_trans;
+    list cntx_trans;
+
+    list file_notes;
+    list node_notes;
+    list link_notes;
+    list cntx_notes;
+
+    list file_note_trans;
+    list node_note_trans;
+    list link_note_trans;
+    list cntx_note_trans;
+
+    list file_items;
+    list node_items;
+    list link_items;
+    list cntx_items;
+};
+
+struct sysdata {
+    data system1;
+    data system2;
+ 
+    list cmp_files;
+    list cmp_nodes;
+    list cmp_links;
+    list cmp_cntxs;
+
+    list cmp_node_refs;
+    list cmp_link_refs;
+    list cmp_cntx_refs;
+
+    list cmp_file_notes;
+    list cmp_node_notes;
+    list cmp_link_notes;
+    list cmp_cntx_notes;
+
+    list cmp_file_items;
+    list cmp_node_items;
+    list cmp_link_items;
+    list cmp_cntx_items;
+};
+
+int main()
+{
+    string system1PrintName, system2PrintName;
+    boolean destroy_system1 = False;
+    boolean destroy_system2 = False;
+
+    enable_oms_cache(False);
+
+    string fake_sys = current_system();
+    string fake_proj = current_projdir();
+
+    if(proj1 == "")
+        proj1 = current_projdir();
+
+    if(proj2 == "")
+        proj2 = current_projdir();
+
+    if(system1 == "") {
+        if(baseline1 == "") {
+            system1 = current_system();
+            system1PrintName = system1;
+        }
+    }
+
+    if(system1 == "") {
+        if(baseline1 == "") {
+            print_message("system system1 is not set");
+            return 2;
+        }
+        else {
+            system1 = file_part(temp_file("c", "1")); // ECR 7883
+            proj1 = temp_dir();
+            if(sys_load_system_baseline(proj1, baseline1, False, system1) != 0) {
+                print_message("cannot create temporary system from baseline");
+                return 2;
+            }
+            system1PrintName = "baseline " + file_part(baseline1);
+            destroy_system1 = True;
+        }
+    }
+    else
+        system1PrintName = "system " + system1;
+
+    if(system2 == "") {
+        if(baseline2 == "") {
+            print_message("system system2 is not set");
+            if(destroy_system1 == True) {
+                sys_destroy(proj1, system1, True);
+            }
+            return 2;
+        }
+        else {
+            system2 = file_part(temp_file("c", "2")); // ECR 7883
+            proj2 = temp_dir();
+            if(sys_load_system_baseline(proj2, baseline2, False, system2) != 0) {
+                print_message("cannot create temporary system from baseline");
+                if(destroy_system1 == True) {
+                    sys_destroy(proj1, system1, True);
+                }
+                return 2;
+            }
+            system2PrintName = "baseline " + file_part(baseline2);
+            destroy_system2 = True;
+        }
+    }
+    else
+        system2PrintName = "system " + system2;
+
+    if(system1 == system2 && proj1 == proj2) {
+        print_message("system system1 must be different from system2");
+        return 2;
+    }
+
+    // open system1 and slurp in the data
+    if(repository_open(proj1, system1) == False) {
+        print_message("cannot open system1 " + path_compose(proj1, system1));
+        if(destroy_system2 == True) {
+            sys_destroy(proj2, system2, True);
+        }
+        return 2;
+    }
+
+    format(DefaultFormatFile);
+
+    // the sorting of these queries is needed to make the following code work!
+    // do not even think to change it
+
+    sysdata sysdata;
+
+    // slurp in repository of system 1
+    sysdata.system1.files = list_select("file[!ObjectAnnotation & !SysIdFile & !TedTable] sort by guid");
+    sysdata.system1.nodes = list_select("node[node_refs] sort by guid, name");
+    sysdata.system1.links = list_select("link[link_refs] sort by guid, name");
+    sysdata.system1.cntxs = list_select("cntx[cntx_refs] sort by guid, name");
+    sysdata.system1.node_refs = list_select("node_ref sort by file_id");
+    sysdata.system1.link_refs = list_select("link_ref sort by file_id");
+    sysdata.system1.cntx_refs = list_select("cntx_ref sort by file_id");
+    sysdata.system1.file_notes = note_sort(list_select("note[file[!ObjectAnnotation & !SysIdFile & !TedTable]] sort by obj_id, name"));
+    sysdata.system1.node_notes = note_sort(list_select("note[node[node_refs]] sort by obj_id, name"));
+    sysdata.system1.link_notes = note_sort(list_select("note[link[link_refs]] sort by obj_id, name"));
+    sysdata.system1.cntx_notes = note_sort(list_select("note[cntx[cntx_refs]] sort by obj_id, name"));
+    sysdata.system1.file_items = item_sort(list_select("item[!ObjectName & file[!ObjectAnnotation & !SysIdFile & !TedTable]] sort by obj_id, note_id"));
+    sysdata.system1.node_items = item_sort(list_select("item[!ObjectName & node[node_refs]] sort by obj_id, note_id"));
+    sysdata.system1.link_items = item_sort(list_select("item[!ObjectName & link[link_refs]] sort by obj_id, note_id"));
+    sysdata.system1.cntx_items = item_sort(list_select("item[!ObjectName & cntx[cntx_refs]] sort by obj_id, note_id"));
+
+    if(destroy_system1 == True) {
+        repository_open(fake_proj, fake_sys);
+        sys_destroy(proj1, system1, True);
+    }
+
+    if(repository_open(proj2, system2) == False) {
+        print_message("cannot open system2 " + path_compose(proj2, system2));
+        return 2;
+    }
+
+    // slurp in repository of system 2
+    sysdata.system2.files = list_select("file[!ObjectAnnotation & !SysIdFile & !TedTable] sort by guid");
+    sysdata.system2.nodes = list_select("node[node_refs] sort by guid, name");
+    sysdata.system2.links = list_select("link[link_refs] sort by guid, name");
+    sysdata.system2.cntxs = list_select("cntx[cntx_refs] sort by guid, name");
+    sysdata.system2.node_refs = list_select("node_ref sort by file_id");
+    sysdata.system2.link_refs = list_select("link_ref sort by file_id");
+    sysdata.system2.cntx_refs = list_select("cntx_ref sort by file_id");
+    sysdata.system2.file_notes = note_sort(list_select("note[file[!ObjectAnnotation & !SysIdFile & !TedTable]] sort by obj_id, name"));
+    sysdata.system2.node_notes = note_sort(list_select("note[node[node_refs]] sort by obj_id, name"));
+    sysdata.system2.link_notes = note_sort(list_select("note[link[link_refs]] sort by obj_id, name"));
+    sysdata.system2.cntx_notes = note_sort(list_select("note[cntx[cntx_refs]] sort by obj_id, name"));
+    sysdata.system2.file_items = item_sort(list_select("item[!ObjectName & file[!ObjectAnnotation & !SysIdFile & !TedTable]] sort by obj_id, note_id"));
+    sysdata.system2.node_items = item_sort(list_select("item[!ObjectName & node[node_refs]] sort by obj_id, note_id"));
+    sysdata.system2.link_items = item_sort(list_select("item[!ObjectName & link[link_refs]] sort by obj_id, note_id"));
+    sysdata.system2.cntx_items = item_sort(list_select("item[!ObjectName & cntx[cntx_refs]] sort by obj_id, note_id"));
+
+    if(destroy_system2 == True) {
+        repository_open(fake_proj, fake_sys);
+        sys_destroy(proj2, system2, True);
+    }
+
+    // a couple of lists containing pairs of indizes to the 'repository' lists above
+    // the list is of type element_idx_pair
+    sysdata.cmp_files = pair_stuff(sysdata.system1.files, sysdata.system2.files, "file");
+    sysdata.cmp_nodes = pair_stuff(sysdata.system1.nodes, sysdata.system2.nodes, "node");
+    sysdata.cmp_links = pair_stuff(sysdata.system1.links, sysdata.system2.links, "link");
+    sysdata.cmp_cntxs = pair_stuff(sysdata.system1.cntxs, sysdata.system2.cntxs, "cntx");
+
+    // create lists to translate quickly a element-id to an index into the sysdata.xxx lists
+    // the list is of type id2idx
+    sysdata.system1.file_trans = trans_stuff(sysdata.system1.files, sysdata.cmp_files, 1, "file");
+    sysdata.system2.file_trans = trans_stuff(sysdata.system2.files, sysdata.cmp_files, 2, "file");
+    sysdata.system1.node_trans = trans_stuff(sysdata.system1.nodes, sysdata.cmp_nodes, 1, "node");
+    sysdata.system2.node_trans = trans_stuff(sysdata.system2.nodes, sysdata.cmp_nodes, 2, "node");
+    sysdata.system1.link_trans = trans_stuff(sysdata.system1.links, sysdata.cmp_links, 1, "link");
+    sysdata.system2.link_trans = trans_stuff(sysdata.system2.links, sysdata.cmp_links, 2, "link");
+    sysdata.system1.cntx_trans = trans_stuff(sysdata.system1.cntxs, sysdata.cmp_cntxs, 1, "cntx");
+    sysdata.system2.cntx_trans = trans_stuff(sysdata.system2.cntxs, sysdata.cmp_cntxs, 2, "cntx");
+
+    // create lists to pair object_ref's
+    // the list is of type refcmpidx
+    sysdata.cmp_node_refs = pair_stuff_refs(sysdata.cmp_nodes, sysdata.system1.node_refs, sysdata.system2.node_refs,
+                                            sysdata.cmp_files, sysdata.system1.node_trans, sysdata.system2.node_trans,
+                                            sysdata.system1.file_trans, sysdata.system2.file_trans,
+                                            sysdata.system1.files, sysdata.system2.files,
+                                            "node");
+    sysdata.cmp_link_refs = pair_stuff_refs(sysdata.cmp_links, sysdata.system1.link_refs, sysdata.system2.link_refs,
+                                            sysdata.cmp_files, sysdata.system1.link_trans, sysdata.system2.link_trans,
+                                            sysdata.system1.file_trans, sysdata.system2.file_trans,
+                                            sysdata.system1.files, sysdata.system2.files,
+                                            "link");
+    sysdata.cmp_cntx_refs = pair_stuff_refs(sysdata.cmp_cntxs, sysdata.system1.cntx_refs, sysdata.system2.cntx_refs,
+                                            sysdata.cmp_files, sysdata.system1.cntx_trans, sysdata.system2.cntx_trans,
+                                            sysdata.system1.file_trans, sysdata.system2.file_trans,
+                                            sysdata.system1.files, sysdata.system2.files,
+                                            "cntx");
+
+    sysdata.cmp_file_notes = pair_stuff_notes(sysdata.cmp_files, sysdata.cmp_files, sysdata.system1.file_notes, sysdata.system2.file_notes,
+                                              sysdata.system1.file_trans, sysdata.system2.file_trans,
+                                              sysdata.system1.file_trans, sysdata.system2.file_trans,
+                                              sysdata.system1.files, sysdata.system2.files,
+                                              "file");
+    sysdata.cmp_node_notes = pair_stuff_notes(sysdata.cmp_files, sysdata.cmp_nodes, sysdata.system1.node_notes, sysdata.system2.node_notes,
+                                              sysdata.system1.node_trans, sysdata.system2.node_trans,
+                                              sysdata.system1.file_trans, sysdata.system2.file_trans,
+                                              sysdata.system1.nodes, sysdata.system2.nodes,
+                                              "node");
+    sysdata.cmp_link_notes = pair_stuff_notes(sysdata.cmp_files, sysdata.cmp_links, sysdata.system1.link_notes, sysdata.system2.link_notes,
+                                              sysdata.system1.link_trans, sysdata.system2.link_trans,
+                                              sysdata.system1.file_trans, sysdata.system2.file_trans,
+                                              sysdata.system1.links, sysdata.system2.links,
+                                              "link");
+    sysdata.cmp_cntx_notes = pair_stuff_notes(sysdata.cmp_files, sysdata.cmp_cntxs, sysdata.system1.cntx_notes, sysdata.system2.cntx_notes,
+                                              sysdata.system1.cntx_trans, sysdata.system2.cntx_trans,
+                                              sysdata.system1.file_trans, sysdata.system2.file_trans,
+                                              sysdata.system1.cntxs, sysdata.system2.cntxs,
+                                              "cntx");
+
+    sysdata.system1.file_note_trans = trans_stuff(sysdata.system1.file_notes, sysdata.cmp_file_notes, 1, "note");
+    sysdata.system2.file_note_trans = trans_stuff(sysdata.system2.file_notes, sysdata.cmp_file_notes, 2, "note");
+    sysdata.system1.node_note_trans = trans_stuff(sysdata.system1.node_notes, sysdata.cmp_node_notes, 1, "note");
+    sysdata.system2.node_note_trans = trans_stuff(sysdata.system2.node_notes, sysdata.cmp_node_notes, 2, "note");
+    sysdata.system1.link_note_trans = trans_stuff(sysdata.system1.link_notes, sysdata.cmp_link_notes, 1, "note");
+    sysdata.system2.link_note_trans = trans_stuff(sysdata.system2.link_notes, sysdata.cmp_link_notes, 2, "note");
+    sysdata.system1.cntx_note_trans = trans_stuff(sysdata.system1.cntx_notes, sysdata.cmp_cntx_notes, 1, "note");
+    sysdata.system2.cntx_note_trans = trans_stuff(sysdata.system2.cntx_notes, sysdata.cmp_cntx_notes, 2, "note");
+
+
+    sysdata.cmp_file_items = pair_stuff_items(sysdata.cmp_files, sysdata.cmp_file_notes, sysdata.system1.file_items, sysdata.system2.file_items,
+                                              sysdata.system1.file_note_trans, sysdata.system2.file_note_trans,
+                                              sysdata.system1.file_trans, sysdata.system2.file_trans);
+    sysdata.cmp_node_items = pair_stuff_items(sysdata.cmp_nodes, sysdata.cmp_node_notes, sysdata.system1.node_items, sysdata.system2.node_items,
+                                              sysdata.system1.node_note_trans, sysdata.system2.node_note_trans,
+                                              sysdata.system1.node_trans, sysdata.system2.node_trans);
+    sysdata.cmp_link_items = pair_stuff_items(sysdata.cmp_links, sysdata.cmp_link_notes, sysdata.system1.link_items, sysdata.system2.link_items,
+                                              sysdata.system1.link_note_trans, sysdata.system2.link_note_trans,
+                                              sysdata.system1.link_trans, sysdata.system2.link_trans);
+    sysdata.cmp_cntx_items = pair_stuff_items(sysdata.cmp_cntxs, sysdata.cmp_cntx_notes, sysdata.system1.cntx_items, sysdata.system2.cntx_items,
+                                              sysdata.system1.cntx_note_trans, sysdata.system2.cntx_note_trans,
+                                              sysdata.system1.cntx_trans, sysdata.system2.cntx_trans);
+
+    // now for each OMS type there is a list containing pairs of corresponding entries
+
+    compare(sysdata, system1PrintName, system2PrintName);
+
+    return 0;
+}
+
+// create a list of pairs of indizes into the lists of the elements of the two systems
+// !! The order in this compare-list guarantees that both the indizes into the system's
+// !! nodes are always sorted in ascending order (!Ignoring the optional NULL values!)
+// since the list of elements is sorted by guid, the list of index-pairs is sorted that way too
+// this sort order is later used to find the pairs of obj_refs
+list pair_stuff(list stuff1, list stuff2, string type)
+{
+    list cmp_types = list_create("element_idx_pair", 0);
+    int i1 = 0;
+    int i2 = 0;
+    qrl_eval(type + " t1, t2;");
+    element_idx_pair element_idx_pair;
+
+    while(i1 < list_count(stuff1) && i2 < list_count(stuff2)) {
+        t1 = list_get(stuff1, i1);
+        t2 = list_get(stuff2, i2);
+        if(t1.guid == t2.guid) {
+            element_idx_pair.sys1 = i1;
+            element_idx_pair.sys2 = i2;
+            ++ i1;
+            ++ i2;
+        }
+        else if(t1.guid < t2.guid) {
+            element_idx_pair.sys1 = i1;
+            element_idx_pair.sys2 = NULL;
+            ++ i1;
+        }
+        else {
+            element_idx_pair.sys1 = NULL;
+            element_idx_pair.sys2 = i2;
+            ++ i2;
+        }
+        list_append(cmp_types, element_idx_pair);
+    }
+
+    element_idx_pair.sys2 = NULL;
+    while(i1 < list_count(stuff1)) {
+        element_idx_pair.sys1 = i1;
+        list_append(cmp_types, element_idx_pair);
+        ++ i1;
+    }
+
+    element_idx_pair.sys1 = NULL;
+    while(i2 < list_count(stuff2)) {
+        element_idx_pair.sys2 = i2;
+        list_append(cmp_types, element_idx_pair);
+        ++ i2;
+    }
+    return cmp_types;
+}
+
+list trans_stuff(list stuff, list cmp_type, int sysnr, string type)
+{
+	list id2idx_list = list_create("id2idx", 0);
+	id2idx id2idx;
+	int i;
+    if(type != "note") {
+        element_idx_pair idx_pair;
+    }
+    else {
+        note_cmpidx idx_pair;
+    }
+    string typeStatement = "if(idx_pair.sys" + sysnr + " != NULL) t = list_get(stuff, idx_pair.sys" + sysnr + "); else t = NULL;";
+	qrl_eval(type + " t;");
+
+	for(i = 0; i < list_count(cmp_type); ++ i) {
+        idx_pair = list_get(cmp_type, i);
+		qrl_eval(typeStatement);
+		if(t != NULL) {
+            id2idx.id = t.id;
+            id2idx.idx = i;
+            list_append(id2idx_list, id2idx);
+		}
+	}
+
+	return list_sort_by_field(id2idx_list, "id");
+}
+
+list pair_stuff_refs(list cmp_type, list type_refs1, list type_refs2,
+                     list cmp_files, list type_trans1, list type_trans2,
+                     list file_trans1, list file_trans2,
+                     list files1, list files2, string type)
+{
+    int i;
+    int ref_id;
+    int id_f = -1;
+    qrl_eval(type + "_ref t_ref;");
+    cmp_ref cmp_ref;
+    id2idx id2idx;
+    string idAssignStmt = "ref_id = t_ref." + type + "_id;";
+    list cmp_refs1 = list_create("cmp_ref", 0);
+    list cmp_refs2 = list_create("cmp_ref", 0);
+
+    for(i = 0; i < list_count(type_refs1); ++ i) {
+        t_ref = list_get(type_refs1, i);
+        qrl_eval(idAssignStmt);
+        id2idx = sorted_list_find_val_by_field(type_trans1, "id", ref_id);
+        cmp_ref.obj_pair_idx = id2idx.idx;
+        if(id_f != t_ref.file_id) {
+        	id_f = t_ref.file_id;
+	        id2idx = sorted_list_find_val_by_field(file_trans1, "id", id_f);
+            cmp_ref.file_pair_idx = id2idx.idx;
+        }
+        cmp_ref.ref_idx = i;
+        list_append(cmp_refs1, cmp_ref);
+    }
+
+    id_f = -1;
+    for(i = 0; i < list_count(type_refs2); ++ i) {
+        t_ref = list_get(type_refs2, i);
+        qrl_eval(idAssignStmt);
+        id2idx = sorted_list_find_val_by_field(type_trans2, "id", ref_id);
+        cmp_ref.obj_pair_idx = id2idx.idx;
+        if(id_f != t_ref.file_id) {
+        	id_f = t_ref.file_id;
+	        id2idx = sorted_list_find_val_by_field(file_trans2, "id", id_f);
+            cmp_ref.file_pair_idx = id2idx.idx;
+        }
+        cmp_ref.ref_idx = i;
+        list_append(cmp_refs2, cmp_ref);
+    }
+
+    return pair_refs(cmp_refs1, cmp_refs2, cmp_files, files1, files2);
+}
+
+list pair_refs(list cmp_refs1, list cmp_refs2,
+               list cmp_files, list files1, list files2)
+{
+    list cmp_refs = list_create("refcmpidx", 0);
+    cmp_refs1 = list_sort(cmp_refs1);
+    cmp_refs2 = list_sort(cmp_refs2);
+    file f;
+    refcmpidx refcmpidx;
+    cmp_ref cmp_ref1, cmp_ref2;
+    element_idx_pair element_idx_pair;
+
+    int i1 = 0;
+    int i2 = 0;
+    while(i1 < list_count(cmp_refs1) && i2 < list_count(cmp_refs2)) {
+        cmp_ref1 = list_get(cmp_refs1, i1);
+        cmp_ref2 = list_get(cmp_refs2, i2);
+        if(cmp_ref1.file_pair_idx == cmp_ref2.file_pair_idx) {
+            element_idx_pair = list_get(cmp_files, cmp_ref1.file_pair_idx);
+            f = list_get(files1, element_idx_pair.sys1);
+            if(cmp_ref1.obj_pair_idx == cmp_ref2.obj_pair_idx) {
+            	refcmpidx.file_guid = f.guid;
+            	refcmpidx.file_pair_idx = cmp_ref1.file_pair_idx;
+            	refcmpidx.obj_pair_idx = cmp_ref1.obj_pair_idx;
+            	refcmpidx.sys1 = cmp_ref1.ref_idx;
+            	refcmpidx.sys2 = cmp_ref2.ref_idx;
+                ++ i1;
+                ++ i2;
+            }
+            else if(cmp_ref1.obj_pair_idx < cmp_ref2.obj_pair_idx) {
+            	refcmpidx.file_guid = f.guid;
+            	refcmpidx.file_pair_idx = cmp_ref1.file_pair_idx;
+            	refcmpidx.obj_pair_idx = cmp_ref1.obj_pair_idx;
+            	refcmpidx.sys1 = cmp_ref1.ref_idx;
+                refcmpidx.sys2 = NULL;
+                ++ i1;
+            }
+            else {
+            	refcmpidx.file_guid = f.guid;
+            	refcmpidx.file_pair_idx = cmp_ref2.file_pair_idx;
+            	refcmpidx.obj_pair_idx = cmp_ref2.obj_pair_idx;
+            	refcmpidx.sys1 = NULL;
+            	refcmpidx.sys2 = cmp_ref2.ref_idx;
+                cmp_ref1 = NULL;
+                ++ i2;
+            }
+        }
+        else if(cmp_ref1.file_pair_idx < cmp_ref2.file_pair_idx) {
+            element_idx_pair = list_get(cmp_files, cmp_ref1.file_pair_idx);
+            f = list_get(files1, element_idx_pair.sys1);
+            refcmpidx.file_guid = f.guid;
+            refcmpidx.file_pair_idx = cmp_ref1.file_pair_idx;
+            refcmpidx.obj_pair_idx = cmp_ref1.obj_pair_idx;
+            refcmpidx.sys1 = cmp_ref1.ref_idx;
+            refcmpidx.sys2 = NULL;
+            ++ i1;
+        }
+        else {
+            element_idx_pair = list_get(cmp_files, cmp_ref2.file_pair_idx);
+            f = list_get(files2, element_idx_pair.sys2);
+            refcmpidx.file_guid = f.guid;
+            refcmpidx.file_pair_idx = cmp_ref2.file_pair_idx;
+            refcmpidx.obj_pair_idx = cmp_ref2.obj_pair_idx;
+            refcmpidx.sys1 = NULL;
+            refcmpidx.sys2 = cmp_ref2.ref_idx;
+            ++ i2;
+        }
+        list_append(cmp_refs, refcmpidx);
+    }
+
+    refcmpidx.sys2 = NULL;
+    while(i1 < list_count(cmp_refs1)) {
+        cmp_ref1 = list_get(cmp_refs1, i1);
+        element_idx_pair = list_get(cmp_files, cmp_ref1.file_pair_idx);
+        f = list_get(files1, element_idx_pair.sys1);
+        refcmpidx.file_guid = f.guid;
+        refcmpidx.file_pair_idx = cmp_ref1.file_pair_idx;
+        refcmpidx.obj_pair_idx = cmp_ref1.obj_pair_idx;
+        refcmpidx.sys1 = cmp_ref1.ref_idx;
+        list_append(cmp_refs, refcmpidx);
+        ++ i1;
+    }
+
+    refcmpidx.sys1 = NULL;
+    while(i2 < list_count(cmp_refs2)) {
+        cmp_ref2 = list_get(cmp_refs2, i2);
+        element_idx_pair = list_get(cmp_files, cmp_ref2.file_pair_idx);
+        f = list_get(files2, element_idx_pair.sys2);
+        refcmpidx.file_guid = f.guid;
+        refcmpidx.file_pair_idx = cmp_ref2.file_pair_idx;
+        refcmpidx.obj_pair_idx = cmp_ref2.obj_pair_idx;
+        refcmpidx.sys2 = cmp_ref2.ref_idx;
+        list_append(cmp_refs, refcmpidx);
+        ++ i2;
+    }
+
+    return list_sort_by_field(cmp_refs, "file_guid");
+}
+
+int cmp_notes(note N1, note N2)
+{
+    if(N1.type < N2.type)
+        return -1;
+    if(N1.type > N2.type)
+        return 1;
+    if(N1.name > N2.name)
+        return 1;
+    if(N1.name < N2.name)
+        return -1;
+    return 0;
+}
+
+// Input is a list of notes sorted by type (but sadly numerical)
+// this function re-sorts the type by string
+list note_sort(list notes)
+{
+    int i, j;
+    int start_i = 0;
+    int obj_id = -1;
+    note N;
+    list sub_list = list_create("note", 0);
+
+    for(i = 0; i < list_count(notes); ++ i) {
+        N = list_get(notes, i);
+        if(obj_id != N.obj_id && obj_id != -1) {
+            if(i - start_i > 1) {
+                sub_list = list_sort(sub_list, cmp_notes);
+                for(j = start_i; j < i; ++ j)
+                    list_set(notes, j, list_get(sub_list, j - start_i));
+            }
+            list_clear(sub_list);
+            obj_id = N.obj_id;
+            start_i = i;
+        }
+        list_append(sub_list, N);
+    }
+
+    if(obj_id != -1 && i - start_i > 1) {
+        sub_list = list_sort(sub_list, cmp_notes);
+        for(j = start_i; j < i; ++ j)
+            list_set(notes, j, list_get(sub_list, j - start_i));
+    }
+    return notes;
+}
+
+list pair_stuff_notes(list cmp_files, list cmp_type, list notes1, list notes2,
+                      list type_trans1, list type_trans2,
+                      list file_trans1, list file_trans2,
+                      list types1, list types2, string type)
+{
+    int i;
+//    int id_f = -1;
+    note N;
+    cmp_note cmp_note;
+	id2idx id2idx;
+//	id2idx id2idx_f;
+    list cmp_notes1 = list_create("cmp_note", 0);
+    list cmp_notes2 = list_create("cmp_note", 0);
+
+    for(i = 0; i < list_count(notes1); ++ i) {
+        N = list_get(notes1, i);
+        id2idx = sorted_list_find_val_by_field(type_trans1, "id", N.obj_id);
+        if(id2idx != NULL)
+        	cmp_note.obj_pair_idx = id2idx.idx;
+        else
+        	cmp_note.obj_pair_idx = NULL;
+//        if(id_f != N.file_id) {
+//        	id_f = N.file_id;
+//	        id2idx_f = sorted_list_find_val_by_field(file_trans1, "id", id_f);
+//	        if(id2idx_f != NULL)
+//	        	cmp_note.file_pair_idx = id2idx_f.idx;
+//	        else
+//	        	cmp_note.file_pair_idx = -1;
+//        }
+        cmp_note.note_idx = i;
+        cmp_note.type = N.type;
+        cmp_note.name = N.name;
+        list_append(cmp_notes1, cmp_note);
+    }
+
+//    id_f = -1;
+    for(i = 0; i < list_count(notes2); ++ i) {
+        N = list_get(notes2, i);
+        id2idx = sorted_list_find_val_by_field(type_trans2, "id", N.obj_id);
+        if(id2idx != NULL)
+        	cmp_note.obj_pair_idx = id2idx.idx;
+        else
+        	cmp_note.obj_pair_idx = NULL;
+//        if(id_f != N.file_id) {
+//        	id_f = N.file_id;
+//	        id2idx_f = sorted_list_find_val_by_field(file_trans2, "id", id_f);
+//	        if(id2idx_f != NULL)
+//	        	cmp_note.file_pair_idx = id2idx_f.idx;
+//	        else
+//	        	cmp_note.file_pair_idx = -1;
+//        }
+        cmp_note.note_idx = i;
+        cmp_note.type = N.type;
+        cmp_note.name = N.name;
+        list_append(cmp_notes2, cmp_note);
+    }
+
+    return pair_notes(cmp_notes1, cmp_notes2, cmp_type, type, types1, types2);
+}
+
+list pair_notes(list cmp_notes1, list cmp_notes2, list cmp_type, string type,
+                list types1, list types2)
+{
+    list cmp_refs = list_create("note_cmpidx", 0);
+    cmp_notes1 = list_sort(cmp_notes1);
+    cmp_notes2 = list_sort(cmp_notes2);
+    qrl_eval(type + " t;");
+    note_cmpidx note_cmpidx;
+    element_idx_pair element_idx_pair;
+    cmp_note cmp_note1, cmp_note2;
+
+    int i1 = 0;
+    int i2 = 0;
+    while(i1 < list_count(cmp_notes1) && i2 < list_count(cmp_notes2)) {
+        cmp_note1 = list_get(cmp_notes1, i1);
+        cmp_note2 = list_get(cmp_notes2, i2);
+        if(cmp_note1.obj_pair_idx == cmp_note2.obj_pair_idx) {
+            note_cmpidx.obj_pair_idx = cmp_note1.obj_pair_idx;
+            element_idx_pair = list_get(cmp_type, cmp_note1.obj_pair_idx);
+//            if(cmp_note1.file_pair_idx == cmp_note2.file_pair_idx) {
+//                note_cmpidx.file_pair_idx = cmp_note1.file_pair_idx;
+                if(cmp_note1.type == cmp_note2.type) {
+                    note_cmpidx.type = cmp_note1.type;
+                    if(cmp_note1.name == cmp_note2.name) {
+                        note_cmpidx.name = cmp_note1.name;
+                        note_cmpidx.sys1 = cmp_note1.note_idx;
+                        note_cmpidx.sys2 = cmp_note2.note_idx;
+                        ++ i1;
+                        ++ i2;
+                    }
+                    else if(cmp_note1.name < cmp_note2.name) {
+                        note_cmpidx.name = cmp_note1.name;
+                        note_cmpidx.sys1 = cmp_note1.note_idx;
+                        note_cmpidx.sys2 = NULL;
+                        ++ i1;
+                    }
+                    else {
+                        note_cmpidx.name = cmp_note2.name;
+                        note_cmpidx.sys1 = NULL;
+                        note_cmpidx.sys2 = cmp_note2.note_idx;
+                        ++ i2;
+                    }
+                }
+                else if(cmp_note1.type < cmp_note2.type) {
+                    note_cmpidx.type = cmp_note1.type;
+                    note_cmpidx.name = cmp_note1.name;
+                    note_cmpidx.sys1 = cmp_note1.note_idx;
+                    note_cmpidx.sys2 = NULL;
+                    ++ i1;
+                }
+                else {
+                    note_cmpidx.type = cmp_note2.type;
+                    note_cmpidx.name = cmp_note2.name;
+                    note_cmpidx.sys2 = cmp_note2.note_idx;
+                    note_cmpidx.sys1 = NULL;
+                    ++ i2;
+                }
+//            }
+//            else if(cmp_note1.file_pair_idx < cmp_note2.file_pair_idx) {
+//                note_cmpidx.file_pair_idx = cmp_note1.file_pair_idx;
+//                note_cmpidx.type = cmp_note1.type;
+//                note_cmpidx.name = cmp_note1.name;
+//                note_cmpidx.sys1 = cmp_note1.note_idx;
+//                note_cmpidx.sys2 = NULL;
+//                ++ i1;
+//            }
+//            else {
+//                note_cmpidx.file_pair_idx = cmp_note2.file_pair_idx;
+//                note_cmpidx.type = cmp_note2.type;
+//                note_cmpidx.name = cmp_note2.name;
+//                note_cmpidx.sys2 = cmp_note2.note_idx;
+//                note_cmpidx.sys1 = NULL;
+//                ++ i2;
+//            }
+        }
+        else if(cmp_note1.obj_pair_idx < cmp_note2.obj_pair_idx) {
+            element_idx_pair = list_get(cmp_type, cmp_note1.obj_pair_idx);
+            note_cmpidx.obj_pair_idx = cmp_note1.obj_pair_idx;
+//            note_cmpidx.file_pair_idx = cmp_note1.file_pair_idx;
+            note_cmpidx.type = cmp_note1.type;
+            note_cmpidx.name = cmp_note1.name;
+            note_cmpidx.sys1 = cmp_note1.note_idx;
+            note_cmpidx.sys2 = NULL;
+            ++ i1;
+        }
+        else {
+            element_idx_pair = list_get(cmp_type, cmp_note2.obj_pair_idx);
+            note_cmpidx.obj_pair_idx = cmp_note2.obj_pair_idx;
+//            note_cmpidx.file_pair_idx = cmp_note2.file_pair_idx;
+            note_cmpidx.type = cmp_note2.type;
+            note_cmpidx.name = cmp_note2.name;
+            note_cmpidx.sys2 = cmp_note2.note_idx;
+            note_cmpidx.sys1 = NULL;
+            ++ i2;
+        }
+        if(element_idx_pair.sys1 != NULL)
+            t = list_get(types1, element_idx_pair.sys1);
+        else
+            t = list_get(types2, element_idx_pair.sys2);
+        note_cmpidx.element_guid = t.guid;
+//        if(note_cmpidx.file_pair_idx == -1)
+//            note_cmpidx.file_pair_idx = NULL;
+        list_append(cmp_refs, note_cmpidx);
+    }
+
+    note_cmpidx.sys2 = NULL;
+    while(i1 < list_count(cmp_notes1)) {
+        cmp_note1 = list_get(cmp_notes1, i1);
+        element_idx_pair = list_get(cmp_type, cmp_note1.obj_pair_idx);
+        note_cmpidx.obj_pair_idx = cmp_note1.obj_pair_idx;
+//        if(cmp_note1.file_pair_idx == -1)
+//            note_cmpidx.file_pair_idx = NULL;
+//        else
+//            note_cmpidx.file_pair_idx = cmp_note1.file_pair_idx;
+        note_cmpidx.type = cmp_note1.type;
+        note_cmpidx.name = cmp_note1.name;
+        note_cmpidx.sys1 = cmp_note1.note_idx;
+        t = list_get(types1, element_idx_pair.sys1);
+        note_cmpidx.element_guid = t.guid;
+        list_append(cmp_refs, note_cmpidx);
+        ++ i1;
+    }
+
+    note_cmpidx.sys1 = NULL;
+    while(i2 < list_count(cmp_notes2)) {
+        cmp_note2 = list_get(cmp_notes2, i2);
+        element_idx_pair = list_get(cmp_type, cmp_note2.obj_pair_idx);
+        note_cmpidx.obj_pair_idx = cmp_note2.obj_pair_idx;
+//        if(cmp_note2.file_pair_idx == -1)
+//            note_cmpidx.file_pair_idx = NULL;
+//        else
+//            note_cmpidx.file_pair_idx = cmp_note2.file_pair_idx;
+        note_cmpidx.type = cmp_note2.type;
+        note_cmpidx.name = cmp_note2.name;
+        note_cmpidx.sys2 = cmp_note2.note_idx;
+        t = list_get(types2, element_idx_pair.sys2);
+        note_cmpidx.element_guid = t.guid;
+        list_append(cmp_refs, note_cmpidx);
+        ++ i2;
+    }
+
+    return list_sort_by_field(cmp_refs, "element_guid");
+}
+
+int cmp_items(item I1, item I2)
+{
+    if(I1.type < I2.type)
+        return -1;
+    if(I1.type > I2.type)
+        return 1;
+    if(I1.value > I2.value)
+        return 1;
+    if(I1.value < I2.value)
+        return -1;
+    return 0;
+}
+
+// Input is a list of notes sorted by type (but sadly numerical)
+// this function re-sorts the type by string
+list item_sort(list items)
+{
+    int i, j;
+    int start_i = 0;
+    int obj_id = -1;
+    item I;
+    list sub_list = list_create("item", 0);
+
+    for(i = 0; i < list_count(items); ++ i) {
+        I = list_get(items, i);
+        if(obj_id != I.obj_id && obj_id != -1) {
+            if(i - start_i > 1) {
+                sub_list = list_sort(sub_list, cmp_items);
+                for(j = start_i; j < i; ++ j)
+                    list_set(items, j, list_get(sub_list, j - start_i));
+            }
+            list_clear(sub_list);
+            obj_id = I.obj_id;
+            start_i = i;
+        }
+        list_append(sub_list, I);
+    }
+
+    if(obj_id != -1 && i - start_i > 1) {
+        sub_list = list_sort(sub_list, cmp_items);
+        for(j = start_i; j < i; ++ j)
+            list_set(items, j, list_get(sub_list, j - start_i));
+    }
+    return items;
+}
+
+list pair_stuff_items(list cmp_types, list cmp_type_notes, list items1, list items2,
+                      list note_trans1, list note_trans2,
+                      list type_trans1, list type_trans2)
+{
+    int i;
+    item I;
+    cmp_item cmp_item;
+	id2idx id2idx;
+    list cmp_items1 = list_create("cmp_item", 0);
+    list cmp_items2 = list_create("cmp_item", 0);
+
+    for(i = 0; i < list_count(items1); ++ i) {
+        I = list_get(items1, i);
+        id2idx = sorted_list_find_val_by_field(type_trans1, "id", I.obj_id);
+        if(id2idx != NULL)
+        	cmp_item.obj_pair_idx = id2idx.idx;
+        else
+        	cmp_item.obj_pair_idx = NULL;
+        id2idx = sorted_list_find_val_by_field(note_trans1, "id", I.note_id);
+        if(id2idx != NULL)
+            cmp_item.note_pair_idx = id2idx.idx;
+        else
+            cmp_item.note_pair_idx = -1;
+        cmp_item.item_idx = i;
+        cmp_item.type = I.type;
+        list_append(cmp_items1, cmp_item);
+    }
+
+    for(i = 0; i < list_count(items2); ++ i) {
+        I = list_get(items2, i);
+        id2idx = sorted_list_find_val_by_field(type_trans2, "id", I.obj_id);
+        if(id2idx != NULL)
+        	cmp_item.obj_pair_idx = id2idx.idx;
+        else
+        	cmp_item.obj_pair_idx = NULL;
+        id2idx = sorted_list_find_val_by_field(note_trans2, "id", I.note_id);
+        if(id2idx != NULL)
+            cmp_item.note_pair_idx = id2idx.idx;
+        else
+            cmp_item.note_pair_idx = -1;
+        cmp_item.item_idx = i;
+        cmp_item.type = I.type;
+        list_append(cmp_items2, cmp_item);
+    }
+
+    return pair_items(cmp_items1, cmp_items2, cmp_types, cmp_type_notes);
+}
+
+list pair_items(list cmp_items1, list cmp_items2, list cmp_type,
+                list cmp_type_notes)
+{
+    list cmp_refs = list_create("item_cmpidx", 0);
+    cmp_items1 = list_sort(cmp_items1);
+    cmp_items2 = list_sort(cmp_items2);
+    item_cmpidx item_cmpidx;
+    note_cmpidx note_cmpidx;
+    cmp_item cmp_item1, cmp_item2;
+
+    int i1 = 0;
+    int i2 = 0;
+    while(i1 < list_count(cmp_items1) && i2 < list_count(cmp_items2)) {
+        cmp_item1 = list_get(cmp_items1, i1);
+        cmp_item2 = list_get(cmp_items2, i2);
+        if(cmp_item1.obj_pair_idx == cmp_item2.obj_pair_idx) {
+            item_cmpidx.obj_pair_idx = cmp_item1.obj_pair_idx;
+            if(cmp_item1.note_pair_idx == cmp_item2.note_pair_idx) {
+                item_cmpidx.note_pair_idx = cmp_item1.note_pair_idx;
+                if(cmp_item1.type == cmp_item2.type) {
+                    item_cmpidx.type = cmp_item1.type;
+                    item_cmpidx.sys1 = cmp_item1.item_idx;
+                    item_cmpidx.sys2 = cmp_item2.item_idx;
+                    ++ i1;
+                    ++ i2;
+                }
+                else if(cmp_item1.type < cmp_item2.type) {
+                    item_cmpidx.type = cmp_item1.type;
+                    item_cmpidx.sys1 = cmp_item1.item_idx;
+                    item_cmpidx.sys2 = NULL;
+                    ++ i1;
+                }
+                else {
+                    item_cmpidx.type = cmp_item2.type;
+                    item_cmpidx.sys2 = cmp_item2.item_idx;
+                    item_cmpidx.sys1 = NULL;
+                    ++ i2;
+                }
+            }
+            else if(cmp_item1.note_pair_idx < cmp_item2.note_pair_idx) {
+                item_cmpidx.note_pair_idx = cmp_item1.note_pair_idx;
+                item_cmpidx.type = cmp_item1.type;
+                item_cmpidx.sys1 = cmp_item1.item_idx;
+                item_cmpidx.sys2 = NULL;
+                ++ i1;
+            }
+            else {
+                item_cmpidx.note_pair_idx = cmp_item2.note_pair_idx;
+                item_cmpidx.type = cmp_item2.type;
+                item_cmpidx.sys2 = cmp_item2.item_idx;
+                item_cmpidx.sys1 = NULL;
+                ++ i2;
+            }
+        }
+        else if(cmp_item1.obj_pair_idx < cmp_item2.obj_pair_idx) {
+            item_cmpidx.obj_pair_idx = cmp_item1.obj_pair_idx;
+            item_cmpidx.note_pair_idx = cmp_item1.note_pair_idx;
+            item_cmpidx.type = cmp_item1.type;
+            item_cmpidx.sys1 = cmp_item1.item_idx;
+            item_cmpidx.sys2 = NULL;
+            ++ i1;
+        }
+        else {
+            item_cmpidx.obj_pair_idx = cmp_item2.obj_pair_idx;
+            item_cmpidx.note_pair_idx = cmp_item2.note_pair_idx;
+            item_cmpidx.type = cmp_item2.type;
+            item_cmpidx.sys2 = cmp_item2.item_idx;
+            item_cmpidx.sys1 = NULL;
+            ++ i2;
+        }
+        note_cmpidx = list_get(cmp_type_notes, item_cmpidx.note_pair_idx);
+        item_cmpidx.element_guid = note_cmpidx.element_guid;
+        list_append(cmp_refs, item_cmpidx);
+    }
+
+    item_cmpidx.sys2 = NULL;
+    while(i1 < list_count(cmp_items1)) {
+        cmp_item1 = list_get(cmp_items1, i1);
+        note_cmpidx = list_get(cmp_type_notes, cmp_item1.note_pair_idx);
+        item_cmpidx.obj_pair_idx = cmp_item1.obj_pair_idx;
+        item_cmpidx.note_pair_idx = cmp_item1.note_pair_idx;
+        item_cmpidx.type = cmp_item1.type;
+        item_cmpidx.sys1 = cmp_item1.item_idx;
+        item_cmpidx.element_guid = note_cmpidx.element_guid;
+        list_append(cmp_refs, item_cmpidx);
+        ++ i1;
+    }
+
+    item_cmpidx.sys1 = NULL;
+    while(i2 < list_count(cmp_items2)) {
+        cmp_item2 = list_get(cmp_items2, i2);
+        note_cmpidx = list_get(cmp_type_notes, cmp_item2.note_pair_idx);
+        item_cmpidx.obj_pair_idx = cmp_item2.obj_pair_idx;
+        item_cmpidx.note_pair_idx = cmp_item2.note_pair_idx;
+        item_cmpidx.type = cmp_item2.type;
+        item_cmpidx.sys2 = cmp_item2.item_idx;
+        item_cmpidx.element_guid = note_cmpidx.element_guid;
+        list_append(cmp_refs, item_cmpidx);
+        ++ i2;
+    }
+
+    return list_sort_by_field(cmp_refs, "element_guid");
+}
+
+node findNodeById(int id, sysdata sysdata, int system)
+{
+    if(system == 1) {
+        id2idx id2idx = sorted_list_find_val_by_field(sysdata.system1.node_trans, "id", id);
+        if(id2idx != NULL) {
+            element_idx_pair element_idx_pair = list_get(sysdata.cmp_nodes, id2idx.idx);
+            return list_get(sysdata.system1.nodes, element_idx_pair.sys1);
+        }
+    }
+    else {
+        id2idx id2idx = sorted_list_find_val_by_field(sysdata.system2.node_trans, "id", id);
+        if(id2idx != NULL) {
+            element_idx_pair element_idx_pair = list_get(sysdata.cmp_nodes, id2idx.idx);
+            return list_get(sysdata.system2.nodes, element_idx_pair.sys2);
+        }
+    }
+
+	return NULL;
+}
+
+link findLinkById(int id, sysdata sysdata, int system)
+{
+    if(system == 1) {
+        id2idx id2idx = sorted_list_find_val_by_field(sysdata.system1.link_trans, "id", id);
+        if(id2idx != NULL) {
+            element_idx_pair element_idx_pair = list_get(sysdata.cmp_links, id2idx.idx);
+            return list_get(sysdata.system1.links, element_idx_pair.sys1);
+        }
+    }
+    else {
+        id2idx id2idx = sorted_list_find_val_by_field(sysdata.system2.link_trans, "id", id);
+        if(id2idx != NULL) {
+            element_idx_pair element_idx_pair = list_get(sysdata.cmp_links, id2idx.idx);
+            return list_get(sysdata.system2.links, element_idx_pair.sys2);
+        }
+    }
+
+	return NULL;
+}
+
+list getChangedAnnotations(string guid, list cmp_notes, list cmp_items, list notes1, list notes2, list items1, list items2)
+{
+    int idx;
+    note_cmpidx note_cmpidx;
+    note n1, n2;
+    item_cmpidx item_cmpidx;
+    item i1, i2;
+    list changes = list_create("int", 0);
+
+    for(idx = sorted_list_find_idx_by_field(cmp_notes, "element_guid", guid); idx < list_count(cmp_notes); ++ idx) {
+        note_cmpidx = list_get(cmp_notes, idx);
+        if(guid != note_cmpidx.element_guid)
+            break;
+
+        if(note_cmpidx.sys1 != NULL)
+            n1 = list_get(notes1, note_cmpidx.sys1);
+        else
+            n1 = NULL;
+
+        if(note_cmpidx.sys2 != NULL)
+            n2 = list_get(notes2, note_cmpidx.sys2);
+        else
+            n2 = NULL;
+
+        if(n1 == NULL || n2 == NULL) {
+            list_append(changes, idx);
+        }
+        else if(n1.desc != n2.desc)
+            list_append(changes, idx);
+    }
+
+    for(idx = sorted_list_find_idx_by_field(cmp_items, "element_guid", guid); idx < list_count(cmp_items); ++ idx) {
+        item_cmpidx = list_get(cmp_items, idx);
+        if(guid != item_cmpidx.element_guid)
+            break;
+
+        if(item_cmpidx.sys1 != NULL)
+            i1 = list_get(items1, item_cmpidx.sys1);
+        else
+            i1 = NULL;
+
+        if(item_cmpidx.sys2 != NULL)
+            i2 = list_get(items2, item_cmpidx.sys2);
+        else
+            i2 = NULL;
+
+        if(i1 == NULL || i2 == NULL) {
+            if(list_find(changes, 0, item_cmpidx.note_pair_idx) == list_count(changes))
+                list_append(changes, item_cmpidx.note_pair_idx);
+        }
+        else if(i1.value != i2.value) {
+            if(list_find(changes, 0, item_cmpidx.note_pair_idx) == list_count(changes))
+                list_append(changes, item_cmpidx.note_pair_idx);
+        }
+    }
+    return changes;
+}
+
+enum nSectType { NONEN, DELNT, ADDNT, CHNGNT };
+
+void printChangedAnnotations(list changes, list cmp_notes, list cmp_items, list notes1, list notes2, list items1, list items2, string system1, string system2)
+{
+    int idx;
+    note_cmpidx note_cmpidx;
+    note n1, n2;
+    nSectType SectionPrinted = NONEN;
+
+    for(idx = 0; idx < list_count(changes); ++ idx) {
+        note_cmpidx = list_get(cmp_notes, list_get(changes, idx));
+        if(note_cmpidx.sys1 == NULL) {
+            if(SectionPrinted != DELNT) {
+                paragraph(ObjectFormat + "3");
+                print("Annotations only in " + system2 + ":");
+                SectionPrinted = DELNT;
+            }
+            n2 = list_get(notes2, note_cmpidx.sys2);
+            paragraph(NoteFormat + "2");
+            print(formatNote(n2));
+            printChangedItems(note_cmpidx, cmp_items, items1, items2, notes1, notes2, 2);
+        }
+    }
+
+    for(idx = 0; idx < list_count(changes); ++ idx) {
+        note_cmpidx = list_get(cmp_notes, list_get(changes, idx));
+        if(note_cmpidx.sys2 == NULL) {
+            if(SectionPrinted != ADDNT) {
+                paragraph(ObjectFormat + "3");
+                print("Annotations only in " + system1 + ":");
+                SectionPrinted = ADDNT;
+            }
+            n1 = list_get(notes1, note_cmpidx.sys1);
+            paragraph(NoteFormat + "2");
+            print(formatNote(n1));
+            printChangedItems(note_cmpidx, cmp_items, items1, items2, notes1, notes2, 1);
+        }
+    }
+
+    for(idx = 0; idx < list_count(changes); ++ idx) {
+        note_cmpidx = list_get(cmp_notes, list_get(changes, idx));
+        if(note_cmpidx.sys1 != NULL && note_cmpidx.sys2 != NULL) {
+            if(SectionPrinted != CHNGNT) {
+                paragraph(ObjectFormat + "3");
+                print("Different Annotations:");
+                SectionPrinted = CHNGNT;
+            }
+            n1 = list_get(notes1, note_cmpidx.sys1);
+            n2 = list_get(notes2, note_cmpidx.sys2);
+            paragraph(NoteFormat + "2");
+            print("In " + system1 + ":");
+            paragraph(NoteFormat + "2");
+            print(formatNote(n1));
+            printChangedItems(note_cmpidx, cmp_items, items1, items2, notes1, notes2, 1);
+            paragraph(NoteFormat + "2");
+            print("In " + system2 + ":");
+            paragraph(NoteFormat + "2");
+            print(formatNote(n2));
+            printChangedItems(note_cmpidx, cmp_items, items1, items2, notes1, notes2, 2);
+        }
+    }
+}
+
+void printChangedItems(note_cmpidx note_cmpidx, list cmp_items, list items1, list items2, list notes1, list notes2, int system)
+{
+int idx;
+item_cmpidx item_cmpidx;
+item i1, i2;
+note n1, n2;
+
+    if(note_cmpidx.sys1 != NULL)
+        n1 = list_get(notes1, note_cmpidx.sys1);
+    else
+        n1 = NULL;
+
+    if(note_cmpidx.sys2 != NULL)
+        n2 = list_get(notes2, note_cmpidx.sys2);
+    else
+        n2 = NULL;
+
+    for(idx = sorted_list_find_idx_by_field(cmp_items, "element_guid", note_cmpidx.element_guid); idx < list_count(cmp_items); ++ idx) {
+        item_cmpidx = list_get(cmp_items, idx);
+        if(note_cmpidx.element_guid != item_cmpidx.element_guid)
+            break;
+
+        if(n1 != NULL && item_cmpidx.sys1 != NULL) {
+            i1 = list_get(items1, item_cmpidx.sys1);
+            if(i1.note_id != n1.id)
+                continue;
+        }
+        else
+            i1 = NULL;
+
+        if(n2 != NULL && item_cmpidx.sys2 != NULL) {
+            i2 = list_get(items2, item_cmpidx.sys2);
+            if(i2.note_id != n2.id)
+                continue;
+        }
+        else
+            i2 = NULL;
+
+        if(i1 == NULL && i2 == NULL)
+            continue;
+
+        if(i1 == NULL || i2 == NULL) {
+            if(i1 == NULL && system == 2) {
+                paragraph(NoteFormat + "3");
+                print(formatItem(i2));
+            }
+            else if(i2 == NULL && system == 1) {
+                paragraph(NoteFormat + "3");
+                print(formatItem(i1));
+            }
+        }
+        else if(i1.value != i2.value) {
+            if(system == 2) {
+                paragraph(NoteFormat + "3");
+                print(formatItem(i2));
+            }
+            else if(system == 1) {
+                paragraph(NoteFormat + "3");
+                print(formatItem(i1));
+            }
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////
+// the compare part
+///////////////////////////////////////////////////////////
+
+enum fSectType { NONEF,
+                 DIFFS, NEW1F, NEW2F, NAMEF, ANNOTF,
+                 NEW1N, NEW2N, NAMEN, ANNOTN,
+                 NEW1L, NEW2L, NAMEL, ANNOTL,
+                 NEW1C, NEW2C, NAMEC, ANNOTC };
+
+void compare(sysdata sysdata, string system1, string system2)
+{
+    int fi, ni, li, ci;
+    element_idx_pair eip;
+    file f1, f2;
+    node n1, n2;
+    link l1, l2;
+    cntx c1, c2;
+    fSectType file_section = NONEF;
+    list changes;
+
+    paragraph(SectionFormat);
+    print_line("Differences between " + system1 + " and " + system2);
+
+    ///////////////////////////////////////////////////////////////////////////
+    // handle renamed things
+    ///////////////////////////////////////////////////////////////////////////
+    // find renamed files
+    for(fi = 0; fi < list_count(sysdata.cmp_files); ++ fi) {
+        eip = list_get(sysdata.cmp_files, fi);
+        if(eip.sys1 == NULL || eip.sys2 == NULL)
+            continue;
+
+        f1 = list_get(sysdata.system1.files, eip.sys1);
+        f2 = list_get(sysdata.system2.files, eip.sys2);
+
+        if(f1.name != f2.name) {
+            if(file_section != NAMEF) {
+                paragraph(SectionFormat);
+                print("Renamed diagrams:");
+                file_section = NAMEF;
+            }
+            paragraph(NoteFormat + "1");
+            print_line(formatFile(f1) + " renamed to " + formatFile(f2));
+        }
+    }
+
+    // find changed files
+    for(fi = 0; fi < list_count(sysdata.cmp_files); ++ fi) {
+        eip = list_get(sysdata.cmp_files, fi);
+        if(eip.sys1 == NULL || eip.sys2 == NULL)
+            continue;
+
+        f1 = list_get(sysdata.system1.files, eip.sys1);
+        f2 = list_get(sysdata.system2.files, eip.sys2);
+
+        if(changesInFile(False, f1, f2, sysdata, system1, system2)) {
+            if(file_section != DIFFS) {
+                paragraph(SectionFormat);
+                print("Differences in diagrams:");
+                file_section = DIFFS;
+            }
+            changesInFile(True, f1, f2, sysdata, system1, system2);
+        }
+    }
+
+    // find renamed nodes
+    for(ni = 0; ni < list_count(sysdata.cmp_nodes); ++ ni) {
+        eip = list_get(sysdata.cmp_nodes, ni);
+        if(eip.sys1 == NULL || eip.sys2 == NULL)
+            continue;
+
+        n1 = list_get(sysdata.system1.nodes, eip.sys1);
+        n2 = list_get(sysdata.system2.nodes, eip.sys2);
+
+        if(n1.name != n2.name || n1.sig != n2.sig) {
+            // prevent invisible renames to be reported
+            if(formatNode(n1, NULL, NULL) != formatNode(n2, NULL, NULL)) {
+                if(file_section != NAMEN) {
+                    paragraph(SectionFormat);
+                    print("Renamed node symbols:");
+                    file_section = NAMEN;
+                }
+                paragraph(NoteFormat + "1");
+                print(formatNode(n1, sysdata, 1) +
+                      " renamed to " + formatNode(n2, NULL, NULL));
+            }
+        }
+    }
+
+    // find renamed links
+    for(li = 0; li < list_count(sysdata.cmp_links); ++ li) {
+        eip = list_get(sysdata.cmp_links, li);
+        if(eip.sys1 == NULL || eip.sys2 == NULL)
+            continue;
+
+        l1 = list_get(sysdata.system1.links, eip.sys1);
+        l2 = list_get(sysdata.system2.links, eip.sys2);
+
+        if(l1.name != l2.name || l1.sig != l2.sig) {
+            // prevent invisible renames to be reported
+            if(formatLink(l1, NULL, NULL) != formatLink(l2, NULL, NULL)) {
+                if(file_section != NAMEL) {
+                    paragraph(SectionFormat);
+                    print("Renamed link symbols:");
+                    file_section = NAMEL;
+                }
+                paragraph(NoteFormat + "1");
+                print(formatLink(l1, sysdata, 1) +
+                      " renamed to " + formatLink(l2, NULL, NULL));
+            }
+        }
+    }
+
+    // find renamed cntxs
+    for(ci = 0; ci < list_count(sysdata.cmp_cntxs); ++ ci) {
+        eip = list_get(sysdata.cmp_cntxs, ci);
+        if(eip.sys1 == NULL || eip.sys2 == NULL)
+            continue;
+
+        c1 = list_get(sysdata.system1.cntxs, eip.sys1);
+        c2 = list_get(sysdata.system2.cntxs, eip.sys2);
+
+        if(c1.name != c2.name || c1.sig != c2.sig) {
+            // prevent invisible renames to be reported
+            if(formatCntx(c1, NULL, NULL) != formatCntx(c2, NULL, NULL)) {
+                if(file_section != NAMEC) {
+                    paragraph(SectionFormat);
+                    print("Renamed context symbols:");
+                    file_section = NAMEC;
+                }
+                paragraph(NoteFormat + "1");
+                print(formatCntx(c1, sysdata, 1) +
+                      " renamed to " + formatCntx(c2, NULL, NULL));
+            }
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // handle changed annotations
+    ///////////////////////////////////////////////////////////////////////////
+    // find different annotated files
+    for(fi = 0; fi < list_count(sysdata.cmp_files); ++ fi) {
+        eip = list_get(sysdata.cmp_files, fi);
+        if(eip.sys1 == NULL || eip.sys2 == NULL)
+            continue;
+
+        f1 = list_get(sysdata.system1.files, eip.sys1);
+        f2 = list_get(sysdata.system2.files, eip.sys2);
+
+        changes = getChangedAnnotations(f1.guid, sysdata.cmp_file_notes, sysdata.cmp_file_items, sysdata.system1.file_notes, sysdata.system2.file_notes, sysdata.system1.file_items, sysdata.system2.file_items);
+        if(list_count(changes) != 0) {
+            if(file_section != ANNOTF) {
+                paragraph(SectionFormat);
+                print("Differences in diagram annotation:");
+                file_section = ANNOTF;
+            }
+            paragraph(ObjectFormat + "2");
+            print(formatFile(f1));
+            printChangedAnnotations(changes, sysdata.cmp_file_notes, sysdata.cmp_file_items, sysdata.system1.file_notes, sysdata.system2.file_notes, sysdata.system1.file_items, sysdata.system2.file_items, system1, system2);
+        }
+    }
+
+    // find different annotated nodes
+    for(ni = 0; ni < list_count(sysdata.cmp_nodes); ++ ni) {
+        eip = list_get(sysdata.cmp_nodes, ni);
+        if(eip.sys1 == NULL || eip.sys2 == NULL)
+            continue;
+
+        n1 = list_get(sysdata.system1.nodes, eip.sys1);
+        n2 = list_get(sysdata.system2.nodes, eip.sys2);
+
+        changes = getChangedAnnotations(n1.guid, sysdata.cmp_node_notes, sysdata.cmp_node_items, sysdata.system1.node_notes, sysdata.system2.node_notes, sysdata.system1.node_items, sysdata.system2.node_items);
+        if(list_count(changes) != 0) {
+            if(file_section != ANNOTN) {
+                paragraph(SectionFormat);
+                print("Differences in node symbol annotation:");
+                file_section = ANNOTN;
+            }
+            paragraph(ObjectFormat + "2");
+            print(formatNode(n1, sysdata, 1));
+            printChangedAnnotations(changes, sysdata.cmp_node_notes, sysdata.cmp_node_items, sysdata.system1.node_notes, sysdata.system2.node_notes, sysdata.system1.node_items, sysdata.system2.node_items, system1, system2);
+        }
+    }
+
+    // find different annotated links
+    for(li = 0; li < list_count(sysdata.cmp_links); ++ li) {
+        eip = list_get(sysdata.cmp_links, li);
+        if(eip.sys1 == NULL || eip.sys2 == NULL)
+            continue;
+
+        l1 = list_get(sysdata.system1.links, eip.sys1);
+        l2 = list_get(sysdata.system2.links, eip.sys2);
+
+        changes = getChangedAnnotations(l1.guid, sysdata.cmp_link_notes, sysdata.cmp_link_items, sysdata.system1.link_notes, sysdata.system2.link_notes, sysdata.system1.link_items, sysdata.system2.link_items);
+        if(list_count(changes) != 0) {
+            if(file_section != ANNOTL) {
+                paragraph(SectionFormat);
+                print("Differences in link symbol annotation:");
+                file_section = ANNOTL;
+            }
+            paragraph(ObjectFormat + "2");
+            print(formatLink(l1, sysdata, 1));
+            printChangedAnnotations(changes, sysdata.cmp_link_notes, sysdata.cmp_link_items, sysdata.system1.link_notes, sysdata.system2.link_notes, sysdata.system1.link_items, sysdata.system2.link_items, system1, system2);
+        }
+    }
+
+    // find different annotated cntxs
+    for(ci = 0; ci < list_count(sysdata.cmp_cntxs); ++ ci) {
+        eip = list_get(sysdata.cmp_cntxs, ci);
+        if(eip.sys1 == NULL || eip.sys2 == NULL)
+            continue;
+
+        c1 = list_get(sysdata.system1.cntxs, eip.sys1);
+        c2 = list_get(sysdata.system2.cntxs, eip.sys2);
+
+        changes = getChangedAnnotations(c1.guid, sysdata.cmp_cntx_notes, sysdata.cmp_cntx_items, sysdata.system1.cntx_notes, sysdata.system2.cntx_notes, sysdata.system1.cntx_items, sysdata.system2.cntx_items);
+        if(list_count(changes) != 0) {
+            if(file_section != ANNOTC) {
+                paragraph(SectionFormat);
+                print("Differences in context symbol annotation:");
+                file_section = ANNOTC;
+            }
+            paragraph(ObjectFormat + "2");
+            print(formatCntx(n1, sysdata, 1));
+            printChangedAnnotations(changes, sysdata.cmp_cntx_notes, sysdata.cmp_cntx_items, sysdata.system1.cntx_notes, sysdata.system2.cntx_notes, sysdata.system1.cntx_items, sysdata.system2.cntx_items, system1, system2);
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // handle deleted things
+    ///////////////////////////////////////////////////////////////////////////
+    // find deleted files
+    for(fi = 0; fi < list_count(sysdata.cmp_files); ++ fi) {
+        eip = list_get(sysdata.cmp_files, fi);
+        if(eip.sys1 != NULL)
+            continue;
+
+        if(file_section != NEW2F) {
+            paragraph(SectionFormat);
+            print("Diagrams only in " + system2 + ":");
+            file_section = NEW2F;
+        }
+        paragraph(NoteFormat + "1");
+        f2 = list_get(sysdata.system2.files, eip.sys2);
+        print(formatFile(f2));
+
+//        changes = getChangedAnnotations(f2.guid, sysdata.cmp_file_notes, sysdata.cmp_file_items, sysdata.system1.file_notes, sysdata.system2.file_notes, sysdata.system1.file_items, sysdata.system2.file_items);
+//        if(list_count(changes) != 0)
+//            printChangedAnnotations(changes, sysdata.cmp_file_notes, sysdata.cmp_file_items, sysdata.system1.file_notes, sysdata.system2.file_notes, sysdata.system1.file_items, sysdata.system2.file_items, system1, system2);
+    }
+
+    // find deleted nodes
+    for(ni = 0; ni < list_count(sysdata.cmp_nodes); ++ ni) {
+        eip = list_get(sysdata.cmp_nodes, ni);
+        if(eip.sys1 != NULL)
+            continue;
+
+        if(file_section != NEW2N) {
+            paragraph(SectionFormat);
+            print("Node symbols only in " + system2 + ":");
+            file_section = NEW2N;
+        }
+        paragraph(NoteFormat + "1");
+        n2 = list_get(sysdata.system2.nodes, eip.sys2);
+        print(formatNode(n2, sysdata, 2));
+
+//        changes = getChangedAnnotations(n2.guid, sysdata.cmp_node_notes, sysdata.cmp_node_items, sysdata.system1.node_notes, sysdata.system2.node_notes, sysdata.system1.node_items, sysdata.system2.node_items);
+//        if(list_count(changes) != 0)
+//            printChangedAnnotations(changes, sysdata.cmp_node_notes, sysdata.cmp_node_items, sysdata.system1.node_notes, sysdata.system2.node_notes, sysdata.system1.node_items, sysdata.system2.node_items, system1, system2);
+    }
+
+    // find deleted links
+    for(li = 0; li < list_count(sysdata.cmp_links); ++ li) {
+        eip = list_get(sysdata.cmp_links, li);
+        if(eip.sys1 != NULL)
+            continue;
+
+        if(file_section != NEW2L) {
+            paragraph(SectionFormat);
+            print("Link symbols only in " + system2 + ":");
+            file_section = NEW2L;
+        }
+        paragraph(NoteFormat + "1");
+        l2 = list_get(sysdata.system2.links, eip.sys2);
+        print(formatLink(l2, sysdata, 2));
+
+//        changes = getChangedAnnotations(l2.guid, sysdata.cmp_link_notes, sysdata.cmp_link_items, sysdata.system1.link_notes, sysdata.system2.link_notes, sysdata.system1.link_items, sysdata.system2.link_items);
+//        if(list_count(changes) != 0)
+//            printChangedAnnotations(changes, sysdata.cmp_link_notes, sysdata.cmp_link_items, sysdata.system1.link_notes, sysdata.system2.link_notes, sysdata.system1.link_items, sysdata.system2.link_items, system1, system2);
+    }
+
+    // find deleted cntxs
+    for(ci = 0; ci < list_count(sysdata.cmp_cntxs); ++ ci) {
+        eip = list_get(sysdata.cmp_cntxs, ci);
+        if(eip.sys1 != NULL)
+            continue;
+
+        if(file_section != NEW2C) {
+            paragraph(SectionFormat);
+            print("Context symboles only in " + system2 + ":");
+            file_section = NEW2C;
+        }
+        paragraph(NoteFormat + "1");
+        c2 = list_get(sysdata.system2.cntxs, eip.sys2);
+        print(formatCntx(c2, sysdata, 2));
+
+//        changes = getChangedAnnotations(c2.guid, sysdata.cmp_cntx_notes, sysdata.cmp_cntx_items, sysdata.system1.cntx_notes, sysdata.system2.cntx_notes, sysdata.system1.cntx_items, sysdata.system2.cntx_items);
+//        if(list_count(changes) != 0)
+//            printChangedAnnotations(changes, sysdata.cmp_cntx_notes, sysdata.cmp_cntx_items, sysdata.system1.cntx_notes, sysdata.system2.cntx_notes, sysdata.system1.cntx_items, sysdata.system2.cntx_items, system1, system2);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // handle new things
+    ///////////////////////////////////////////////////////////////////////////
+    // find new files
+    for(fi = 0; fi < list_count(sysdata.cmp_files); ++ fi) {
+        eip = list_get(sysdata.cmp_files, fi);
+        if(eip.sys2 != NULL)
+            continue;
+
+        if(file_section != NEW1F) {
+            paragraph(SectionFormat);
+            print("Diagrams only in " + system1 + ":");
+            file_section = NEW1F;
+        }
+        paragraph(NoteFormat + "1");
+        f1 = list_get(sysdata.system1.files, eip.sys1);
+        print(formatFile(f1));
+
+//        changes = getChangedAnnotations(f1.guid, sysdata.cmp_file_notes, sysdata.cmp_file_items, sysdata.system1.file_notes, sysdata.system2.file_notes, sysdata.system1.file_items, sysdata.system2.file_items);
+//        if(list_count(changes) != 0)
+//            printChangedAnnotations(changes, sysdata.cmp_file_notes, sysdata.cmp_file_items, sysdata.system1.file_notes, sysdata.system2.file_notes, sysdata.system1.file_items, sysdata.system2.file_items);
+    }
+
+    // find new nodes
+    for(ni = 0; ni < list_count(sysdata.cmp_nodes); ++ ni) {
+        eip = list_get(sysdata.cmp_nodes, ni);
+        if(eip.sys2 != NULL)
+            continue;
+
+        if(file_section != NEW1N) {
+            paragraph(SectionFormat);
+            print("Node symbols only in " + system1 + ":");
+            file_section = NEW1N;
+        }
+        paragraph(NoteFormat + "1");
+        n1 = list_get(sysdata.system1.nodes, eip.sys1);
+        print(formatNode(n1, sysdata, 1));
+
+//        changes = getChangedAnnotations(n1.guid, sysdata.cmp_node_notes, sysdata.cmp_node_items, sysdata.system1.node_notes, sysdata.system2.node_notes, sysdata.system1.node_items, sysdata.system2.node_items);
+//        if(list_count(changes) != 0)
+//            printChangedAnnotations(changes, sysdata.cmp_node_notes, sysdata.cmp_node_items, sysdata.system1.node_notes, sysdata.system2.node_notes, sysdata.system1.node_items, sysdata.system2.node_items, system1, system2);
+    }
+
+    // find new links
+    for(li = 0; li < list_count(sysdata.cmp_links); ++ li) {
+        eip = list_get(sysdata.cmp_links, li);
+        if(eip.sys2 != NULL)
+            continue;
+
+        if(file_section != NEW1L) {
+            paragraph(SectionFormat);
+            print("Link symbols only in " + system1 + ":");
+            file_section = NEW1L;
+        }
+        paragraph(NoteFormat + "1");
+        l1 = list_get(sysdata.system1.links, eip.sys1);
+        print(formatLink(l1, sysdata, 1));
+
+//        changes = getChangedAnnotations(l1.guid, sysdata.cmp_link_notes, sysdata.cmp_link_items, sysdata.system1.link_notes, sysdata.system2.link_notes, sysdata.system1.link_items, sysdata.system2.link_items);
+//        if(list_count(changes) != 0)
+//            printChangedAnnotations(changes, sysdata.cmp_link_notes, sysdata.cmp_link_items, sysdata.system1.link_notes, sysdata.system2.link_notes, sysdata.system1.link_items, sysdata.system2.link_items);
+    }
+
+    // find new cntxs
+    for(ci = 0; ci < list_count(sysdata.cmp_cntxs); ++ ci) {
+        eip = list_get(sysdata.cmp_cntxs, ci);
+        if(eip.sys2 != NULL)
+            continue;
+
+        if(file_section != NEW1C) {
+            paragraph(SectionFormat);
+            print("Context symbols only in " + system1 + ":");
+            file_section = NEW1C;
+        }
+        paragraph(NoteFormat + "1");
+        c1 = list_get(sysdata.system1.cntxs, eip.sys1);
+        print(formatCntx(c1, sysdata, 1));
+
+//        changes = getChangedAnnotations(c1.guid, sysdata.cmp_cntx_notes, sysdata.cmp_cntx_items, sysdata.system1.cntx_notes, sysdata.system2.cntx_notes, sysdata.system1.cntx_items, sysdata.system2.cntx_items);
+//        if(list_count(changes) != 0)
+//            printChangedAnnotations(changes, sysdata.cmp_cntx_notes, sysdata.cmp_cntx_items, sysdata.system1.cntx_notes, sysdata.system2.cntx_notes, sysdata.system1.cntx_items, sysdata.system2.cntx_items, system1, system2);
+    }
+}
+
+boolean changesInFile(boolean printOut, file f1, file f2, sysdata sysdata, string system1, string system2)
+{
+    refcmpidx refcmp;
+    element_idx_pair cmp;
+    node_ref nr1, nr2;
+    link_ref lr1, lr2;
+    cntx_ref cr1, cr2;
+    node N;
+    link L;
+    cntx C;
+    int idx, idx1;
+    int deltax = NULL, deltay = NULL;
+    boolean layoutChanged = False;
+    boolean didPrint = False;
+    string aLine;
+    list only_in_system1 = list_create("string", 0);
+    list only_in_system2 = list_create("string", 0);
+
+    for(idx = sorted_list_find_idx_by_field(sysdata.cmp_node_refs, "file_guid", f1.guid); idx < list_count(sysdata.cmp_node_refs); ++ idx) {
+        refcmp = list_get(sysdata.cmp_node_refs, idx);
+        if(refcmp.file_guid != f1.guid)
+            break;
+
+        if(refcmp.sys1 != NULL)
+            nr1 = list_get(sysdata.system1.node_refs, refcmp.sys1);
+        else
+            nr1 = NULL;
+
+        if(refcmp.sys2 != NULL)
+            nr2 = list_get(sysdata.system2.node_refs, refcmp.sys2);
+        else
+            nr2 = NULL;
+
+        if(nr1 == NULL || nr2 == NULL) {
+            if(printOut == False)
+                return True;
+
+            if(didPrint == False) {
+                paragraph(ObjectFormat + "2");
+                print(formatFile(f1));
+                didPrint = True;
+            }
+            cmp = list_get(sysdata.cmp_nodes, refcmp.obj_pair_idx);
+            if(nr1 == NULL) {
+                N = list_get(sysdata.system2.nodes, cmp.sys2);
+                aLine = formatNode(N, sysdata, 2);
+                if(aLine != NULL)
+                    list_append(only_in_system2, aLine);
+            }
+            else {
+                N = list_get(sysdata.system1.nodes, cmp.sys1);
+                aLine = formatNode(N, sysdata, 1);
+                if(aLine != NULL)
+                    list_append(only_in_system1, aLine);
+            }
+            continue;
+        }
+
+        if(layoutChanged == False) {
+            if(deltax == NULL) {
+                deltax = nr1.xcoord - nr2.xcoord;
+                deltay = nr1.ycoord - nr2.ycoord;
+            }
+            else if(nr1.xcoord - nr2.xcoord != deltax || nr1.ycoord - nr2.ycoord != deltay) {
+                if(printOut == False)
+                    return True;
+                layoutChanged = True;
+            }
+        }
+    }
+
+    if(list_count(only_in_system1) != 0) {
+        paragraph(ObjectFormat + "3");
+        print("Node symbols only in " + system1 + ":");
+        aLine = "";
+        only_in_system1 = list_sort(only_in_system1);
+        for(idx = 0; idx < list_count(only_in_system1); ++ idx) {
+            if(aLine != list_get(only_in_system1, idx)) {
+                aLine = list_get(only_in_system1, idx);
+                paragraph(NoteFormat + "2");
+                print(aLine);
+            }
+        }
+        didPrint = True;
+        list_clear(only_in_system1);
+    }
+
+    if(list_count(only_in_system2) != 0) {
+        paragraph(ObjectFormat + "3");
+        print("Node symbols only in " + system2 + ":");
+        aLine = "";
+        only_in_system2 = list_sort(only_in_system2);
+        for(idx = 0; idx < list_count(only_in_system2); ++ idx) {
+            if(aLine != list_get(only_in_system2, idx)) {
+                aLine = list_get(only_in_system2, idx);
+                paragraph(NoteFormat + "2");
+                print(aLine);
+            }
+        }
+        didPrint = True;
+        list_clear(only_in_system2);
+    }
+
+    for(idx = sorted_list_find_idx_by_field(sysdata.cmp_link_refs, "file_guid", f1.guid); idx < list_count(sysdata.cmp_link_refs); ++ idx) {
+        refcmp = list_get(sysdata.cmp_link_refs, idx);
+        if(refcmp.file_guid != f1.guid)
+            break;
+
+        if(refcmp.sys1 != NULL)
+            lr1 = list_get(sysdata.system1.link_refs, refcmp.sys1);
+        else
+            lr1 = NULL;
+
+        if(refcmp.sys2 != NULL)
+            lr2 = list_get(sysdata.system2.link_refs, refcmp.sys2);
+        else
+            lr2 = NULL;
+
+        if(lr1 == NULL || lr2 == NULL) {
+            if(printOut == False)
+                return True;
+
+            if(didPrint == False) {
+                paragraph(ObjectFormat + "2");
+                print(formatFile(f1));
+                didPrint = True;
+            }
+            cmp = list_get(sysdata.cmp_links, refcmp.obj_pair_idx);
+            if(lr1 == NULL) {
+                L = list_get(sysdata.system2.links, cmp.sys2);
+                aLine = formatLink(L, sysdata, 2);
+                if(aLine != NULL)
+                    list_append(only_in_system2, aLine);
+            }
+            else {
+                L = list_get(sysdata.system1.links, cmp.sys1);
+                aLine = formatLink(L, sysdata, 1);
+                if(aLine != NULL)
+                    list_append(only_in_system1, aLine);
+            }
+            continue;
+        }
+
+        if(layoutChanged == False) {
+            if(deltax == NULL) {
+                deltax = lr1.xcoord - lr2.xcoord;
+                deltay = lr1.ycoord - lr2.ycoord;
+            }
+            else if(lr1.xcoord - lr2.xcoord != deltax || lr1.ycoord - lr2.ycoord != deltay) {
+                if(printOut == False)
+                    return True;
+                layoutChanged = True;
+            }
+        }
+    }
+
+    if(list_count(only_in_system1) != 0) {
+        paragraph(ObjectFormat + "3");
+        print("Link symbols only in " + system1 + ":");
+        aLine = "";
+        only_in_system1 = list_sort(only_in_system1);
+        for(idx = 0; idx < list_count(only_in_system1); ++ idx) {
+            if(aLine != list_get(only_in_system1, idx)) {
+                aLine = list_get(only_in_system1, idx);
+                paragraph(NoteFormat + "2");
+                print(aLine);
+            }
+        }
+        list_clear(only_in_system1);
+    }
+
+    if(list_count(only_in_system2) != 0) {
+        paragraph(ObjectFormat + "3");
+        print("Link symbols only in " + system2 + ":");
+        aLine = "";
+        only_in_system2 = list_sort(only_in_system2);
+        for(idx = 0; idx < list_count(only_in_system2); ++ idx) {
+            if(aLine != list_get(only_in_system2, idx)) {
+                aLine = list_get(only_in_system2, idx);
+                paragraph(NoteFormat + "2");
+                print(aLine);
+            }
+        }
+        list_clear(only_in_system2);
+    }
+
+    for(idx = sorted_list_find_idx_by_field(sysdata.cmp_cntx_refs, "file_guid", f1.guid); idx < list_count(sysdata.cmp_cntx_refs); ++ idx) {
+        refcmp = list_get(sysdata.cmp_cntx_refs, idx);
+        if(refcmp.file_guid != f1.guid)
+            break;
+
+        if(refcmp.sys1 != NULL)
+            cr1 = list_get(sysdata.system1.cntx_refs, refcmp.sys1);
+        else
+            cr1 = NULL;
+
+        if(refcmp.sys2 != NULL)
+            cr2 = list_get(sysdata.system2.cntx_refs, refcmp.sys2);
+        else
+            cr2 = NULL;
+
+        if(cr1 == NULL || cr2 == NULL) {
+            if(printOut == False)
+                return True;
+
+            if(didPrint == False) {
+                paragraph(ObjectFormat + "2");
+                print(formatFile(f1));
+                didPrint = True;
+            }
+            cmp = list_get(sysdata.cmp_cntxs, refcmp.obj_pair_idx);
+            if(cr1 == NULL) {
+                C = list_get(sysdata.system2.cntxs, cmp.sys2);
+                aLine = formatCntx(C, sysdata, 2);
+                if(aLine != NULL)
+                    list_append(only_in_system2, aLine);
+            }
+            else {
+                C = list_get(sysdata.system1.cntxs, cmp.sys1);
+                aLine = formatCntx(C, sysdata, 1);
+                if(aLine != NULL)
+                    list_append(only_in_system1, aLine);
+            }
+            continue;
+        }
+
+        if(layoutChanged == False) {
+            if(deltax == NULL) {
+                deltax = cr1.xcoord - cr2.xcoord;
+                deltay = cr1.ycoord - cr2.ycoord;
+            }
+            else if(cr1.xcoord - cr2.xcoord != deltax || cr1.ycoord - cr2.ycoord != deltay) {
+                if(printOut == False)
+                    return True;
+                layoutChanged = True;
+            }
+        }
+    }
+
+    if(list_count(only_in_system1) != 0) {
+        paragraph(ObjectFormat + "3");
+        print("Context symbols only in " + system1 + ":");
+        aLine = "";
+        only_in_system1 = list_sort(only_in_system1);
+        for(idx = 0; idx < list_count(only_in_system1); ++ idx) {
+            if(aLine != list_get(only_in_system1, idx)) {
+                aLine = list_get(only_in_system1, idx);
+                paragraph(NoteFormat + "2");
+                print(aLine);
+            }
+        }
+        list_clear(only_in_system1);
+    }
+
+    if(list_count(only_in_system2) != 0) {
+        paragraph(ObjectFormat + "3");
+        print("Context symbols only in " + system2 + ":");
+        aLine = "";
+        only_in_system2 = list_sort(only_in_system2);
+        for(idx = 0; idx < list_count(only_in_system2); ++ idx) {
+            if(aLine != list_get(only_in_system2, idx)) {
+                aLine = list_get(only_in_system2, idx);
+                paragraph(NoteFormat + "2");
+                print(aLine);
+            }
+        }
+        list_clear(only_in_system2);
+    }
+
+    if(layoutChanged == True) {
+        if(didPrint == False) {
+            paragraph(ObjectFormat + "2");
+            print("Layout of " + formatFile(f1) + " changed");
+        }
+        else {
+            paragraph(ObjectFormat + "2");
+            print("Layout of Diagram changed");
+        }
+    }
+
+    return False;
+}
+
+boolean is_upper(string char)
+{
+    return (char >= "A" && char <= "Z");
+}
+
+string makePrintableName(string name)
+{
+    string char, prev_char, next_char;
+    int i;
+
+    if(string_length(name) > 3 && string_extract(name, 0, 3) == "Uml")
+        name = string_extract(name, 3, string_length(name) - 3);
+    else if(name == "REQTable")
+        name = "RequirementsTable";
+
+    char = string_extract(name, 0, 1);
+    next_char = string_extract(name, 1, 1);
+    for(i = 1; i < string_length(name); ++ i) {
+        prev_char = char;
+        char = next_char;
+        if(string_length(name) > i + 1)
+            next_char = string_extract(name, i + 1, 1);
+        else
+            next_char = "X";
+        if(is_upper(char) && !(is_upper(prev_char) && is_upper(next_char))) {
+            name = string_extract(name, 0, i) + " " + string_extract(name, i, string_length(name) - i);
+            ++ i;
+        }
+    }
+    return name;
+}
+
+string formatNote(note N)
+{
+    if(N == NULL)
+        return "unknown note";
+
+    string name = makePrintableName(N.type);
+
+    if(N.name != "")
+        name += " " + N.name;
+
+    if(string_strip(N.desc, "T", "\n\r") != "")
+        name += ":\n" + string_strip(N.desc, "T", "\n\r");
+
+    return "Note " + name;
+}
+
+string formatItem(item I)
+{
+    if(I == NULL)
+        return "unknown item";
+
+    string name = makePrintableName(I.type);
+
+    if(I.value != "")
+        name += ": " + I.value;
+
+    return "Item " + name;
+}
+
+string formatNode(node N, sysdata sysdata, int system)
+{
+    if(N == NULL)
+        return "unknown node";
+
+    string type, name;
+    type = makePrintableName(N.type);
+
+    name = "";
+    if(N.type == "UmlAssociation") {
+        string char;
+        int i = string_find(N.name, 0, ":");
+        if(i < string_length(N.name)) {
+            type += " '" + string_extract(N.name, 0, i) + "'";
+            char = string_extract(N.name, i + 1, string_length(N.name) - i - 1);
+        }
+        else
+            char = N.name;
+        if(sysdata != NULL)
+            type += " between Class '" + string_search_and_replace(char, ",", "' and '") + "'";
+    }
+    else if(N.name != "" && string_find(N.name, 0, ",") == string_length(N.name)) {
+        if(N.type == "UmlActionState" && string_length(N.name) > 15 && string_extract(N.name, 0, 15) == "%%UmlDecision%%")
+            name = "<anonymous>";
+        else if(N.type == "UmlSplitControl" && string_length(N.name) > 19 && string_extract(N.name, 0, 19) == "%%UmlSplitControl%%")
+            name = "<anonymous>";
+        else if(N.type == "UmlMergeControl" && string_length(N.name) > 19 && string_extract(N.name, 0, 19) == "%%UmlMergeControl%%")
+            name = "<anonymous>";
+        else if((N.type == "UmlObjectInstance" || N.type == "UmlActiveObject") && string_length(N.name) > 10 && string_extract(N.name, 0, 10) == "%%object%%")
+            name = "<anonymous>";
+        else if(N.type == "UmlObjectClassScope" && string_length(N.name) > 9 && string_extract(N.name, 0, 9) == "%%class%%")
+            name = "<anonymous>";
+        else if(N.type == "UmlDynamicChoicePoint" && string_length(N.name) > 25 && string_extract(N.name, 0, 25) == "%%UmlDynamicChoicePoint%%")
+            name = "<anonymous>";
+        else if(N.type == "UmlJunctionPoint" && string_length(N.name) > 20 && string_extract(N.name, 0, 20) == "%%UmlJunctionPoint%%")
+            name = "<anonymous>";
+        else
+            name = N.name;
+    }
+
+    if(N.sig != "" || N.type == "UmlOperation") {
+        if(N.type == "UmlObjectInstanceAttribute")
+            name += " = " + N.sig;
+        else if(N.type != "UmlAssociation")
+            name += "( " + N.sig + " )";
+    }
+
+    if(N.type == "UmlAttribute" || N.type == "UmlOperation") {
+        if(sysdata != NULL && N.scope_node_id != 0) {
+            node Class = findNodeById(N.scope_node_id, sysdata, system);
+            type = type + " '" + Class.name;
+            if(Class.sig != "")
+                type += "<" + Class.sig + ">";
+        }
+        return type + ":" + name + "'";
+    }
+
+    if(name != "")
+        name = type + " '" + name + "'";
+    else
+        name = type;
+
+    if(sysdata != NULL && N.scope_node_id != 0)
+        name += " scoped by " + formatNode(findNodeById(N.scope_node_id, sysdata, system), sysdata, system);
+
+    return name;
+}
+
+string formatLink(link L, sysdata sysdata, int system)
+{
+    if(L == NULL)
+        return "unknown link";
+
+    string name = makePrintableName(L.type);
+
+    name += " link";
+    if(L.name != "")
+        name += " '" + L.name;
+
+    if(L.sig != "")
+        name += "( " + L.sig + " )'";
+    else
+        name += "'";
+
+    if(sysdata != NULL)
+        name += " from "
+                + formatNode(findNodeById(L.from_node_id, sysdata, system), sysdata, system) + " to "
+                + formatNode(findNodeById(L.to_node_id, sysdata, system), sysdata, system);
+
+    return name;
+}
+
+string formatCntx(cntx C, sysdata sysdata, int system)
+{
+    string name = makePrintableName(C.type);
+
+    name += " cntx";
+    if(C.name != "")
+        name += " '" + C.name;
+
+    if(C.sig != "")
+        name += "( " + C.sig + " )'";
+    else
+        name += "'";
+
+    if(sysdata != NULL)
+        name += " attached to " + formatLink(findLinkById(C.link_id, sysdata, system), sysdata, system);
+
+    return name;
+}
+
+string formatFile(file F)
+{
+    string name = makePrintableName(F.type);
+
+    if(F.name != "")
+        name = name + " '" + F.name + "'";
+
+    return name;
+}

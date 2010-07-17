@@ -1,0 +1,180 @@
+%
+% 	sccsid[] = %W% %Y% %D%
+% 	StP/Core
+% 	Confidential property of Interactive Development Environments, Inc.
+% 	Copyright (c) 1992-1993
+% 	All rights reserved
+%
+
+% Messages for version control
+6000;Null version name
+6001;Revision name '%s' too long, truncated
+6002;Invalid revision name: %s
+6003;[Read only] "%s" %d nodes, %d arcs
+% util_vcc
+6100;vcc-> 
+% The commands
+% Each command entry has two parts name#minlen
+% where name is the full name of a command and minlen
+% is the minimal length needed for matching
+% for example
+% init#1
+% info#3
+% means that a i alone will match init but only inf will match info
+% These messages are also related to the messages 6201 - 6219.
+% If you change these, then you should change those to match.
+6101;delete#4
+6102;info#3
+6103;clean#2
+6104;help#2
+6105;create#1
+6106;delta#1
+6107;edit#1
+6108;get#1
+6109;history#1
+6110;init#1
+6111;quit#1
+6112;release#1
+6113;status#1
+6114;unedit#1
+6115;version#1
+6116;?#1
+6117;inquire#3
+6118;pdb#1
+6119;list#1
+6120;implement#2
+6121;verbose#4
+6122;editor#5
+6123;baseline#2
+6124;restore#2
+% Diagram types in plural, messages 250 and up contain the
+% normal name
+% Some names occur more than once since each name is
+% 6150 + the ordinal number of the scalar in the diag_names
+% relation
+6149;Unknown Diagram
+6150;??? Diagram
+6151;USE State Transition Diagrams
+6152;Structure Charts
+6153;Data Flow Diagrams
+6154;Entity Relationship Diagrams
+6155;Picture Diagrams
+6156;Data Flow Diagrams
+6157;Data Structure Diagrams
+6158;Data Flow Diagrams
+6159;Data Flow Diagrams
+6160;StP Data Dictionary Files
+6161;Other Diagrams
+6162;StP files
+6163;State Transition Diagrams
+6164;Control Specifications
+6165;SADT Diagrams
+6166;Matrices
+6167;Annotations
+6168;Documents
+6169;Object Files
+6170;Source Files
+6171;Ada Design Editor Files
+6172;C Design Editor Files
+6173;OOSD Design Editor Files
+% Do not use up to 6180 ...
+6200;No revision number given after -R flag
+6201;delete
+6202;info
+6203;clean
+6204;help
+6205;create
+6206;delta
+6207;edit
+6208;get
+6209;history
+6210;init
+6211;quit
+6212;release
+6213;status
+6214;unedit
+6215;version
+6216;?
+6217;inquire
+6218;pdb
+6219;list
+6220;Could not recognize vcc command '%s'\n
+6221;No argument after %s option\n
+6222;No argument after %s option\n
+6223;Expected %d arguments after %s option, found only %d\n
+6224;Expected %d arguments after %s option, found none\n
+6225;vcc-> 
+6226;%s
+6227;Initialize VCC subsystem failed\n
+6228;q[uit]\tLeave the VCC subsystem\n
+6229;e
+6230;e
+6231;er
+6232;er
+6233;er
+6234;e
+6235;re
+6236;e
+6237;e
+6238;e
+6239;e
+6240;e
+6241;e
+6242;The '%s' command is not implemented with this VCC system\n
+6243;Must specify an editor to create initial version\n
+6244;Failed to create initial version\n
+6245;Please execute the 'VCC pdb command' to insert version numbers in the project database\n
+6246;Must specify an editor to get diagram\n
+6247;Failed to get diagram %s\n
+6248;Must specify an editor to get diagram for editing\n
+6249;Failed to get diagram %s for editing\n
+6250;Must specify an editor to unedit a diagram\n
+6251;Failed to unedit diagram %s\n
+6252;new version
+6253;Must specify an editor to create a new version\n
+6254;Failed to create a new version of %s\n
+6255;Please execute the 'VCC pdb command' to insert version numbers in the project database\n
+6256;new release
+6257;Must specify an editor to create a new version\n
+6258;Failed to create a new version of %s\n
+6259;Please execute the 'VCC pdb command' to insert version numbers in the project database\n
+6260;Must specify an editor get status of diagrams\n
+6261;Failed to get status of %s\n
+6262;Must specify an editor get history of diagrams\n
+6263;Failed to get history of %s\n
+6264;current version
+6265;Must specify an editor to get current version\n
+6266;Must specify a diagram name to get current version\n
+6267;Failed to get current version of %s\n
+6268;Must specify an editor clean directory\n
+6269;Failed to clean %s\n
+6270;Must specify an editor delete diagrams\n
+6271;Failed to delete %s\n
+6272;Failed to delete %s %s\n
+6273;Must specify an editor to list current versions\n
+6274;Failed list version\n
+6275;Project database contains no diagrams\n
+6276;Project database contains no %s\n
+6277;Failed to list current version for %s\n
+6278;\t%s
+6279;No Project Database entry for %s '%s'\n
+6280;Assign revision to %s '%s' failed (%s)\n
+6281;%s '%s' revision %s\n
+6282;Must specify an editor to get current version\n
+6283;Must specify a diagram name to get current version\n
+6284;Failed to get current version of %s\n
+6285;Could not get current version of %s -- open failed\n
+6286;Could not get current version of %s -- read failed\n
+6287;Could not get current version of %s -- file not found\n
+6288;%s %s\n
+6289;initialize
+% History message for new revision of a diagram, i.e. pdb command
+6290;New revision
+6291;Could not access StP/DD history information, no history update.\n
+6292;No filestore directories to initialize.\n
+6293;Filestore directory for specified editor does not exist.\n
+% History message for init command
+6294;VCC directory initialized.
+% Set another vcc implementation
+6295;Could not initialize vcc for %s implementation\n
+6296;default

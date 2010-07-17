@@ -1,0 +1,76 @@
+//
+// 	StP/UML
+// 	Confidential property of Aonix
+// 	Copyright (c) 2000
+// 	All rights reserved
+//
+
+// SPR 4052 Model Management
+
+Menu MenuBarEdit
+{
+    { MenuEntry
+        // ECR 5080
+        { ParseCondition "current_editor() != \"ustated\" && current_editor() != \"uactivityd\";" }
+	{ Name EditDiagSubsystem }
+	{ Label "Assign Diagram to Subsystem..." } // ECR 7293 - added ellipsis
+	{ Builtin "EditorQrlEvalNoSave setDiagramSubsystem();" }
+	{ PlaceBefore EditDiagAnnot }
+    }
+}
+
+Menu Tools
+{
+    { MenuEntry
+	{ Name CheckSubsystem }
+	{ Label "Check Diagram's Subsystem Semantics" }
+	{ Builtin "EditorExecCommand CheckSubsystem" }
+	{ PlaceAfter CheckSemantics }
+	{ ActiveFunc idehook_diagram_assigned_to_subsystem_active_func }
+    }
+}
+
+Command CheckSubsystem
+{
+    { PrintName "Check Diagram's Subsystem Semantics" }
+    { StopOnFailure True }  
+    { StartMessage "Executing Check Diagram's Subsystem Semantics..." }
+    { FailureMessage "Check Diagram's Subsystem Semantics failed." }
+    { SuccessMessage "Check Diagram's Subsystem Semantics completed." }
+    { Builtin "EditorQrlEvalNoSave CheckSubsystemSemantics();" }
+}
+
+NodeSymbol AllLockableNodeTypes
+{
+    { DisplayMark
+	{ Name ExternalSubsystemIsOwner }
+	{ CondFunc "selection_count(\"file_lock[Permanent&user='stp@aonix'&file[ObjectAnnotation&annot_node[id=${node.id}]]]\") > 0;" }
+	{ BitmapMark0 "lock0" }
+	{ BitmapMark1 "lock1" }
+	{ BitmapMark2 "lock2" }
+	{ Anchor UpperLeft }
+	{ HAdjust Right }
+	{ VAdjust Top }
+	{ XPixelOffset -3 }
+        { YPixelOffset  5 } // ECR 5175
+	// ECR 4969
+	{ Help "Symbol is owned by external or locked subsystem" }
+    }
+}
+
+DisplayMarkGroups
+{
+    { Group 
+	{ DisplayMarks
+	    (
+		ExternalSubsystemIsOwner
+	    )
+	}
+	{ Name ModelManagement }
+    }
+    { ContinuousDisplayMarks
+        (
+            ModelManagement
+        )
+    }
+}

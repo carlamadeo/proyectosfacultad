@@ -1,0 +1,60 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/Booch
+//	StP Core
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1995
+//      All rights reserved
+//
+
+Editor class
+{
+    { PrintName "StP/Booch Class Editor" }
+    { IconFile "boochclass" }
+    { RulesFile "rules/class.rules" }
+    { CreationCommand "stp_startup -C 'gde -p ${projdir} -s ${system} -ed class'" }
+    { QrlFile "rules/qrl/class.qrl" }
+    { FileType Diagram }
+    { EditorFile
+	{ AppType BoochClassDiagram }
+	{ PrintName "Booch Class Diagram" }
+	{ Suffix ".class" }
+	{ FileStore "class_files" }
+	{ IsRepSource True }
+    }
+}
+
+
+Editor module
+{
+    { PrintName "StP/Booch Module Editor" }
+    { IconFile "boochmodule" }
+    { RulesFile "rules/module.rules" }
+    { CreationCommand "stp_startup -C 'gde -p ${projdir} -s ${system} -ed module'" }
+    { QrlFile "rules/qrl/module.qrl" }
+    { FileType Diagram }
+    { EditorFile
+	{ AppType BoochModuleDiagram }
+	{ PrintName "Booch Module Diagram" }
+	{ Suffix ".module" }
+	{ FileStore "module_files" }
+	{ IsRepSource True }
+    }
+}
+
+Editor process
+{
+    { PrintName "StP/Booch Process Editor" }
+    { IconFile "boochprocess" }
+    { RulesFile "rules/process.rules" }
+    { CreationCommand "stp_startup -C 'gde -p ${projdir} -s ${system} -ed process'" }
+    { QrlFile "rules/qrl/process.qrl" }
+    { FileType Diagram }
+    { EditorFile
+	{ AppType BoochProcessDiagram }
+	{ PrintName "Booch Process Diagram" }
+	{ Suffix ".process" }
+	{ FileStore "process_files" }
+	{ IsRepSource True }
+    }
+}

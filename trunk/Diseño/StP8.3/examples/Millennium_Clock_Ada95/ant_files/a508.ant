@@ -1,0 +1,62 @@
+FileObject 1
+{
+    { Name "a508" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65CBB-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "Weight" }
+    { Type UmlClass }
+    { ObjectId 560 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD92BE-6EAE-11d4-8044-00104BF16798" }
+}
+
+NodeObject 99998
+{
+    { Name "hasEnergy" }
+    { Type UmlOperation }
+    { ObjectId 1327 }
+    { AnnotFileId 1 }
+    { Sig "e:int" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_98D34F8A-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlOperationAda95Code }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1329 }
+    { DescLine "begin" }
+    { DescLine "    return getEnergy(acc_this.all)-e >= 0;" }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1331 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1333 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "hasEnergy" }
+    { NoteId 4 }
+    { ObjectId 1334 }
+}
+

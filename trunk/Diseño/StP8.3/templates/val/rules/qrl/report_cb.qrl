@@ -1,0 +1,133 @@
+// ui_text_value(ui_prop); // get text control value
+// ui_text_set_value(ui_prop, string); // set text control value
+// ui_choice_set_value(ui_prop, int (zero based) ) // set choice control value
+// ui_choice_value(ui_prop)
+// to_ui_prop("REParse", "Incremental"); // returns the value of Properties, Control
+
+#include "qrl/include/general.inc"
+
+/*
+string
+getFileName(string sFilePath)
+{
+
+   if (!str_has_val(sFilePath))
+       return "";
+   
+   string sFileName = file_part(sFilePath);
+   if (!str_has_val(sFileName))
+       return "";
+
+   int i = string_length(sFileName);
+   int j = string_find(sFileName, ".");
+
+   if ()
+   sFileName = string_extract(sFileName, 0, i - j)
+   return sFileName;
+}
+*/
+
+int 
+selectReportType_cb(ui_event_tp event, ui_prop theprop, int id, string v)
+{
+
+    ui_prop ptFormatFile = to_ui_prop("UseCaseTraceReport", "tformatfile");  // "TTFormatFile", "tformatfile"
+    ui_prop pcReportType = to_ui_prop("UseCaseTraceReport", "targetformat"); // "TTargetFormat", "targetformat"
+    string sFormatFileSufix; 
+    string sFormatFile;
+    
+    sFormatFileSufix = getFormatFileExt(ui_choice_value(pcReportType));
+    sFormatFile = ui_text_value(ptFormatFile);
+    sFormatFile = string_extract(sFormatFile, 0, string_find(sFormatFile, 0, "."));
+    if ( !str_has_val(sFormatFile) )
+    {
+        sFormatFile = "stpreport";
+    }
+    ui_text_set_value(ptFormatFile, sFormatFile + sFormatFileSufix);
+    return 0;
+
+}
+
+int
+checkFomatFile_cb(ui_event_tp event, ui_prop theprop, int id, string v)
+{
+    ui_prop pFormatFile = to_ui_prop("TTFormatFile", "tformatfile");
+    string sFile = ui_text_value(pFormatFile);
+    
+    if(!file_exists(sFile)) // Check file existance
+    {
+        int nTargetType = ui_choice_value(to_ui_prop("TTargetFormat", "targetformat"));
+        ui_text_set_value(pFormatFile, "stpreport" + getFormatFileExt(nTargetType));
+        print_error("The specified file does not exists. Using default.");
+    }
+
+    return 0;
+}
+
+int
+checkOutputFile_cb(ui_event_tp event, ui_prop theprop, int id, string v)
+{
+    ui_prop ptOutputFile = to_ui_prop("TTOutputFile", "toutputfile");
+    string sFileName = ui_text_value(ptOutputFile);
+    string sFileExt = getOutputFileExt(ui_choice_value(to_ui_prop("TTargetFormat", "targetformat")));
+    ui_text_set_value(ptOutputFile, setFileExtention(sFileName, sFileExt));
+    return 0;
+}
+
+string 
+setFileExtention(string sFileName, string sSuffix)
+{
+    if (!str_has_val(sFileName))
+        return "";
+    
+    int i, j = string_find(sFileName, 0, ".");
+    int l = string_length(sFileName);
+    while( j < l )
+    {
+        i = j;
+        j = string_find(sFileName, j, ".");
+    }
+
+    sFileName = string_extract(sFileName, 0, i) +  sSuffix;
+
+    return sFileName;
+}
+
+string
+getOutputFileExt(int nChoice)
+{
+    if (nChoice == 0) // HTML
+        return ".html";
+
+    if (nChoice == 1) // FrameMaker
+        return ".mif";
+    
+    if (nChoice == 2) // MSWord
+        return ".rtf";
+
+    if (nChoice == 3) // Inteleaf
+        return ".doc";
+    
+    return "";
+}
+
+string
+getFormatFileExt(int nCoice)
+{
+
+    if (nCoice == 0) // HTML
+        return  ".css";
+
+    if (nCoice == 1) // FrameMaker
+        return  ".mif";
+    
+    if (nCoice == 2) // MSWord
+        return  ".rtf";
+
+    if (nCoice == 3) // Inteleaf
+        return  ".doc";
+
+    return "";
+}
+
+

@@ -1,0 +1,94 @@
+// ECR 4039 begin
+
+Toolbar Standard
+{
+    { Entry
+        { Name "CreateScript" }
+        { Type MenuShortCut }
+        { MenuEntry "Edit:CreateScript" }
+        { ActiveFunc idehook_show_new }
+        { HelpTip "Create Script" }
+        { Image "new_file" }
+    }
+    { Entry
+        { Name "EditScript" }
+        { Type MenuShortCut }
+        { MenuEntry "Edit:EditScript" }
+        { ActiveFunc idehook_edit_template }
+        { HelpTip "Edit Script" }
+        { Image "open_file" }
+    }
+    { Entry
+        { Name "ShowScriptPath" }
+        { Type MenuShortCut }
+        { MenuEntry "View:ShowScriptPath" }
+        { ActiveFunc idehook_help_area }
+        { HelpTip "Show Path" }
+        { Image "show_path" }
+    }
+    { Entry
+        { Name "RereadScript" }
+        { Type MenuShortCut }
+        { MenuEntry "File:RereadScript" }
+        { ActiveFunc idehook_reread_template }
+        { HelpTip "Rescan" }
+        { Image "refresh" }
+    }
+
+    { Entry
+        { Type Separator }
+    }
+
+    { Entry
+        { Name "EditExternalValue" }
+        { Type MenuShortCut }
+        { MenuEntry "Edit:EditExternalValue" }
+        { ActiveFunc idehook_edit_ext_val }
+        { HelpTip "Edit External Value" }
+        { Image "ext_default" }
+    }
+
+    { Entry
+        { Type Separator }
+    }
+
+    { Entry
+        { Name "RunScript" }
+        { Type MenuShortCut }
+        { MenuEntry "File:RunScript" }
+        { ActiveFunc idehook_show_run }
+        { HelpTip "Run Script" }
+        { Image "run_script" }
+    }
+    { Entry
+        { Name "KillScript" }
+        { Type MenuShortCut }
+        { MenuEntry "File:KillScript" }
+        { ActiveFunc idehook_show_kill }
+        { HelpTip "Terminate Script" }
+        { Image "kill_script" }
+    }
+
+    { Entry
+        { Type Separator }
+    }
+
+    { Entry
+        { Name "ShowLog" }
+        { Type MenuShortCut }
+        { MenuEntry "View:ShowLog" }
+        { HelpTip "Show Message Log" }
+        { Image "message_log" }
+    }
+    
+    //ECR5247 - add a show desktop button
+    { Entry
+        { Name "ShowDesktop" }
+        { Type MenuShortCut }
+        { MenuEntry "View:ShowDesktop" }
+        { HelpTip "Show Desktop" }
+        { Image "showdesktop" }
+    }
+}
+
+// ECR 4039 end

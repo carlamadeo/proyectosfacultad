@@ -1,0 +1,94 @@
+FileObject 1
+{
+    { Name "a9" }
+    { Type ObjectAnnotation }
+    { GUID "UID_E0D93250-C886-11d5-90AA-0050045C27F0" }
+}
+
+NodeObject 99999
+{
+    { Name "Weight" }
+    { Type UmlClass }
+    { ObjectId 477 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_378C31FE-544B-11d4-8778-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlClassDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1194 }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1196 }
+}
+
+ItemObject 4
+{
+    { Type UmlStereotype }
+    { Value "MAIN" }
+    { NoteId 3 }
+    { ObjectId 1197 }
+}
+
+NoteObject 5
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1199 }
+    { DescLine "The class Weight is stereotyped with <<MAIN>>." }
+    { DescLine "Because Weight is the represantation of the physical weight" }
+    { DescLine "that delivers the energy for the clock to run, it should" }
+    { DescLine "contain the main method." }
+    { DescLine "If the codegenerator detects the class stereotype <<MAIN>> it" }
+    { DescLine "automatically generates a main method." }
+    { DescLine "Inside the main method the class Weight will be instantiated" }
+    { DescLine "and as second step a run method will be invoked that is although" }
+    { DescLine "generated automatically depending on that stereotype." }
+    { DescLine "The behavioural aspect of Weight is modelled in a state diagram, so " }
+    { DescLine "the label of the transition between the creation state and the first state" }
+    { DescLine "will although be automatically generated as part of the run method." }
+}
+
+ItemObject 6
+{
+    { Type ObjectName }
+    { Value "Weight" }
+    { NoteId 5 }
+    { ObjectId 1200 }
+}
+
+ItemObject 7
+{
+    { Type UniqueID }
+    { Value "160" }
+    { NoteId 5 }
+    { ObjectId 1201 }
+}
+
+NoteObject 8
+{
+    { Type REQAssignmentNote }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1203 }
+}
+
+ItemObject 9
+{
+    { Type REQAnalysisAssignmentItem }
+    { Value "1. Weight" }
+    { NoteId 8 }
+    { ObjectId 1204 }
+}
+

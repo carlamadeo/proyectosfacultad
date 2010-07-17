@@ -1,0 +1,418 @@
+<html>
+<head>
+    <title>Fixed Problems in StP 8.3</title>
+</head>
+<body>
+<h2>Fixed Problems in StP 8.3</h2>
+<table border=all cellpadding=2 cellspacing=0>
+<tr>
+    <td bgcolor=lightgrey><b>Product</b></td>
+    <td bgcolor=lightgrey><b>ID</b></td>
+    <td bgcolor=lightgrey><b>Type</b></td>
+    <td bgcolor=lightgrey><b>Description</b></td>
+</tr>
+<tr><td>Install</td><td>6034</td><td>Bug</td><td>When uninstalling the Sybase server the client gets removed too</td></tr>
+<tr><td>Install</td><td>6137</td><td>Bug</td><td>Problems installing StP executables where Sybase is already installed</td></tr>
+<tr><td>Install</td><td>6145</td><td>Bug</td><td>Scales are not correct at installation</td></tr>
+<tr><td>Install</td><td>6276</td><td>Bug</td><td>Incorrect permissions on &quot;lmgrd.start.config&quot;</td></tr>
+<tr><td>Install</td><td>6972</td><td>Bug</td><td>Message router does not work for Windows installation Client/Sever</td></tr>
+<tr><td>Install</td><td>6983</td><td>Bug</td><td>Unix installer is not providing an IP for the default msgd host</td></tr>
+<tr><td>Install</td><td>7075</td><td>Bug</td><td>Startup problems of message router on HP UX11</td></tr>
+<tr><td>Install</td><td>7236</td><td>Bug</td><td>When installing StP _WITHOUT_ Sybase, the symlinks bin/SOL24SN4/sybbcb and sybisql are wrong, causing endless loop</td></tr>
+<tr><td>Install</td><td>7858</td><td>Bug</td><td>Errors in install-log on Solaris &amp; HP/UX</td></tr>
+<tr><td>Install</td><td>6338</td><td>Doc_Bug</td><td>Installation Guide problems</td></tr>
+<tr><td>Install</td><td>6823</td><td>Doc_Enhancem</td><td>Consider updating Unix install guide to include removing older StP versions</td></tr>
+<tr><td>Install</td><td>6115</td><td>Enhancement</td><td>There is no option to install Sybase in one location and StP in another</td></tr>
+<tr><td>Install</td><td>6875</td><td>Enhancement</td><td>Need more detailed description of install options</td></tr>
+<tr><td>Install</td><td>7389</td><td>Enhancement</td><td>Customer don't like editing the toolinfo.xxxx.  They want set the environment in StP desktop options windows instead</td></tr>
+<tr><td>StP/ACD</td><td>5543</td><td>Bug</td><td>ACD Java codegen does not support array attributes</td></tr>
+<tr><td>StP/ACD</td><td>5717</td><td>Bug</td><td>C++ code generation by template converts all class names to lowercase</td></tr>
+<tr><td>StP/ACD</td><td>5807</td><td>Bug</td><td>MStatemachine has no ID, therefore no description, stereotype, Tagged Values, etc</td></tr>
+<tr><td>StP/ACD</td><td>5808</td><td>Bug</td><td>Comment in ACD templates causes ACD to ignore quotes in next line</td></tr>
+<tr><td>StP/ACD</td><td>6352</td><td>Bug</td><td>Dead field actionBlock in MState</td></tr>
+<tr><td>StP/ACD</td><td>6603</td><td>Bug</td><td>Problems in ACD when a template calls a tcl-procedure which itself calls a tdl-procedure</td></tr>
+<tr><td>StP/ACD</td><td>6781</td><td>Bug</td><td>&quot;Open ACD Template&quot; doesn't work</td></tr>
+<tr><td>StP/ACD</td><td>6792</td><td>Bug</td><td>ACD XMI generation creates 'ordered' attribute for associations magically</td></tr>
+<tr><td>StP/ACD</td><td>6865</td><td>Bug</td><td>Ada templates: unnecessary newlines in package spec's private part</td></tr>
+<tr><td>StP/ACD</td><td>6866</td><td>Bug</td><td>Ada templates: package specs contain unnecessary empty lines</td></tr>
+<tr><td>StP/ACD</td><td>6950</td><td>Bug</td><td>Enormous amount of memory needed by ACD</td></tr>
+<tr><td>StP/ACD</td><td>7010</td><td>Bug</td><td>ACD: procedure call in a template leads to superfluous line</td></tr>
+<tr><td>StP/ACD</td><td>7015</td><td>Bug</td><td>ACD's built-in tcl interpreter does not match provided documentation</td></tr>
+<tr><td>StP/ACD</td><td>7033</td><td>Bug</td><td>Associations should be included AFTER the definition of the class</td></tr>
+<tr><td>StP/ACD</td><td>7035</td><td>Bug</td><td>MOperation.access needs to be MOperation.access:CPP (or MOperation.access:)</td></tr>
+<tr><td>StP/ACD</td><td>7036</td><td>Bug</td><td>Non-void operations should return a default value</td></tr>
+<tr><td>StP/ACD</td><td>7110</td><td>Bug</td><td>Behavior of loop with 'empty' where clause</td></tr>
+<tr><td>StP/ACD</td><td>7123</td><td>Bug</td><td>The utility program stdout2msgd causes msgd to eat up to 90% of CPU time</td></tr>
+<tr><td>StP/ACD</td><td>7135</td><td>Bug</td><td>Problem when stereotypes contain a trailing newline</td></tr>
+<tr><td>StP/ACD</td><td>7142</td><td>Bug</td><td>Need cleanup: small memory improvement plus fix of UNIX vs. Windows problem</td></tr>
+<tr><td>StP/ACD</td><td>7229</td><td>Bug</td><td>Two or more persons generating code at the same time might cause problems</td></tr>
+<tr><td>StP/ACD</td><td>7254</td><td>Bug</td><td>C++ templates: no pure virtual method generated (abstract)</td></tr>
+<tr><td>StP/ACD</td><td>7258</td><td>Bug</td><td>C++ templates: no operation generation</td></tr>
+<tr><td>StP/ACD</td><td>7260</td><td>Bug</td><td>C++ templates: visibility of attributes</td></tr>
+<tr><td>StP/ACD</td><td>7264</td><td>Bug</td><td>C++ templates: no virtual destructor</td></tr>
+<tr><td>StP/ACD</td><td>7270</td><td>Bug</td><td>ACD: Problems with parameterized classes</td></tr>
+<tr><td>StP/ACD</td><td>7327</td><td>Bug</td><td>Mechanism attribute of ACD metamodel returns &quot;in&quot; by default</td></tr>
+<tr><td>StP/ACD</td><td>7328</td><td>Bug</td><td>When there is no return type specified, nothing is generated</td></tr>
+<tr><td>StP/ACD</td><td>7330</td><td>Bug</td><td>Default value for operation parameters are not taken into account.</td></tr>
+<tr><td>StP/ACD</td><td>7332</td><td>Bug</td><td>takeEvent method and final state problem</td></tr>
+<tr><td>StP/ACD</td><td>7334</td><td>Bug</td><td>takeEvent method, automatic transitions are not taken into account.</td></tr>
+<tr><td>StP/ACD</td><td>7371</td><td>Bug</td><td>No constructor or destructor specification</td></tr>
+<tr><td>StP/ACD</td><td>7372</td><td>Bug</td><td>Need to set file extension to .h by default for generated files</td></tr>
+<tr><td>StP/ACD</td><td>7396</td><td>Bug</td><td>Need to improve import-statements for Java code generation</td></tr>
+<tr><td>StP/ACD</td><td>7448</td><td>Bug</td><td>Indentation problems with templates</td></tr>
+<tr><td>StP/ACD</td><td>7489</td><td>Bug</td><td>XMI export needs to set ISO-8859-1 instead of UTF-8</td></tr>
+<tr><td>StP/ACD</td><td>7494</td><td>Bug</td><td>Duplicate attributes and methods in class with state machine and singleton pattern</td></tr>
+<tr><td>StP/ACD</td><td>7495</td><td>Bug</td><td>Inner Interface &quot;TransitionInterface&quot; leads to compilation error</td></tr>
+<tr><td>StP/ACD</td><td>7512</td><td>Bug</td><td>metaCreate/metaInsert fails to create links with &quot;link classes&quot; - e.g. MDependencies</td></tr>
+<tr><td>StP/ACD</td><td>7514</td><td>Bug</td><td>No &quot;MActivity&quot; in IMF for states within composite states</td></tr>
+<tr><td>StP/ACD</td><td>7560</td><td>Bug</td><td>No virtual user defined constructor generated when generating C++ with ACD</td></tr>
+<tr><td>StP/ACD</td><td>7603</td><td>Bug</td><td>Problems with usecase inheritance</td></tr>
+<tr><td>StP/ACD</td><td>7605</td><td>Bug</td><td>Send action should respect Java conventions</td></tr>
+<tr><td>StP/ACD</td><td>7608</td><td>Bug</td><td>Support for JunctionPoint/DynamicChoice in state machine code for Java</td></tr>
+<tr><td>StP/ACD</td><td>7612</td><td>Bug</td><td>Need to change C, COM, Corba, and VB templates to unsupported templates</td></tr>
+<tr><td>StP/ACD</td><td>7622</td><td>Bug</td><td>Need Java templates rewrite</td></tr>
+<tr><td>StP/ACD</td><td>7640</td><td>Bug</td><td>Need to change templates and desktop menus for selective generation (Java/C++)</td></tr>
+<tr><td>StP/ACD</td><td>7699</td><td>Bug</td><td>ACD outputs incorrect string when &quot;\end proc&quot; token is found in a template</td></tr>
+<tr><td>StP/ACD</td><td>7763</td><td>Bug</td><td>Need to change templates and desktop menus for selective generation (Ada95)</td></tr>
+<tr><td>StP/ACD</td><td>7764</td><td>Bug</td><td>Need to change templates and desktop menus for selective generation (EJB)</td></tr>
+<tr><td>StP/ACD</td><td>5664</td><td>Enhancement</td><td>Useful string function should go in std.tdl</td></tr>
+<tr><td>StP/ACD</td><td>5723</td><td>Enhancement</td><td>ACD metamodel should be expanded to include 'Value of Attribute'</td></tr>
+<tr><td>StP/ACD</td><td>6664</td><td>Enhancement</td><td>Visual Basic templates should use Typemapping</td></tr>
+<tr><td>StP/ACD</td><td>6718</td><td>Enhancement</td><td>The XMI import/export should take into account derived attributes</td></tr>
+<tr><td>StP/ACD</td><td>7049</td><td>Enhancement</td><td>Port state machine part of template from Java to C++</td></tr>
+<tr><td>StP/ACD</td><td>7089</td><td>Enhancement</td><td>Need to access data in StP requirements table from ACD</td></tr>
+<tr><td>StP/ACD</td><td>7253</td><td>Enhancement</td><td>XMI import/export should support method bodies</td></tr>
+<tr><td>StP/ACD</td><td>7255</td><td>Enhancement</td><td>C++ templates: &quot;const&quot; keyword for operation</td></tr>
+<tr><td>StP/ACD</td><td>7257</td><td>Enhancement</td><td>C++ templates: &quot;inline&quot; keyword</td></tr>
+<tr><td>StP/ACD</td><td>7259</td><td>Enhancement</td><td>C++ templates: parameter &quot;policy&quot;</td></tr>
+<tr><td>StP/ACD</td><td>7261</td><td>Enhancement</td><td>C++ templates: no default value of an attribute</td></tr>
+<tr><td>StP/ACD</td><td>7262</td><td>Enhancement</td><td>C++ templates: no const member generated.</td></tr>
+<tr><td>StP/ACD</td><td>7263</td><td>Enhancement</td><td>C++ templates: Ctor init list</td></tr>
+<tr><td>StP/ACD</td><td>7281</td><td>Enhancement</td><td>ACD performance improvement / selective extraction</td></tr>
+<tr><td>StP/ACD</td><td>7310</td><td>Enhancement</td><td>When templates and procs are called from within a template the last new line symbol should be striped from the returned result</td></tr>
+<tr><td>StP/ACD</td><td>7311</td><td>Enhancement</td><td>Need to enhance ACD templates with 'hard new line' character</td></tr>
+<tr><td>StP/ACD</td><td>7326</td><td>Enhancement</td><td>No constructor or destructor specification</td></tr>
+<tr><td>StP/ACD</td><td>7467</td><td>Enhancement</td><td>Need C++ template updates</td></tr>
+<tr><td>StP/ACD</td><td>7606</td><td>Enhancement</td><td>Exit and entry code missing for states; Activity code is sparse</td></tr>
+<tr><td>StP/ACD</td><td>7631</td><td>Enhancement</td><td>Tagged Value should default to &quot;true&quot; if only the tag is set</td></tr>
+<tr><td>StP/Core</td><td>217</td><td>Bug</td><td>Printing using Word _rtf onto (11 x 17) is unreadable</td></tr>
+<tr><td>StP/Core</td><td>356</td><td>Bug</td><td>Cannot use 'desc' in qrl queries against notes</td></tr>
+<tr><td>StP/Core</td><td>3376</td><td>Bug</td><td>Backslash in pathnames corrupts message log</td></tr>
+<tr><td>StP/Core</td><td>4562</td><td>Bug</td><td>In State tables the cells in 3d column should be grey to indicate they are not used (except for the default value cell)</td></tr>
+<tr><td>StP/Core</td><td>4602</td><td>Bug</td><td>StP desktop opens diagrams/tables in wrong system</td></tr>
+<tr><td>StP/Core</td><td>4658</td><td>Bug</td><td>Typo in help text 'Unrecogized option'. There should be an additional 'n'</td></tr>
+<tr><td>StP/Core</td><td>4900</td><td>Bug</td><td>When a new system is created, the database option &quot;truncate on checkpoint&quot; is not set</td></tr>
+<tr><td>StP/Core</td><td>4901</td><td>Bug</td><td>Auto allign problems in sequence diagram</td></tr>
+<tr><td>StP/Core</td><td>5079</td><td>Bug</td><td>oae problem when system and path are not set</td></tr>
+<tr><td>StP/Core</td><td>5228</td><td>Bug</td><td>When the file name contains &quot;()&quot; GDE can not display it in title bar (this is needed because of state diagrams for opera</td></tr>
+<tr><td>StP/Core</td><td>5230</td><td>Bug</td><td>Refined states of statemachine created for operation goes to one diagram</td></tr>
+<tr><td>StP/Core</td><td>5254</td><td>Bug</td><td>qrl function editor_confirm does not honor all parameters</td></tr>
+<tr><td>StP/Core</td><td>5255</td><td>Bug</td><td>The lock/unlock operation in model management causes very heavy memory load</td></tr>
+<tr><td>StP/Core</td><td>5260</td><td>Bug</td><td>Making stputil (restore subsystem) faster (by factor 2)</td></tr>
+<tr><td>StP/Core</td><td>5382</td><td>Bug</td><td>Parts of diagram, near edges of sheet, are missing when printing more than 1 sheet</td></tr>
+<tr><td>StP/Core</td><td>5386</td><td>Bug</td><td>RTF diagram exporting is buggy</td></tr>
+<tr><td>StP/Core</td><td>5501</td><td>Bug</td><td>OMS errors at opening prop sheet after replace unnamed link between unnamed classes</td></tr>
+<tr><td>StP/Core</td><td>5532</td><td>Bug</td><td>If there is an operation without any arguments you can't open its annotation from tree browser</td></tr>
+<tr><td>StP/Core</td><td>5577</td><td>Bug</td><td>Should not be able to start repository browser when no system is opened</td></tr>
+<tr><td>StP/Core</td><td>5741</td><td>Bug</td><td>Problem when migrating a system with files containing a hyphen</td></tr>
+<tr><td>StP/Core</td><td>5776</td><td>Bug</td><td>StP cannot access properly systems like &quot;\\host\some_di_rlist\system&quot;</td></tr>
+<tr><td>StP/Core</td><td>6048</td><td>Bug</td><td>Copy system fails sometimes without a helpful message</td></tr>
+<tr><td>StP/Core</td><td>6107</td><td>Bug</td><td>Program 'lmtest' crashes</td></tr>
+<tr><td>StP/Core</td><td>6189</td><td>Bug</td><td>Layout problem in some windows in StP desktop</td></tr>
+<tr><td>StP/Core</td><td>6227</td><td>Bug</td><td>StP does not change the user name back when Sybase command with &quot;sa&quot; operation is used</td></tr>
+<tr><td>StP/Core</td><td>6359</td><td>Bug</td><td>Printing in oae should delete the temporary *.rtf file when finished</td></tr>
+<tr><td>StP/Core</td><td>6545</td><td>Bug</td><td>When printing diagrams some labels overlap with links</td></tr>
+<tr><td>StP/Core</td><td>6549</td><td>Bug</td><td>Print settings allow space in the setting name, causing errors later</td></tr>
+<tr><td>StP/Core</td><td>6577</td><td>Bug</td><td>Changing direction of 'return message' results in 'simple message'</td></tr>
+<tr><td>StP/Core</td><td>6606</td><td>Bug</td><td>OMS queries that contain comparisons with empty strings fail if the repository is MS JET</td></tr>
+<tr><td>StP/Core</td><td>6608</td><td>Bug</td><td>On UNIX the &lt;TAB&gt; key does not complete labels</td></tr>
+<tr><td>StP/Core</td><td>6625</td><td>Bug</td><td>Creating baseline _with_ version control *sometimes* loops endlessly</td></tr>
+<tr><td>StP/Core</td><td>6730</td><td>Bug</td><td>Cleanup of obsolete qrl-functions (obsolete since ~core 1.3)</td></tr>
+<tr><td>StP/Core</td><td>6742</td><td>Bug</td><td>The reflexive and N-ary association mappings are wrong</td></tr>
+<tr><td>StP/Core</td><td>6768</td><td>Bug</td><td>Generating model from parsed source file fails to update tables the second time</td></tr>
+<tr><td>StP/Core</td><td>6776</td><td>Bug</td><td>State transition link &quot;left_btn(location)^indicator.light(ON)&quot; is not passed correctly by StP</td></tr>
+<tr><td>StP/Core</td><td>6784</td><td>Bug</td><td>Restoring a baseline hangs endlessly because zip asks for y/n/quit</td></tr>
+<tr><td>StP/Core</td><td>6794</td><td>Bug</td><td>All entries in context menu of diagrams/table are active</td></tr>
+<tr><td>StP/Core</td><td>6797</td><td>Bug</td><td>After migration from an 8.0 Jet system to 8.2 Jet system there are two *.mdb files in the directory</td></tr>
+<tr><td>StP/Core</td><td>6804</td><td>Bug</td><td>'error 32 writing peer info on fd 8' at terminal window when creating a new system</td></tr>
+<tr><td>StP/Core</td><td>6806</td><td>Bug</td><td>Different behavior of UNIX and Windows</td></tr>
+<tr><td>StP/Core</td><td>6809</td><td>Bug</td><td>When there are no saved printer settings, the named setting chooser is ugly</td></tr>
+<tr><td>StP/Core</td><td>6810</td><td>Bug</td><td>Need consistency in buttons in print dialog of editors</td></tr>
+<tr><td>StP/Core</td><td>6812</td><td>Bug</td><td>After 'page layout' the Toolbar-button 'Zoom to fit' still thinks that the page layout is shown</td></tr>
+<tr><td>StP/Core</td><td>6831</td><td>Bug</td><td>Removing a collaborator window from the list does not close the collaborator's panner window</td></tr>
+<tr><td>StP/Core</td><td>6832</td><td>Bug</td><td>Data from Message property sheet disappears in Collaboration diagram</td></tr>
+<tr><td>StP/Core</td><td>6833</td><td>Bug</td><td>Funny behavior of filter-list in apply filter window</td></tr>
+<tr><td>StP/Core</td><td>6836</td><td>Bug</td><td>When adding a symbol that overlaps the border of the drawing area the box for adding the label is shown 'somewhere'</td></tr>
+<tr><td>StP/Core</td><td>6844</td><td>Bug</td><td>The &quot;incldir&quot; toolinfo variable does not work</td></tr>
+<tr><td>StP/Core</td><td>6849</td><td>Bug</td><td>C++ inheritance visibility item can't be removed from Generalization property sheets</td></tr>
+<tr><td>StP/Core</td><td>6850</td><td>Bug</td><td>Cparser crashes in some cases</td></tr>
+<tr><td>StP/Core</td><td>6858</td><td>Bug</td><td>After reverse engineering, final state is missing in some cases</td></tr>
+<tr><td>StP/Core</td><td>6913</td><td>Bug</td><td>The 'Description' button in Binds link property sheets is outside its group</td></tr>
+<tr><td>StP/Core</td><td>6918</td><td>Bug</td><td>StP crashes if you change the owner of a system and then try to close the system.</td></tr>
+<tr><td>StP/Core</td><td>6926</td><td>Bug</td><td>Property sheets have inconsistent look in different editors</td></tr>
+<tr><td>StP/Core</td><td>6936</td><td>Bug</td><td>OAE Printing on UNIX does not work</td></tr>
+<tr><td>StP/Core</td><td>6939</td><td>Bug</td><td>Restoring of a baseline created with an earlier StP version fails</td></tr>
+<tr><td>StP/Core</td><td>6965</td><td>Bug</td><td>During execution of &quot;Generate model from Parsed source files&quot; on SE, many command prompts pop up and vanish</td></tr>
+<tr><td>StP/Core</td><td>6973</td><td>Bug</td><td>Restore multiple subsystem baselines crashes ngoae</td></tr>
+<tr><td>StP/Core</td><td>6976</td><td>Bug</td><td>When there is an empty annotation file, 'recover system repository' fails without a message</td></tr>
+<tr><td>StP/Core</td><td>6977</td><td>Bug</td><td>Printing does not work when using popup menu</td></tr>
+<tr><td>StP/Core</td><td>6981</td><td>Bug</td><td>On UNIX GTE does not have printing to printer functionality</td></tr>
+<tr><td>StP/Core</td><td>6988</td><td>Bug</td><td>g_train example displays a warning when generating C code</td></tr>
+<tr><td>StP/Core</td><td>6997</td><td>Bug</td><td>State transition's property sheet parses link's name incorrectly</td></tr>
+<tr><td>StP/Core</td><td>6999</td><td>Bug</td><td>In the gde printer dialog there is a group labeled 'Copies' with partial images</td></tr>
+<tr><td>StP/Core</td><td>7001</td><td>Bug</td><td>In the Baseline Current System dialog the label should be 'Baseline File Name' instead of 'Baseline System Name'</td></tr>
+<tr><td>StP/Core</td><td>7008</td><td>Bug</td><td>&quot;Recent Systems&quot; does not differentiate between different products</td></tr>
+<tr><td>StP/Core</td><td>7013</td><td>Bug</td><td>Some template files reference the wrong user include files</td></tr>
+<tr><td>StP/Core</td><td>7040</td><td>Bug</td><td>System names with Umlauts</td></tr>
+<tr><td>StP/Core</td><td>7085</td><td>Bug</td><td>Bug in OMS query with sorting</td></tr>
+<tr><td>StP/Core</td><td>7087</td><td>Bug</td><td>Duplicate Global Unique IDs</td></tr>
+<tr><td>StP/Core</td><td>7131</td><td>Bug</td><td>GPF error when starting code generator from StP desktop</td></tr>
+<tr><td>StP/Core</td><td>7151</td><td>Bug</td><td>stputil core dumps if key other than y/n is pressed on questions</td></tr>
+<tr><td>StP/Core</td><td>7194</td><td>Bug</td><td>xpm-icons icon_right and icon_left need to be switched on UNIX</td></tr>
+<tr><td>StP/Core</td><td>7201</td><td>Bug</td><td>Desktop popup/PrintAs and File/Print Diagram dialogs do not display the correct file name</td></tr>
+<tr><td>StP/Core</td><td>7202</td><td>Bug</td><td>GPF errpr when trying to get an element which is out of range from an ui-list</td></tr>
+<tr><td>StP/Core</td><td>7208</td><td>Bug</td><td>When running several scripts, if you go to view - Show Message log - Edit, list changes, you can't do anything</td></tr>
+<tr><td>StP/Core</td><td>7225</td><td>Bug</td><td>Bug in Source Code: When printing from gde to a printer memory gets freed twice</td></tr>
+<tr><td>StP/Core</td><td>7232</td><td>Bug</td><td>Problem of an ending &quot;\&quot; in restore selected baseline dialog box (desktop, tools, restore selected baseline)</td></tr>
+<tr><td>StP/Core</td><td>7247</td><td>Bug</td><td>Error message 'tooltip: can not find resource font nor fallback fixed font' when staring StP from command line</td></tr>
+<tr><td>StP/Core</td><td>7248</td><td>Bug</td><td>File StP_V8.2/lib/SOL24SN4/app-defaults/C/IDE seems to have not-working entries for ToolTip settings</td></tr>
+<tr><td>StP/Core</td><td>7250</td><td>Bug</td><td>Need to remove Component Broker from GUI and documentation</td></tr>
+<tr><td>StP/Core</td><td>7285</td><td>Bug</td><td>Incorrect reverse engineering for association</td></tr>
+<tr><td>StP/Core</td><td>7289</td><td>Bug</td><td>When restoring a baseline to a already existing system there _MUST_ be a question if the system should be destroyed</td></tr>
+<tr><td>StP/Core</td><td>7301</td><td>Bug</td><td>Undocumented feature causes some unbelievable delay when starting editors</td></tr>
+<tr><td>StP/Core</td><td>7358</td><td>Bug</td><td>Only the first 4 buttons of a non-exclusive Choice List can be set</td></tr>
+<tr><td>StP/Core</td><td>7441</td><td>Bug</td><td>Copy system should not do a deep copy when finding a symbolic link</td></tr>
+<tr><td>StP/Core</td><td>7451</td><td>Bug</td><td>bcp might cut long descriptions in note description field</td></tr>
+<tr><td>StP/Core</td><td>7455</td><td>Bug</td><td>File license.txt on the CD uses mixed double quotes (&quot;) and double single quotes(')</td></tr>
+<tr><td>StP/Core</td><td>7457</td><td>Bug</td><td>Restore baseline increases size of Sybase repository</td></tr>
+<tr><td>StP/Core</td><td>7462</td><td>Bug</td><td>Problems with loading large databases with bcp</td></tr>
+<tr><td>StP/Core</td><td>7484</td><td>Bug</td><td>If the path for the postscript converter in the toolinfo is wrong,  no error is displayed</td></tr>
+<tr><td>StP/Core</td><td>7487</td><td>Bug</td><td>Shadow files of annotations are ignored/deleted when recovering system from files</td></tr>
+<tr><td>StP/Core</td><td>7571</td><td>Bug</td><td>When we create a new diagram from the GDE the name of the old one shouldn't be used anywhere for the new.</td></tr>
+<tr><td>StP/Core</td><td>7624</td><td>Bug</td><td>Incorrect annotation generated in some cases after RevEngr</td></tr>
+<tr><td>StP/Core</td><td>7664</td><td>Bug</td><td>No warning if HTML target is chosen but no postscript conversion defined</td></tr>
+<tr><td>StP/Core</td><td>7703</td><td>Bug</td><td>Problem in class table printing with MS Office 2000 or XP</td></tr>
+<tr><td>StP/Core</td><td>7706</td><td>Bug</td><td>Error when 'reader' Sybase user attempts to save a diagram</td></tr>
+<tr><td>StP/Core</td><td>7707</td><td>Bug</td><td>Reflexive association role bug</td></tr>
+<tr><td>StP/Core</td><td>7725</td><td>Bug</td><td>Problems with checking model management packages</td></tr>
+<tr><td>StP/Core</td><td>7886</td><td>Bug</td><td>Printing from desktop with 'Print As' does not reset file path when system changes</td></tr>
+<tr><td>StP/Core</td><td>7933</td><td>Bug</td><td>The migration wizard in StP-desktop ends with a dialog containing a question mark</td></tr>
+<tr><td>StP/Core</td><td>7953</td><td>Bug</td><td>FlexLM- documentation is installed twice on NT and only at one place on UNIX</td></tr>
+<tr><td>StP/Core</td><td>7964</td><td>Bug</td><td>Uml2imf generates invalid IMF file for certain state diagrams. See description.</td></tr>
+<tr><td>StP/Core</td><td>2756</td><td>Doc_Enhancem</td><td>Can't change page size in mid qrl script</td></tr>
+<tr><td>StP/Core</td><td>7469</td><td>Doc_Enhancem</td><td>GDE crashes when open collaborator window on UNIX machine when the display is on NT.</td></tr>
+<tr><td>StP/Core</td><td>4037</td><td>Enhancement</td><td>Performance improvement: Property sheets</td></tr>
+<tr><td>StP/Core</td><td>5242</td><td>Enhancement</td><td>Handling of size of a restored system</td></tr>
+<tr><td>StP/Core</td><td>6184</td><td>Enhancement</td><td>To exit StP on Windows we use Alt+F4 whereas on Unix we use Ctrl+E</td></tr>
+<tr><td>StP/Core</td><td>6234</td><td>Enhancement</td><td>Drawing canvas in gde looks flat -- should have &quot;depth shading&quot;.</td></tr>
+<tr><td>StP/Core</td><td>6238</td><td>Enhancement</td><td>Make progress messages for &quot;Dump Current System Repository to Files&quot; match ones for &quot;Load Current System from Files</td></tr>
+<tr><td>StP/Core</td><td>6245</td><td>Enhancement</td><td>Subsystems baselined from a system with MSJet could not be restored under Solaris or HP</td></tr>
+<tr><td>StP/Core</td><td>6614</td><td>Enhancement</td><td>Command Line Interface for Cron Jobs - rmanmaint</td></tr>
+<tr><td>StP/Core</td><td>6757</td><td>Enhancement</td><td>Enabling of synchronous MSGD communication needed</td></tr>
+<tr><td>StP/Core</td><td>6774</td><td>Enhancement</td><td>We should include the new version (v.5) of Adobe Acrobat Reader in our install package</td></tr>
+<tr><td>StP/Core</td><td>6795</td><td>Enhancement</td><td>We should do an 'align all links' on several diagrams of the provided example systems</td></tr>
+<tr><td>StP/Core</td><td>7000</td><td>Enhancement</td><td>Request to be able to compare a baseline and a current StP system</td></tr>
+<tr><td>StP/SE</td><td>6312</td><td>Bug</td><td>No page breaks between diagrams in SDD report. Makes diagrams/captions unreadable</td></tr>
+<tr><td>StP/SE</td><td>6835</td><td>Bug</td><td>Behavior problem of Event/Action symbol in SE</td></tr>
+<tr><td>StP/SE</td><td>6837</td><td>Bug</td><td>When creating a formal definition for a Module symbol in sce, the recent file list is not filled with the newly created diagram</td></tr>
+<tr><td>StP/SE</td><td>6839</td><td>Bug</td><td>Message on stderr (terminal window) instead of message log</td></tr>
+<tr><td>StP/SE</td><td>6840</td><td>Bug</td><td>Resizing SCE View Code windows does not give expected results</td></tr>
+<tr><td>StP/SE</td><td>6851</td><td>Bug</td><td>Error message when semantic model (from Reverse Engineering) is out of date in example system atm</td></tr>
+<tr><td>StP/SE</td><td>6893</td><td>Bug</td><td>Goto error origin does not work in DFE semantic check</td></tr>
+<tr><td>StP/SE</td><td>6894</td><td>Bug</td><td>Fill areas in data, etc., prop sheets have no OK button</td></tr>
+<tr><td>StP/SE</td><td>6895</td><td>Bug</td><td>Selection in View Code browser gets lost</td></tr>
+<tr><td>StP/SE</td><td>6990</td><td>Bug</td><td>Duplicate diagrams in atm example system</td></tr>
+<tr><td>StP/SE</td><td>7125</td><td>Bug</td><td>Reverse engineering doesn't stop</td></tr>
+<tr><td>StP/SE</td><td>7222</td><td>Bug</td><td>When updating a Pspec note description by Go To - Decomposition, StP doesn't accept quotes &quot;</td></tr>
+<tr><td>StP/SE</td><td>7268</td><td>Bug</td><td>In Decision Table, Event Logic, Action Logic.... editor (gte), you can add columns but not remove them</td></tr>
+<tr><td>StP/SE</td><td>7509</td><td>Bug</td><td>SE parser crashes when parsing source files</td></tr>
+<tr><td>StP/SE</td><td>7666</td><td>Bug</td><td>Changes to PSpec description are lost when the user selects another process</td></tr>
+<tr><td>StP/SE</td><td>7768</td><td>Bug</td><td>QRL glitches in SDD.qrl</td></tr>
+<tr><td>StP/SE</td><td>7818</td><td>Bug</td><td>print_sc_error has 3 parameters; called with 1 argument</td></tr>
+<tr><td>StP/SE</td><td>7873</td><td>Bug</td><td>RevEngr crashes on customer's code</td></tr>
+<tr><td>StP/UML</td><td>4823</td><td>Bug</td><td>Sloppy and incorrect repositioning of association role labels</td></tr>
+<tr><td>StP/UML</td><td>4923</td><td>Bug</td><td>The executable file 'oraclecmd.exe' is missing from the bin directory</td></tr>
+<tr><td>StP/UML</td><td>5114</td><td>Bug</td><td>Checks for model management are incomplete</td></tr>
+<tr><td>StP/UML</td><td>5330</td><td>Bug</td><td>See ECR 5192</td></tr>
+<tr><td>StP/UML</td><td>5434</td><td>Bug</td><td>stp.exe looking for disk in drive a: during migration and open system</td></tr>
+<tr><td>StP/UML</td><td>5529</td><td>Bug</td><td>RTF printing on more than one side is buggy</td></tr>
+<tr><td>StP/UML</td><td>5591</td><td>Bug</td><td>Problems in 'Construct Package by adding ...'</td></tr>
+<tr><td>StP/UML</td><td>5699</td><td>Bug</td><td>Reverse engineering of really simple code fails (worked in 7.2)</td></tr>
+<tr><td>StP/UML</td><td>5702</td><td>Bug</td><td>Class symbol overlaps package symbol in UML_Report.</td></tr>
+<tr><td>StP/UML</td><td>5703</td><td>Bug</td><td>UML_Report_F: misspelling</td></tr>
+<tr><td>StP/UML</td><td>5726</td><td>Bug</td><td>syslock is not removed when baselining a subsystem</td></tr>
+<tr><td>StP/UML</td><td>5766</td><td>Bug</td><td>Scenario name should be read-only</td></tr>
+<tr><td>StP/UML</td><td>5770</td><td>Bug</td><td>Need display mark for state entry action and activities in ustated</td></tr>
+<tr><td>StP/UML</td><td>5837</td><td>Bug</td><td>Little glitch with ps_StringList</td></tr>
+<tr><td>StP/UML</td><td>5861</td><td>Bug</td><td>Display Mark 'Constraints' shows constraints of all elements at a strange position</td></tr>
+<tr><td>StP/UML</td><td>5913</td><td>Bug</td><td>JPEG file format appears in Print As ... dialog</td></tr>
+<tr><td>StP/UML</td><td>5954</td><td>Bug</td><td>Object instantiation link always starts from the center of both the class and the object</td></tr>
+<tr><td>StP/UML</td><td>5969</td><td>Bug</td><td>Wrong XMI charset definition</td></tr>
+<tr><td>StP/UML</td><td>6219</td><td>Bug</td><td>${file.id} is invalid until the file is saved</td></tr>
+<tr><td>StP/UML</td><td>6241</td><td>Bug</td><td>Implements link not conformant to UML 1.3; code generation only with lollipops.</td></tr>
+<tr><td>StP/UML</td><td>6335</td><td>Bug</td><td>No warning when working on property sheets with locked annotations</td></tr>
+<tr><td>StP/UML</td><td>6369</td><td>Bug</td><td>Problem with labels of transitions</td></tr>
+<tr><td>StP/UML</td><td>6408</td><td>Bug</td><td>Jet-only installation causes multiple libsybdb.dll not found windows messages to appear</td></tr>
+<tr><td>StP/UML</td><td>6426</td><td>Bug</td><td>Need to have operation as target of Dependency</td></tr>
+<tr><td>StP/UML</td><td>6463</td><td>Bug</td><td>Check Whole System: Query takes longer than 30 minutes</td></tr>
+<tr><td>StP/UML</td><td>6464</td><td>Bug</td><td>Check class diagram: Query takes longer than 30 minutes</td></tr>
+<tr><td>StP/UML</td><td>6465</td><td>Bug</td><td>Check whole system: very time consuming code fragment is called thousands of times</td></tr>
+<tr><td>StP/UML</td><td>6466</td><td>Bug</td><td>Check class diagram:: very time consuming code fragment</td></tr>
+<tr><td>StP/UML</td><td>6502</td><td>Bug</td><td>OAE core dumps when drawing aggregation links</td></tr>
+<tr><td>StP/UML</td><td>6503</td><td>Bug</td><td>Behavior of aggregation depends on how you draw it</td></tr>
+<tr><td>StP/UML</td><td>6595</td><td>Bug</td><td>Packages/Subsystems need to be able to have interfaces</td></tr>
+<tr><td>StP/UML</td><td>6611</td><td>Bug</td><td>Default page setup for printing should always fit a diagram to a single page</td></tr>
+<tr><td>StP/UML</td><td>6662</td><td>Bug</td><td>Java files opened in Visual C++, not Java</td></tr>
+<tr><td>StP/UML</td><td>6669</td><td>Bug</td><td>View Log button in migration dialog does not exist</td></tr>
+<tr><td>StP/UML</td><td>6675</td><td>Bug</td><td>Problems in drawing diagram to clipboard</td></tr>
+<tr><td>StP/UML</td><td>6723</td><td>Bug</td><td>Problem with 'Goto Source Code' when a semantic model exists</td></tr>
+<tr><td>StP/UML</td><td>6725</td><td>Bug</td><td>cxx_std_types lists illegal types like unsigned double</td></tr>
+<tr><td>StP/UML</td><td>6747</td><td>Bug</td><td>Problems with comment extraction in RevEngr</td></tr>
+<tr><td>StP/UML</td><td>6830</td><td>Bug</td><td>Changing object from active to passive does not display the 'active' parts of the lifeline</td></tr>
+<tr><td>StP/UML</td><td>6879</td><td>Bug</td><td>Problem with navigating from state diagram to state table</td></tr>
+<tr><td>StP/UML</td><td>6890</td><td>Bug</td><td>Should not be able to replace dependency links with invalid links</td></tr>
+<tr><td>StP/UML</td><td>6891</td><td>Bug</td><td>Printing classes with attributes of more than 16 characters gives unreadable result</td></tr>
+<tr><td>StP/UML</td><td>6896</td><td>Bug</td><td>Parse Source Code should be the first menu entry</td></tr>
+<tr><td>StP/UML</td><td>6910</td><td>Bug</td><td>Error in error message of model management check</td></tr>
+<tr><td>StP/UML</td><td>6923</td><td>Bug</td><td>Discarding notes/items in an update should print error, not warning</td></tr>
+<tr><td>StP/UML</td><td>6924</td><td>Bug</td><td>Different mapping of refined Action States</td></tr>
+<tr><td>StP/UML</td><td>6927</td><td>Bug</td><td>We should be able to import what we export</td></tr>
+<tr><td>StP/UML</td><td>6934</td><td>Bug</td><td>setup-stp.* should set $SYBASE_ASE</td></tr>
+<tr><td>StP/UML</td><td>6940</td><td>Bug</td><td>No easy way to find packages contained in a class</td></tr>
+<tr><td>StP/UML</td><td>6941</td><td>Bug</td><td>Stereotype inheritance link should use triangle arrowhead</td></tr>
+<tr><td>StP/UML</td><td>6945</td><td>Bug</td><td>GPF error in gde when copying large classes multiple times</td></tr>
+<tr><td>StP/UML</td><td>6949</td><td>Bug</td><td>Illegal Group attribute 'Orientation'</td></tr>
+<tr><td>StP/UML</td><td>6954</td><td>Bug</td><td>Typo in Scenario Instance label</td></tr>
+<tr><td>StP/UML</td><td>6966</td><td>Bug</td><td>Restore Subsystem overwrites external class definitions</td></tr>
+<tr><td>StP/UML</td><td>6998</td><td>Bug</td><td>Difference in the underlying model between StP and Rose for unlabeled links</td></tr>
+<tr><td>StP/UML</td><td>7007</td><td>Bug</td><td>In Rose, actors in use case diagrams are actually classes</td></tr>
+<tr><td>StP/UML</td><td>7016</td><td>Bug</td><td>Packages with same name in UseCase View and Logical View need to be different</td></tr>
+<tr><td>StP/UML</td><td>7021</td><td>Bug</td><td>Menu entries for generating ACD code should not be active when no system is opened!</td></tr>
+<tr><td>StP/UML</td><td>7022</td><td>Bug</td><td>Two objects with same names in component diagram</td></tr>
+<tr><td>StP/UML</td><td>7024</td><td>Bug</td><td>Rose2StP generates incorrect annotation for decisions in activity diagrams</td></tr>
+<tr><td>StP/UML</td><td>7031</td><td>Bug</td><td>Need updates/changes to the EJB template documentation</td></tr>
+<tr><td>StP/UML</td><td>7037</td><td>Bug</td><td>In Rose, diagrams can have an 'empty' name</td></tr>
+<tr><td>StP/UML</td><td>7038</td><td>Bug</td><td>Crash (Assertion failed) when moving a link end of a generalization tree</td></tr>
+<tr><td>StP/UML</td><td>7047</td><td>Bug</td><td>GOR on a class corrupts filenames for state diagrams and tables</td></tr>
+<tr><td>StP/UML</td><td>7050</td><td>Bug</td><td>Install as non-root user creates 1 byte setup-stp.* files</td></tr>
+<tr><td>StP/UML</td><td>7068</td><td>Bug</td><td>Rose2StP should migrate communicates link in the deployment diagrams also</td></tr>
+<tr><td>StP/UML</td><td>7082</td><td>Bug</td><td>Cannot add stereotypes to deployment links</td></tr>
+<tr><td>StP/UML</td><td>7086</td><td>Bug</td><td>Operator precedence problems with RE</td></tr>
+<tr><td>StP/UML</td><td>7109</td><td>Bug</td><td>Stereotypes get converted to lower letters during conversion</td></tr>
+<tr><td>StP/UML</td><td>7112</td><td>Bug</td><td>Installation CD contains a file 0 byte file, /Setup/readme.txt</td></tr>
+<tr><td>StP/UML</td><td>7134</td><td>Bug</td><td>CanBeSelected, CanBeRenamed NodeSymbol attributes</td></tr>
+<tr><td>StP/UML</td><td>7136</td><td>Bug</td><td>Need tune-up of JPEG generation</td></tr>
+<tr><td>StP/UML</td><td>7140</td><td>Bug</td><td>Refresh of description window does not work correctly</td></tr>
+<tr><td>StP/UML</td><td>7143</td><td>Bug</td><td>In Rose, links can be in a model, but not shown in any diagram</td></tr>
+<tr><td>StP/UML</td><td>7146</td><td>Bug</td><td>uclassd semantic check error is incorrect</td></tr>
+<tr><td>StP/UML</td><td>7147</td><td>Bug</td><td>Semantic check in desktop and uclassd differ</td></tr>
+<tr><td>StP/UML</td><td>7148</td><td>Bug</td><td>ui_owner_visible returns always True after first prop sheet display</td></tr>
+<tr><td>StP/UML</td><td>7157</td><td>Bug</td><td>Yet another case of flying roles, data inconsistency</td></tr>
+<tr><td>StP/UML</td><td>7165</td><td>Bug</td><td>StP should not ask for Sybase password if SybServer is down</td></tr>
+<tr><td>StP/UML</td><td>7169</td><td>Bug</td><td>Need to disable property sheet for anonymous objects</td></tr>
+<tr><td>StP/UML</td><td>7174</td><td>Bug</td><td>Problem in changing Association - direction /- type in class diagram</td></tr>
+<tr><td>StP/UML</td><td>7175</td><td>Bug</td><td>Drag&amp;Drop with classes between class diagrams makes the class persistent</td></tr>
+<tr><td>StP/UML</td><td>7187</td><td>Bug</td><td>#error statement causes parsing to fail with errors</td></tr>
+<tr><td>StP/UML</td><td>7196</td><td>Bug</td><td>Caption appearing below diagram despite warning that it will be above the diagram</td></tr>
+<tr><td>StP/UML</td><td>7205</td><td>Bug</td><td>Semantic check wrong with roles and attributes of the same name</td></tr>
+<tr><td>StP/UML</td><td>7217</td><td>Bug</td><td>When erroneously labeling an object like 'Instance[State]:Class' a qrl error shows up</td></tr>
+<tr><td>StP/UML</td><td>7221</td><td>Bug</td><td>Incorrect class symbol scaling</td></tr>
+<tr><td>StP/UML</td><td>7223</td><td>Bug</td><td>Too long name for MergeControl (aka SynchronizationBar) symbol</td></tr>
+<tr><td>StP/UML</td><td>7227</td><td>Bug</td><td>Desktop freezes during long running operations</td></tr>
+<tr><td>StP/UML</td><td>7243</td><td>Bug</td><td>AssociationTable is not printed when association descriptions contain &quot;</td></tr>
+<tr><td>StP/UML</td><td>7272</td><td>Bug</td><td>When a class exists in multiple packages, Rose2StP does not honor it</td></tr>
+<tr><td>StP/UML</td><td>7287</td><td>Bug</td><td>Stereotypes for Communicates Links are not visible in deployment diagrams</td></tr>
+<tr><td>StP/UML</td><td>7293</td><td>Bug</td><td>Inconsistent usage of '...' in menu entries</td></tr>
+<tr><td>StP/UML</td><td>7318</td><td>Bug</td><td>Undefined variable/function when trying to load MM-subsystem and an operation needs to be renamed</td></tr>
+<tr><td>StP/UML</td><td>7336</td><td>Bug</td><td>System not locked when copied</td></tr>
+<tr><td>StP/UML</td><td>7403</td><td>Bug</td><td>Backslash in filename of checks in Both UNIX and windows (SE &amp; UML)</td></tr>
+<tr><td>StP/UML</td><td>7404</td><td>Bug</td><td>Remove debug message in UML-semantic checks</td></tr>
+<tr><td>StP/UML</td><td>7425</td><td>Bug</td><td>Incorrect label in prop sheet for messages</td></tr>
+<tr><td>StP/UML</td><td>7450</td><td>Bug</td><td>Problems with association property sheet</td></tr>
+<tr><td>StP/UML</td><td>7463</td><td>Bug</td><td>Note-Symbols in Rose can contain &lt;tab&gt; characters; these are shown as hollow rectangles in StP</td></tr>
+<tr><td>StP/UML</td><td>7464</td><td>Bug</td><td>Check semantics causes undo button to be enabled</td></tr>
+<tr><td>StP/UML</td><td>7466</td><td>Bug</td><td>Installation problems on Windows XP</td></tr>
+<tr><td>StP/UML</td><td>7473</td><td>Bug</td><td>When renaming a class, only one side of a reflexive association gets renamed</td></tr>
+<tr><td>StP/UML</td><td>7474</td><td>Bug</td><td>Mapping of link gets lost when a node gets smaller and orthogonal links is turned on</td></tr>
+<tr><td>StP/UML</td><td>7496</td><td>Bug</td><td>Too complex query in HTML report on Jet</td></tr>
+<tr><td>StP/UML</td><td>7516</td><td>Bug</td><td>Message router problems on Windows 2000 and XP</td></tr>
+<tr><td>StP/UML</td><td>7518</td><td>Bug</td><td>Double quotes in default values changed to single during Rose migrations</td></tr>
+<tr><td>StP/UML</td><td>7533</td><td>Bug</td><td>Missing association link between two parameterized classes</td></tr>
+<tr><td>StP/UML</td><td>7538</td><td>Bug</td><td>Can't draw transitions between Fork and Join control symbols in activity diagrams</td></tr>
+<tr><td>StP/UML</td><td>7540</td><td>Bug</td><td>Draw Generalization Hierarchy doesn't work when grid is switched on</td></tr>
+<tr><td>StP/UML</td><td>7542</td><td>Bug</td><td>StP does not ask for confirmation when overwriting an existing file</td></tr>
+<tr><td>StP/UML</td><td>7550</td><td>Bug</td><td>Objects and ValueOfAttributes should have shrink-around-label set to true on default</td></tr>
+<tr><td>StP/UML</td><td>7568</td><td>Bug</td><td>Calling a virtual template results in an incorrect 1-char indentation</td></tr>
+<tr><td>StP/UML</td><td>7570</td><td>Bug</td><td>Construct Class From Table Definition uses confusing &quot;last modified&quot; sort order</td></tr>
+<tr><td>StP/UML</td><td>7589</td><td>Bug</td><td>State Tables:  Duplicate GUIDs for MAction and MActivity</td></tr>
+<tr><td>StP/UML</td><td>7610</td><td>Bug</td><td>ActiveFunc for creation of association classes is erroneous</td></tr>
+<tr><td>StP/UML</td><td>7611</td><td>Bug</td><td>No swimlane cursor after double click on toolbar symbol</td></tr>
+<tr><td>StP/UML</td><td>7639</td><td>Bug</td><td>Export to Doors menu appears when TI var use_doors_integration=False</td></tr>
+<tr><td>StP/UML</td><td>7656</td><td>Bug</td><td>Need to fix navigation from operation in uclassd</td></tr>
+<tr><td>StP/UML</td><td>7673</td><td>Bug</td><td>Various redraw problems</td></tr>
+<tr><td>StP/UML</td><td>7675</td><td>Bug</td><td>Only attributes with visibility &quot;public&quot; in guard chooser</td></tr>
+<tr><td>StP/UML</td><td>7676</td><td>Bug</td><td>View after run doesn't work for HTML report</td></tr>
+<tr><td>StP/UML</td><td>7714</td><td>Bug</td><td>Need to improve sorting of symbols in UML report</td></tr>
+<tr><td>StP/UML</td><td>7719</td><td>Bug</td><td>StP cannot be installed on a host with a &quot;-&quot; in its hostname</td></tr>
+<tr><td>StP/UML</td><td>7731</td><td>Bug</td><td>Navigation needs to be independent of  content of TI var projdir</td></tr>
+<tr><td>StP/UML</td><td>7735</td><td>Bug</td><td>Display mark not shown for activity scenario</td></tr>
+<tr><td>StP/UML</td><td>7736</td><td>Bug</td><td>Misleading message when opening an 8.3 repository with 8.2</td></tr>
+<tr><td>StP/UML</td><td>7745</td><td>Bug</td><td>Typo in stputil, subsystem &quot;vcc&quot;</td></tr>
+<tr><td>StP/UML</td><td>7796</td><td>Bug</td><td>stpem messages get misrouted on terminal server</td></tr>
+<tr><td>StP/UML</td><td>7807</td><td>Bug</td><td>Derived attributes should not get initialized in Java code generation</td></tr>
+<tr><td>StP/UML</td><td>7884</td><td>Bug</td><td>GOR on classes does not update object instances correctly</td></tr>
+<tr><td>StP/UML</td><td>7905</td><td>Bug</td><td>two small changes in the example system uml_email, differences to documentation</td></tr>
+<tr><td>StP/UML</td><td>7909</td><td>Bug</td><td>The provided RE_Demos examples for reverse engineering have a UNIX line ending,even on Windows.</td></tr>
+<tr><td>StP/UML</td><td>7910</td><td>Bug</td><td>The provided RE_Demos examples for reverse engineering assign bad formatted comments to wrong classes</td></tr>
+<tr><td>StP/UML</td><td>7911</td><td>Bug</td><td>The provided RE_Demos examples do not match StP's capabilities</td></tr>
+<tr><td>StP/UML</td><td>7912</td><td>Bug</td><td>Friend dependencies get drawn in the wrong direction by reverse engineering</td></tr>
+<tr><td>StP/UML</td><td>7917</td><td>Bug</td><td>C++ templates ignore navigability</td></tr>
+<tr><td>StP/UML</td><td>7921</td><td>Bug</td><td>c++ templates do not output rev'enged code.</td></tr>
+<tr><td>StP/UML</td><td>6378</td><td>Doc_Bug</td><td>&quot;Cloning annotations&quot; not explained anywhere</td></tr>
+<tr><td>StP/UML</td><td>7009</td><td>Doc_Bug</td><td>Release Notes 8.2: reflexive links for use cases incorrectly documented</td></tr>
+<tr><td>StP/UML</td><td>6640</td><td>Doc_Enhancem</td><td>Activation of a life line can be ended only by return message</td></tr>
+<tr><td>StP/UML</td><td>7543</td><td>Doc_Enhancem</td><td>Make Index based Search and a search over all Documents in online documentationpossible ...</td></tr>
+<tr><td>StP/UML</td><td>7575</td><td>Doc_Enhancem</td><td>Cannot execute scripts that contain space in their names on NT from the scriptmanager.</td></tr>
+<tr><td>StP/UML</td><td>7576</td><td>Doc_Enhancem</td><td>Error message for create StP system &quot;dummy&quot;</td></tr>
+<tr><td>StP/UML</td><td>7577</td><td>Doc_Enhancem</td><td>Restore of a baseline to loops endlessly</td></tr>
+<tr><td>StP/UML</td><td>7578</td><td>Doc_Enhancem</td><td>Problem if we have condition and operation on one linein SE... see the description</td></tr>
+<tr><td>StP/UML</td><td>7761</td><td>Doc_Enhancem</td><td>Need to update docs to reflect XP client support only</td></tr>
+<tr><td>StP/UML</td><td>7791</td><td>Doc_Enhancem</td><td>StP can't be installed because of corrupt previous deinstallation</td></tr>
+<tr><td>StP/UML</td><td>2653</td><td>Enhancement</td><td>Generalization is not UML 1.1 compliant</td></tr>
+<tr><td>StP/UML</td><td>4822</td><td>Enhancement</td><td>Width of lines in printed diagrams</td></tr>
+<tr><td>StP/UML</td><td>5738</td><td>Enhancement</td><td>Text alignment in note symbol should be improved</td></tr>
+<tr><td>StP/UML</td><td>6389</td><td>Enhancement</td><td>Need display mark for object description</td></tr>
+<tr><td>StP/UML</td><td>6527</td><td>Enhancement</td><td>Rose2StP bridge needs to support Rose 2000 and 2001</td></tr>
+<tr><td>StP/UML</td><td>6633</td><td>Enhancement</td><td>Need to create classes from sequence diagram</td></tr>
+<tr><td>StP/UML</td><td>6635</td><td>Enhancement</td><td>Problems extracting parameter and return value from messages when constructing operations</td></tr>
+<tr><td>StP/UML</td><td>6638</td><td>Enhancement</td><td>Activity diagram should have split/merge control symbol in the toolbar</td></tr>
+<tr><td>StP/UML</td><td>6683</td><td>Enhancement</td><td>Change 'Start New Editor' to 'Freeze Current View' and 'File-&gt;Open in new Editor'</td></tr>
+<tr><td>StP/UML</td><td>6726</td><td>Enhancement</td><td>Property sheets for attributes, operations and object instances.</td></tr>
+<tr><td>StP/UML</td><td>6864</td><td>Enhancement</td><td>Uninstall screens on NT/W2000 must be corrected</td></tr>
+<tr><td>StP/UML</td><td>6880</td><td>Enhancement</td><td>Need to provide same property sheets in table editors as in diagram editors</td></tr>
+<tr><td>StP/UML</td><td>6929</td><td>Enhancement</td><td>Alternative way of migrating decisions from Rose state charts into StP state diagrams</td></tr>
+<tr><td>StP/UML</td><td>6932</td><td>Enhancement</td><td>Rose2StP should not create 'empty' files</td></tr>
+<tr><td>StP/UML</td><td>7046</td><td>Enhancement</td><td>We need a UID for file objects</td></tr>
+<tr><td>StP/UML</td><td>7097</td><td>Enhancement</td><td>Need update to QRL functions for repository name</td></tr>
+<tr><td>StP/UML</td><td>7098</td><td>Enhancement</td><td>Need QRL function for list of systems</td></tr>
+<tr><td>StP/UML</td><td>7153</td><td>Enhancement</td><td>HTML report should allow to exclude display marks from being printed</td></tr>
+<tr><td>StP/UML</td><td>7159</td><td>Enhancement</td><td>Label in Rose2StP should be Source Model instead of Source System</td></tr>
+<tr><td>StP/UML</td><td>7170</td><td>Enhancement</td><td>The stereotype chooser should support double clicking into the list of stereotypes</td></tr>
+<tr><td>StP/UML</td><td>7178</td><td>Enhancement</td><td>Stereotypes for associations should be visible in class diagram editor</td></tr>
+<tr><td>StP/UML</td><td>7184</td><td>Enhancement</td><td>Misleading error message in 'copy system'</td></tr>
+<tr><td>StP/UML</td><td>7200</td><td>Enhancement</td><td>Administration command needed</td></tr>
+<tr><td>StP/UML</td><td>7361</td><td>Enhancement</td><td>Need integration between StP/UML and SNiFF 4</td></tr>
+<tr><td>StP/UML</td><td>7410</td><td>Enhancement</td><td>There should be a choice box 'View After Run' when doing model checks</td></tr>
+<tr><td>StP/UML</td><td>7428</td><td>Enhancement</td><td>Need to improve rename dialog in desktop</td></tr>
+<tr><td>StP/UML</td><td>7475</td><td>Enhancement</td><td>Global rename should be in the context menu of objects</td></tr>
+<tr><td>StP/UML</td><td>7480</td><td>Enhancement</td><td>Need new link type 'Directed Association', similar to 'Aggregation' link</td></tr>
+<tr><td>StP/UML</td><td>7607</td><td>Enhancement</td><td>No Support for DynamicChoicePoint</td></tr>
+<tr><td>StP/UML</td><td>7625</td><td>Enhancement</td><td>For Java there is no &quot;package private&quot; visibility</td></tr>
+<tr><td>StP/UML</td><td>7628</td><td>Enhancement</td><td>Need to provide ObjectSelector for creation of new diagram</td></tr>
+<tr><td>StP/UML</td><td>7740</td><td>Enhancement</td><td>Need to have friend classes supported</td></tr>
+<tr><td>StP/UML</td><td>7758</td><td>Enhancement</td><td>HTML report should support HTML in descriptions</td></tr>
+</table>
+<p>
+Total count: 400
+</body>
+</html>

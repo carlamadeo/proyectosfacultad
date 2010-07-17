@@ -1,0 +1,32 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Note 800109
+{
+    { AppType StoredProcedure }
+    { HelpText "The Stored Procedure note lets you define a Stored Procedure or Function. This information is used in SQL generation." }
+    { PrintName "Stored Procedure" }
+    { Bounds { Min 0 } }
+    { Item
+	{ AppType SqlName }
+	{ HelpText "The Procedure Name item allows you to name the Stored Prcedure or Function." }
+	{ PrintName "Procedure Name" }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ IsKey True }
+    }
+    { Item
+	{ AppType ReturnsValue }
+	{ HelpText "The Returns Value? item allows you to spcify that the procedure returns a value. In Oracle 7, this procedure will be created as a function." }
+	{ PrintName "Returns Value?" }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ InitValue "True" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_stored_procedure.note"

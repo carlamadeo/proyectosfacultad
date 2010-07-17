@@ -1,0 +1,25 @@
+/* XPM */
+static char* macro_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 3 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+/* pixels */
+".......X........",
+"......XXX.......",
+".....XXXXX......",
+"XXXXXXXXXXXXXXX.",
+"X             X ",
+"X ............X ",
+"X ............X ",
+"X ............X ",
+"X ............X ",
+"X ............X ",
+"X ............X ",
+"X ............X ",
+"XXXXXXXXXXXXXXX ",
+".               ",
+"................",
+"................"};

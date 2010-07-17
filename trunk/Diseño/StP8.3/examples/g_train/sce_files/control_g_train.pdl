@@ -1,0 +1,28 @@
+module	control g_train
+
+PDL generated
+	Thu Dec 21 13:52:36 1995 by april@kilauea
+This module has 0 formal parameters:
+
+input data params
+
+input flags
+
+output data params
+
+output flags
+
+calls
+
+called by
+
+description
+        
+control_g_train()
+
+        {
+           process_weight(N_Kgs,number_of_passengers);
+           process_speed(location,Ts);
+           send_to_screen(location,number_of_passenger,N_Kgs,Ts);
+        }end module
+

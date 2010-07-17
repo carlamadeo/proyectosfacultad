@@ -1,0 +1,61 @@
+FileObject 1
+{
+    { Name "a324" }
+    { Type ObjectAnnotation }
+    { GUID "UID_E0D93172-C886-11d5-90AA-0050045C27F0" }
+}
+
+NodeObject 99999
+{
+    { Name "Clockwork" }
+    { Type UmlStateMachine }
+    { ObjectId 652 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_98A70124-AC4F-11d4-BEDC-0060971B5EE0" }
+}
+
+NodeObject 99998
+{
+    { Name "NotSolidHour" }
+    { Type UmlState }
+    { ObjectId 661 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_98A7012D-AC4F-11d4-BEDC-0060971B5EE0" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 663 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 665 }
+    { DescLine "This state will be reached by each transition if time is not a solid hour." }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "NotSolidHour" }
+    { NoteId 3 }
+    { ObjectId 666 }
+}
+
+ItemObject 5
+{
+    { Type UniqueID }
+    { Value "153" }
+    { NoteId 3 }
+    { ObjectId 667 }
+}
+

@@ -1,0 +1,372 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/Core
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1993
+//      All rights reserved
+//
+
+//////////////////////////////////////////////////////////////////////
+//
+//      req_doc
+//
+//
+//      See script_help for general template comments.
+//
+//////////////////////////////////////////////////////////////////////
+
+#include "qrl/include/se_report_formats.inc"
+
+script_help = "This report itemizes how each requirement is satisfied by objects in the repository.  The report itemizes the requirement paragraphs from a particular requirement document and for each paragraph describes the design objects that satisfy the requirement.";
+
+
+external string Requirement_Document = "NONE";
+external_help = "Enter the name of the requirement document to trace.";
+
+	
+//
+// main()
+//
+void
+main()
+{
+    print_message("Requirements Document ...");
+
+    // set default format
+    format(DefaultFormatFile);
+
+    paragraph (SectionFormat);
+    print("Requirements Document Traceability Report");
+    paragraph (SectionFormat);
+    print("Document: " + Requirement_Document);
+
+    paragraph (SeparatorFormat); print("");
+
+    print_requirement_paragraphs (Requirement_Document);
+
+    message("Requirements Document Traceability Report completed.");
+}
+
+
+
+
+//
+// print_requirement_paragraphs()
+// Get the requirements paragraphs notes from the data dictionary.  If the
+// object associated with the current note has another note item indicating
+// that the requirements paragraph is associated with the desired requirements
+// document, then print a paragraph.  Print a section heading for the first
+// paragraph to identify the paragraph.
+//
+void
+print_requirement_paragraphs (string Document)
+{
+    string last_paragraph = "None";
+    string query;
+    item one_para;
+    file one_file;
+    int count;
+    
+    query = "item[ParagraphNumber && note[Requirement]] sort by value";
+    for_each_in_select(query, one_para)
+    {
+	query = "item[RequirementDocument && note[Requirement] && " +
+	    "value == '${Document}' && obj_id == ${one_para.obj_id}]";
+	count = selection_count(query);
+	if (count > 0)
+	{
+	    if (last_paragraph != one_para.value)
+	    {
+		paragraph (Object1Format);
+		print ("Paragraph " + one_para.value);
+		last_paragraph = one_para.value;
+		print_object (one_para.obj_id);
+	    }
+	}
+    
+    }
+}
+
+
+//
+// print_object()
+// Get the object identified by the argument.  Print the object number,
+// the object name, and the object type, then print any other information
+// associated with the particular object.
+//
+void
+print_object (int object_id)
+{
+    string query;
+    node one_node;
+    cntx one_cntx;
+    link one_link;
+    file one_file;
+    
+    one_node = find_by_query("node[id = ${object_id}]");
+    if (one_node != NULL)
+    {
+	paragraph(Note1Format);
+	print("Object: " + one_node.id);	
+	paragraph(Item1Format);
+	print("Name: " + one_node.name);	
+	paragraph(Item1Format);
+	print("Type: " + one_node.type);	
+	other_node_information (one_node);
+    }
+    else
+    {
+	// maybe it's a parameter
+	one_cntx = find_by_query("cntx[id = ${object_id}]");
+	if (one_cntx != NULL)
+	{
+	    paragraph(Note1Format);
+	    print("Object: " + one_cntx.id);	
+	    paragraph(Item1Format);
+	    print("Name: " + one_cntx.name);	
+	    paragraph(Item1Format);
+	    print("Type: " + one_cntx.type);	
+	    print_parameter_info (one_cntx);
+	}
+	else
+	{
+	    // maybe it's a link
+	    one_link = find_by_query("link[id = ${object_id}]");
+	    if (one_link != NULL)
+	    {
+		paragraph(Note1Format);
+		print("Object: " + one_link.id);	
+		paragraph(Item1Format);
+		print("Name: " + one_link.name);	
+		paragraph(Item1Format);
+		print("Type: " + one_link.type);	
+		other_link_information (one_link);
+	    }
+	    else
+	    {
+		// maybe it's a file
+		one_file = find_by_query("file[id = ${object_id}]");
+		if (one_file != NULL)
+		{
+		    paragraph(Note1Format);
+		    print("Object: " + one_file.id);	
+		    paragraph(Item1Format);
+		    print("Name: " + one_file.name);	
+		    paragraph(Item1Format);
+		    print("Type: " + one_file.type);	
+		    other_file_information (one_file);
+		}
+	    }
+	}
+    }
+}
+
+
+//
+// other_node_information()
+// Print any useful other information about the node given its type.
+//
+void
+other_node_information (node object)
+{
+    string query;
+    note one_desc;
+    note one_note;
+
+    query = "note[GenericObject && obj_id == ${object.id}]";
+    one_desc = find_by_query(query);
+    if (one_desc != NULL)
+    {
+	paragraph (Description1Format);
+	print (one_desc.desc);
+    }
+
+    if (object.type == "Module")
+    {
+	query = "note[ModulePDL && obj_id == ${object.id}]";
+	one_note = find_by_query(query);
+	if (one_note != NULL)
+	{
+	    paragraph(Item1Format);
+	    print("The module has a PDL specification");
+	    paragraph (SeparatorFormat); print("");
+	    paragraph (Description1Format);
+	    print(one_note.desc);
+	}
+	else
+	{
+	    paragraph(Item1Format);
+	    print("The module has no PDL specification");
+	}
+    }
+    else if (object.type == "Process")
+    {
+	query = "note[Pspec && obj_id == ${object.id} && " +
+	    "items[ProcessSpec]]";
+	one_note = find_by_query(query);
+	if (one_note != NULL)
+	{
+	    paragraph (Description1Format);
+	    print (one_note.desc);
+
+	    paragraph(Item1Format);
+	    print ("The process has a specification");
+	}
+	else
+	{
+	    paragraph(Item1Format);
+	    print ("The process has no specification");
+	}
+    }
+}
+
+//
+// other_link_information()
+// Print any useful other information about the node given its type.
+//
+void
+other_link_information(link object)
+{
+    string query;
+    node from_node;
+    node to_node;
+    note one_note;
+    cntx one_cntx;
+
+    if ((object.type == "ControlFlow") || (object.type == "DataFlow"))
+    {
+	query = "node[id = ${object.from_node_id}]";
+	from_node = find_by_query(query);
+	if (from_node != NULL)
+	{
+	    query = "node[${object.to_node_id}]";
+	    to_node = find_by_query(query);
+	    if (to_node != NULL)
+	    {
+		paragraph (Item1Format);
+		print("Flows from '" + from_node.name + "'");
+		paragraph (Item1Format);
+   		print ("Flows to '" + to_node.name + "'"); 
+	    }
+	}
+    
+	query = "note[GenericObject && obj_id == ${object.id}]";
+	one_note = find_by_query(query);
+	if (one_note != NULL)
+	{
+	    paragraph (Description1Format);
+	    print (one_note.desc);
+	}
+    }
+    else if (object.type == "SubprogramCall")
+    {
+	query = "node[id = ${object.from_node_id}]";
+	from_node = find_by_query(query);
+	if (from_node != NULL)
+	{
+	    query = "node[id = ${object.to_node_id}]";
+	    to_node = find_by_query(query);
+	    if (to_node != NULL)
+	    {
+		paragraph (Item1Format);
+		print("Passed from '" + from_node.name + "' to '" + 
+		    to_node.name + "'");
+	    }
+	}
+
+	query = "cntx[link_id == ${object.id}]";
+	for_each_in_select(query,one_cntx)
+	{
+	    print_parameter_info(one_cntx);
+	}
+    }
+    if (object.type == "Transition")
+    {
+	query = "node[id = ${object.from_node_id}]";
+	from_node = find_by_query(query);
+	if (from_node != NULL)
+	{
+	    query = "node[id = ${object.to_node_id}]";
+	    to_node = find_by_query(query);
+	    if (to_node != NULL)
+	    {
+		paragraph (Item1Format);
+		print("From state '" + from_node.name + "'");
+		paragraph (Item1Format);
+   		print ("To State '" + to_node.name + "'"); 
+	    }
+	}
+    
+	query = "note[GenericObject && obj_id == ${object.id}]";
+	one_note = find_by_query(query);
+	if (one_note != NULL)
+	{
+	    paragraph (Description1Format);
+	    print (one_note.desc);
+	}
+    }
+}
+
+
+//
+// print_parameter_info()
+//
+void
+print_parameter_info (cntx parameter)
+{
+    string query;
+    note one_note;
+
+    paragraph(Item1Format);
+    if (parameter.type == "DataIn") 
+    {
+        print("Input data : " + parameter.name);
+    }
+    else if (parameter.type == "DataOut")
+    {
+        print("Output data : " + parameter.name);
+    }
+    else if (parameter.type == "DataInOut")
+    {
+        print("Updata data : " + parameter.name);
+    }
+    else if (parameter.type == "ControlIn")  
+    {
+        print("Input Control Flag: " + parameter.name);
+    }
+    else if (parameter.type == "ControlOut")
+    {
+        print("Output control flag: " + parameter.name);
+    }
+
+    query = "note[GenericObject && obj_id == ${parameter.id}]";
+    one_note = find_by_query(query);
+    if (one_note != NULL)
+    {
+	paragraph (Description1Format);
+	print (one_note.desc);
+    }
+}
+
+
+//
+// other_file_information()
+// print the revision and description for the given file
+//
+void
+other_file_information(file object)
+{
+    string query;
+    note one_note;
+
+    paragraph(Item1Format);
+    print("Revision:  " + object.rev);
+
+    query = "note[GenericObject && obj_id == ${object.id}]";
+    one_note = find_by_query(query);
+    if (one_note != NULL)
+    {
+	paragraph (Description1Format);
+	print (one_note.desc);
+    }
+}

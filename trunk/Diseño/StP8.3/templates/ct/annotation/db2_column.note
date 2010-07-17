@@ -1,0 +1,45 @@
+//
+// 	sccsid[] = @(#)db2_column.note	3.6  93/04/26
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Note 800100
+{
+    { AppType DB2Column }
+    { HelpText "The DB2 Table Column note lets you add items for declaring an DB2 table column. This information is used in SQL generation." }
+    { PrintName "DB2 Table Column" }
+    { Bounds { Min 0 } { Max 1 } }
+    { Item
+	{ AppType DB2DataType }
+	{ HelpText "The Data Type item allows you to assign an DB2 data type to an attribute or data element. The Value text field contains a menu listing all available choices." }
+	{ PrintName "Data Type" }
+	{ Bounds { Min 0 } { Max 1 } }
+    }
+    { Item
+	{ AppType Size }
+	{ HelpText "The Length/Precision item allows you to set the maximum amount of storage for a data type (such as Length for VARCHAR), or the number of places to the left of a decimal point (such as Precision for NUMERIC). See Scale." }
+	{ PrintName "Length/Precision" }
+	{ Bounds { Min 0 } { Max 1 } }
+    }
+    { Item
+	{ AppType Size2 }
+	{ HelpText "The Scale item allows you to set the number of decimal places (for example with NUMERIC). See Length/Precision." }
+	{ PrintName "Scale" }
+	{ Bounds { Min 0 } { Max 1 } }
+    }
+    { Item
+	{ AppType IsBitData } 
+	{ HelpText "For CHAR, VARCHAR and LONG VARCHAR datatypes, treat column values as binary data." }
+	{ PrintName "Bit Data?" }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ InitValue "True" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_db2_column.note"
+
+

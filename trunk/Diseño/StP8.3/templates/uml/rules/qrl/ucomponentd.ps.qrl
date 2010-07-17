@@ -1,0 +1,172 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+#include "rules/qrl/ps.inc"
+#include "rules/qrl/uclassd.ps.inc" // ECR 5184
+
+//////////////////////////////////////////////
+// 
+//  Component Nodes
+//
+//////////////////////////////////////////////
+
+void
+UmlComponent_ps_show()
+
+{
+    gde_builtin("PropertySheetShow UmlComponent_ps");
+
+    // reset
+
+    UmlComponent_ps_init();
+}
+
+
+// double click hook
+void
+UmlComponent_ps_double_click(gde_mapsymbol ms)
+{
+    ps_reset_last_fill();
+    UmlComponent_ps_show();
+}
+
+
+
+boolean UmlComponent_ps_initted = False;
+
+void
+UmlComponent_ps_init()
+
+{
+    if (UmlComponent_ps_initted)
+    {
+        // just refresh the prop sheet
+        ps_fill("UmlComponent_ps");
+        return;
+    }
+    UmlComponent_ps_initted = True;
+//    gde_builtin("EditorActionDone 0214951139  UmlComponent_ps_ActionDone();"); // ECR 6880
+    ps_init("UmlComponent_ps", "ObjectName", ps_Node, string_to_list("binaryComponent executableComponent sourceComponent objectComponent interfaceComponent", " "), ps_Node);
+
+    // ECR 3789 begin
+    ps_append_field("UmlComponent_ps", "ObjectDescription",
+    "GenericObject", "", ps_NoteDescriptionExternal, NULL);
+    // ECR 3789 end
+    ps_append_field("UmlComponent_ps", "Stereotype", "UmlExtensibilityDefinition", "UmlStereotype", ps_StringAnt, NULL);
+    ps_append_field("UmlComponent_ps", "Constraints", "UmlExtensibilityDefinition", "UmlConstraintItem", ps_StringList, NULL);
+    ps_append_field("UmlComponent_ps", "TaggedValues", "UmlExtensibilityDefinition", "UmlTaggedValue", ps_StringList, NULL);
+
+    ps_fill("UmlComponent_ps");
+
+    //ps_dump();
+
+    return;
+}
+
+
+// change focus of property sheet
+
+void
+UmlComponent_ps_ActionDone()
+
+{
+    // reset propsheet
+
+    if( ui_owner_visible(to_ui_prop("UmlComponent_ps","OK")) ) // ECR 4037
+        ps_fill("UmlComponent_ps");
+}
+
+
+
+//////////////////////////////////////////////
+// 
+//  Component Links
+//
+//////////////////////////////////////////////
+
+void
+UmlComponentLink_ps_show()
+
+{
+    gde_builtin("PropertySheetShow UmlComponentLink_ps");
+
+    // reset
+
+    UmlComponentLink_ps_init();
+}
+
+
+// double click hook
+void
+UmlComponentLink_ps_double_click(gde_mapsymbol ms)
+{
+    ps_reset_last_fill();
+    UmlComponentLink_ps_show();
+}
+
+
+
+boolean UmlComponentLink_ps_initted = False;
+
+void
+UmlComponentLink_ps_init()
+
+{
+    if (UmlComponentLink_ps_initted)
+    {
+        // just refresh the prop sheet
+        ps_fill("UmlComponentLink_ps");
+        return;
+    }
+    UmlComponentLink_ps_initted = True;
+//    gde_builtin("EditorActionDone 0214951140  UmlComponentLink_ps_ActionDone();"); // ECR 6880
+    ps_init("UmlComponentLink_ps", "", ps_Link, string_to_list("Dependency Interface isComponentOf", " "), ps_Link);
+
+    // ECR 3789 begin
+    ps_append_field("UmlComponentLink_ps", "ObjectDescription",
+    "GenericObject", "", ps_NoteDescriptionExternal, NULL);
+    // ECR 3789 end
+    ps_append_field("UmlComponentLink_ps", "Stereotype", "UmlExtensibilityDefinition", "UmlStereotype", ps_StringAnt, NULL);
+    ps_append_field("UmlComponentLink_ps", "Constraints", "UmlExtensibilityDefinition", "UmlConstraintItem", ps_StringList, NULL);
+    ps_append_field("UmlComponentLink_ps", "TaggedValues", "UmlExtensibilityDefinition", "UmlTaggedValue", ps_StringList, NULL);
+
+    ps_fill("UmlComponentLink_ps");
+
+    //ps_dump();
+
+    return;
+}
+
+
+// change focus of property sheet
+
+void
+UmlComponentLink_ps_ActionDone()
+
+{
+    // reset propsheet
+
+    if( ui_owner_visible(to_ui_prop("UmlComponentLink_ps","OK")) ) // ECR 4037
+        ps_fill("UmlComponentLink_ps");
+}
+
+// Active Function
+
+int
+UmlComponentObjectPropsActive()
+{
+    list symbols;
+
+    symbols = gde_selected_symbols();
+    if (list_count(symbols) != 1)
+        return ACTIVE_FUNC_IS_INACTIVE;
+    // ECR 5184 added Class symbol
+    if (list_count(gde_symbols_find_with_types(symbols, string_to_list("binaryComponent executableComponent sourceComponent objectComponent interfaceComponent Dependency Interface isComponentOf Class", " "))) == 1)
+        return ACTIVE_FUNC_IS_ACTIVE;
+
+    return ACTIVE_FUNC_IS_INACTIVE;
+}
+

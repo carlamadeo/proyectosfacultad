@@ -1,0 +1,3676 @@
+//////////////////////////////////////////////////////////////////////
+//
+//  2167A Software Design Document
+//
+//
+//  See script_help for general template comments.
+//IndentBody1
+//////////////////////////////////////////////////////////////////////
+
+
+#include "qrl/include/general.inc"
+#include "qrl/2167A/SDD_externals.inc"
+#include "qrl/2167A/2167A_generic_fns.inc"
+#include "qrl/2167A/2167A_formats.inc"
+#include "qrl/ted/tabgen.inc"
+#include "qrl/2167A/2167A_data_elements_external_table.inc"
+#include "qrl/2167A/interfaces.inc"
+#include "qrl/pdl/ada.inc"
+#include "qrl/pdl/c.inc"
+#include "qrl/pdl/sce.inc"
+
+script_help = "This report satisfies DI-MCCR-80012A, the Software Design Document.
+
+3.1  The Software Design Document (SDD) describes the complete
+design of a Computer Software Configuration
+Item (CSCI).  It describes the CSCI as composed of Computer Software
+Components (CSCs) and Computer Software Units (CSUs).
+
+3.2  The SDD describes the allocation of requirements from a CSCI to its 
+CSCs and CSUs.  Prior to Preliminary Design Review, the SDD is entered into
+the Developmental Configuration for the CSCI.  Upon completion of Physical
+Configuration Audit (PCA), the SDD, as part of the Software Product 
+Specification, is entered into the Product Baseline for the CSCI.
+ 
+3.3  The SDD is used by the contractor for three primary purposes, namely:
+(1) present the preliminary design at the Preliminary Design Review(s), (2)
+present the detailed design at the Critical Design Review(s), and (3) use
+the design information as the basis for coding each CSU.
+
+3.4  The SDD is used by the Government to assess the preliminary and detail-
+ed design of a CSCI.
+
+7.3  An SDD is developed incrementally as follows:
+a.  Sections 1,2,3,7 and 8 are produced during preliminary design and are
+presented at Preliminary Design Review (PDR).
+b.  Sections 4, 5, 6 are produced during detailed design and all other 
+sections are updated, as applicable.  The complete SDD is presented at
+Critical Design Review (CDR).
+
+7.4  In preparation for PCA, the SDD is incorporated into the Sofware
+Product Specification (SPS), DI-MCCR-80029A.
+
+7.5  This DID supersedes DI-MCCR-80012, DI-MCCR-80028, and DI-MCCR-80031
+dated 5 June 1985.
+
+The Software through Pictures implementation of the SDD consists of a
+Query and Reporting System (QRS) program that integrates various
+graphical diagrams, dynamically generated tables, external variables
+for boiler plate and paragraphs, and literal text into a complete
+document.  A 2167A format file defines WYSIWYG-specific paragraph
+formats that will be used by this template (i.e. embedded in the
+resulting output file).
+
+There are various external variables (see SDD_externals.inc) that
+control the organization of the document as well as the information
+that is extracted from Software through Pictures.  These variables have
+been added to allow this program to generate different interpretations
+of the 2167A DIDs.
+
+Unfortunately, acheiving a single interpretation of the 2167A DIDs is
+unattainable given the tailoring that occurs from one project to
+another.  As some level of modifications will be required for this
+program, please consult the Query and Reporting System manual (QRS) for
+a description of this programming language and the Object Management
+System manual (OMS) for a description of the underlying repository.
+For most aesthetic changes, changes can be made on the WYSIWYG chosen
+by your project.  Please consult the OMS manual on how these aesthetic
+changes can be incorporated into QRS generated documents.";
+
+//
+// GLOBAL VARIABLES
+//
+
+// CSCs, top-CSCs and CSU caches
+set     top_csc_set,
+        csc_set,
+        csu_set,
+        sub_csc_set,
+        primitive_csc_set,
+        csci_param_name_set;
+        
+// Some parallel lists (more caches)
+list    csc_children_list,                  // parallel to csc_set
+        csu_to_subcsu_list,                 // parallel to csu_set
+        csu_defining_scd_list,
+        csc_defining_scd_list = list_create ("file", 0),
+        csu_shared_list,
+        csci_data_write_list,               // parallel to csci_param_name_set
+        csci_data_read_list,
+        csci_data_source_list,
+        csci_param_element_list,
+        csu_data_file_list;             // parallel to csu_set
+
+// Stores the single CSCI in this system
+int     csci_module_id;
+
+// Some OMS ID lists that are created for the life of this program
+string  CSU_IDS = "CSU_ids",
+        TOP_CSC_IDS = "top_CSC_ids";
+        
+// Used for tracking paths + other info 
+set     temp_set,
+        temp_set1,
+        temp_set2,
+        temp_set3,
+        temp_set4;
+
+// MAX commented out the following type definition because it's already
+// defined in the included file.
+// Used to determine the direction of a interface w.r.t. CSCI
+//enum      direction {input, output};
+
+// Used to cache the Data Structure parent-child relationships 
+list    struct_id_list,
+        child_sets_list;                    // parallel to struct_id_list
+
+// Support different pdl scripts
+enum        pdl_type {none, c, ada, generic};
+pdl_type    pdl_request = none;
+
+
+
+//
+// MAIN PROGRAM
+//
+
+void
+main ()
+{
+    message ("SDD:  START");
+    
+    if (legal_target())
+    {
+    	initialize ();
+    	e_GENERATION_INFO = False;
+    	
+    	if (DOD_error_count == 0)
+    	{
+    		title_page ();
+    		scope_section ();
+    		referenced_documents_section ();
+    		preliminary_design_section ();
+    		detailed_design_section ();
+    		CSCI_data_section ();
+    		CSCI_data_files_section ();
+    		requirements_traceability_section ();
+    		notes_section ();
+    		appendices_section ();
+    
+    		clean_up ();
+    	}
+    }
+    
+    display_fault_status ();
+    message ("SDD:  END");
+}
+
+//
+// SUPPORT FUNCTIONS
+//
+
+
+// INITIALIZE
+
+void
+initialize ()
+{
+    string      temp;
+    
+    message ("SDD:  Initialize");
+    
+    // set default format
+    format(DefaultFormatFile);
+    
+    // Determine type of PDL code frame (if any)
+    temp = to_upper(use_PDL_generator);
+    if (string_length(temp) == 0)
+        pdl_request = none;
+    else if (string_find(temp, 0, "GENERIC") != string_length(temp))
+        pdl_request = generic;
+    else if (string_find(temp, 0, "ADA") != string_length(temp))
+        pdl_request = ada;
+    else if (string_find(temp, 0, "C") != string_length(temp))
+        pdl_request = c;
+    else
+        message ("          No PDL code frame specified");
+    
+    // Diagram printing initialization
+    diagram_orientation_scale_set (PortraitFit);
+    diagram_caption_alignment_set (Center);
+    diagram_caption_orientation_set (Portrait);
+    diagram_caption_placement_set (Bottom);
+    diagram_caption_paragraph_format_set (FigureFormat);
+    diagram_frame_height_set (5.0);
+    diagram_frame_width_set (6.0);
+    
+    // Table printing initialization
+    table_caption_alignment_set (Center);
+    table_caption_placement_set (Bottom);
+    table_width_set (6.5);
+    table_caption_paragraph_format_set (TableTitleFormat);
+    table_cell_bold_paragraph_format_set (TableHeaderCellFormat);
+    table_cell_paragraph_format_set (TableBodyCellFormat);
+    
+    // 01/18/94 JHSIA: Added check of link_refs
+    message ("          external interfaces");
+    create_external_interfaces("external_interfaces", select_SDD_components,
+				 "SDD");
+    message ("          global caches");
+    init_global_cache ();
+    //print_global_cache ();
+    
+}
+
+
+// INIT_GLOBAL_CACHE
+
+void
+init_global_cache ()
+{
+    node        csci_module_node,
+                csu_node,
+                csc_node;
+    string      query;
+    int         i;
+    
+    // Default values
+    csci_module_id = -1;
+    csu_set = set_create ("int");
+    top_csc_set = set_create("int");
+    csc_set = set_create("int");
+    sub_csc_set = set_create("int");
+    primitive_csc_set = set_create("int");
+    csc_children_list = list_create ("set", 0);
+    
+    //
+    // Find the CSCI module.  There should be exactly 1 module, no more,
+    // no less.  This module is marked with a DecompositionLevel annotation
+    // value of "CSCI".
+    // 01/18/94 JHSIA: Added check of node_refs
+    if (select_SDD_components)
+        csci_module_node = find_by_query 
+            ("node[Module && items[DecompositionLevel && " +
+            "value = 'CSCI'] && items[DocumentName && value = 'SDD'] && " +
+            "node_refs]");
+    else
+        csci_module_node = find_by_query 
+            ("node[Module && items[DecompositionLevel && value = 'CSCI'] && " +
+            "node_refs]");
+    
+    if (csci_module_node == NULL)
+    {
+        display_error ("No CSCI module found in repository");
+        message ("  Remember to annotate the Decomposition Level  \n" +
+            "  annotation for the CSCI module with a value of 'CSCI'");
+        return;
+    }
+    csci_module_id = csci_module_node.id;
+    
+    //
+    // Find all the CSU modules.  There should be 1 or more of these.  Like
+    // the CSCI module, this modules should also be marked with a 
+    // DecompositionLevel annotation but with a value of "CSU"
+    // 01/18/94 JHSIA: Added check of node_refs
+    if (select_SDD_components)
+        query = "node[Module && items[DecompositionLevel && value = 'CSU'] " +
+            "&& items[DocumentName && value = 'SDD'] && node_refs]";
+    else
+        query = "node[Module && items[DecompositionLevel && value = 'CSU'] " +
+            "&& node_refs]";
+        
+    id_list_create (query, CSU_IDS);
+    for_each_in_select ("node[${CSU_IDS}]", csu_node)
+    {
+        set_add (csu_set, csu_node.id);
+    }
+    
+    if (set_count(csu_set) == 0)
+    {
+        display_error ("No CSU modules found in repository");
+        message ("  Remember to annotate the Decomposition Level  \n" +
+            "  annotation for the CSU module with a value of 'CSU'");
+        return;
+    }
+    
+    //
+    // Find the top CSCs.  These are found directly below the CSCI
+    // 01/18/94 JHSIA: Added check of node_refs
+    // 6/20/95 changed to look for SubProgramCalls instead of lexical modules.
+    if (select_SDD_components)
+        query = "node[Module && in_links[SubprogramCall && " +
+            "from_node_id = ${csci_module_id}] && node_refs" +
+            " && items[DocumentName && value = 'SDD']]";
+    else
+        query = "node[Module && in_links[SubprogramCall && " +
+            "from_node_id = ${csci_module_id}] && node_refs]";
+    
+    id_list_create (query, TOP_CSC_IDS);
+    for_each_in_select ("node[${TOP_CSC_IDS}] sort by name", csc_node)
+    {
+        set_add (top_csc_set, csc_node.id);
+    }
+    
+    if (set_count(top_csc_set) == 0)
+    {
+        display_error ("No top CSC modules found in repository");
+        message ("  Remember to link the CSCI module to the top level CSCs.");
+        return;
+    }
+    
+    // Initialize element cache
+    init_element_lists ();
+    
+    //
+    // Now find all the sub-CSCs.  At the same time create the children list
+    // and the primitive csu list.
+    message ("          csc caches");
+    for (i=0; i<set_count(top_csc_set); i=i+1)
+    {
+        init_csc_cache (set_get_element(top_csc_set, i));
+    }
+    
+    sub_csc_set = set_copy(csc_set);
+    set_difference (sub_csc_set, top_csc_set);
+    
+    //
+    // For all csus, create descendant list, library list and defining SCD
+    // list at the same time
+    message ("          csu caches");
+    csu_to_subcsu_list = list_create("set", 0);
+    csu_defining_scd_list = list_create("set", 0);
+    csu_shared_list = list_create("set", 0);
+    csci_param_name_set = set_create ("string");
+    csci_data_write_list = list_create ("set", 0);
+    csci_data_read_list = list_create ("set", 0);
+    csci_data_source_list = list_create ("set", 0);
+    csci_param_element_list = list_create ("set", 0);
+    csu_data_file_list = list_create ("set", 0);
+    for (i=0; i<set_count(csu_set); i=i+1)
+    {
+        // Yes, we are using globals here
+        temp_set1 = set_create("int");          // subcsu ids
+        temp_set2 = set_create("int");          // defining scd ids
+        temp_set3 = set_create("int");          // library ids
+        
+        init_csu_cache (set_get_element(csu_set, i));
+        
+        // Cache for later use
+        set_delete (temp_set1, set_get_element(csu_set, i));
+        list_append (csu_to_subcsu_list, temp_set1);
+        list_append (csu_defining_scd_list, temp_set2);
+        list_append (csu_shared_list, temp_set3);
+        
+        // make up the cashe for the CSCI data table
+    }
+
+    // make up the cashe for the CSCI data table
+    message ("          CSCI data table caches");
+    init_CSCI_data_cache ();
+    
+}
+
+
+// INIT_ELEMENT_LISTS
+//
+// This function creates 2 global lists.  The first list (struct_id_list)
+// contains all data structure ids and the second list (child_sets_list)
+// contains a parallel list of sets where each set contains the ids of child
+// nodes.
+
+void
+init_element_lists ()
+{
+    set         temp_child_set;
+    link        comp_link;
+    node        struct_node;
+    
+    struct_id_list = list_create ("int", 0);
+    child_sets_list = list_create ("set", 0);
+    
+    // get all the structure nodes
+    // 01/18/94 JHSIA: added node_refs
+    for_each_in_select ("node[out_links[Component] && node_refs]", 
+                        struct_node)
+    {
+        list_append (struct_id_list, struct_node.id);
+        temp_child_set = set_create ("int");
+        for_each_in_select 
+            ("link[from_node_id=${struct_node.id} && link_refs]", comp_link)
+        {
+            set_add (temp_child_set, comp_link.to_node_id);
+        }
+        list_append (child_sets_list, temp_child_set);
+    }
+}
+
+
+// INIT_CSC_CACHE
+
+void
+init_csc_cache (int csc_id)
+{
+    set     children;
+    int     index;
+    string  query;
+    node    one_child_node;
+    
+    // ignore if we've already been here
+    if (!set_is_member(csc_set, csc_id))
+    {
+        // mark my path & remember where we will need to update the child list
+        set_add (csc_set, csc_id);
+        children = set_create("int");
+        index = list_append (csc_children_list, children) - 1;
+        
+        // now look for all those children
+        // 01/18/94 JHSIA: added node_refs
+        // 06/20/95 SA Stewart changed to look for SubProgramCalls instead of lexical modules.
+        if (select_SDD_components)
+            query = "node[Module && in_links[SubprogramCall && " +
+                "from_node_id = ${csc_id}] && " +
+                "items[DocumentName && value = 'SDD'] && node_refs]";
+        else
+            query = "node[Module && in_links[SubprogramCall && " +
+                "from_node_id = ${csc_id}] && node_refs]";
+        if (selection_count(query) == 0)
+        {
+            display_warning ("The CSC module with objid (" + csc_id + 
+                ") has no child modules");
+            message ("  suggestion: either make this module a CSU or create a" +
+                " child CSU");
+        }
+        
+        for_each_in_select (query, one_child_node)
+        {
+            set_add (children, one_child_node.id);
+            
+            // if a CSU then stop recursion & update primitive csc list
+            if (set_is_member(csu_set, one_child_node.id))
+            {
+                set_add (primitive_csc_set, csc_id);
+            }
+            // otherwise there's still a ways to go
+            else
+            {
+                init_csc_cache (one_child_node.id);
+            }
+        }
+        
+        // now store the children set away for good
+        list_set (csc_children_list, index, set_copy(children));
+    }
+}
+
+// INIT_CSU_CACHE
+//
+// Unfortunately some global variables (sets) will be used by this
+// recursive function.  The variables are:
+//
+//      temp_set1:  subcsu ids
+//      temp_set2:  defining scd ids
+//      temp_set3:  library ids
+//
+
+void
+init_csu_cache (int top_module_id)
+{
+    string      query;
+    file        defining_diag;
+    node        child_node;
+    
+    // We've been here before
+    if (set_is_member(temp_set1, top_module_id))
+        return;
+    
+    // mark our path
+    set_add (temp_set1, top_module_id);
+    
+    // Find defining diagram
+    query = "file[SceDiagram && " +
+            "link_refs[to_node_ref[node_id=${top_module_id}] && " +
+            "from_node_ref[node[FormalCaller]]]]";
+    defining_diag = find_by_query (query);
+    if (defining_diag != NULL)
+    {
+        set_add (temp_set2, defining_diag.id);
+    }
+    
+    // Include all library functions
+    // 01/18/94 JHSIA: added node_refs
+    // 01/21/94 JHSIA: look for LibraryModule rather than note
+    query = "node[LibraryModule && in_links[SubprogramCall && " +
+        "from_node_id = ${top_module_id}] && node_refs]";
+    for_each_in_select (query, child_node)
+    {
+        set_add (temp_set3, child_node.id);
+    }
+
+    // Now follow decomposition but only if a subCSU function
+    // 01/18/94 JHSIA: added node_refs
+    // 01/21/94 JHSIA: library modules are types now so no note check needed
+    query = "node[Module && in_links[SubprogramCall && " +
+        "from_node_id = ${top_module_id}] && node_refs]";
+    for_each_in_select (query, child_node)
+    {
+        if (set_is_member(csc_set, child_node.id) || 
+            set_is_member(csu_set, child_node.id))
+        {
+            display_warning ("Ignoring CSC or CSU (" + child_node.name + 
+                ") referenced within another CSU (subCSU is " +
+                top_module_id + ")");
+            message ("Suggestion: Shared modules are represented as Library " +
+                     "Modules");
+        }
+        else
+            init_csu_cache (child_node.id);
+    }
+    
+}
+
+// INIT_CSCI_DATA_CACHE
+//
+// This function prepares several global lists and sets with information
+// concerning the parameters that access data modules.
+
+void
+init_CSCI_data_cache ()
+
+{
+    int     link_id,
+            i,
+            data_module_id,
+            calling_module_id,
+            param_index;
+    cntx    param;
+    set     write_set,
+            read_set,
+            child_set,
+            data_file_set,
+            source_set;
+    link    one_link;
+    link    data_module_link;
+    string  query;
+    
+    data_file_set = set_create("int");
+    
+    // For each link to a data module within the CSU (csu_id)
+    query = 
+        "link[SubprogramCall && link_refs && to_node[DataModule]]";
+    for_each_in_select (query, data_module_link)
+    {
+        //
+        // Some up front foot work necessary for all parameters
+
+        link_id = data_module_link.id;
+        
+        // find the modules directly connected to the data module
+        // and the data module.
+        // 01/18/94 JHSIA: added link_refs
+        one_link = find_by_query ("link[id=${link_id} && link_refs]");
+        if (one_link == NULL)
+        {
+            display_error ("Inconsistency in repository. " +
+                "No link found with the id " + link_id);
+            calling_module_id = -1;
+            data_module_id = -1;
+        }
+        else
+        {
+            calling_module_id = one_link.from_node_id;
+            data_module_id = one_link.to_node_id;
+            set_add (data_file_set, data_module_id);
+        }
+                
+        // Find all the parameters on this link
+        // 01/18/94 JHSIA: added cntx_refs
+        for_each_in_select ("cntx[link_id=${link_id} && cntx_refs]", param)
+        {
+            // A completely new parameter
+            if (!set_is_member(csci_param_name_set, param.name))
+            {
+                // Update global parameter set
+                param_index = set_add (csci_param_name_set, param.name) - 1;
+                //message ("param_index = " + param_index);
+                
+                // Set up parallel csci_lists
+                write_set = set_create("int");
+                read_set = set_create("int");
+                source_set = set_create("int");
+                
+                list_append (csci_data_write_list, write_set);
+                list_append (csci_data_read_list, read_set);
+                list_append (csci_data_source_list, source_set);
+                
+                // set up all child elements
+                child_set = get_all_elements(param.name);
+                if (set_count(child_set) == 0)
+                    display_warning ("No data elements found for the" +
+                        " parameter called " + param.name + " on link " +
+                        link_id);
+                list_append (csci_param_element_list, child_set);
+            }
+            // An existing parameter 
+            else
+            {
+                param_index = set_get_index_of_string_element 
+                                (csci_param_name_set, param.name);
+                write_set = list_get (csci_data_write_list, param_index);
+                read_set = list_get (csci_data_read_list, param_index);
+                source_set = list_get (csci_data_source_list, param_index);
+            }
+            
+            // DataInOut means that this CSU reads and writes this parameter
+            // and the information comes from both the calling module and
+            // the data store.  In other words simply a Data In & a Data Out
+            // Data In means that only writes occur in this CSU and the
+            // information comes from the calling module
+            if ((param.type == "DataIn") || (param.type == "DataInOut"))
+            {
+                set_add (write_set, calling_module_id);
+                if (calling_module_id != -1)
+                    set_add (source_set, calling_module_id);
+            }
+                
+            // Data In means that only reads occur in this CSU and the
+            // information comes from the data module
+            if ((param.type == "DataOut") || (param.type == "DataInOut"))
+            {
+                set_add (read_set, calling_module_id);
+                if (data_module_id != -1)
+                    set_add (source_set, data_module_id);
+            }
+
+            // Update Global lists
+            list_set (csci_data_write_list, param_index, write_set);
+            list_set (csci_data_read_list, param_index, read_set);
+            list_set (csci_data_source_list, param_index, source_set);
+        }
+    }
+    list_append (csu_data_file_list, data_file_set);
+}
+
+
+// GET_ALL_ELEMENTS
+//
+
+set
+get_all_elements (string root_name)
+{
+    set     return_set;
+    string  query;
+    node    one_node;
+    
+    //message ("get_all_elements: " + root_name);
+    return_set = set_create ("int");
+    
+    // 01/18/94 JHSIA: added node_refs
+    query = "node[(Sequence | Selection | Iteration) && " +
+            "name == '${root_name}' && node_refs]";
+    one_node = find_by_query(query);
+    if (one_node != NULL)
+    {
+        set_union (return_set, get_all_elements_help(one_node.id));
+    }
+    else
+    {
+        display_warning ("No Data Definition found for the data name called " +
+            root_name);
+    }
+    return return_set;  
+}
+
+
+// GET_ALL_ELEMENTS_HELP
+//
+
+set
+get_all_elements_help (int root_node_id)
+{
+    set     return_set,
+            child_set;
+    int     index,
+            child_set_length,
+            i;
+    node    child_node;
+    
+    //message ("get_all_elements_help: " + root_node_id);
+    return_set = set_create ("int");
+
+    // if children then return combined set from recursive call
+    index = list_find (struct_id_list, 1, root_node_id);
+    if (index == list_count(struct_id_list))
+    {
+        set_add (return_set, root_node_id);
+    }
+    else
+    {
+        child_set = list_get (child_sets_list, index);
+        child_set_length = set_count(child_set);
+        for (i=0; i<child_set_length; i=i+1)
+        {
+            set_union (return_set, 
+                get_all_elements_help(set_get_element(child_set, i)));
+        }
+    }
+    return return_set;
+}
+
+// PRINT_GLOBAL_CACHE
+
+void
+print_global_cache ()
+{
+    int     i, j;
+    set     child_set;
+    
+    message ("Top CSC set");
+    for (i=0; i<set_count(top_csc_set); i=i+1)
+        message ("  " + (i+1) + "-" + set_get_element(top_csc_set, i));
+        
+    message ("CSC set & children");
+    for (i=0; i<set_count(csc_set); i=i+1)
+    {
+        message ("  " + (i+1) + "-" + set_get_element(csc_set, i));
+        child_set = list_get(csc_children_list, i);
+        for (j=0; j<set_count(child_set); j=j+1)
+            message ("  >>>>" + set_get_element(child_set, j));
+    }
+        
+    message ("Sub CSC set");
+    for (i=0; i<set_count(sub_csc_set); i=i+1)
+        message ("  " + (i+1) + "-" + set_get_element(sub_csc_set, i));
+        
+    message ("Primitive CSC set");
+    for (i=0; i<set_count(primitive_csc_set); i=i+1)
+        message ("  " + (i+1) + "-" + set_get_element(primitive_csc_set, i));
+        
+    message ("CSU set & parallel lists");
+    for (i=0; i<set_count(csu_set); i=i+1)
+    {
+        message ("  " + (i+1) + "-" + set_get_element(csu_set, i));
+        child_set = list_get(csu_to_subcsu_list, i);
+        for (j=0; j<set_count(child_set); j=j+1)
+            message ("  >>subcsu>>" + set_get_element(child_set, j));
+        child_set = list_get(csu_defining_scd_list, i);
+        for (j=0; j<set_count(child_set); j=j+1)
+            message ("  >>scd>>" + set_get_element(child_set, j));
+        child_set = list_get(csu_shared_list, i);
+        for (j=0; j<set_count(child_set); j=j+1)
+            message ("  >>libs>>" + set_get_element(child_set, j));
+        child_set = list_get(csu_data_file_list, i);
+        for (j=0; j<set_count(child_set); j=j+1)
+            message ("  >>data_file>>" + set_get_element(child_set, j));
+    }
+    
+    message ("Param set & parallel lists");
+    for (i=0; i<set_count(csci_param_name_set); i=i+1)
+    {
+        message ("  " + (i+1) + "-" + set_get_element(csci_param_name_set, i));
+        child_set = list_get(csci_data_write_list, i);
+        for (j=0; j<set_count(child_set); j=j+1)
+            message ("  >>write>>" + set_get_element(child_set, j));
+        child_set = list_get(csci_data_read_list, i);
+        for (j=0; j<set_count(child_set); j=j+1)
+            message ("  >>read>>" + set_get_element(child_set, j));
+        child_set = list_get(csci_data_source_list, i);
+        for (j=0; j<set_count(child_set); j=j+1)
+            message ("  >>source>>" + set_get_element(child_set, j));
+        child_set = list_get(csci_param_element_list, i);
+        for (j=0; j<set_count(child_set); j=j+1)
+            message ("  >>elements>>" + set_get_element(child_set, j));
+    }
+
+    message ("struct id list & children lists");
+    for (i=0; i<list_count(struct_id_list); i=i+1)
+    {
+        message ("  " + (i+1) + "-" + list_get(struct_id_list, i));
+        child_set = list_get(child_sets_list, i);
+        for (j=0; j<set_count(child_set); j=j+1)
+            message ("  >>children>>" + set_get_element(child_set, j));
+    }
+    
+}
+        
+        
+
+
+// CLEAN_UP
+//
+// This function deallocates any memory that might have been allocated
+// during the execution of this program.
+
+void
+clean_up ()
+{
+    set_clear(csu_set);
+    set_clear(top_csc_set);
+    set_clear(csc_set);
+    set_clear(sub_csc_set);
+    set_clear(primitive_csc_set);
+    list_clear (csc_children_list);
+    list_clear (csu_to_subcsu_list);
+    list_clear (csu_defining_scd_list);
+    list_clear (csu_shared_list);
+    id_list_free (CSU_IDS);
+    id_list_free (TOP_CSC_IDS);
+    id_list_free ("external_interfaces");
+}
+
+
+
+// TITLE_PAGE
+//
+//
+// 10.1.1  Title page.  The title page shall contain the information identified
+// below in the indicated format:
+//
+//
+//      [Document control number and date: Volume x of y (if multi-volume)]
+//
+//                      [Rev. indicator: date of Rev.]
+//
+//
+//
+//                           SOFTWARE DESIGN DOCUMENT
+//
+//                                  FOR THE
+//
+//                                [CSCI NAME]
+//
+//                                    OF
+//
+//                               [SYSTEM NAME]
+//
+//
+//
+//                      CONTRACT NO. [contract number]
+//
+//                     CDRL SEQUENCE NO. [CDRL number]
+//
+//                              Prepared for:
+//
+//                  [Contracting Agency Name, department code]
+//
+//                              Prepared by:
+//
+//                      [contractor name and address]
+//
+//
+//
+//  Authenticated by ____________________   Approved by ______________________
+//                   (Contracting agency)                   (Contractor)
+//
+//  Date _____________________              Date _______________________
+//
+
+void
+title_page ()
+{
+    message ("SDD:  Title Page");
+    paragraph (TitleDocInfoFormat);
+    print_line (document_number);
+    print (document_date());
+    
+    paragraph (TitleMainFormat);
+    print_line ("SOFTWARE DESIGN DOCUMENT");
+    print_line ("FOR THE");
+    print_line (csci_name);
+    print_line ("OF");
+    print (system_name);
+    
+    paragraph (TitlePrepInfoFormat);
+    print_line ("CONTRACT NO. " + contract_number);
+    print_line ("CDRL SEQUENCE NO. " + cdrl_number);
+    print_line ("Prepared for:");
+    print_line (contracting_agency_and_dept_code);
+    print_line ("Prepared by:");
+    print (contractor_name_and_address);
+    
+    paragraph (TitleSignaturesFormat);
+    print ("Authenticated by _______________________");
+    tab(1);
+    print_line ("(Contracting agency)");
+    print ("Date ____________________");
+    
+    paragraph (TitleSignaturesFormat);
+    print ("Approved by ____________________________");
+    tab(1);
+    print_line ("(Contractor agency)");
+    print ("Date ____________________");
+    
+    // No page needed here as the paragraph style "heading L1" is placed
+    // at the top of the page.  
+    
+}
+
+
+//
+// MAIN FUNCTIONS
+//
+
+// SCOPE_SECTION
+//
+// 10.1.3  Scope.  This section shall be numbered 1. and divided into 
+// the following paragraphs.
+//
+// 10.1.3.1  Identification.  This paragraph shall be numbered 1.1 and
+// shall contain the approved identification number, title, and if 
+// applicable, abbreviation of the CSCI and the system to which this 
+// SDD applies.  This paragraph shall identify the higher-level 
+// specifications(s) containing the requirements from which the 
+// design of this CSCI was derived.
+//
+
+void
+scope_section ()
+{
+    string      sys_abbrev  = " ";
+    string      csci_abbrev = " ";
+    node        one_node;
+    int         i,
+                node_id;
+    
+    message ("SDD:  1. Scope ...");
+    paragraph (HeadingL1Format);
+    print ("Scope.");
+        
+    message ("SDD:    1.1. Identification ...");
+    paragraph (HeadingL2Format);
+    print ("Identification.");
+    paragraph (SubSectionBodyFormat);
+    
+    // Add the necessary delimiters around the abbreviations if in fact
+    // they exist.
+    if (system_abbreviation != "")
+        sys_abbrev = " (" + system_abbreviation + ") ";
+    else
+        display_warning ("No system abbreviation provided");
+        
+    if (csci_abbreviation != "")
+        csci_abbrev = " (" + csci_abbreviation + ") ";
+    else
+        display_warning ("No CSCI abbreviation provided");
+        
+    print ("The Software Design Document describes the detailed " +
+        "design for the CSCI identified as " + csci_name + 
+        csci_abbrev + csci_number + " CSCI_Number of the " + system_name + 
+        sys_abbrev + system_number + " System.");
+        
+    message ("SDD:    1.2. System Overview ...");
+    paragraph (HeadingL2Format);
+    print ("System Overview.");
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_1_2__System_overview);
+    
+    paragraph (SubSectionBodyFormat);
+    print ("This SDD documents the following CSC(s):");
+    for_each_in_select ("node[${TOP_CSC_IDS}] sort by name", one_node)
+    {
+        paragraph (SubSectionListFormat);
+        print (one_node.name);
+    }
+
+    paragraph (SubSectionBodyFormat);
+    print ("This SDD documents the following sub-level CSC(s):");
+    for (i=0; i<set_count(sub_csc_set); i=i+1)
+    {
+        paragraph (SubSectionListFormat);
+        node_id = set_get_element(sub_csc_set, i);
+        one_node = find_by_query("node[id=${node_id}]");
+        if (one_node == NULL)
+            display_warning ("No node found for the sub-level CSC with id of " +
+                node_id);
+        else
+            print (one_node.name);
+    }
+    
+    paragraph (SubSectionBodyFormat);
+    print ("This SDD documents the following CSU(s):");
+    for (i=0; i<set_count(csu_set); i=i+1)
+    {
+        paragraph (SubSectionListFormat);
+        node_id = set_get_element(csu_set, i);
+        one_node = find_by_query("node[id=${node_id}]");
+        if (one_node == NULL)
+            display_warning ("No node found for the CSU with id of " + node_id);
+        else
+            print (one_node.name);
+    }
+    
+    
+    message ("SDD:    1.3. Document Overview ...");
+    paragraph (HeadingL2Format);
+    print ("Document Overview.");
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_1_3__Document_overview);
+}
+
+
+// REFERENCED_DOCUMENTS_SECTION
+//
+
+void
+referenced_documents_section ()
+{
+    message ("SDD:  2. Referenced Documents ...");  
+    paragraph (HeadingL1Format);
+    print ("Referenced Documents.");
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_2__Referenced_documents);
+}
+
+
+// PRELIMINARY_DESIGN_SECTION
+//
+// 10.1.5 Preliminary Design.  This section shall be numbered 3. and shall be 
+// divided into the following paragraphs to describe the preliminary design 
+// of the CSCI.  
+//
+
+void
+preliminary_design_section ()
+{
+    message ("SDD:  3. Preliminary Design ...");    
+    paragraph (HeadingL1Format);
+    print ("Preliminary Design.");
+    
+    CSCI_overview_paragraph ();
+    CSCI_design_description_paragraph ();
+}
+
+
+// CSCI_OVERVIEW_PARAGRAPH
+//
+// 10.1.5.1  CSCI Overview.  This paragraph shall be numbered 3.1 and
+// shall identify and describe the role of the CSCI within the system to which
+// this SDD applies.  The overview shall identify and state the purpose of each
+// external interface of the CSCI.  A system architecture diagram may be used
+// to show the relationships between this CSCI and the other CIs in the 
+// system.
+
+void
+CSCI_overview_paragraph ()
+{
+    link        one_link;
+    
+    message ("SDD:    3.1 CSCI Overview ...");  
+    paragraph (HeadingL2Format);
+    print ("CSCI Overview.");
+    
+    paragraph (SubSectionBodyFormat);
+    if (narrative_document)
+    {
+        print ("The external interfaces for this CSCI are as follows:");
+    }
+    else // reference document
+    {
+        print ("The External Interface diagram for this CSCI appears " +
+            "in Appendix A, at the end of this document.  The external " +
+            "interfaces for this CSCI are as follows:");
+    }
+        
+    // Now pick out the name, identifier & description of each
+    // external link
+    //PEC mod 11/17/95 printing links in alpha order per rts#8102
+    for_each_in_select ("link[external_interfaces] sort by name", one_link)
+    {
+        paragraph (SubSectionBodyFormat);
+        print_line ("Interface Name:  " + one_link.name);
+        print ("Identifier:  " + find_unique_identifier(one_link.id));
+
+        print_note_description(one_link.id, "Extract", "GenericObject");
+    }
+    
+    // Now include flow diagrams where external diagrams are found  
+    if (narrative_document)
+    {
+        paragraph (SubSectionBodyFormat);
+        print ("The external interfaces described above are further " +
+            "detailed in the following External Flow Diagrams:");
+        include_external_interface_diagrams("External Interface Diagram");
+    }
+    
+    CSCI_architecture_subparagraph ();
+    system_states_and_modes_subparagraph ();
+    memory_and_processing_time_allocation_subparagraph ();
+}
+
+// CSCI_ARCHITECTURE_SUBPARAGRAPH
+//
+// 10.1.5.1.1  CSCI architecture.  This paragraph shall be numbered 3.1.1 and
+// shall describe the internal organizational structure of the CSCI.  The 
+// Computer Software Components (CSCs) and sub-level CSCs shall be identified 
+// and their purpose summarized.  The relationships among the CSCs shall be
+// described.  The relationship description shall identify and state the
+// purpose of each CSC-to-CSC interface and shall summarize the data transmitted
+// via the interface.  This paragraph shall identify any non-developmental 
+// software to be incorporated into the CSCI.  The CSCI top-level architecture
+// may be illustrated graphically.
+
+void
+CSCI_architecture_subparagraph ()
+{
+    int     i,
+            csc_id;
+    string  query;
+    node    csc_node,
+            csc_one,
+            csc_two;
+    cntx    param_cntx;
+    link    comm_link;
+    set     csci_csc_set;
+    
+    message ("SDD:    3.1.1 CSCI architecture ...");
+    paragraph (HeadingL3Format);
+    print ("CSCI Architecture.");
+    
+    query = "note[ModulePDL && obj_id = ${csci_module_id}]";
+    if (selection_count (query) > 0)
+    {
+        paragraph (SubSectionTitleFormat);
+        print ("Algorithms");
+        print_note_description (csci_module_id, IndentBody1Format, "ModulePdl");
+    }
+
+    if (narrative_document)
+    {
+        paragraph (SubSectionBodyFormat);
+        print ("Each CSC identified as part of this system is described in " +
+            "the following sections.  These CSCs are illustrated in the " +
+            "following top level architecture diagram(s).");
+    }
+    else
+    {
+        paragraph (SubSectionBodyFormat);
+        print ("Each CSC identified as part of this system is described in " +
+            "the following sections.  These CSCs are illustrated in the " +
+            "top level architecture diagram(s) of the system that appears " +
+            "in Appendix A.");
+    }
+    
+    if (narrative_document)
+        // Include SCDs that show the csci module to top level csc modules
+        include_top_level_architecture_diagrams (csci_module_id);
+    
+    // list top level CSCs 
+    for_each_in_select ("node[${TOP_CSC_IDS}] sort by name", csc_node)
+    {
+        paragraph (SubSectionBodyFormat);
+        print ("CSC: " + csc_node.name);
+        print_note_description (csc_node.id, "Extract", "Module");   
+    }
+    
+    // list sub CSCs 
+    for (i=0; i<set_count(sub_csc_set); i=i+1)
+    {
+        csc_id = set_get_element(sub_csc_set, i);
+        csc_node = find_by_query("node[id=${csc_id}]");
+        if (csc_node == NULL)
+            display_warning ("Unable to find the CSC node with the id of " +
+                csc_id);
+        else
+        {
+            paragraph (SubSectionBodyFormat);
+            print ("subCSC: " + csc_node.name);
+            print_note_description (csc_node.id, "Extract", "Module");   
+        }
+    }
+    
+    // 01/20/94 JHSIA: Change to include all CSC traffic and not just
+    //                 Top Level CSCs
+    // 08/18/95 SAStewart: Add CSCI traffic.
+
+    id_list_create("node[Module && out_links && !items[DecompositionLevel && value = 'CSU']]", "module_callers");
+    id_list_create("node[Module && in_links && !items[DecompositionLevel && (value = 'CSU' || value = 'CSCI')]]", "module_called");
+    csci_csc_set = set_create("int");
+    set_add(csci_csc_set,csci_module_id);
+    set_union(csci_csc_set,csc_set);
+
+    query = "link[SubprogramCall && cntxs && " +
+		    "from_node[module_callers] && " +
+		    "to_node[module_called]] sort by from_node_id";
+    for_each_in_select (query,comm_link)
+    {
+        if (set_is_member (csc_set, comm_link.to_node_id) &&
+            set_is_member (csci_csc_set, comm_link.from_node_id))
+        {
+            csc_one = find_by_query("node[id=${comm_link.from_node_id}]");
+            csc_two = find_by_query("node[id=${comm_link.to_node_id}]");
+            
+            if (csc_one == NULL)
+                display_error ("Inconsistent: The node (" + csc_one.id + 
+                    ") attached to the comm link is undefined");
+                    
+            if (csc_two == NULL)
+                display_error ("Inconsistent: The node (" + csc_two.id + 
+                    ") attached to the comm link is undefined");
+                    
+            // 01/20/94 JHSIA: Also added different title if inconsistent
+            if ((csc_one == NULL) || (csc_two == NULL))
+            {
+                paragraph (SubSectionTitleFormat);
+                print ("Data transferred between ??? and ???");
+            }
+            else
+            {
+                paragraph (SubSectionTitleFormat);
+                print ("Data transferred between " + csc_one.name + " and " + 
+                    csc_two.name);
+            }
+        
+            query = "cntx[link_id=${comm_link.id}]";
+            for_each_in_select (query, param_cntx)
+            {
+                paragraph (SubSectionBodyFormat);
+                print ("Data Name: " + param_cntx.name);
+                print_note_description (param_cntx.id, IndentBody1Format, 
+                    "GenericObject");
+            }
+        }
+    }
+    id_list_free("module_callers");
+    id_list_free("module_called");
+}
+
+
+// INCLUDE_TOP_LEVEL_ARCHITECTURE_DIAGRAMS
+//
+// This function includes any SCD that shows a connection between the CSCI
+// modules and a top level CSC.
+
+void
+include_top_level_architecture_diagrams (int csci_module_id)
+{
+    string      query;
+    file        top_scd;
+    
+    // 06/20/95 SA Stewart changed to look for SubProgramCalls instead of lexical modules.
+    query = "file[link_refs[link[SubprogramCall && " + 
+            "from_node_id=${csci_module_id} && to_node[${TOP_CSC_IDS}]]]]";
+                
+    if (selection_count(query) == 0)
+        display_warning ("No SCD found to the CSCI module with id of " + 
+            csci_module_id);
+    else
+        for_each_in_select (query, top_scd)
+        {
+            PrintDiagram( top_scd, True, "", "", "", "", 
+                "Top level architecture diagram", "" );
+        }
+}
+
+
+// SYSTEM_STATES_AND_MODES_SUBPARAGRAPH
+//
+// 10.1.5.1.2  System States and Modes. This paragraph shall be numbered 3.1.2
+// and shall identify each system state and mode in which the CSCI operates
+// and the CSCs that execute in each state and mode.  A state/CSC table may
+// be provided to illustrate the system states and modes that each CSC executes.
+// In addition, this paragraph shall describe the general flow of both execution
+// control and data between CSCs while operating in the different states and 
+// modes.  A flow diagram(s) may be used to illustrate the execution control and
+// data flow in each state and mode.
+
+void
+system_states_and_modes_subparagraph ()
+{
+    message ("SDD:    3.1.2 System States and Modes ...");  
+    paragraph (HeadingL3Format);
+    print ("System States and Modes.");
+    
+    if (narrative_document)
+        include_system_states_matrix ();
+    else
+    {
+        paragraph (SubSectionBodyFormat);
+        print ("Refer to Appendix B for the System states and modes Table");
+    }
+}
+
+
+// INCLUDE_SYSTEM_STATES_MATRIX
+//
+
+void
+include_system_states_matrix ()
+{
+    list        csc_to_state_list,
+                csc_name_list;
+    int         i,
+                j,
+                num_cells,
+                table_group,
+                column_number,
+                total_table_groups,
+                column_per_page = 6,
+                total_columns_in_group,
+                csc_id;
+    set         temp_set,
+                state_set,
+                all_states;
+    item        one_item;
+    string      table_type,
+                csc_name,
+                current_state,
+                table_type_prefix = "SDD_System_State_Matrix";
+    boolean     debug = False;
+    node        csc_node;
+    
+    
+    // csc_set already has the csc ids so no need to create but we need to
+    // create a parallel set but with names instead
+    csc_name_list = list_create ("string", 0);
+    for (i=0; i<set_count(csc_set); i=i+1)
+    {
+        csc_id = set_get_element(csc_set, i);
+        csc_node = find_by_query ("node[id=${csc_id}]");
+        if (csc_node == NULL)
+        {
+            display_error ("Could not find csc node with id of " + 
+                csc_node);
+            list_append (csc_name_list, "???");
+        }
+        else
+            list_append (csc_name_list, csc_node.name);
+    }
+
+    // Create a set of all unique states & parallel list to csc_set
+    csc_to_state_list = list_create ("set", 0);
+    all_states = set_create ("string");
+    for (i=0; i<set_count(csc_set); i=i+1)
+    {
+        temp_set = set_create ("string");
+        csc_id = set_get_element(csc_set, i);
+        if (debug)
+            message ("csc = " + csc_id);
+        for_each_in_select ("item[SystemState && obj_id = ${csc_id}]", one_item)
+        {
+            if (debug)
+                message ("  state = " + one_item.value);
+            set_add (all_states, one_item.value);
+            set_add (temp_set, one_item.value);
+        }
+        list_append (csc_to_state_list, temp_set);
+    }
+    
+    if (debug)
+    {
+        message ("All states:");
+        for (i=0; i<set_count(all_states); i=i+1)
+            message ("  " + set_get_element(all_states, i));
+    }
+    
+    // Now create the table(s)
+    
+    // Now that all necessary info is added, just generate the table
+    // in 1 or more parts depending on the number of states (i.e. columns)
+    total_table_groups = set_count(all_states) / column_per_page;
+    if (total_table_groups * column_per_page < set_count(all_states))
+        total_table_groups = total_table_groups + 1;
+    
+    if (debug)
+        message ("total table groups = " + total_table_groups);
+
+    if (total_table_groups == 0)
+        display_warning ("Insufficient System State information to generate " +
+            "table");
+            
+    // For every Table Group do a set of columns
+    column_number = 0;
+    for (table_group = 1; table_group <= total_table_groups; 
+        table_group = table_group + 1)
+    {
+        // determine the number of columns of data for this group
+        if (table_group < total_table_groups)
+            total_columns_in_group = column_per_page;
+        else
+            total_columns_in_group = set_count(all_states) - column_number;
+        if (debug)
+        {
+            message ("Group: " + table_group);
+            message ("# of columns: " + total_columns_in_group);
+        }
+
+        // Create table & initialize column size
+        table_type = table_type_prefix + table_group;
+        if (debug)
+            message ("Table: " + table_type);
+        define_table_format (table_type, "");
+        define_table_cell(table_type, 200);
+        for (i = column_number; i < (column_number + total_columns_in_group); 
+             i = i + 1)
+        {
+            define_table_cell(table_type, 150);
+        }       
+        
+        // Initialize column header format and content
+        define_table_header_span(table_type, 1, BOLD, Center, "");
+        for (i = column_number; i < (column_number + total_columns_in_group); 
+             i = i + 1)
+        {
+            current_state = set_get_element(all_states, i);
+            if (debug)
+                message ("Column header: " + current_state);
+            define_table_header_span(table_type, 1, BOLD, Center,
+                current_state);
+        }
+        
+        // set up body format
+        num_cells = define_table_body_cells(table_type, STANDARD, Center);
+        define_table_border(table_type, HEADER, 1, RIGHT, Thick,
+            Solid, Single, Visible);
+        define_table_border(table_type, BODY, 1, RIGHT, Thick,
+            Solid, Single, Visible);
+//          define_table_border(table_type, BODY, 0, TOP, Thick, Solid, Single, Visible);
+// TODO: need bold border below header row
+//      define_table_border(table_type, HEADER, 1, BOTTOM, Thick,
+//          Solid, Single, Visible);
+
+        // prepare for filling table
+        generate_table_header(table_type);
+        generate_table_body_start(table_type);
+        
+        // Fill in Table
+        for (j = 0; j < set_count(csc_set); j = j + 1)
+        {
+            // Print current process name
+            csc_name = list_get (csc_name_list, j);
+            
+            if (debug)
+                message ("Row header: " + csc_name);
+            generate_body_cell(table_type, csc_name);
+            
+            // find the set of states that this process is active in 
+            state_set = list_get (csc_to_state_list, j);
+            
+            for (i = column_number; 
+                i < (column_number + total_columns_in_group); 
+                i = i + 1)
+            {
+                current_state = set_get_element(all_states, i);
+                if (set_is_member (state_set, current_state))
+                {
+                    if (debug)
+                        message (" member");
+                    generate_body_cell(table_type, "x");
+                }
+                else
+                {
+                    if (debug)
+                        message (" ~member");
+                    generate_body_cell(table_type, "");
+                }
+            }
+        }
+        
+        generate_table_body_end(table_type);
+        generate_table_finish(table_type);
+        define_table_caption(table_type, "System States and Modes Table (" +
+            table_group + " of " + total_table_groups + ")");
+        output_table(table_type);    
+        
+        column_number = column_number + total_columns_in_group;
+    }
+    
+    set_clear (all_states);
+    list_clear (csc_to_state_list);
+    
+}
+
+
+// MEMORY_AND_PROCESSING_TIME_ALLOCATION_SUBPARAGRAPH
+//
+// 10.1.5.1.3  Memory and processing time allocation.  This paragraph shall be
+// numbered 3.1.3 and shall document the allocation of memory and processing 
+// time to the CSCs.  The allocation may be illustrated by a memory/processing
+// time table.
+
+void
+memory_and_processing_time_allocation_subparagraph ()
+{
+    message ("SDD:    3.1.3 Memory and Processing Time Allocation ...");    
+    paragraph (HeadingL3Format);
+    print ("Memory and Processing Time Allocation.");
+    
+    if (narrative_document)
+        include_memory_and_processing_time_allocation_table ();
+    else
+    {
+        paragraph (SubSectionBodyFormat);
+        print ("Refer to Appendix B for the Memory and Processing Time " +
+            "Allocation Table");
+    }
+}
+
+
+// INCLUDE_MEMORY_AND_PROCESSING_TIME_ALLOCATION_TABLE
+//
+void
+include_memory_and_processing_time_allocation_table ()
+{
+    int     i, id; 
+    string      table_type = "SDD_memory_processing_table";
+    note        one_note;
+    
+    message ("          .. memory and processing time table ");
+    
+    // Initialize table header 
+    define_table_format (table_type, "");
+    define_table_cell(table_type, 200);
+    define_table_cell(table_type, 200);
+    define_table_cell(table_type, 200);
+    define_table_cell(table_type, 200);
+    define_table_header_span(table_type, 1, BOLD, Center, "CSC Name");
+    define_table_header_span(table_type, 1, BOLD, Center, "CSC Number");
+    define_table_header_span(table_type, 1, BOLD, Center, "Memory Budget");
+    define_table_header_span(table_type, 1, BOLD, Center, "Allocated Processing Time");
+    define_table_body_cells(table_type, STANDARD, Center);
+    generate_table_header(table_type);
+    
+    // Now for the table body
+    generate_table_body_start(table_type);
+
+    
+    for (i=0; i < set_count(csu_set); i = i+1)
+    {
+        id = set_get_element(csu_set, i);
+        insert_a_memory_processing_cell(table_type, id);
+    }
+
+    for (i=0; i < set_count(csc_set); i = i+1)
+    {
+        id = set_get_element(csc_set, i);
+        insert_a_memory_processing_cell(table_type, id);
+    }
+
+    // Output table
+    generate_table_body_end(table_type);
+    generate_table_finish(table_type);
+    define_table_caption(table_type, "Memory and Processing Time Table");
+    output_table(table_type);   
+}
+
+
+void
+insert_a_memory_processing_cell(string table_type, int id)
+{
+    note one_note = NULL;
+    string memory_budget;
+    string processing_time;
+    node one_module;
+    
+    one_note = find_by_query ("note[Module && obj_id=${id}]");
+    if (one_note != NULL)
+    {
+    memory_budget = get_note_item(one_note.id, "MemoryBudget");
+    processing_time = get_note_item(one_note.id, "ProcessingTime");
+    
+    if ((memory_budget != "" ) || (processing_time != ""))
+    {
+        one_module = find_by_query ("node[Module && id == ${id}]");
+        if (one_module != NULL)
+        {
+        generate_body_cell(table_type, one_module.name);
+        generate_body_cell(table_type, find_unique_identifier(id));
+        generate_body_cell(table_type, memory_budget); 
+        generate_body_cell(table_type, processing_time); 
+        }
+    }
+    }
+}
+
+
+
+// CSCI_DESIGN_DESCRIPTION_PARAGRAPH
+//
+// 10.1.5.2 CSCI design description.  This section shall be numbered 3.2 and
+// shall be divided into the following subparagraphs to provide a design
+// description of each CSC of the CSCI.
+
+void
+CSCI_design_description_paragraph ()
+{
+    int     i;
+    
+    message ("SDD:    3.2 CSCI Design Description ...");    
+    paragraph (HeadingL2Format);
+    print ("CSCI Design Description.");
+    
+    // Avoid recursive relationships by creating a global set.  We could
+    // do this by passing a parameter but this could be quite costly.
+    temp_set = set_create ("int");
+    for (i=0; i<set_count(top_csc_set); i=i+1)
+    {
+        CSC_description (set_get_element(top_csc_set, i), 3);
+    }
+}
+
+
+// CSC_DESCRIPTION
+//
+// 10.1.5.2.1 (CSC name and project unique identifier). This subparagraph
+// shall be numbered 3.2.X (beginning with 3.2.1), shall identify a CSC by
+// name and project unique identifier, and shall state its purpose.  This
+// subparagraph shall provide the following information:
+//
+// a.  Identify the requirements allocated to the CSC from the applicable
+//  requirements specification(s).  If the CSC is composed of sub-level
+//  CSCs, some or all of this information may be referenced and provided
+//  by the sub-level CSC description.
+// b.  Describe the preliminary design of the CSC in terms of execution control
+//  and data flow.  If a CSC is composed of sublevel CSCs this descriptiopn
+//  shall identify the relationships among the sub-level CSCs.  In addition
+//  this description shall identify each CSCI internal interface documented
+//  in the Software Requirements Specification, that is to be addressed by
+//  the CSC and its sub-level CSCs, as applicable.  This informatino may be
+//  referenced rather than duplicated for each sub-level CSC.
+// c.  Identify the derived design requirements for the CSC and any design 
+//  constraints imposed on or by the CSC.  If the CSC is composed of sub-
+//  level CSCs, some or all of this information may be referenced and
+//  provided by the sub-level CSC description.
+//
+// 10.1.5.2.1.1 (Sub-level CSC name and project unique identifier). This
+// subparagraph shall be numbered 3.2.X.Y (beginning with 3.2.1.1), shall 
+// identify a sub-level CSC by name and project unique identifier, shall state
+// its purpose, and shall provide the information required by a through c
+// above.  This subparagraph does not apply if there are no sub-level CSCs.
+// If this CSC is also composed of sub-level CSCs, each sub-level CSC shall be
+// identified by name and project unique identifier and the information 
+// required by a through c above shall be provided in a separate subparagraph
+// for each sub-level CSC.
+//
+
+void
+CSC_description (int csc_id, int level)
+{
+    node        csc_node;
+    int         index,
+                i;
+    set         children_set;
+    file        one_scd;
+    string      query;
+    int         paragraph_level;
+    
+    // SubCSCs are suppose to be unique so flag a warning
+    if (set_is_member(temp_set, csc_id))
+    {
+        display_warning ("The CSC with object id (" + csc_id + 
+            ") is found multiple times in the hierarchy diagrams");
+        return;
+    }
+    
+    // Continue only if this isn't a CSU
+    if (!set_is_member(csu_set, csc_id))
+    {
+        set_add (temp_set, csc_id);
+        
+        // We need the name so we need to get the whole object
+        csc_node = find_by_query ("node[id=${csc_id}]");
+        if (csc_node == NULL)
+        {
+            display_error ("The CSC node with object id " + csc_id + 
+                " could not be found");
+            return;
+        }
+
+        // All this to print a header and message command
+        if (level == 3)
+            message ("SDD:    3.2.x " + csc_node.name + " (" + 
+                find_unique_identifier(csc_id) + ")");
+        else if (level == 4)
+            message ("SDD:    3.2.x.y " + csc_node.name + " (" + 
+                find_unique_identifier(csc_id) + ")");
+        else 
+            message ("SDD:    3.2.x.y.z " + csc_node.name + " (" + 
+                find_unique_identifier(csc_id) + ")");
+
+	paragraph_level = level;
+	if (level > MAX_HEADING_LEVELS) {
+	    paragraph_level = MAX_HEADING_LEVELS;
+	}
+	paragraph (HeadingLFormat + paragraph_level);
+
+        print (csc_node.name + " (" + find_unique_identifier(csc_id) + ")");
+        
+        // TODO: Possibly change this back to GenericObject note
+        paragraph (SubSectionBodyFormat);
+        print_note_description (csc_id, SubSectionBodyFormat, "Module");
+        
+        // Include the defining SCD
+        query = "file[link_refs[to_node_ref[node_id=${csc_id}] && " +
+                "from_node_ref[node[FormalCaller]]]]";
+        one_scd = find_by_query (query);
+        if (one_scd != NULL)
+        {
+            // 01/19/94 JHSIA: Added check of narrative document
+            if (narrative_document)
+            {
+                paragraph (SubSectionBodyFormat);
+                PrintDiagram( one_scd, True, "", "", "", "", "Hierarchy diagram", "" );
+            }
+            else
+            {
+                paragraph (SubSectionBodyFormat);
+                print ("Refer to the Hierarchy diagram in Appendix A.");
+                list_append (csc_defining_scd_list, one_scd);
+            }
+        }
+        include_module_reqs (csc_id);
+
+        // Specify Input/Output data elements & note description
+        include_io_elements (csc_id);
+        
+        // Now do the same for all the children
+        index = set_get_index_of_int_element (csc_set, csc_id);
+        if (index == -1)
+        {
+            display_error ("The CSC node with object id of " + csc_id +
+                " was not found");
+            return;
+        }
+        
+        children_set = list_get(csc_children_list, index);
+        if (set_count(children_set) > 0)
+            for (i=0; i<set_count(children_set); i=i+1)
+                CSC_description (set_get_element(children_set, i), level+1);
+    }
+    
+}
+
+
+// INCLUDE_MODULE_REQS
+//
+
+void
+include_module_reqs (int csc_id)
+{
+    note    one_req;
+    string  query;
+    item    one_req_name;
+    boolean start;
+    list    DeReq;
+    int     i, maxReq;
+    
+    // 01/20/94 JHSIA: added warning check
+    query = "note[obj_id = ${csc_id} && (Requirement || DerivedRequirement)]";
+    if (selection_count(query) == 0)
+    {
+        display_warning ("No Requirement or Derived Requirement associated " +
+            "with the CSC with object id of " + csc_id);
+    }
+    else
+    {   
+        // Allocated Requirements
+        paragraph (SubSectionTitleFormat);
+        print ("Requirements:");
+
+        start = True;
+        query = "note[obj_id = ${csc_id} && Requirement]";
+        for_each_in_select(query, one_req)
+        {
+            if (start)
+            {
+                start = False;
+                paragraph (AlphaListStartFormat);
+            }
+            else
+                paragraph (AlphaListFormat);
+                
+            // get name
+            query = "item[note_id = ${one_req.id} && RequirementName]";
+            one_req_name = find_by_query (query);
+            if (one_req_name != NULL)
+                print (one_req_name.value + ":  ");
+            else
+            {
+                print ("??:  ");
+                display_warning ("No Requirement Name " +
+                    "associated with the description attached to the CSC " +
+                    "with object id of " +  csc_id);
+            }
+            
+            // full description
+            if (one_req.desc != NULL)
+                print (strip_last_return(one_req.desc));
+        }
+
+        query = "note[obj_id = ${csc_id} && DerivedRequirement]";
+        DeReq = list_select(query);
+        maxReq = list_count(DeReq);
+        if (maxReq > 0) 
+        {
+        // Derived Requirements
+            paragraph (SubSectionTitleFormat);
+            print ("Derived Requirements:");
+
+            start = True;
+            for (i = 0; i < maxReq; i = i + 1)
+            {
+                one_req = list_get(DeReq, i);
+                if (start)
+                {
+                    start = False;
+                    paragraph (AlphaListStartFormat);
+                }
+                else
+                    paragraph (AlphaListFormat);
+                
+                // get name
+                query = "item[note_id = ${one_req.id} && DerivedRequirementName]";
+                one_req_name = find_by_query (query);
+                if (one_req_name != NULL)
+                    print (one_req_name.value + ":  ");
+                else
+                {
+                    print ("??:  ");
+                    display_warning ("No Derived Requirement Name " +
+                        "associated with the description attached to the CSC " +
+                        "with object id of " +  csc_id);
+                }
+            
+                // full description
+                if (one_req.desc != NULL)
+                   print (strip_last_return(one_req.desc));
+            }
+        }
+    }
+}
+
+
+
+// DETAILED_DESIGN_SECTION
+//
+// 10.1.6  Detailed Design.  This paragraph shall be numbered 4 and shall be
+// divided into the following paragraphs and subparagraphs to describe the
+// detailed design for each CSC.
+
+void
+detailed_design_section ()
+{
+    int     i;
+    
+    message ("SDD:  4. Detailed Design ...");   
+    paragraph (HeadingL1Format);
+    print ("Detailed Design.");
+    
+    // For all primitive CSCs ...
+    for (i=0; i<set_count(primitive_csc_set); i=i+1)
+    {
+        primitive_CSC_description (set_get_element(primitive_csc_set, i));
+    }
+}
+
+
+// PRIMITIVE_CSC_DESCRIPTION
+//
+// 10.1.6.1  (CSC Name and project unique identifier).  This paragraph shall 
+// be numbered 4.X (beginning with 4.1) and shall be divided into the following
+// subparagraphs to identify and describe each of the Computer Software Units
+// (CSUs) of a CSC.  This paragraph shall describe the relationships of the
+// CSUs in terms of execution control and data flow between the CSUs of this
+// CSC and shall identify all CSU interfaces that are external to the CSC.
+// Each CSU that is used by more than one CSC shall be described in detail
+// under one CSC and then referenced by the other using CSCs.
+
+void
+primitive_CSC_description (int prim_csc_id)
+{
+    node        csc_node;
+    string      query;
+    file        one_scd;
+    int         index, 
+                i;
+    set         children_set;
+    
+    csc_node = find_by_query ("node[id=${prim_csc_id}]");
+    if (csc_node == NULL)
+    {
+        display_error ("The CSC node with object id " + prim_csc_id + 
+            " could not be found");
+        return;
+    }
+
+    // All this to print a header and message command
+    message ("SDD:    4.x " + csc_node.name + " (" + 
+        find_unique_identifier(prim_csc_id) + ")");
+    paragraph (HeadingL2Format);
+    print (csc_node.name + " (" + find_unique_identifier(prim_csc_id) + ")");
+    
+    // Now include the defining SCD for this CSC
+    query = "file[link_refs[to_node_ref[node_id=${prim_csc_id}] && " +
+            "from_node_ref[node[FormalCaller]]]]";
+    one_scd = find_by_query (query);
+    
+    // 01/21/94 JHSIA: Reference non-dedicated defining diagram
+    if (one_scd == NULL)
+    {
+        id_list_create("file[link_refs[to_node_ref[node_id=${prim_csc_id}] && from_node_ref[node[Module]]]]", "def_files");
+
+        query = "file[def_files && !cntx_refs]";
+        one_scd = find_by_query (query);
+    	id_list_free("def_files");
+    }
+    
+    if (one_scd == NULL)
+        display_warning ("No defining diagram found for modules with id " +
+            prim_csc_id);
+    else
+    {
+        // 01/19/94 JHSIA: Added check of narrative document
+        if (narrative_document)
+        {
+            paragraph (SubSectionBodyFormat);
+            PrintDiagram( one_scd, True, "", "", "", "", "Hierarchy diagram", "" );
+        }
+        else
+        {
+            paragraph (SubSectionBodyFormat);
+            print ("Refer to the Hierarchy diagram called " + one_scd.name + 
+                   " in Appendix A.");
+            list_append (csc_defining_scd_list, one_scd);
+        }
+    }
+
+    query = "note[ModulePDL && obj_id = ${csc_node.id}]";
+    if (selection_count (query) > 0)
+    {
+        // Specify Input/Output data elements & note description
+        include_io_elements (csc_node.id);
+    
+        // Include PDL annotations for CSU 
+        paragraph (SubSectionTitleFormat);
+        print ("Algorithms");
+        print_note_description (csc_node.id, IndentBody1Format, "ModulePdl");
+
+        include_module_annotations(csc_node);
+    }
+        
+    // For all CSUs of the given primitive CSC ...
+    index = set_get_index_of_int_element (csc_set, prim_csc_id);
+    if (index == -1)
+    {
+        display_error ("The CSC node with object id of " + prim_csc_id +
+            " was not found");
+        return;
+    }
+    children_set = list_get(csc_children_list, index);
+    if (set_count(children_set) > 0)
+        for (i=0; i<set_count(children_set); i=i+1)
+        {
+            CSU_description (set_get_element(children_set, i));
+        }
+}
+
+// CSU_DESCRIPTION
+//
+// 10.1.6.1.2 (CSU name and project unique identifier).  This subparagraph
+// shall be numbered 4.X.Y (beginning with 4.1.1) and shall identify a CSU by
+// name and project unique identifier and shall state the purpose of the CSU. 
+// This subparagraph shall be divided into the following subparagraphs to 
+// provide the design information for the CSU.
+
+void
+CSU_description (int csu_id)
+{
+    node        csu_node;
+    
+    // Not all the children of primitive cscs are csu.  We're only 
+    // guaranteed that at least 1 is.
+    if (set_is_member(csu_set, csu_id))
+    {
+        csu_node = find_by_query ("node[id=${csu_id}]");
+        if (csu_node == NULL)
+        {
+            display_error ("The CSU node with object id " + csu_id + 
+                " could not be found");
+            return;
+        }
+
+        // All this to print a header and message command
+        message ("SDD:    4.x.y " + csu_node.name + " (" + 
+            find_unique_identifier(csu_id) + ")");
+        paragraph (HeadingL3Format);
+        print (csu_node.name + " (" + find_unique_identifier(csu_id) + ")");
+        
+        // 01/20/94 JHSIA: get note type Module instead of Generic Object
+        print_note_description (csu_id, SubSectionBodyFormat, "Module");
+
+        CSU_design_specs (csu_node);
+        CSU_design (csu_node);
+    }
+}
+
+
+// CSU_DESIGN_SPECS
+//
+// 10.1.6.1.2.1 (CSU name) Design specification/constraints. This subparagraph
+// shall be numbered 4.X.Y.1 (beginning with 4.1.1.1) and shall state the design
+// requirements for the CSU.  This subparagraph shall identify the requirements
+// allocated to the CSC that are to be satisfied or partially satisfied by the
+// CSU and shall identify any constraints on the design of the CSU.  The design
+// requirements addressed in this subparagraph shall include design requirements
+// for the man-machine interface, as applicable.
+
+void
+CSU_design_specs (node csu_node)
+{
+    message ("SDD:    4.x.y.1 " + csu_node.name + 
+        " Design Specification/Constraints");
+    paragraph (HeadingL4Format);
+    print (csu_node.name + " Design Specification/Constraints");
+    
+    include_module_reqs (csu_node.id);
+}
+
+
+// CSU_DESIGN
+//
+// 10.1.6.1.2.2 (CSU name) Design. This subparagraph shall be numbered
+// 4.X.Y.2 (beginning with 4.1.1.2) and shall specify the design of the CSU.
+// If the CSU is to be coded in a programming language other than the specified
+// CSCI language, the programming language shall be identified and the rationale
+// for its use shall be provided.  If the CSU resides in a library, this 
+// subparagraph shall identify the library by name and project unique identifier,
+// and the design document in which the library description can be found.  The
+// detailed design information identified below shall be provided for the CSU,
+// as applicable.  This information may be provided by automated tools or
+// other techniques, such as a program design language, flowcharts, or other
+// design representations.
+//
+// a. Input/output data elements. Identify and state the purpose of each input
+//    and output data element to the CSU.  The design information for data
+//    elements shall be provided in section 5.
+// b. Local Data elements. Identify and state the purpose of each data element
+//    that originates in the CSU and is not used by any other CSU.  Each data
+//    element shall be described in terms of name, brief description, data type
+//    data representation, size, units of measure, limit/range, accuracy,
+//    precision/resolution, and any other attributes of the data.  This 
+//    information may be provided in a CSU local data definition table.
+// c. Interrupts and signals. Identify and describe the interrupts and signals
+//    handled by the CSU.  Identify for each interrupt and signal, as 
+//    appropriate, its source, purpose, priority, expected response and
+//    response time, and minimum, maximum and probable frequency of occurrence.
+// d. Algorithms. Identify, state the purpose, and describe in detail the
+//    algorithms to be incorporated into the execution of the CSU.  The
+//    algorithms shall be described in terms of the manipulation of input and
+//    local data elements and the generation of output data elements.
+// e. Error handling. Identify and describe the error detection and recovery
+//    features of the CSU, including handling of erroneous input data and other
+//    conditions that affect the execution of the CSU.
+// f. Data conversion. Identify and describe any data conversion operations
+//    performed in order to implement the CSU's interfaces.
+// g. Use of other elements. Describe the use of other elements that are used
+//    by the CSU including, but not limited to:
+//    1.  Other CSUs (e.g., calls for library functions, calls for I/O services,
+//        for access to databases, mass storage devices, and real-time I/O
+//        channels.
+//    2.  Shared data stored in a global memory (e.g. databases or data files,
+//        tables, compool, datapool, etc.).
+//    3.  Input and output buffers, including message buffers.
+// h. Logic flow. Describe the logic flow of the CSU in terms of items 'a'
+//    through 'g' above.  Describe the conditions under which CSU execution is
+//    initiated and, if applicable, communication interface features are in-
+//    voked, and the conditions under which control is passed to other CSUs,
+//    as applicable.  If sequencing is dynamically controlled during the CSCIs
+//    operations, the method for sequence control and the logic and input
+//    conditions of that method shall be described, such as timing variations,
+//    priority assignments, internal operations such as data transfer in and 
+//    out of internal memory, sensing of discrete input signals, and timing
+//   relationships between interrput operations with the CSCI.
+// i. Data structures. Describe local data structures implemented by the CSU
+//    and any shared data structures used by the CSU.  Shared data structures
+//    shall be described under one CSU and referenced thereafter by the
+//    sharing CSUs.
+// j. Local data files or database.  If a data file(s) or a database are part
+//   of the local data of a CSU, state the purpose of each file or database,
+//    the structure of each file or database in terms of records, fields, 
+//    etc., and describe the access procedures, such as sequential or random.
+// k. Limitations. Describe any limitations or unusual features that restrict 
+//    the performance of the CSU.
+//
+// 
+// The DID requirements for the Design of each CSU will not be presented in
+// the same order as the DID.  The following describes how the items a thru k 
+// will be addressed.
+//
+// a. Input/output data elements. List all data couples connected with 
+//    FormalCall and their note descriptions.
+// b. Local Data elements. Local data table.
+// c. Interrupts and signals. Interrupt Annotation
+// d. Algorithms. PDL annotation.
+// e. Error handling. SubCSU functions
+// f. Data conversion. SubCSU functions
+// g. Use of other elements. List CSUs, CSCs, subCSCs & all library functions
+// h. Logic flow. SCDs
+// i. Data structures. Data Dictionary Appendix.
+// j. Local data files or database.  Data Dictionary Appendix.
+// k. Limitations.  Annotations
+//
+
+void
+CSU_design (node csu_node)
+{
+    note        one_note;
+    item        one_item;
+    string      query;
+    boolean     print_title;
+    
+    message ("SDD:    4.x.y.2 " + csu_node.name + " Design");
+    paragraph (HeadingL4Format);
+    print (csu_node.name + " Design");
+    
+    // Specify Input/Output data elements & note description
+    include_io_elements (csu_node.id);
+    
+    // Include PDL annotations for CSU 
+    paragraph (SubSectionTitleFormat);
+    print ("Algorithms");
+    print_note_description (csu_node.id, IndentBody1Format, "ModulePdl");
+    
+    // Include SCDs
+    paragraph (SubSectionTitleFormat);
+    print ("Logic flow");
+    if (narrative_document)
+        include_CSU_diagrams (csu_node.id, csu_node.name);
+    else
+    {
+        paragraph(SubSectionBodyFormat);
+        print ("The structure chart diagrams depicting the design of this " +
+            "CSU is included in Appendix A.");
+    }
+    
+    // Include PDL annotations for all subCSU modules
+    include_subcsu_pdls (csu_node.id);
+    
+    // List CSUs, CSCs, subCSCs & all library functions used by this CSU
+    include_other_elements (csu_node.id);
+
+    include_module_annotations(csu_node);
+}
+
+void
+include_module_annotations(node one_node)
+{
+
+    note        one_note;
+    item        one_item;
+    string      query;
+    boolean     print_title;
+
+    //
+    // Annotations galore
+    
+    print_title = True;
+    query = "note[Interrupt && obj_id = ${one_node.id}]";
+    for_each_in_select (query, one_note)
+    {
+		if (print_title == True) 
+        {
+            paragraph (SubSectionTitleFormat);
+            print ("Interrupts and Signals");
+            print_title = False;
+        }
+    
+        paragraph (SubSectionBodyFormat);
+        print (get_note_item (one_note.id, "InterruptName") +
+            ": " + strip_last_return(one_note.desc));
+            
+        paragraph (IndentBody1Format);
+        print ("Source: " + get_note_item(one_note.id, "Source"));
+        paragraph (IndentBody1Format);
+        print ("Priority: " + get_note_item(one_note.id, "InterruptPriority"));
+        paragraph (IndentBody1Format);
+        print ("Response: " + get_note_item(one_note.id, "Response"));
+        paragraph (IndentBody1Format);
+        print ("Time: " + get_note_item(one_note.id, "InterruptTime"));
+        paragraph (IndentBody1Format);
+        print ("Minimum Frequency: " + 
+            get_note_item(one_note.id, "MinimumFrequency"));
+        paragraph (IndentBody1Format);
+        print ("Maximum Frequency: " + 
+            get_note_item(one_note.id, "MaximumFrequency"));
+        paragraph (IndentBody1Format);
+        print ("Probable Frequency: " + 
+            get_note_item(one_note.id, "ProbableFrequency"));
+    }
+        
+    print_title = True;
+    query = "note[Library && obj_id = ${one_node.id}]";
+    for_each_in_select (query, one_note)
+    {
+		if (print_title == True) 
+        {
+            paragraph (SubSectionTitleFormat);
+            print ("Library References");
+            print_title = False;
+        }
+        paragraph (IndentBody1Format);
+        print ("Name: " + get_note_item(one_note.id, "LibraryName"));
+        paragraph (IndentBody1Format);
+        print ("Number: " + get_note_item(one_note.id, "LibraryNumber"));
+        paragraph (IndentBody1Format);
+        print (strip_last_return(one_note.desc));
+    }
+
+    print_title = True;
+    query = "note[Timing && obj_id = ${one_node.id}]";
+    for_each_in_select (query, one_note)
+    {
+		if (print_title == True) 
+        {
+            paragraph (SubSectionTitleFormat);
+            print ("Timing Information");
+            print_title = False;
+        }
+        paragraph (IndentBody1Format);
+        print ("Conditions: " + get_note_item(one_note.id, "TimingConditions"));
+        paragraph (IndentBody1Format);
+        print ("Sequencing: " + get_note_item(one_note.id, "Sequencing"));
+        paragraph (IndentBody1Format);
+        print ("Dynamic Logic: " + get_note_item(one_note.id, "DynamicLogic"));
+        paragraph (IndentBody1Format);
+        print (strip_last_return(one_note.desc));
+    }
+
+    print_title = True;
+    query = "item[SystemState && obj_id = ${one_node.id}]";
+    for_each_in_select (query, one_item)
+    {
+		if (print_title == True) 
+        {
+            paragraph (SubSectionTitleFormat);
+            print ("Applicable System States:");
+            print_title = False;
+        }
+        paragraph (SubSectionListFormat);
+        print (one_item.value);
+    }
+    
+    print_title = True;
+    query = "note[Limitations && obj_id = ${one_node.id}]";
+    for_each_in_select (query, one_note)
+    {
+	if (print_title == True) 
+        {
+            paragraph (SubSectionTitleFormat);
+            print ("Limitations");
+            print_title = False;
+        }
+        paragraph (IndentBody1Format);
+        print (strip_last_return(one_note.desc));
+    }
+
+    // Local data tables
+    paragraph (SubSectionTitleFormat);
+    print ("Local Data");
+    if (selection_count("note[LocalData && obj_id=${one_node.id}]") > 0)
+    {
+        include_local_data_table (one_node.id, one_node.name);
+    }
+    else
+    {
+        paragraph (IndentBody1Format);
+        print ("No applicable local data");
+        display_warning ("No local data annotation found for the csu with " +
+            "repository object id of " + one_node.id);
+    }
+}
+
+
+// INCLUDE_IO_ELEMENTS
+//
+// Prints out the name and annotations associated with the input and output
+// parameters in the formal declaration the given module node.
+
+void
+include_io_elements (int node_id)
+{
+    cntx        parameter;
+    string      query;
+    note        one_note;
+    
+    paragraph (SubSectionTitleFormat);
+    print ("Input/Output Data Elements");
+    
+    // All Data parameters
+    query = "cntx[(DataIn || DataOut || DataInOut) && link[SubprogramCall && " +
+        "from_node[FormalCaller] && to_node_id=${node_id}]]";
+    for_each_in_select (query, parameter)
+    {
+        paragraph (IndentBody1Format);
+        print (parameter.name);
+        print_note_description (parameter.id, "IndentBody2", 
+            "GenericObject");
+    }
+}
+
+
+// INCLUDE_CSU_DIAGRAMS
+//
+// Given a CSU module node id, this function will print out all SCDs from
+// the defining SCD on down through all sub structures.  Functions from
+// other CSUs should be drawn as a library module instead of a regular
+// module.  Otherwise, it is impossible to determine which CSU a subCSU
+// function belongs to.  
+//
+// Other CSUs, CSCs, and SubCSCs should be drawn as regular modules.
+//
+
+void
+include_CSU_diagrams (int csu_node_id, string csu_name)
+{
+    int     file_id,
+            index,
+            i;
+    set     all_diag_set;
+    file    one_diag;
+    
+    index = set_get_index_of_int_element (csu_set, csu_node_id);
+    if (index == -1)
+    {
+        display_error ("The csu set is inconsistent with the id of " + 
+            csu_node_id);
+        return;
+    }
+    
+    all_diag_set = list_get (csu_defining_scd_list, index);
+    if (all_diag_set == NULL)
+    {
+        display_error ("The csu_defining_scd_list is inconsistent with the " +
+            "id of " + csu_node_id);
+        return;
+    }
+    
+    for (i=0; i<set_count(all_diag_set); i=i+1)
+    {
+        file_id = set_get_element (all_diag_set, i);
+        one_diag = find_by_query ("file[id=${file_id}]");
+        if (one_diag == NULL)
+            display_error ("Element " + index + 
+                " of the csu_defining_scd_list is inconsistent");
+        else
+            PrintDiagram( one_diag, True, "", "", "", "", 
+                "Structure Chart Diagram for CSU " + csu_name, "" );
+
+    }
+}
+
+
+// INCLUDE_SUBCSU_PDLS
+//
+
+void
+include_subcsu_pdls (int csu_node_id)
+{
+    int     index,
+            i,
+            csu_id;
+    set     all_subcsu_set;
+    node    subcsu_module;
+    string  mod_type;
+    
+    index = set_get_index_of_int_element (csu_set, csu_node_id);
+    if (index == -1)
+    {
+        display_error ("The csu set is inconsistent with the id of " + 
+            csu_node_id);
+        return;
+    }
+    
+    all_subcsu_set = list_get (csu_to_subcsu_list, index);
+    if (all_subcsu_set == NULL)
+    {
+        display_error ("The csu_to_subcsu_list is inconsistent with the " +
+            "id of " + csu_node_id);
+        return;
+    }
+    
+    for (i=0; i<set_count(all_subcsu_set); i=i+1)
+    {
+        csu_id = set_get_element (all_subcsu_set, i);
+        subcsu_module = find_by_query ("node[id=${csu_id}]");
+        if (subcsu_module == NULL)
+            display_error ("Element " + index + 
+                " of the csu_to_subcsu_list is inconsistent");
+        else
+        {
+            paragraph (SubSectionTitleFormat);
+            print ("PDL for module " + subcsu_module.name);
+            
+            if (pdl_request == none)
+            {
+                print_note_description (subcsu_module.id, SubSectionBodyFormat, 
+                    "ModulePdl");
+            }
+            else if (pdl_request == c)
+            {
+                paragraph (SubSectionBodyFormat);
+                mod_type = subcsu_module.type;
+                do_c_pdl(subcsu_module.id, subcsu_module.name, mod_type);
+            }
+            else if (pdl_request == ada)
+            {
+                paragraph (SubSectionBodyFormat);
+                do_ada_pdl(subcsu_module.id, subcsu_module.name);
+            }
+            else if (pdl_request == generic)
+            {
+                paragraph (SubSectionBodyFormat);
+                do_sce_pdl(subcsu_module.id, subcsu_module.name);
+            }
+            else
+            {
+                display_warning ("Global variable PDL_REQUEST set to unknown" +
+                    " value.  No code frame assumed");
+                print_note_description (subcsu_module.id, SubSectionBodyFormat, 
+                    "ModulePdl");
+            }
+        }
+    }
+}
+
+
+// INCLUDE_OTHER_ELEMENTS
+//
+// This function lists all other CSUs, CSCs, SubCSCs and library functions
+// that are used within the CSU given (csu_node_id).  Some items may not 
+// be depicted in the diagrams so the annotation OtherElements will also
+// be included.
+
+void
+include_other_elements (int csu_node_id)
+{
+    int     index,
+            i,
+            shared_node_id;
+    set     shared_set;
+    node    subcsu_module,
+            csc_or_csu_node;
+            
+    index = set_get_index_of_int_element (csu_set, csu_node_id);
+    if (index == -1)
+    {
+        display_error ("The csu set is inconsistent with the id of " + 
+            csu_node_id);
+        return;
+    }
+    
+    shared_set = list_get (csu_shared_list, index);
+    if (shared_set == NULL)
+    {
+        display_error ("The csu_shared_list is inconsistent with the " +
+            "id of " + csu_node_id);
+        return;
+    }
+    
+    if (set_count(shared_set) > 0)
+    {
+        paragraph (SubSectionTitleFormat);
+        print ("Other elements used (depicted in Structure Chart Diagram)" +
+                " include : ");
+    }
+        
+    for (i=0; i<set_count(shared_set); i=i+1)
+    {
+        shared_node_id = set_get_element (shared_set, i);
+        subcsu_module = find_by_query ("node[id=${shared_node_id}]");
+        if (subcsu_module == NULL)
+            display_error ("Element " + index + 
+                " of the csu_shared_list is inconsistent");
+        else
+        {
+            // 01/21/94 JHSIA: Find CSC or CSU
+            paragraph (SubSectionListFormat);
+            csc_or_csu_node = find_by_query 
+                ("node[Module && name = '${subcsu_module.name}']");
+            if (csc_or_csu_node == NULL)
+            {
+                print ("Library: ");
+            }
+            else
+            {
+                if (set_is_member(sub_csc_set, csc_or_csu_node.id))
+                    print ("subCSC: ");
+                else if (set_is_member(csu_set, csc_or_csu_node.id))
+                    print ("CSU: ");
+                else if (set_is_member(csc_set, csc_or_csu_node.id))
+                    print ("CSC: ");
+                else
+                    print ("Library: ");
+            }
+            print (subcsu_module.name);
+        }
+    }
+    
+    if (selection_count ("note[OtherElements && obj_id=${csu_node_id}]") > 0)
+    {
+        paragraph (SubSectionTitleFormat);
+        print ("Other elements used (not depicted in Structure Chart Diagram)" +
+                " include : ");
+    }
+    print_note_description (csu_node_id, SubSectionBodyFormat, "OtherElements");
+}
+
+
+// INCLUDE_LOCAL_DATA_TABLE
+//
+// The DID calls for data elements that "originates in the CSU and is
+// not used by any other CSU".  Here in lies the difficulty.  To trace all
+// the elements used by the subCSUs of a CSU and to eliminate ones used by
+// other CSUs requires more CPU cycles than currently available within the
+// time frame of a fairly patient user.  This is algorithmically possible
+// but not necessarily too practical.  So for now, there is a local data
+// annotation associated with the CSU module that will be utilized.
+//
+// The table will be broken into 2 parts:
+//
+// Identifier       Data Type       Description
+// ==========       =========       ===========
+//
+//              Data                Units of    LImit/              Precision/
+// Identifier   Represent.  Size    Measure     Range   Accuracy    Resolution
+// ==========   ==========  ====    ========    ======  ========    ==========
+//
+
+void
+include_local_data_table (int csu_node_id, string csu_node_name)
+{
+    string      table_type_prefix = "SDD_local_data",
+                table_part_1,
+                table_part_2;
+    note        one_note;
+    
+    message ("          .. local data table for node " + csu_node_id);
+    table_part_1 = table_type_prefix + "_" + csu_node_id + "_part1";
+    table_part_2 = table_type_prefix + "_" + csu_node_id + "_part2";
+    
+    // Initialize table header - part 1
+    define_table_format (table_part_1, "");
+    define_table_cell(table_part_1, 200);
+    define_table_cell(table_part_1, 200);
+    define_table_cell(table_part_1, 800);
+    define_table_header_span(table_part_1, 1, BOLD, Center, "Identifier");
+    define_table_header_span(table_part_1, 1, BOLD, Center, "Data Type");
+    define_table_header_span(table_part_1, 1, BOLD, Center, "Description");
+    define_table_body_cells(table_part_1, STANDARD, Center);
+    generate_table_header(table_part_1);
+    
+    // Define the table header - part 2
+    define_table_format (table_part_2, "");
+    define_table_cell(table_part_2, 200);
+    define_table_cell(table_part_2, 200);
+    define_table_cell(table_part_2, 200);
+    define_table_cell(table_part_2, 200);
+    define_table_cell(table_part_2, 200);
+    define_table_cell(table_part_2, 200);
+    define_table_cell(table_part_2, 200);
+    define_table_header_span(table_part_2, 1, BOLD, Center, "Identifier");
+    define_table_header_span(table_part_2, 1, BOLD, Center, 
+        "Data Representation");
+    define_table_header_span(table_part_2, 1, BOLD, Center, "Size");
+    define_table_header_span(table_part_2, 1, BOLD, Center, "Units of Measure");
+    define_table_header_span(table_part_2, 1, BOLD, Center, "Limit/Range");
+    define_table_header_span(table_part_2, 1, BOLD, Center, "Accuracy");
+    define_table_header_span(table_part_2, 1, BOLD, Center, 
+        "Precision/Resolution");
+    define_table_body_cells(table_part_2, STANDARD, Center);
+    generate_table_header(table_part_2);
+    
+    // Now for the table body
+    generate_table_body_start(table_part_1);
+    generate_table_body_start(table_part_2);
+    for_each_in_select ("note[LocalData && obj_id=${csu_node_id}]", one_note)
+    {
+        // 1,2: Identifier
+        generate_body_cell(table_part_1, 
+            get_note_item(one_note.id, "DataName"));
+        generate_body_cell(table_part_2, 
+            get_note_item(one_note.id, "DataName"));
+        
+        // 1: Data Type, Description
+        generate_body_cell(table_part_1, 
+            get_note_item(one_note.id, "DataType"));
+        generate_body_cell(table_part_1, 
+            string_search_and_replace (strip_last_return(one_note.desc), 
+                "\n", "\\n"));
+                
+        // 2: Data Rep, Size, Units of Measure, Limit/Range, Accuracy, 
+        //    Precision/Resolution
+        generate_body_cell(table_part_2, 
+            get_note_item(one_note.id, "Representation"));
+        generate_body_cell(table_part_2, 
+            get_note_item(one_note.id, "DataSize"));
+        generate_body_cell(table_part_2, 
+            get_note_item(one_note.id, "Units"));
+//      TODO: When limit/range annotation is placed back in
+//      generate_body_cell(table_part_2, 
+//          get_note_item(one_note.id, ""));
+        generate_body_cell(table_part_2, "Limit/Range");
+        generate_body_cell(table_part_2, 
+            get_note_item(one_note.id, "Accuracy"));
+        generate_body_cell(table_part_2, 
+            get_note_item(one_note.id, "Precision"));
+    }
+    
+    // Output table
+    generate_table_body_end(table_part_1);
+    generate_table_finish(table_part_1);
+    define_table_caption(table_part_1, "Local Data for CSU " + csu_node_name + 
+        " (1 of 2)");
+    output_table(table_part_1);   
+    generate_table_body_end(table_part_2);
+    generate_table_finish(table_part_2);
+    define_table_caption(table_part_2, "Local Data for CSU " + csu_node_name + 
+        " (2 of 2)");
+    output_table(table_part_2);   
+}
+
+
+// CSCI_DATA_SECTION
+//
+// 10.1.7 CSCI data. This section shall be numbered 5 and shall describe the
+// global data elements within the CSCI.  For ease in readability and maint-
+// enance, the information required below may be providedin one or more
+// tables.  The following information shall be provided for each data
+// element as applicable:
+// a. For data elements internal to the CSCI:
+//    1. Name of the data element
+//    2. A brief description
+//    3. The units of measure, such as knots, seconds, meters, feet, etc.
+//    4. The limit/range of values required for the data element (for 
+//       constants provide the actual value)
+//    5. The accuracy required for the data element
+//    6. The precision/resolution in terms of significant digits
+//    7. For real time systems, the frequency at which the data element
+//       is calculated or refreshed, such as 10 KHz, 50 Msec, etc.
+//    8. Legality checks performed on the data element
+//    9. The data type, such as integer, ASCII, fixed, real, enumeration,etc.
+//   10. The data representation/format
+//   11. The CSU project unique identifier where the data element is set or
+//       calculated.
+//   12. The CSU project unique identifier(s) where the data element is used
+//   13. The data source from which the data is supplied, such as database or
+//       data file, global common, local common, compool, datapool, parameter,
+//       etc.  Where applicable, each source shall be identified by its
+//       project unique identifier.
+// b. For data elements of the CSCI's external interface:
+//    1. Identify the data element
+//    2. Identify the interface by name and project unique identifier
+//    3. Reference the Interface Design Document (IDD) in which the external
+//       interface is described.
+
+void
+CSCI_data_section ()
+{
+    message ("SDD:  5. CSCI data ..."); 
+    paragraph (HeadingL1Format);
+    print ("CSCI data.");
+    
+    paragraph (SubSectionBodyFormat);
+    if (narrative_document)
+    {
+        include_CSCI_data_table ();
+        include_data_elements_external_table (SDD, 
+            "CSCI External Interface Data Table");
+    }
+    else
+    {
+        print ("Tables describing the global data elements within the CSCI, " +
+            "for both internal and external data, appear in Appendix B.");
+    }
+}
+
+
+// INCLUDE_CSCI_DATA_TABLE
+//
+// Fortunately, all the footwork for this table was done during initialization.
+// Now we just need to extract the necessary info.
+//
+// For all data elements that are part of a parameter (accessing data module),
+// information concerning the parameter and annotation attributes of the data
+// element will be brought out in the tables.  There will be 4 tables.
+// 
+//              
+//   ID     Struct  Description
+//   ====   ======  ===========
+//   
+//          Units of    Limit/              Precision/           
+//   ID     Measure     Range   Accuracy    Resolution  Frequency
+//   ====   ========    ======  ========    ==========  =========
+//
+//          Legality   Data    Data       
+//   ID     Checks     Type    Represent.  
+//   ====   ========   ====    ==========
+//
+//          Where       Where       Data
+//   ID     Set         Used        Source  
+//   ====   =========   ======      =======
+
+
+void
+include_CSCI_data_table ()
+{
+    set     all_data_elements,
+            write_set,
+            read_set,
+            param_elem_set,
+            source_set;
+    list    param_name_list;
+    int     i,
+            j,
+            node_id,
+            index,
+            element_id;
+    string  table_part_1,
+            table_part_2,
+            table_part_3,
+            table_part_4;
+    node    element_node,
+            one_node;
+    note    data_note;
+    string  cell_string;
+    string  level = NULL;
+    note    node_note;
+    
+    // get a list of all data elements 
+    all_data_elements = set_create("int");
+    for (i=0; i<list_count(csci_param_element_list); i=i+1)
+        set_union (all_data_elements, list_get(csci_param_element_list, i));
+    
+    //  
+    // Now define the 3 tables
+    table_part_1 = "CSCI_data_table_part1";
+    table_part_2 = "CSCI_data_table_part2";
+    table_part_3 = "CSCI_data_table_part3";
+    table_part_4 = "CSCI_data_table_part4";
+    
+    // Define the table header - part 1
+    define_table_format (table_part_1, "");
+    define_table_cell(table_part_1, 200);
+    define_table_cell(table_part_1, 200);
+    define_table_cell(table_part_1, 800);
+    define_table_header_span(table_part_1, 1, BOLD, Center, "Identifier");
+    define_table_header_span(table_part_1, 1, BOLD, Center, "Structure");
+    define_table_header_span(table_part_1, 1, BOLD, Center, "Description");
+    define_table_body_cells(table_part_1, STANDARD, Center);
+    generate_table_header(table_part_1);
+
+    // Define the table header - part 2
+    define_table_format (table_part_2, "");
+    define_table_cell(table_part_2, 200);
+    define_table_cell(table_part_2, 200);
+    define_table_cell(table_part_2, 200);
+    define_table_cell(table_part_2, 200);
+    define_table_cell(table_part_2, 200);
+    define_table_cell(table_part_2, 200);
+    define_table_header_span(table_part_2, 1, BOLD, Center, "Identifier");
+    define_table_header_span(table_part_2, 1, BOLD, Center, "Units of Measure");
+    define_table_header_span(table_part_2, 1, BOLD, Center, "Limit/Range");
+    define_table_header_span(table_part_2, 1, BOLD, Center, "Accuracy");
+    define_table_header_span(table_part_2, 1, BOLD, Center, 
+        "Precision/Resolution");
+    define_table_header_span(table_part_2, 1, BOLD, Center, "Frequency");
+    define_table_body_cells(table_part_2, STANDARD, Center);
+    generate_table_header(table_part_2);
+
+    // Define the table header - part 3
+    define_table_format (table_part_3, "");
+    define_table_cell(table_part_3, 200);
+    define_table_cell(table_part_3, 200);
+    define_table_cell(table_part_3, 200);
+    define_table_cell(table_part_3, 200);
+    define_table_header_span(table_part_3, 1, BOLD, Center, "Identifier");
+    define_table_header_span(table_part_2, 1, BOLD, Center, "Legality Checks");
+    define_table_header_span(table_part_3, 1, BOLD, Center, "Data Type");
+    define_table_header_span(table_part_3, 1, BOLD, Center, 
+        "Data Representation");
+    define_table_body_cells(table_part_3, STANDARD, Center);
+    generate_table_header(table_part_3);
+
+    // Define the table header - part 4
+    define_table_format (table_part_4, "");
+    define_table_cell(table_part_4, 200);
+    define_table_cell(table_part_4, 400);
+    define_table_cell(table_part_4, 400);
+    define_table_cell(table_part_4, 400);
+    define_table_header_span(table_part_4, 1, BOLD, Center, "Identifier");
+    define_table_header_span(table_part_4, 1, BOLD, Center, "Where Set");
+    define_table_header_span(table_part_4, 1, BOLD, Center, "Where Used");
+    define_table_header_span(table_part_4, 1, BOLD, Center, "Data Source");
+    define_table_body_cells(table_part_4, STANDARD, Center);
+    generate_table_header(table_part_4);
+
+    // Start Table body for all elements
+    generate_table_body_start(table_part_1);
+    generate_table_body_start(table_part_2);
+    generate_table_body_start(table_part_3);
+    generate_table_body_start(table_part_4);
+    for (i=0; i<set_count(all_data_elements); i=i+1)
+    {
+        // get the node & id of element
+        element_id = set_get_element (all_data_elements, i);
+        element_node = find_by_query ("node[id=${element_id}]");
+        if (element_node == NULL)
+        {
+            display_error ("Inconsistent element node id of " + element_id + 
+                " in csci_param_element_list");
+            break;
+        }
+        
+        // We need to find the parameters that this element belongs to.
+        // From there, we can then extract the write, read & source info
+        write_set = set_create ("int");
+        read_set = set_create ("int");
+        source_set = set_create ("int");
+        param_name_list = list_create ("string", 0);
+        for (j=0; j<list_count(csci_param_element_list); j=j+1)
+        {
+            param_elem_set = list_get (csci_param_element_list, j);
+            
+            if (set_is_member (param_elem_set, element_id))
+            {
+                list_append (param_name_list, 
+                    set_get_element(csci_param_name_set, j));
+                set_union (write_set, list_get(csci_data_write_list, j));
+                set_union (read_set, list_get(csci_data_read_list, j));
+                set_union (source_set, list_get(csci_data_source_list, j));
+            }
+        }
+        
+        // 1, 2 & 3: ID
+        generate_body_cell(table_part_1, element_node.name);
+        generate_body_cell(table_part_2, element_node.name);
+        generate_body_cell(table_part_3, element_node.name);
+        generate_body_cell(table_part_4, element_node.name);
+        
+        // 1: Struct
+        generate_body_cell(table_part_1, 
+            list_to_string(param_name_list, "\\n"));
+            
+        // Generate cells from annotations
+        data_note = 
+            find_by_query ("note[DataDefinition && obj_id=${element_id}]");
+        if (data_note == NULL)
+        {
+            // 1: Description
+            generate_body_cell (table_part_1, "");
+
+            // 2: Units of Measure ==> Legality Checks
+            generate_body_cell (table_part_2, "");
+            generate_body_cell (table_part_2, "");
+            generate_body_cell (table_part_2, "");
+            generate_body_cell (table_part_2, "");
+            generate_body_cell (table_part_2, "");
+            generate_body_cell (table_part_2, "");
+
+            // 3: Data Type, and Data Representation
+            generate_body_cell (table_part_3, "");
+            generate_body_cell (table_part_3, "");
+            generate_body_cell (table_part_3, "");
+        }
+        else
+        {
+            // 1: Description
+            generate_body_cell (table_part_1, 
+                string_search_and_replace (strip_last_return(data_note.desc), 
+                    "\n", "\\n"));
+
+            // 2: Units of Measure ==> Legality Checks
+            generate_body_cell (table_part_2, 
+                get_note_item (data_note.id, "Units"));
+            generate_body_cell (table_part_2, 
+                get_note_item (data_note.id, "Constraint"));
+            generate_body_cell (table_part_2, 
+                get_note_item (data_note.id, "Accuracy"));
+            generate_body_cell (table_part_2, 
+                get_note_item (data_note.id, "Precision"));
+            generate_body_cell (table_part_2, 
+                get_note_item (data_note.id, "Frequency"));
+
+            // 3: Data Type, and Data Representation
+            generate_body_cell (table_part_3, 
+                get_note_item (data_note.id, "Legality"));
+            generate_body_cell (table_part_3, 
+                get_note_item (data_note.id, "DataType"));
+            generate_body_cell (table_part_3, 
+                get_note_item (data_note.id, "Representation"));
+        }
+
+        node_note = 
+            find_by_query ("note[DataDefinition && obj_id=${element_id}]");
+        
+        // 4: Set
+        // These sets of ids have to be converted to name and possibly type
+        cell_string = "";
+        for (j=0; j<set_count(write_set); j=j+1)
+        {
+            if (j > 0)
+                cell_string = cell_string + "\\n";
+            node_id = set_get_element(write_set, j);
+            one_node = find_by_query ("node[id=${node_id}]");
+            if (one_node == NULL)
+                display_error ("Inconsistent write_set with node id of " + 
+                    node_id);
+            else 
+			{
+                node_note = 
+                   find_by_query ("note[Module && obj_id=${node_id}]");
+                if( node_note != NULL )
+    				level = get_note_item (node_note.id, "DecompositionLevel");
+                if (level == NULL)
+					level = "Module";
+                cell_string = cell_string + level + ": " + one_node.name;
+			}
+        }
+        generate_body_cell (table_part_4, cell_string);
+        
+        // 4: Used
+        // These sets of ids have to be converted to name and possibly type
+        cell_string = "";
+        for (j=0; j<set_count(read_set); j=j+1)
+        {
+            if (j > 0)
+                cell_string = cell_string + "\\n";
+            node_id = set_get_element(read_set, j);
+            one_node = find_by_query ("node[id=${node_id}]");
+            if (one_node == NULL)
+                display_error ("Inconsistent write_set with node id of " + 
+                    node_id);
+            else
+			{
+                node_note = 
+                   find_by_query ("note[Module && obj_id=${node_id}]");
+                if( node_note != NULL )
+    				level = get_note_item (node_note.id, "DecompositionLevel");
+                if (level == NULL)
+					level = "Module";
+                cell_string = cell_string + level + ": " + one_node.name;
+			}
+        }
+        generate_body_cell (table_part_4, cell_string);
+        
+        // 4: Source
+        // These sets of ids have to be converted to name and possibly type
+        cell_string = "";
+        for (j=0; j<set_count(source_set); j=j+1)
+        {
+            if (j > 0)
+                cell_string = cell_string + "\\n";
+            node_id = set_get_element(source_set, j);
+            one_node = find_by_query ("node[id=${node_id}]");
+            if (one_node == NULL)
+                display_error ("Inconsistent write_set with node id of " + 
+                    node_id);
+            else
+                cell_string = cell_string + one_node.type + ": " + 
+                    one_node.name;
+        }
+        generate_body_cell (table_part_4, cell_string);
+    }
+    
+    // Now for the grand finale.
+    generate_table_body_end(table_part_1);
+    generate_table_finish(table_part_1);
+    define_table_caption(table_part_1, "CSCI Data Table (1 of 4)");
+    output_table(table_part_1);   
+    generate_table_body_end(table_part_2);
+    generate_table_finish(table_part_2);
+    define_table_caption(table_part_2, "CSCI Data Table (2 of 4)");
+    output_table(table_part_2);   
+    generate_table_body_end(table_part_3);
+    generate_table_finish(table_part_3);
+    define_table_caption(table_part_3, "CSCI Data Table (3 of 4)");
+    output_table(table_part_3);   
+    generate_table_body_end(table_part_4);
+    generate_table_finish(table_part_4);
+    define_table_caption(table_part_4, "CSCI Data Table (4 of 4)");
+    output_table(table_part_4);   
+}
+
+
+// CSCI_DATA_FILES_SECTION
+//
+// 10.1.8 CSCI Data Files. This section shall be numbered 6 and shall be divided
+// into the following paragraphs to describe each of the shared data files of 
+// the CSCI.
+//
+// 10.1.8.1 Data file to CSC/CSU cross reference. This paragraph shall be
+// numbered 6.1 and shall provide a mapping of each data file identified below
+// to the CSCs and CSUs that use the data file.
+
+void
+CSCI_data_files_section ()
+{
+    message ("SDD:  6. CSCI data files ...");   
+    paragraph (HeadingL1Format);
+    print ("CSCI data files.");
+    
+    paragraph (HeadingL2Format);
+    print ("Data file to CSC/CSU cross reference.");
+    paragraph (SubSectionBodyFormat);
+    if (narrative_document)
+    {
+        print ("The Data File to CSC/CSU Cross Reference table provides a " +
+            "mapping of each data file to the CSCs and CSUs that utilize " +
+            "that data file.");
+        include_data_file_cross_reference_table ();
+    }
+    else
+    {
+        print ("The Data File to CSC/CSU Cross Reference table provides a " +
+            "mapping of each data file to the CSCs and CSUs that utilize " +
+            "that data file.  This table is located in Appendix B at the " +
+            "end of this document.");
+    }
+    
+    data_file_name_descriptions ();
+}
+
+
+// INCLUDE_DATA_FILE_CROSS_REFERENCE_TABLE
+//
+// For all data modules (with data file annotation), create a 3 column
+// table:
+//
+// Data File Name   CSC Name    CSU Name
+// ==============   ========    ========
+// Data Module Name 
+//
+
+
+void
+include_data_file_cross_reference_table ()
+{
+    set     all_data_modules,
+            parent_csu_set,
+            parent_csc_set;
+    int     i, 
+            j,
+            node_id,
+            data_module_id;
+    string  table_type,
+            cell_string,
+            query;
+    node    one_node,
+            data_module;
+    
+    // find all the data modules
+    all_data_modules = set_create ("int");
+    for (i=0; i<list_count(csu_data_file_list); i=i+1)
+        set_union (all_data_modules, list_get(csu_data_file_list, i));
+        
+    // initialize table
+    table_type = "DataFileCrossReferenceTable";
+    define_table_format (table_type, "");
+    define_table_cell(table_type, 300);
+    define_table_cell(table_type, 300);
+    define_table_cell(table_type, 300); 
+    define_table_header_span(table_type, 1, BOLD, Center, "Data File Name");
+    define_table_header_span(table_type, 1, BOLD, Center, "CSC Name");
+    define_table_header_span(table_type, 1, BOLD, Center, "CSU Name");
+    define_table_body_cells(table_type, STANDARD, Center);
+    generate_table_header(table_type);
+    generate_table_body_start(table_type);
+        
+    // for all unique data file modules find the csc & csu 
+    for (i=0; i<set_count(all_data_modules); i=i+1)
+    {
+        // Only create row if DataFile note is attached to data module
+        data_module_id = set_get_element(all_data_modules, i);
+        data_module = 
+            find_by_query("node[id=${data_module_id} && notes[DataFile]]");
+        if (data_module == NULL)
+            continue;
+        
+        // find all parent csus & cscs
+		query = 
+			"node[out_links[to_node[${data_module_id}]] && " +
+            "items[DecompositionLevel && value = 'CSU']]";
+        parent_csu_set = set_create ("int");
+        parent_csc_set = set_create ("int");
+        for_each_in_select(query,one_node)
+		{
+            set_add (parent_csu_set, one_node.id);
+        	set_union (parent_csc_set, get_parent_csc(one_node.id));
+		}
+
+
+        
+        //
+        // now create one row for this data file module
+        generate_body_cell(table_type, data_module.name);
+        
+        // csc id set has to be converted to a string of names
+        cell_string = "";
+        for (j=0; j<set_count(parent_csc_set); j=j+1)
+        {
+            if (j>0)
+                cell_string = cell_string + "\\n";
+            
+            node_id = set_get_element(parent_csc_set, j);
+            one_node = find_by_query ("node[${node_id}]");
+            if (one_node == NULL)
+                display_error 
+                    ("Inconsistent repository - No node found with id of " + 
+                    node_id);
+            else
+                cell_string = cell_string + one_node.name;
+        }
+        generate_body_cell(table_type, cell_string);
+                
+        // csu id set has to be converted to a string of names
+        cell_string = "";
+        for (j=0; j<set_count(parent_csu_set); j=j+1)
+        {
+            if (j>0)
+                cell_string = cell_string + "\\n";
+            
+            node_id = set_get_element(parent_csu_set, j);
+            one_node = find_by_query ("node[${node_id}]");
+            if (one_node == NULL)
+                display_error 
+                    ("Inconsistent repository - No node found with id of " + 
+                    node_id);
+            else
+                cell_string = cell_string + one_node.name;
+        }
+        generate_body_cell(table_type, cell_string);
+    }
+    
+    // complete table
+    generate_table_body_end(table_type);
+    generate_table_finish(table_type);
+    define_table_caption(table_type, "Data File Cross Reference Table");
+    output_table(table_type);       
+}
+
+
+// GET_PARENT_CSC
+//
+
+set
+get_parent_csc (int module_id)
+{
+    int     i;
+    set     return_set;
+    
+    return_set = set_create("int");
+    
+    if (set_is_member(top_csc_set, module_id))
+        set_add (return_set, module_id);
+    else
+        for (i=0; i<list_count(csc_children_list); i=i+1)
+            if (set_is_member(list_get(csc_children_list, i), module_id))
+                set_union (return_set, 
+                    get_parent_csc(set_get_element(csc_set, i)));
+        
+    return return_set;
+}
+
+
+// DATA_FILE_NAME_DESCRIPTIONS
+//
+// 10.1.8.2 (Data file name and project unique identifier). This subparagraph
+// shall be numbered 6.X (beginning with 6.2) and shall identify by name and
+// project unique identifier a data file of the CSCI that is shared by more 
+// than one CSU.  This paragraph shall state the purpose of the data file,
+// identify the maximum size of the file, and describe the file access method,
+// such as random or sequential.  This paragraph shall provide a description
+// of the structure and size of the records contained within the file.  This
+// paragraph shall also provide a description of the data that is to reside
+// in the file.  The data description shall include, as applicable, data type,
+// data representation, size, units of measure, limit/range, accuracy,
+// precision/resolution, and any other design characteristics of the data.
+// This information may be provided in a file definition table.
+
+void
+data_file_name_descriptions ()
+{
+    string      query, filename;
+    node        one_data_file_node;
+    note        one_note;
+    file        one_file;
+    
+    
+    query = "node[DataModule && notes[DataFile]] sort by name";
+    for_each_in_select (query, one_data_file_node)
+    {
+        paragraph (HeadingL2Format);
+        print (one_data_file_node.name + "(" + 
+            find_unique_identifier(one_data_file_node.id) + ")");
+            
+        print_note_description(one_data_file_node.id, SubSectionBodyFormat,
+            "GenericObject");
+        
+        // Now for data file related information
+        query = "note[DataFile && obj_id=${one_data_file_node.id}]";
+        for_each_in_select (query, one_note)
+        {
+            paragraph (SubSectionTitleFormat);
+            print ("Data File");
+            
+            paragraph (SubSectionBodyFormat);
+            print(strip_last_return(one_note.desc));
+            
+            paragraph (SubSectionBodyFormat);
+            print_line ("Data Structure Diagram: " + 
+                get_note_item(one_note.id, "DSDiagram"));
+            print_line ("Access Method: " + 
+                get_note_item(one_note.id, "AccessMethod"));
+            print ("Maximum Size: " + 
+                get_note_item(one_note.id, "MaximumSize"));
+        
+            if (narrative_document)
+            {
+                filename = get_note_item(one_note.id, "DSDiagram");
+                if (string_length(filename) > 0)
+                {
+                    filename = string_search_and_replace (filename, " ", "_");
+                    one_file = 
+                        find_by_query("file[DseDiagram && name='${filename}']");
+                    if (one_file != NULL)
+                        PrintDiagram( one_file, True, "", "", "", "", 
+                            "Data Structure Diagram", "" );
+                     else
+                        display_warning ("The DSD " + filename + 
+                            "associated with the DataFile "
+                            + one_data_file_node.name + " could not be found");
+                }
+            }
+        }
+        
+        // Now for Entity Relationship Diagrams related information
+        query = "note[LocalDatabase && obj_id=${one_data_file_node.id}]";
+        for_each_in_select (query, one_note)
+        {
+            paragraph (SubSectionTitleFormat);
+            print ("Local Database");
+            
+            paragraph (SubSectionBodyFormat);
+            print(strip_last_return(one_note.desc));
+            
+            paragraph (SubSectionBodyFormat);
+            print_line ("Entity Relationship Diagram: " + 
+                get_note_item(one_note.id, "ERDiagram"));
+            print ("Access Method: " + 
+                get_note_item(one_note.id, "AccessMethod"));
+        
+            if (narrative_document)
+            {
+                filename = get_note_item(one_note.id, "ERDiagram");
+                if (string_length(filename) > 0)
+                {
+                    filename = string_search_and_replace (filename, " ", "_");
+                    one_file = 
+                        find_by_query("file[ChenDiagram && name='${filename}']");
+                    if (one_file != NULL)
+                        PrintDiagram( one_file, True, "", "", "", "", 
+                            "Entity Relationship Diagram", "" );
+                    else
+                        display_warning ("The ERD " + filename + 
+                            " associated with the DataFile "
+                            + one_data_file_node.name + " could not be found");
+                }
+            }
+        }
+        
+        // Now for Data Description related information
+        query = "note[DataDescription && obj_id=${one_data_file_node.id}]";
+        for_each_in_select (query, one_note)
+        {
+            paragraph (SubSectionTitleFormat);
+            print ("Data Description");
+            
+            paragraph (SubSectionBodyFormat);
+            print(strip_last_return(one_note.desc));
+            
+            paragraph (SubSectionBodyFormat);
+            print_line ("DataName: " + 
+                get_note_item(one_note.id, "DataName"));
+            print_line ("DataLocation: " + 
+                get_note_item(one_note.id, "DataLocation"));
+            print_line ("DataSize: " + 
+                get_note_item(one_note.id, "DataSize"));
+            print_line ("DataType: " + 
+                get_note_item(one_note.id, "DataType"));
+            print_line ("Representation: " + 
+                get_note_item(one_note.id, "Representation"));
+            print_line ("Constraint: " + 
+                get_note_item(one_note.id, "Constraint"));
+            print_line ("Legality: " + 
+                get_note_item(one_note.id, "Legality"));
+            print_line ("Units: " + 
+                get_note_item(one_note.id, "Units"));
+            print_line ("Scaling: " + 
+                get_note_item(one_note.id, "Scaling"));
+            print_line ("Precision: " + 
+                get_note_item(one_note.id, "Precision"));
+            print_line ("Accuracy: " + 
+                get_note_item(one_note.id, "Accuracy"));
+            print_line ("Conventions: " + 
+                get_note_item(one_note.id, "Conventions"));
+            print_line ("Frequency: " + 
+                get_note_item(one_note.id, "Frequency"));
+            print ("Priority: " + get_note_item(one_note.id, "Priority"));
+        
+        }
+    }
+}
+
+
+// REQUIREMENTS_TRACEABILITY_SECTION
+//
+
+void
+requirements_traceability_section ()
+{
+    message ("SDD:  7. Requirements traceability ..."); 
+    paragraph (HeadingL1Format);
+    print ("Requirements traceability.");
+    
+    paragraph (SubSectionBodyFormat);
+    if (narrative_document)
+        include_requirements_traceability_table ();
+    else
+    {
+        print ("The Requirements Traceability table provides a " +
+            "mapping of each allocated requirement to the CSCs and CSUs that " +
+            "address that requirement.  This table is located in Appendix B " +
+            "at the end of this document.");
+    }
+}
+
+
+// INCLUDE_REQUIREMENTS_TRACEABILITY_TABLE
+//
+
+void
+include_requirements_traceability_table ()
+{
+    string      table_type = "SDD_req_trace_table",
+                last_req_name,
+                doc_name,
+                temp_string,
+                para_num;
+    list        module_names;
+    item        req_item;
+    int         temp_int;
+    node        module_node;
+    
+    // initialize table
+    define_table_format (table_type, "");
+    define_table_cell(table_type, 200);
+    define_table_cell(table_type, 200);
+    define_table_cell(table_type, 200);
+    define_table_cell(table_type, 200);
+    define_table_header_span(table_type, 1, BOLD, Center, 
+        "Requirement\\nName");
+    define_table_header_span(table_type, 1, BOLD, Center, 
+        "Document\\nName");
+    define_table_header_span(table_type, 1, BOLD, Center, 
+        "Requirement\\nParagraph No");
+    define_table_header_span(table_type, 1, BOLD, Center, 
+        "CSU/CSC\\nName");
+    define_table_body_cells(table_type, STANDARD, Center);
+    generate_table_header(table_type);
+    
+    // Now for all unique SRS/IRS requirements that are attached to CSCs/CSUs
+    last_req_name = "";
+    for_each_in_select ("item[RequirementName && node[Module]] sort by value", 
+        req_item)
+    {
+        //
+        // Various reason to opt out
+        
+        // no requirement name
+        if (req_item.value == NULL)
+            continue;
+        if (string_length(req_item.value) == 0)
+            continue;
+        
+        // not attached to a csc or csu
+        if (!set_is_member(csc_set, req_item.obj_id) && 
+            !set_is_member(csu_set, req_item.obj_id) &&
+            !req_item.obj_id == csci_module_id)
+        {
+            display_warning ("The requirement called " + req_item.value +
+                " attached to the object " + req_item.obj_id + 
+                " is neither a csci, csc, nor a csu");
+            continue;
+        }
+        
+        //
+        // Take care of a real entry
+        
+        // If first requirement or skipped invalid annot, 
+        // then set up for next row
+        if (last_req_name == "")
+        {
+            last_req_name = req_item.value;
+            doc_name = "";
+            para_num = "";
+            module_names = list_create("string", 0);
+        }
+        
+        // else if a real req but not the first then output last row and
+        // set up for the next row
+        else if (last_req_name != req_item.value)
+        {
+            // output row
+            generate_body_cell (table_type, last_req_name);
+            generate_body_cell (table_type, doc_name);
+            generate_body_cell (table_type, para_num);
+            generate_body_cell (table_type, 
+                list_to_string(module_names, "\\n"));
+            
+            // set up
+            list_clear (module_names);
+            last_req_name = req_item.value;
+            doc_name = "";
+            para_num = "";
+            module_names = list_create("string", 0);
+        }
+        
+        // attached to csc or csu to add the module name
+        module_node = find_by_query("node[id=${req_item.obj_id}]");
+        if (module_node == NULL)
+        {
+            display_error 
+                ("Could not find module with id of " + req_item.obj_id);
+            continue;
+        }
+        list_append (module_names, module_node.name);
+
+        // Requirement Document 
+        temp_string = get_note_item (req_item.note_id, "RequirementDocument");
+        if (string_length(doc_name) == 0)
+        {
+            if (string_length(temp_string) > 0)
+                doc_name = temp_string;
+        }
+        else if ((string_length(temp_string) > 0) && (doc_name != temp_string))
+        {
+            display_warning ("The module (" + req_item.obj_id + 
+                ") has a Requirement Document field value of " +
+                temp_string + " which conflicts with a previously found " +
+                "value of " + doc_name);
+        }
+        
+        // Requirement Paragraph 
+        temp_string = get_note_item (req_item.note_id, "ParagraphNumber");
+        if (string_length(para_num) == 0)
+        {
+            if (string_length(temp_string) > 0)
+                para_num = temp_string;
+        }
+        else if ((string_length(temp_string) > 0) && (para_num != temp_string))
+        {
+            display_warning ("The module (" + req_item.obj_id + 
+                ") has a Paragraph Number field value of " +
+                temp_string + " which conflicts with a previously found " +
+                "value of " + para_num);
+        }
+    }
+    
+    // last row
+    if (last_req_name != "")
+    {
+        // output row
+        generate_body_cell (table_type, last_req_name);
+        generate_body_cell (table_type, doc_name);
+        generate_body_cell (table_type, para_num);
+        generate_body_cell (table_type, 
+            list_to_string(module_names, "\\n"));
+            
+        list_clear (module_names);
+    }
+        
+    // output table     
+    generate_table_body_end(table_type);
+    generate_table_finish(table_type);
+    define_table_caption(table_type, "Requirements Traceability Table");
+    output_table(table_type);    
+}
+
+
+// NOTES_SECTION
+//
+
+void
+notes_section ()
+{
+    message ("SDD:  8. Notes ..."); 
+    paragraph (HeadingL1Format);
+    print ("Notes.");
+
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_8__Notes);
+
+    paragraph (SubSectionBodyFormat);
+    print (SECTION_8__Abbreviations);
+}
+
+
+// APPENDICES_SECTION
+//
+
+void
+appendices_section ()
+{
+    // Narrative vs Reference flag will determine the appendices to
+    // be included
+    
+    if (!narrative_document)
+    {
+        message ("SDD:  Appendix A");
+        paragraph (AppendixL1StartFormat);
+        print ("SDD figures.");
+        appendix_A_subsection ();
+        
+        message ("SDD:  Appendix B");
+        paragraph (AppendixL1Format);
+        print ("SDD tables.");
+        appendix_B_subsection ();
+    }
+}
+
+
+// APPENDIX_A_SUBSECTION
+//
+// All SDD figures/diagrams should be included here.
+
+void
+appendix_A_subsection ()
+{
+    int     i,
+            csu_id;
+    node    csu_node;
+    file    one_scd;
+    set     id_set = set_create ("int");
+    
+    paragraph (AppendixL2Format);
+    print ("System Architecture");
+    paragraph(TableBodyCellFormat);
+    include_external_interface_diagrams("External Interface Diagram");
+
+    paragraph (AppendixL2Format);
+    print ("Top Level Architecture");
+    paragraph(TableBodyCellFormat);
+    include_top_level_architecture_diagrams (csci_module_id);
+    
+    // 01/19/94 JHSIA: Include defining CSC diagrams
+    for (i=0; i<list_count(csc_defining_scd_list); i=i+1)
+    {
+        one_scd = list_get(csc_defining_scd_list, i);
+        if (!set_is_member(id_set, one_scd.id))
+        {
+            set_add (id_set, one_scd.id);
+            PrintDiagram( one_scd, True, "", "", "", "", "Hierarchy diagram", "" );
+        }
+    }
+    
+    set_clear (id_set);
+    list_clear (csc_defining_scd_list);
+    
+    
+    for (i=0; i<set_count(csu_set); i=i+1)
+    {
+        csu_id = set_get_element(csu_set, i);
+        csu_node = find_by_query ("node[id=${csu_id}]");
+        if (csu_node == NULL)
+        {
+            display_error ("The CSU node with object id " + csu_id + 
+                " could not be found");
+            return;
+        }
+        include_CSU_diagrams (csu_id, csu_node.name);
+    }
+    
+    paragraph (AppendixL2Format);
+    print ("Data Files");
+    paragraph(TableBodyCellFormat);
+    include_data_file_related_diagrams ();
+}
+
+
+// INCLUDE_DATA_FILE_RELATED_DIAGRAMS
+//
+
+void
+include_data_file_related_diagrams ()
+{
+    file        one_file;
+    string      file_name;
+    item        one_item;
+    
+    for_each_in_select ("item[DSDiagram] sort by value", one_item)
+    {
+        file_name = one_item.value;
+        if (string_length(file_name) > 0)
+        {
+            file_name = string_search_and_replace (file_name, " ", "_");
+            one_file = 
+                find_by_query("file[DseDiagram && name='${file_name}']");
+            if (one_file != NULL)
+                PrintDiagram( one_file, True, "", "", "", "", 
+                    "Data Structure Diagram", "" );
+            else
+                display_warning ("The DSD " + file_name + 
+                    " associated with a DataFile could not be found");
+        }
+    }
+    
+    // ERDiagram support
+    for_each_in_select ("item[ERDiagram && node[DataModule]] sort by value", 
+                        one_item)
+    {
+        file_name = one_item.value;
+        if (string_length(file_name) > 0)
+        {
+            file_name = string_search_and_replace (file_name, " ", "_");
+            one_file = 
+                find_by_query("file[ChenDiagram && name='${file_name}']");
+            if (one_file != NULL)
+                PrintDiagram( one_file, True, "", "", "", "", 
+                    "Entity Relationship Diagram", "" );
+            else
+                display_warning ("The Chen Diagram called " + file_name + 
+                    " associated with a DataFile could not be found");
+        }
+    }
+    
+}
+
+//  APPENDIX_B_SUBSECTION
+
+void
+appendix_B_subsection ()
+{
+    // Necessary to avoid inclusion of undesired paragraph
+    paragraph(TableBodyCellFormat);
+    
+    paragraph (AppendixL2Format);
+    print ("System States and Modes");
+    paragraph(TableBodyCellFormat);
+    include_system_states_matrix ();
+    paragraph (AppendixL2Format);
+    print ("Memory and Processing Time");
+    paragraph(TableBodyCellFormat);
+    include_memory_and_processing_time_allocation_table ();
+    paragraph (AppendixL2Format);
+    print ("Data Tables");
+    paragraph(TableBodyCellFormat);
+    include_CSCI_data_table ();
+    paragraph(TableBodyCellFormat);
+    include_data_elements_external_table (SDD, 
+        "CSCI External Interface Data Table");
+    paragraph (AppendixL2Format);
+    print ("Data File Cross Reference");
+    paragraph(TableBodyCellFormat);
+    include_data_file_cross_reference_table ();
+    paragraph (AppendixL2Format);
+    print ("Requirements Traceability");
+    paragraph(TableBodyCellFormat);
+    include_requirements_traceability_table ();
+}

@@ -1,0 +1,161 @@
+/************************************************** 
+ * java_MOperation.tdl
+ * -------------------
+ *
+ * Code for initialization of operations. This in-
+ * cludes creating default values, bindings, 
+ * visibility and returntype, in case those infor-
+ * mation is not in the model. Other modifiers are 
+ * initialzed and normalized too.
+ * 
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    17.12.2001
+ *
+ * Copyright 2001, Aonix, San Diego
+ **************************************************/
+
+// Initializes an operation, so that missing information is provided
+// and raw data is translated in to meaningful values.
+proc MOperation.init()
+  [MOperation].init_access();
+  [MOperation].init_binding();
+  [MOperation].init_modifiers();
+  init_parameter_types([MOperation]);
+  init_returntype([MOperation]);
+  init_exceptions([MOperation]);
+end proc
+
+
+// Determines visibility in three steps:
+// 1) Looks, if the general visibility from  "Analysis Items" is set.
+// 2) Looks, if the Java specific visibility from  "Java Items" is set.
+// 3) If there is still no value (for artificial operations only), takes
+//    the default visibility from "java_globals.tdl",
+proc MOperation.init_access()
+  if ([MOperation.access:java] != "")
+    [MOperation.access] = [MOperation.access:java];
+  end if
+  if ([MOperation.access] == "package private")
+    [MOperation.access] = "";
+    return;
+  end if
+  if ([MOperation.access] == "")
+    [MOperation.access] = [DEF_OP_VISIB];
+  end if
+end proc
+
+
+// Normalizes the binding retrieved from IMF file for Java
+proc MOperation.init_binding()
+  if ([MOperation.binding] != "static")
+    [MOperation.binding] = "";
+  end if
+end proc
+
+
+// Collects all possible modifiers, an operation can have.
+// Beware! It's in the responsibility of the modeller, to 
+// provide only meaningful values here..
+// "native abstract" and "final abstract" are simply not
+// valid in Java!
+proc MOperation.init_modifiers()
+  local modifiers;
+  if (! [MOperation:ctor])
+    loop(MOperation->Note->Item Where [Item.type] == "UmlMemberJavaIsFinal" ||
+                                      [Item.type] == "UmlOperationIsAbstract" ||
+                                      [Item.type] == "UmlOperationJavaIsNative" ||
+                                      [Item.type] == "UmlOperationJavaIsSynchronized")
+      switch([Item.type])
+        case "UmlMemberJavaIsFinal" :
+          if ([Item.value] == "True")
+            if ([modifiers] == "")
+              [modifiers] = "final";
+            else
+              [modifiers] = [modifiers] " final";
+            end if
+          end if
+        break;
+        case "UmlOperationIsAbstract" :
+          if ([Item.value] == "True")
+            if ([modifiers] == "")
+              [modifiers] = "abstract";
+            else
+              [modifiers] = [modifiers] " abstract";
+            end if
+            [MOperation:abstract] = "TRUE";
+          end if
+        break;
+        case "UmlOperationJavaIsNative" :
+          if ([Item.value] == "True")
+            if ([modifiers] == "")
+              [modifiers] = "native";
+            else
+              [modifiers] = [modifiers] " native";
+            end if
+            [MOperation:native] = "TRUE";
+          end if
+        break;
+        case "UmlOperationJavaIsSynchronized" :
+          if ([Item.value] == "True")
+            if ([modifiers] == "")
+              [modifiers] = "synchronized";
+            else
+              [modifiers] = [modifiers] " synchronized";
+            end if
+          end if
+        break;
+      end switch
+    end loop
+    [MOperation:modifiers] = [modifiers];
+  end if
+end proc
+
+
+// Initializes the types of the formal parameters of an operation:
+// 1) if necessary, types are converted according to ACD's "DataType"
+//    mechanism 
+// 2) ArrayTypes are handeled correctly (no support of multidimensional
+//    fields yet!)
+proc init_parameter_types(MOperation)
+  local arr = "";
+  loop(MOperation->OpPara)
+    if ([OpPara.multiplicity] != "")
+      [arr] = "[]";
+    else
+      [arr] = "";
+    end if 
+    [OpPara.type] = getDataType([OpPara.type]) [arr];
+  end loop
+end proc
+
+
+// Initializes returntyp of an operation:
+// 1) If nothing is modeled, the mandatory java returntype "void" is added
+// 2) If necessary, types are converted with the help of the "DataType" 
+//    mechanism.
+// 3) Array types are properly handeled, even for "DataType" types.
+proc init_returntype(MOperation)
+  local arr = "";
+  local pos;
+  local len;
+  if ([MOperation.returnType] == "" || [MOperation:ctor])
+    [MOperation.returnType] = "void";
+  else
+    [pos] = searchstr([MOperation.returnType], "[]", 0);
+    if ([pos] == "-1")
+      [MOperation.returnType] = getDataType([MOperation.returnType]);
+    else
+      [arr] = substring([MOperation.returnType], [pos], "end");
+      [MOperation.returnType] = getDataType(replace([MOperation.returnType], "\[]", "")) [arr];
+    end if
+  end if
+end proc
+
+
+// Sets metaproperty for the exceptions, an operation can throw
+proc init_exceptions(MOperation)
+  loop(MOperation->Note->Item Where [Item.type] == "UmlOperationThrows")
+    [MOperation:throws] = [Item.value];
+  end loop
+end proc

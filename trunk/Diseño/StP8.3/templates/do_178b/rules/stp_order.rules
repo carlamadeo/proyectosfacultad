@@ -1,0 +1,80 @@
+//
+//	StP/UML
+//      ConfStP-UMLntial property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+//
+
+
+
+Category 0 SoftwareRequirementsProcess
+{
+    { ShowOnDesktop True }
+    { ParseCondition "(toolinfo_variable(\"SoftwareRequirementsProcess\") == \"True\");" }
+    { Label "Software Requirements Process" }
+    { Image "folder" }
+    { Group
+       (
+          DeploymentModeler_UmlDeploymentDiagramFiles
+          SwDOORS
+          RqtsModeler_Sw_RqtsTables
+          RqtsModeler_Sw_UmlUseCaseDiagramFiles
+          RqtsModeler_Sw_UmlSequenceDiagramFiles
+          RqtsModeler_Sw_UmlActivityDiagramFiles
+          RqtsModeler_Sw_TestTypeTables
+      )
+    }
+}
+
+Category 0 SoftwareDesignProcess
+{
+    { ShowOnDesktop True }
+    { ParseCondition "(toolinfo_variable(\"SoftwareDesignProcess\") == \"True\");" }
+    { Label "Software Design Process" }
+    { Image "folder" }
+    { Group
+         (
+	     ComponentModeler_UmlComponentDiagramFiles
+	     UmlClassDiagramFiles
+	     UmlClassTableFiles
+	     UmlStateDiagramFiles
+	     UmlStateTableFiles
+	     UmlStereotypeDiagramFiles
+             UmlCollaborationDiagramFiles
+          )
+    }
+}
+
+
+Category 0 SoftwareCodingProcess
+{
+    { ShowOnDesktop True }
+    { ParseCondition "(toolinfo_variable(\"SoftwareCodingProcess\") == \"True\");" }
+    { Label "Software Coding Process" }
+    { Image "folder" }
+    { Group
+         (
+             GenCPPCode
+             GenJavaCode
+             GenAdaCode
+             GenIDLCode
+          )
+    }
+}
+
+
+Category 0 IntegrationProcess
+{
+    { ShowOnDesktop True }
+    { ParseCondition "(toolinfo_variable(\"IntegrationProcess\") == \"True\");" }
+    { Label "Integration Process" }
+    { Image "folder" }
+    { Group
+         (
+            ValidatorScripts
+	    MercuryIntegration
+	    SegueIntegration
+         )
+    }
+}
+

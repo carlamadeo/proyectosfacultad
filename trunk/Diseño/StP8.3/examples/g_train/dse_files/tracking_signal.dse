@@ -1,0 +1,137 @@
+Diagram DseDiagram
+{
+    { Name "tracking_signal" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -335 }
+    { PanY -376 }
+    { Alignment 0 }
+    { GUID "UID_290D0D9F-1268-41d6-9244-FE8F9B7DB112" }
+    { Summary
+        { Nodes 3 }
+        { Arcs 2 }
+    }
+}
+
+Node 1
+{
+    { Type Sequence }
+    { Loc -84 -102 }
+    { Scale 256.00 128.00 }
+    { Label
+        { Text "tracking" }
+        { Text "signal" }
+    }
+    { PropertyList
+        { Property
+            { Name "SEDirectory" }
+            { Value "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ComponentMapping }
+        { ID 1400 }
+        { GUID "UID_97EEE476-FB5E-40c7-8C4C-CAF1A330DC15" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName SEFileMapping }
+        { ID 1399 }
+        { GUID "UID_CD9CEE51-F248-4c78-B197-967490A83758" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName SEDirectoryMapping }
+        { ID 602 }
+        { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+    }
+}
+
+Node 2
+{
+    { Type Sequence }
+    { Loc -225 93 }
+    { Scale 268.00 178.00 }
+    { Label
+        { Text "first" }
+        { Text "pulse" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ComponentMapping }
+        { ID 1425 }
+        { GUID "UID_E64D1D6D-F0B6-4c46-AEF7-3C89E75C3254" }
+    }
+}
+
+Node 3
+{
+    { Type Sequence }
+    { Loc 92 92 }
+    { Scale 253.00 173.00 }
+    { Label
+        { Text "second" }
+        { Text "pulse" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ComponentMapping }
+        { ID 1462 }
+        { GUID "UID_D3D6E983-8DAB-4192-8C03-CD97F60E94D1" }
+    }
+}
+
+Arc 4
+{
+    { Type Component }
+    { From
+        { ID 1 }
+        { Loc -16 -77 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 2 }
+        { Loc -157 58 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 5
+{
+    { Type Component }
+    { From
+        { ID 1 }
+        { Loc -16 -77 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 3 }
+        { Loc 160 58 }
+        { Offset 0 0 }
+    }
+}
+
+Link 6
+{
+    { FirstArc 4 }
+    { LastArc 4 }
+    { Object
+        { PDMType Link }
+        { MappingName ComponentLinkMapping }
+        { ID 4684 }
+        { GUID "UID_CC9A82E1-0A18-40b2-BDD0-264C4D0A24D4" }
+    }
+}
+
+Link 7
+{
+    { FirstArc 5 }
+    { LastArc 5 }
+    { Object
+        { PDMType Link }
+        { MappingName ComponentLinkMapping }
+        { ID 4683 }
+        { GUID "UID_3CD9E779-3291-4959-A728-FCBA4ABFF90E" }
+    }
+}

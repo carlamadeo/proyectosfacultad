@@ -1,0 +1,356 @@
+proc generateClassDiagrams()
+    loop(Instances->MClassDiagram)
+        generateClassDiagram([MClassDiagram]);
+    end loop
+end proc
+
+proc generateClassDiagram(MClassDiagram)
+    local diagramName;
+
+    [diagramName] = replace([MClassDiagram.name]," ","_");
+    output( [ProjectDir] "uclassd_files/" getFileName([diagramName],"") ".uclassd");
+    generateClassDiagramInfo([diagramName]);
+    generateClassDiagramClassesInfo([MClassDiagram]);
+    generateClassDiagramAttributesInfo([MClassDiagram]);
+    generateClassDiagramOperationsInfo([MClassDiagram]);
+    generateClassDiagramGeneralizationsInfo([MClassDiagram]);
+    generateClassDiagramAssociationsInfo([MClassDiagram]);
+    generateClassDiagramAssociationClasses([MClassDiagram]);
+end proc
+
+proc generateClassDiagramAssociationClasses(MClassDiagram)
+    loop(MClassDiagram->MDiagram->MNode->MSymbolNode->MSNodeChild->ToNode->MSNodeLinkChild->MSNodeRel->MVertexAssocRel->MSNodeClass)
+        [ARC_ID] = getNextARCID();
+        [CNTX_ID] = getNextCNTXID();
+        [LINK_REPOS_ID] = getNextID();
+        [LINK_ID] = getNextNodeID();
+        loop(MSNodeLinkChild->MVertexChild->MVertex->To)
+            [ASSOC_NODE_ID] = [ARC_ID [MVertex.id] [To.id]];
+            [ASSOC_XPos] = div(add([MVertex.xPos],[To.xPos]),"2");
+            [ASSOC_YPos] = sub(div(add([MVertex.yPos],[To.yPos]),"2"),"66");
+        end loop
+        >>
+        Arc [ARC_ID]
+        {
+            { Type AssociationClassLink }
+            { From
+                { ID [CNTX_ID] }
+            }
+            { To
+                { ID [[SNODECHILD_ID [MSNodeClass.id]]] }
+            }
+        }
+        Cntx [CNTX_ID]
+        {
+            { Type AssociationAnchor }
+            { Loc [ASSOC_XPos] [ASSOC_YPos] }
+            { Scale 12.0 12.0 }
+            { Parent [ASSOC_NODE_ID] }
+        }
+        Link [LINK_ID]
+        {
+            { FirstArc [ARC_ID] }
+            { LastArc [ARC_ID] }
+            { Object
+                { PDMType Link }
+                { MappingName AttributedAssociationMapping }
+                { ID 0 }
+            }
+            { Object
+                { PDMType Link }
+                { MappingName FromMapping }
+                { ID 0 }
+            }
+            { Object
+                { PDMType Link }
+                { MappingName ToMapping }
+                { ID 0 }
+            }
+        }
+        >> out
+    end loop
+end proc
+
+proc generateClassDiagramAssociationsInfo(MClassDiagram)
+    loop(MClassDiagram->MDiagram->MNode->MSymbolNode->MSNodeChild->ToNode->MSNodeLinkChild->MSemElement->MAssociation)
+        loop(MSNodeLinkChild->MVertexChild->MVertex)
+            createVertex([MVertex]);
+            createAssociationArc([MVertex]);
+        end loop
+
+        [LINK_ID] = getNextNodeID();
+        [CNTX_FROM_ID] = getNextCNTXID();
+
+        >>
+        Link [LINK_ID]
+        {
+            {FirstArc [[LAST_ARC_ID [MSNodeLinkChild.id]]] }
+            {LastArc [[FIRST_ARC_ID [MSNodeLinkChild.id]]] }
+            { Object
+                { PDMType Node }
+                { MappingName AssociationNodeMapping }
+                { ID 0 }
+            }
+            { Object
+                { PDMType Link }
+                { MappingName FromMapping }
+                { ID 0 }
+            }
+            { Object
+                { PDMType Link }
+                { MappingName ToMapping }
+                { ID 0 }
+            }
+        }
+        >> out
+        loop(MAssociation->MAssociationEnd->MClass Where [MAssociationEnd.name] != "")
+        [CNTX_TO_ID] = getNextCNTXID();
+        >>
+        Cntx [CNTX_TO_ID]
+        {
+            { Type RelLabel[getDirection([MAssociation],[MClass])] }
+            { Loc [printRoleLoc([MSNodeLinkChild],getDirection([MAssociation],[MClass]))] }
+            { Label
+                { Text "[MAssociationEnd.name]" }
+            }
+            { Parent [[FIRST_ARC_ID [MSNodeLinkChild.id]]] }
+        }
+        >> out
+        end loop
+    end loop
+end proc
+
+proc getDirection(MAssociation, MClass)
+    loop(MAssociation->MSNodeLinkChild->FromNode->MSemElement Where [MSemElement.id] == [MClass.id])
+        return "From";
+    end loop
+    loop(MAssociation->MSNodeLinkChild->ToNode->MSemElement Where [MSemElement.id] == [MClass.id])
+        return "To";
+    end loop
+    return "";
+//  info = "Error: Class has no direction\n";
+end proc
+
+proc printRoleLoc(MSNodeLinkChild,direction)
+    local xPosFrom;
+    local yPosFrom;
+    local xPosTo;
+    local yPosTo;
+    loop(MSNodeLinkChild->FromNode)
+        [xPosFrom] = [FromNode.xPos];
+        [yPosFrom] = [FromNode.yPos];
+    end loop
+    loop(MSNodeLinkChild->ToNode)
+        [xPosTo] = [ToNode.xPos];
+        [yPosTo] = [ToNode.yPos];
+    end loop
+    if([direction] == "To")
+        return sub([xPosFrom],div(sub([xPosFrom],[xPosTo]),6)) " " sub([yPosFrom],div(sub([yPosFrom],[yPosTo]),6));
+    else
+        return sub([xPosTo],div(sub([xPosTo],[xPosFrom]),6)) " " sub([yPosTo],div(sub([yPosTo],[yPosFrom]),6));
+    end if
+end proc
+
+proc createVertex(MVertex)
+    if(loopCount(MVertex->MVertexChild) == "0" && loopCount(MVertex->To) != "0")
+        >>
+        Node [[VERTEX_NODE_ID [MVertex.id]]]
+        {
+            { Type Vertex }
+            { Loc [MVertex.xPos] [MVertex.yPos]] }
+        }
+        >> out
+    end if
+    loop(MVertex->To)
+        createVertex([To]);
+    end loop
+end proc
+
+proc createGeneralizationArc(MVertex)
+    loop(MVertex->To)
+        >>
+        Arc [[ARC_ID [MVertex.id] [To.id]]]
+        {
+            { Type Generalization }
+            { From
+                { ID [[VERTEX_NODE_ID [MVertex.id]]] }
+            }
+
+            { To
+                { ID [[VERTEX_NODE_ID [To.id]]] }
+            }
+        }
+        >> out
+
+        createGeneralizationArc([To]);
+    end loop
+end proc
+
+proc createAssociationArc(MVertex)
+    loop(MVertex->To)
+        >>
+        Arc [[ARC_ID [MVertex.id] [To.id]]]
+        {
+            { Type Association }
+            { From
+                { ID [[VERTEX_NODE_ID [To.id]]] }
+            }
+
+            { To
+                { ID [[VERTEX_NODE_ID [MVertex.id]]] }
+            }
+        }
+        >> out
+    createAssociationArc([To]);
+    end loop
+end proc
+
+proc generateClassDiagramGeneralizationsInfo(MClassDiagram)
+    loop(MClassDiagram->MDiagram->MNode->MSymbolNode->MSNodeChild->ToNode->MSNodeLinkChild->MSemElement->MInheritance)
+        [ARC_ID] = getNextARCID();
+        [LINK_NODE_ID] = getNextNodeID();
+        loop(MSNodeLinkChild->MVertexChild->MVertex)
+            createVertex([MVertex]);
+            createGeneralizationArc([MVertex]);
+        end loop
+        >>
+        Link [LINK_NODE_ID]
+        {
+            {FirstArc [[FIRST_ARC_ID [MSNodeLinkChild.id]]] }
+            {LastArc [[LAST_ARC_ID [MSNodeLinkChild.id]]] }
+            { Object
+                { PDMType Link }
+                { MappingName GeneralizationMapping }
+                { ID 0 }
+            }
+        }
+        >> out
+    end loop
+end proc
+
+proc generateClassDiagramOperationsInfo(MClassDiagram)
+    loop(MClassDiagram->MNode->MSymbolNode->MSNodeChild->MSemElement->MDependentElement->MClass->MOperation)
+        [LINK_ID] = getNextID();
+        [OP_NODE_ID] = getNextNodeID();
+        [ARC_NODE_ID] = getNextARCID();
+        [LINK_NODE_ID] = getNextNodeID();
+
+        [DELIM] = "";
+        [OpParam] = "";
+        [OpName] = [MClass.name] ":" [MOperation.name];
+        loop(MOperation->OpPara)
+            [OpName] = [OpName] ":" [OpPara.type];
+            [OpParam] = [OpParam] [DELIM] [OpPara.name] ":" [OpPara.type];
+            [DELIM] = ",";
+        end loop
+        >>
+        Node [OP_NODE_ID]
+        {
+            { Type Operation }
+            { Label
+                { Text "[MOperation.name]( [OpParam] )" }
+            }
+            { IsIncluded True }
+            { Parent [[SNODECHILD_ID [MNode.id]]] }
+            { Object
+                { PDMType Node }
+                { MappingName ClassMapping }
+                { ID 0 }
+            }
+        }
+        Arc [ARC_NODE_ID]
+        {
+            { Type Contains }
+            { From
+                { ID [[SNODECHILD_ID [MNode.id]]] }
+            }
+            { To
+                { ID [OP_NODE_ID] }
+            }
+            { IsInclusion True }
+        }
+        Link [LINK_NODE_ID]
+        {
+            { FirstArc [ARC_NODE_ID] }
+            { LastArc [ARC_NODE_ID] }
+            { Object
+                { PDMType Link }
+                { MappingName ContainsMapping }
+                { ID 0 }
+            }
+        }
+        >> out
+    end loop
+end proc
+
+proc generateClassDiagramAttributesInfo(MClassDiagram)
+    loop(MClassDiagram->MNode->MSymbolNode->MSNodeChild->MSemElement->MDependentElement->MClass->MAttribute)
+        [LINK_ID] = getNextID();
+        [ATT_NODE_ID] = getNextNodeID();
+        [ARC_NODE_ID] = getNextARCID();
+        [LINK_NODE_ID] = getNextNodeID();
+        >>
+        Node [ATT_NODE_ID]
+        {
+            { Type Attribute }
+            { Label
+                { Text "[MAttribute.name]" }
+            }
+            { IsIncluded True }
+            { Parent [[SNODECHILD_ID [MNode.id]]] }
+            { Object
+                { PDMType Node }
+                { MappingName ClassMapping }
+                { ID 0 }
+            }
+        }
+        Arc [ARC_NODE_ID]
+        {
+            { Type Contains }
+            { From
+                { ID [[SNODECHILD_ID [MNode.id]]] }
+            }
+            { To
+                { ID [ATT_NODE_ID] }
+            }
+            { IsInclusion True }
+        }
+        Link [LINK_NODE_ID]
+        {
+            { FirstArc [ARC_NODE_ID] }
+            { LastArc [ARC_NODE_ID] }
+            { Object
+                { PDMType Link }
+                { MappingName ContainsMapping }
+                { ID 0 }
+            }
+        }
+        >> out
+    end loop
+end proc
+
+proc generateClassDiagramClassesInfo(MClassDiagram)
+    loop(MClassDiagram->MNode->MSymbolNode->MSNodeChild->MSemElement->MDependentElement->MClass)
+        [CLASS_NODE_ID] = getNextNodeID();
+        [SNODECHILD_ID [MNode.id]] = [CLASS_NODE_ID];
+        >>
+        Node [[SNODECHILD_ID [MNode.id]]]
+        {
+            { Type Class }
+            { Loc [MSNodeChild.xPos] [MSNodeChild.yPos]  }
+            { Scale 128.00 128.00 }
+            { Label
+                { Text "[MClass.name]" }
+            }
+            { ViewPoint UmlAllGeneralization }
+            { Object
+                { PDMType Node }
+                { MappingName ClassMapping }
+                { ID 0 }
+            }
+        }
+
+        >> out
+    end loop
+end proc
+

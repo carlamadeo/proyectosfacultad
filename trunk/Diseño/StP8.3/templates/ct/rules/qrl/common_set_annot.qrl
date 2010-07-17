@@ -1,0 +1,58 @@
+// New file for ECR 3789
+
+const boolean debug_GetDefaultDescription = False;
+//--------------------------------------------------------------------
+// GetDefaultDescription: Return the default description template, 
+//                        if such a file exists for the given apptype
+//                        and note and if the note description is 
+//                        still unset, otherwise return ""
+//--------------------------------------------------------------------
+string GetDefaultDescription( int objectId, string objectType, 
+                              string noteType)
+{
+    note   descNote;
+    string descFile = "", 
+           descPath,
+           descString;
+
+    // get the note description and check it's status
+    descNote = find_by_query("note[" + noteType 
+             + " && obj_id == " + objectId + "]");
+
+    // This is way things will be done on the new server
+    // descPath = get_user_var("DefaultNoteDescPath");
+    // As long as we don't have Project Toolinfos
+    descPath = current_projdir() + "stp_env/ndt_files/";
+
+    // Now we need the name of the description template incl. the path:
+    // The description template name is objecttype_noteType, 
+    // i.e. UmlUseCase_GenericObject or OMTClass_GenericObjectEnglish
+    if ((descPath != "") && (descPath != "none"))
+       descFile = descPath + "/" + objectType + "_" + noteType;
+
+    // Make sure the description template exists
+    
+    if( debug_GetDefaultDescription )
+    	message ("Checking for template "+descFile );
+	if( !file_exists(descFile) )
+	  descFile = descFile+".rtf";
+
+    if   (descFile != "" && file_exists(descFile))
+    {
+         // Make sure the description is yet unset (don't overwrite 
+         // existing text !
+         if   ((descNote == NULL) || (descNote.desc == ""))
+	 {
+	      // Return the default description string if not empty
+              descString = read_file(descFile);
+              if (descString != "")
+                 return descString;
+         }
+    }
+    else if ((descNote == NULL) || (descNote.desc == ""))
+         print_warning("No default description available");
+
+    // Return an empty description string, i.e. nothing to insert
+    return "";        
+}
+// ECR 3789 end

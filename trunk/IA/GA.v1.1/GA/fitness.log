@@ -1,0 +1,390 @@
+-----------------
+Iniciando corrida: 01/11/2009 11:19:38
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,1
+Tamaño de Población: 100
+Generaciones: 2000
+Resultados:
+
+Generationes Creadas: 2000
+Mejor (7,5): [-57,12; 38,19; 70,14; 7,73; 1,42; 673,29; ]
+Peor (-12,5): [-52,23; 59,73; 51,58; 6,72; 1,42; 677,71; ]
+-----------------
+Iniciando corrida: 01/11/2009 11:19:46
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,3
+Tamaño de Población: 500
+Generaciones: 2000
+Resultados:
+
+Generationes Creadas: 2000
+Mejor (-25,5): [-52,14; 57,27; 63,72; 5,87; 50,57; 850,52; ]
+Peor (-56,5): [-0,58; 30,63; 28,35; 6,52; 55,39; 960,54; ]
+-----------------
+Iniciando corrida: 01/11/2009 11:20:26
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,1
+Tamaño de Población: 1000
+Generaciones: 500
+Resultados:
+
+Generationes Creadas: 500
+Mejor (7,5): [-50,83; 37,52; 72,38; 7,76; 1,43; 664,17; ]
+Peor (-55,5): [4,06; 24,36; 65,95; 7,16; 36,56; 804,90; ]
+-----------------
+Iniciando corrida: 01/11/2009 11:20:42
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,1
+Tamaño de Población: 500
+Generaciones: 5000
+Resultados:
+
+Generationes Creadas: 5000
+Mejor (-17): [-51,80; 32,60; 39,00; 5,82; 4,68; 788,92; ]
+Peor (-56,5): [-6,66; 35,52; 38,23; 6,77; 33,34; 918,27; ]
+-----------------
+Iniciando corrida: 01/11/2009 11:21:09
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,1
+Tamaño de Población: 100
+Generaciones: 2000
+Resultados:
+
+Generationes Creadas: 2000
+Mejor (7,5): [-62,23; 60,20; 83,40; 7,76; 1,38; 669,69; ]
+Peor (-12,5): [-59,73; 36,51; 83,40; 7,33; 1,38; 669,69; ]
+-----------------
+Iniciando corrida: 01/11/2009 11:23:45
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,1
+Tamaño de Población: 100
+Generaciones: 2000
+Resultados:
+
+Generationes Creadas: 2000
+Mejor (37,5): [-50,25; 0,69; 49,56; 7,68; 1,93; 624,39; ]
+Peor (-25,5): [-1,76; 24,90; 49,56; 7,68; 1,93; 824,24; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:03:35
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,0
+Tamaño de Población: 10
+Generaciones: 10000
+Resultados:
+
+Generationes Creadas: 10000
+Mejor (-2,5): [-53,88; 53,66; 68,48; 7,70; 47,21; 675,83; ]
+Peor (-2,5): [-53,88; 53,66; 68,48; 7,70; 47,21; 675,83; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:04:12
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,1
+Tamaño de Población: 100
+Generaciones: 10000
+Resultados:
+
+Generationes Creadas: 10000
+Mejor (37,5): [-51,91; 1,39; 72,44; 7,62; 1,32; 655,28; ]
+Peor (-15,5): [-2,49; 1,87; 29,55; 6,20; 1,32; 820,93; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:04:34
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,1
+Tamaño de Población: 100
+Generaciones: 10000
+Resultados:
+
+Generationes Creadas: 10000
+Mejor (37,5): [-55,88; 1,81; 17,77; 7,88; 1,77; 699,61; ]
+Peor (-20,5): [-26,45; 42,17; 33,70; 7,88; 35,30; 806,03; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:05:05
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,1
+Tamaño de Población: 100
+Generaciones: 10000
+Resultados:
+
+Generationes Creadas: 10000
+Mejor (37,5): [-58,20; 0,95; 73,59; 7,74; 0,93; 683,42; ]
+Peor (7,5): [-61,37; 13,64; 51,26; 7,84; 0,93; 666,30; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:05:22
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,1
+Tamaño de Población: 100
+Generaciones: 10000
+Resultados:
+
+Generationes Creadas: 888
+Mejor (57,5): [-60,00; 1,00; 0,97; 7,78; 1,98; 637,15; ]
+Peor (3): [-6,58; 0,52; 0,97; 7,48; 3,73; 789,09; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:05:37
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,1
+Tamaño de Población: 100
+Generaciones: 10000
+Resultados:
+
+Generationes Creadas: 10000
+Mejor (37,5): [-55,17; 1,25; 48,32; 7,80; 1,27; 665,76; ]
+Peor (-2,5): [-57,96; 8,03; 60,73; 7,73; 45,91; 635,46; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:05:48
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,1
+Tamaño de Población: 100
+Generaciones: 1000
+Resultados:
+
+Generationes Creadas: 1000
+Mejor (7,5): [-54,67; 29,46; 33,25; 7,71; 1,84; 636,78; ]
+Peor (-22,5): [-6,49; 34,21; 30,93; 7,71; 1,84; 684,17; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:05:56
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,1
+Tamaño de Población: 100
+Generaciones: 1000
+Resultados:
+
+Generationes Creadas: 138
+Mejor (57,5): [-55,95; 1,81; 0,96; 7,61; 1,88; 693,67; ]
+Peor (-20,5): [-26,08; 13,42; 33,71; 7,61; 27,30; 840,99; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:06:12
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,1
+Tamaño de Población: 100
+Generaciones: 1000
+Resultados:
+
+Generationes Creadas: 1000
+Mejor (-22,5): [-50,52; 65,32; 61,71; 6,12; 77,66; 674,78; ]
+Peor (-55,5): [1,86; 86,08; 57,13; 6,86; 68,75; 832,38; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:06:19
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 1,0
+Tamaño de Población: 100
+Generaciones: 2000
+Resultados:
+
+Generationes Creadas: 2000
+Mejor (-23,5): [-52,09; 49,70; 20,63; 6,81; 11,20; 856,91; ]
+Peor (-56,5): [11,32; 53,82; 53,21; 5,55; 57,17; 908,57; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:06:30
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 1,0
+Tamaño de Población: 100
+Generaciones: 2000
+Resultados:
+
+Generationes Creadas: 2000
+Mejor (-22,5): [-61,23; 47,32; 30,46; 4,88; 43,19; 698,57; ]
+Peor (-55,5): [14,68; 39,51; 45,60; 7,23; 65,69; 839,87; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:06:37
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 1,0
+Tamaño de Población: 100
+Generaciones: 2000
+Resultados:
+
+Generationes Creadas: 2000
+Mejor (-22,5): [-55,77; 34,12; 81,02; 5,54; 38,62; 664,17; ]
+Peor (-56,5): [-4,73; 44,08; 20,62; 4,73; 32,58; 911,95; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:06:43
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 1,0
+Tamaño de Población: 100
+Generaciones: 2000
+Resultados:
+
+Generationes Creadas: 2000
+Mejor (-33): [-31,70; 37,68; 40,47; 6,59; 55,62; 751,66; ]
+Peor (-56,5): [0,91; 52,69; 78,84; 6,27; 61,65; 919,48; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:06:57
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 1,0
+Tamaño de Población: 100
+Generaciones: 2000
+Resultados:
+
+Generationes Creadas: 2000
+Mejor (-24): [-53,62; 79,39; 41,28; 5,75; 74,10; 792,52; ]
+Peor (-56,5): [2,19; 47,14; 80,23; 5,64; 74,55; 911,25; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:10:12
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 1,0
+Tamaño de Población: 10
+Generaciones: 10000
+Resultados:
+
+Generationes Creadas: 10000
+Mejor (-37,5): [-22,61; 60,84; 57,42; 6,14; 42,32; 684,05; ]
+Peor (-55,5): [12,28; 38,59; 78,72; 5,09; 67,76; 833,38; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:10:27
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 1,0
+Tamaño de Población: 10
+Generaciones: 10000
+Resultados:
+
+Generationes Creadas: 10000
+Mejor (-31,5): [-37,51; 47,79; 53,66; 6,75; 52,93; 684,36; ]
+Peor (-54): [-3,50; 42,93; 60,34; 5,09; 39,32; 785,94; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:12:04
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,1
+Tamaño de Población: 5
+Generaciones: 2
+Resultados:
+
+Generationes Creadas: 2
+Mejor (-31,5): [-34,24; 14,04; 61,74; 6,99; 65,34; 674,40; ]
+Peor (-34,5): [-34,24; 14,04; 61,74; 6,99; 27,62; 823,49; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:12:19
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,1
+Tamaño de Población: 4
+Generaciones: 2
+Resultados:
+
+Generationes Creadas: 2
+Mejor (-11,5): [-35,47; 51,00; 41,22; 7,83; 86,33; 605,93; ]
+Peor (-13): [-35,47; 51,00; 41,22; 7,83; 81,22; 754,50; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:12:27
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,1
+Tamaño de Población: 3
+Generaciones: 2
+Resultados:
+
+Generationes Creadas: 2
+Mejor (-1): [-45,10; 15,84; 1,42; 7,79; 42,14; 710,13; ]
+Peor (-1): [-45,10; 15,84; 1,42; 7,79; 42,14; 710,13; ]
+-----------------
+Iniciando corrida: 01/11/2009 12:12:40
+Método de Selección: Elitista / Ruleta.
+Método de Cruza: Simple.
+Método de Mutación: Simple.
+Mejor Fitness posible: 57.5
+Tasa de Cruzamientos: 0,9
+Tasa de Mutación: 0,1
+Tamaño de Población: 2
+Generaciones: 1
+Resultados:
+
+Generationes Creadas: 1
+Mejor (5,5): [-45,53; 1,06; 65,86; 5,72; 3,36; 653,43; ]
+Peor (5,5): [-45,53; 1,06; 65,86; 5,72; 3,36; 653,43; ]

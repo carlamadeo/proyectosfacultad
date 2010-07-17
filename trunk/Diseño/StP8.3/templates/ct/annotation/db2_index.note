@@ -1,0 +1,33 @@
+//
+// 	sccsid[] = @(#)db2_index.note	3.7  93/04/26
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Note 800102
+{
+    { AppType DB2Index }
+    { HelpText "The DB2 Index note provides the notes and items needed to declare an DB2 index object. This information is used in SQL generation." }
+    { Bounds { Min 0 } }
+    { PrintName "DB2 Index" }
+    { Item
+	{ IsKey True }
+	{ AppType SqlName }
+	{ HelpText "The Index Name item specifies the name of the index.  You can include columns in the index by using the Index Name item under the In Index note to associate the name of the index with an attribute." }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Index Name" }
+	{ InitValue "${sym_label} index" }
+    }
+    { Item
+	{ AppType IsUnique }
+	{ HelpText "The Unique Index? item specifies that all column values in this index must be unique." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Unique Index?" }
+	{ InitValue "True" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_db2_index.note"

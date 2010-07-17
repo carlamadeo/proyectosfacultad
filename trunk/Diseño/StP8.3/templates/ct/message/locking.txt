@@ -1,0 +1,238 @@
+%
+% 	sccsid[] = %W% %Y% %D%
+% 	StP/Core
+% 	Confidential property of Interactive Development Environments, Inc.
+% 	Copyright (c) 1992-1993
+% 	All rights reserved
+%
+
+% Messages for locking
+6500;Permanent Lock
+6501;Session Lock
+6502;Automatic Lock
+6503;Undefined Lock
+6504;Could not recognize lock command '%s'\n
+6505;NULL
+6506;DIAGRAM.LOCKING.ENABLED
+6507;'DIAGRAM.LOCKING.ENABLED'
+6508;PermLock
+6509;SessLock
+6510;AutoLock
+6511;UndefLock
+6512;xf
+6513;Invalid option '%s' for this command\n
+6514;No value after `%s' option\n
+6515;Invalid value for -t option: '%s'\n
+6516;Access list value too long, truncated\n
+6517;Destroy list value too long, truncated\n
+6518;Revision value too long, truncated\n
+6519;Lock owner value too long, truncated\n
+6520;Lock editor value too long, truncated\n
+6521;Invalid option '%s'\n
+6522;Diagram name '%s' too long\n
+6523;lock-> 
+6524;unlock %.300
+6525;You need to specify an editor to set a lock\n
+6526;file-> 
+6527;All revisions assumed\n
+6528;Identical lock exists\n
+6529;File is locked and you do not have delete rights\n
+6530;machine
+6531;user
+6532;Enter access list in the form 'user@machine [, user@machine] ...'\nTerminate with an empty line\n
+6533;Enter delete list in the form 'user@machine [, user@machine] ...'\nTerminate with an empty line\n
+6534;Could not get lock status\n
+6535;Locking is already enabled\n
+6536;Enter disable list in the form 'user@machine [, user@machine] ...'\nTerminate with an empty line\n
+6537;Enable locking failed DBMS error\n
+6538;Locking enabled\n
+6539;Could not get lock status\n
+6540;Locking is already disabled\n
+6541;Locking disabled\n
+6542;Could not get lock status\n
+6543;Locking is disabled\n
+6544;Locking is enabled\n
+6545;\tEnabled by: %s
+6546;\ on %s
+6547;\ at %s\n
+6548;\tUsers allowed to disable:\n
+6549;\t\t
+6550;The lock command allows you to set locks on files\n
+6551;A lock allows a system administrator to restrict editing privileges\n
+6552;The following commands are supported\n
+6553;\tli[st]\t\tlist locks\n
+6554;\ti[nquire]\tinquire whether file is locked\n
+6555;\te[nable]\tenable locking\n
+6556;\tdi[sable]\tdisable locking\n
+6557;\ts[et]\t\tset a lock\n
+6558;\td[elete]\telete a lock\n
+6559;\tst[atus]\tlocking status\n
+6560;\th[elp]\t\tgive help on locking\n
+6561;\tq[uit]\t\tleave locking subsystem\n
+6562;\nFor more help type `help command'\n\n
+6563;\nLeave the locking system\n
+6564;name\nInquire whether a lock is set on name\n
+%6565;
+6566;\tl[ock]\t\tset a lock\n
+6567;[pattern]\nList all locks matching pattern\n
+6568;[pattern]\nList all locks matching pattern in tabular format\n
+%6569;List all locks matching pattern\n
+6570;pattern\nSet a lock on all diagrams matching pattern for the current editor\n
+6572;name\nDelete a lock named `name'\n
+%6573;Delete a lock named `name'\n
+6574;\nEnable locking for the current system\n
+%6575;Enable locking for the current system\n
+6576;\nDisable locking for the current system\n
+%6577;Disable locking for the current system\n
+6578;\nTell whether locking is enabled or disabled for the current system\n
+%6579;Tell whether locking is enabled or disabled for the current system\n
+6580;[command]\nGive help about a command\n
+%6581;Give help about a command\n
+6582;\    Valid options for the command are:\n
+6583;\t-t\tLock Type\n
+6584;\t\tWhere lock type is one of\n
+6585;\t\t    P  Permanent\n
+6586;\t\t    A  Automatic\n
+6587;\t-a\tAccess-list\n
+6588;\t\tThe access list is a list of users allowed to access the diagram\n
+6589;\t\tThe list if a comma-separated list of machine/user pairs\n
+6590;\t\tBoth machine::user and user@machine are recognized\n
+6591;\t\tMachine and user can be a pattern.\n
+6592;\t-d\tDestroy-list\n
+6593;\t\tA list of users allowed to destroy the lock\n
+6594;\t-d\tDestroy-list\n
+6595;\t\tA list of users allowed to disable locking\n
+6596;\t\tThe users in this list have `System administrator' capabilities\n
+6597;\t\tUsers in this list can delete locks even if they are not in the `destroy-list'\n
+6598;\t-k\trelative|absolute\n
+6599;\t\tSets the expiration time of a lock\n
+6600;\t\tBoth relative [[days:]hours:]minutes and\n
+6601;\t\tabsolute [[year/]month/]day[;hour[:minute]\n
+6602;\t\tare recognized\n
+6603;\t-r\tFile Revision\n
+6604;\t\tThe revision can be a pattern to allow locking of all revisions\n
+6605;\t-o\tOwner\n
+6606;\t\tA machine user pair specifying the owner of a lock\n
+6607;\t-e\tEditor\n
+6608;\t\tThe editor for which to apply the lock\n
+6609;\t\tThis is the name of an editor\n
+% Disabled for OOSD/Ada
+%6610;\t\t    DFE|DSE|ERE|SCE|TDE|STE|CSP|TED|DOC\n
+6610;\t\t    ADE|DSE|ERE|DOC\n
+6611;\t\tAll commands other than the `set' command allow `-e ALL' to match all editors\n
+6612;\t-x\n
+6613;\t\tList or Delete only expired locks\n
+6614;\t-f\n
+6615;\t\tForce delete of a lock if you are a `super-user' but have no lock-destroy permission\n
+6616;%s: 
+6617;List too long\n
+6618;Lock tuple too long (Maximum is %d) -- Please try again\n
+6619;Insert lock %s failed\n
+6620;Lock for %s set\n
+6621;You need to specify an editor to delete a lock\n
+6622;Are you sure you want to delete an Automatic Lock? (y) 
+6623;No lock for `%s' found\n
+6624;You do not have the permission to disable locking\n
+6625;You do not have the permission to delete this lock\n
+6626;Delete lock? (y): 
+6627;Delete lock `%s'? (y): 
+6628;DBMS error in delete lock\n
+6629;\tDeleted\n
+6630;%-15s: %s
+6631;%-15s: %s: %s
+6632;\ (current revision)\n
+6633;\ (all revisions)\n
+6634;\ Revision %s\n
+6635;\tLocked by: %s
+6636;\ on %s
+6637;\ at %s\n
+6638;\tAccess list:\n
+6639;\t\t
+6640;\tChange list:\n
+6641;\t\t
+6642;\tNo expiration date/time\n
+6643;\tLock expired 
+6644;\tLock expires 
+6645;\ on %s
+6646;\ at %s\n
+6647;%sUser %s\n
+6648;Regular expression %s failed: %s\n
+6649;File lock table does not exist in StP/DD\n
+6650;Could not access StP/DD lock table\n
+6651;Do you want to try again? (y) 
+6652;Deleting expired lock\n
+% user@machine is default
+6653;@
+6654;%.18s%c%.18s
+6655;%.18s%c%.18s
+6656;Failed print StP/DD lock table\n
+6657;File '%s' is locked -- you do not have access rights\n
+6658;You must specify a file and an editor to check for a lock\n
+6659;No lock set that would not allow you to edit file '%s'\n
+6660;file\nCheck if you have permission to edit the given file\n
+6661;Check if you have permission to edit the given file\n
+6662;\tloc[k]\t\tEnter locking subsystem\n
+6663;\tvc[c]\t\tEnter Version and Configuration Control subsystem\n
+% VMs mail syntax is mach::user
+6664;::
+6665;%.18s%s%.18s
+6666;%.18s%s%.18s
+6667;No lock for `%s' (all revisions) found\n
+6668;No lock for `%s' (revision `%s') found\n
+6669;All revisions assumed (revision is `*')\n
+6670;No expired locks for `%s' found\n
+6671;No expired locks found\n
+% Messages for the graphical editor <-> locking interface
+6700;Could not get locking status for System -- Locking disabled
+6701;StP/DD lock table currently in use -- please try again
+6702;Access StP/DD lock table failed -- please inform system manager
+6703;File is being edited by %s; lock set %s
+6704;A permanent lock exists. Lock set by %s %s
+6705;ERROR: Insert lock tuple failed
+6706;File lock set
+6707;Failed to lock file, DBMS error '%.70s'
+%% The mail message sent if an expired lock is deleted
+%% Terminate with a line with \033, but at most 20 lines
+%% ToolInfo variables (${xx}) are replaced
+%% xdate is the current date
+%% xtime the current time
+%% xuser xhost the user/machine pair of the lock owner
+6710;
+6711;Project ${projdir} system ${system}
+6712;
+6713;The following lock expired at ${ti.xdate}
+6714;and was deleted:
+6715;\033
+%6729; Last possible mail line
+%%%%
+6730;Could not lock file -- the lock you held expired
+6731;No file name to lock
+% This is the label of the write button if the diagram is
+% locked. If you want to make the button disappear the
+% use the second line (6732;\033)
+6732;Locked
+%6732;\033
+6733;You did not lock this file -- write aborted
+6734;Deleted lock: File %s, revision %s
+6735;\ on %s
+6736;\ at %s
+6737;Warning: Lock `%s' does not match any %s files\n
+% Lock commands
+6801;disable#2
+6802;delete#1
+6803;enable#1
+6804;help#1
+6805;ls#2
+6807;lock#1
+6808;list#2
+6809;check#1
+6810;inquire#1
+6811;quit#1
+6812;set#1
+6813;status#2
+6814;unlock#1
+6816;?#1
+6817;syslock#4
+6818;sysunlock#4
+% New messages for ade
+6820;Cannot execute command -- Locking is not enabled\n

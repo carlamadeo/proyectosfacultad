@@ -1,0 +1,35 @@
+%
+% 	sccsid[] = %W% %Y% %D%
+% 	StP/Core
+% 	Confidential property of Interactive Development Environments, Inc.
+% 	Copyright (c) 1992-1993
+% 	All rights reserved
+%
+
+% This is an example on how to change messages done
+% by Ron Sercely.
+%Here are some messages you might consider adding.  If you use ptroff -ms, it
+%adds the dates as a left header, and the process name with number as
+%a right header when printing formated data flows.
+%
+2029;%s\n\n
+1304;.nf\n.ps 10\n.sp 2\n\.ds LH \\*(DY\n
+1308;\\fB\\s+2Processes\\s-2\\fP\n.sp 2\n
+1310;.ds ZZ %s\n
+1312;.as ZZ  (%s)\n.ds RH \\*(ZZ\n.bp\n\t\\fB\\s+2\\*(ZZ\\s-2\\fP\n
+1313;
+1314;\n\t    %s\n
+1317;.ds RH Data Stores\n.bp\n\\fB\\s+2Data Stores\\s-2\\fP\n.sp 2\n
+1319;\t\\s+2%s\\s-2\n
+1320;%s
+1322;
+1326;.ds RH Data Flows\n.bp\n\\fB\\s+2Data Flows\\s-2\\fP\n.sp 2\n
+1328;\t\\s+2%s\\s-2\n.sp \n
+1330;
+1333;.ds RH Data Sources\n.bp\\fB\\s+2Data Sources and Sinks\\s-2\\fP\n.sp 2\n
+1338;
+1345;
+1341;.bp\\fB\\s+2Control Specifications\\s-2\\fP\n.sp 2\n
+2004;
+2017;
+2510;

@@ -1,0 +1,166 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/SE
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1995
+//      All rights reserved
+//
+//////////////////////////////////////////////////////////////////////////////
+
+Global 1 DfeCheckDecomp
+{
+    { Properties
+	{ Choice
+	    { Name "CheckDecomp" }
+	    { Label "" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "OffPage connections balance with parent Process" }
+		{ OnValue "-x decomp '1'" }
+		{ OffValue "-x decomp '0'" }
+		{ Init On }
+	    }
+	}
+    }
+}
+
+Global 1 DfeCheckBalance
+{
+    { Properties
+	{ Choice
+	    { Name "CheckBalance" }
+	    { Label "" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "In/Out Flows balance for Stores and SplitFlows" }
+		{ OnValue "-x balance '1'" }
+		{ OffValue "-x balance '0'" }
+		{ Init On }
+	    }
+	}
+    }
+}
+
+Global 1 DfeCheckPspec
+{
+    { Properties
+	{ Choice
+	    { Name "CheckPspec" }
+	    { Label "" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "All Processes have either a decomposition or Pspec" }
+		{ OnValue "-x pspec '1'" }
+		{ OffValue "-x pspec '0'" }
+		{ Init On }
+	    }
+	}
+    }
+}
+
+Global 1 DfeCheckCspec
+{
+    { Properties
+	{ Choice
+	    { Name "CheckCspec" }
+	    { Label "" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "All Cspec Bars have an associated table or diagram" }
+		{ OnValue "-x cspec '1'" }
+		{ OffValue "-x cspec '0'" }
+		{ Init On }
+	    }
+	}
+    }
+}
+
+Global 1 DfeVerbose
+{
+    { Properties
+	{ Choice
+	    { Name "Verbose" }
+	    { Label "" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "Verbose" }
+		{ OnValue "-x verbose '1'" }
+		{ OffValue "-x verbose '0'" }
+		{ Init Off }
+	    }
+	}
+    }
+}
+
+// New Semantic Checks
+
+
+Global 1 DfeDecompBalance
+{
+    { Properties
+	{ Choice
+	    { Name "DecompBalance" }
+	    { Label "" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "OffPage flows balance with parent Process" }
+		{ OnValue "-x decomp '1'" }
+		{ OffValue "-x decomp '0'" }
+		{ Init On }
+	    }
+	}
+    }
+}
+
+Global 1 DfeStoreBalance
+{
+    { Properties
+	{ Choice
+	    { Name "StoreBalance" }
+	    { Label "" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "Flows balance in and out of Stores" }
+		{ OnValue "-x balance '1'" }
+		{ OffValue "-x balance '0'" }
+		{ Init On }
+	    }
+	}
+    }
+}
+
+Global 1 DfeSplitFlowBalance
+{
+    { Properties
+	{ Choice
+	    { Name "SplitFlowBalance" }
+	    { Label "" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "Flows balance in and out of SplitFlows and MergeFlows" }
+		{ OnValue "-x splitflows '1'" }
+		{ OffValue "-x splitflows '0'" }
+		{ Init On }
+	    }
+	}
+    }
+}
+Global 1 DfeProcessBalance
+{
+    { Properties
+	{ Choice
+	    { Name "ProcessBalance" }
+	    { Label "" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "Flows balance in and out of each Process" }
+		{ OnValue "-x internalproc '1'" }
+		{ OffValue "-x internalproc '0'" }
+		{ Init Off }
+	    }
+	}
+    }
+}
+
+

@@ -1,0 +1,57 @@
+//      sccsid[] = %W% %Y% %D%
+//	StP Core
+//      Confidential property of Interactive Development Environments, Inc.
+//      Confidential property of Aonix
+//      Copyright (c) 1992-1997
+//      All rights reserved
+//
+
+// Reserved limits project
+// FileObject	405000
+// FileObject	405019
+
+// NodeObject	705000
+// NodeObject	705049
+
+// LinkObject	605000
+// LinkObject	605029
+
+// NoteObject	805000
+// NoteObject	805099
+
+// ItemObject	505000
+// ItemObject	505099
+
+// CntxObject	105000
+// CntxObject	105009
+
+
+// Reserved app types for large sys customization
+
+// NoteObject   805100
+// NoteObject   805105
+
+// ItemObject   505100
+// ItemObject   505110
+
+// Reserved for Metaphase
+
+// FileObject	405020
+// FileObject	405024
+
+// NodeObject	705050
+// NodeObject	705125
+
+// LinkObject	605030
+// LinkObject	605059
+
+
+// NoteObject   805110
+// NoteObject   805209
+
+// ItemObject   505111
+// ItemObject   505260
+
+
+
+

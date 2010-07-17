@@ -1,0 +1,282 @@
+Diagram UmlSequenceDiagram
+{
+    { Name "Raiseweight__1" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -362 }
+    { PanY -255 }
+    { Alignment 32 }
+    { GUID "UID_140B80CC-C887-11d5-90AA-0050045C27F0" }
+    { Summary
+        { Nodes 6 }
+        { Arcs 4 }
+    }
+}
+
+Node 2
+{
+    { Type ScenarioInstance }
+    { Loc 173 -173 }
+    { Scale 1313.00 45.00 }
+    { Label
+        { Text "Raise_the_weight(UmlUseCase:Raiseweight)" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ScenarioMapping }
+        { ID 893 }
+        { GUID "UID_8F1FFC02-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2725 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2727 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ParentName }
+        { ID 2726 }
+    }
+}
+
+Node 3
+{
+    { Type Actor }
+    { Loc -145 109 }
+    { Scale 128.00 1298.00 }
+    { Label
+        { Text "Watchadministrator" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 775 }
+        { GUID "UID_7A5DA1DF-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 4
+{
+    { Type PassiveObject }
+    { Loc 210 109 }
+    { Scale 128.00 1298.00 }
+    { Label
+        { Text "weight:Weight" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 402 }
+        { GUID "UID_7CFB96A9-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 2660 }
+        { GUID "UID_7CFB96B2-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 403 }
+        { GUID "UID_7CFB96AF-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 6
+{
+    { Type Vertex }
+    { Loc 301 109 }
+    { Scale 128.00 128.00 }
+}
+
+Node 8
+{
+    { Type Vertex }
+    { Loc 301 162 }
+    { Scale 128.00 128.00 }
+}
+
+Node 13
+{
+    { Type Note }
+    { Loc -213 -126 }
+    { Scale 801.00 1146.00 }
+    { Label
+        { Text "This is the starting point" }
+        { Text "of running the clock." }
+        { Text "The watchadministrator" }
+        { Text "has to raise the weight" }
+        { Text "that means the weight" }
+        { Text "is brought to a higher level " }
+        { Text "of energy." }
+        { Text "The number of 1000" }
+        { Text "is arbitrary and has influence " }
+        { Text "on the duration of runtime." }
+    }
+}
+
+Arc 5
+{
+    { Type SimpleMessage }
+    { From
+        { ID 3 }
+        { Loc -147 39 }
+        { Offset 0 -53 }
+    }
+    { To
+        { ID 4 }
+        { Loc 200 39 }
+        { Offset 0 -53 }
+    }
+    { Label
+        { Text "raise(int e=1000)" }
+    }
+}
+
+Arc 7
+{
+    { Type SimpleMessage }
+    { From
+        { ID 4 }
+        { Loc 212 92 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 6 }
+        { Loc 297 92 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 9
+{
+    { Type SimpleMessage }
+    { From
+        { ID 6 }
+        { Loc 297 92 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 8 }
+        { Loc 297 145 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "energize(e)" }
+    }
+}
+
+Arc 10
+{
+    { Type SimpleMessage }
+    { From
+        { ID 8 }
+        { Loc 297 145 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 4 }
+        { Loc 212 145 }
+        { Offset 0 53 }
+    }
+}
+
+Link 6
+{
+    { FirstArc 5 }
+    { LastArc 5 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 2728 }
+        { GUID "UID_0D1BF757-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2730 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2736 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 2735 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 2734 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 2733 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 2732 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 2731 }
+    }
+}
+
+Link 11
+{
+    { FirstArc 7 }
+    { LastArc 10 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 2737 }
+        { GUID "UID_0D1BF758-544E-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2739 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2745 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 2744 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 2743 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 2742 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 2741 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 2740 }
+    }
+}

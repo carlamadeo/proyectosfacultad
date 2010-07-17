@@ -1,0 +1,32 @@
+//
+// 	sccsid[] = @(#)foreign_key_rule.note	3.5  93/04/29
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Note	800103
+{
+    { AppType ForeignKeyRule }
+    { HelpText "The Foreign Key Rule note lets you set Delete and Update Rules for Foreign Keys." }
+    { PrintName "Foreign Key Rule" }
+    { Bounds { Min 0 } { Max 1 } }
+    { Item
+	{ AppType ForeignKeyDeleteRule }
+	{ HelpText "The Delete Rule indicates the database action to take when the instance of the parent entity identified by the foreign key is deleted." }
+	{ PrintName "Delete Rule" }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ InitValue "RESTRICT" }
+    }
+    { Item
+	{ AppType ForeignKeyUpdateRule }
+	{ HelpText "The Update Rule indicates the database action to take when the instance of the parent entity identified by the foreign key is updated." }
+	{ PrintName "Update Rule" }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ InitValue "RESTRICT" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_foreign_key_rule.note"

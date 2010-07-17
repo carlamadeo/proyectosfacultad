@@ -1,0 +1,264 @@
+// ECR 7389
+PropertySheet tv_advanced
+{
+	{ Name "tv_advanced" }
+	{ Label "Advanced ToolInfo Settings" }
+	{ ShowPropsOnExec True }
+	{ Properties
+
+// Tool Info Liste
+		{ List
+			{ Name "tv_toolinfo_list" }
+			{ Label "" }
+			{ Rows 16 }
+			{ Width 96 }
+			{ Exclusive True }
+			{ LabelAbove True }
+			{ ShowImages True }
+			{ Resizable ResizeGrow }
+			{ Event
+				{ Type DoubleClickRow }
+				{ Callback "tv_advanced_edit_callback" }
+			}
+			{ Event
+				{ Type Select }
+				{ Callback "tv_toolinfo_list_select_callback" }
+			}
+		}
+
+//		Buttons: Add, Edit, Delete
+		{ Button
+            { ParseCondition "is_windows_platform();" }
+			{ Name "tv_add" }
+			{ Label " Add  " }
+			{ Event
+				{ Type Select }
+				{ Callback "tv_advanced_add_callback" }
+			}
+		}
+		{ Button
+            { ParseCondition "!is_windows_platform();" }
+			{ Name "tv_add" }
+			{ Label "Add" }
+			{ Resizable ResizeWidth }
+			{ Event
+				{ Type Select }
+				{ Callback "tv_advanced_add_callback" }
+			}
+		}
+		{ Button
+            { ParseCondition "is_windows_platform();" }
+			{ Name "tv_edit" }
+			{ Label " Edit " }
+			{ Event 
+				{ Type Select }
+				{ Callback "tv_advanced_edit_callback" }
+			}
+		}
+		{ Button
+            { ParseCondition "!is_windows_platform();" }
+			{ Name "tv_edit" }
+			{ Label "Edit" }
+			{ Resizable ResizeWidth }
+			{ Event 
+				{ Type Select }
+				{ Callback "tv_advanced_edit_callback" }
+			}
+		}
+		{ Button
+            { ParseCondition "is_windows_platform();" }
+			{ Name "tv_delete" }
+			{ Label "Delete" }
+			{ Event 
+				{ Type Select }
+				{ Callback "tv_advanced_delete_callback" }
+			}
+		}
+		{ Button
+            { ParseCondition "!is_windows_platform();" }
+			{ Name "tv_delete" }
+			{ Label "Delete" }
+			{ Resizable ResizeWidth }
+			{ Event 
+				{ Type Select }
+				{ Callback "tv_advanced_delete_callback" }
+			}
+		}
+		{ Group
+            { ParseCondition "is_windows_platform();" }
+			{ Name "tv_button_group" }
+			{ Label "" }
+			{ Type Horizontal }
+			{ Resizable ResizeAny }
+			{ HorizontalSpacing 10 }
+			{ Members ( tv_add tv_delete tv_edit ) }
+		}
+		{ Group
+            { ParseCondition "!is_windows_platform();" }
+			{ Name "tv_button_group" }
+			{ Label "" }
+			{ Type Vertical }
+			{ Resizable ResizeAny }
+			{ ChildSizePolicy ResizeWidth }
+			{ VerticalSpacing 10 }
+			{ Members ( tv_add tv_delete tv_edit ) }
+		}
+		{ Group
+            { ParseCondition "!is_windows_platform();" }
+			{ Name "tv_all_group" }
+			{ Label "" }
+			{ Type Horizontal }
+			{ Resizable ResizeAny }
+			{ HorizontalSpacing 10 }
+			{ Members ( tv_button_group tv_toolinfo_list ) }
+		}
+
+//		Cancel Button
+		{ Button
+			{ Name "Cancel" }
+			{ Label "Done" }
+			{ Event 
+				{ Type Select }
+				{ Callback "tv_advanced_done_callback" }
+			}
+		}
+	}
+}
+
+PropertySheet tv_advanced_add
+{
+	{ Name "tv_advanced_add" }
+	{ Label "Add a new ToolInfo Variable" }
+	{ ShowPropsOnExec True }
+	{ Properties
+
+//		Toolinfo Enabler
+		{ Choice
+			{ Name "tv_add_enabled" }
+			{ Label "Enable" }
+			{ LabelAbove True }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "" }
+                { Label "" }
+                { OnValue "True" }
+                { OffValue "False" }
+                { Init Off }
+            }
+		}
+
+//		Toolinfo Name
+		{ Text
+			{ Name "tv_add_name" }
+			{ Label "Name" }
+			{ LabelAbove True }
+			{ DispLength 32 }
+			{ MaxLength 128 }
+		}
+
+//		Toolinfo Value
+		{ Text
+			{ Name "tv_add_value" }
+			{ Label "Value" }
+			{ LabelAbove True }
+			{ DispLength 64 }
+			{ MaxLength 1024 }
+		}
+
+		{ Group
+			{ Name "tv_add_group" }
+			{ Type Horizontal }
+			{ Resizable ResizeAny }
+			{ HorizontalSpacing 2 }
+			{ Members ( tv_add_enabled tv_add_name tv_add_value ) }
+		}
+
+//		Okay Button
+		{ Button
+			{ Name "OK" }
+			{ Event 
+				{ Type Select }
+				{ Callback "tv_advanced_add_ok_callback" }
+			}
+		}
+
+//		Cancel Button
+		{ Button
+			{ Name "Cancel" }
+			{ Event 
+				{ Type Select }
+				{ Callback "tv_advanced_add_cancel_callback" }
+			}
+		}
+	}
+}
+
+PropertySheet tv_advanced_edit
+{
+	{ Name "tv_advanced_edit" }
+	{ Label "Edit a ToolInfo Variable" }
+	{ ShowPropsOnExec True }
+	{ Properties
+
+//		Toolinfo Enabler
+		{ Choice
+			{ Name "tv_edit_enabled" }
+			{ Label "Enable" }
+			{ LabelAbove True }
+            { Type CheckBox }
+            { ChoiceItem
+                { Name "" }
+                { Label "" }
+                { OnValue "True" }
+                { OffValue "False" }
+                { Init Off }
+            }
+		}
+
+//		Toolinfo Name
+		{ Text
+			{ Name "tv_edit_name" }
+			{ Label "Name" }
+			{ LabelAbove True }
+			{ Active False }
+			{ DispLength 32 }
+			{ MaxLength 128 }
+		}
+
+//		Toolinfo Value
+		{ Text
+			{ Name "tv_edit_value" }
+			{ Label "Value" }
+			{ LabelAbove True }
+			{ DispLength 64 }
+			{ MaxLength 1024 }
+		}
+
+		{ Group
+			{ Name "tv_edit_group" }
+			{ Label "" }
+			{ Type Horizontal }
+			{ Resizable ResizeAny }
+			{ HorizontalSpacing 2 }
+			{ Members ( tv_edit_enabled tv_edit_name tv_edit_value ) }
+		}
+
+//		Okay Button
+		{ Button
+			{ Name "OK" }
+			{ Event 
+				{ Type Select }
+				{ Callback "tv_advanced_edit_ok_callback" }
+			}
+		}
+
+//		Cancel Button
+		{ Button
+			{ Name "Cancel" }
+			{ Event 
+				{ Type Select }
+				{ Callback "tv_advanced_edit_cancel_callback" }
+			}
+		}
+	}
+}

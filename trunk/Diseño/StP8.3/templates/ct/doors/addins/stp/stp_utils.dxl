@@ -1,0 +1,127 @@
+// given an StP system name, find a module in the current project
+// that has the "StP System" attribute and that attribute is equal to 
+// the passed in system. 
+
+string stp_find_modname_for_system (string sysname)
+{
+	if (null current Project) {
+		ack "Error: No project is open"
+		halt
+	}
+
+	// search for a module with the right info. This form of the for loop
+	// causes you to get all modules, open or not. So, we'll have to open and
+	// close the ones that are not already open. when/if we find the right
+	// one, we will return its name
+	string modName
+	Module m
+	AttrDef ad
+	string val
+	bool wasOpen
+
+	// JED - first, check if the current module is the one. This can save
+	// a lot of time
+	m = current
+	if (!null m) {
+		if ("Formal" == type(m)) {
+			ad = find(m,"StP System")
+			if (!null ad && ad.module) {
+				val = m."StP System"
+				if (val == sysname) {
+					// current module is it
+					modName = m."Name"
+					return modName
+				}
+			}
+		}
+	}
+
+	// current module is not it - search them all
+				
+	for modName in current Project do {
+		// we're only interested in Formal modules
+		if ("Formal" != type(module modName))
+			continue
+		if (open module modName)
+			wasOpen = true
+		else
+			wasOpen = false
+		m = share(modName,false)
+		if (null m) {
+			error "Error: Unable to open module '" modName "' for shared reading"
+		}
+	
+		// look for the stp system attribute
+		ad = find(m,"StP System")
+		if (null ad || !ad.module) {
+			// didn't find it
+			if (!wasOpen)
+				close(m)
+			continue
+		}
+		val = m."StP System"
+		if (val != sysname) {
+			// didn't match
+			if (!wasOpen)
+				close(m)
+			continue
+		} else {
+			// found it - close up and return the name
+			if (!wasOpen)
+				close(m)
+			return modName
+		}
+	}
+	modName = null
+	return modName
+}
+
+// This function searches the module for objects that have the attribute 
+// "StP ID" set to ID. We know this attribute exists because we created
+// these attributes in the module to apply to objects.
+// This is split into two functions because DXL does not allow you to 
+// traverse ALL objects in a module regardless of display filtering. However,
+// you can get all top level objects and then traverse their children.
+// Both these operations ignore the display set. I split it into 2 
+// functions because the second is recursive in nature.
+// returns the object, or null if not found
+Object stp_find_object_with_ID(Object topobj, string ID)
+{
+	Object o
+	Object ofound = null
+	string foundID
+
+	// first, test this object
+	foundID = topobj."StP ID"
+	if (foundID == ID) {
+		// got it
+		return topobj
+	}
+	// traverse top level objects
+	for o in topobj do {
+		ofound = stp_find_object_with_ID(o,ID)
+		if (!null ofound)
+			break
+	}
+	return ofound
+}
+
+Object stp_find_object_with_ID(Module m, string ID)
+{
+	Object o
+	Object ofound = null
+	// traverse top level objects
+	for o in top m do {
+		ofound = stp_find_object_with_ID(o,ID)
+		if (!null ofound)
+			break
+	}
+	return ofound
+}
+
+
+
+void stpDoneCB(int param)
+{
+    ack "DXL Server Stopped!"
+}

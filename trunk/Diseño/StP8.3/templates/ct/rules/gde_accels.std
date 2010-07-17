@@ -1,0 +1,25 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Command Zoom
+{
+    { Builtin "BufferZoom down" }
+    { Accelerator "z" }
+}
+
+Command UnZoom
+{
+    { Builtin "BufferZoom up" }
+    { Accelerator "Z" }
+}
+
+Command NotImplemented
+{
+    { FailureMessage "Command not implemented yet." }
+    { Builtin "fail" }
+}

@@ -1,0 +1,856 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+Include "rules/uml.feature"
+Include "rules/state_diag_syms.rules.common"
+Include "rules/note_vertex_syms.rules.common"
+Include "rules/stereotype_dm.rules.common"
+Include "rules/ustated.prop"
+Include "rules/state_diag.prop.common" // ECR 6596
+Include "rules/ustated_toolbar_acr_types.rules" // ECR 3556
+
+TypeSet AllNoteableNodeTypes
+{
+	State
+	InitialState
+	FinalState
+	CompositeState
+	StateMachine
+	ConcurrentSubregion
+	SplitControl
+	MergeControl
+	HistoryTypes
+	StatesWithSubDiagrams
+// ECR947, ECR 4494
+	CommentAnchor
+// End ECR947, ECR 4494
+    // ECR 7215
+    JunctionPoints
+}
+
+DiagramType
+{
+    { SyntaxCheckFunc UStateDCheckSyntax }
+}
+
+NodeSymbol 1 State
+{
+  { PrintName "State" }
+  { Cardinality { Min 0 } { Max 1 } { InLinks StateComponentLink } } 
+  { NodeMapping
+      { AppType UmlState }
+      { NameFunc uml_state_name_func }
+      { Scope 
+              { SymbolFunc uml_state_scope_symbol }
+      }
+      { NameIsRequired True }
+    }
+}
+
+NodeSymbol 2 InitialState
+{
+	{ Cardinality { Min 0 } { Max 1 } { InLinks StateComponentLink } } 
+	{ NodeMapping
+		{ AppType UmlInitialState }
+		{ NameFunc uml_gde_node_name_func }  
+		{ Scope 
+			  { SymbolFunc uml_state_scope_symbol }
+		}
+		{ NameIsRequired False }
+    }
+}
+
+NodeSymbol 3 FinalState
+{
+	{ Cardinality { Min 0 } { Max 1 } { InLinks StateComponentLink } } 
+	{ NodeMapping
+		{ AppType UmlFinalState }
+		{ NameFunc uml_gde_node_name_func }
+		{ Scope 
+			  { SymbolFunc uml_state_scope_symbol }
+		}
+		{ NameIsRequired False }
+    }
+}
+
+NodeSymbol 4 CompositeState
+{
+	{ PrintName "CompositeState" }
+	{ CanAdjustLabel True }
+	{ LabelAnchor North }
+	{ AutoScaleLarger True }
+	{ ViewPoint UmlRefinedState }
+	{ UniformScale False }
+	{ Shape
+		{ Predefined RoundRectangleWithTopLine }
+		{ ToolbarImage "composite_state" }
+	}
+	{ Navigation
+	{ Name StateDefinitionFromComposite }
+	{ Label "Parent" }
+	{ Query "node_ref[node_id == ${node.id} && (!viewpoints[UmlScopeAmbassador] && !viewpoints[UmlRefinedState]) && file[UmlStateDiagram && id != ${file.id}]]" }
+	}
+	{ DefaultSize 2.5 1.5 }
+	{ NodeMapping
+		{ AppType UmlState }
+		// use the same name mapping as State so that Refine works properly
+		//{ NameFunc uml_gde_node_name_func } 
+		{ NameFunc uml_state_name_func }
+		{ Scope 
+			  { SymbolFunc uml_state_scope_symbol }
+		}
+		{ NameIsRequired True }
+    }
+    // Begin Add ECR 6389
+    { DisplayMark
+        { Name CsDescription }
+        { CondFunc "symbol_has_description(0${node.id});" }
+        { Anchor LowerRight }
+        { VAdjust Bottom }
+        { HAdjust Center }
+        { YPixelOffset 19 }
+        { BitmapMark0 "descln0" }
+        { BitmapMark1 "descln1" }
+        { BitmapMark2 "descln2" }
+        { Help "CompositeState has description." }
+    }
+    // End Add ECR 6389
+}
+
+NodeSymbol 5 StateMachine
+{
+	{ NodeMapping
+		{ AppType UmlStateMachine }
+		{ NameFunc uml_state_machine_name_func }
+		{ NameIsRequired True }
+    }
+}
+
+NodeSymbol 6 ConcurrentSubregion
+{
+	{ PrintName "Concurrent Subregion" }
+	{ LabelAnchor North }
+	{ UniformScale False }
+	{ AutoScaleLarger True }
+	{ Shape
+		{ Predefined DottedRectangle }
+		{ ToolbarImage "concurrent_subregion" }
+	}
+	{ DefaultSize 2.5 1.5 }
+// ECR 5037 start
+//	{ Cardinality { Min 1 } { Max 1 } { InLinks StateComponentLink } } 
+	{ Cardinality { Min 1 } { OutLinks StateComponentLink } } 
+// ECR 5037 end
+	{ NodeMapping
+// ECR 5037 start
+//		{ MappingName State }                
+// ECR 5037 end
+		{ AppType UmlState }
+		{ NameFunc uml_gde_node_name_func }
+		{ Scope 
+			  { SymbolFunc uml_state_scope_symbol }
+		}
+		{ NameIsRequired True }
+    }
+	{ NoteMapping 
+		{ AppType UmlStateDefinition }
+	}
+	{ ItemMapping 
+		{ AppType UmlConcurrentState }
+		{ NoteAppType UmlStateDefinition }
+		{ ValueString "True" }
+	}
+	{ Navigation
+		{ Name RequirementTableFromNode }
+		{ UseMappings ( State ) }
+	}
+	{ Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+        // ECR 5118 end
+		{ Name DOORS }
+		{ UseMappings ( State ) }
+	}
+}
+
+NodeSymbol 7 SplitControl
+{
+	{ NodeMapping
+        // { MappingName UmlSplitControlMapping } // ECR 6344
+		{ AppType UmlSplitControl }
+		{ NameFunc uml_split_control_name }
+		// ECR 7223
+		// { SigFunc uml_split_control_signature }
+		{ Scope 
+			  { SymbolFunc uml_split_control_scope_symbol }
+		}
+		{ NameIsRequired True }
+		{ InverseMapFunc gde_no_op_inverse_node_map_func }
+	}
+	{ Cardinality { Min 0 } { Max 1 } { InLinks StateComponentLink } } 	
+}
+
+NodeSymbol 8 MergeControl
+{
+  	// ECR 6638, relocated symbols props into
+  	// state_diag_syms.rules.common
+	{ NodeMapping
+		{ AppType UmlMergeControl }
+		{ NameFunc uml_merge_control_name }
+		// ECR 7223
+		// { SigFunc uml_merge_control_signature }
+		{ Scope 
+			  { SymbolFunc uml_merge_control_scope_symbol }
+		}
+		{ InverseMapFunc gde_no_op_inverse_node_map_func }
+		{ NameIsRequired True } 
+	}
+	{ Cardinality { Min 0 } { Max 1 } { InLinks StateComponentLink } } 
+}
+
+TypeSet HistoryTypes
+{
+    History
+    DeepHistory
+}
+
+// ECR 7215 begin
+TypeSet JunctionPoints
+{
+    JunctionPoint
+    DynamicChoicePoint
+}
+// ECR 7215 end
+
+NodeSymbol 9 History
+{
+  { Shape
+        { Predefined Ellipse }
+        { ToolbarImage "history" }
+  }
+  { CanBeRenamed False }
+  { CanHaveLabel False }
+  { UniformScale True }
+  { DefaultSize 1.0 1.0 }
+  { PrintName "Shallow History" }
+  { DisplayMark
+        { Name HistoryType }
+        { StringMark "H" }
+        { Anchor CenterCenter }
+        { HAdjust Center }
+        { VAdjust Center }
+	{ YPixelOffset 2 }
+  }
+  { ReplaceSet (DeepHistory) }
+  { PreserveScale DeepHistory }
+}
+
+NodeSymbol 10 DeepHistory
+{
+  { PrintName "Deep History" }
+  { Shape
+        { Predefined Ellipse }
+        { ToolbarImage "deep_history" }
+  }
+  { DisplayMark
+        { Name HistoryType }
+        { StringMark " H*" }
+        { Anchor CenterCenter }
+        { HAdjust Center }
+        { VAdjust Center }
+	{ YPixelOffset 2 }
+  }
+  { ReplaceSet (History) }
+  { PreserveScale History }
+}
+
+NodeSymbol HistoryTypes
+{
+	{ CanBeRenamed False }
+	{ CanHaveLabel False }
+	//   { Shape { Predefined Ellipse }}
+	{ UniformScale True }
+	{ DefaultSize 1.0 1.0 }
+	{ NodeMapping
+		{ AppType UmlHistoryState }
+		// JED - This will force each history type to map uniquely
+		// There can be at most 1 of each, so all subsequent symbols will only
+		// add references to this mapping
+		{ NameFunc ustated_history_name }
+		{ Scope 
+			  { SymbolFunc uml_state_scope_symbol }
+		}
+	}
+	{ Cardinality { Min 1 } { Max 1 } { InLinks StateComponentLink } } 
+	{ Cardinality { Min 1 } { InLinks StateTransitionLink } }
+	{ Cardinality { Min 0 } { Max 1 } { OutLinks StateTransitionLink } }
+}
+
+// ECR 7215 begin
+NodeSymbol 11 JunctionPoint
+{
+    { PrintName "Junction Point" }
+    { UniformScale True }
+    { Shape
+        { Predefined FilledEllipse }
+        { ToolbarImage "junction_point" }
+    }
+	{ CanHaveLabel False }
+	{ CanBeRenamed False }
+	{ DefaultSize 0.2 0.2 }
+    { Cardinality { Min 1 } { InLinks StateTransitionLink }}
+	{ Cardinality { Min 1 } { OutLinks StateTransitionLink }}
+	{ NodeMapping
+		{ AppType UmlJunctionPoint }
+		{ NameFunc uml_junction_point_name }
+		{ InverseMapFunc gde_no_op_inverse_node_map_func }
+        { Scope { SymbolFunc uml_state_scope_symbol } }
+    }
+	{ NoteMapping 
+		{ AppType UmlExtensibilityDefinition }}
+	{ ItemMapping 
+		{ AppType UmlStereotype }
+		{ NoteAppType UmlExtensibilityDefinition }
+		{ ValueString "JunctionPoint" }
+		{ InverseMapFunc gde_no_op_inverse_item_map_func }
+	}
+}
+
+NodeSymbol 12 DynamicChoicePoint
+{
+    { PrintName "Dynamic Choice Point" }
+    { UniformScale True }
+    { Shape
+        { Predefined Ellipse }
+        { ToolbarImage "dynamic_junction_point" }
+    }
+	{ CanHaveLabel False }
+	{ CanBeRenamed False }
+	{ DefaultSize 0.2 0.2 }
+    { Cardinality { Min 1 } { InLinks StateTransitionLink }}
+	{ Cardinality { Min 1 } { OutLinks StateTransitionLink }}
+	{ NodeMapping
+		{ AppType UmlDynamicChoicePoint }
+		{ NameFunc uml_dynamic_choice_point_name }
+		{ InverseMapFunc gde_no_op_inverse_node_map_func }
+        { Scope { SymbolFunc uml_state_scope_symbol } }
+    }
+	{ NoteMapping 
+		{ AppType UmlExtensibilityDefinition }}
+	{ ItemMapping 
+		{ AppType UmlStereotype }
+		{ NoteAppType UmlExtensibilityDefinition }
+		{ ValueString "DynamicChoicePoint" }
+		{ InverseMapFunc gde_no_op_inverse_item_map_func }
+	}
+}
+// ECR 7215 end
+
+NodeSymbol 21 Vertex
+{
+    { ReplaceSet ( None ) }
+
+    { Cardinality { Max 1 } { InLinks  SplitControlLink } }	
+    { Cardinality { Max 1 } { InLinks  MergeControlLink } }	
+    { Cardinality { Max 1 } { InLinks  StateAmbassadorScopeLink } }	
+
+    { Cardinality { Max 1 } { OutLinks StateTransitionLink } }	
+    { Cardinality { Max 1 } { OutLinks MergeControlLink } }	
+}
+
+NodeSymbol 22 Note
+{}
+
+// ECR947, ECR 4494
+// Added CommentAnchor
+CntxSymbol CommentAnchor
+{
+    { ParentLink StereotypeableLinkSet }
+    { ParentLink StateComponentLink }
+}
+// End ECR947, ECR 4494
+
+NodeSymbol StatesWithSubDiagrams
+{
+    { DisplayMark
+		{ Name RefinedStateExists }
+		{ Condition "node[id==0${node.id}]" }
+		{ LabelMarkFunc "uml_state_refined(${node.id});" }
+		{ XPixelOffset 4 }
+		{ YPixelOffset 4 }
+		{ Help "State is refined." }
+    }
+}
+
+LinkSymbol 50 StateTransitionLink
+{
+	{ Connects { From StatesWithOutgoingTransitions } { To StatesWithIncomingTransitions } { IsDefault True } }
+	{ Connects { From StatesWithOutgoingTransitions } { To ControlStates } { IsDefault True } }
+	{ SymbolicDependentsFunc transition_symbolic_dependents }
+	{ LinkMapping 
+		{ MappingName Transition }
+		{ AppType UmlTransition }
+		{ NameFunc uml_transition_name }
+		{ Scope { SymbolFunc uml_state_machine_symbol }}
+		{ InverseMapFunc uml_transition_inverse_map_func }
+	}
+	{ NoteMapping 
+		{ AppType UmlTransitionDefinition }
+		{ Owner { MappingName Transition } } }
+	{ ItemMapping 
+		{ MappingName TransitionEvent }
+		{ AppType UmlTransitionEvent }
+		{ NoteAppType UmlTransitionDefinition }
+		{ ValueFunc uml_transition_event }
+		{ InverseMapFunc gde_no_op_inverse_item_map_func }
+	}
+	{ ItemMapping 
+		{ MappingName TransitionGuard }
+		{ AppType UmlTransitionGuard }
+		{ NoteAppType UmlTransitionDefinition }
+		{ ValueFunc uml_transition_guard }
+		{ InverseMapFunc gde_no_op_inverse_item_map_func }
+	}
+	{ ItemMapping 
+		{ MappingName TransitionAction }
+		{ AppType UmlTransitionAction }
+		{ NoteAppType UmlTransitionDefinition }
+		{ ValueFunc uml_transition_action }
+		{ InverseMapFunc gde_no_op_inverse_item_map_func }
+	}
+	{ ItemMapping 
+		{ MappingName TransitionSend }
+		{ AppType UmlTransitionSend }
+		{ NoteAppType UmlTransitionDefinition }
+		{ ValueFunc uml_transition_send_event }
+		{ InverseMapFunc gde_no_op_inverse_item_map_func }
+	}
+}
+
+
+LinkSymbol 52 StateComponentLink
+{
+    { Connects { From CompoundStates } { To CompoundStates }}
+    { Connects { From CompoundStates } { To AtomicStates }}
+    { PrintName "State Component" }
+    { Uncentered True }
+    { CanBeVisible False }
+    { CanBeInclude True }
+    // ECR 5037 start
+    { LinkMapping
+          { AppType UmlContains }
+          { FromNode { MappingName Default } }
+          { ToNode { MappingName Default } }
+    }
+    // ECR 5037 end
+    // ECR 6879 begin
+    { SymbolicDependentsFunc component_link_symbolic_dependents }
+    // ECR 6879 end
+}
+
+
+
+
+LinkSymbol 54 SplitControlLink
+{
+	{ Connects
+		{ From SplitControl } { To StatesWithIncomingTransitions }
+		{ IsDefault True }
+	}
+	{ LinkMapping 
+		{ AppType UmlTransition } 
+		{ Scope { SymbolFunc uml_state_machine_symbol }} 
+	}
+}
+
+LinkSymbol 55 MergeControlLink
+{
+	{ Connects
+		{ From MergeControl } { To StatesWithIncomingTransitions }
+		{ IsDefault True }
+	}
+	{ LinkMapping 
+		{ AppType UmlTransition }
+		{ Scope { SymbolFunc uml_state_machine_symbol }} 
+	}
+}
+
+TypeSet ReplaceableNodes
+{
+    State
+    CompositeState
+    ConcurrentSubregion
+    InitialState
+    FinalState
+    // ECR 7215
+    JunctionPoints
+}
+
+NodeSymbol ReplaceableNodes
+{
+    { ReplaceSet ( ReplaceableNodes ) }
+}
+
+
+TypeSet CompoundStates
+{
+    CompositeState
+    ConcurrentSubregion
+}
+
+NodeSymbol CompoundStates
+{
+    { NoCommittedTrans True }
+    { SymbolicDependentsFunc compound_state_symbolic_dependents }
+}
+
+TypeSet AtomicStates
+{
+    InitialState
+    State
+    FinalState
+    SplitControl
+    MergeControl  
+    HistoryTypes
+    // ECR 7215
+    JunctionPoints
+}
+
+NodeSymbol AtomicStates
+{
+    { SymbolicDependentsFunc state_symbolic_dependents }
+}
+
+TypeSet StatesWithIncomingTransitions
+{
+    State
+    FinalState   
+    CompositeState    
+    ConcurrentSubregion  
+    HistoryTypes
+    // ECR 7215
+    JunctionPoints
+}
+
+TypeSet StatesWithOutgoingTransitions
+{
+    InitialState
+    State
+    CompositeState      
+    ConcurrentSubregion  
+    HistoryTypes
+    // ECR 7215
+    JunctionPoints
+}
+
+NodeSymbol 101 StateAmbassador
+{
+	{ UniformScale False }
+	{ LabelAnchor North }
+	{ CanBeRenamed False }
+	{ DisplayMark
+		{ Name Parent }
+		{ StringMark "(Parent)" }
+		{ Anchor UpperCenter }
+		{ HAdjust Center }
+		{ VAdjust Bottom }
+	}
+	{ ReadOnly True }
+	{ ApplicationTag "ScopeAmbassador" }
+	{ ViewPoint UmlScopeAmbassador } 
+	{ PrintName "State (Parent)" }
+	{ Shape { Predefined ArcRectangle } }
+	{ LabelAnchor North }
+	{ DefaultSize 1.8 .9 }
+	{ Navigation
+		{ Name StateDefinitionFromAmbassador }
+		{ Label "Parent" }
+		{ Query "node_ref[node_id == ${node.id} && (!viewpoints[UmlScopeAmbassador]) && file[UmlStateDiagram && id != ${file.id}]]" }
+	}
+	{ NodeMapping
+        // ECR 5812 begin
+        // { MappingName UmlStateMapping }
+        // ECR 5812 end
+		{ Scope 
+			  { SymbolFunc uml_ambassador_scope_symbol }
+		}
+		{ AppType UmlState }
+		{ NameFunc uml_gde_node_name_func }
+		{ NameIsRequired True }
+	}
+	{ Cardinality { Max 1 } { OutLinks  StateAmbassadorScopeLink } }	
+}
+
+LinkSymbol 200 StateAmbassadorScopeLink
+{
+  { Connects { From StateAmbassador } { To StateAmbassador } }
+  { Connects { From StateMachine } { To StateAmbassador } }
+  { PrintName "Scope Link" }
+  { Thick True }
+  { Dashed True }
+  { CanHaveLabel False }
+  { ToOpenArrow True } // ECR 4861	
+}
+
+
+TypeSet StatesWithTables
+{
+    State
+    CompositeState
+    ConcurrentSubregion
+}
+
+// SPR 4052 - Model Management
+// used for Model Management to have one common display mark
+TypeSet AllLockableNodeTypes
+{
+    State
+    CompositeState
+    ConcurrentSubregion
+    StateMachine
+    SplitControl
+    MergeControl
+    CompoundStates
+    HistoryTypes
+    InitialState
+    FinalState
+    // ECR 7215
+    JunctionPoints
+}
+
+NodeSymbol StatesWithTables
+{
+    { DisplayMark
+        { Name StateTableExists }
+        { BitmapMark0 "ctable0" }
+        { BitmapMark1 "ctable1" }
+        { BitmapMark2 "ctable2" }
+        { Condition "link[link_refs && UmlStateTableDefinesState && to_node_id = 0${node.id}]" }
+        { Anchor UpperLeft }
+        { HAdjust Left }
+        { VAdjust Bottom }
+        { YPixelOffset -3 }
+        { Help "State table exists" }
+    }
+    // JED - added for UML 1.1
+    // This typeset also relates to states that can defer events
+    { DisplayMark
+        { Name DeferredEvents }
+        { Condition "link_ref[link[UmlDeferredEventLink && from_node_id=0${node.id}]];" }
+        { Anchor LowerCenter }
+        { VAdjust Bottom }
+        { HAdjust Center }
+        { YPixelOffset 15 }
+        { StringMarkFunc "uml_state_deferred_events_dmark(0${node.id});" }
+        { Help "Deferred events for the state." }
+    }
+    // Begin Add ECR 5770
+	{ DisplayMark
+        { Name StateActivity }
+        { Condition "link_ref[link[UmlStateActivity &&  from_node_id=0${node.id}]];" }
+        { StringMarkFunc "uml_state_activity_mark(0${node.id});" }
+        { HAdjust Left }
+        { Anchor CenterRight }
+        { VAdjust Center }
+        { XPixelOffset 10 }
+	}
+    // End Add ECR 5770
+}
+
+
+// Begin Add ECR 6389
+DisplayMarkGroups
+{
+	{ Group
+	    { Name Description }
+	    { DisplayMarks (StDescription SmDescription CsDescription) }
+	}
+	{ OnDemandDisplayMarks (Description) }
+}
+// End  Add ECR 6389
+
+DisplayMarkGroups
+{
+    { ContinuousDisplayMarks (
+			StateTableExists 
+			RefinedStateExists
+			HistoryType
+			Stereotype
+			StereotypeLink
+			    )
+    }
+}
+
+SymbolList
+{
+    { ShowStraightArc True }
+    { ShowSpline True }
+    { OrthogonalArcsAreAllowed True }
+    { OrthogonalArcsAreDefault False }
+    { Symbols
+    (
+        Note
+        SEPARATOR
+        StateMachine
+        SEPARATOR
+        State
+        CompositeState
+        ConcurrentSubregion
+	    SplitControl // ECR 6638
+	    MergeControl // ECR 6638
+        SEPARATOR
+        InitialState
+        FinalState
+        History
+        DeepHistory
+        // ECR 7215
+        JunctionPoint
+        DynamicChoicePoint
+    )
+    }
+}
+
+Include "rules/gde_menu_bar.std"
+Include "rules/gde_accels.std"
+Include "rules/gde_edit_menu.std"
+Include "rules/ustated.navigations"
+//Include "rules/oo_object_rename.rules"
+
+Include "rules/default_arc_type.rules" //ECR 6469
+
+Menu ProductMenu
+{
+    { InMenuBar True }
+    { Label "&UML" }
+    { Pin True }
+
+    { MenuEntry
+	{ Name SplitControl }
+	{ Label "Split Tranisition (fork)" } // ECR 6638
+	{ Builtin "EditorQrlEval UStateDCreateControlSplit();" }
+	{ ActiveFunc idehook_split_control_active_func }
+    }
+    { MenuEntry
+	{ Name MergeControl }
+	{ Label "Synchronize Transitions (merge)" } // ECR 6638
+	{ Builtin "EditorQrlEval UStateDMergeControl();" }
+	{ ActiveFunc idehook_merge_control_active_func }
+    }
+// Begin ECR947, ECR 4494
+    { MenuEntry
+	{ Name ConnectNoteToLink }
+	{ Label "Connect Note To Link" }
+	{ Builtin "EditorQrlEval ConnectNoteToLink();" }
+//    	{ Accelerator
+//             { Value "Ctrl<Key>n" }
+//	}
+	{ ActiveFunc idehook_note_link_active_func }
+    }
+// End ECR947, ECR 4494
+    // ECR 7215 begin
+    { MenuEntry
+	    { Name changeJunctionPoint }
+	    { LabelFunc junctionPointStatusLabel }
+	    { Builtin "EditorQrlEvalNoSave changeJunctionPoint();" }
+	    { ActiveFunc junctionPointSelected }
+    }
+    // ECR 7215 end
+}
+
+Menu MenuBarEdit
+{
+    { MenuEntry
+        { Name ObjectProperties }
+        { Show True }
+        { Builtin "EditorQrlEvalNoSave UmlPopUpPropSheet(\"ustated\");" }
+        { ActiveFunc UmlStateObjectPropsActive }
+    }
+}
+
+Menu ObjectContextMenu
+{
+    { MenuEntry
+        { Name ObjectProperties }
+        { Show True }
+        { Builtin "EditorQrlEvalNoSave UmlPopUpPropSheet(\"ustated\");" }
+        { ActiveFunc UmlStateObjectPropsActive }
+    }
+}
+
+
+Command CheckSemantics
+{
+  { PrintName "Check Semantics" }
+  { StartMessage "Check Diagram Semantics" }
+  // ECR 7464
+  // { Builtin "EditorQrlEval uml_diag_check_semantics(\"ustated_check_semantics\");" }
+  { Builtin "EditorQrlEvalNoSave uml_diag_check_semantics(\"ustated_check_semantics\");" }
+}
+
+TypeSet StereotypeableOnSymbolNodeSet
+{
+    State
+    StateMachine
+    SplitControl
+    MergeControl
+    CompoundStates
+    HistoryTypes
+}
+
+TypeSet StereotypeableInLabelNodeSet
+{
+    InitialState
+    FinalState
+}
+
+NodeSymbol StereotypeableNodeSet
+{
+    { Methods
+        { Method
+            { Name DoubleClick }
+            { MethodFunc UmlState_ps_double_click }
+        }
+    }
+}
+
+TypeSet StereotypeableLinkSet 
+{
+    StateTransitionLink
+    SplitControlLink
+    MergeControlLink
+}
+
+LinkSymbol StereotypeableLinkSet
+{
+    { Methods
+        { Method
+            { Name DoubleClick }
+            { MethodFunc UmlStateLink_ps_double_click }
+        }
+    }
+}
+
+// Begin Add ECR3785
+// TypeSet for all kind of uml node symbols
+TypeSet NavigationNodeTypes
+{
+	State
+	InitialState
+	FinalState
+	CompositeState
+	StateMachine
+}
+
+// Included navigation targets for all kind of uml node symbols
+Include "uml/rules/uml_navigation.rules"
+// End Add ECR3785
+
+// ECR 4052 Model Management
+Include "rules/model_management.common"
+
+IncludeIfExists "user/uml/rules/user_ustated.rules"
+
+PassWord "87E71EA0"

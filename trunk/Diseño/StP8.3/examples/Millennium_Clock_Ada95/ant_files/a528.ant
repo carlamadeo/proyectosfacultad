@@ -1,0 +1,52 @@
+FileObject 1
+{
+    { Name "a528" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65CBE-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "Door" }
+    { Type UmlClass }
+    { ObjectId 510 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD92B6-6EAE-11d4-8044-00104BF16798" }
+}
+
+NodeObject 99998
+{
+    { Name "doorStatus" }
+    { Type UmlAttribute }
+    { ObjectId 1336 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_91DD92C1-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1338 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1340 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "doorStatus" }
+    { NoteId 3 }
+    { ObjectId 1341 }
+}
+

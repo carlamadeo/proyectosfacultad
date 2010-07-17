@@ -1,0 +1,34 @@
+//
+//	FILE:	OMTOperationParameter.note
+//
+
+
+
+
+Note 801581
+{
+	{ AppType OMTOperationParameterNote }
+        { HelpText "This note shows the Name, Type and Mode of an operation parameter." }
+	{ PrintName "Parameter" }
+	{ Item
+		{ AppType OMTOperationParameterNameItem  }
+		{ HelpText "The name of the parameter."}
+		{ PrintName "Name" }
+		{ Bounds { Min 1 } { Max 1 } }
+		{ IsKey True }
+	}
+        { Item
+                { AppType OMTOperationParameterTypeItem  }
+                { HelpText "The data type of the parameter."}
+                { PrintName "Type" }
+		{ InitValue "int" }
+                { Bounds { Min 1 } { Max 1 } }
+        }
+        { Item
+                { AppType OMTOperationParameterModeItem  }
+                { HelpText "The direction (in, out, or in-out) of the parameter."}
+                { PrintName "Mode" }
+		{ InitValue "in" }
+                { Bounds { Min 1 } { Max 1 } }
+        }
+}

@@ -1,0 +1,79 @@
+FileObject 1
+{
+    { Name "a103" }
+    { Type ObjectAnnotation }
+    { GUID "UID_4F82D9B9-6A5B-4df0-90F9-DBC47C4028CC" }
+}
+
+NodeObject 99999
+{
+    { Name "Account,BankStatement" }
+    { Type UmlAssociation }
+    { ObjectId 311 }
+    { Sig ":" }
+    { ScopeNodeId 0 }
+    { GUID "UID_DEAA18D4-108E-11d5-8C6F-000000000000" }
+}
+
+NodeObject 99998
+{
+    { Name "BankStatement" }
+    { Type UmlClass }
+    { ObjectId 329 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_47881ED2-0F47-11d5-8C6D-000000000000" }
+}
+
+LinkObject 99997
+{
+    { Name "" }
+    { Type UmlRole }
+    { ObjectId 330 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_DEAA18DC-108E-11d5-8C6F-000000000000" }
+}
+
+NoteObject 2
+{
+    { Type UmlRoleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 332 }
+}
+
+ItemObject 3
+{
+    { Type UmlAggregationType }
+    { Value "None" }
+    { NoteId 2 }
+    { ObjectId 333 }
+}
+
+NoteObject 4
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 335 }
+}
+
+NoteObject 5
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 337 }
+}
+
+ItemObject 6
+{
+    { Type ObjectName }
+    { Value "" }
+    { NoteId 5 }
+    { ObjectId 338 }
+}
+

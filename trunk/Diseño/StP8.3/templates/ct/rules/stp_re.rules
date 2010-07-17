@@ -1,0 +1,1452 @@
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1995
+//      All rights reserved
+//
+
+// SE-RE and CC reverse engineering rules
+
+Global REParse
+{
+    { ClassCommand
+        { Name "REParse" }
+        { Label "Parse Source Code..." }
+        { ShowPropsOnExec True }
+        { Type Nowin }
+        // ECR4288, added ToolInfo variable ccparser_flags to be included on the commandline
+		{ Command "ccparser -forward_messages ${msgd_handle} -p ${projdir} -s ${system} -Desktop ${prop.Incremental} ${ti.ccparser_flags}" }
+		{ UseProperty FileChooser }
+
+		{ Properties
+
+			{ Qrl { QrlFile "rules/qrl/stp_re.qrl" } }
+
+			{ List
+				{ Name "Files" }
+				{ Label "Files to Parse" }
+                { ShowImages True }
+			}
+
+		    { Button
+	    			{ Name "ReadMakefile" }
+	    			{ Label "Read Selected Makefile" }
+				{ Resizable ResizeWidth }
+	    			{ Event	
+					{ Type Select }
+					{ Callback "REReadMakefile" }
+				}
+		    }
+                // ECR4126
+		    { Button
+	    			{ Name "ReadMSProjectFile" }
+	    			{ Label "Read Selected DevStudio Project File" }
+				{ Resizable ResizeWidth }
+	    			{ Event	
+					{ Type Select }
+					{ Callback "REReadMSProjectFile" }
+				}
+		    }
+                // ECR4258
+		    { Button
+	    			{ Name "ParseDirectoryTree" }
+	    			{ Label "Parse Directory Tree" }
+				{ Resizable ResizeWidth }
+	    			{ Event	
+					{ Type Select }
+					{ Callback "REParseDirectoryTree" }
+				}
+		    }
+                // End ECR4258, ECR4126
+		    { Button
+				{ Name "ObjectAdaLibrary" }
+				{ Label "ObjectAda Library" }
+				{ Resizable ResizeWidth }
+				{ Event
+					{ Type Select }
+					{ Callback "REObjectAdaLibrary" }
+				}
+		    }
+                 
+
+		    { Button
+				{ Name "MakeOptions" }
+				{ Label "Makefile Options..." }
+				{ Resizable ResizeWidth }
+				{ Event
+					{ Type Select }
+					{ Callback "RESelectMakeOptions" }
+				}
+		    }
+
+		    { Button
+				{ Name "AdvancedButton" }
+				{ Label "Preprocessor Options..." }
+				{ Resizable ResizeWidth }
+				{ Event
+				    { Type Select }
+				    { Callback "RESelectAdvanced" }
+				}
+			}
+		
+		    { Choice
+				{ Name "Incremental" }
+		        { Type CheckBox }
+				{ ChoiceItem
+				    { Label "Incremental Mode" }
+					{ Init Off }
+				    { OnValue "-i" }
+				    { OffValue "" }
+				}
+				{ Event 
+				    { Type Initialize }
+				    { Callback "REParseReset_cb" }
+				}
+		    }
+
+		    { Choice
+				{ ParseCondition "!is_product_se() && is_unix_platform();" }
+				{ Name "MSExtensions" }
+			    { Type CheckBox }
+				{ ChoiceItem
+					{ Label "Use Microsoft Extensions" }
+				    { Init Off }
+				}
+		    }
+
+			{ Choice
+				{ ParseCondition "!is_product_se() && !is_unix_platform();" }
+				{ Name "MSExtensions" }
+				{ Type CheckBox }
+				{ ChoiceItem
+					{ Label "Use Microsoft Extensions" }
+					{ Init On }
+				}
+			}
+
+			{ Choice
+				{ ParseCondition "is_product_se() && is_unix_platform();" }
+				{ Name "PCStyle" }
+				{ Type CheckBox }
+				{ ChoiceItem
+					{ Label "PC Style Code" }
+					{ Init Off }
+				}
+				{ Event
+					{ Type Select }
+					{ Callback "REPCset" }
+				}
+			}
+
+			{ Choice
+				{ ParseCondition "is_product_se() && !is_unix_platform();" }
+				{ Name "PCStyle" }
+				{ Type CheckBox }
+				{ ChoiceItem
+					{ Label "PC Style Code" }
+					{ Init On }
+				}
+				{ Event
+					{ Type Select }
+					{ Callback "REPCset" }
+				}
+			}
+
+			{ Group
+				{ Name "ParseCommands" }
+				{ Type Vertical }
+				{ Resizable ResizeNone }
+				{ Gravity NorthEast }
+				{ ChildSizePolicy ResizeWidth }
+				{ LayoutPolicy ResizeColumns }
+				{ VerticalSpacing 5 }
+				{ Members ( MakeOptions AdvancedButton ) }
+			}
+
+			{ Group
+				{ Name "ReadMakefileAndAda" }
+				{ Type Vertical }
+				{ Resizable ResizeNone }
+				{ Gravity NorthEast }
+				{ ChildSizePolicy ResizeWidth }
+				{ LayoutPolicy ResizeColumns }
+				{ VerticalSpacing 5 }
+// ECR4258, ECR4126
+//				{ Members ( ReadMakefile ObjectAdaLibrary ) }
+				{ Members ( ReadMakefile ReadMSProjectFile ParseDirectoryTree ObjectAdaLibrary ) }
+// End ECR4258, ECR4126
+			}
+
+			{ Group
+				{ Name "ParseOptions" }
+				{ Type Vertical }
+				{ Members ( Incremental MSExtensions PCStyle ) }
+			}
+
+			{ Group
+				{ Name "LowerGroup" }
+				{ Type Horizontal }
+				{ HorizontalSpacing 20 }
+				{ Resizable ResizeWidth }
+				{ Members ( ReadMakefileAndAda ParseOptions ParseCommands ) }
+			}
+
+			{ Button
+				{ Name "OK" }
+				{ Label "OK" }
+				{ Event 
+					{ Type Select }
+					{ Callback "REParseApply_cb" }
+				}
+			}
+
+			{ Button
+				{ Name "Apply" }
+				{ Label "&Apply" }
+				{ Event 
+					{ Type Select }
+					{ Callback "REParseApply_cb" }
+				}
+			}
+
+			{ Button
+				{ Name "Reset" }
+				{ Label "&Reset" }
+				{ Event 
+					{ Type Select }
+					{ Callback "REParseReset_cb" }
+				}
+			}
+
+			{ Footer
+				{ Name "Status" }
+				{ LeftFooter "" }
+				{ Active True }
+			}
+
+			{ TopGroup
+				{ HorizontalAlign AlignLeft }
+				{ VariableRow "0" }
+			}
+		}
+    }
+}
+
+
+
+
+Global 1 FileChooser
+
+{
+    { Properties
+	
+	{ List
+	    { Name "DirSelector" }
+	    { Label "Directory Listing" }
+        { ShowImages True }
+	    { Rows 8 }
+	    { Width 40 }
+	    { Exclusive False }
+	    { LabelAbove True }
+	    { Event
+		{ Type EventDoubleClickRow }
+		{ Callback "REFileChooserDoubleClick_cb" }
+	    }
+	}
+
+	{ Button
+	    { Name "ChooserDirectoryButton" }
+	    { Label "Filter:" }
+	    { Event
+		{ Type Select }
+		{ Callback "DirChooserFill_cb" }
+	    }
+	}
+
+	{ Text
+	    { Name "ChooserDirectory" }
+	    { Label "" }
+	    { MinLength 0 }
+	    { DispLength 72 }
+	    { MaxLength 1024 }
+	    { InitVal "${projdir}${system}/src_files/*" }
+	    { Event
+		 { Type Text }
+		 { Callback "SetFilterDefault_cb" }
+	    }
+	}
+    // ECR 3651    
+    { Button
+        { Name "BrowseRevDir" }
+        { Label "Choose" }
+        { Event
+            { Type Select }
+            { Callback "select_rev_dir_callback" }
+        }
+    }
+    // ECR 3651
+	{ Group
+	    { Name "ChooserFilterGroup" }
+	    { Type Horizontal }
+	    { Align Top }
+	    { HorizontalSpacing 5 }
+        // ECR3651
+	    { Members ( ChooserDirectoryButton ChooserDirectory BrowseRevDir ) }
+	}
+	
+	// the files
+	{ List
+	    { Name "Files" }
+	    { Label "" }
+	    { Rows 8 }
+	    { Width 40 }
+	    { Exclusive False }
+	    { LabelAbove True }
+	}
+
+	{ Button
+	    { Name "AddFile" }
+	    { Label "->" }
+	    { Event
+		{ Type Select }
+		{ Callback "REFileAdd" }
+	    }
+	}
+
+	{ Button
+	    { Name "RemoveFile" }
+	    { Label "<-" }
+	    { Event
+		{ Type Select }
+		{ Callback "RERemoveFile" }
+	    }
+	}
+
+	{ Group
+	    { Name "AddRemoveGroup" }
+	    { Type Vertical }
+		{ VerticalAlign AlignCenter }
+		{ VerticalSpacing 5 }
+	    { Members ( AddFile RemoveFile ) }
+	}
+	
+	{ Group
+	    { Name "SelectionGroup" }
+	    { Type Horizontal }
+		{ HorizontalSpacing 10 }
+		{ VariableColumn "0 2" }
+        { Resizable ResizeAny }
+		{ VerticalAlign AlignCenter }
+	    { Members ( DirSelector AddRemoveGroup Files ) }
+	}
+
+	{ Group
+	    { Name "CompleteFileGroup" }
+	    { Type Vertical }
+		{ VerticalSpacing 10 } 
+        { Resizable ResizeAny }
+        { ChildSizePolicy ResizeAny }
+	    { Members ( ChooserFilterGroup SelectionGroup ) }
+	}
+    }
+}
+
+PropertySheet REObjectAdaLibDir
+{
+    { Name "REObjectAdaLibDir" }
+    { Label "ObjectAda Library Setting" }
+    { Properties
+	
+	{ Text
+	    { Name "ObjectAdaLibDir" }
+	    { Label "Ada Library Folder:" }
+	    { MinLength 0 }
+	    { DispLength 72 }
+	    { MaxLength 1024 }
+	}
+
+	{ Button
+	    { Name "OK" }
+	    { Label "OK" }
+	}
+
+     }
+}
+
+
+
+PropertySheet REMakeOptions
+{
+    { Name "REMakeOptions" }
+    { Label "Makefile Options" }
+    { Properties
+
+	{ Choice
+	    { Name "MakefileType" }
+	    { Type Exclusive }
+	    { Label "Makefile type:" }
+	    { ChoiceItem
+	        { Label "Generic" }
+	        { Init on }
+	    }
+	    { ChoiceItem
+	      { Label "Nmake" }
+	    }
+	    { ChoiceItem
+	      { Label "Gnu Make" }
+	    }
+	}
+
+	{ Choice
+	    { Name "MakefileKeep" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "Overwrite current settings" }
+		{ Init On }
+	    }
+	}
+	
+	{ Text
+	    { Name "MakefileTargets" }
+	    { Label "Make Targets:" }
+	    { MinLength 0 }
+	    { DispLength 35 }
+	    { MaxLength 200 }
+	}
+	
+	{ Choice
+	    { Name "MakefileDepth" }
+	    { Type AbbrMenu }
+	    { Label "Make Depth Bound:" }
+	    { ChoiceItem
+		{ Label "No Limit" }
+		{ Init On }
+	    }
+	    { ChoiceItem
+		{ Label "1" }
+	    }
+	    { ChoiceItem
+		{ Label "2" }
+	    }
+	    { ChoiceItem
+		{ Label "3" }
+	    }
+	    { ChoiceItem
+		{ Label "4" }
+	    }
+	    { ChoiceItem
+		{ Label "5" }
+	    }
+	}
+
+	{ Space
+	  { Name Space1 }
+	}
+	
+	// these patterns are all numbered so that the QRL can easily load
+	// and store their values - one function can work for all
+
+	{ Text
+	  { Name "Pattern0" }
+	  { Label "Source File Pattern:" }
+	  { DispLength 25 }
+	  { MaxLength  100 }
+	}
+
+	{ Text
+	  { Name "Pattern1" }
+	  { Label "Compiler Command Pattern (case insensitive):" }
+	  { DispLength 25 }
+	  { MaxLength 100 }
+	}
+
+	{ Text
+	  { Name "Pattern2" }
+	  { Label "Compiler Flags for Search Directories:" }
+	  { DispLength 25 }
+	  { MaxLength 100 }
+	}
+
+	{ Text
+	  { Name "Pattern3" }
+	  { Label "Compiler Flags for System Search Directories:" }
+	  { DispLength 25 }
+	  { MaxLength 100 }
+	}
+
+	{ Text
+	  { Name "Pattern4" }
+	  { Label "Compiler Flags for Preprocessor Definitions:" }
+	  { DispLength 25 }
+	  { MaxLength 100 }
+	}
+
+	{ Text
+	  { Name "Pattern5" }
+	  { Label "Exclude files matching:" }
+	  { DispLength 25 }
+	  { MaxLength 100 }
+	}
+
+	{ Group
+	    { Name "MakefileKeepandDepth" }
+	    { Type Horizontal }
+	    { HorizontalSpacing 40 }
+	    { Members ( MakefileKeep MakefileDepth ) }
+	}
+
+	{ Group
+	    { Name "MakefileTopGroup" }
+	    { Type Vertical }
+	    { Align Center }
+	    { Members ( MakefileType MakefileKeepandDepth MakefileTargets ) }
+	}
+	
+	{ Group
+	    { Name "MakefileBottomGroup" }
+	    { Type Vertical }
+	    { Align Labels }
+	    { Members ( Pattern0 Pattern1 Pattern2
+			Pattern3 Pattern4 Pattern5 ) }
+	}
+
+	{ Group
+	    { Name "MakefileSettings" }
+	    { Type Vertical }
+	    { Align Center }
+	    { Members ( MakefileTopGroup Space1 MakefileBottomGroup ) }
+	}
+
+	{ Button
+	    { Name "OK" }
+	    { Label "OK" }
+	}
+    }
+}
+
+
+PropertySheet REParseExtra
+{
+    { Name "REParseExtra" }
+    { Label "Preprocessor Options" }
+    { Properties
+	{ Qrl { QrlFile "rules/qrl/stp_re.qrl" } }
+
+	    // the user includes
+	    { Text
+		{ Name "UserIncludes" }
+		{ Label "User Include Search Directories:" }
+		{ LabelAbove True }
+                { DispRows 4 }
+		{ MinLength 0 }
+		{ DispLength 70 }
+		{ MaxLength 8192 }
+	    }
+
+	    // the system includes
+	    { Text
+		{ Name "SysIncludes" }
+		{ Label	"System Include Search Directories:" }
+		{ LabelAbove True }
+                { DispRows 4 }
+		{ MinLength 0 }
+		{ DispLength 70 }
+		{ MaxLength 8192 }
+	    }
+
+	    // the defines
+	    { Text
+		{ Name "Defines" }
+		{ Label	"Defines:" }
+		{ HorizontalScrollBar 1 }
+		{ MinLength 0 }
+		{ DispLength 50 }
+		{ MaxLength 1024 }
+	    }
+
+	    // the specifiers
+	    { Text
+		{ ParseCondition "is_product_se();" }
+		{ Name "Specifiers" }
+		{ Label	"Specifiers:" }
+		{ LabelAbove True }
+		{ HorizScrollBar 1 }
+		{ MinLength 0 }
+		{ DispLength 60 }
+		{ MaxLength 512 }
+	    }
+
+	    // an optional spacer
+	    { Space
+		{ ParseCondition "0;" }
+		{ Name "CCSpacer" }
+	    }
+
+	    { Choice
+		{ Name "NoPredefinedDirectives" }
+		{ Type CheckBox }
+		{ ChoiceItem
+		    { Label "Undefine Platform-Specific Defines" }
+		    { Init Off }
+		}
+	    }
+
+	    { Choice
+		{ ParseCondition "!is_product_se();" }
+		{ Name "NoPreprocessor" }
+	        { Type CheckBox }
+		{ ChoiceItem
+		    { Label "No preprocessing" }
+		    { Init Off }
+		}
+	        { Event
+	            { Type Select }
+	            { Callback "NoPPset" }
+		}
+	    }
+
+	    { Group
+		{ Name "PreprocessorTicks" }
+		{ Type Horizontal }
+		{ HorizontalSpacing 30 }
+		{ Members ( NoPreprocessor NoPredefinedDirectives ) }
+	    }
+
+	    { Group
+		{ Name "Everything" }
+		{ Type Vertical }
+		{ Align Left }
+		{ Members ( PreprocessorTicks UserIncludes SysIncludes
+			    Defines Specifiers ) }
+	    }
+
+	    { Button
+		{ Name "OK" }
+		{ Label "OK" }
+	    }
+    }
+}
+
+
+Global 1 RECommentGather
+{
+    { ClassCommand
+        { Name "RECommentGather" }
+        { Label "Extract Source Code Comments..." }
+        { ShowPropsOnExec True }
+        { Type Nowin }
+	{ Command "comments -forward_messages ${msgd_handle} -p ${projdir} -s ${system} -f Comments -Desktop ${prop.PrintStyle} " }
+
+	{ Properties
+	    { Label "Files" }
+	    { Qrl { QrlFile "rules/qrl/stp_re.qrl" } }
+
+	    { Choice
+		{ Name "FunctionCommentLocation" }
+		{ Label "Function Comment:" }
+		{ Type NonExclusive }
+        { Orientation Vertical }
+		{ ChoiceItem
+		    { Label "Above Definition" }
+		    { Init On }			
+		}
+		{ ChoiceItem
+		    { Label "Below Definition" }
+		}
+	    }
+
+	    { Choice
+		{ Name "FunctionGapSetting" }
+		{ Label "Function Gap: " }
+		{ Type AbbrMenu }
+		{ ChoiceItem
+		    { Label "No Gap" }
+		}
+		{ ChoiceItem
+		    { Label "1 Line" }
+		}
+		{ ChoiceItem
+		    { Label "2 Lines" }
+		    { Init On }			
+		}
+		{ ChoiceItem
+		    { Label "3 Lines" }
+		}
+		{ ChoiceItem
+		    { Label "4 Lines" }
+		}
+	    }
+
+	    { Choice
+		{ ParseCondition "is_product_se();" }
+		{ Name "StructureCommentLocation" }
+		{ Label "Structure Comment:" }
+                { Orientation Vertical }
+		{ Type NonExclusive }
+		{ ChoiceItem
+		    { Label "Above Definition" }
+		    { Init On }			
+		}
+		{ ChoiceItem
+		    { Label "Below Definition" }
+		}
+		{ ChoiceItem
+		    { Label "Right of Definition" }
+		}
+	    }
+
+	    { Choice
+		{ ParseCondition "!is_product_se();" }
+		{ Name "ClassCommentLocation" }
+		{ Label "Class Comment:" }
+                { Orientation Vertical }
+		{ Type NonExclusive }
+		{ ChoiceItem
+		    { Label "Above Definition" }
+		    { Init On }			
+		}
+		{ ChoiceItem
+		    { Label "Below Definition" }
+		}
+		{ ChoiceItem
+		    { Label "Right of Definition" }
+		}
+	    }
+
+	    { Choice
+		{ ParseCondition "is_product_se();" }
+		{ Name "StructureGapSetting" }
+		{ Label "Structure Gap:" }
+		{ Type AbbrMenu }
+		{ ChoiceItem
+		    { Label "No Gap" }
+		}
+		{ ChoiceItem
+		    { Label "1 Line" }
+		}
+		{ ChoiceItem
+		    { Label "2 Lines" }
+		    { Init On }			
+		}
+		{ ChoiceItem
+		    { Label "3 Lines" }
+		}
+		{ ChoiceItem
+		    { Label "4 Lines" }
+		}
+	    }
+
+	    { Choice
+		{ ParseCondition "!is_product_se();" }
+		{ Name "ClassGapSetting" }
+		{ Label "Class Gap:" }
+		{ Type AbbrMenu }
+		{ ChoiceItem
+		    { Label "No Gap" }
+		}
+		{ ChoiceItem
+		    { Label "1 Lines" }
+		}
+		{ ChoiceItem
+		    { Label "2 Lines" }
+		    { Init On }			
+		}
+		{ ChoiceItem
+		    { Label "3 Lines" }
+		}
+		{ ChoiceItem
+		    { Label "4 Lines" }
+		}
+	    }
+
+	    { Choice
+		{ ParseCondition "is_product_se();" }
+		{ Name "GlobalCommentLocation" }
+		{ Label "Global Comment:" }
+                { Orientation Vertical }
+		{ Type NonExclusive }
+		{ ChoiceItem
+		    { Label "Above Definition" }
+		    { Init On }			
+		}
+		{ ChoiceItem
+		    { Label "Right of Definition" }
+		}
+	    }
+
+	    { Choice
+		{ ParseCondition "!is_product_se();" }
+		{ Name "MemberCommentLocation" }
+		{ Label "Member Comment:" }
+        { Orientation Vertical }
+		{ Type NonExclusive }
+		{ ChoiceItem
+		    { Label "Above Definition" }
+		    { Init On }			
+		}
+		{ ChoiceItem
+		    { Label "Right of Definition" }
+		}
+	    }
+
+	    { Choice
+		{ ParseCondition "is_product_se();" }
+		{ Name "GlobalGapSetting" }
+		{ Label "Global Gap:" }
+		{ Type AbbrMenu }
+		{ ChoiceItem
+		    { Label "No Gap" }
+		}
+		{ ChoiceItem
+		    { Label "1 Line" }
+		    { Init On }			
+		}
+		{ ChoiceItem
+		    { Label "2 Lines" }
+		}
+		{ ChoiceItem
+		    { Label "3 Lines" }
+		}
+		{ ChoiceItem
+		    { Label "4 Lines" }
+		}
+	    }
+
+	    { Choice
+		{ ParseCondition "!is_product_se();" }
+		{ Name "MemberGapSetting" }
+		{ Label "Member Gap:" }
+		{ Type AbbrMenu }
+		{ ChoiceItem
+		    { Label "No Gap" }
+		}
+		{ ChoiceItem
+		    { Label "1 Line" }
+		    { Init On }			
+		}
+		{ ChoiceItem
+		    { Label "2 Lines" }
+		}
+		{ ChoiceItem
+		    { Label "3 Lines" }
+		}
+		{ ChoiceItem
+		    { Label "4 Lines" }
+		}
+	    }
+
+	    { Group
+            { ParseCondition "is_product_se();" }
+            { Name "AllGaps" }
+            { Type Vertical }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeAny }
+            { Align Labels }
+            { Members ( ClassGapSetting MemberGapSetting FunctionGapSetting
+			    StructureGapSetting GlobalGapSetting ) }
+	    }
+	    { Group
+            { ParseCondition "!is_product_se();" }
+            { Name "AllGaps" }
+            { Type Vertical }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeAny }
+            { Align Labels }
+            { Members (ClassGapSetting MemberGapSetting FunctionGapSetting) }
+	    }
+
+	    { Group
+            { ParseCondition "is_product_se();" }
+            { Name "AllChoices" }
+            { Align Labels }
+            { Type Vertical }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeAny }
+            { Members ( ClassCommentLocation MemberCommentLocation
+			  FunctionCommentLocation
+			  StructureCommentLocation GlobalCommentLocation ) }
+	    }
+	    { Group
+            { ParseCondition "!is_product_se();" }
+            { Name "AllChoices" }
+            { Align Labels }
+            { Type Vertical }
+            { VerticalSpacing 5 }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeAny }
+            { Members ( ClassCommentLocation MemberCommentLocation
+			  FunctionCommentLocation) }
+	    }
+
+	    { Group
+            { Name "TopHalf" }
+            { Label "Comment Generation" }
+            //{ Margin 5 }
+            { Type Horizontal }
+            { Align Top }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeAny }
+            { Members ( AllChoices AllGaps ) }
+	    }
+
+	    { Choice
+		{ Name "UseCommentDelimiters" }
+	        { Type CheckBox }
+		{ ChoiceItem
+		    { Label "Use Comment Delimiters" }
+		    { Init Off }
+		    { OnValue "" }
+		    { OffValue "" }
+		    { Activation
+			{ Target "StartCommentDelimiter" }
+			{ On Activate }
+		    }
+		    { Activation
+			{ Target "StartCommentDelimiter" }
+			{ Off InActivate }
+		    }
+		    { Activation
+			{ Target "EndCommentDelimiter" }
+			{ On Activate }
+		    }
+		    { Activation
+			{ Target "EndCommentDelimiter" }
+			{ Off InActivate }
+		    }
+	        }
+	    }
+
+	    { Text
+		{ Name "StartCommentDelimiter" }
+		{ Label "Start Delimiter:" }
+		{ MinLength 0 }
+		{ DispLength 20 }
+		{ MaxLength 512 }
+	    }
+
+	    { Text
+		{ Name "EndCommentDelimiter" }
+		{ Label "End Delimiter:" }
+		{ MinLength 0 }
+		{ DispLength 20 }
+		{ MaxLength 512 }
+	    }
+
+        { Group
+            { Name "DelimitersTextFields" }
+            { Type Vertical }
+            { Align Labels }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeAny }
+            { Members (StartCommentDelimiter EndCommentDelimiter) }
+        }
+	    { Group 
+            { Name "Delimiters" }
+            { Label "Comment Delimiters" }
+            { Type Horizontal }
+            { Align Top }
+            //{ Margin 5 }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeAny }
+            { Members ( UseCommentDelimiters DelimitersTextFields ) }  
+	    }
+	    
+	    { Choice
+		{ Name "PrintStyle" }
+		{ Label "" }
+		{ Type AbbrMenu }
+		{ ChoiceItem
+		    { Label "Copy Text Exactly" }
+		    { Init on }
+		    { OnValue "-verbatim 2" }
+		    { OffValue "" }
+		    { Activation
+			{ Target "AnnotationLength" }
+			{ On InActivate }
+		    }
+		}
+		{ ChoiceItem
+		    { Label "Left Justify Text" }
+		    { Init Off }
+		    { OnValue "-verbatim 1" }
+		    { OffValue "" }
+		    { Activation
+			{ Target "AnnotationLength" }
+			{ On InActivate }
+		    }
+		}
+		{ ChoiceItem
+		    { Label "Fully Justify Text" }
+		    { Init Off }
+		    { OnValue "-verbatim 0 -annot_length ${prop.AnnotationLength}" }
+		    { OffValue "" }
+		    { Activation
+			{ Target "AnnotationLength" }
+			{ Off InActivate }
+			{ On Activate }
+		    }
+		}
+	    }
+
+	    { Choice
+		{ Name "AnnotationLength" }
+		{ Label "Line Length:" }
+		{ Type AbbrMenu }
+		{ ChoiceItem
+		    { Label "40" }
+		}
+		{ ChoiceItem
+		    { Label "65" }
+		}
+		{ ChoiceItem
+		    { Label "80" }
+		    { Init On }			
+		}
+		{ ChoiceItem
+		    { Label "120" }
+		}
+		{ ChoiceItem
+		    { Label "As Is" }
+		}
+		{ Event 
+		    { Type Initialize }
+		    { Callback "RECommentsReset_cb" }
+		}
+	    }
+
+	    { Group 
+            { Name "PrintRow" }
+            { Label "Print Information" }
+            { Type Horizontal }
+            //{ Margin 5 }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeAny }
+            { Members ( PrintStyle AnnotationLength ) }  
+	    }
+
+// 	    { Group 
+//             { Name "MiscButtons" }
+//             { Type Vertical }
+//             { Align Labels }
+//             { Resizable ResizeAny }
+//             { ChildSizePolicy ResizeAny }
+// 		{ Members ( Delimiters PrintRow ) }  
+// 	    }
+
+	    { Button
+		{ Name "OK" }
+		{ Label "OK" }
+		{ Event 
+		    { Type Select }
+		    { Callback "RECommentsApply_cb" }
+		}
+	    }
+
+	    { Button
+		{ Name "Apply" }
+		{ Label "&Apply" }
+		{ Event 
+		    { Type Select }
+		    { Callback "RECommentsApply_cb" }
+		}
+	    }
+
+	    { Button
+		{ Name "Reset" }
+		{ Label "&Reset" }
+		{ Event 
+		    { Type Select }
+		    { Callback "RECommentsReset_cb" }
+		}
+	    }
+
+	    { Footer
+		{ Name "Status" }
+		{ LeftFooter "" }
+		{ Active True }
+	    }
+
+	    //{ Group
+	    //{ ParseCondition "is_product_se();" }
+	    //{ Name AllCommentSettings }
+	    //{ Type Vertical }
+		//{ Members ( FunctionSettings StructureSettings
+		//	    GlobalSettings  ) }
+	    //}
+
+	    //{ Group
+	    //{ ParseCondition "!is_product_se();" }
+	    //{ Name AllCommentSettings }
+	    //{ Type Vertical }
+		//{ Members ( ClassSettings MemberSettings
+		//	    FunctionSettings  ) }
+	    //}
+
+	    { TopGroup
+                  //{ Name TheWholeCommentsEnchilada } 
+//             { Type Vertical }
+//             { Resizable ResizeAny }
+//             { ChildSizePolicy ResizeAny }
+            { Align Left }
+            { Members ( TopHalf Delimiters PrintRow ) }
+	    }
+	}
+    }
+}
+
+
+Global OOCC2Generate
+{
+    { ClassCommand
+	{ Name "OOCC2Generate" }
+	{ Label "Generate Model from Parsed Source Files..." }
+	{ Properties
+
+	{ Qrl { QrlFile "rules/qrl/stp_re.qrl" } }
+
+	{ Button
+	    { Name "filter" }
+	    { Label "Filter Source Information..." }
+	    { Event
+		{ Type Select }
+		{ Callback "REFilterShow_cb" }
+	    }
+	}
+
+	{ Choice
+	    { Name "extern" }
+	    { Type CheckBox }
+	    { ChoiceItem
+            { Label "Annotate &Classes as External" }
+            { Name "extern" }
+            { OnValue "-external" }
+            { OffValue "-noexternal" }
+	    	{ Init On }
+	    }
+	}
+	{ Choice
+	    { Name "capture_donotcapture" }
+	    { Type CheckBox }
+        { Orientation Vertical }
+	    { ChoiceItem
+	    	{ Label "&Regenerate" }
+	    	{ Init On }
+            { OnValue "" }
+            { OffValue "ignore" }
+            { Activation
+                { Target "merge_overwrite_annotations" }
+                { Off InActivate }
+            }
+            { Activation
+                { Target "merge_overwrite_annotations" }
+                { On Activate }
+            }
+	    }
+	}
+	{ Choice
+	    { Name "merge_overwrite_annotations" }
+	    { Label "" }
+	    { Type CheckBox }
+        { Orientation Vertical }
+	    { ChoiceItem
+	    	{ Label "Retain &User Modifications" }
+            { OnValue "merge" }
+            { OffValue "overwrite" }
+	    	{ Init On }
+	    }
+	}
+	{ Choice
+	    { Name "bodies" }
+	    { Type CheckBox }
+        { Orientation Vertical }
+	    { ChoiceItem
+            { Name "__bodies" }
+            { Label "Include &Operation Bodies" }
+	    	{ OnValue " " }
+	    	{ OffValue " -nooperationbodies " }
+	    	{ Init On }
+	    }
+	}
+	{ Choice
+	    { Name "system_ignore" }
+	    { Type CheckBox }
+        { Orientation Vertical }
+	    { ChoiceItem
+            { Name "__system" }
+            { Label "Ignore Standard &Library Definitions" }
+	    	{ OnValue " " }
+	    	{ OffValue " -showstandardlibraries " }
+	    	{ Init On }
+	    }
+	}
+	{ Choice
+	    { Name "diagrams" }
+	    { Type CheckBox }
+        { Orientation Vertical }
+	    { ChoiceItem
+            { Name "__diagrams" }
+            { Label "Diagrams" }
+	    	{ OnValue " " }
+	    	{ OffValue " -nodiagram " }
+	    	{ Init On }
+	    }
+	}
+	{ Choice
+	    { Name "tables" }
+	    { Type CheckBox }
+        { Orientation Vertical }
+	    { ChoiceItem
+            { Name "__tables" }
+            { Label "Tables" }
+	    	{ OnValue " " }
+	    	{ OffValue " -notable " }
+	    	{ Init On }
+	    }
+	}
+	{ Choice
+	    { Name "annotations" }
+	    { Type CheckBox }
+        { Orientation Vertical }
+	    { ChoiceItem
+            { Name "__annotations" }
+            { Label "Annotations" }
+	    	{ OnValue " " }
+	    	{ OffValue " -noannot " }
+	    	{ Init On }
+	    }
+	}
+	{ Choice
+	    { Name "repsync" }
+	    { Type CheckBox }
+	    { ChoiceItem
+	    	{ Label "&Generate Repository" }
+            { OnValue " " }
+            { OffValue " -norepsync " }
+	    	{ Init On }
+	    }
+	}
+        { Group
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeAny }
+    	    { Name "generate_group" }
+            { Label "Generate" }
+            //{ Margin 5 }
+    	    { Type Vertical }
+    	    { Align Left }
+            { VerticalSpacing 1 }
+            { Members ( diagrams tables annotations ) }
+    	}
+        { Message
+            { Label "If Class Already Exists:" }
+            { Name "classExistsMsg" }
+        }
+        { Group
+            { Name "classExistsChoices" }
+            { Type Vertical }
+            // ECR 7400
+            // { Resizable ResizeAny }
+            { Resizable ResizeBoth }
+            { ChildSizePolicy ResizeAny }
+            { VerticalSpacing 1 }
+            { Members (capture_donotcapture merge_overwrite_annotations)}
+        }
+        { Group
+            { Name "ifClassExists" }
+            { Type Horizontal }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeAny }
+            { Align Top }
+            { Members (classExistsMsg classExistsChoices) }
+        }
+
+    	{ Group
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeAny }
+            { Name "Options" }
+            //{ Margin 5 }
+            { VerticalSpacing 1 }
+            { Label "Options" }
+            { Type Vertical }
+            { Align Left }
+            { Members ( extern bodies system_ignore repsync ifClassExists filter) }
+    	}
+    	{ Group
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeAny }
+            { Name "All" }
+            { Type Vertical }
+            { Align Center }
+            { Members ( Options generate_group) }
+    	}
+        }
+    }
+}
+
+PropertySheet REFilterModel
+{
+    { Name "REFilterModel" }
+    { Label "Filter Source Information" }
+    { Properties
+	{ Qrl { QrlFile "rules/qrl/stp_re.qrl" } }
+
+	{ Choice
+	    { Name "REFilterCategoryObject" }
+	    { Type Exclusive }
+	    { ChoiceItem
+		{ Label "Files" }
+		{ Init On }
+	    }
+	    { ChoiceItem
+		{ Label "Classes" }
+	    }
+	    { Event
+		{ Type Select }
+		{ Callback "REFilterCategoryChanged_cb" }
+	    }
+	}
+
+	{ Choice
+	    { Name "PersonalChoice" }
+	    { Type Exclusive }
+	    { Label "Save Filter for:" }
+	    { ChoiceItem
+		{ Label "All Users" }
+		{ Init On }
+		{ Value 0 }
+	    }
+	    { ChoiceItem
+		{ Label "Only Me" }
+		{ Value 1 }
+	    }
+	    { Event
+		{ Type Select }
+		{ Callback "REFilterChangedUser_cb" }
+	    }
+	}
+
+	{ Button
+	    { Name "RemovePersonalFile" }
+	    { Label "Delete My Filter File" }
+	    { Event
+		{ Type Select }
+		{ Callback "REFilterDeleted_cb" }
+	    }
+	}
+
+	{ List
+	    { Name "IgnoreList" }
+	    { Label "Do not include:" }
+            { ShowImages True }
+	    { Rows 10 }
+	    { Width 40 }
+	    { Exclusive False }
+	    { LabelAbove True }
+	}
+
+	{ List
+	    { Name "IncludeList" }
+	    { Label "Include:" }
+            { ShowImages True }
+	    { Rows 10 }
+	    { Width 40 }
+	    { Exclusive False }
+	    { LabelAbove True }
+	}
+
+	{ Button
+	    { Name "Add" }
+	    { Label "->" }
+	    { Event
+		{ Type Select }
+		{ Callback "REFilterAdd_cb" }
+	    }
+	}
+
+	{ Button
+	    { Name "Remove" }
+	    { Label "<-" }
+	    { Event
+		{ Type Select }
+		{ Callback "REFilterAdd_cb" }
+	    }
+	}
+
+	{ Group
+	    { Name "AddRemoveGroup" }
+	    { Type Vertical }
+        { VerticalAlign AlignCenter }
+        { VerticalSpacing 5 }
+	    { Members ( Add Remove ) }
+	}
+	
+	{ Group
+	    { Name "SelectionGroup" }
+	    { Type Horizontal }
+	    { HorizontalSpacing 10 }
+	    { VariableColumn "0 2" } 
+        { Resizable ResizeAny } // ECR 7400
+	    { VerticalAlign AlignCenter }
+	    { Members ( IgnoreList AddRemoveGroup IncludeList ) }
+	}
+
+	{ Group
+	    { Name "TopSelectionGroup" }
+	    { Type Vertical } 
+		{ VerticalSpacing 5 } // ECR 7400
+        { Resizable ResizeAny } // ECR 7400
+        { ChildSizePolicy ResizeAny } // ECR 7400
+	    { Members ( REFilterCategoryObject SelectionGroup ) }
+	}
+
+	{ Button
+	    { Name "ResetToDefaults" }
+	    { Label "Reset to &Defaults" }
+	    { Event
+		{ Type Select }
+		{ Callback "REFilterDefaults_cb" }
+	    }
+	}
+
+	{ Group
+	    { Name "FileSaveOptions" }
+	    { Type Horizontal }
+	    { Members ( PersonalChoice RemovePersonalFile ) }
+	}
+
+	{ Group
+	    { Name "LowerSelectionGroup" }
+	    { Type Horizontal }
+	    { HorizontalSpacing 60 }
+	    { Members ( ResetToDefaults FileSaveOptions ) }
+	}
+
+	{ Button
+	    { Name "OK" }
+	    { Label "OK" }
+	    { Event
+		{ Type Select }
+		{ Callback "REFilterDone_cb" }
+	    }
+	}
+	{ Button
+	    { Name "Apply" }
+	    { Label "&Apply" }
+	    { Event
+		{ Type Select }
+		{ Callback "REFilterDone_cb" }
+	    }
+	}
+
+	{ Button
+	    { Name "Reset" }
+	    { Label "&Reset" }
+	    { Event
+		{ Type Select }
+		{ Callback "REFilterReset_cb" }
+	    }
+	}
+    }
+}
+
+
+// Includes
+Include "ct/rules/re_navigate.prop"
+

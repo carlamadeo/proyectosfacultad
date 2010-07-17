@@ -1,0 +1,77 @@
+FileObject 1
+{
+    { Name "a298" }
+    { Type ObjectAnnotation }
+    { GUID "UID_E0D93154-C886-11d5-90AA-0050045C27F0" }
+}
+
+NodeObject 99999
+{
+    { Name "SetTime" }
+    { Type UmlUseCase }
+    { ObjectId 559 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_7A5DA1EB-AC4F-11d4-BEDC-0060971B5EE0" }
+}
+
+NoteObject 2
+{
+    { Type UmlUseCaseDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 561 }
+}
+
+ItemObject 3
+{
+    { Type UmlUseCasePrecondition }
+    { Value "" }
+    { NoteId 2 }
+    { ObjectId 562 }
+}
+
+ItemObject 4
+{
+    { Type UmlUseCasePostcondition }
+    { Value "" }
+    { NoteId 2 }
+    { ObjectId 563 }
+}
+
+ItemObject 5
+{
+    { Type UmlUseCaseException }
+    { Value "" }
+    { NoteId 2 }
+    { ObjectId 564 }
+}
+
+NoteObject 6
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 566 }
+}
+
+NoteObject 7
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 568 }
+    { DescLine "The administrator has to set the starting time. " }
+    { DescLine "For ease of use this can be part of the model, so the starting time is" }
+    { DescLine "always the same." }
+}
+
+ItemObject 8
+{
+    { Type ObjectName }
+    { Value "SetTime" }
+    { NoteId 7 }
+    { ObjectId 569 }
+}
+

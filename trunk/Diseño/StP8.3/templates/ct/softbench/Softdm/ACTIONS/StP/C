@@ -1,0 +1,426 @@
+!
+! (c) Copyright 1994,  IDE Inc. All rights reserved.
+!
+
+Softdm*stp_alt_class*titleString:	Actions
+Softdm*stp_ate_class*titleString:	Actions
+Softdm*stp_bach_class*titleString:	Actions
+Softdm*stp_chen_class*titleString:	Actions
+Softdm*stp_crud_class*titleString:	Actions
+Softdm*stp_dete_class*titleString:	Actions
+Softdm*stp_det_class*titleString:	Actions
+Softdm*stp_dfe_class*titleString:	Actions
+Softdm*stp_dmte_class*titleString:	Actions
+Softdm*stp_dse_class*titleString:	Actions
+Softdm*stp_elt_class*titleString:	Actions
+Softdm*stp_cte_class*titleString:	Actions
+Softdm*stp_fme_class*titleString:	Actions
+Softdm*stp_ome_class*titleString:	Actions
+Softdm*stp_dme_class*titleString:	Actions
+Softdm*stp_stbl_class*titleString:	Actions
+Softdm*stp_pam_class*titleString:	Actions
+Softdm*stp_pat_class*titleString:	Actions
+Softdm*stp_sce_class*titleString:	Actions
+Softdm*stp_spt_class*titleString:	Actions
+Softdm*stp_spe_class*titleString:	Actions
+Softdm*stp_sem_class*titleString:	Actions
+Softdm*stp_stt_class*titleString:	Actions
+Softdm*stp_ste_class*titleString:	Actions
+Softdm*stp_ted_class*titleString:	Actions
+Softdm*stp_class_class*titleString:	Actions
+Softdm*stp_object_class*titleString:	Actions
+Softdm*stp_omt_class*titleString:	Actions
+Softdm*stp_process_class*titleString:	Actions
+Softdm*stp_module_class*titleString:	Actions
+
+Softdm.actionPaneDoubleClick_stp_alt_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_ate_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_bach_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_chen_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_crud_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_dete_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_det_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_dfe_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_dmte_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_dse_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_elt_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_cte_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_fme_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_ome_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_dme_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_stbl_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_pam_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_pat_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_sce_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_spt_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_spe_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_sem_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_stt_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_ste_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_ted_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_class_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_object_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_omt_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_process_class:	MenuMsgSelectFunc STP EDIT
+Softdm.actionPaneDoubleClick_stp_module_class:	MenuMsgSelectFunc STP EDIT
+
+Softdm*ACTIONS_STP_stp_alt_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_alt_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_alt_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_ate_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_ate_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_ate_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_bach_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_bach_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_bach_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_chen_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_chen_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_chen_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_crud_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_crud_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_crud_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_dete_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_dete_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_dete_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_det_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_det_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_det_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_dfe_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_dfe_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_dfe_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_dmte_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_dmte_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_dmte_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_dse_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_dse_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_dse_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_elt_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_elt_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_elt_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_cte_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_cte_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_cte_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_fme_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_fme_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_fme_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_ome_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_ome_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_ome_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_dme_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_dme_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_dme_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_stbl_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_stbl_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_stbl_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_pam_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_pam_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_pam_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_pat_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_pat_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_pat_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_sce_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_sce_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_sce_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_spt_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_spt_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_spt_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_spe_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_spe_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_spe_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_sem_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_sem_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_sem_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_stt_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_stt_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_stt_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_ste_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_ste_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_ste_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_ted_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_ted_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_ted_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_class_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_class_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_class_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_object_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_object_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_object_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_omt_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_omt_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_omt_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_process_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_process_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_process_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_module_class_edit.labelString:	Edit
+Softdm*ACTIONS_STP_stp_module_class_print.labelString:	Print
+Softdm*ACTIONS_STP_stp_module_class_stpdt.labelString:	StP Desktop
+
+Softdm*ACTIONS_STP_stp_alt_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_alt_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_alt_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_ate_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_ate_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_ate_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_bach_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_bach_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_bach_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_chen_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_chen_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_chen_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_crud_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_crud_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_crud_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_dete_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_dete_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_dete_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_det_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_det_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_det_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_dfe_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_dfe_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_dfe_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_dmte_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_dmte_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_dmte_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_dse_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_dse_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_dse_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_elt_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_elt_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_elt_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_cte_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_cte_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_cte_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_fme_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_fme_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_fme_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_ome_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_ome_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_ome_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_dme_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_dme_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_dme_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_stbl_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_stbl_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_stbl_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_pam_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_pam_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_pam_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_pat_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_pat_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_pat_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_sce_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_sce_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_sce_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_spt_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_spt_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_spt_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_spe_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_spe_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_spe_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_sem_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_sem_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_sem_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_stt_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_stt_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_stt_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_ste_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_ste_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_ste_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_ted_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_ted_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_ted_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_class_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_class_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_class_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_object_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_object_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_object_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_omt_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_omt_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_omt_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_process_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_process_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_process_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_module_class_edit.setMark: True
+Softdm*ACTIONS_STP_stp_module_class_print.setMark: True
+Softdm*ACTIONS_STP_stp_module_class_stpdt.setMark: True
+
+Softdm*ACTIONS_STP_stp_alt_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_alt_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_alt_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_ate_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_ate_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_ate_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_bach_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_bach_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_bach_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_chen_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_chen_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_chen_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_crud_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_crud_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_crud_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_dete_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_dete_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_dete_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_det_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_det_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_det_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_dfe_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_dfe_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_dfe_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_dmte_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_dmte_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_dmte_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_dse_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_dse_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_dse_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_elt_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_elt_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_elt_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_cte_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_cte_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_cte_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_fme_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_fme_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_fme_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_ome_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_ome_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_ome_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_dme_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_dme_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_dme_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_stbl_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_stbl_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_stbl_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_pam_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_pam_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_pam_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_pat_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_pat_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_pat_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_sce_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_sce_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_sce_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_spt_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_spt_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_spt_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_spe_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_spe_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_spe_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_sem_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_sem_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_sem_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_stt_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_stt_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_stt_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_ste_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_ste_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_ste_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_ted_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_ted_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_ted_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_class_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_class_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_class_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_object_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_object_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_object_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_omt_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_omt_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_omt_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_process_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_process_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_process_class_stpdt.markImage: action
+
+Softdm*ACTIONS_STP_stp_module_class_edit.markImage: action
+Softdm*ACTIONS_STP_stp_module_class_print.markImage: action
+Softdm*ACTIONS_STP_stp_module_class_stpdt.markImage: action
+

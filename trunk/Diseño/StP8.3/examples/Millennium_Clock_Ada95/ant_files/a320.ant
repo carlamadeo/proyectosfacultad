@@ -1,0 +1,52 @@
+FileObject 1
+{
+    { Name "a320" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65BF2-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "Pendulum" }
+    { Type UmlStateMachine }
+    { ObjectId 812 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_B3C9A156-6EAE-11d4-8044-00104BF16798" }
+}
+
+NodeObject 99998
+{
+    { Name "NotMoving" }
+    { Type UmlInitialState }
+    { ObjectId 813 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_B3C9A157-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 815 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 817 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "NotMoving" }
+    { NoteId 3 }
+    { ObjectId 818 }
+}
+

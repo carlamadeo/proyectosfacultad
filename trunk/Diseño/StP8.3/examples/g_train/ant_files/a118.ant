@@ -1,0 +1,271 @@
+FileObject 1
+{
+    { Name "a118" }
+    { Type ObjectAnnotation }
+    { GUID "UID_D76AFD0A-5BCE-41c0-936F-7D779F9979ED" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "num_pulses.h" }
+    { Type SEFile }
+    { ObjectId 949 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_6D1A8E09-765C-41a3-ADE0-73BD74CB7FCA" }
+}
+
+NodeObject 99997
+{
+    { Name "num_pulses" }
+    { Type Sequence }
+    { ObjectId 950 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_282F5F3B-61CB-451d-901E-1C849F766F58" }
+}
+
+NoteObject 2
+{
+    { Type DataDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 952 }
+    { DescLine "From speed sensors." }
+}
+
+ItemObject 3
+{
+    { Type DataType }
+    { Value "integer" }
+    { NoteId 2 }
+    { ObjectId 953 }
+}
+
+ItemObject 4
+{
+    { Type SystemType }
+    { Value "False" }
+    { NoteId 2 }
+    { ObjectId 954 }
+}
+
+ItemObject 5
+{
+    { Type Constraint }
+    { Value "None" }
+    { NoteId 2 }
+    { ObjectId 955 }
+}
+
+ItemObject 6
+{
+    { Type DataLocation }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 956 }
+}
+
+ItemObject 7
+{
+    { Type DataSize }
+    { Value "Unknown" }
+    { NoteId 2 }
+    { ObjectId 957 }
+}
+
+ItemObject 8
+{
+    { Type Representation }
+    { Value "Standard" }
+    { NoteId 2 }
+    { ObjectId 958 }
+}
+
+ItemObject 9
+{
+    { Type Legality }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 959 }
+}
+
+ItemObject 10
+{
+    { Type Units }
+    { Value "Digital" }
+    { NoteId 2 }
+    { ObjectId 960 }
+}
+
+ItemObject 11
+{
+    { Type Scaling }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 961 }
+}
+
+ItemObject 12
+{
+    { Type Precision }
+    { Value "Perfect" }
+    { NoteId 2 }
+    { ObjectId 962 }
+}
+
+ItemObject 13
+{
+    { Type Conventions }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 963 }
+}
+
+ItemObject 14
+{
+    { Type Frequency }
+    { Value "Depends" }
+    { NoteId 2 }
+    { ObjectId 964 }
+}
+
+NoteObject 15
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 966 }
+}
+
+ItemObject 16
+{
+    { Type ObjectName }
+    { Value "num_pulses" }
+    { NoteId 15 }
+    { ObjectId 967 }
+}
+
+NoteObject 17
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 969 }
+}
+
+ItemObject 18
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 17 }
+    { ObjectId 970 }
+}
+
+ItemObject 19
+{
+    { Type RequirementName }
+    { Value "speed_sub_system" }
+    { NoteId 17 }
+    { ObjectId 971 }
+}
+
+ItemObject 20
+{
+    { Type RequirementDocument }
+    { Value "g_train_specifications" }
+    { NoteId 17 }
+    { ObjectId 972 }
+}
+
+ItemObject 21
+{
+    { Type RequirementParagraph }
+    { Value "speed" }
+    { NoteId 17 }
+    { ObjectId 973 }
+}
+
+ItemObject 22
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 17 }
+    { ObjectId 974 }
+}
+
+ItemObject 23
+{
+    { Type QualificationMethod }
+    { Value "" }
+    { NoteId 17 }
+    { ObjectId 975 }
+}
+
+ItemObject 24
+{
+    { Type QualificationLevel }
+    { Value "" }
+    { NoteId 17 }
+    { ObjectId 976 }
+}
+
+ItemObject 25
+{
+    { Type FormalTestParagraph }
+    { Value "" }
+    { NoteId 17 }
+    { ObjectId 977 }
+}
+
+NoteObject 26
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 979 }
+}
+
+ItemObject 27
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 26 }
+    { ObjectId 980 }
+}
+
+ItemObject 28
+{
+    { Type DocumentName }
+    { Value "SDD" }
+    { NoteId 26 }
+    { ObjectId 981 }
+}
+
+ItemObject 29
+{
+    { Type DocumentNumber }
+    { Value "1" }
+    { NoteId 26 }
+    { ObjectId 982 }
+}
+
+ItemObject 30
+{
+    { Type ParagraphNumber }
+    { Value "10" }
+    { NoteId 26 }
+    { ObjectId 983 }
+}
+

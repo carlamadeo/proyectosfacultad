@@ -1,0 +1,46 @@
+FileObject 1
+{
+    { Name "a398" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65C25-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "Watchuser" }
+    { Type UmlActor }
+    { ObjectId 979 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_6E951D6B-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 981 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 983 }
+    { DescLine "The normal nationality of a black forest " }
+    { DescLine "coocoo watch owner is japanese or american." }
+    { DescLine "It was a souvenir of a wonderful and unforgetable" }
+    { DescLine "journey to the deep black forest." }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Watchuser" }
+    { NoteId 3 }
+    { ObjectId 984 }
+}
+

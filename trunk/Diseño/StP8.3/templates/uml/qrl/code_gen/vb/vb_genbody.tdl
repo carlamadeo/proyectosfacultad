@@ -1,0 +1,298 @@
+//*****************************************************************************
+// $RCSfile: vb_genbody.tdl,v $
+// $Revision: 1.4 $
+// $Date: 2001/12/04 12:59:57 $
+// Author: Vince Bryce
+//*****************************************************************************
+
+//   Generates a .cls file for each instance of metamodel type MClass.
+//   Currently there are two different templates for the subtypes of MClass 
+//   one for MInterface (handled in template MInterface.genClass), 
+//   the rest are handled in template MClass.genClass
+
+//   Import other template files
+
+USES vb_std;
+USES vb_sm;
+
+//   Generates the .cls file for each instance of meta type MClass (except 
+//   MInterface, s.above).
+//   MClass.genClass is called by procedure genClass (defined above).
+
+template genClass(MClass)
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+  Persistable = 0  'NotPersistable
+  DataBindingBehavior = 0  'vbNone
+  DataSourceBehavior  = 0  'vbNone
+  MTSTransactionMode  = 0  'NotAnMTSObject
+END
+Attribute VB_Name = "[MClass.name]"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Option Explicit
+
+[loop(MClass->MAttribute)]
+[MAttribute.access] [MAttribute.name] As [getDataType([MAttribute.type])]
+[end loop]
+
+[// Generate attributes of the class]
+[// A distinction is made between static and normal attributes]
+
+
+
+[/* generate all operations */]
+[loop(MClass->MOperation Where [MOperation.returnType] == "Void")]
+[MOperation.access] Sub [MOperation.name]([getOpTypeList([MOperation])])
+	[mergeOut("UDOC::" [MOperation.id],"operation code")]
+End Sub
+[end loop]
+
+[loop(MClass->MOperation Where [MOperation.returnType] != "Void")]
+[MOperation.access] Function [MOperation.name]([getOpTypeList([MOperation])]) As [getDataType([MOperation.returnType])] 
+	[mergeOut("UDOC::" [MOperation.id],"operation code")]
+End Function
+[end loop]
+
+
+	[mergeOut("UDOP","operation")]
+
+	[/* generate all relationships (defined below) */]
+	[genRelationship([MClass])]
+	
+	[mergeOut("UDREL","relationship")]
+
+	[/* generate accessor functions for each attribute (defined below) */]
+	[genAccessMethod([MClass])] 
+	
+[/* if the class has a state machine in the model, it is an active class. 
+    genStateMachine (defined in vb_sm.tdl) generates declarations for the state
+    machine in this case. */]	
+	[if([MClass.active] == TRUE)]
+	[genStateMachine([MClass])]
+	[end if]
+end template
+
+template genAttribute(MClass)
+[loop(MClass->MAttribute Where [MAttribute.binding] == "static";
+insert("import",[Class_[MAttribute.type]]),
+setText("' static class members **************************************************/"))]
+[getText()]
+[MAttribute.access] static [getDataType([MAttribute.type])] [MAttribute.name] [getAttDefVal([MAttribute])];
+		
+[end loop]
+
+[loop(MClass->MAttribute;
+setText("' class members //////////////////////////////////////////////////////////"),
+insert("import",[Class_[MAttribute.type]]))]
+[getText()]
+[MAttribute.access] [getDataType([MAttribute.type])] [MAttribute.name] [getAttDefVal([MAttribute])];
+		
+[end loop]
+end template
+
+
+//	Generate accessor functions for all attributes, called in the template above
+
+template genAccessMethod(MClass)
+[loop(MClass->MAttribute)]
+[/* get operation */]
+Public Function get[MAttribute.name]() As [getDataType([MAttribute.type])]
+	[MAttribute.name]=get[MAttribute.name]()
+End Function
+[/* set operation */]
+Private Function set[MAttribute.name](value As [getDataType([MAttribute.type])])
+	[MAttribute.name] = value
+End Function
+		
+[end loop]
+end template
+	
+
+	
+//	Generate relationships of the class
+//	A distinction is made between static and normal attributes
+
+
+template genRelationship(MClass)
+[/* each relation (MAssociation) has two end points (MAssociationEnd). 
+	We look for pairs of end points where one end point is attached to 
+	the source class and the other end point is attached to the 
+	destination class. We use the alias name 'FromRole' for the end point
+	of the source class, 'ToRole' for the end point of the destination 
+	class, and 'Partner' for the destination class itself. The condition
+	'Where [FromRole.id] != [ToRole.id]' assures that both end points are
+	different. */]
+[loop(MClass->Role As FromRole->MAssociation->MAssociationEnd As ToRole->MClass As Partner Where [FromRole.id] != [ToRole.id];
+setString("' association ************************************************************"))]
+[getString()]
+[loop(Partner->MPackage)]
+[insert("import",[MPackage.id])]
+		
+[end loop]
+Public [genRelationStatement([Partner],[ToRole])]
+		
+[end loop]	
+end template
+
+//   maps the multiplicity of the end point MAssociationEnd. We distinguish the 
+//   following cases:
+//   "One"  : a single instance
+//   "Many" : a Vector
+//   "n"    : an array of n instances 
+//   Procedure getMultiplicity (defined in std.tdl) provides the multiplicity of 
+//   the end point 
+
+proc genRelationStatement(MClass As Partner, MAssociationEnd)
+	local multiplicity = getMultiplicity([MAssociationEnd.multiplicity]);
+	switch([multiplicity])
+	case "Many" : 
+		insert("import","import vb.util.*;\n");
+		return "Vector _" [MAssociationEnd.name] " = new Vector()";
+	case "One"	: 
+		return  " new_" [MAssociationEnd.name] " As " [Partner.name];
+	default 	: 
+		return  " new_" [MAssociationEnd.name] "(" [multiplicity] ") As " [Partner.name];
+	end switch
+end proc
+
+//   Generate operations of the class
+//   A distinction is made between static, virtual and normal operations
+//   If there are any code statements attached to the StP annotation 
+//   'VB Source Code' these are generated with procedure outDesc (defined in
+//   vb_std.tdl
+
+template genOperation(MClass)
+[loop(MClass->MOperation Where [MOperation.binding] == "static";
+setText("' static class methods ///////////////////////////////////////////////////"))]
+[getText()]
+[MOperation.access] static [getDataType([MOperation.returnType])] [MOperation.name]([getOpTypeList([MOperation])])
+{
+	[mergeOut("UDOC::" getUniqueId([MOperation]),"operation code")]
+	[loop(MOperation->Note Where [Note.type] == "UmlOperationVBCode")]
+	[outDesc([Note.description])]
+			
+	[end loop]  
+}
+		
+[end loop]
+
+[loop(MClass->MOperation Where [MOperation.binding] == "normal";
+setText("' class methods //////////////////////////////////////////////////////////"))]
+[getText()]
+[MOperation.access] [getDataType([MOperation.returnType])] [MOperation.name]([getOpTypeList([MOperation])])
+{
+	[mergeOut("UDOC::" getUniqueId([MOperation]),"operation code")]
+	[loop(MOperation->Note Where [Note.type] == "UmlOperationVBCode")]
+	[outDesc([Note.description])]
+	
+	[end loop]
+}
+		
+[end loop]
+
+[loop(MClass->MOperation Where [MOperation.binding] == "virtual";
+setText("' virtual class methods //////////////////////////////////////////////////////////"))]
+[getText()]
+
+[if(getDataType([MOperation.returnType]) == "void")]
+[MOperation.access] Sub [MOperation.name]([getOpTypeList([MOperation])])
+{
+	[mergeOut("UDOC::" getUniqueId([MOperation]),"operation code")]
+	[loop(MOperation->Note Where [Note.type] == "UmlOperationVBCode")]
+	[outDesc([Note.description])]
+			
+	[end loop]
+	
+}
+[else]
+[MOperation.access] Sub [getDataType([MOperation.returnType])] [MOperation.name]([getOpTypeList([MOperation])])
+{
+	[mergeOut("UDOC::" getUniqueId([MOperation]),"operation code")]
+	[loop(MOperation->Note Where [Note.type] == "UmlOperationVBCode")]
+	[outDesc([Note.description])]
+			
+	[end loop]
+	
+}
+[end if]	
+		
+[end loop]
+end template
+
+
+// package_proc is used by the mark function (with the first parameter package)
+//   to identify the packagenames based on the packaged id 
+//   setDelim is a procedure to set a delimiter, that is used with procedure delim
+//   (both defined in std.tdl)
+
+proc MPackage.package_proc()
+	local packageName = "";
+	local packageList = getIdListRec(MPackage->Domain) [MPackage.id];
+	loop(Instances->MPackage([packageList]) As allPackage;setDelim("");setDelim("."))
+		[packageName] = [packageName] delim() [allPackage.name];
+			
+	end loop
+	return "package " [packageName] ";\n";
+end proc
+
+//   import_proc is used by the mark function (with first parameter import) to 
+//   identify the import statement for the proper package
+
+proc MPackage.import_proc()
+	local packageName = "";
+	local packageList = getIdListRec(MPackage->Domain) [MPackage.id];
+	loop(Instances->MPackage([packageList]) As allPackage;setDelim("");setDelim("."))
+		[packageName] = [packageName] delim() [allPackage.name];
+			
+	end loop
+	return "import " [packageName] ".*;\n";
+end proc
+
+//   help function to get all the interfaces a class has to implement.
+//   Called by MClass.genClass
+
+proc genImplementClass(MClass)
+    //get all interfaces the class implements
+	local ret;
+    loop(MClass->Implement;setDelim("");setDelim(" ,"))
+        insert("import",[Class_[Implement.name]]);
+        [ret] = [ret] delim() "implements " [Implement.name];
+    		
+    end loop
+	return [ret];
+end proc
+
+//  help function to get the parentclass of a class.
+//  Called by MClass.genClass
+
+proc genBaseClass(MClass)
+	//get *the* class the class extends
+	loop(MClass->SuperClass)
+		insert("import",[Class_[SuperClass.name]]);
+	    return "extends " [SuperClass.name];
+	end loop
+end proc
+
+//   help function to get the default value of the attribute.
+//   Called by MClass.genClass
+
+template getAttDefVal(MAttribute)
+[if([MAttribute.defaultValue] != "")]
+= [MAttribute.defaultValue]\
+[end if]
+end template
+
+//   help function to get the paramter type and value of the operation.
+//   Called by MClass.genClass
+
+template getOpTypeList(MOperation)
+[loop(MOperation->OpPara;setDelim("");setDelim(","))]
+[insert("import",[Class_[OpPara.type]])]
+[delim()] [OpPara.name] As [getDataType([OpPara.type])]\
+[end loop]
+end template
+

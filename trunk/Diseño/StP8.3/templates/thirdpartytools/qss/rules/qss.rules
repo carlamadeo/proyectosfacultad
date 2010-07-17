@@ -1,0 +1,35 @@
+
+ Class 0  SysDOORS
+{
+  { ParseCondition "(toolinfo_variable(\"SysDOORS\") == \"True\");" }
+  { Label "Specify Rqts (DOORS)" }
+  { ShowOnDesktop True }
+  { Image "requirements_tables" }
+  { ClassCommand
+        { Name "StartDOORS" }
+	{ Label "Start DOORS" }
+	{ ShowPropsOnExec True }
+	{ Type Nowin }
+        { Command "${DOORSHOME}\bin\DOORS.exe -project '${DoorsProjectSystem}' -user '${DoorsUserName}' -password '${DoorsPassword}' &" } 
+
+  }
+} 
+
+
+
+ Class 0  SwDOORS
+{
+  { ParseCondition "(toolinfo_variable(\"SwDOORS\") == \"True\");" }
+  { Label "Specify Rqts (DOORS)" }
+  { ShowOnDesktop True }
+  { Image "requirements_tables" }
+  { ClassCommand
+        { Name "StartDOORS" }
+	{ Label "Start DOORS" }
+	{ ShowPropsOnExec True }
+	{ Type Nowin }
+        { Command "${DOORSHOME}\bin\DOORS.exe -project '${DoorsProjectSoftware}' -user '${DoorsUserName}' -password '${DoorsPassword}' &" } 
+
+  }
+
+} 

@@ -1,0 +1,130 @@
+
+Class 0 SwDesignDocumentation
+{
+    { ParseCondition "(toolinfo_variable(\"ComponentModeler\") == \"True\");" }
+    { Label "Documentation (Model)" }
+    { Image "script_manager" }
+    { ShowOnDesktop True }
+
+ { ClassCommand
+        { Name "GenerateSRS" }
+	{ Label "Generate Software Design Document ..." }
+	{ ShowPropsOnExec True }
+	{ Type Nowin }
+	{ Command "qrp -p ${projdir} -s ${system}  -x UseCases '${cmd.objects}' -x RequirementsTools '${prop.RequirementsTools}'  -x DocumentFormat '${prop.DocumentFormat}' lifecycle/support/documentation/qrl/GenerateSwArchitectureDocument.qrl"}
+        { UseProperty ValRequirementsTools}
+        { UseProperty ValDocumentFormat }
+        { Properties
+	    { Activation
+	        { Target "RequirementsTools" }
+                { On Activate }
+            }
+	    { Activation
+	        { Target "DocumentFormat" }
+                { On Activate }
+            }
+	    { Footer
+		{ Name "Footer1" }
+		{ LeftFooter "Choose Properties" }
+	    }
+    	    { Activation 
+		{ Target "Footer1" }
+		{ OnInit Active }
+	    }
+    	    { Footer
+    	    	{ Name "Footer2" }
+    	    	{ RightFooter "Software Architecture Document" }
+    	    }
+    	    { Activation 
+		{ Target "Footer2" }
+		{ OnInit Active }
+	    }
+		
+	    { Group
+		{ Name "options2" }
+		{ Type Vertical }
+                { Align Labels }
+    	    	{ Align Bottom }
+		{ Members ( DocumentFormat RequirementsTools) }
+	    }
+	    { Group
+	  	{ Name "midcolumn" }
+	  	{ Type Vertical }
+	  	{ Members ( options2 ) }
+	    }
+    	    { Group
+    	    	{ Name "All" }
+    	    	{ Type Horizontal }
+		{ Members (  midcolumn) }
+    	    }
+    	}
+    }
+
+}
+
+
+
+
+Global 5 ValDocumentFormat
+{
+    { Properties
+        { Choice
+            { Name "DocumentFormat" }
+	    { Label "Document Format:" }
+            { Type AbbrMenu }
+            { ChoiceItem
+                { Label "RTF (Microsoft Word)" }
+                { OnValue "rtf" }
+		{ Init On }
+            }
+            { ChoiceItem
+                { Label "Framemaker" }
+                { OnValue "mif" }
+            }
+        }
+    }
+}
+
+ 
+Global 5 ValDocumentPath
+{
+    { Properties
+	{ Text
+	    { Name "OutputPath" }
+	    { Label "Output Path:" }
+	    { Init "" }
+    	    { Type Text }
+    	    { MinLength 1 }
+	    { MaxLength 80 }
+	    { DispLength 20 }
+	}
+    }
+}
+
+
+
+ 
+Global 5 ValRequirementsTools
+{
+    { Properties
+        { Choice
+            { Name "RequirementsTools" }
+	    { Label "Requirements Tool:" }
+            { Type AbbrMenu }
+            { ChoiceItem
+                { Label "Validator Table" }
+                { OnValue "Validator" }
+		{ Init On }
+            }
+            { ChoiceItem
+                { Label "DOORS" }
+                { OnValue "DOORS" }
+            }
+            { ChoiceItem
+                { Label "NONE" }
+                { OnValue "NONE" }
+            }
+        }
+    }
+}
+

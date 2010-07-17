@@ -1,0 +1,513 @@
+FileObject 1
+{
+    { Name "a133" }
+    { Type ObjectAnnotation }
+    { GUID "UID_59FF2172-C340-4d50-B3F5-7DF48EB8BE63" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "control_g_train.c" }
+    { Type SEFile }
+    { ObjectId 1499 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_3B71EE7C-98E5-423f-9AEC-8D2700D509FD" }
+}
+
+NodeObject 99997
+{
+    { Name "control g_train" }
+    { Type Module }
+    { ObjectId 1500 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_FA6E6C2E-5240-4d91-B16F-2D3686CA257F" }
+}
+
+NoteObject 2
+{
+    { Type ModulePDL }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1502 }
+    { DescLine "        " }
+    { DescLine "control_g_train()" }
+    { DescLine "        {" }
+    { DescLine "           process_weight(N_Kgs,number_of_passengers);" }
+    { DescLine "           process_speed(location,Ts);" }
+    { DescLine "           send_to_screen(location,number_of_passenger,N_Kgs,Ts);" }
+    { DescLine "        }" }
+}
+
+ItemObject 3
+{
+    { Type PDL }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 1503 }
+}
+
+NoteObject 4
+{
+    { Type ModuleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1505 }
+}
+
+ItemObject 5
+{
+    { Type ModuleReturnType }
+    { Value "int" }
+    { NoteId 4 }
+    { ObjectId 1506 }
+}
+
+ItemObject 6
+{
+    { Type CodeGenId }
+    { Value "7" }
+    { NoteId 4 }
+    { ObjectId 1507 }
+}
+
+NoteObject 7
+{
+    { Type Module }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1509 }
+    { DescLine "This module initiates all the other modules. This computer system receives data " }
+    { DescLine "from sensors and updates information to the display screen. Passengers at the " }
+    { DescLine "stations can get information about the G-Train's Location, Speed, Weight, and" }
+    { DescLine " Number of passengers on board." }
+}
+
+ItemObject 8
+{
+    { Type MemoryBudget }
+    { Value "5 WORDS" }
+    { NoteId 7 }
+    { ObjectId 1510 }
+}
+
+ItemObject 9
+{
+    { Type ProcessingTime }
+    { Value "2.5" }
+    { NoteId 7 }
+    { ObjectId 1511 }
+}
+
+ItemObject 10
+{
+    { Type DecompositionLevel }
+    { Value "CSCI" }
+    { NoteId 7 }
+    { ObjectId 1512 }
+}
+
+NoteObject 11
+{
+    { Type LocalData }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1514 }
+    { DescLine "Centralized Computer System" }
+}
+
+ItemObject 12
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 11 }
+    { ObjectId 1515 }
+}
+
+ItemObject 13
+{
+    { Type DataName }
+    { Value "Control-Info" }
+    { NoteId 11 }
+    { ObjectId 1516 }
+}
+
+ItemObject 14
+{
+    { Type DataSize }
+    { Value "8 Mega Bytes" }
+    { NoteId 11 }
+    { ObjectId 1517 }
+}
+
+ItemObject 15
+{
+    { Type DataType }
+    { Value "SUN 3/60" }
+    { NoteId 11 }
+    { ObjectId 1518 }
+}
+
+ItemObject 16
+{
+    { Type Representation }
+    { Value "Color Monitor" }
+    { NoteId 11 }
+    { ObjectId 1519 }
+}
+
+ItemObject 17
+{
+    { Type Constraint }
+    { Value "None" }
+    { NoteId 11 }
+    { ObjectId 1520 }
+}
+
+ItemObject 18
+{
+    { Type Units }
+    { Value "N/A" }
+    { NoteId 11 }
+    { ObjectId 1521 }
+}
+
+ItemObject 19
+{
+    { Type Precision }
+    { Value "100 %" }
+    { NoteId 11 }
+    { ObjectId 1522 }
+}
+
+NoteObject 20
+{
+    { Type LocalDatabase }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1524 }
+    { DescLine "The local database contains 'time' information " }
+    { DescLine "regarding the the pulses." }
+}
+
+ItemObject 21
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 20 }
+    { ObjectId 1525 }
+}
+
+ItemObject 22
+{
+    { Type ERDiagram }
+    { Value "Time" }
+    { NoteId 20 }
+    { ObjectId 1526 }
+}
+
+ItemObject 23
+{
+    { Type AccessMethod }
+    { Value "Direct" }
+    { NoteId 20 }
+    { ObjectId 1527 }
+}
+
+NoteObject 24
+{
+    { Type DatabaseReference }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1529 }
+}
+
+ItemObject 25
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 24 }
+    { ObjectId 1530 }
+}
+
+ItemObject 26
+{
+    { Type DatabaseName }
+    { Value "time_1" }
+    { NoteId 24 }
+    { ObjectId 1531 }
+}
+
+ItemObject 27
+{
+    { Type DatabaseUsage }
+    { Value "Both" }
+    { NoteId 24 }
+    { ObjectId 1532 }
+}
+
+NoteObject 28
+{
+    { Type Interrupt }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1534 }
+    { DescLine "This manual interrupt system is enabled during" }
+    { DescLine "emergencies." }
+}
+
+ItemObject 29
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 28 }
+    { ObjectId 1535 }
+}
+
+ItemObject 30
+{
+    { Type InterruptName }
+    { Value "Enabled" }
+    { NoteId 28 }
+    { ObjectId 1536 }
+}
+
+ItemObject 31
+{
+    { Type Source }
+    { Value "StationMaster" }
+    { NoteId 28 }
+    { ObjectId 1537 }
+}
+
+ItemObject 32
+{
+    { Type InterruptPriority }
+    { Value "Top" }
+    { NoteId 28 }
+    { ObjectId 1538 }
+}
+
+ItemObject 33
+{
+    { Type Response }
+    { Value "Immediate" }
+    { NoteId 28 }
+    { ObjectId 1539 }
+}
+
+ItemObject 34
+{
+    { Type InterruptTime }
+    { Value ".25 Seconds" }
+    { NoteId 28 }
+    { ObjectId 1540 }
+}
+
+ItemObject 35
+{
+    { Type MinimumFrequency }
+    { Value "Unknown" }
+    { NoteId 28 }
+    { ObjectId 1541 }
+}
+
+ItemObject 36
+{
+    { Type MaximumFrequency }
+    { Value "-" }
+    { NoteId 28 }
+    { ObjectId 1542 }
+}
+
+ItemObject 37
+{
+    { Type ProbableFrequency }
+    { Value "Random" }
+    { NoteId 28 }
+    { ObjectId 1543 }
+}
+
+NoteObject 38
+{
+    { Type Timing }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1545 }
+    { DescLine "Synchronized with the sensors & the display screen." }
+}
+
+ItemObject 39
+{
+    { Type TimingConditions }
+    { Value "N/A" }
+    { NoteId 38 }
+    { ObjectId 1546 }
+}
+
+ItemObject 40
+{
+    { Type Sequencing }
+    { Value "N/A" }
+    { NoteId 38 }
+    { ObjectId 1547 }
+}
+
+ItemObject 41
+{
+    { Type DynamicLogic }
+    { Value "N/A" }
+    { NoteId 38 }
+    { ObjectId 1548 }
+}
+
+NoteObject 42
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1550 }
+    { DescLine ",.St stable" }
+}
+
+ItemObject 43
+{
+    { Type ObjectName }
+    { Value "control g_train" }
+    { NoteId 42 }
+    { ObjectId 1551 }
+}
+
+ItemObject 44
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 42 }
+    { ObjectId 1552 }
+}
+
+NoteObject 45
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1554 }
+    { DescLine "This fulfills the requirement that there be a control system on the gravity train." }
+}
+
+ItemObject 46
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 45 }
+    { ObjectId 1555 }
+}
+
+ItemObject 47
+{
+    { Type RequirementName }
+    { Value "control_g_train" }
+    { NoteId 45 }
+    { ObjectId 1556 }
+}
+
+ItemObject 48
+{
+    { Type RequirementDocument }
+    { Value "g_train_specifications" }
+    { NoteId 45 }
+    { ObjectId 1557 }
+}
+
+ItemObject 49
+{
+    { Type RequirementParagraph }
+    { Value "introduction" }
+    { NoteId 45 }
+    { ObjectId 1558 }
+}
+
+ItemObject 50
+{
+    { Type ParagraphNumber }
+    { Value "1" }
+    { NoteId 45 }
+    { ObjectId 1559 }
+}
+
+ItemObject 51
+{
+    { Type QualificationMethod }
+    { Value "" }
+    { NoteId 45 }
+    { ObjectId 1560 }
+}
+
+ItemObject 52
+{
+    { Type QualificationLevel }
+    { Value "" }
+    { NoteId 45 }
+    { ObjectId 1561 }
+}
+
+ItemObject 53
+{
+    { Type FormalTestParagraph }
+    { Value "" }
+    { NoteId 45 }
+    { ObjectId 1562 }
+}
+
+NoteObject 54
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1564 }
+}
+
+ItemObject 55
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 54 }
+    { ObjectId 1565 }
+}
+
+ItemObject 56
+{
+    { Type DocumentName }
+    { Value "SDD" }
+    { NoteId 54 }
+    { ObjectId 1566 }
+}
+
+ItemObject 57
+{
+    { Type DocumentNumber }
+    { Value "2" }
+    { NoteId 54 }
+    { ObjectId 1567 }
+}
+
+ItemObject 58
+{
+    { Type ParagraphNumber }
+    { Value "7" }
+    { NoteId 54 }
+    { ObjectId 1568 }
+}
+

@@ -1,0 +1,312 @@
+
+FillTable ActionLogicTable 
+{
+	{ GUID "UID_C488F635-FBE2-4d42-851A-E2B2C6EBF7C1" }
+	{ Hsect	{ Appid 20 }
+		{ NumRows 2 }
+		{ Hidden False }
+		{ NumVisRows 2 }
+		{ Vsect	{ Appid 21 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 28 }
+				{ Cell	{ Appid 31 }
+					 } }
+			{ Row	{ Appid 39 }
+				{ Cell	{ Appid 42 }
+					 } } }
+		{ Vsect	{ Appid 22 }
+		{ NumCols 4 }
+		{ Hidden False }
+		{ NumVisCols 4 }
+			{ Row	{ Appid 29 }
+				{ Cell	{ Appid 32 }
+					 }
+				{ Cell	{ Appid 33 }
+					 }
+				{ Cell	{ Appid 34 }
+					 }
+				{ Cell	{ Appid 35 }
+					 } }
+			{ Row	{ Appid 40 }
+				{ Cell	{ Appid 8 }
+					{ Label "Complete Transaction" }
+					
+					{ ObjectCache { Object { PDMType node } { MappingName ControlSpecMap } { ID 208 } { GUID "UID_7C04BE48-AC56-11d4-BEDC-0060971B5EE0" }  } } }
+				{ Cell	{ Appid 9 }
+					{ Label "Dispense Cash" }
+					
+					{ ObjectCache { Object { PDMType node } { MappingName ControlSpecMap } { ID 238 } { GUID "UID_7C04BFDB-AC56-11d4-BEDC-0060971B5EE0" }  } } }
+				{ Cell	{ Appid 43 }
+					{ Label "Initiate Transaction" }
+					
+					{ ObjectCache { Object { PDMType node } { MappingName ControlSpecMap } { ID 243 } { GUID "UID_7C04BFE7-AC56-11d4-BEDC-0060971B5EE0" }  } } }
+				{ Cell	{ Appid 44 }
+					{ Label "Specify Transaction Data" }
+					
+					{ ObjectCache { Object { PDMType node } { MappingName ControlSpecMap } { ID 213 } { GUID "UID_7C04BE54-AC56-11d4-BEDC-0060971B5EE0" }  } } } } }
+		{ Vsect	{ Appid 23 }
+		{ NumCols 3 }
+		{ Hidden False }
+		{ NumVisCols 3 }
+			{ Row	{ Appid 30 }
+				{ Cell	{ Appid 36 }
+					 }
+				{ Cell	{ Appid 37 }
+					 }
+				{ Cell	{ Appid 38 }
+					 } }
+			{ Row	{ Appid 41 }
+				{ Cell	{ Appid 10 }
+					{ Label "Print Receipt" }
+					
+					{ ObjectCache { Object { PDMType node } { MappingName ControlSpecMap } { ID 532 } { GUID "UID_FA750A8A-B5C1-11d4-879B-00C04F8DEC45" }  } } }
+				{ Cell	{ Appid 11 }
+					{ Label "Cash Approved" }
+					
+					{ ObjectCache { Object { PDMType node } { MappingName ControlSpecMap } { ID 533 } { GUID "UID_FA750A8D-B5C1-11d4-879B-00C04F8DEC45" }  } } }
+				{ Cell	{ Appid 45 }
+					{ Label "Eject Card" }
+					
+					{ ObjectCache { Object { PDMType node } { MappingName ControlSpecMap } { ID 534 } { GUID "UID_FA750A90-B5C1-11d4-879B-00C04F8DEC45" }  } } } } } }
+	{ Hsect	{ Appid 24 }
+		{ NumRows 6 }
+		{ Hidden False }
+		{ NumVisRows 6 }
+		{ Vsect	{ Appid 25 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 46 }
+				{ Cell	{ Appid 3 }
+					{ Label "Activate PIN Validation" }
+					
+					{ ObjectCache { Object { PDMType node } { MappingName ControlSpecMap } { ID 503 } { GUID "UID_FA750A23-B5C1-11d4-879B-00C04F8DEC45" }  } } } }
+			{ Row	{ Appid 50 }
+				{ Cell	{ Appid 5 }
+					{ Label "Activate Print Receipt" }
+					
+					{ ObjectCache { Object { PDMType node } { MappingName ControlSpecMap } { ID 506 } { GUID "UID_FA750A2C-B5C1-11d4-879B-00C04F8DEC45" }  } } } }
+			{ Row	{ Appid 54 }
+				{ Cell	{ Appid 57 }
+					{ Label "Eject Card" }
+					
+					{ ObjectCache { Object { PDMType node } { MappingName ControlSpecMap } { ID 509 } { GUID "UID_FA750A35-B5C1-11d4-879B-00C04F8DEC45" }  } } } }
+			{ Row	{ Appid 65 }
+				{ Cell	{ Appid 68 }
+					{ Label "Get Transaction Data" }
+					
+					{ ObjectCache { Object { PDMType node } { MappingName ControlSpecMap } { ID 512 } { GUID "UID_FA750A3E-B5C1-11d4-879B-00C04F8DEC45" }  } } } }
+			{ Row	{ Appid 76 }
+				{ Cell	{ Appid 79 }
+					{ Label "Release Funds" }
+					
+					{ ObjectCache { Object { PDMType node } { MappingName ControlSpecMap } { ID 515 } { GUID "UID_FA750A47-B5C1-11d4-879B-00C04F8DEC45" }  } } } }
+			{ Row	{ Appid 87 }
+				{ Cell	{ Appid 90 }
+					{ Label "Request New Data" }
+					
+					{ ObjectCache { Object { PDMType node } { MappingName ControlSpecMap } { ID 518 } { GUID "UID_FA750A50-B5C1-11d4-879B-00C04F8DEC45" }  } } } } }
+		{ Vsect	{ Appid 26 }
+		{ NumCols 4 }
+		{ Hidden False }
+		{ NumVisCols 4 }
+			{ Row	{ Appid 2 }
+				{ ObjectCache { Object { PDMType link } { MappingName DefinitionMap } { ID 504 } { GUID "UID_FA750A26-B5C1-11d4-879B-00C04F8DEC45" }  } { Object { PDMType node } { MappingName CombinationMap } { ID 502 } { GUID "UID_FA750A20-B5C1-11d4-879B-00C04F8DEC45" }  } }
+				{ Cell	{ Appid 12 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 13 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 47 }
+					{ Label "1" }
+					
+					{ ObjectCache { Object { PDMType link } { MappingName ControlSpecMap } { ID 535 } { GUID "UID_FA750A93-B5C1-11d4-879B-00C04F8DEC45" }  } } }
+				{ Cell	{ Appid 48 }
+					
+					{ ObjectCache  } } }
+			{ Row	{ Appid 4 }
+				{ ObjectCache { Object { PDMType link } { MappingName DefinitionMap } { ID 507 } { GUID "UID_FA750A2F-B5C1-11d4-879B-00C04F8DEC45" }  } { Object { PDMType node } { MappingName CombinationMap } { ID 505 } { GUID "UID_FA750A29-B5C1-11d4-879B-00C04F8DEC45" }  } }
+				{ Cell	{ Appid 16 }
+					{ Label "1" }
+					
+					{ ObjectCache { Object { PDMType link } { MappingName ControlSpecMap } { ID 536 } { GUID "UID_FA750A96-B5C1-11d4-879B-00C04F8DEC45" }  } } }
+				{ Cell	{ Appid 17 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 51 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 52 }
+					
+					{ ObjectCache  } } }
+			{ Row	{ Appid 55 }
+				{ ObjectCache { Object { PDMType link } { MappingName DefinitionMap } { ID 510 } { GUID "UID_FA750A38-B5C1-11d4-879B-00C04F8DEC45" }  } { Object { PDMType node } { MappingName CombinationMap } { ID 508 } { GUID "UID_FA750A32-B5C1-11d4-879B-00C04F8DEC45" }  } }
+				{ Cell	{ Appid 58 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 59 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 60 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 61 }
+					
+					{ ObjectCache  } } }
+			{ Row	{ Appid 66 }
+				{ ObjectCache { Object { PDMType link } { MappingName DefinitionMap } { ID 513 } { GUID "UID_FA750A41-B5C1-11d4-879B-00C04F8DEC45" }  } { Object { PDMType node } { MappingName CombinationMap } { ID 511 } { GUID "UID_FA750A3B-B5C1-11d4-879B-00C04F8DEC45" }  } }
+				{ Cell	{ Appid 69 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 70 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 71 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 72 }
+					{ Label "1" }
+					
+					{ ObjectCache { Object { PDMType link } { MappingName ControlSpecMap } { ID 539 } { GUID "UID_FA750A9F-B5C1-11d4-879B-00C04F8DEC45" }  } } } }
+			{ Row	{ Appid 77 }
+				{ ObjectCache { Object { PDMType link } { MappingName DefinitionMap } { ID 516 } { GUID "UID_FA750A4A-B5C1-11d4-879B-00C04F8DEC45" }  } { Object { PDMType node } { MappingName CombinationMap } { ID 514 } { GUID "UID_FA750A44-B5C1-11d4-879B-00C04F8DEC45" }  } }
+				{ Cell	{ Appid 80 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 81 }
+					{ Label "1" }
+					
+					{ ObjectCache { Object { PDMType link } { MappingName ControlSpecMap } { ID 541 } { GUID "UID_FA750AA5-B5C1-11d4-879B-00C04F8DEC45" }  } } }
+				{ Cell	{ Appid 82 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 83 }
+					
+					{ ObjectCache  } } }
+			{ Row	{ Appid 88 }
+				{ ObjectCache { Object { PDMType link } { MappingName DefinitionMap } { ID 519 } { GUID "UID_FA750A53-B5C1-11d4-879B-00C04F8DEC45" }  } { Object { PDMType node } { MappingName CombinationMap } { ID 517 } { GUID "UID_FA750A4D-B5C1-11d4-879B-00C04F8DEC45" }  } }
+				{ Cell	{ Appid 91 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 92 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 93 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 94 }
+					{ Label "1" }
+					
+					{ ObjectCache { Object { PDMType link } { MappingName ControlSpecMap } { ID 542 } { GUID "UID_FA750AA8-B5C1-11d4-879B-00C04F8DEC45" }  } } } } }
+		{ Vsect	{ Appid 27 }
+		{ NumCols 3 }
+		{ Hidden False }
+		{ NumVisCols 3 }
+			{ Row	{ Appid 6 }
+				{ ObjectCache { Object { PDMType link } { MappingName DefinitionMap } { ID 521 } { GUID "UID_FA750A59-B5C1-11d4-879B-00C04F8DEC45" }  } { Object { PDMType node } { MappingName ControlSpecMap } { ID 520 } { GUID "UID_FA750A56-B5C1-11d4-879B-00C04F8DEC45" }  } }
+				{ Cell	{ Appid 14 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 15 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 49 }
+					
+					{ ObjectCache  } } }
+			{ Row	{ Appid 7 }
+				{ ObjectCache { Object { PDMType link } { MappingName DefinitionMap } { ID 523 } { GUID "UID_FA750A5F-B5C1-11d4-879B-00C04F8DEC45" }  } { Object { PDMType node } { MappingName ControlSpecMap } { ID 522 } { GUID "UID_FA750A5C-B5C1-11d4-879B-00C04F8DEC45" }  } }
+				{ Cell	{ Appid 18 }
+					{ Label "On" }
+					
+					{ ObjectCache { Object { PDMType link } { MappingName ControlSpecMap } { ID 537 } { GUID "UID_FA750A99-B5C1-11d4-879B-00C04F8DEC45" }  } } }
+				{ Cell	{ Appid 19 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 53 }
+					
+					{ ObjectCache  } } }
+			{ Row	{ Appid 56 }
+				{ ObjectCache { Object { PDMType link } { MappingName DefinitionMap } { ID 525 } { GUID "UID_FA750A65-B5C1-11d4-879B-00C04F8DEC45" }  } { Object { PDMType node } { MappingName ControlSpecMap } { ID 524 } { GUID "UID_FA750A62-B5C1-11d4-879B-00C04F8DEC45" }  } }
+				{ Cell	{ Appid 62 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 63 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 64 }
+					{ Label "On" }
+					
+					{ ObjectCache { Object { PDMType link } { MappingName ControlSpecMap } { ID 538 } { GUID "UID_FA750A9C-B5C1-11d4-879B-00C04F8DEC45" }  } } } }
+			{ Row	{ Appid 67 }
+				{ ObjectCache { Object { PDMType link } { MappingName DefinitionMap } { ID 527 } { GUID "UID_FA750A6B-B5C1-11d4-879B-00C04F8DEC45" }  } { Object { PDMType node } { MappingName ControlSpecMap } { ID 526 } { GUID "UID_FA750A68-B5C1-11d4-879B-00C04F8DEC45" }  } }
+				{ Cell	{ Appid 73 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 74 }
+					{ Label "On" }
+					
+					{ ObjectCache { Object { PDMType link } { MappingName ControlSpecMap } { ID 540 } { GUID "UID_FA750AA2-B5C1-11d4-879B-00C04F8DEC45" }  } } }
+				{ Cell	{ Appid 75 }
+					
+					{ ObjectCache  } } }
+			{ Row	{ Appid 78 }
+				{ ObjectCache { Object { PDMType link } { MappingName DefinitionMap } { ID 529 } { GUID "UID_FA750A71-B5C1-11d4-879B-00C04F8DEC45" }  } { Object { PDMType node } { MappingName ControlSpecMap } { ID 528 } { GUID "UID_FA750A6E-B5C1-11d4-879B-00C04F8DEC45" }  } }
+				{ Cell	{ Appid 84 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 85 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 86 }
+					
+					{ ObjectCache  } } }
+			{ Row	{ Appid 89 }
+				{ ObjectCache { Object { PDMType link } { MappingName DefinitionMap } { ID 531 } { GUID "UID_FA750A77-B5C1-11d4-879B-00C04F8DEC45" }  } { Object { PDMType node } { MappingName ControlSpecMap } { ID 530 } { GUID "UID_FA750A74-B5C1-11d4-879B-00C04F8DEC45" }  } }
+				{ Cell	{ Appid 95 }
+					
+					{ ObjectCache  } }
+				{ Cell	{ Appid 96 }
+					{ Label "On" }
+					
+					{ ObjectCache { Object { PDMType link } { MappingName ControlSpecMap } { ID 543 } { GUID "UID_FA750AAB-B5C1-11d4-879B-00C04F8DEC45" }  } } }
+				{ Cell	{ Appid 97 }
+					
+					{ ObjectCache  } } } } }
+	{ Hsect	{ Appid 98 }
+		{ NumRows 1 }
+		{ Hidden True }
+		{ NumVisRows 1 }
+		{ Vsect	{ Appid 99 }
+		{ NumCols 1 }
+		{ Hidden False }
+		{ NumVisCols 1 }
+			{ Row	{ Appid 102 }
+				{ Cell	{ Appid 105 }
+					 } } }
+		{ Vsect	{ Appid 100 }
+		{ NumCols 4 }
+		{ Hidden False }
+		{ NumVisCols 4 }
+			{ Row	{ Appid 103 }
+				{ Cell	{ Appid 106 }
+					 }
+				{ Cell	{ Appid 107 }
+					 }
+				{ Cell	{ Appid 108 }
+					 }
+				{ Cell	{ Appid 109 }
+					 } } }
+		{ Vsect	{ Appid 101 }
+		{ NumCols 3 }
+		{ Hidden False }
+		{ NumVisCols 3 }
+			{ Row	{ Appid 104 }
+				{ Cell	{ Appid 110 }
+					 }
+				{ Cell	{ Appid 111 }
+					 }
+				{ Cell	{ Appid 112 }
+					 } } } } }

@@ -1,0 +1,831 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+Include "rules/extensibility.prop"
+
+// --- START PATCH ECR 6726 ---
+PropertySheet UmlAttribute_ps
+{
+    { Name "UmlAttribute_ps" }
+    { Label "Properties" } 
+    { UseProperty UmlObjectDescriptionButton}
+    { UseProperty UmlExtensibilityProps }
+    { UseProperty UmlBottomButtons }
+    { OwnerActionCallback UmlAttribute_ps_ActionDone } // ECR 6880
+    { Properties
+        { Qrl { QrlFile "rules/qrl/uclassd.ps.qrl" } }
+        { Text
+            { Name "ObjectName" }
+            { Label "Attribute Name:" }
+            { MinLength 1 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Group
+            { Name NameGroup }
+	    { Label "Attribute:" }
+            { Type Vertical }
+            { VerticalSpacing 5 }
+            { Resizable ResizeWidth }
+            { HorizontalAlign AlignLabels }
+            { Members (ObjectName ObjectDescription) }
+        }
+        { TopGroup
+            { VerticalSpacing 10 }
+            { VariableRow "1" }
+            { Align Left }
+            { Members ( NameGroup Extensibility ) }
+        }
+    }
+}
+
+PropertySheet UmlOperation_ps
+{
+    { Name "UmlOperation_ps" }
+    { Label "Properties" } 
+    { UseProperty UmlObjectDescriptionButton}
+    { UseProperty UmlExtensibilityProps }
+    { UseProperty UmlBottomButtons }
+    { OwnerActionCallback UmlOperation_ps_ActionDone } // ECR 6880
+    { Properties
+        { Qrl { QrlFile "rules/qrl/uclassd.ps.qrl" } }
+        { Text
+            { Name "ObjectName" }
+            { Label "Operation Name:" }
+            { MinLength 1 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Group
+            { Name NameGroup }
+	    { Label "Operation:" }
+            { Type Vertical }
+            { VerticalSpacing 5 }
+            { Resizable ResizeWidth }
+            { HorizontalAlign AlignLabels }
+            { Members ( ObjectName ObjectDescription ) }
+        }
+        { TopGroup
+            { VerticalSpacing 10 }
+            { VariableRow "1" }
+            { Align Left }
+            { Members ( NameGroup Extensibility ) }
+        }
+    }
+}
+
+PropertySheet UmlObjectInstance_ps
+{
+    { Name "UmlObjectInstance_ps" }
+    { Label "Properties" } 
+    { UseProperty UmlObjectDescriptionButton}
+    { UseProperty UmlExtensibilityProps }
+    { UseProperty UmlBottomButtons }
+    { OwnerActionCallback UmlObjectInstance_ps_ActionDone } // ECR 6880
+    { Properties
+        { Qrl { QrlFile "rules/qrl/uclassd.ps.qrl" } }
+        { Text
+            { Name "ObjectName" }
+            { Label "Object Name:" }
+            { MinLength 1 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Group
+            { Name NameGroup }
+	    { Label "Object:" }
+            { Type Vertical }
+            // { ResizePolicy ResizeNone }
+            { VerticalSpacing 5 }
+            { Resizable ResizeWidth }
+            { HorizontalAlign AlignLabels }
+            { Members (ObjectName ObjectDescription) }
+        }
+        { TopGroup
+            { VerticalSpacing 10 }
+            { VariableRow "1" }
+            { Align Left }
+            { Members ( NameGroup Extensibility ) }
+        }
+    }
+}
+// --- END PATCH ECR 6726 ---
+
+PropertySheet UmlClass_ps
+{
+    { Name "UmlClass_ps" }
+    {Label "Properties"} {UseProperty UmlObjectDescriptionButton}
+    { UseProperty UmlMultiplicityProp }
+    { UseProperty UmlVisibilityProp }
+    { UseProperty UmlAbstractProp }
+    { UseProperty UmlExternalProp }
+    { UseProperty UmlExtensibilityProps }
+    { UseProperty UmlBottomButtons }
+    { OwnerActionCallback UmlClass_ps_ActionDone } // ECR 6880
+    { Properties
+        { Qrl { QrlFile "rules/qrl/uclassd.ps.qrl" } }
+        { Text
+            { Name "ObjectName" }
+            { Label "Class Name:" }
+            { MinLength 1 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Group
+            { Name ModifyFieldsGroup }
+            { Type Horizontal }
+            { HorizontalSpacing 10 }
+            { ResizePolicy ResizeNone }
+            { HorizontalAlign AlignLabels }
+            { Members ( Visibility Abstract External ) }
+        }
+        { Group
+            { Name NameGroup }
+            { Label "Class:" }
+            { Type Vertical }
+            { VerticalSpacing 5 }
+            { Resizable ResizeWidth }
+            { HorizontalAlign AlignLabels }
+            { Members ( ObjectName ObjectDescription
+                        ModifyFieldsGroup
+                        MultiplicityGroup) }
+        }
+        { TopGroup
+            { VerticalSpacing 10 }
+            { Align Left }
+            { VariableRow "1" }
+            { Members ( NameGroup
+                        Extensibility ) }
+        }
+    }
+}
+
+PropertySheet UmlParamClass_ps
+{
+    { Name "UmlParamClass_ps" }
+    {Label "Properties"} {UseProperty UmlObjectDescriptionButton}
+    { UseProperty UmlParametersProp }
+    { UseProperty UmlExternalProp }
+    { UseProperty UmlAbstractProp }
+    { UseProperty UmlVisibilityProp }
+    { UseProperty UmlMultiplicityProp }
+    { UseProperty UmlExtensibilityProps }
+    { UseProperty UmlBottomButtons }
+    { OwnerActionCallback UmlParamClass_ps_ActionDone } // ECR 6880
+    { Properties
+        { Qrl { QrlFile "rules/qrl/uclassd.ps.qrl" } }
+        { Text
+            { Name "ObjectName" }
+            { Label "Class Name:" }
+            { MinLength 1 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Group
+            { Name ModifyFieldsGroup }
+            { Type Horizontal }
+            { HorizontalSpacing 10 }
+            //{ ResizePolicy ResizeNone } //ECR ????
+            { ResizePolicy ResizeAny } //ECR ????
+            { HorizontalAlign AlignLabels }
+            { Members ( Visibility Abstract External ) }
+        }
+        { Group
+            { Name NameGroup }
+            { Type Vertical }
+            { Label "Param Class:" }
+            //{ ResizePolicy ResizeNone } //ECR ????
+            { ResizePolicy ResizeAny } //ECR ????
+            { HorizontalAlign AlignLabels }
+            { VerticalSpacing 10 }
+            { Members ( ObjectName ObjectDescription
+                        ModifyFieldsGroup
+                        MultiplicityGroup // ECR 4654
+                        Parameters  ) }
+        }
+        { TopGroup
+            { VerticalSpacing 10 }
+            { Align Left }
+            { VariableRow "1" }
+            { Members ( NameGroup
+                        Extensibility ) }
+        }
+    }
+}
+
+
+Global 1 UmlClassNodeStuff
+
+{
+    { Properties
+        { Choice
+            { Name Abstract }
+            { Label "Abstract" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Label "" }
+            }
+            { Event
+                { Type Select }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Choice
+            { Name External }
+            { Label "External" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Label "" }
+            }
+            { Event
+                { Type Select }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Choice
+            { Name Visibility }
+            { Label "Visibility:" }
+            { Type AbbrMenu }
+            // Added "    " for ECR4270, lower case for ECR 5281
+            { ChoiceItem { Label "         " } }
+            { ChoiceItem { Label "public   " } }
+            { ChoiceItem { Label "protected" } }
+            { ChoiceItem { Label "private  " } }
+            { Event
+                { Type Select }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Text
+            { Name Multiplicity }
+            { Label "Multiplicity:" }
+            { MinLength    0 }
+            { DispLength 5 }
+            { InitVal "Many" }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Group
+            { Name ClassNodeStuff1 }
+            { Type Horizontal }
+            { Members ( External Abstract ) }
+        }
+        { Group
+            { Name ClassNodeStuff2 }
+            { Type Horizontal }
+            { Members ( Visibility Multiplicity ) }
+        }
+        { Group
+            { Name ClassNodeStuff }
+            { Type Vertical }
+            { Align Left }
+            { Members ( ClassNodeStuff1 ClassNodeStuff2 ) }
+        }
+    }
+}
+
+// Package property sheets
+
+
+PropertySheet UmlPackage_ps
+{
+    { Name "UmlPackage_ps" }
+    {Label "Properties"} {UseProperty UmlObjectDescriptionButton}
+    { UseProperty UmlExternalProp }
+    { UseProperty UmlComponentProp }
+    { UseProperty UmlExtensibilityProps }
+    { UseProperty UmlBottomButtons }
+    { OwnerActionCallback UmlPackage_ps_ActionDone } // ECR 6880
+    { Properties
+        { Qrl { QrlFile "rules/qrl/uclassd.ps.qrl" } }
+        { Text
+            { Name "ObjectName" }
+            { Label "Name:" } // ECR 7425 - changed from 'Package Name' to 'Name'
+            { MinLength 1 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Group
+            { Name ComponentModifyFieldsGroup }
+            { Type Horizontal }
+            { HorizontalSpacing 60 }
+            { VariableColumn "0" }
+            { Resizable ResizeWidth }
+            { HorizontalAlign AlignLabels }
+            { ChildSizePolicy ResizeAny }
+            { LayoutPolicy ResizeAny }
+            { Members ( Component
+                        External ) }
+        }
+        { Group
+            { Name ModifyGroup }
+            { Label "Object" } // ECR 7425 - changed from 'Package' to 'Object'
+            { Type Vertical }
+            { Resizable ResizeWidth }
+            { HorizontalAlign AlignLabels }
+            { LayoutPolicy ResizeAny }
+            { Members ( ObjectName ObjectDescription
+                        ComponentModifyFieldsGroup) }
+        }
+        { TopGroup
+            { Align Left }
+            { VerticalSpacing 10 }
+            { VariableRow "1" }
+            { Members ( ModifyGroup
+                        Extensibility ) }
+        }
+    }
+}
+
+// Link property sheets
+
+PropertySheet UmlClassLinkDependency_ps
+{
+    { Name "UmlClassLinkDependency_ps" }
+    {Label "Properties"} {UseProperty UmlObjectDescriptionButton}
+    { UseProperty UmlExtensibilityProps }
+    { UseProperty UmlBottomButtons }
+    { OwnerActionCallback UmlClassLinkDependency_ps_ActionDone } // ECR 6880
+    { Properties
+        { Qrl { QrlFile "rules/qrl/uclassd.ps.qrl" } }
+        { Text
+            { Name "ObjectName" }
+            { Label "Dependency Name:" }
+            { MinLength 1 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Group
+            { Name NameGroup }
+            { Label "Link:" }
+            { Resizable ResizeWidth }
+            { Type Vertical }
+            { VerticalSpacing 5 }
+            { HorizontalAlign AlignLabels }
+            { Members ( ObjectName ObjectDescription ) }
+        }
+        { TopGroup
+            { Align Left }   // ECR 6926
+            { Type Vertical }
+            { ResizePolicy ResizeAny }
+            { VariableRow "1" }
+            { Members ( NameGroup
+                        Extensibility ) }
+        }
+    }
+}
+
+// Link property sheets
+
+
+PropertySheet UmlClassLinkGenImpl_ps
+{
+    { Name "UmlClassLinkGenImpl_ps" }
+    {Label "Properties"} {UseProperty UmlObjectDescriptionButton}
+    { UseProperty UmlInheritanceVisibilityProp }
+    { UseProperty UmlVirtualInheritanceProp }
+    { UseProperty UmlExtensibilityProps }
+    { UseProperty UmlBottomButtons }
+	//ECR4791
+	{ UseProperty UmlDiscriminatorProp }
+    { OwnerActionCallback UmlClassLinkGenImpl_ps_ActionDone } // ECR 6880
+    { Properties
+        { Qrl { QrlFile "rules/qrl/uclassd.ps.qrl" } }
+// ECR 6926 begin
+        { Group
+            { Name NameGroup }
+            { Label "Object" }
+            { Type Vertical }
+            { VerticalSpacing 5 }
+            { Resizable ResizeWidth }
+            { HorizontalAlign AlignLabels }
+            { Members ( ObjectName
+                        ObjectDescription ) }
+        }
+// ECR 6926 end
+        { Group
+            { Name InhGroup }
+            { Label "Inheritance" }
+            { Type Vertical }
+            { ResizePolicy ResizeWidth }
+            { HorizontalAlign AlignLabels }
+			//ECR4791
+// ECR 6926 begin
+//            { Members ( Discriminator
+//						InheritanceVisibility
+//                        VirtualInheritance ) }
+            { Members ( InheritanceVisibility
+                        VirtualInheritance ) }
+// ECR 6926 end
+        }
+        { TopGroup
+            { Align Left }   // ECR 6926
+            { Type Vertical }
+            { ResizePolicy ResizeAny }
+            { VariableRow "1" }
+            { Members ( NameGroup InhGroup
+                        Extensibility ) }
+        }
+    }
+}
+
+//ECR2653
+PropertySheet UmlClassLinkGenHierImpl_ps
+{
+    { Name "UmlClassLinkGenHierImpl_ps" }
+    { Label "Hierarchy Properties" }
+    { UseProperty UmlExtensibilityProps }
+    { UseProperty UmlBottomHierarchyButtons }
+    { OwnerActionCallback UmlClassLinkGenHierImpl_ps_ActionDone } // ECR 6880
+	{ Properties
+        { Qrl { QrlFile "rules/qrl/uclassd.ps.qrl" } }
+        { TopGroup
+            { Align Left }  // ECR 6926
+            { Type Vertical }
+            { ResizePolicy ResizeAny }
+            { VariableRow "1" }
+            { Members ( Extensibility ) }
+        }
+    }
+}
+
+
+
+PropertySheet UmlClassLinkRefines_ps
+{
+    { Name "UmlClassLinkRefines_ps" }
+    {Label "Properties"} {UseProperty UmlObjectDescriptionButton}
+    { UseProperty UmlInheritanceVisibilityProp }
+    { UseProperty UmlVirtualInheritanceProp }
+    { UseProperty UmlRefineArgsProp }
+    { UseProperty UmlExtensibilityProps }
+    { UseProperty UmlBottomButtons }
+    { OwnerActionCallback UmlClassLinkRefines_ps_ActionDone } // ECR 6880
+    { Properties
+        { Qrl { QrlFile "rules/qrl/uclassd.ps.qrl" } }
+// ECR 6913 begin
+        { Group
+            { Name FakeInhGroup }
+            { Type Vertical }
+            { ResizePolicy ResizeWidth }
+            { HorizontalAlign AlignLabels }
+            { Members ( InheritanceVisibility
+                        VirtualInheritance
+                        RefineArgs) }
+        }
+        { Group
+            { Name InhGroup }
+            { Label "Inheritance & Arguments:" }
+            { Type Vertical }
+            { ResizePolicy ResizeWidth }
+            { HorizontalAlign AlignLabels }
+            { VerticalSpacing 5 }
+            { Members ( ObjectDescription
+                        FakeInhGroup ) }
+        }
+// ECR 6913 end
+        { TopGroup
+            { Align Left }  // ECR 6926
+            { ResizePolicy ResizeAny }
+            { Members ( InhGroup
+                        Extensibility ) }
+        }
+    }
+}
+
+
+// Link property sheets
+
+
+PropertySheet UmlClassLinkAssociation_ps
+{
+    { Name "UmlClassLinkAssociation_ps" }
+    {Label "Properties"} {UseProperty UmlObjectDescriptionButton}
+    { UseProperty UmlAssociationLinkProps }
+    { UseProperty UmlExtensibilityProps }
+    { UseProperty UmlBottomButtons }
+    { OwnerActionCallback UmlClassLinkAssociation_ps_ActionDone } // ECR 6880
+    { Properties
+        { Qrl { QrlFile "rules/qrl/uclassd.ps.qrl" } }
+        { Text
+            { Name "ObjectName" }
+            { Label "Association Name:" }
+            { MinLength 1 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Group
+            { Name NameFromToGroup }
+            { Type Vertical }
+            { Label "Link:" }
+            { VerticalSpacing 10 }
+            { HorizontalAlign AlignLabels }
+            { ResizePolicy ResizeWidth }
+            { Members ( ObjectName ObjectDescription ) }
+        }
+        { TopGroup
+            { Align Left }  // ECR 6926
+            { Resizable ResizeAny }
+            { Members ( NameFromToGroup Extensibility ) }
+        }
+    }
+}
+
+Global 1 UmlAssociationLinkProps
+{
+    { Properties
+        { Text
+            { Name "FromClass" }
+            { Label "Class:" }
+            { MinLength 0 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Text
+            { Name "FromRole" }
+            { Label "Role:" }
+            { MinLength 0 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Text
+            { Name "FromRoleStereotype" }
+            { Label "Stereotype:" }
+            { MinLength 0 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        // Begin Change ECR 150
+        { Choice
+            { Name "FromMultiplicityChoice" }
+            { Label "Multiplicity:" }
+            { Type AbbrMenu }
+            { ChoiceItem { Label "    " } }
+            { ChoiceItem { Label "0..1" } }
+            { ChoiceItem { Label "0..*" } }
+            { ChoiceItem { Label "1..*" } }
+            { ChoiceItem { Label "1   " } }
+            { ChoiceItem { Label "*   " } }
+            { Event
+                { Type Select }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Text
+            { Name "FromMultiplicity" }
+            { Label "" }
+            { MinLength    0 }
+            { DispLength 16 }
+            { Resizable ResizeNone }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Group
+            { Name "FromMultiplicityGroup" }
+            { Type Horizontal }
+            { HorizontalAlign AlignLabels }
+            { Members ( FromMultiplicityChoice FromMultiplicity ) } 
+        }
+        // End Change ECR 150
+        { Text
+            { Name "FromQualifiers" }
+            { Label "Qualifiers:" }
+            { MinLength    0 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Choice
+            { Name "FromAggregationType" }
+            { Label "AggregationType:" }
+            { Type AbbrMenu }
+            { ChoiceItem { Label "None                     " } }
+            { ChoiceItem { Label "Composition              " } }
+            { ChoiceItem { Label "Aggregation              " } }
+            { Event
+                { Type Select }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Choice
+            { Name FromRoleNavigability }
+            { Label "Role Navigability:" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Label "" }
+            }
+            { Event
+                { Type Select }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Choice
+            { Name FromOrdered }
+            { Label "Ordered:" }
+            { Type CheckBox }
+            { ChoiceItem
+                { Label "" }
+            }
+            // as a performance enhancement, we notice when this value
+            // changes, then we don't update the annotation file if it
+            // has not changed
+            { Event
+                { Type Select }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Text
+            { Name "ToClass" }
+            { Label " " }
+            { MinLength 0 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Text
+            { Name "ToRole" }
+            { Label " " }
+            { MinLength 0 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Text
+            { Name "ToRoleStereotype" }
+            { Label " " }
+            { MinLength 0 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        // Begin Change ECR 150
+        { Choice
+            { Name "ToMultiplicityChoice" }
+            { Label " " }
+            { Type AbbrMenu }
+            { ChoiceItem { Label "    " } }
+            { ChoiceItem { Label "0..1" } }
+            { ChoiceItem { Label "0..*" } }
+            { ChoiceItem { Label "1..*" } }
+            { ChoiceItem { Label "1   " } }
+            { ChoiceItem { Label "*   " } }
+            { Event
+                { Type Select }
+                { Callback "ps_ValueChanged_cb" }
+            }
+    	}
+        { Text
+            { Name "ToMultiplicity" }
+            { Label "" }
+            { MinLength    0 }
+            { DispLength 16 }
+            { Resizable ResizeNone }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Group
+            { Name "ToMultiplicityGroup" }
+            { Type Horizontal }
+            { HorizontalAlign AlignLabels }
+            { Members ( ToMultiplicityChoice ToMultiplicity ) } 
+        }
+        // End Change ECR 150
+        { Text
+            { Name "ToQualifiers" }
+            { Label " " }
+            { MinLength    0 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Choice
+            { Name "ToAggregationType" }
+            { Label " " }
+            { Type AbbrMenu }
+            { ChoiceItem { Label "None                     " } }
+            { ChoiceItem { Label "Composition              " } }
+            { ChoiceItem { Label "Aggregation              " } }
+            { Event
+                { Type Select }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Choice
+            { Name ToRoleNavigability }
+            { Label " " }
+            { Type CheckBox }
+            { ChoiceItem
+                { Label "" }
+            }
+            { Event
+                { Type Select }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Choice
+            { Name ToOrdered }
+            { Label " " }
+            { Type CheckBox }
+            { ChoiceItem
+                { Label "" }
+            }
+            { Event
+                { Type Select }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Group
+            { Name "FromGroup" }
+            { Type Vertical }
+            { Resizable ResizeAny }
+            { HorizontalAlign AlignLabels }
+	        // Changed for ECR 150
+            { Members ( FromClass FromRole FromRoleStereotype FromMultiplicityGroup FromQualifiers FromAggregationType FromRoleNavigability FromOrdered ) } 
+        }
+        { Group
+            { Name "ToGroup" }
+            { Type Vertical }
+            { Resizable ResizeAny }
+            { HorizontalAlign AlignLabels }
+            // Changed for ECR 150
+            { Members ( ToClass ToRole ToRoleStereotype ToMultiplicityGroup ToQualifiers ToAggregationType ToRoleNavigability ToOrdered ) } 
+        }
+        { TopGroup
+            { Align Left }  // ECR 6926
+            { Label "Associated Classes" }
+            { Type Horizontal }
+            { HorizontalSpacing 10 }
+            { HorizontalAlign Top }
+            { Members ( FromGroup ToGroup ) }
+        }
+    }
+}
+

@@ -1,0 +1,174 @@
+USES interface2stp_std;
+USES interface2stp_classdiagram;
+USES interface2stp_genclassdiagram;
+USES interface2stp_statediagram;
+USES interface2stp_classtable;
+USES interface2stp_statetable;
+USES interface2stp_annotation;
+
+proc main()
+    generateUniqueIdMap();
+
+    [ID]     = [UIDMAP];
+    [APPID]  = [UIDMAP];
+    [ANTID]  = [UIDMAP];
+    [NODEID] = [UIDMAP];
+    [ANTFILENUM] = 0;
+    [ClassLOCPOINTX] = 0;
+    [ClassLOCPOINTY] = 0;
+    [StateLOCPOINTX] = 0;
+    [StateLOCPOINTY] = 0;
+
+    generateIndexList();
+    generateClassDiagrams();
+    generatePackageClassDiagrams();
+    generateClassTables();
+    generateStateDiagrams();
+    generateStateTables();
+    generateAnnotations();
+end proc
+
+proc generateUniqueIdMap()
+    [UIDMAP] = 1;
+    loop(Instances->MElement)
+        [UIDMAP_[MElement.id]] = [UIDMAP];
+        [UIDMAP] = add([UIDMAP], 1);
+    end loop
+end proc
+
+proc generateVertexIndexList(MVertex, MSNodeLinkChild)
+    if( loopCount(MVertex->MVertexChild) != "0" )
+            loop(MSNodeLinkChild->FromNode)
+                [VERTEX_NODE_ID [MVertex.id]] = [SNODECHILD_ID [FromNode.id]];
+            end loop
+    else
+        if( loopCount(MVertex->To) == "0" )
+            loop(MSNodeLinkChild->ToNode)
+                [VERTEX_NODE_ID [MVertex.id]] = [SNODECHILD_ID [ToNode.id]];
+            end loop
+        else
+            [VERTEX_NODE_ID [MVertex.id]] = getNextNodeID();
+        end if
+    end if
+
+    loop(MVertex->To)
+        [ARC_ID [MVertex.id] [To.id]] = getNextARCID();
+        if(loopCount(MVertex->MVertexChild) != "0" )
+                [FIRST_ARC_ID [MSNodeLinkChild.id]] = [ARC_ID [MVertex.id] [To.id]];
+        end if
+        if(loopCount(MVertex->To->To As Next) == "0" )
+            [LAST_ARC_ID [MSNodeLinkChild.id]] = [ARC_ID [MVertex.id] [To.id]];
+        end if
+        generateVertexIndexList([To],[MSNodeLinkChild]);
+    end loop
+end proc
+
+proc generateIndexList()
+    loop(Instances->MClass)
+        [MCLASS_ID [MClass.id]] = getNextID();
+    end loop
+
+    loop(Instances->MAssociation)
+        [MREL_ID [MAssociation.id]] = getNextID();
+        [FROM_ROLE_ID [MAssociation.id]] = getNextID();
+        [TO_ROLE_ID [MAssociation.id]] = getNextID();
+    end loop
+
+    loop(Instances->MInheritance)
+        [MINHERIT_ID [MInheritance.id]] = getNextID();
+    end loop
+
+    // ECR 6927 begin
+    loop(Instances->MPackageInheritance)
+        [MPACKINHERIT_ID [MPackageInheritance.id]] = getNextID();
+    end loop
+    // ECR 6927 end
+
+    loop(Instances->MDiagram->MNode->MSymbolNode->MSNodeChild)
+        [SNODECHILD_ID [MNode.id]] = getNextNodeID();
+    end loop
+
+    loop(Instances->MSNodeLinkChild)
+        [LinkChild_ID [MSNodeLinkChild.id]] = getNextNodeID();
+    end loop
+
+    loop(Instances->MSNodeLinkChild->MVertexChild->MVertex)
+        generateVertexIndexList([MVertex],[MSNodeLinkChild]);
+    end loop
+
+    loop(Instances->MClass->MAttribute)
+        [MATTRIBUTE_ID [MAttribute.id]] = getNextID();
+    end loop
+
+    loop(Instances->MClass->MOperation)
+        [MOperation_ID [MOperation.id]] = getNextID();
+    end loop
+
+    loop(Instances->MClass where [MClass.active])
+        [STATEMACHINE_ID [MClass.name]] = getNextID();
+    end loop
+
+    loop(Instances->MState)
+        [STATE_NODE_ID getStateQualifiedName([MState])] = getNextID();
+    end loop
+end proc
+
+proc getVisibility(visibility)
+    if([visibility] == "")
+        return "private";
+    else
+        return [visibility];
+    end if
+end proc
+
+proc getFileName(fileName,count)
+    if([FILE_NAME [fileName] [count]] == TRUE)
+        if([count] == "") [count] = 1; end if
+        return getFileName([fileName], add(1,[count]));
+    else
+        [FILE_NAME [fileName] [count]] = TRUE;
+        return [fileName] [count];
+    end if
+end proc
+
+proc getNextTaggedID()
+    [TAGGEID] = add([TAGGEID],1);
+    return [TAGGEID];
+end proc
+
+proc setTaggedID(id)
+    [TAGGEID] = [id];
+end proc
+
+proc getNextCNTXID()
+    [NODEID] = add([NODEID],1);
+    return [NODEID];
+end proc
+proc getNextARCID()
+    [NODEID] = add([NODEID],1);
+    return [NODEID];
+end proc
+proc getNextNodeID()
+    [NODEID] = add([NODEID],1);
+    return [NODEID];
+end proc
+proc getNextID()
+    [ID] = add([ID],1);
+    return [ID];
+end proc
+
+proc getNextAppID()
+    [APPID] = add([APPID],1);
+    return [APPID];
+end proc
+
+proc getNextAntID()
+    [ANTID] = add([ANTID],1);
+    return [ANTID];
+end proc
+
+proc getNextAntFileName()
+    [ANTFILENUM] = add([ANTFILENUM],1);
+    return "a" [ANTFILENUM];
+end proc
+

@@ -1,0 +1,53 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/T
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1994
+//      All rights reserved
+//
+ 
+//
+// custom.rules: 
+//
+
+ 
+Global 5 TTPrepare 
+{
+    { Properties
+        { Choice
+            { Name "tprepare" }
+//            { Label "Operation:" }
+//            { Type AbbrMenu }
+            { ChoiceItem
+                { Label "Prepare Test Cases (Selected CDF)" }
+                { OnValue "qrp -p ${projdir} -s ${system} -x UseCases '${cmd.objects}'  -x T_subactions ${prop.tprepareactions} -x T_substates ${prop.tpreparestates} -x T_subindices ${prop.tprepareindices}   -x T_message_level ${prop.tmsglevel} -x T_case_desc_file ${prop.tcasedescfile}  -x T_case_desc_dir ${prop.tcasedescdir} val/qrl/PrepareTestCases.qrl" }
+
+
+		{ Activation
+		    { Target "tcasedescfile" }
+                    { On Activate }
+                }
+		{ Activation
+		    { Target "tcasedescdir" }
+                    { On Activate }
+                }
+		{ Activation
+		    { Target "tprepareactions" }
+                    { On Activate }
+                }
+		{ Activation
+	            { Target "tpreparestates" }
+                    { On Activate }
+                }
+		{ Activation
+		    { Target "tprepareindices" }
+                    { On Activate }
+                }
+		{ Activation
+		    { Target "tmsglevel" }
+                    { On Activate }
+                }
+            }
+        }
+    }
+}

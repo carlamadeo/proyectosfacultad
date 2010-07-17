@@ -1,0 +1,29 @@
+//	DSE selection
+
+Include "annotation/data_definition.note"
+Include "annotation/structure_component.note"
+Include "annotation/se_generic_object"
+
+// Add these selection items
+
+Note 802006
+{
+    { Item
+        { AppType Selector }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Selector" }
+	{ HelpText "Use the Selector item to enter the tag value for this selection.  The tag value determines which data substructure is used in a particular case." }
+    }
+    { Item
+        { AppType SelectorType }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Selector Type" }
+	{ HelpText "Use the Selector Type item to enter the data type of the tag value." } 
+    }
+}
+
+Include "annotation/t_description.note"
+
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_selection"

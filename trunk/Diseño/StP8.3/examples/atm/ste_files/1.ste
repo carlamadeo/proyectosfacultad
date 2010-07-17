@@ -1,0 +1,686 @@
+Diagram SteDiagram
+{
+    { Name "1" }
+    { Format "1.6" }
+    { Scale 0.79 }
+    { PanX -42 }
+    { PanY -43 }
+    { Alignment 32 }
+    { GUID "UID_42F7FE24-CA4E-497b-B5E7-B013BEDC8506" }
+    { Summary
+        { Nodes 19 }
+        { Arcs 14 }
+    }
+}
+
+Node 2
+{
+    { Type Anchor }
+    { Loc 315 -16 }
+    { Scale 128.00 128.00 }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 1302 }
+        { GUID "UID_184D6BA0-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Node 3
+{
+    { Type State }
+    { Loc 316 92 }
+    { Scale 409.00 117.00 }
+    { Label
+        { Text "ATM Available" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 1303 }
+        { GUID "UID_184D6BA3-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Node 6
+{
+    { Type State }
+    { Loc 316 252 }
+    { Scale 411.00 102.00 }
+    { Label
+        { Text "Validating PIN" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 1304 }
+        { GUID "UID_184D6BA6-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Node 10
+{
+    { Type State }
+    { Loc 318 421 }
+    { Scale 476.00 102.00 }
+    { Label
+        { Text "Validating Transaction" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 1305 }
+        { GUID "UID_184D6BA9-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Node 14
+{
+    { Type State }
+    { Loc 317 576 }
+    { Scale 409.00 102.00 }
+    { Label
+        { Text "Dispensing Cash" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 1306 }
+        { GUID "UID_184D6BAC-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Node 22
+{
+    { Type State }
+    { Loc 319 726 }
+    { Scale 411.00 102.00 }
+    { Label
+        { Text "Printing Receipt" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 1307 }
+        { GUID "UID_184D6BAF-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Node 45
+{
+    { Type Vertex }
+    { Loc 36 722 }
+    { Scale 128.00 128.00 }
+}
+
+Node 47
+{
+    { Type Vertex }
+    { Loc 36 88 }
+    { Scale 128.00 128.00 }
+}
+
+Node 65
+{
+    { Type Vertex }
+    { Loc 509 249 }
+    { Scale 128.00 128.00 }
+}
+
+Node 67
+{
+    { Type Vertex }
+    { Loc 509 82 }
+    { Scale 128.00 128.00 }
+}
+
+Node 74
+{
+    { Type Vertex }
+    { Loc 502 435 }
+    { Scale 128.00 128.00 }
+}
+
+Node 76
+{
+    { Type Vertex }
+    { Loc 502 408 }
+    { Scale 128.00 128.00 }
+}
+
+Arc 4
+{
+    { Type Transition }
+    { From
+        { ID 2 }
+        { Loc 315 -15 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 3 }
+        { Loc 316 67 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 7
+{
+    { Type Transition }
+    { From
+        { ID 3 }
+        { Loc 315 113 }
+        { Offset -1 10 }
+    }
+    { To
+        { ID 6 }
+        { Loc 315 230 }
+        { Offset -1 -6 }
+    }
+}
+
+Arc 11
+{
+    { Type Transition }
+    { From
+        { ID 6 }
+        { Loc 314 270 }
+        { Offset -2 8 }
+    }
+    { To
+        { ID 10 }
+        { Loc 314 399 }
+        { Offset -4 -4 }
+    }
+}
+
+Arc 16
+{
+    { Type Transition }
+    { From
+        { ID 10 }
+        { Loc 316 439 }
+        { Offset -2 13 }
+    }
+    { To
+        { ID 14 }
+        { Loc 316 554 }
+        { Offset -1 -5 }
+    }
+}
+
+Arc 26
+{
+    { Type Transition }
+    { From
+        { ID 14 }
+        { Loc 317 594 }
+        { Offset 0 11 }
+    }
+    { To
+        { ID 22 }
+        { Loc 317 704 }
+        { Offset -2 -11 }
+    }
+}
+
+Arc 46
+{
+    { Type Transition }
+    { From
+        { ID 22 }
+        { Loc 237 722 }
+        { Offset -4 -4 }
+    }
+    { To
+        { ID 45 }
+        { Loc 36 722 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 48
+{
+    { Type Transition }
+    { From
+        { ID 45 }
+        { Loc 36 722 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 47 }
+        { Loc 36 88 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 49
+{
+    { Type Transition }
+    { From
+        { ID 47 }
+        { Loc 36 88 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 3 }
+        { Loc 234 88 }
+        { Offset -53 -4 }
+    }
+}
+
+Arc 66
+{
+    { Type Transition }
+    { From
+        { ID 6 }
+        { Loc 394 249 }
+        { Offset 69 -3 }
+    }
+    { To
+        { ID 65 }
+        { Loc 509 249 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 68
+{
+    { Type Transition }
+    { From
+        { ID 65 }
+        { Loc 509 249 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 67 }
+        { Loc 509 82 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 69
+{
+    { Type Transition }
+    { From
+        { ID 67 }
+        { Loc 509 82 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 3 }
+        { Loc 394 82 }
+        { Offset 58 -10 }
+    }
+}
+
+Arc 75
+{
+    { Type Transition }
+    { From
+        { ID 10 }
+        { Loc 409 435 }
+        { Offset 84 14 }
+    }
+    { To
+        { ID 74 }
+        { Loc 502 435 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 77
+{
+    { Type Transition }
+    { From
+        { ID 74 }
+        { Loc 502 435 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 76 }
+        { Loc 502 408 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 78
+{
+    { Type Transition }
+    { From
+        { ID 76 }
+        { Loc 502 408 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 10 }
+        { Loc 409 408 }
+        { Offset 74 -13 }
+    }
+}
+
+Cntx 9
+{
+    { Type EventAction }
+    { Loc 401 167 }
+    { Scale 646.00 128.00 }
+    { Label
+        { Text "Activate PIN Validation" }
+    }
+    { Label
+        { Type Auxiliary }
+        { Text "Card, PIN entered" }
+    }
+    { Parent 7 }
+    { Object
+        { PDMType Node }
+        { MappingName EventMap }
+        { ID 614 }
+        { GUID "UID_FF292A04-B5C1-11d4-879B-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ActionMap }
+        { ID 503 }
+        { GUID "UID_FA750A23-B5C1-11d4-879B-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Cntx }
+        { MappingName ActionInstanceMap }
+        { ID 1309 }
+        { GUID "UID_184D6BB5-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Cntx 13
+{
+    { Type EventAction }
+    { Loc 412 331 }
+    { Scale 953.00 128.00 }
+    { Label
+        { Text "Get Transaction Data" }
+    }
+    { Label
+        { Type Auxiliary }
+        { Text "PIN OK" }
+    }
+    { Parent 11 }
+    { Object
+        { PDMType Node }
+        { MappingName EventMap }
+        { ID 617 }
+        { GUID "UID_FF292A0D-B5C1-11d4-879B-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ActionMap }
+        { ID 512 }
+        { GUID "UID_FA750A3E-B5C1-11d4-879B-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Cntx }
+        { MappingName ActionInstanceMap }
+        { ID 1311 }
+        { GUID "UID_184D6BC1-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Cntx 52
+{
+    { Type EventAction }
+    { Loc 97 242 }
+    { Scale 256.00 128.00 }
+    { Label
+        { Text "Eject Card" }
+    }
+    { Label
+        { Type Auxiliary }
+        { Text "Receipt Printed" }
+    }
+    { Parent 48 }
+    { Object
+        { PDMType Node }
+        { MappingName EventMap }
+        { ID 618 }
+        { GUID "UID_FF292A10-B5C1-11d4-879B-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ActionMap }
+        { ID 509 }
+        { GUID "UID_FA750A35-B5C1-11d4-879B-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Cntx }
+        { MappingName ActionInstanceMap }
+        { ID 1313 }
+        { GUID "UID_184D6BCD-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Cntx 71
+{
+    { Type EventAction }
+    { Loc 556 122 }
+    { Scale 256.00 128.00 }
+    { Label
+        { Text "Eject Card" }
+    }
+    { Label
+        { Type Auxiliary }
+        { Text "PIN Not OK" }
+    }
+    { Parent 68 }
+    { Object
+        { PDMType Node }
+        { MappingName EventMap }
+        { ID 616 }
+        { GUID "UID_FF292A0A-B5C1-11d4-879B-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ActionMap }
+        { ID 509 }
+        { GUID "UID_FA750A35-B5C1-11d4-879B-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Cntx }
+        { MappingName ActionInstanceMap }
+        { ID 1315 }
+        { GUID "UID_184D6BD9-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Cntx 80
+{
+    { Type EventAction }
+    { Loc 570 421 }
+    { Scale 256.00 128.00 }
+    { Label
+        { Text "Request New Data" }
+    }
+    { Label
+        { Type Auxiliary }
+        { Text "Transaction Not OK" }
+    }
+    { Parent 77 }
+    { Object
+        { PDMType Node }
+        { MappingName EventMap }
+        { ID 619 }
+        { GUID "UID_FF292A13-B5C1-11d4-879B-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ActionMap }
+        { ID 518 }
+        { GUID "UID_FA750A50-B5C1-11d4-879B-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Cntx }
+        { MappingName ActionInstanceMap }
+        { ID 1317 }
+        { GUID "UID_184D6BE3-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Cntx 81
+{
+    { Type EventAction }
+    { Loc 392 500 }
+    { Scale 256.00 128.00 }
+    { Label
+        { Text "Release Funds" }
+    }
+    { Label
+        { Type Auxiliary }
+        { Text "Transaction OK" }
+    }
+    { Parent 16 }
+    { Object
+        { PDMType Node }
+        { MappingName EventMap }
+        { ID 620 }
+        { GUID "UID_FF292A16-B5C1-11d4-879B-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ActionMap }
+        { ID 515 }
+        { GUID "UID_FA750A47-B5C1-11d4-879B-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Cntx }
+        { MappingName ActionInstanceMap }
+        { ID 1319 }
+        { GUID "UID_184D6BEF-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Cntx 84
+{
+    { Type EventAction }
+    { Loc 406 649 }
+    { Scale 256.00 128.00 }
+    { Label
+        { Text "Activate Print Receipt" }
+    }
+    { Label
+        { Type Auxiliary }
+        { Text "Cash Dispensed" }
+    }
+    { Parent 26 }
+    { Object
+        { PDMType Node }
+        { MappingName EventMap }
+        { ID 615 }
+        { GUID "UID_FF292A07-B5C1-11d4-879B-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ActionMap }
+        { ID 506 }
+        { GUID "UID_FA750A2C-B5C1-11d4-879B-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Cntx }
+        { MappingName ActionInstanceMap }
+        { ID 1321 }
+        { GUID "UID_184D6BFB-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Link 5
+{
+    { FirstArc 4 }
+    { LastArc 4 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 1322 }
+        { GUID "UID_184D6C04-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Link 8
+{
+    { FirstArc 7 }
+    { LastArc 7 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 1308 }
+        { GUID "UID_184D6BB2-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Link 12
+{
+    { FirstArc 11 }
+    { LastArc 11 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 1310 }
+        { GUID "UID_184D6BBE-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Link 17
+{
+    { FirstArc 16 }
+    { LastArc 16 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 1318 }
+        { GUID "UID_184D6BEC-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Link 27
+{
+    { FirstArc 26 }
+    { LastArc 26 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 1320 }
+        { GUID "UID_184D6BF8-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Link 50
+{
+    { FirstArc 46 }
+    { LastArc 49 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 1312 }
+        { GUID "UID_184D6BCA-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Link 70
+{
+    { FirstArc 66 }
+    { LastArc 69 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 1314 }
+        { GUID "UID_184D6BD6-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}
+
+Link 79
+{
+    { FirstArc 75 }
+    { LastArc 78 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 1316 }
+        { GUID "UID_184D6BE0-B5C2-11d4-879B-00C04F8DEC45" }
+    }
+}

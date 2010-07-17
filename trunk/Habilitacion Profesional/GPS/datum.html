@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html><head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.5 [es] (Win95; I) [Netscape]"><title>El Datum</title></head>
+
+<body>
+
+<center><b><font size="+4">El Datum</font></b>
+<br><i>Por <a href="mailto:puntoycota@iname.com">Bárbara Domingo</a></i>
+<br><i>Club alpino Burgales</i></center>
+
+<table border="1" cols="2" width="100%">
+<tbody><tr>
+<td>
+<center><b><font size="+1">¿QUE ES EL DATUM?</font></b></center>
+<font size="-1">Todos sabemos que la tierra no es esférica. Pero,
+no solo eso, ni siquiera es un cuerpo regular achatado por los polos. Esta
+irregularidad hace que cada pais, o incluso cada región, escoja
+el modelo de cuerpo (definible matemáticamente) que mas se ajuste
+a la forma de la tierra en su territorio. Este cuerpo suele ser un elipsoide.</font>
+<p><font size="-1">Los diferentes elipsoides se diferencian unos de otros
+en sus parámetros, entre los que se encuentran :</font>
+</p><p><font size="-1">- el radio mayor y menor del elipsoide. (a y b)</font>
+<br><font size="-1">- el aplastamiento del elipsoide (1/f = 1-(b/a) )</font>
+</p><p><font size="-1">Cada <b>Datum</b> esta compuesto por:</font>
+</p><p><font size="-1">a) un elipsoide,</font>
+<br><font size="-1">b) por un punto llamado "Fundamental" en el que el elipsoide
+y la tierra son tangentes. De este punto se han de especificar longitud,
+latitud y el acimut de una dirección desde él establecida.</font>
+</p><p><font size="-1">En el punto Fundamental, las verticales de elipsoide y
+tierra coinciden. También coinciden las coordenadas astronómicas
+(las del elipsoide) y las geodésicas (las de la tierra).</font>
+</p><p><font size="-1">Definido el Datum, ya se puede elaborar la cartografía
+de cada lugar, pues se tienen unos parámetros de referencia.</font></p></td>
+
+<td><img src="datum_files/datum1.jpg" nosave="" align="texttop" border="0" height="382" width="378"></td>
+</tr>
+</tbody></table>
+
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<table border="1" cols="2" width="100%">
+<tbody><tr>
+<td>
+<center><b><font size="+1">EL DATUM Y LAS COORDENADAS EN ESPAÑA. LOS
+MAPAS ESPAÑOLES.</font></b></center>
+<font size="-1">En España, el datum utilizado tradicionalmente en
+cartografía, tanto en los mapas del Servicio Geográfico del
+Ejercito (SGE) como en los del Instituto Geográfico Nacional (IGN),
+es el Europeo. Este puede ser el de 1950 si el mapa esta "formado" (información
+que se obtiene en la letra pequeña del margen del mapa) antes o
+durante 1979 o el europeo de 1979, si el mapa esta formado después
+de este año. Ambos datum tienen como elipsoide el de Hayford, también
+llamado Internacional de 1924, y como punto fundamental Postdam (Gran Bretaña).</font>
+<p><font size="-1">En cuanto a las coordenadas utilizadas en los mapas españoles,
+más o menos modernos, tenemos :</font>
+</p><ul>
+<li>
+<font size="-1">La cuadricula que cubre todo el mapa es la de las coordenadas
+UTM</font></li>
+
+<li>
+<font size="-1">La que solo va indicada en los márgenes (IGN) o tan
+solo en las esquinas (SGE), con el símbolo de grados (º) son
+las coordenadas geográficas, latitud y longitud.</font></li>
+
+<li>
+<font size="-1">La que va indicada en verde en el margen, cada 5 Km (solo
+SGE) es la Lambert, que únicamente se conserva por compatibilidad
+con los mapas antiguos.</font></li>
+</ul>
+</td>
+
+<td align="center" valign="CENTER"><img src="datum_files/datum2.jpg" nosave="" align="right" border="0" height="684" width="176"></td>
+</tr>
+</tbody></table>
+
+<p><b><font size="+1">EL DATUM Y TU NAVEGADOR GPS</font></b>
+</p><p><font size="-1">&nbsp;&nbsp;&nbsp; El sistema GPS trabaja siempre con
+el datum WGS84, si bien los distintos navegadores GPS pueden convertir
+en tiempo real, dichas coordenadas a las que nosotros les definamos.</font>
+<br><font size="-1">&nbsp;&nbsp;&nbsp; Es importante tener bien presente
+el <b>tipo de coordenadas</b> que nos está dando nuestro GPS <b>y
+el datum</b> que esta utilizando. Sobre todo, si vamos a llevar nuestras
+coordenadas a un mapa, o del mapa al GPS. Pues si no nos preocupamos de
+hacer coincidir el Datum y las coordenadas del GPS con los del mapa el
+error que normalmente daría nuestro Navegador, se puede incrementar
+en 200 ó 300 m (por el Datum), o incluso no parecerse en nada (por
+las coordenadas). Y esto sería debido, no a su mal funcionamiento
+sino a una mala configuración.</font>
+<br><font size="-1">&nbsp;&nbsp;&nbsp; La mayoría de los que tenemos
+un GPS hemos hecho la prueba de llevárnosle a un Vértice
+Geodésico y comprobar las coordenadas obtenidas con las que trae
+el mapa en la información adicional. Y casi todos nos hemos llevado
+una desagradable sorpresa pensando la escasa precisión que nos había
+dado. Más tarde nos enteraríamos a que había sido
+debido.</font>
+<br><font size="-1">&nbsp;&nbsp;&nbsp; <b>La cartografia española</b>,
+tanto la del I.G.N. como la del S.G.E. trabajan con el Datum Europeo 1950
+ó 1979 (la diferencia entre ambos es mínima para la precisión
+que vienen a dar los Navegadores) y su cuadricula principal con coordenadas
+UTM.</font>
+<br><font size="-1">&nbsp;&nbsp;&nbsp; Es interesante leerse la <b>información
+adicional de los mapas</b>, de ella podremos sacar también el huso
+(29, 30 y 31 para la Península y Baleares, 28 para Canarias) y la
+zona del huso (S y T para la Península y Baleares, R para Canarias)
+en la que se encuentra un punto del mapa. Esta también es información
+que se usa a la hora de meter coordenadas UTM a nuestro navegador GPS.</font>
+</p><center>
+<p><img src="datum_files/datum3p.jpg" nosave="" height="725" width="591"></p></center>
+
+</body></html>

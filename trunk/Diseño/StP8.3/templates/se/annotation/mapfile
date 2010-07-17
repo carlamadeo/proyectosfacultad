@@ -1,0 +1,1894 @@
+FileMap
+{
+    { OldName "ANT_CSP_diag" }
+    { NewName "cspec_table" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_DFE_ctrl_flow" }
+    { NewName "control_flow" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_DFE_ctrl_spec" }
+    { NewName "cspec" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_DFE_dash_store" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_DFE_data_flow" }
+    { NewName "data_flow" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_DFE_diag" }
+    { NewName "se_diagram" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_DFE_external" }
+    { NewName "external" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_DFE_interface" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_DFE_process" }
+    { NewName "process" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_DFE_store" }
+    { NewName "store" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_DSE_diag" }
+    { NewName "dse_diagram" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_DSE_gen_package" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_DSE_iteration" }
+    { NewName "iteration" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_DSE_package" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_DSE_procedure" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_DSE_prog_unit" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_DSE_selection" }
+    { NewName "selection" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_DSE_sequence" }
+    { NewName "sequence" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_DSE_task" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_GLB_object" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_bar" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_circle" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_circle2" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_dash_circle" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_dash_store" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_dashed_box" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_diag" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_diamond" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_dotted_box" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_ellipse" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_entity" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_function" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_gen_function" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_gen_package" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_gen_procedure" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_package" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_parallelogram" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_procedure" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_prog_unit" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_rectangle" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_relationship" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_rounded_rectangle" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_square" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_store" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_task" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_triangle" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_PCT_upside_triangle" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_SCE_data_module" }
+    { NewName "data_module" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_SCE_diag" }
+    { NewName "sce_diagram" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_SCE_iteration" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_SCE_lex_inclusion" }
+    { NewName "lexical_inclusion" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_SCE_library" }
+    { NewName "module" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_SCE_module" }
+    { NewName "module" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_SCE_offpage" }
+    { NewName "offpage" }
+    { Obsolete False }
+}
+
+// $$ appears that all data used this note in 4.2
+FileMap
+{
+    { OldName "ANT_SCE_par_data" }
+    { NewName "data_in_out" }
+    { Obsolete False }
+}
+
+// $$ appears that all data used this note in 4.2
+FileMap
+{
+    { OldName "ANT_SCE_par_flag" }
+    { NewName "control_in" } //$$ or control_out??
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_SCE_selection" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_STE_diag" }
+    { NewName "ste_diagram" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_STE_state" }
+    { NewName "state" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_STE_state_trans" }
+    { NewName "transition" }
+    { Obsolete False }
+}
+
+FileMap
+{
+    { OldName "ANT_TDE_action_box" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_TDE_diag" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_TDE_start" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_TDE_state" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_TDE_subdiag" }
+    { Obsolete True }
+}
+
+FileMap
+{
+    { OldName "ANT_TED_diag" }
+    { NewName "ted_table" }
+    { Obsolete False }
+}
+
+NoteMap
+{
+    { OldName "diag" }
+    { NewName "GenericObject" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "ObjectName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "At" }
+	{ NewName "Author" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+	{ NewName "Generated" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Pa" }
+        { NewName "Parent" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "tt" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "req" }
+    { NewName "Requirement" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "K" }
+	{ NewName "NoteKey" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Rn" }
+	{ NewName "RequirementName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Rd" }
+	{ NewName "RequirementDocument" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Rp" }
+	{ NewName "RequirementParagraph" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Pn" }
+	{ NewName "RequirementParagraph" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "P" }
+        { NewName "ParagraphNumber" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Qm" }
+	{ NewName "QualificationMethod" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ql" }
+	{ NewName "QualificationLevel" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "doc" }
+    { NewName "Document" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Dc" }
+	{ NewName "DocumentName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Dn" }
+	{ NewName "DocumentNumber" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "P" }
+	{ NewName "ParagraphNumber" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "ctrl_flow" }
+    { NewName "GenericObject" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "ObjectName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "At" }
+	{ NewName "Author" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+        { NewName "Generated" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "external" }
+    { NewName "GenericObject" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "ObjectName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "At" }
+	{ NewName "Author" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+        { NewName "Generated" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "data_flow" }
+    { NewName "GenericObject" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "ObjectName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "At" }
+	{ NewName "Author" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+        { NewName "Generated" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "req_int" }
+    { NewName "InterfaceRequirement" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "In" }
+	{ NewName "InterfaceName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Tp" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ex" }
+	{ NewName "Execution" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Sy" }
+	{ NewName "Synchronization" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Dr" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Mm" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ip" }
+	{ NewName "InterruptPriority" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Sp" }
+	{ NewName "PriorityLevel" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "com_pro" }
+    { NewName "CommunicationProtocol" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Cp" }
+	{ NewName "CommunicationProtocol" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Fg" }
+	{ NewName "Fragmentation" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Fm" }
+	{ NewName "MessageFormatting" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Er" }
+	{ NewName "ErrorControl" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Sn" }
+	{ NewName "Synchronization" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Fl" }
+	{ NewName "FlowControl" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Dt" }
+	{ NewName "DataTransferRate" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Rt" }
+	{ NewName "RoutingAddressing" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ts" }
+	{ NewName "TransmissionServices" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Si" }
+	{ NewName "StatusIdentification" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Se" }
+	{ NewName "SecurityEncryption" } 
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "req_con" }
+    { NewName "InitiationConditionReq" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Cn" }
+	{ NewName "Condition" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Fr" }
+	{ NewName "Frequency" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Re" }
+	{ NewName "Response" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Mr" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Fa" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "des_int" }
+    { NewName "InterfaceDesign" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "InterfaceName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ti" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Pi" }
+        { NewName "InterfacePriority" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "des_cri" }
+    { Obsolete True }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Cr" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Re" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "ctrl_spec" }
+    { NewName "GenericObject" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "ObjectName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "At" }
+	{ NewName "Author" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+        { NewName "Generated" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "dash_store" }
+    { Obsolete True }
+    { UserExtension False }
+}
+
+NoteMap
+{
+    { OldName "process" }
+    { NewName "GenericObject" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "ObjectName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "At" }
+	{ NewName "Author" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+        { NewName "Generated" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "pspec" }
+    { NewName "Pspec" }
+    { UserExtension False }
+}
+
+NoteMap
+{
+    { OldName "req_per" }
+    { NewName "PerformanceRequirement" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Rq" }
+	{ NewName "PerformanceRequirementName" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "req_der" }
+    { NewName "DerivedRequirement" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Rv" }
+	{ NewName "DerivedRequirementName" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "sys_state" }
+    { NewName "SystemState" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "St" }
+	{ NewName "SystemState" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "store" }
+    { NewName "GenericObject" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "ObjectName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "At" }
+	{ NewName "Author" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+        { NewName "Generated" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "char_req" }
+    { Obsolete True }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Ch" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Rn" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "code" }
+    { NewName "DeclarationCode" }
+    { UserExtension False }
+}
+
+NoteMap
+{
+    { OldName "data" }
+    { NewName "DataDefinition" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "T" }
+	{ NewName "DataType" }
+        { UserExtension False }
+    }
+    // CDE annotations are mostly obsolete.  Not everybody will be pleased about this.
+    { ItemMap
+        { OldName "Re" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Sf" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Md" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Uq" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Kd" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "St" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "En" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    // end CDE annotations
+    { ItemMap
+        { OldName "C" }
+	{ NewName "Constraint" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "V" }
+	{ NewName "AllowedValue" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "A" }
+	{ NewName "Alias" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ka" }
+	{ NewName "KeyElements" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "K" } 
+	{ NewName "IsKey" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Lo" }
+	{ NewName "DataLocation" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Sz" }
+	{ NewName "DataSize" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Rp" }
+	{ NewName "Representation" } 
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Lg" }
+	{ NewName "Legality" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Un" }
+        { NewName "Units" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Sc" }
+        { NewName "Scaling" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Pr" }
+        { NewName "Precision" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ac" }
+        { NewName "Accuracy" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Cv" }
+        { NewName "Conventions" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Fr" }
+        { NewName "Frequency" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Pi" }
+        { NewName "Priority" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Nm" }
+	{ Obsolete True } // automatically inserted in GenericObject anyway
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "At" }
+	{ Obsolete True } // automatically inserted in GenericObject anyway
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+	{ Obsolete True } // automatically inserted in GenericObject anyway
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "E" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Il" }
+	{ NewName "ArraySize" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Iu" }
+	{ Obsolete True }
+	//{ NewName "UpperIteration" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "S" }
+	{ NewName "Selector" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Se" }
+	{ NewName "SelectorType" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "St" }
+	{ NewName "SelectorType" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "M" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "str_comp" }
+    { NewName "StructureComponent" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Pa" }
+        { NewName "Parent" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Us" }
+        { NewName "Usage" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "database" }
+    { Obsolete True }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Rl" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Er" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ac" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "system" }
+    { Obsolete True }
+    { UserExtension False }
+    { ItemMap
+        { OldName "CI" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ct" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "object_data" }
+    { Obsolete True }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Pj" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Pn" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "CD" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ag" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Dp" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Co" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "id" }
+    { Obsolete True }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Id" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "T" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ti" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ab" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "data_module" }
+    { NewName "GenericObject" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+        { NewName "Nm" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "At" }
+        { NewName "At" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+        { NewName "Ge" }
+        { UserExtension False }
+    }
+}
+
+
+NoteMap
+{
+    { OldName "data_module" }
+    { NewName "GlobalDefinition" }
+    { UserExtension False }
+    // CDE annotations are mostly obsolete.  Not everybody will be pleased about this.
+    { ItemMap
+        { OldName "Sf" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "In" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Uq" }   // under module, this was External or not
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ex" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Mt" }
+        { NewName "DataType" }
+        { UserExtension False }
+    }
+    // end CDE annotations
+}
+
+
+
+NoteMap
+{
+    { OldName "datafile" }
+    { NewName "DataFile" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Df" }
+	{ NewName "DSDiagram" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ac" }
+	{ NewName "AccessMethod" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Sz" }
+	{ NewName "MaximumSize" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "data_desc" }
+    { NewName "DataDescription" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "DataName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Lo" }
+        { NewName "DataLocation" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Sz" }
+        { NewName "DataSize" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ty" }
+        { NewName "DataType" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Rp" }
+        { NewName "Representation" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "C" }
+        { NewName "Constraint" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Lg" }
+        { NewName "Legality" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Un" }
+        { NewName "Units" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Sc" }
+        { NewName "Scaling" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Pr" }
+        { NewName "Precision" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ac" }
+        { NewName "Accuracy" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Cv" }
+        { NewName "Conventions" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Fr" }
+        { NewName "Frequency" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Pi" }
+        { NewName "Priority" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "lex_inclusion" }
+    { NewName "GenericObject" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "ObjectName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "At" }
+        { NewName "Author" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+        { NewName "Generated" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "library" }
+    { NewName "GenericObject" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "ObjectName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "At" }
+        { NewName "Author" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+        { NewName "Generated" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "pdl" }
+    { NewName "ModulePDL" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "PDL" }
+        { NewName "PDL" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "module" }
+    { NewName "Module" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    // CDE annotations are mostly obsolete.  Not everybody will be pleased about this.
+    { ItemMap
+        { OldName "Kd" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Uq" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ex" }   // under module, this was External or not
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "In" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Sf" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    // end CDE annotations
+    { ItemMap
+        { OldName "At" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ln" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Mb" }
+	{ NewName "MemoryBudget" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Pt" }
+	{ NewName "ProcessingTime" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Lv" }
+	{ NewName "DecompositionLevel" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "module" }
+    { NewName "ModuleDefinition" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Mt" }
+        { NewName "ModuleReturnType" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "local_data" }
+    { NewName "LocalData" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "DataName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Lo" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Sz" }
+        { NewName "DataSize" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "T" }
+	{ NewName "DataType" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Rp" }
+        { NewName "Representation" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "C" }
+        { NewName "Constraint" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Lg" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Un" }
+        { NewName "Units" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Sc" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Pr" }
+        { NewName "Precision" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ac" }
+        { NewName "Accuracy" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Cv" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Fr" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Pi" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "local_database" }
+    { NewName "LocalDatabase" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Er" }
+        { NewName "ERDiagram" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ac" }
+        { NewName "AccessMethod" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "external_database" }
+    { NewName "ExternalDatabase" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Er" }
+        { NewName "ERDiagram" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ac" }
+        { NewName "AccessMethod" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "db_ref" }
+    { NewName "DatabaseReference" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "De" }
+        { NewName "DatabaseName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Us" }
+        { NewName "DatabaseUsage" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "state" }
+    { NewName "GenericObject" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "St" }
+	{ Obsolete True }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "ObjectName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "At" }
+        { NewName "Author" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+        { NewName "Generated" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "interrupt" }
+    { NewName "Interrupt" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "It" }
+        { NewName "InterruptName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Sr" }
+        { NewName "Source" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Py" }
+        { NewName "InterruptPriority" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Re" }
+        { NewName "Response" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Tm" }
+        { NewName "InterruptTime" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Mn" }
+        { NewName "MinimumFrequency" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Mf" }
+        { NewName "MaximumFrequency" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Pf" }
+        { NewName "ProbableFrequency" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "timing" }
+    { NewName "Timing" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Tc" }
+        { NewName "TimingConditions" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Sq" }
+        { NewName "Sequencing" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Dl" }
+        { NewName "DynamicLogic" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "lib" }
+    { NewName "Library" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Lb" }
+        { NewName "LibraryName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "No" }
+	{ NewName "LibraryNumber" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "other" }
+    { NewName "OtherElements" }
+    { UserExtension False }
+}
+
+NoteMap
+{
+    { OldName "limitations" }
+    { NewName "Limitations" }
+    { UserExtension False }
+}
+
+NoteMap
+{
+    { OldName "der_req" }
+    { NewName "DerivedRequirement" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Dr" }
+	{ NewName "DerivedRequirementName" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "offpage" }
+    { NewName "GenericObject" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "ObjectName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "At" }
+        { NewName "Author" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+        { NewName "Generated" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "par_data" }
+    { NewName "GenericObject" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "ObjectName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "At" }
+        { NewName "Author" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+        { NewName "Generated" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "par_flag" }
+    { NewName "GenericObject" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "ObjectName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "At" }
+        { NewName "Author" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+        { NewName "Generated" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "state_trans" }
+    { NewName "GenericObject" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "ObjectName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "At" }
+        { NewName "Author" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+        { NewName "Generated" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "object" }
+    { NewName "GenericObject" }
+    { UserExtension False }
+    { ItemMap
+        { OldName "Nm" }
+	{ NewName "ObjectName" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "At" }
+        { NewName "Author" }
+        { UserExtension False }
+    }
+    { ItemMap
+        { OldName "Ge" }
+        { NewName "Generated" }
+        { UserExtension False }
+    }
+}
+
+NoteMap
+{
+    { OldName "LexicalModule" }
+    { NewName "LexicalModule" }
+    { UserExtension False }
+    { ItemMap
+	{ OldName "IsLexicalModule" }
+	{ NewName "IsLexicalModule" }
+	{ UserExtension False }
+    }
+}
+
+IncludeIfExists "user/se/annotation/user_mapfile"

@@ -1,0 +1,32 @@
+WildPackets’ FREEWARE SOFTWARE LICENSE AGREEMENT AND WARRANTY
+PLEASE READ CAREFULLY BEFORE USING THIS SOFTWARE 
+
+You are being granted a license to use WildPackets Software. The Software is owned by and remains the property of WildPackets, Inc. and is protected by international copyrights. The Software is transferred to the licensee for his/her use only according to the license terms set forth below.  USING THE SOFTWARE INDICATES YOUR ACCEPTANCE OF THESE TERMS. If you do not agree to all of the terms and conditions herein, return or delete the Software and any partial or whole copies you have made.
+
+1.  Grant of License:  WildPackets grants the Licensee the limited rights to possess and use WildPackets’ Software (Software) on the terms and conditions specifically set out in this License.
+
+2.  Term:  This License is effective as of the time Licensee receives the Software, and shall continue in effect until Licensee ceases all use of the Software and destroys all copies thereof, or until automatically terminated upon the failure of Licensee to comply with any of the terms of this License.
+
+3.  Your Agreement:
+SINGLE USER LICENSE
+
+·	The Freeware Software is provided under a Single User License that can be freely copied and distributed by the Licensee.
+
+·	Licensee may not modify, distribute, sub-license, sell, rent, lease, reverse engineer, decompile, disassemble, translate, make any attempt to discover the source code of the Software, or create derivative works of the Software.  This license is for machine readable object code only, and Licensee will use its best efforts and take all reasonable steps to protect the Software from unauthorized use, copying or dissemination, and will maintain all proprietary notices intact.
+
+·	Licensee agrees and certifies that the Software (a) is not being shipped nor will be shipped, transferred or 
+         re-exported, directly or indirectly, into any country prohibited by the United States Export Administration
+         Act and the regulations thereunder, or (b) will be used for any purpose prohibited by same.
+
+4. LIMITED WARRANTY
+WildPackets, Inc. does not warrant that the Software will meet your requirements or that the operation of the software will be uninterrupted or that the Softtware will be error-free. LICENSING OF THE SOFTWARE DOES NOT INCLUDE ANY CONSIDERATION FOR ASSUMPTION OF RISK BY WILDPACKETS OR ANY WILDPACKETS’ LICENSOR, AND WILDPACKETS AND ITS LICENSOR DISCLAIM ANY AND ALL LIABILITY FOR INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR OPERATION OR INABILITY TO USE THE SOFTWARE, OR ARISING FROM THE NEGLIGENCE OF WILDPACKETS AND ITS LICENSOR, OR THEIR EMPLOYEES, OFFICERS, DIRECTORS CONSULTANTS OR DEALERS, EVEN IF ANY OF THESE PARTIES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.  FURTHERMORE, LICENSEE INDEMNIFIES AND AGREES TO HOLD WILDPACKETS AND ITS LICENSOR HARMLESS FROM SUCH CLAIMS.  THE LICENSEE ASSUMES THE ENTIRE RISK AS TO THE RESULTS AND PERFORMANCE OF THE SOFTWARE.  THE WARRANTIES EXPRESSED IN THIS LICENSE ARE THE ONLY WARRANTIES MADE BY WILDPACKETS AND ITS LICENSOR, AND ARE IN LIEU OF ALL OTHER WARRANTIES, EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY AND OF FITNESS FOR A PARTICULAR PURPOSE.  THIS WARRANTY GIVES YOU SPECIFIED LEGAL RIGHTS, AND YOU MAY ALSO HAVE OTHER RIGHTS, WHICH VARY FROM JURISDICTION TO JURISDICTION.  SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR LIMITATION OF WARRANTIES, SO THE ABOVE LIMITATIONS OR EXCLUSIONS MAY NOT APPLY TO YOU.
+
+5. General
+This license is the complete and exclusive statement of the agreement of the parties.  Should any provision of this License be held to be invalid by any court of competent jurisdiction that provision will be enforced to the maximum extent permissible, and the remainder of the License shall nonetheless remain in full force and effect.  The laws of the State of California, and the United States of America shall control this License.
+
+6.  United States Government Restricted Rights
+Use of the Software by any department, agency or other entity of the United States Federal Government is limited as follows:
+
+(1) The Software and User Manual are provided with RESTRICTED RIGHTS, and are trade secrets of WildPackets, Inc. for all purposes of the Freedom of Information Act.
+
+(2) Use, duplication or disclosure is subject to restrictions set forth in subparagraph (c)(I)(ii) of the Rights in Technical Data and Computer Software clause at 252.227-7013 or in subparagraphs (c)(1) and (2) of the Commercial Computer Software - Restricted Rights at 48 CFR 52.227-19, as applicable.  Manufacturer: WildPackets, Inc., 2540 Camino Diablo, Walnut Creek, California, 94596.

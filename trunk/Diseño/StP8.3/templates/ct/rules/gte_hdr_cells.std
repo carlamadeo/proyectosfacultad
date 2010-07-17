@@ -1,0 +1,73 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+// set Shade1 and Shade3 in tool info file variables.
+
+CellType 99990 hvSpanHeaderCell 
+{	
+    { Bold True } 
+    { ReadOnly True } 
+    { Hspan True } 
+    { Vspan True } 
+    { Shading Shade1 }
+}
+
+CellType 99991 hSpanHeaderCell 
+{	
+    { Bold True } 
+    { ReadOnly True } 
+    { Hspan True } 
+    { Shading Shade1 }
+}
+
+CellType 99992 vSpanHeaderCell 
+{	
+    { Bold True } 
+    { ReadOnly True } 
+    { Vspan True } 
+    { Shading Shade1 }
+}
+
+CellType 99993 HeaderCell 
+{	
+    { Bold True } 
+    { ReadOnly True } 
+    { Shading Shade1 }
+}
+
+CellType 99994 hvSpanFillCell 
+{	
+    { Bold True } 
+    { ReadOnly True } 
+    { Shading Shade3 }
+    { Hspan True } 
+    { Vspan True } 
+}
+
+CellType 99995 hSpanFillCell 
+{	
+    { Bold True } 
+    { ReadOnly True } 
+    { Shading Shade3 }
+    { Hspan True } 
+}
+
+CellType 99996 vSpanFillCell 
+{	
+    { Bold True } 
+    { ReadOnly True } 
+    { Shading Shade3 }
+    { Vspan True } 
+}
+
+CellType 99997 FillCell 
+{	
+    { Bold True } 
+    { ReadOnly True } 
+    { Shading Shade3 }
+}

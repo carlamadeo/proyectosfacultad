@@ -1,0 +1,432 @@
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+// general qrl utility functions
+#include "rules/qrl/ct.inc"
+
+
+
+// specific-editor functions (display marks, mappings)
+// #include "rules/qrl/ustated_display_mark.inc"
+#include "rules/qrl/ustated_mapping.inc"
+#include "rules/qrl/ustated_syntax.inc"
+#include "rules/qrl/gde_qrl_std.inc"
+
+void
+Impl_UmlStateDiagramInit(int oid)
+{
+    list            scope_chain, ambassadors;
+    node            state;
+    gde_node        ambassador, parent_ambassador, pstate;
+    string          statename, statetype, filename;
+    int             i, x, id, dodefer;
+
+    /*
+     * Initialize a dynamic model from a "refined" state on a higher-level
+     * state model. We pass in the object, extract a scope chain from the
+     * repository, and build the corresponding chain of "scope ambassador"
+     * symbols, so that the state can be mapped to exactly the same
+     * repository object as in the parent diagram. In this diagram, the state
+     * will be represented by a compound state symbol with substructure. In
+     * the parent diagram, the state is nested within some other compound
+     * state.
+     */
+
+    EditorShowOnNavReceive();
+
+    /* get the scope chain from the oid */
+    scope_chain = list_create("node", 0);
+    node_build_scope_chain(oid, scope_chain);
+
+    /* invalid oid */
+    if (list_count(scope_chain) == 0)
+	return;
+
+    /* make a filename from the scope chain */
+    filename = make_filename_from_scope_chain(scope_chain, 1);
+
+    /* load any pre-existing file with that name */
+    gde_builtin("FileLoad " + filename);
+
+
+    /* get the name of the state corresponding to the passed-in oid */
+    state = list_get(scope_chain, list_count(scope_chain) - 1);
+    statename = state.name;
+    statetype = state.type;
+
+    gde_builtin("BufferFindOpt -center");
+
+    /* state symbol not found, initialize the diagram */
+    gde_save_state();
+    
+    dodefer = gde_start_edit_transaction();
+    
+    if (list_count(scope_chain) > 1)
+	{	
+	    x = 	0;
+	    parent_ambassador = NULL;
+	    for (i = 1; i < list_count(scope_chain) -1; i = i + 1)
+		{
+		    state = list_get(scope_chain, i);
+		    
+		    ambassador = 
+			gde_node_create(UML_STATE_AMBASSADOR_SYMBOL_TYPE,
+					x, -(STATE_AMBASSADOR_VERT_SPACING));
+		    /*
+		     * Attach a ScopeAmbassador viewpoint to every scope
+		     * ambassador symbol -- important for navigation
+		     */
+		    gde_node_set_viewpoint(ambassador, "UmlScopeAmbassador");
+		    /* hook the ambassador to its parent with a scope link */
+		    if (parent_ambassador != NULL)
+			gde_arc_create(UML_STATE_AMBASSADOR_SCOPE_LINK_TYPE,
+				       parent_ambassador, ambassador);
+		    parent_ambassador = ambassador;
+		    
+		    
+		    /* label the ambassador */
+		    gde_node_set_label(ambassador, state.name);
+		    
+		    
+		    x = x + STATE_AMBASSADOR_HORZ_SPACING;
+		}
+	}
+
+    x = ((list_count(scope_chain) - 3) * STATE_AMBASSADOR_HORZ_SPACING) / 2;
+    
+    ambassador =  gde_node_create(UML_STATE_MACHINE_SYMBOL_TYPE,
+				  x, -(STATE_AMBASSADOR_VERT_SPACING) * 2);
+    state = list_get(scope_chain, 0);
+    gde_node_set_label(ambassador, state.name);
+    
+    
+    pstate = gde_node_create(UML_COMPOSITE_STATE_SYMBOL_TYPE, x, 0);
+    gde_node_set_viewpoint(pstate, "UmlRefinedState");
+    if (statename != NULL)
+	{
+	    /* label the topic state */
+	    gde_node_set_label(pstate, statename);
+	    
+	    gde_end_edit_transaction(GDE_CMD_INSERT, dodefer, False);
+	    /* center the buffer */
+	    gde_builtin("BufferZoom FitDiagram");
+	    
+	    /* save all this work we did */
+	    gde_builtin("FileSaveas " + filename);
+	} else {
+	    /* center the buffer */
+	    gde_builtin("BufferZoom FitDiagram");
+	    gde_end_edit_transaction(GDE_CMD_INSERT, dodefer, False);
+	}
+
+    /* select the topic state */
+    id = gde_node_psymid(pstate);
+    gde_builtin("BufferFind " + id);
+}
+
+const string    SEL_SE_STATE_TARGET_PROMPT = "Please select a state for target of transition";
+
+void
+Impl_UStateDCreateControlSplit()
+{
+    list            symbols, tr, st;
+    int             cnt, i;
+    string          label;
+    gde_arc         a, sa;
+    gde_node        fn, sn, n, tn, lback, v;
+    gde_symbol      s, sf;
+    int             x, y, dodefer;
+
+    symbols = gde_selected_symbols();
+
+    // message("in UStateDCreateControlSplit");
+
+    tr = gde_arcs_find_by_type(symbols, UML_STATE_TRANS_LINK_SYMBOL_TYPE);
+
+    if (list_count(tr) != 1)
+    {
+	// messages("if (list_count(tr) != 1)");
+	return;
+    }
+    st = gde_symbols_find_with_types(symbols,
+			       uml_state_types_with_incoming_transitions());
+    cnt = list_count(st);
+
+    if ((cnt + 1) != list_count(symbols))
+    {
+	// message("if ((cnt + 1) != list_count(symbols))");
+	return;
+    }
+    a = list_get(tr, 0);
+
+    label = gde_arc_get_first_label(a);
+
+    a = list_get(tr, 0);
+    fn = gde_arc_get_real_fromnode(a, True, NULL, NULL);
+
+    // ambiguous from node ...
+    if (fn == NULL)
+    {
+	// message("if (fn == NULL)");
+	return;
+    }
+    tn = gde_arc_get_real_tonode(a, False, NULL, NULL);
+
+    x = 0;
+    y = 0;
+
+    if (tn != NULL)
+    {
+	i = list_find(st, 0, to_gde_symbol(tn));
+	if (i == list_count(st))
+	{
+	    list_append(st, to_gde_symbol(tn));
+	}
+    }
+    i = list_find(st, 0, to_gde_symbol(fn));
+    lback = NULL;
+    if (i < list_count(st))
+    {
+	lback = fn;
+	list_delete(st, i);
+    }
+    for (i = 0; i < list_count(st); i = i + 1)
+    {
+	n = to_gde_node(list_get(st, i));
+	x = gde_node_x(n) + x;
+	y = gde_node_y(n) + y;
+    }
+
+    if (i == 0)
+    {
+	x = gde_arc_fromx(a);
+	y = gde_arc_fromy(a);
+    } else
+    {
+	x = x / i;
+	y = y / i;
+    }
+    x = (gde_arc_fromx(a) + x) / 2;
+    y = (gde_arc_fromy(a) + y) / 2;
+
+    dodefer = gde_start_edit_transaction();
+
+    sn = gde_node_create(UML_SPLIT_CONTROL_SYMBOL_TYPE, x, y);
+    sa = gde_arc_create(UML_STATE_TRANS_LINK_SYMBOL_TYPE, fn, sn);
+    if (sa == NULL || sn == NULL)
+    {
+	gde_end_edit_transaction(0, dodefer, False);
+	return;
+    }
+    if (label != NULL)
+    {
+	gde_arc_set_label(sa, label);
+    }
+    gde_arc_delete(a);
+
+    if (cnt == 0)
+    {
+	if (tn != NULL)
+	{
+	    sa = gde_arc_create(UML_SPLIT_CONTROL_LINK_SYMBOL_TYPE, sn, tn);
+	}
+	gde_end_edit_transaction(GDE_CMD_INSERT, dodefer, False);
+	start_an_arc_from(to_gde_symbol(sn), UML_SPLIT_CONTROL_LINK_SYMBOL_TYPE,
+			  SEL_SE_STATE_TARGET_PROMPT, False);
+	return;
+    }
+    sf = to_gde_symbol(sn);
+    if (lback != NULL)
+    {
+	x = gde_arc_fromx(sa);
+	if (x == gde_arc_tox(sa))
+	{
+	    x = x - 30;
+	    y = (gde_arc_fromy(sa) + gde_arc_toy(sa)) / 2;
+	} else
+	{
+	    x = (x + gde_arc_tox(sa)) / 2;
+	    y = gde_arc_tox(sa);
+	}
+	v = gde_node_create(UML_VERTEX_SYMBOL_TYPE, x, y);
+	sa = gde_arc_create(UML_SPLIT_CONTROL_LINK_SYMBOL_TYPE, sn, v);
+	sa = gde_arc_create(UML_SPLIT_CONTROL_LINK_SYMBOL_TYPE, v, fn);
+    }
+    for (i = 0; i < list_count(st); i = i + 1)
+    {
+	s = list_get(st, i);
+	sa = gde_arc_create(UML_SPLIT_CONTROL_LINK_SYMBOL_TYPE, sf, s);
+    }
+    gde_end_edit_transaction(GDE_CMD_INSERT, dodefer, False);
+}
+
+
+boolean
+arc_multiple_segs_selected(gde_arc a, list arcs)
+{
+    gde_arc	a1;
+    gde_node	tn;
+    list	st, segs;
+    gde_symbol	s;
+    int		i;
+
+    st = list_create("gde_node", 0);
+    segs = list_create("gde_symbol", 0);
+
+    tn = gde_arc_get_real_tonode(a, False, st, segs);
+
+    // don't want to find this arc again ...
+    for(i = 1; i < list_count(segs); i = i + 1)
+    {
+	s = list_get(segs, i);
+	if (gde_symbol_is_arc(s))
+	{
+	    a1 = to_gde_arc(s);
+	    if (list_find(arcs, 0, a1) != list_count(arcs))
+	    {
+		// message("Found duplicate seg selected...");
+		return(True);
+	    }
+	}
+    }
+    return(False);
+}
+
+// Assumes that the idehook_merge_control_active_func has been called
+
+void
+Impl_UStateDMergeControl()
+{
+    list            symbols, tr, st, al1, st2, sources, newtr;
+    int             cnt, i, j, k, nc;
+    string          label;
+    gde_arc         a, a2, ma;
+    gde_node        fn, sn, n, tn, lback, v;
+    gde_symbol      s, sf;
+    int             x, y, dodefer;
+
+    symbols = gde_selected_symbols();
+
+    // message("in UStateDCreateControlMerge");
+
+    tr = gde_arcs_find_by_type(symbols, UML_STATE_TRANS_LINK_SYMBOL_TYPE);
+    newtr = list_create("gde_arc", 0);
+
+    if (list_count(tr) < 1)
+    {
+	// messages("if (list_count(tr) != 1)");
+	return;
+    }
+
+
+    // st contains all the to states
+    st = list_create("gde_node", 0);
+    for (i = 0; i < list_count(tr); i = i + 1)
+    {
+	a = list_get(tr, i);
+	if (i < (list_count(tr) -1))
+	{
+	    if (list_find(tr, i+1, a) < list_count(tr))
+	    {
+		// message("duplicate in selection list - ignore");
+		continue;
+	    }
+	}
+
+	// get rid of arcs where more than one arc segement is
+	// selected of the same arc
+
+	if (arc_multiple_segs_selected(a, tr))
+	{
+	    // message("duplicate on path - ignore");
+	    continue;
+	}
+	list_append(newtr, a);
+	tn = gde_arc_get_real_tonode(a, False, st, NULL);
+    }
+    // the cleaned state transition link list ...
+    tr = newtr;
+
+    // for each transition find all the target nodes
+
+    dodefer = gde_start_edit_transaction();
+
+
+    // for all all targets find the links that end in this target
+    for (k = 0; k < list_count(st); k = k + 1)
+    {
+	tn = list_get(st, k);
+	al1 = list_create("gde_arc", 0);
+	x = 0;
+	y = 0;
+	for (j = 0; j < list_count(tr); j = j + 1)
+	{
+	    // for all arcs find if they end in the target
+	    a2 = list_get(tr, j);
+	    st2 = list_create("gde_node", 0);
+	    n = gde_arc_get_real_tonode(a2, False, st2, NULL);
+	    if (list_find(st2, 0, tn) != list_count(st2))
+	    {
+		list_append(al1, a2);
+		x = x + (gde_arc_fromx(a2) + gde_arc_tox(a2)) / 2;
+		y = y + (gde_arc_fromy(a2) + gde_arc_toy(a2)) / 2;
+	    }
+	}
+
+	// now al1 contains all arcs ending in tn
+	cnt = list_count(al1);
+	if (cnt == 0)
+	{
+	    continue;
+	}
+	x = x / cnt;
+	y = y / cnt;
+	sn = gde_node_create(UML_MERGE_CONTROL_SYMBOL_TYPE, x, y);
+	if (sn == NULL)
+	{
+	    gde_end_edit_transaction(0, dodefer, False);
+	    return;
+	}
+	// message("arcs ending in same node " + list_count(al1));
+
+	ma = gde_arc_create(UML_MERGE_CONTROL_LINK_SYMBOL_TYPE, sn, tn);
+
+	for (i = 0; i < list_count(al1); i = i + 1)
+	{
+	    a = list_get(al1, i);
+	    label = gde_arc_get_first_label(a);
+
+	    sources = list_create("gde_node", 0);
+	    fn = gde_arc_get_real_fromnode(a, False, sources, NULL);
+
+	    for (nc = 0; nc < list_count(sources); nc = nc + 1)
+	    {
+		fn = list_get(sources, nc);
+		ma = gde_arc_create(UML_STATE_TRANS_LINK_SYMBOL_TYPE, fn, sn);
+		if (ma == NULL)
+		{
+		    continue;
+		}
+		if (label != NULL)
+		{
+		    gde_arc_set_label(ma, label);
+		}
+	    }
+	}
+    }
+
+    for (i = 0; i < list_count(tr); i = i + 1)
+    {
+	a = list_get(tr, i);
+	gde_arc_delete(a);
+    }
+
+    gde_end_edit_transaction(GDE_CMD_INSERT, dodefer, False);
+}
+
+
+
+
+

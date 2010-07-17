@@ -1,0 +1,120 @@
+//*****************************************************************************
+// $RCSfile: corba_genFactoryHeader.tdl,v $
+// $Revision: 1.3 $
+// $Date: 2001/12/04 12:59:55 $
+// Author: Oliver Maus
+//*****************************************************************************
+
+/*
+   Generates a header file for each factory. Factories are fully generated for 
+   intefaces with tagged value 'HasFactory=<factory class name>'.
+*/
+
+/*
+import other template files
+*/
+USES corbaidl_std;
+USES ../tdl/std; 
+
+proc genFactoryHeader(MInterface)
+	/* local variables */
+	local packageName;
+	local fileName;
+	local implementationFilename;
+
+	loop(MInterface->Implementation)
+		loop(MInterface->MPackage)
+			[packageName] = [MPackage.name];
+		end loop
+		[implementationFilename] = getTaggedValueValue([MInterface], "HasFactory");
+		if ([implementationFilename] == "")
+			return;
+		end if
+		
+		/* Build the final filename for MClass */
+		[fileName] = [srcdir] "/" [packageName] "/" [implementationFilename] "_i.hpp";
+		/* Redirect output to standard output */
+		info = "generate " [fileName] "\n";
+		/* make subdirectory if necessary. lsdir is a Tcl procedure (defined 
+		   in std.tdl) */
+		mkdir(lsdir( [fileName]));
+		
+		/* Set the output redirection to [fileName]. output is a predefined
+		   function */
+		output( [fileName] );
+		/* insert package id that is used inside the templates by the procedure
+		   provided as the second parameter to the mark function */
+//		insert("package",[Class_[MInterface.name]]);
+	
+		/* Call the appropriate template for generation of header file */
+		out = [Implementation].genFactoryHeader([MInterface]);
+	end loop
+end proc
+
+/*	start template
+*/
+template MClass.genFactoryHeader(MInterface)
+[loop (MClass->MPackage)]
+#include "[MPackage.name].h"
+[end loop]
+#include "[MClass.name].h"
+[mergeOut("UDIF","user includes")]
+
+[/* generate the name of the factory class. 
+	 getTaggedValueValue is defined in corbaidl_std.tdl 
+*/]
+class [getTaggedValueValue([MInterface], "HasFactory")]_i
+{
+	// Note: Factories are Singletons
+[instanciateFactoryHeader([MInterface])]			[// gen. instance() method]
+
+[factoryDoYourJobHeader([MInterface])]				[// gen. method responsible for instantiation of server class]
+
+[if (InterfaceHasStaticOps([MInterface], "FALSE") == "TRUE")]
+[genStaticOperationsOfInterfaceHeader([MInterface], "CPP")]	[// gen. the static ops from interface]
+
+[genTieObjectHeader([MInterface])]					[// gen. method, that creates TIE object]
+
+[end if]
+};
+end template
+
+/*	generate the TIE object
+*/
+template genTieObjectHeader(MInterface)
+private:
+	// My own TIE object
+[loop (MInterface->MPackage)]
+	[MPackage.name]_tie_[getFactoryNameFromInterface([MInterface], "FALSE")]<[getFactoryNameFromInterface([MInterface], "FALSE")]_i>* myTie;
+[end loop]
+	
+end template
+
+/*	generate method declaration, that instantiates 
+	the appropriate server class
+*/
+template factoryDoYourJobHeader(MInterface)
+public:
+	// Create one [MInterface.name] object
+[loop (MInterface->MPackage)]
+	[MPackage.name]::[MInterface.name]* create[MInterface.name] ();
+[end loop]
+end template
+
+/*	static method that instantiates the factory according to the singleton pattern
+*/
+template instanciateFactoryHeader(MInterface)
+public:
+	// Get singleton instance
+	static [getTaggedValueValue([MInterface], "HasFactory")]_i* instance ();
+
+private:
+	// Constructors, destructor
+	// Shall no be used from outside (except from the TIE object)
+	[getTaggedValueValue([MInterface], "HasFactory")]_i();
+	virtual ~[getTaggedValueValue([MInterface], "HasFactory")]_i();
+
+	// Singleton pointer
+	static [getTaggedValueValue([MInterface], "HasFactory")]_i* mInstance;
+
+end template

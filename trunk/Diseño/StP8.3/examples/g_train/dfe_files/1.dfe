@@ -1,0 +1,535 @@
+Diagram DfeDiagram
+{
+    { Name "1" }
+    { Format "1.6" }
+    { Scale 0.78 }
+    { PanX -321 }
+    { PanY -243 }
+    { Alignment 0 }
+    { GUID "UID_84441983-C57F-459e-ABE5-F6A9481DA7F8" }
+    { Summary
+        { Nodes 10 }
+        { Arcs 11 }
+    }
+}
+
+Node 1
+{
+    { Type Anchor }
+    { Loc -315 -132 }
+    { Scale 128.00 128.00 }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 1992 }
+        { GUID "UID_A0EA4F97-6DBC-4703-9E61-888B955B2352" }
+    }
+}
+
+Node 2
+{
+    { Type OffPageProcess }
+    { Loc 261 156 }
+    { Scale 96.00 96.00 }
+    { Label
+        { Text "3" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 2772 }
+        { GUID "UID_6309EC2E-57C6-45b3-992D-6CB33613FBD0" }
+    }
+}
+
+Node 3
+{
+    { Type Anchor }
+    { Loc -315 124 }
+    { Scale 128.00 128.00 }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 1992 }
+        { GUID "UID_A0EA4F97-6DBC-4703-9E61-888B955B2352" }
+    }
+}
+
+Node 4
+{
+    { Type ControlSpec }
+    { Loc -267 -4 }
+    { Scale 512.00 128.00 }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 2767 }
+        { GUID "UID_2D10A994-E5FA-4a6d-8401-EAA41DFA600F" }
+    }
+}
+
+Node 5
+{
+    { Type Process }
+    { Loc 261 -68 }
+    { Scale 282.00 282.00 }
+    { Label
+        { Text "read" }
+        { Text "pulse" }
+    }
+    { PropertyList
+        { Property
+            { Name "pindex" }
+            { Value "1" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 2739 }
+        { GUID "UID_67582A44-DDD7-45f7-B6BF-F9EE30D788AC" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 4432 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName Default }
+        { ID 4433 }
+    }
+}
+
+Node 6
+{
+    { Type Store }
+    { Loc 37 -196 }
+    { Scale 320.00 76.00 }
+    { Label
+        { Text "time" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 2728 }
+        { GUID "UID_02CB5AB6-8F7C-4be7-8913-58F954DBB4E9" }
+    }
+}
+
+Node 7
+{
+    { Type Process }
+    { Loc -155 -68 }
+    { Scale 268.00 268.00 }
+    { Label
+        { Text "calculate" }
+        { Text "delay" }
+    }
+    { PropertyList
+        { Property
+            { Name "pindex" }
+            { Value "2" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 2838 }
+        { GUID "UID_B1D57930-51C9-4387-B98A-BB30487DD9DD" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 4435 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName Default }
+        { ID 4436 }
+    }
+}
+
+Node 8
+{
+    { Type Process }
+    { Loc -155 156 }
+    { Scale 282.00 282.00 }
+    { Label
+        { Text "calculate" }
+        { Text "speed" }
+    }
+    { PropertyList
+        { Property
+            { Name "pindex" }
+            { Value "3" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 2773 }
+        { GUID "UID_FE0D14F1-962A-4d05-8162-A423686C7B8E" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 4438 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName Default }
+        { ID 4439 }
+    }
+}
+
+Node 9
+{
+    { Type Process }
+    { Loc 37 28 }
+    { Scale 268.00 268.00 }
+    { Label
+        { Text "count" }
+        { Text "pulse" }
+    }
+    { PropertyList
+        { Property
+            { Name "pindex" }
+            { Value "4" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 2783 }
+        { GUID "UID_C3F70C88-B7FC-498d-8EC4-05F09DA5226E" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 4441 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName Default }
+        { ID 4442 }
+    }
+}
+
+Node 20
+{
+    { Type Vertex }
+    { Loc 261 -196 }
+    { Scale 128.00 128.00 }
+}
+
+Arc 10
+{
+    { Type ControlFlow }
+    { From
+        { ID 1 }
+        { Loc 0 65 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 4 }
+        { Loc 48 190 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "first" }
+        { Text "pulse" }
+    }
+}
+
+Arc 11
+{
+    { Type ControlFlow }
+    { From
+        { ID 3 }
+        { Loc 0 319 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 4 }
+        { Loc 48 194 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "second" }
+        { Text "pulse" }
+    }
+}
+
+Arc 12
+{
+    { Type DataFlow }
+    { From
+        { ID 8 }
+        { Loc 215 352 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 2 }
+        { Loc 557 352 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "speed" }
+        { Text "of train" }
+    }
+}
+
+Arc 13
+{
+    { Type DataFlow }
+    { From
+        { ID 5 }
+        { Loc 529 102 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 6 }
+        { Loc 377 14 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 14
+{
+    { Type DataFlow }
+    { From
+        { ID 6 }
+        { Loc 330 14 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 7 }
+        { Loc 203 100 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 15
+{
+    { Type DataFlow }
+    { From
+        { ID 7 }
+        { Loc 160 180 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 8 }
+        { Loc 160 297 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "delay" }
+    }
+}
+
+Arc 16
+{
+    { Type DataFlow }
+    { From
+        { ID 5 }
+        { Loc 526 149 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 9 }
+        { Loc 400 205 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "pulse" }
+    }
+}
+
+Arc 17
+{
+    { Type DataFlow }
+    { From
+        { ID 7 }
+        { Loc 206 150 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 9 }
+        { Loc 306 202 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "pulse" }
+    }
+}
+
+Arc 18
+{
+    { Type DataFlow }
+    { From
+        { ID 9 }
+        { Loc 397 249 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 2 }
+        { Loc 560 344 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "location" }
+        { Text "of" }
+        { Text "train" }
+    }
+}
+
+Arc 21
+{
+    { Type DataFlow }
+    { From
+        { ID 6 }
+        { Loc 415 0 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 20 }
+        { Loc 576 0 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 22
+{
+    { Type DataFlow }
+    { From
+        { ID 20 }
+        { Loc 576 0 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 5 }
+        { Loc 576 73 }
+        { Offset 0 0 }
+    }
+}
+
+Link 32
+{
+    { FirstArc 10 }
+    { LastArc 10 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 4443 }
+        { GUID "UID_82E9A7A5-51A9-4cb0-A45B-3E4AB996C059" }
+    }
+}
+
+Link 33
+{
+    { FirstArc 11 }
+    { LastArc 11 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 4444 }
+        { GUID "UID_217507F4-B403-4c29-8C00-FDFDE51848BA" }
+    }
+}
+
+Link 34
+{
+    { FirstArc 12 }
+    { LastArc 12 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 2774 }
+        { GUID "UID_5AA2BF7C-B62D-40cf-801B-831E913A1BA3" }
+    }
+}
+
+Link 35
+{
+    { FirstArc 13 }
+    { LastArc 13 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 2793 }
+        { GUID "UID_B92F7CAF-9B1C-4f05-BACB-AE1D9E03F294" }
+    }
+}
+
+Link 36
+{
+    { FirstArc 14 }
+    { LastArc 14 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 4446 }
+        { GUID "UID_B6A2212E-5824-4fea-ACA3-706AB72AA617" }
+    }
+}
+
+Link 37
+{
+    { FirstArc 15 }
+    { LastArc 15 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 3013 }
+        { GUID "UID_0AF97C76-AD67-4594-B778-6BC0D92555CB" }
+    }
+}
+
+Link 38
+{
+    { FirstArc 16 }
+    { LastArc 16 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 3042 }
+        { GUID "UID_451BAE27-053C-4d5e-9D20-921E8A14FD81" }
+    }
+}
+
+Link 39
+{
+    { FirstArc 17 }
+    { LastArc 17 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 3095 }
+        { GUID "UID_984A3B4C-9451-4bf2-9E6C-D41AAC354F95" }
+    }
+}
+
+Link 40
+{
+    { FirstArc 18 }
+    { LastArc 18 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 2784 }
+        { GUID "UID_52F82621-0D8F-4ec7-A787-2EC249865B30" }
+    }
+}
+
+Link 41
+{
+    { FirstArc 21 }
+    { LastArc 22 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 4445 }
+        { GUID "UID_389AFECB-BE0E-48de-A584-3501CA973B2F" }
+    }
+}

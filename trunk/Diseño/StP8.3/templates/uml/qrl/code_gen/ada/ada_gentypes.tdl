@@ -1,0 +1,638 @@
+//*****************************************************************************
+// $RCSfile: ada_gentypes.tdl,v $
+// $Revision: 1.3 $
+// $Date: 2002/03/08 16:03:54 $
+// Author: Peter Kleiner
+//*****************************************************************************
+
+//wdh genAbstract added to genTaggedPrivateType & genPrivateExtensionType
+//wdh: genIsAbstract is same as genAbstract, but including keyword 'is'. generates leading space.
+
+// wdh:00/11/08
+// support Counted_Ref stereotypes for aggregations
+
+/*
+Support templates and procedures dealing with types.
+called by genSpec (defined in ada_genspec.tdl)
+
+2. genClassTypesForwardDecls:
+	generate the primary type declaration for an instance of MNormalClass or
+	MTemplateClass. this declaration never includes attribute or relation
+	components which might depend on the type for another class
+2.1. genIncompleteType
+	generate an incomplete type declaration
+2.1.1. genDiscriminantPart
+	generate the discriminant part of the type declaration
+2.2. genPrivateExtensionType
+	Generate "type ... is new ... with private"
+2.3. genTaggedPrivateType
+	Generate "type ... is tagged private"
+2.4. genPrivateType
+	Generate "type ... is private"
+2.5. genImplementationType
+	Generate "type ..._ptr is private"
+3. genClassCptr
+	Generate pointer type to <type>'class when class attribute is
+	applicable and generation of this pointer is not prohibited by
+	the modeller
+4. genClassPtr
+	Generate pointer type to <type> when this pointer is not prohibited
+	by the modeler
+5. genInterfaceType
+	Generate "subtype ... is ..."
+6. genInterfaceClassCptr
+	Generate pointer type to <type>'class when class attribute is
+	applicable and generation of this pointer is not prohibited by
+	the modeller
+7. genInterfaceClassPtr
+	Generate pointer type to <type> when this pointer is not prohibited
+	by the modeler
+8. genGenericAssoc
+	Generate the association for the given generic instance	
+9. genClassTypes
+	Generate the public visible completion of the type for an instance of
+	MClass or MTemplateClass, if visibility of class is specified as public 	
+9.1 genTaskType
+	Generate "task type ... is ... end ..."
+9.2 genProtectedType
+	Generate "protected type ... is ... end ..."
+9.3 genRecordType
+	Generate "type ... is ... record" or "type .... is ... null record"
+9.3.1 genAbstract
+	Generate "abstract" if specified by modeller	
+9.3.2 genClassLimited
+	Generate "limited" if specified by modeller or implied by class kind	
+9.3.3. genBaseClass
+	generate base class for type
+9.3.4 genClassRecordComponents
+	Collects all components of the record type. The result of this template
+9.4. genImplementationPrivate
+	Generate private part for type completed in body
+9.5. genEnumerationType
+9.5.1. getLiterals
+9.6.1. genDataTypeForwardDecls
+9.6.1.1. isSubType
+9.6.2. genDataType
+9.7. genArrayType
+9.7.1. genArrayIndex
+9.8.1. accThisToTaskPt
+9.8.2. thisToTaskPt
+9.8.3. accThisToAttr
+9.8.4. bodyToThis
+
+*/
+
+/* 2. class types. The privacy of the types declaration is determined in the model.
+   getClassPrivacy (define in ada_tdl.tdl) determines this value */
+proc genClassTypesForwardDecls(MClass)
+
+//T   info = "forward " [MClass.name] " priv " getClassPrivacy([MClass])  "\n";
+
+   if(getClassPrivacy([MClass]) == "public")
+        return genIncompleteType([MClass]);
+
+   else if(getClassPrivacy([MClass]) == "private extension")
+	return genPrivateExtensionType([MClass]);
+    
+   else if(getClassPrivacy([MClass]) == "tagged private")
+ 	return genTaggedPrivateType([MClass]);
+      
+   else if(getClassPrivacy([MClass]) == "private")
+        return genPrivateType([MClass]);
+      
+   else if(getClassPrivacy([MClass]) == "implementation")
+        return genImplementationType([MClass]);
+      
+   end if end if end if end if end if
+
+end proc
+
+/* 2.1 generate an incomplete type declaration */
+template genIncompleteType(MClass)
+type [MClass.name][genDiscriminantPart([MClass])];
+end template
+
+/* 2.1.1 generate the discriminant part, if any. genComponentType produces an Ada subtype
+   indication for the type specification given in the model (defined in ada_std.tdl).
+   See 12.1.1 for [MAttribute].genDefault */
+proc genDiscriminantPart(MClass)
+
+   local result = "";
+
+   openList();
+   loop(MClass->MAttribute where isDiscriminant([MAttribute]) )
+	[result] = [result] delim() [MAttribute.name] " : " genComponentType([MAttribute.type])[MAttribute].genDefault();
+	setDelim("; ");
+   end loop
+
+   return [result] closeList();
+
+end proc
+
+/* 2.2. private extension. genBaseClass outputs the base class for the given instance of
+   MClass. See 9.3.3. */
+//wdh genAbstract added to genTaggedPrivateType & genPrivateExtensionType
+template genPrivateExtensionType(MClass)
+type [MClass.name][genDiscriminantPart([MClass])] is [[MClass].genAbstract()]new [genBaseClass([MClass])] with private;
+end template
+
+/* 2.3 tagged private. genClassLimited outputs "limited" when the class type shall be
+   limited. See 9.3.2. */
+//wdh genAbstract added to genTaggedPrivateType & genPrivateExtensionType
+template genTaggedPrivateType(MClass)
+--abstract missing
+type [MClass.name][genDiscriminantPart([MClass])] is [[MClass].genAbstract()]tagged [genClassLimited([MClass])]private;
+end template
+
+/* 2.4 private type */
+template genPrivateType(MClass)
+type [MClass.name][genDiscriminantPart([MClass])] is [genClassLimited([MClass])]private;
+end template
+
+/* 2.5 incomplete type */
+template genImplementationType(MClass)
+type [MClass.name]_ptr is private;
+end template
+
+
+/* 3. class pointer. doGenClassPtr determines whether the modeller has specified
+   that the class pointer shall be generated (defined in ada_std.tdl). */
+template genClassCptr(MClass)
+[if(doGenClassPtr([MClass]))]
+type [MClass.name]_cptr is access all [MClass.name]'class;
+[   if(getStoragePool([MClass]) != "")]
+	for [MClass.name]_cptr'storage_pool use [typeReference(getStoragePool([MClass]),"")];
+[   end if]
+[   if(doGenStreamOps([MClass]))]
+[insert("include","Ada.Streams")]
+procedure Write(Stream : access Ada.Streams.Root_Stream_Type'Class;
+		Item   : in     [MClass.name]_cptr);
+
+procedure Read (Stream : access Ada.Streams.Root_Stream_Type'Class;
+		Item   :    out [MClass.name]_cptr);
+
+for [MClass.name]_cptr'Write use Write;
+for [MClass.name]_cptr'Read use Read;
+[   end if]
+[end if]
+end template
+
+
+// 3.1 doGenSmartCptr determines whether we need a smart pointer definition
+proc doGenSmartCptr(MClass As ToClass)
+   if ([ToClass].getTaggedValueBool("Counted_Class_Ptr", FALSE))
+      return TRUE;
+   end if
+   
+   loop(ToClass->Role As ToRole->MAssociation
+        Where [ToRole:adaName]!="" 
+              && [ToRole:isPointer] && [MAssociation].getStereoType() == "counted_ref")
+	    
+      return TRUE;
+   end loop
+   
+   return FALSE;
+end proc
+// 3.2 GenSmartCptrSpec generates the smart pointer definition
+// This template is defined in file wdh_extensions
+
+/* 4. normal pointer. doGenPtr determines whether the modeller has specified
+   that the pointer shall be generated (defined in ada_std.tdl). */
+template genClassPtr(MClass)
+[if(doGenPtr([MClass]))]
+type [MClass.name]_ptr is access all [MClass.name];
+[   if(getStoragePool([MClass]) != "")]
+	for [MClass.name]_ptr'storage_pool use [typeReference(getStoragePool([MClass]),"")];
+[   end if]
+[end if]
+end template
+
+/* 5. type for MInterface */
+template genInterfaceType(MClass)
+[loop(MClass->MInterface->Implementation As ImplClass)]
+subtype [MInterface.name] is [importClass([ImplClass])];
+[end loop]
+end template
+
+/* 6. interface class pointer. */
+template genInterfaceCptr(MClass)
+[loop(MClass->MInterface->Implementation As ImplClass where isTagged([ImplClass])  && doGenClassPtr([ImplClass]) )]
+[   if(doGenClassPtr([MInterface]) )]
+subtype [MInterface.name]_cptr is [importClass([ImplClass])]_cptr;
+[   end if]
+[end loop]
+end template
+
+/* 7. interface pointer. */
+template genInterfacePtr(MClass)
+[loop(MClass->MInterface->Implementation As ImplClass where getClassPrivacy([ImplClass]) != "implementation" && doGenPtr([ImplClass]) )]
+[   if(doGenClassPtr([MInterface]) )]
+subtype [MInterface.name]_ptr is [importClass([ImplClass])]_ptr;
+[   end if]
+[end loop]
+end template
+
+/* 8. generic association. genActualParameterType produces an Ada subtype
+   indication for the type specification given in the model (defined in ada_std.tdl) */
+template genGenericAssoc(MInstantiatedClass)
+[openList()]
+[loop(MInstantiatedClass->InstPara)][delim()][setDelim(", ")]
+[genActualParameterType([InstPara.name])]
+[end loop]
+[closeList()]
+end template
+
+/* 9. generate full class type, if visibility is as inidicated by [place] */
+proc genClassTypes(MClass,place)
+
+   if([place] == getClassPrivacy([MClass]))
+      /* this is the place for the main type definition to occur */
+      if(isTask([MClass]))
+	 return genTaskType([MClass]);
+      else if(isPT([MClass]))
+	 return genProtectedType([MClass]);
+      else
+	 return genRecordType([MClass]);
+      end if end if
+   end if
+
+   if ([place] == "private")
+      /* special cases */
+      switch(getClassPrivacy([MClass]))
+      case "public":
+      case "private":
+         return "";
+      case "implementation":
+         if ([place] == "private")
+            return genImplementationPrivate([MClass]);
+         else
+            return "";
+         end if
+      case "tagged private":
+      case "private extension":
+         /* this is the place for the main type definition to occur */
+         if(isTask([MClass]))
+            return genTaskType([MClass]);
+         else if(isPT([MClass]))
+	    return genProtectedType([MClass]);
+         else
+	    return genRecordType([MClass]);
+         end if end if
+      default :
+         info = "Inconsistency detected: unsupported class privacy " getClassPrivacy([MClass]) "\n";
+      end switch
+   else
+      return "";
+   end if
+  
+end proc
+
+/* 9.1. generate task type. A task type declaration enforces compilation of a body.
+   Thus a dummy declaration to force a body is not required. bodyIsRequired remarks
+   this (defined in ada_genspec.tdl). An entry is generated for each operation which
+   is not static. genOpParaList generates the list of parameters, if any, for an
+   operation. See 13.1.1.
+   genStateMachineClassOperationSpecsTask generates entries for the classes state
+   machine, if any (defined in ada_gensm.tdl). */
+template genTaskType(MClass)
+
+[bodyIsRequired()]
+[if(!isTagged([MClass]))]
+task type [MClass:taskName][genDiscriminantPart([MClass])] is
+
+	[genAttributeOperationSpecsTask([MClass])]
+	[genRelationOperationSpecsTask([MClass])]
+	[genClassOperationsSpecsTask([MClass])]
+	[genStateMachineClassOperationSpecsTask([MClass])]
+	
+end [MClass:taskName];
+[else]
+task type [MClass:taskName](acc_This : access [MClass.name]'class) is
+
+	[genClassOperationsSpecsTask([MClass])]
+	[genStateMachineClassOperationSpecsTask([MClass])]
+	
+end [MClass:taskName];
+
+[mark("passoctypes_"[MClass.name],"")]
+
+type [MClass.name][genDiscriminantPart([MClass])] is [[MClass].genAbstract()]new [genBaseClass([MClass])] with
+	record
+		Tsk[getNestingSuffix([MClass])] : [MClass:taskName](acc_This => [MClass.name]'access);
+		[genAttributeComponents([MClass])]
+		[genRelationshipComponents([MClass])]
+		[mergeOut("UDCOMP::" getUniqueId([MClass]), "User defined components", "")]
+	end record;
+
+[end if]
+end template
+
+/* 9.2. generate protected type. A protected type declaration enforces compilation
+   of a body. Thus a dummy declaration to force a body is not required.
+   bodyIsRequired remarks this (defined in ada_genspec.tdl).
+   An entry, procedure, or function is generated for each operation which is not static.
+   genOpParaList generates the list of parameters, if any, for an operation.
+   See 13.1.1. genStateMachineClassOperationSpecs generates entries for the classes state
+   machine, if any (defined in ada_gensm.tdl).
+   The private part is generated with the components for the state machine, if any;
+   the attribute components, if any; and the relation components, if any;
+   For genStateMachineComponents see ada_gensm.tdl.
+   For genAttributeComponents see 9.3.4.1.
+   For genRelationshipComponents see 9.3.4.2.
+*/
+template genProtectedType(MClass)
+
+[bodyIsRequired()]
+[if(!isTagged([MClass]))]
+[mark("passoctypes_"[MClass.name],"")]
+protected type [MClass:ptName][genDiscriminantPart([MClass])] is
+	[genAttributeOperationSpecsPT([MClass])]
+	[genRelationOperationSpecsPT([MClass])]
+	[genClassOperationsSpecsPT([MClass])]
+	[genStateMachineClassOperationSpecsPT([MClass])]
+private
+	[genStateMachineComponents([MClass])]	
+	[mergeOut("UDPTFPD" condGetUniqueId([MClass]),"protected type first private declarations","")]
+	[genAttributeComponents([MClass])]
+	[genRelationshipComponents([MClass])]
+	[mergeOut("UDPTLPD" condGetUniqueId([MClass]),"protected type last private declarations","")]
+end [MClass:ptName];
+[else]
+[mark("passoctypes_"[MClass.name],"")]
+
+protected type [MClass:ptName](acc_This : access [MClass.name]'class) is
+	[genAttributeOperationSpecsPT([MClass])]
+	[genRelationOperationSpecsPT([MClass])]
+	[genClassOperationsSpecsPT([MClass])]
+	[genStateMachineClassOperationSpecsPT([MClass])]
+private
+	[genStateMachineComponents([MClass])]	
+	[mergeOut("UDPTLPD" condGetUniqueId([MClass]),"protected type last private declarations","")]
+end [MClass:ptName];
+
+type [MClass.name][genDiscriminantPart([MClass])] is [[MClass].genAbstract()]new [genBaseClass([MClass])] with
+	record
+		PT[getNestingSuffix([MClass])] : [MClass:ptName](acc_This => [MClass.name]'access);
+		[genAttributeComponents([MClass])]
+		[genRelationshipComponents([MClass])]
+		[mergeOut("UDCOMP::" getUniqueId([MClass]), "User defined components", "")]
+	end record;
+
+[end if]
+end template
+
+/* 9.3. generate record type */
+template genRecordType(MClass)
+
+[mark("passoctypes_"[MClass.name],"")]
+
+[genSectionComment("Class Record")]
+type [MClass.name][genDiscriminantPart([MClass])] is [[MClass].genAbstract()]new [genBaseClass([MClass])] with
+	record
+		[genClassRecordComponents([MClass])]
+[/* for an empty record, we need a null; here; for a non empty record there must be no
+    null; here */]
+[if(genClassRecordComponents([MClass]) == "")]
+		[mergeOut("UDCOMP::" getUniqueId([MClass]), "User defined components", "null; -- Delete this line if you add your own components")]
+[else]
+		[mergeOut("UDCOMP::" getUniqueId([MClass]), "User defined components", "")]
+[end if]
+	end record;
+end template
+
+/* 9.3.1. generate "abstract", if specified */
+proc MClass.genAbstract()
+
+   if([MClass].isAbstract())
+	return "abstract ";
+   else
+   	return "";
+   end if
+
+end proc
+//wdh: genIsAbstract is same as genAbstract, but including keyword 'is'. generates leading space.
+proc MClass.genIsAbstract()
+
+   if([MClass].isAbstract())
+	return " is abstract";
+   else
+   	return "";
+   end if
+
+end proc
+
+/* 9.3.2. generate "limited", if specified */
+proc genClassLimited(MClass)
+
+   if(isLimited([MClass]) )
+      return "limited ";
+   else
+      return "";
+   end if
+   
+end proc
+
+/* 9.3.3. generate the base class of the instance of MClass. this is either a
+   base class in the model (MClass->SuperClass) or 'ActiveInstance' or
+   'InactiveInstance'. Insert an include for the base classes header file. */
+proc genBaseClass(MClass)
+
+	loop(MClass->SuperClass)
+	    return importClass([SuperClass]);
+	end loop
+
+	if(isActiveClass([MClass]))
+		insert("include","ACD_Runtime.Active_Base_Class");
+		if(isLimited([MClass]))
+			return "ACD_Runtime.Active_Base_Class.ActiveLimitedInstance";
+		else
+			return "ACD_Runtime.Active_Base_Class.ActiveInstance";
+		end if
+	else if(isStoragePool([MClass]))
+		insert("include","System.Storage_Pools");
+		return "System.Storage_Pools.Root_Storage_Pool";
+	else if(isCOMClass([MClass]))
+		insert("include","CreateCOM.COMInterface");
+		return "CreateCOM.COMInterface.CoClass_Type (Guid_Map'Access)";
+	else
+		insert("include","ACD_Runtime.Inactive_Base_Class");
+		if(isLimited([MClass]))
+			return "ACD_Runtime.Inactive_Base_Class.InactiveLimitedInstance";
+		else
+			return "ACD_Runtime.Inactive_Base_Class.InactiveInstance";
+		end if
+	end if end if end if
+end proc
+
+/* 9.3.4. generate components of record type */
+template genClassRecordComponents(MClass)
+[genAttributeComponents([MClass])]
+[genRelationshipComponents([MClass])]
+[genStateMachineComponents([MClass])]
+end template
+
+
+/* 9.4. generate declaration in private part for type completed in body */
+template genImplementationPrivate(MClass)
+
+type [MClass.name][genDiscriminantPart([MClass])];
+type [MClass.name]_ptr is access all [MClass.name];
+end template
+
+
+
+/* 9.5. generate an enumeration type declaration */
+template genEnumerationType(MClass)
+type [MClass.name] is
+[if(hasLoop(MClass->MAttribute where [MAttribute.defaultValue] == ""))]
+[   loop(MClass->MAttribute;setDelim("(");setDelim(","))]
+	[delim()][MAttribute.name]
+[   end loop]
+[else]
+[   loop(Instances->TokenSet(getLiterals(0,[MClass]));setDelim("(");setDelim(","))]
+	[delim()][TokenSet.line]
+[   end loop]
+[end if]
+	);
+end template
+
+/* 9.5.1. generate literals for enumeration type */
+proc getLiterals(pos,MClass)
+
+   local s;
+
+   loop(MClass->MAttribute where [MAttribute.defaultValue] == [pos])
+      [s] = getLiterals(add([pos],1), [MClass]);  
+      if([s] == "")
+         return [MAttribute.name];  
+      else
+//wdh         return [MAttribute.name] "\n" getLiterals(add([pos],1), [MClass]); 
+         return [MAttribute.name] "\n" [s];  
+      end if
+   end loop
+   return "";
+   
+end proc
+
+/* 9.6.1. generate an (sub)type declaration */
+template genDataTypeForwardDecls(MClass)
+[if(!isSubType([MClass]))]
+type [MClass.name];
+[end if]
+end template
+
+/* 9.6.2.  generate an (sub)type declaration */
+template genDataType(MClass)
+[if(isSubType([MClass]))]
+subtype [MClass.name] is [[MClass].getConstraint()];
+[else]
+type [MClass.name] is [[MClass].getConstraint()];
+[end if]
+end template
+
+/* 9.6.1.1. */
+proc isSubType(MClass)
+
+   switch(toLower(split([MClass].getConstraint()," ","L")))
+   case "array" :
+   case "new" :
+   case "range" :
+   case "delta" :
+   case "digits" :
+   case "access" :
+      return FALSE;
+   default :
+      return TRUE;
+   end switch
+   
+end proc
+
+/* 9.7. generate an array type declaration */
+template genArrayType(MClass)
+[loop(MClass->Role As FromRole->MAssociation->MAssociationEnd As ToRole->MClass As ElementClass Where [FromRole.id] != [ToRole.id])]
+type [MClass.name] is array ([genArrayIndex([ToRole])]) of 
+[   if([FromRole.aggregation] == "Composition")]
+[importClass([ElementClass])];
+[   else]
+[getClassResultType([ElementClass],TRUE)];
+[   end if]
+[end loop]
+end template
+
+/* 9.7.1. */
+proc genArrayIndex(MAssociationEnd)
+	local multiplicity = getMultiplicity([MAssociationEnd.multiplicity]);
+
+	switch([multiplicity])
+	case "Many" :
+		return "natural range <>";
+	default 	:
+		return "1 .. " [multiplicity];
+	end switch
+end proc
+
+/* 9.8.1. */
+// from a subprogram within the package, navigate from the acc_this parameter to task/PO
+proc accThisToTaskPt(MClass)
+
+   if(isTask([MClass]) && isTagged([MClass]))
+      return "acc_this.Tsk" getNestingSuffix([MClass]) ".";
+   else if(isPT([MClass]) && isTagged([MClass]))
+      return "acc_this.PT" getNestingSuffix([MClass]) ".";
+   else
+      return "acc_this.";
+   end if end if
+   
+end proc
+
+/* 9.8.2. */
+// from a subprogram within the package, navigate from the this parameter to task/PO
+proc thisToTaskPt(MClass)
+
+   if(isTask([MClass]) && isTagged([MClass]))
+      return "this.Tsk" getNestingSuffix([MClass]) ".";
+   else if(isPT([MClass]) && isTagged([MClass]))
+      return "this.PT" getNestingSuffix([MClass]) ".";
+   else
+      return "this.";
+   end if end if
+   
+end proc
+/* 9.8.3. */
+// from a subprogram within the package, navigate from the acc_this parameter attributes/relations 
+proc accThisToAttr(MClass)
+
+   if(isTask([MClass]) && !isTagged([MClass]))
+      return [MClass.name];
+      	// if task is not tagged, attr & rels are in declared the task body
+   else if(isPT([MClass]) && !isTagged([MClass]))
+      return [MClass.name];
+      	// if PT is not tagged, attr & rels are in declared the PT private part
+   else
+      return "acc_this";
+      	// that's what we used before introducing accThisToAttr
+   end if end if
+   
+end proc
+   
+/* 9.8.4. */
+// from the task/protected body, determine parameter for get/set routines for attributes/relations 
+proc bodyToThis(MClass)
+
+   if(isTask([MClass]))
+      if (isTagged([MClass]))
+         return "this";			// use renaming decl. in task body to access the enclosing tagged record
+      else
+         return [MClass.name]"_tsk";
+      end if
+   else if(isPT([MClass]))
+      if (isTagged([MClass]))
+         return "acc_this.all";		// no renaming decl. in protected body available
+      else
+         return [MClass.name]"_pt";
+      end if
+   else
+      return "this";			// that's what we used before introducing bodyToThis
+   end if end if
+   
+end proc

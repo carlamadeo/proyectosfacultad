@@ -1,0 +1,25 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/Core
+//      Confidential property of Aonix.
+//      Copyright (c) 1992-1996
+//      All rights reserved
+//
+
+//
+//      FILE:   GenericRptOptions.note
+//
+Note 806008
+{
+    { AppType GenericRptOptions }
+    { PrintName "Generic Report Options" }
+    { Bounds { Min 0 } { Max 1 } } 
+    { HelpText "This note is used to contain generic report parameters." }
+    { Item
+        { AppType StartNewPage }
+        { PrintName "Start On New Page" }
+        { InitValue "True" }
+        { Bounds { Min 0 } { Max 1 } } 
+        { HelpText "This item will cause a new page to be started." }
+    }
+}

@@ -1,0 +1,37 @@
+//*****************************************************************************
+// DESCRIPTION: UML_Report_E.qrl
+// ----------------------------------
+//             (c) 1997 by Aonix
+//*****************************************************************************
+//
+// This is the wrapper script for the english UML-Report. It consists only of 
+// the main function and an include statement for the UML_Include_E.inc file, 
+// where everything else takes place. 
+//
+//*****************************************************************************
+// Included Files:
+// 
+// UML_Include_E.inc : Includes all other files, needed for UML_Report_E
+//*****************************************************************************
+#include "qrl/include/UML_Include_E.inc"
+ 
+//*****************************************************************************
+//  UML-Report: Main Function
+//*****************************************************************************
+int main()
+{
+    //----------------------------------------
+    // declaration of the return value status 
+    //----------------------------------------
+    int status = IS_OK;
+
+//    page_equals_document(HTML);
+ 
+    //---------------------------------------
+    // call the document generation function
+    //---------------------------------------
+    status = GenUMLReport("E");
+
+    return status;
+}
+

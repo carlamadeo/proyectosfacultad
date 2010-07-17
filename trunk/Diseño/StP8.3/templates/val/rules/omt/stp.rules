@@ -1,0 +1,161 @@
+// StP/Validator rules file.
+
+
+Include "val/rules/omt/TGen.rules"
+Include "val/rules/omt/generate_stp.rules"
+
+
+Include "val/sri/rules/stp_omt.rules"
+//Include "val/mercury/rules/stp_omt.rules"
+
+Class 0 Validator
+{
+  { Label "Requirements Validation" }
+  //{ Image "icon/oousecase_32.xbm" }
+  { Image "icon/oousecase_32" }
+  { ShowOnDesktop True }
+  { OMSObjects
+      { Match "node[OMTUseCase && node_refs]" }
+  } 
+
+
+  { ClassCommand
+      { Name "UseCaseTraceReport" }
+      { Label "Generate Requirements Traceability Report" }
+      { Command "qrp -o ${projdir}${system}/test_files/TraceabilityReport.mif -t mif -p ${projdir} -s ${system} val/qrl/GenerateTraceabilityReport.qrl" }
+  }
+
+
+  { ObjectCommand
+      { Name "Generate Requirements Document" }
+      { Command "qrp -p ${projdir} -s ${system} -x UseCases '${cmd.objects}' val/qrl/GenerateRequirementsDocument.qrl" }
+  }
+
+
+//  { ObjectCommand
+//      { Name "Check Test Readiness" }
+//      { Command "qrp -p ${projdir} -s ${system} -x UseCases '${cmd.objects}' val/qrl/CheckModel.qrl" }
+//  }
+
+
+
+    { ObjectCommand
+	{ Name "TGenClass" }
+	{ Label "Generate Test Cases  ..." }
+	{ ShowPropsOnExec True }
+	{ Type Normal }
+	{ Command "${prop.tgen}" }
+	{ UseProperty TTGen }
+        { UseProperty TTListExtras }
+        { UseProperty TTSatisfyPreconditions }
+        { UseProperty TTMsgLevel }
+        { UseProperty TTSummaryLineSpacing }
+        { Properties
+	    { Footer
+		{ Name "Footer1" }
+		{ LeftFooter "Choose Operation and Properties" }
+	    }
+    	    { Activation 
+		{ Target "Footer1" }
+		{ OnInit Active }
+	    }
+    	    { Footer
+    	    	{ Name "Footer2" }
+    	    	{ RightFooter "Generate Test Cases" }
+    	    }
+    	    { Activation 
+		{ Target "Footer2" }
+		{ OnInit Active }
+	    }
+	    { Group
+		{ Name "options0" }
+		{ Type Vertical }
+//                { Align Labels }
+//    	    	{ Align Middle }
+		{ Members ( tgen ) }
+	    }
+	    { Group
+	  	{ Name "midcolumn" }
+	  	{ Type Vertical }
+		{ Members (tsatisfypreconditions tlistextras  tsummarylinespacing tmsglevel ) }
+	    }
+    	    { Group
+    	    	{ Name "All" }
+    	    	{ Type Horizontal }
+		{ Members ( options0 midcolumn) }
+    	    }
+    	}
+    }
+
+
+
+  { ObjectCommand
+      { Name "Generate Test Specification Document" }
+      { Command "qrp -p ${projdir} -s ${system} -x UseCases '${cmd.objects}' val/qrl/GenerateTestSpecification.qrl" }
+  }
+
+}
+
+
+
+Class 0 ValidatorCustom
+{
+  { Label "Custom Integration" }
+  //{ Image "icon/oousecase_32.xbm" }
+  { Image "icon/oousecase_32" }
+  { ShowOnDesktop True }
+  { OMSObjects
+      { Match "node[OMTUseCase && node_refs]" }
+  }
+
+    { ObjectCommand
+	{ Name "TPrepareClass" }
+	{ Label "Generate Custom Test Scripts  ..." }
+	{ ShowPropsOnExec True }
+	{ Type Normal }
+	{ Command "qrp -p ${projdir} -s ${system} -x UseCases '${cmd.objects}'  -x T_subactions ${prop.tprepareactions} -x T_substates ${prop.tpreparestates} -x T_subindices ${prop.tprepareindices}   -x T_message_level ${prop.tmsglevel} -x T_case_desc_file ${prop.tcasedescfile}  -x T_case_desc_dir ${prop.tcasedescdir} val/qrl/PrepareTestCases.qrl" }
+        { UseProperty TTCaseDescFile }
+        { UseProperty TTCaseDescResultDir }
+        { UseProperty TTPrepareActions }
+        { UseProperty TTPrepareStates }
+        { UseProperty TTPrepareIndices }
+        { UseProperty TTMsgLevel }
+        { Properties
+	    { Footer
+		{ Name "Footer1" }
+		{ LeftFooter "Choose Operation and Properties" }
+	    }
+    	    { Activation 
+		{ Target "Footer1" }
+		{ OnInit Active }
+	    }
+    	    { Footer
+    	    	{ Name "Footer2" }
+    	    	{ RightFooter "Custom Script Generator" }
+    	    }
+    	    { Activation 
+		{ Target "Footer2" }
+		{ OnInit Active }
+	    }
+		
+	    { Group
+		{ Name "options2" }
+		{ Type Vertical }
+                { Align Labels }
+    	    	{ Align Bottom }
+		{ Members ( tcasedescfile tcasedescdir tprepareactions tpreparestates tprepareindices tmsglevel) }
+	    }
+	    { Group
+	  	{ Name "midcolumn" }
+	  	{ Type Vertical }
+	  	{ Members ( options2 ) }
+	    }
+    	    { Group
+    	    	{ Name "All" }
+    	    	{ Type Horizontal }
+		{ Members ( midcolumn) }
+    	    }
+    	}
+    }
+
+}

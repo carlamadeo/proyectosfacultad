@@ -1,0 +1,87 @@
+FileObject 1
+{
+    { Name "a439" }
+    { Type ObjectAnnotation }
+    { GUID "UID_7CAD264D-0206-11d6-AE65-000000000000" }
+}
+
+NodeObject 99999
+{
+    { Name "ClockBird,Display" }
+    { Type UmlAssociation }
+    { ObjectId 868 }
+    { Sig ":display" }
+    { ScopeNodeId 0 }
+    { GUID "UID_04328C66-544E-11d4-8778-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "Display" }
+    { Type UmlClass }
+    { ObjectId 494 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_04328C60-544E-11d4-8778-00C04F8DEC45" }
+}
+
+LinkObject 99997
+{
+    { Name "display" }
+    { Type UmlRole }
+    { ObjectId 875 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_04328C64-544E-11d4-8778-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlRoleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 877 }
+}
+
+ItemObject 3
+{
+    { Type UmlMultiplicity }
+    { Value "1" }
+    { NoteId 2 }
+    { ObjectId 878 }
+}
+
+ItemObject 4
+{
+    { Type UmlRoleNavigability }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 879 }
+}
+
+NoteObject 5
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 881 }
+}
+
+NoteObject 6
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 883 }
+}
+
+ItemObject 7
+{
+    { Type ObjectName }
+    { Value "display" }
+    { NoteId 6 }
+    { ObjectId 884 }
+}
+

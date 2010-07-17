@@ -1,0 +1,20 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1994
+// 	All rights reserved
+//
+
+//
+//	FILE:	OMTUseCase.note
+//
+
+
+Note 801592
+{
+	{ AppType OMTUseCaseInteractionDefinition }
+	{ PrintName "Use Case Interaction Definition" }
+	{ Bounds { Min 0 } { Max 1 } }
+}
+

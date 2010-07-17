@@ -1,0 +1,115 @@
+FileObject 1
+{
+    { Name "a840" }
+    { Type ObjectAnnotation }
+    { GUID "UID_1671E9D9-48C0-11d6-951F-000103DC9D9C" }
+}
+
+NodeObject 99999
+{
+    { Name "%%class%%1016637922_1200" }
+    { Type UmlObjectClassScope }
+    { ObjectId 2139 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_A5E82A5F-9593-48c8-A95C-AD4F1BA638F9" }
+}
+
+NodeObject 99998
+{
+    { Name "Coocoo" }
+    { Type UmlObjectInstance }
+    { ObjectId 2140 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_31725E2C-7B00-43e8-8CB2-C56D94739310" }
+}
+
+NodeObject 99997
+{
+    { Name "Clockwork" }
+    { Type UmlObjectClassScope }
+    { ObjectId 951 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_73727F34-6EAE-11d4-8044-00104BF16798" }
+}
+
+NodeObject 99996
+{
+    { Name "%%object%%933083130_307" }
+    { Type UmlObjectInstance }
+    { ObjectId 952 }
+    { Sig "" }
+    { ScopeNodeId 99997 }
+    { GUID "UID_2246246B-CE14-11d5-A046-0010A4B8EFF8" }
+}
+
+LinkObject 99995
+{
+    { Name "cry(inthour)" }
+    { Type UmlSimpleMessage }
+    { ObjectId 2141 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99998 }
+    { FromNodeId 99996 }
+    { GUID "UID_9771C184-68A2-4390-82A4-7085423C42BA" }
+}
+
+NoteObject 2
+{
+    { Type UmlMessageDefinition }
+    { Name "" }
+    { OwnerId 99995 }
+    { ObjectId 2143 }
+}
+
+ItemObject 3
+{
+    { Type UmlMessageDirection }
+    { Value "Activation" }
+    { NoteId 2 }
+    { ObjectId 2144 }
+}
+
+ItemObject 4
+{
+    { Type UmlMessageIsCreation }
+    { Value "False" }
+    { NoteId 2 }
+    { ObjectId 2145 }
+}
+
+ItemObject 5
+{
+    { Type UmlMessageIsDestruction }
+    { Value "False" }
+    { NoteId 2 }
+    { ObjectId 2146 }
+}
+
+NoteObject 6
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99995 }
+    { ObjectId 2148 }
+}
+
+NoteObject 7
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99995 }
+    { ObjectId 2150 }
+}
+
+ItemObject 8
+{
+    { Type ObjectName }
+    { Value "cry(inthour)" }
+    { NoteId 7 }
+    { ObjectId 2151 }
+}
+

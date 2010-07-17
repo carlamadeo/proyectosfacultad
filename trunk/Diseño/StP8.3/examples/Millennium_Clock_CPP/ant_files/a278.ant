@@ -1,0 +1,60 @@
+FileObject 1
+{
+    { Name "a278" }
+    { Type ObjectAnnotation }
+    { GUID "UID_E0D9314E-C886-11d5-90AA-0050045C27F0" }
+}
+
+NodeObject 99999
+{
+    { Name "Clockwork" }
+    { Type UmlClass }
+    { ObjectId 468 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_378C31F0-544B-11d4-8778-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "showTime" }
+    { Type UmlOperation }
+    { ObjectId 536 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_FD39C161-544D-11d4-8778-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 538 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 540 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "showTime" }
+    { NoteId 3 }
+    { ObjectId 541 }
+}
+
+ItemObject 5
+{
+    { Type UniqueID }
+    { Value "102" }
+    { NoteId 3 }
+    { ObjectId 542 }
+}
+

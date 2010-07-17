@@ -1,0 +1,2046 @@
+
+// 	StP/SE
+// 	Confidential property of Aonix
+// 	Copyright (c) 1992-1999
+// 	All rights reserved
+
+// The product Specific "New" Menu items...
+Menu FileNewSubMenu
+{
+    { MenuEntry
+        { Name NewDemarcoYourdonDiagram }
+        { Label "DeMarco/&Yourdon Data Flow Diagram" }
+        { PlaceAfter AfterNewSystem }
+        { Builtin "EditorQrlEval stp_start_diagram_editor(\"DyDfe\");" }
+        { ActiveFunc stp_repos_is_open } // ECR 5951
+    }
+
+    { MenuEntry
+        { Name NewGaneSarsonDiagram }
+        { Label "&Gane/Sarson Data Flow Diagram" }
+        { Builtin "EditorQrlEval stp_start_diagram_editor(\"GsDfe\");" }
+        { ActiveFunc stp_repos_is_open } // ECR 5951
+    }
+
+    { MenuEntry
+        { Name NewStructureChart }
+        { Label "Str&ucture Chart" }
+        { Builtin "EditorQrlEval stp_start_diagram_editor(\"Sce\");" }
+        { ActiveFunc stp_repos_is_open } // ECR 5951
+    }
+
+    { MenuEntry
+        { Name NewFlowChart }
+        { Label "&Flow Chart" }
+        { Builtin "EditorQrlEval stp_start_diagram_editor(\"Fce\");" }
+        { ActiveFunc stp_repos_is_open } // ECR 5951
+    }
+
+    { MenuEntry
+        { Name NewDataStructureDiagram }
+        { Label "&Data Structure Diagram" }
+        { Builtin "EditorQrlEval stp_start_diagram_editor(\"Dse\");" }
+        { ActiveFunc stp_repos_is_open } // ECR 5951
+    }
+
+    { MenuEntry
+        { Name NewStateTransitionDiagram }
+        { Label "S&tate Transition Diagram" }
+        { Builtin "EditorQrlEval stp_start_diagram_editor(\"Ste\");" }
+        { ActiveFunc stp_repos_is_open } // ECR 5951
+    }
+
+    { Spacer { Name DiagramTableSpace }}
+
+    { MenuEntry
+        { Name NewRequirementsTable }
+        { Label "&Requirements Table" }
+        { Builtin "EditorQrlEval stp_start_table_editor(\"RequirementTableFiles\");" }
+        { ActiveFunc stp_repos_is_open } // ECR 5951
+    }
+
+    { MenuEntry
+        { Name NewDecisionTable }
+        { Label "D&ecision Table" }
+        { Builtin "EditorQrlEval stp_start_table_editor(\"DecisionTable\");" }
+        { ActiveFunc stp_repos_is_open } // ECR 5951
+    }
+
+    { MenuEntry
+        { Name NewProcessActivationTable }
+        { Label "&Process Activation Table" }
+        { Builtin "EditorQrlEval stp_start_table_editor(\"ProcessActivationTable\");" }
+        { ActiveFunc stp_repos_is_open } // ECR 5951
+    }
+
+    { MenuEntry
+        { Name NewProcessActivationMatrix }
+        { Label "Pr&ocess Activation Matrix" }
+        { Builtin "EditorQrlEval stp_start_table_editor(\"ProcessActivationMatrix\");" }
+        { ActiveFunc stp_repos_is_open } // ECR 5951
+    }
+
+    { MenuEntry
+        { Name NewStateTransitionTable }
+        { Label "State Tra&nsition Table" }
+        { Builtin "EditorQrlEval stp_start_table_editor(\"StateTransitionTable\");" }
+        { ActiveFunc stp_repos_is_open } // ECR 5951
+    }
+
+    { MenuEntry
+        { Name NewStateEventMatrix }
+        { Label "State Event &Matrix" }
+        { Builtin "EditorQrlEval stp_start_table_editor(\"StateEventMatrix\");" }
+        { ActiveFunc stp_repos_is_open } // ECR 5951
+    }
+
+    { MenuEntry
+        { Name NewEventLogicTable }
+        { Label "Event &Logic Table" }
+        { Builtin "EditorQrlEval stp_start_table_editor(\"EventLogicTable\");" }
+        { ActiveFunc stp_repos_is_open } // ECR 5951
+    }
+
+    { MenuEntry
+        { Name NewActionLogicTable }
+        { Label "A&ction Logic Table" }
+        { Builtin "EditorQrlEval stp_start_table_editor(\"ActionLogicTable\");" }
+        { ActiveFunc stp_repos_is_open } // ECR 5951
+    }
+}
+
+
+Menu Report
+{
+    { SubMenu
+        { Name RepositoryReportSubMenu }
+        { Label "&Generate" }
+        { PlaceAfter Scriptman }
+    }
+}
+
+Menu RepositoryReportSubMenu
+{
+// ECR 6149
+    { Pin True }
+    { Label "Generate Review Report" }
+// ECR 6149 end
+    { MenuEntry
+        { Name AnalysisReport }
+        { Label "Generate &Analysis Review Report for Entire Model..." }
+        { Builtin "EditorQrlEval stp_run_command(\"EntireSEModel\",\"GenerateAnalysisReviewReportClass\");" }
+    }
+
+    { MenuEntry
+        { Name DesignReport }
+        { Label "Generate &Design Review Report for Entire Model..." }
+        { Builtin "EditorQrlEval stp_run_command(\"EntireSEModel\",\"GenerateDesignReviewReportClass\");" }
+    }
+}
+
+Menu Tools
+{
+    { SubMenu
+        { Name ToolsCheckSubMenu }
+        { Label "&Check" }
+        { PlaceBefore LockingSubMenu }
+    }
+// spr 2722    
+    { MenuEntry
+        { Name EditAnnotation }
+// fix for spr 2853  
+        { Label "Edit &Annotation" }
+// fix for spr 2853 
+        { PlaceAfter  BelowSyntaxErrors }
+        { ActiveFunc edit_annot_active_func }
+        { Builtin "EditorQrlEval stp_run_command(\"\",\"EditAnnotation\");" }
+    }
+
+    { MenuEntry
+	{ Name PdmBrowser }
+	{ Label "&Browse Repository" }
+	{ ActiveFunc stp_repos_is_open }
+// fix for spr 2853 
+	{ PlaceAfter EditAnnotation }
+	{ Builtin "EditorQrlEval stp_run_command(\"Repository\",\"StartGUI\");" }
+    }
+
+
+    { MenuEntry
+        { Name BrowseSEModel }
+        { Label "Browse Structured &Models" }
+// fix for spr 2853
+//      { PlaceBefore ShowFilesWithSyntax }
+        { PlaceAfter PdmBrowser }
+        { Builtin "EditorQrlEval stp_run_command(\"EntireSEModel\",\"StartTableEditor\");" }
+    }
+    { Spacer {PlaceAfter BrowseSEModel }}
+
+    { MenuEntry
+        { Name GlobalObjectRename }
+        { Label "&Rename Object System Wide..." }
+        { ActiveFunc se_gor_active_func }
+        { PlaceAfter BelowTI }
+        { Builtin "EditorQrlEval stp_run_command(\"SEDirectory\",\"DesktopGlobalObjectRename\");" }
+    }
+
+    { MenuEntry
+        { Name RenameHierarchy }
+        { Label "Re&name Hierarchy..." }
+        { PlaceAfter GlobalObjectRename }
+        { ActiveFunc rename_hierarchy_active_func }
+        { Builtin "EditorQrlEval stp_run_command(\"\",\"RenameHierarchy\");" }
+    }
+    { Spacer {PlaceBefore Options }}
+}
+
+Menu ToolsCheckSubMenu
+{
+// ECR 6149
+    { Pin True }
+    { Label "Check" }
+// ECR 6149 end
+    { MenuEntry
+        { Name CheckSemanticsAll }
+        { Label "Check Semantics for &Selected Objects..." }
+        { ActiveFunc se_check_all_active_func }
+        { Builtin "EditorQrlEval stp_run_command(\"EntireSEModel\",\"CheckSemanticsAll\");" }
+        //{ Builtin "EditorQrlEval se_check_diagrams_or_tables();" }
+    }
+
+    { MenuEntry
+        { Name AllModelSemantics }
+        { Label "Check Semantics for &Whole Model..." }
+        { Builtin "EditorQrlEval stp_run_command(\"EntireSEModel\",\"CheckSemanticsWholeModel\");" }
+    }
+
+//    { Spacer { Name BeforeCspec }}
+
+//    { MenuEntry
+//        { Name CspecSemantics }
+//        { Label "Check Semantics for This &Cspec" }
+//        { ActiveFunc se_check_table_type_active_func }
+//        { Builtin "EditorQrlEval stp_run_command(\"\",\"CheckSemanticsTables\");" }
+//    }
+
+//    { MenuEntry
+//        { Name AllCspecSemantics }
+//        { Label "Check Semantics for &Cspec's Objects..." }
+//        { ActiveFunc se_check_all_active_func }
+//        //{ ActiveFunc se_check_all_tables_active_func }
+//        { Builtin "EditorQrlEval stp_run_command(\"Cse\",\"CheckSemanticsAll\");" }
+//    }
+    { Spacer }
+    { MenuEntry
+        { Name SelectiveSemantics }
+        { Label "Check S&emantics Selectively..." }
+        { ActiveFunc se_check_selectively_active_func }
+        { Builtin "EditorQrlEval stp_run_command(\"\",\"CheckSemanticsSelectively\");" }
+    }
+}
+
+// Global declarations for reuse in rules:
+
+// Note: if this list is changed, keep other similar lists in sync
+Global 1 VccFileStoreAny
+{
+    { Properties
+    	{ Choice
+	    { Name "file_store" }
+	    { ChoiceItem
+	    	{ Label "Data Flow Diagrams" }
+	    	{ Value "-e dydfe" }
+	    }
+	    { ChoiceItem
+	    	{ Label "Data Structure Diagrams" }
+	    	{ Value "-e dse" }
+	    }
+	    { ChoiceItem
+	    	{ Label "Structure Chart Diagrams" }
+	    	{ Value "-e sce" }
+	    }
+	    { ChoiceItem
+	    	{ Label "Flow Chart Diagrams" }
+	    	{ Value "-e fce" }
+	    }
+	    { ChoiceItem
+	    	{ Label "State Transition Diagrams" }
+	    	{ Value "-e ste" }
+	    }
+	    { ChoiceItem
+	    	{ Label "Cspec Decision Tables" }
+	    	{ Value "-e cse -T DecisionTable" }
+	    }
+	    { ChoiceItem
+	    	{ Label "Cspec Process Activation Tables" }
+	    	{ Value "-e cse -T ProcessActivationTable" }
+	    }
+	    { ChoiceItem
+	    	{ Label "Cspec Process Activation Matrix Tables" }
+	    	{ Value "-e cse -T ProcessActivationMatrix" }
+	    }
+	    { ChoiceItem
+	    	{ Label "Cspec State Transition Tables" }
+	    	{ Value "-e cse -T StateTransitionTable" }
+	    }
+	    { ChoiceItem
+	    	{ Label "Cspec State Event Matrix Tables" }
+	    	{ Value "-e cse -T StateEventMatrix" }
+	    }
+	    { ChoiceItem
+	    	{ Label "Cspec Event Logic Tables" }
+	    	{ Value "-e cse -T EventLogicTable" }
+	    }
+	    { ChoiceItem
+	    	{ Label "Cspec Action Logic Tables" }
+	    	{ Value "-e cse -T ActionLogicTable" }
+	    }
+	    { ChoiceItem
+	    	{ Label "Matrix Tables" }
+	    	{ Value "-e ted" }
+	    }
+    	}
+    }
+}
+
+Global 1 OutputDirProperty
+{
+    { Properties
+	    { Text
+	        { Name "output_dir" }
+	        { Label "Output File Directory:" }
+	        { Type Text }
+    	    { MinLength 1 }
+    	    { MaxLength 300 }
+    	    { DispLength 40 }
+	        { InitVal "${projdir}${system}/${filestore}" }
+	    }
+        // ECR 3651a begin
+        { Button
+            { Name "browse_for_out_dir" }
+            { Label "Choose" }
+            { Event
+                { Type Select }
+                { Callback "select_output_dir_callback" }
+            }
+        }
+        { Group
+            { Name "output_file_group" }
+            { Label "" }
+            { Type Horizontal }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { LayoutPolicy ResizeAny }
+            { Align Bottom }
+            { Members ( output_dir browse_for_out_dir ) }
+        }
+        // ECR 3651a end
+    }
+}
+
+Global 1 MapfileOutputDirProperty
+{
+    { Properties
+	{ Text
+	    { Name "mapfile_output_dir" }
+	    { Label "Output File Directory:" }
+	    { Type Text }
+    	    { MinLength 1 }
+    	    { MaxLength 300 }
+    	    { DispLength 40 }
+	    { InitVal "~/${system}" }
+	}
+    }
+}
+
+Global 1 PdlProperty
+{
+    { Properties
+    	{ Choice
+    	    { Name "pdl_type" }
+    	    { Label "PDL Output Type:" }
+	    { Type AbbrMenu }
+	    { ChoiceItem
+	    	{ Label "Generic" }
+	    	{ Value "generic" }
+	    	{ Init On }
+	    }
+	    { ChoiceItem
+	    	{ Label "Ada" }
+	    	{ Value "ada" }
+	    }
+    	}
+    }
+}
+
+
+
+// These are from ct/rules, but the values were not quite right
+
+Global 1 RenameVerbose
+{
+    { Properties
+	{ Choice
+	    { Name "verbose" }
+	    { Label "Verbose:" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "" }
+		{ OnValue "-x Verbose True" }
+		{ OffValue "-x Verbose False" }
+    	    	{ Init On }
+	    }
+	}
+    }
+}
+
+Global 1 RenameQuiet
+{
+    { Properties
+	{ Choice
+	    { Name "quiet" }
+	    { Label "Show Commands:" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "" }
+		{ OffValue "-x Quiet True" }
+		{ OnValue "-x Quiet False" }
+		{ Init On }
+	    }
+	}
+    }
+}
+
+Global 1 RenameForce
+{
+    { Properties
+	{ Choice
+	    { Name "force" }
+	    { Label "Ask for Confirmation:" }
+	    { Type CheckBox }
+	    { ChoiceItem
+		{ Label "" }
+		{ OffValue "-x Force True" }
+		{ OnValue "-x Force False" }
+		{ Init On }
+	    }
+	}
+    }
+}
+
+
+Global 1 RenameHierarchy
+{
+    { ObjectCommand
+        { Name "RenameHierarchy" }
+        { Label "Rename Hierarchy..." }
+        { ResetAfterExec True }
+	{ ReapplyFilterAfterExec Self }
+        { ShowPropsOnExec True }
+        { Chdir False }
+        { SingleObject True }
+	{ Command "qrp -forward_messages ${msgd_handle} -s ${system} -p ${projdir} ${prop.verbose} ${prop.quiet}  ${prop.force} -x OrigFile ${cmd.objects} -x TargetFile ${prop.new_name} qrl/decomp/mv_decomp.qrl" }
+        { Type Nowin }
+        { Properties
+            { Footer
+                { Name "Footer2" }
+                { RightFooter "${class.label}" }
+            }
+            { Activation
+                { Target "Footer2" }
+                { OnInit Active }
+            }
+            { Text
+                { Name "new_name" }
+                { Label "New Name:" }
+                { Type Text }
+                { MinLength 1 }
+                { DispLength 20 }
+            }
+        }
+        { UseProperty RenameForce }
+        { UseProperty RenameVerbose }
+        { UseProperty RenameQuiet }
+    }
+}
+
+
+
+Global 1 CheckSemanticsDseSelectively
+{
+    { ObjectCommand
+        { Name "CheckSemanticsSelectively" }
+        { Label "Check Semantics Selectively..." }
+        { Chdir False }
+        { SingleObject False }
+	{ UseProperty "DseCheckOne" }
+	{ UseProperty "DseCheckTwo" }
+	{ UseProperty "DseVerbose" }
+        { Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} ${prop.check_one} ${prop.check_two} ${prop.verbose} -x files \"${cmd.objects}\" qrl/check/${editor}.qrl " }
+        { Type Nowin }
+    }
+}
+
+
+Global 1 DOORSCommand
+{
+    { ObjectCommand
+        { ShowOnMenuExpr "use_doors_integration();" }
+        { Name "ExportToDoors" }
+        { Label "Export To Doors" }
+        { Chdir False }
+        { SingleObject False }
+        { Type Nowin }     //ECR 5660
+        { Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system}  -x Files '${cmd.objects}' -x Editor '${editor}' qrl/req_trace/export_to_doors.qrl " }
+    }
+}
+
+Global 1 CheckSemanticsSceSelectively
+{
+    { ObjectCommand
+        { Name "CheckSemanticsSelectively" }
+        { Label "Check Semantics Selectively..." }
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty "SceCheckOne" }
+        { UseProperty "SceCheckTwo" }
+        { UseProperty "SceCheckThree" }
+        { UseProperty "SceCheckFour" }
+        { UseProperty "SceCheckFive" }
+        { UseProperty "SceCheckSix" }
+        { UseProperty "SceCheckSeven" }
+        { UseProperty "SceCheckVerbose" }
+        { Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} ${prop.check_one} ${prop.check_two} ${prop.check_three} ${prop.check_four} ${prop.check_five} ${prop.check_six} ${prop.check_seven} ${prop.verbose} -x files \"${cmd.objects}\" qrl/check/${editor}.qrl " }
+        { Type Nowin }
+    }
+}
+
+Global 1 CheckSemanticsDfeSelectively
+{
+    { ObjectCommand
+        { Name "CheckSemanticsSelectively" }
+        { Label "Check Semantics Selectively..." }
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty DfeDecompBalance }
+        { UseProperty DfeStoreBalance }
+        { UseProperty DfeSplitFlowBalance }
+        { UseProperty DfeProcessBalance }
+        { UseProperty DfeCheckPspec }
+        { UseProperty DfeCheckCspec }
+        { UseProperty DfeVerbose }
+        { Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} ${prop.DecompBalance} ${prop.StoreBalance} ${prop.CheckPspec} ${prop.CheckCspec} ${prop.SplitFlowBalance} ${prop.ProcessBalance} ${prop.Verbose} -x files \"${cmd.objects}\" qrl/check/dfe.qrl " }
+        { Type Nowin }
+    }
+}
+
+Global 1 CheckSemanticsSteSelectively
+{
+    { ObjectCommand
+        { Name "CheckSemanticsSelectively" }
+        { Label "Check Semantics Selectively..." }
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty "SteCheckOne" }
+        { UseProperty "SteCheckTwo" }
+        { UseProperty "SteCheckThree" }
+        { UseProperty "SteCheckFour" }
+        { UseProperty "SteCheckFive" }
+        { UseProperty "SteCheckSix" }
+        { UseProperty "SteVerbose" }
+        { Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} ${prop.check_one} ${prop.check_two} ${prop.check_three} ${prop.check_four} ${prop.check_five} ${prop.check_six} ${prop.verbose} -x files \"${cmd.objects}\" qrl/check/${editor}.qrl " }
+        { Type Nowin }
+    }
+}
+
+Global 1 CheckSemanticsWholeModel  
+{
+    { ClassCommand
+        { Name "CheckSemanticsWholeModel" }
+        { Label "Check Semantics for &Whole Model..." }
+	//{ Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} qrl/check/check_all.qrl " }
+        { ShowPropsOnExec True }
+        { UseProperty CheckSemanticsWholeModelProperty }
+        { UseProperty CheckSemanticsWholeModelButtonsProperty }
+    }
+}
+
+
+Global 1 GeneratePspecAll
+{
+    { ClassCommand
+	{ Name "GeneratePspecAll" }
+	{ Label "Generate Pspec for All Diagrams..." }
+	{ Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} qrl/pspec/all_pspec.qrl -x output_dir ${prop.output_dir}" }
+        { Type Nowin }
+    	{ UseProperty OutputDirProperty }
+    }
+}
+
+Global 1 GeneratePspec
+{
+    { ObjectCommand
+	{ Name "GeneratePspec" }
+	{ Label "Generate Pspec..." }
+	{ Chdir False }
+	{ Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} qrl/pspec/all_pspec.qrl -x files \"${cmd.objects}\" -x output_dir ${prop.output_dir}" }
+        { Type Nowin }
+    	{ UseProperty OutputDirProperty }
+    }
+}
+
+Global 1 GenerateBnfAll
+{
+    { ClassCommand
+	{ Name "GenerateBnfAll" }
+	{ Label "Generate BNF for All Diagrams..." }
+	{ Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} qrl/bnf/all_bnf.qrl -x output_dir ${prop.output_dir}"}
+        { Type Nowin }
+    	{ UseProperty OutputDirProperty }
+    }
+}
+
+Global 1 GenerateBnf
+{
+    { ObjectCommand
+	{ Name "GenerateBnf" }
+	{ Label "Generate BNF..." }
+	{ Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} qrl/bnf/bnf.qrl -x files \"${cmd.objects}\" -x output_dir ${prop.output_dir}" }
+        { Type Nowin }
+    	{ UseProperty OutputDirProperty }
+    }
+}
+
+Global 1 GeneratePdlAll
+{
+    { ClassCommand
+	{ Name "GeneratePdlAll" }
+	{ Label "Generate PDL for All Diagrams..." }
+	{ Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} qrl/pdl/all_pdl.qrl -x pdl_type ${prop.pdl_type} -x output_dir ${prop.output_dir}"}
+        { Type Nowin }
+        { UseProperty PdlProperty }
+    	{ UseProperty OutputDirProperty }
+    }
+}
+
+Global 1 GeneratePdl
+{
+    { ObjectCommand
+	{ Name "GeneratePdl" }
+	{ Label "Generate PDL..." }
+	{ SingleObject False }
+	{ Chdir False }
+	{ Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} qrl/pdl/all_pdl.qrl -x files \"${cmd.objects}\" -x pdl_type ${prop.pdl_type} -x output_dir ${prop.output_dir}"}
+        { Type Nowin }
+        { UseProperty PdlProperty }
+    	{ UseProperty OutputDirProperty }
+    }
+}
+
+Global 1 GenerateCCodeClass
+{
+    { ClassCommand
+        { Name "GenerateCCodeClass" }
+        { Label "Generate C Code..." }
+        { Command "" }
+        { UseProperty CKandR_Ansi }
+	{ UseProperty CDeleteOldCode }
+	{ UseProperty SeVerbose }
+	{ UseProperty CFileExtensions }
+	{ UseProperty CFileDirectory }
+	{ UseProperty CFileName }
+	{ UseProperty CGenCodeBody }
+	{ UseProperty CGenComment }
+	{ UseProperty CCheckOnly }
+	{ Properties
+	    { Group
+                { Name "Options1" }
+                { Label "Output File:" }
+                { Type Vertical }
+                //ECR 5836 begin - commented out next lines
+                //{ Resizable ResizeAny }
+                //{ ChildSizePolicy ResizeWidth }
+                //{ LayoutPolicy ResizeAny }
+                //ECR 5836 begin 
+                { HorizontalAlign AlignLabels }
+                // ECR 3651a begin
+                // { Members ( file_directory file_name_group delete_old_code ) }
+                { Members ( output_directory_group file_name_group delete_old_code ) }
+                // ECR 3651a end
+            }
+            { Group
+                { Name "Options2" }
+                { Label "File Extensions:" }
+                { Type Vertical }
+                { Resizable ResizeWidth }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeWidth }
+                { HorizontalAlign AlignLabels }
+                { Members ( file_extension_group ) }
+            }
+            { Group
+                { Name "Options3" }
+                { Label "Code Options:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+                { Members ( kandr_or_ansi gen_code_body gen_comment verbose check_only) }
+            }
+            { TopGroup
+                { Align Left }
+                { Members ( Options1 Options2 Options3 ) }
+            }
+	    { Qrl { QrlFile "se/qrl/properties/codegen_cb.inc" } }
+	    { Button
+		{ Name "OK" }
+		{ Event
+		    { Type Select }
+		    { Callback "GenCodefromDesktop_cb" }
+		}
+	    }
+        }
+    }    
+}
+
+Global 1 GenerateCCodeObject
+{
+    { ObjectCommand
+        { Name "GenerateCCodeObject" }
+        { Label "Generate C Code..." }
+        { Command "" }
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty CKandR_Ansi }
+	{ UseProperty CDeleteOldCode }
+	{ UseProperty SeVerbose }
+	{ UseProperty CFileExtensions }
+	{ UseProperty CFileDirectory }
+	{ UseProperty CFileName }
+	{ UseProperty CGenCodeBody }
+	{ UseProperty CGenComment }
+	{ UseProperty CCheckOnly }
+	{ Properties
+	    { Group
+                { Name "Options1" }
+                { Label "Output File:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+                // ECR 3651a begin
+                // { Members ( file_directory file_name_group delete_old_code ) }
+                { Members ( output_directory_group file_name_group delete_old_code ) }
+                // ECR 3651a end
+            }
+            { Group
+                { Name "Options2" }
+                { Label "File Extensions:" }
+                { Type Vertical }
+                { Resizable ResizeWidth }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeWidth }
+                { HorizontalAlign AlignLabels }
+                { Members ( file_extension_group ) }
+            }
+            { Group
+                { Name "Options3" }
+                { Label "Code Options:" }
+                { Type Vertical }
+                { Resizable ResizeAny }
+                { ChildSizePolicy ResizeWidth }
+                { LayoutPolicy ResizeAny }
+                { HorizontalAlign AlignLabels }
+                { Members ( kandr_or_ansi gen_code_body gen_comment verbose check_only) }
+            }
+            { TopGroup
+                { Align Left }
+                { Members ( Options1 Options2 Options3 ) }
+            }
+	    { Qrl { QrlFile "se/qrl/properties/codegen_cb.inc" } }
+	    { Button
+		{ Name "OK" }
+		{ Event
+		    { Type Select }
+		    { Callback "GenCodefromDesktop_cb" }
+		}
+	    }
+        }
+    }    
+}
+
+Global 1 GenerateDesignReviewReportClass
+{
+    { ClassCommand
+        { Name "GenerateDesignReviewReportClass" }
+        { Label "Generate Design Review Report..." }
+        { Command "" }
+        { UseProperty ReportTargetOutputFormat }
+        { UseProperty ReportDefaultOutputDirAndFileObjectsProperty }
+        { UseProperty ReportIncludeSceDiagrams }
+        { UseProperty ReportIncludeDseDiagrams }
+        { UseProperty ReportIncludeAnnotations }
+//        { UseProperty ReportIncludeSourceListings }
+        { UseProperty ReportIncludeAllFileHistory }
+        { UseProperty ReportVerbose }
+        { Properties
+            { Group
+                { Name "Top" }
+                { Type Vertical }
+                { Align Labels }
+                //ECR 5833 begin
+                { Resizable ResizeNone }
+                { ChildSizePolicy ResizeNone }
+                { Members ( output_target main_output_file_group include_sce_diagrams include_dse_diagrams include_annotations include_all_file_history verbose ) }
+                //ECR 5833 end
+            }
+            { Group
+                { Name "All" }
+                { Type Vertical }
+                { Members ( Top Buttons) }
+                { VerticalAlign Center }
+            }
+        }
+    }    
+}
+
+Global 1 GenerateAnalysisReviewReportClass
+{
+    { ClassCommand
+        { Name "GenerateAnalysisReviewReportClass" }
+        { Label "Generate Analysis Review Report..." }
+        { Command "" }
+        { UseProperty ReportTargetOutputFormat }
+        { UseProperty ReportSymbols }
+        { UseProperty ReportDefaultOutputDirAndFileObjectsPropertyAnalysis }
+        { UseProperty ReportIncludeCspecTables }
+//        { UseProperty ReportIncludeDseDiagrams }
+        { UseProperty ReportIncludeAnnotations }
+        { UseProperty ReportIncludeAllFileHistory }
+        { UseProperty ReportVerbose }
+        { Properties
+            { Group
+                { Name "Top" }
+                { Type Vertical }
+                { Align Labels }
+                //ECR 5832 begin
+                { Resizable ResizeNone }
+                { ChildSizePolicy ResizeNone }
+                { Members ( output_target output_symbols output_file_group_analysis include_cspec_tables include_annotations include_all_file_history verbose ) }
+                //ECR 5832 end
+            }
+            { Group
+                { Name "All" }
+                { Type Vertical }
+                { Members ( Top Buttons) }
+                { VerticalAlign Center }
+            }
+        }
+    }    
+}
+
+//spr 2722 - add the new global definition
+Global 1 EditAnnotation
+{
+    { ObjectCommand
+	{ Name EditAnnotation }
+        { Label "Edit Object Annotation..." }
+        { Type Nowin }
+        { Command "" }
+        { Chdir False }
+        { SingleObject True }
+    }
+}
+
+
+// Start of specification of classes:
+// -----------------------------------------------------------------------------
+
+Class 0 DyDfe
+{
+    { Label "DeMarco/Yourdon Data Flow" }
+    { Image "data_flow_diagrams" }
+    { ShowOnDesktop True }
+    { OMSObjects
+        { Match "file[DfeDiagram]" }
+        { Editor "dydfe" }
+    }
+
+    { UseClassCommand StartDiagramEditor }
+    { UseClassCommand GeneratePspecAll }
+
+    { UseObjectCommand EditDiagram }
+    { UseObjectCommand PrintDiagram }
+	{ UseObjectCommand PrintDiagramAs }  // SPR 2287 - PrintAs crashes from stpdt
+    // ECR 5887 { UseObjectCommand CheckSemanticsAll }
+    { ObjectCommand 
+        { Name "CheckSemanticsAll" }
+        { Label "Check Semantics for Dfe Diagrams..." }  
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty CheckSemanticsWholeModelProperty }
+        { UseProperty CheckSemanticsDfeButtonsProperty }
+    }
+    { UseObjectCommand CheckSemanticsDfeSelectively }
+    { UseObjectCommand GeneratePspec }
+    { UseObjectCommand Copy }
+    { UseObjectCommand Delete }
+    { UseObjectCommand RenameHierarchy }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+    { UseObjectCommand DOORSCommand }
+}
+
+Class 0 GsDfe
+{
+    { Label "Gane/Sarson Data Flow" }
+    { Image "data_flow_diagrams" }
+    { ShowOnDesktop True }
+    { OMSObjects
+        { Match "file[DfeDiagram]" }
+        { Editor "gsdfe" }
+    }
+ 
+    { UseClassCommand StartDiagramEditor }
+    { UseClassCommand GeneratePspecAll }
+
+    { UseObjectCommand EditDiagram }
+    { UseObjectCommand PrintDiagram }
+	{ UseObjectCommand PrintDiagramAs }  // SPR 2287 - PrintAs crashes from stpdt
+    // ECR 5887 { UseObjectCommand CheckSemanticsAll }
+    { ObjectCommand 
+        { Name "CheckSemanticsAll" }
+        { Label "Check Semantics for Dfe Diagrams..." }  
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty CheckSemanticsWholeModelProperty }
+        { UseProperty CheckSemanticsDfeButtonsProperty }
+    }
+    { UseObjectCommand CheckSemanticsDfeSelectively }
+    { UseObjectCommand GeneratePspec }
+    { UseObjectCommand Copy }
+    { UseObjectCommand Delete }
+    { UseObjectCommand RenameHierarchy }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+    { UseObjectCommand DOORSCommand }
+}
+
+Class 0 Dse
+{
+    { Label "Data Structure" }
+    { Image "data_structure_diagrams" }
+    { ShowOnDesktop True }
+    { OMSObjects
+        { Match "file[DseDiagram]" }
+        { Editor "dse" }
+    }
+ 
+    { UseClassCommand StartDiagramEditor }
+    { UseClassCommand GenerateBnfAll }
+
+    { UseObjectCommand EditDiagram }
+    { UseObjectCommand PrintDiagram }
+	{ UseObjectCommand PrintDiagramAs }  // SPR 2287 - PrintAs crashes from stpdt
+    // ECR 5887 { UseObjectCommand CheckSemanticsAll }
+    { ObjectCommand 
+        { Name "CheckSemanticsAll" }
+        { Label "Check Semantics for Dse Diagrams..." }  
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty CheckSemanticsWholeModelProperty }
+        { UseProperty CheckSemanticsDseButtonsProperty }
+    }
+    { UseObjectCommand CheckSemanticsDseSelectively }
+    { UseObjectCommand GenerateBnf }
+    { UseObjectCommand Copy }
+    { UseObjectCommand Delete }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+    { UseObjectCommand DOORSCommand }
+}
+
+Class 0 Sce
+{
+    { Label "Structure Chart" }
+    { Image "structure_chart_diagrams" }
+    { ShowOnDesktop True }
+    { OMSObjects
+        { Match "file[SceDiagram]" }
+        { Editor "sce" }
+    }
+ 
+    { UseClassCommand StartDiagramEditor }
+    { UseClassCommand GeneratePdlAll }
+    { UseObjectCommand EditDiagram }
+    { UseObjectCommand PrintDiagram }
+	{ UseObjectCommand PrintDiagramAs }  // SPR 2287 - PrintAs crashes from stpdt
+    // ECR 5887 { UseObjectCommand CheckSemanticsAll }
+    { ObjectCommand 
+        { Name "CheckSemanticsAll" }
+        { Label "Check Semantics for Sce Diagrams..." }  
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty CheckSemanticsWholeModelProperty }
+        { UseProperty CheckSemanticsSceButtonsProperty }
+    }
+    { UseObjectCommand CheckSemanticsSceSelectively }
+    { UseObjectCommand GenerateCCodeObject }
+    { ObjectCommand
+        { Name "GenerateCCodeObject" }
+        { Label "Generate C Code for SCE Diagram(s)..." }
+        { Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} ${prop.kandr_or_ansi} -x file_directory '${prop.file_directory}' -x file_name \"${prop.file_name}\" ${prop.view_file} -x view_editor \"${prop.view_editor}\" -x file_interface_extension \"${prop.file_interface_extension}\" -x file_extension \"${prop.file_extension}\" ${prop.delete_old_code} ${prop.verbose} ${prop.gen_code_body} ${prop.gen_comment} ${prop.check_only} -x obj_name \"${cmd.objects}\" -x obj_type \"${cmd.type}\" qrl/code_gen/codegen.qrl" }
+        { Type Nowin }
+    }
+    { UseObjectCommand GeneratePdl }
+    { UseObjectCommand Copy }
+    { UseObjectCommand Delete }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+    { UseObjectCommand DOORSCommand }
+}
+
+Class 0 Fce
+{
+    { Label "Flow Chart" }
+    { Image "flow_chart_diagrams" }
+    { ShowOnDesktop True }
+    { OMSObjects
+        { Match "file[FceDiagram]" }
+        { Editor "fce" }
+    }
+ 
+    { UseClassCommand StartDiagramEditor }
+
+    { UseObjectCommand EditDiagram }
+    { UseObjectCommand PrintDiagram }
+	{ UseObjectCommand PrintDiagramAs }  // SPR 2287 - PrintAs crashes from stpdt
+    //{ UseObjectCommand CheckSemanticsAllChecks }  Remedy 2300, there are no sem. checks for fce 
+    { UseObjectCommand Copy }
+    { UseObjectCommand Delete }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 Ste
+{
+    { Label "State Transition" }
+    { Image "state_transition_diagrams" }
+    { ShowOnDesktop True }
+    { OMSObjects
+        { Match "file[SteDiagram]" }
+        { Editor "ste" }
+    }
+ 
+    { UseClassCommand StartDiagramEditor }
+
+    { UseObjectCommand EditDiagram }
+    { UseObjectCommand PrintDiagram }
+	{ UseObjectCommand PrintDiagramAs }  // SPR 2287 - PrintAs crashes from stpdt
+    // ECR 5887 { UseObjectCommand CheckSemanticsAll }
+    { ObjectCommand 
+        { Name "CheckSemanticsAll" }
+        { Label "Check Semantics for Ste Diagrams..." }  
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty CheckSemanticsWholeModelProperty }
+        { UseProperty CheckSemanticsSteButtonsProperty }
+    }
+    { UseObjectCommand CheckSemanticsSteSelectively }
+    { UseObjectCommand Copy }
+    { UseObjectCommand Delete }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+    { UseObjectCommand DOORSCommand }
+}
+
+Class 0 Cse
+{
+    { Label "All Control Spec" }
+    { Image "all_control_spec_tables" }
+    { ShowOnDesktop True }
+    { OMSObjects
+        { Match "file[CspecTable]" }
+        { Editor "cse" }
+    }
+// SPR 2266    { UseClassCommand StartTableEditor }
+
+    { UseObjectCommand PrintTable }
+    { ObjectCommand
+	{ Name "PrintTable" }
+	{ Label "Print Cspec..." }
+    }
+
+// SPR 2287 - PrintAs crashes from stpdt
+	{ UseObjectCommand PrintTableAs }
+    { ObjectCommand
+	{ Name "PrintTableAs" }
+	{ Label "Print As Cspec..." }
+    }
+
+    // ECR 5887 { UseObjectCommand CheckSemanticsAll }
+    { ObjectCommand 
+        { Name "CheckSemanticsAll" }
+        { Label "Check Semantics for Cse Tables..." }  
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty CheckSemanticsWholeModelProperty }
+        { UseProperty CheckSemanticsCseButtonsProperty }
+    }
+
+//    { UseObjectCommand CheckSemanticsTables }
+//    { ObjectCommand
+//	{ Name "CheckSemanticsTables" }
+//	{ Label "Check Semantics for This Cspec" }
+//    }
+
+    { UseObjectCommand Copy }
+    { ObjectCommand
+	{ Name "Copy" }
+	{ Label "Copy Cspec..." }
+    }
+
+    { UseObjectCommand Rename }
+    { ObjectCommand
+	{ Name "Rename" }
+	{ Label "Rename Cspec..." }
+    }
+
+    { UseObjectCommand Delete }
+    { ObjectCommand
+	{ Name "Delete" }
+	{ Label "Delete Cspec..." }
+    }
+
+    { UseObjectCommand LockingCommands }
+}
+
+
+
+
+Class 0 DecisionTable
+{
+    { Label "Decision" }
+    { Image "decision_tables" }
+    { ShowOnDesktop True }
+    { OMSObjects
+        { Match "file[DecisionTable]" }
+        { Editor "cse" }
+        { AppType DecisionTable }
+    }
+
+    { UseClassCommand StartTableTypeEditor }
+
+    { UseObjectCommand TableTypeEditTable }
+    // ECR 5887 { UseObjectCommand TableTypePrint }
+	{ UseObjectCommand PrintTable }  // SPR 3146 - Print crashes from stpdt
+    { UseObjectCommand PrintTableAs }  // SPR 2287 - PrintAs crashes from stpdt
+    //{ UseObjectCommand TableTypeCheckSemanticsTables }
+    // ECR 5887 { UseObjectCommand CheckSemanticsAll }
+    { ObjectCommand
+	{ Name "CheckSemanticsAll" }
+	{ Label "Check Semantics for Decision Tables..." }
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty CheckSemanticsWholeModelProperty }
+        { UseProperty CheckSemanticsDETButtonsProperty }
+    }
+    // ECR4244 begin change: Copy one or more files
+    // use the standard Object Command Copy instead
+    //{ UseObjectCommand TableTypeCopy }
+    { UseObjectCommand Copy }
+    // ECR4244 end change: Copy one or more files
+    { UseObjectCommand TableTypeDelete }
+    { UseObjectCommand TableTypeRename }
+    { UseObjectCommand TableTypeLockingCommands }
+}
+
+Class 0 ProcessActivationTable
+{
+    { Label "Process Activation" }
+    { Image "process_activation_tables" }
+    { ShowOnDesktop True }
+    { OMSObjects
+        { Match "file[ProcessActivationTable]" }
+        { Editor "cse" }
+        { AppType ProcessActivationTable }
+    }
+ 
+    { UseClassCommand StartTableTypeEditor }
+
+    { UseObjectCommand TableTypeEditTable }
+    // ECR 5887 { UseObjectCommand TableTypePrint }
+	{ UseObjectCommand PrintTable }  // SPR 3146 - Print crashes from stpdt
+    { UseObjectCommand PrintTableAs }  // SPR 2287 - PrintAs crashes from stpdt
+    // ECR 5887 { UseObjectCommand CheckSemanticsAll }
+    { ObjectCommand
+	{ Name "CheckSemanticsAll" }
+	{ Label "Check Semantics for Process Activation Tables..." }
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty CheckSemanticsWholeModelProperty }
+        { UseProperty CheckSemanticsPATButtonsProperty }
+    }
+    // ECR4244 begin change: Copy one or more files
+    // use the standard Object Command Copy instead
+    //{ UseObjectCommand TableTypeCopy }
+    { UseObjectCommand Copy }
+    // ECR4244 end change: Copy one or more files
+    { UseObjectCommand TableTypeDelete }
+    { UseObjectCommand TableTypeRename }
+    { UseObjectCommand TableTypeLockingCommands }
+}
+
+Class 0 ProcessActivationMatrix
+{
+    { Label "Process Activation Matrix" }
+    { Image "process_activation_matrix_tables" }
+    { ShowOnDesktop True }
+    { OMSObjects
+        { Match "file[ProcessActivationMatrix]" }
+        { Editor "cse" }
+        { AppType ProcessActivationMatrix }
+    }
+ 
+    { UseClassCommand StartTableTypeEditor }
+
+    { UseObjectCommand TableTypeEditTable }
+    // ECR 5887 { UseObjectCommand TableTypePrint }
+	{ UseObjectCommand PrintTable }  // SPR 3146 - Print crashes from stpdt
+    { UseObjectCommand PrintTableAs }  // SPR 2287 - PrintAs crashes from stpdt
+    // ECR 5887 { UseObjectCommand CheckSemanticsAll }
+    { ObjectCommand
+	{ Name "CheckSemanticsAll" }
+	{ Label "Check Semantics for Process Activation Matrix Tables..." }
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty CheckSemanticsWholeModelProperty }
+        { UseProperty CheckSemanticsPAMButtonsProperty }
+    }
+    // ECR4244 begin change: Copy one or more files
+    // use the standard Object Command Copy instead
+    //{ UseObjectCommand TableTypeCopy }
+    { UseObjectCommand Copy }
+    // ECR4244 end change: Copy one or more files
+    { UseObjectCommand TableTypeDelete }
+    { UseObjectCommand TableTypeRename }
+    { UseObjectCommand TableTypeLockingCommands }
+}
+
+Class 0 StateTransitionTable
+{
+    { Label "State Transition" }
+    { Image "state_transition_tables" }
+    { ShowOnDesktop True }
+    { OMSObjects
+        { Match "file[StateTransitionTable]" }
+        { Editor "cse" }
+        { AppType StateTransitionTable }
+    }
+ 
+    { UseClassCommand StartTableTypeEditor }
+
+    { UseObjectCommand TableTypeEditTable }
+    // ECR 5887 { UseObjectCommand TableTypePrint }
+	{ UseObjectCommand PrintTable }  // SPR 3146 - Print crashes from stpdt
+    { UseObjectCommand PrintTableAs }  // SPR 2287 - PrintAs crashes from stpdt
+    // ECR 5887 { UseObjectCommand CheckSemanticsAll }
+    { ObjectCommand
+	{ Name "CheckSemanticsAll" }
+	{ Label "Check Semantics for State Transition Tables..." }
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty CheckSemanticsWholeModelProperty }
+        { UseProperty CheckSemanticsSTTButtonsProperty }
+    }
+    // ECR4244 begin change: Copy one or more files
+    // use the standard Object Command Copy instead
+    //{ UseObjectCommand TableTypeCopy }
+    { UseObjectCommand Copy }
+    // ECR4244 end change: Copy one or more files
+    { UseObjectCommand TableTypeDelete }
+    { UseObjectCommand TableTypeRename }
+    { UseObjectCommand TableTypeLockingCommands }
+}
+
+Class 0 StateEventMatrix
+{
+    { Label "State Event Matrix" }
+    { Image "state_event_matrix_tables" }
+    { ShowOnDesktop True }
+    { OMSObjects
+        { Match "file[StateEventMatrix]" }
+        { Editor "cse" }
+        { AppType StateEventMatrix }
+    }
+ 
+    { UseClassCommand StartTableTypeEditor }
+
+    { UseObjectCommand TableTypeEditTable }
+    // ECR 5887 { UseObjectCommand TableTypePrint }
+	{ UseObjectCommand PrintTable }  // SPR 3146 - Print crashes from stpdt
+    { UseObjectCommand PrintTableAs }  // SPR 2287 - PrintAs crashes from stpdt
+    // ECR 5887 { UseObjectCommand CheckSemanticsAll }
+    { ObjectCommand
+	{ Name "CheckSemanticsAll" }
+	{ Label "Check Semantics for State Event Matrix Tables..." }
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty CheckSemanticsWholeModelProperty }
+        { UseProperty CheckSemanticsSEMButtonsProperty }
+    }
+    // ECR4244 begin change: Copy one or more files
+    // use the standard Object Command Copy instead
+    //{ UseObjectCommand TableTypeCopy }
+    { UseObjectCommand Copy }
+    // ECR4244 end change: Copy one or more files
+    { UseObjectCommand TableTypeDelete }
+    { UseObjectCommand TableTypeRename }
+    { UseObjectCommand TableTypeLockingCommands }
+}
+
+Class 0 EventLogicTable
+{
+    { Label "Event Logic" }
+    { Image "event_logic_tables" }
+    { ShowOnDesktop True }
+    { OMSObjects
+        { Match "file[EventLogicTable]" }
+        { Editor "cse" }
+        { AppType EventLogicTable }
+    }
+ 
+    { UseClassCommand StartTableTypeEditor }
+
+    { UseObjectCommand TableTypeEditTable }
+    // ECR 5887 { UseObjectCommand TableTypePrint }
+	{ UseObjectCommand PrintTable }  // SPR 3146 - Print crashes from stpdt
+    { UseObjectCommand PrintTableAs }  // SPR 2287 - PrintAs crashes from stpdt
+    // ECR 5887 { UseObjectCommand CheckSemanticsAll }
+    { ObjectCommand
+	{ Name "CheckSemanticsAll" }
+	{ Label "Check Semantics for Event Logic Tables..." }
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty CheckSemanticsWholeModelProperty }
+        { UseProperty CheckSemanticsELTButtonsProperty }
+    }
+    // ECR4244 begin change: Copy one or more files
+    // use the standard Object Command Copy instead
+    //{ UseObjectCommand TableTypeCopy }
+    { UseObjectCommand Copy }
+    // ECR4244 end change: Copy one or more files
+    { UseObjectCommand TableTypeDelete }
+    { UseObjectCommand TableTypeRename }
+    { UseObjectCommand TableTypeLockingCommands }
+}
+
+Class 0 ActionLogicTable
+{
+    { Label "Action Logic" }
+    { Image "action_logic_tables" }
+    { ShowOnDesktop True }
+    { OMSObjects
+        { Match "file[ActionLogicTable]" }
+        { Editor "cse" }
+        { AppType ActionLogicTable }
+    }
+ 
+    { UseClassCommand StartTableTypeEditor }
+
+    { UseObjectCommand TableTypeEditTable }
+    // ECR 5887 { UseObjectCommand TableTypePrint }
+	{ UseObjectCommand PrintTable }  // SPR 3146 - Print crashes from stpdt
+    { UseObjectCommand PrintTableAs }  // SPR 2287 - PrintAs crashes from stpdt
+    // ECR 5887 { UseObjectCommand CheckSemanticsAll }
+    { ObjectCommand
+	{ Name "CheckSemanticsAll" }
+	{ Label "Check Semantics for Action Logic Tables..." }
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty CheckSemanticsWholeModelProperty }
+        { UseProperty CheckSemanticsALTButtonsProperty }
+    }
+    // ECR4244 begin change: Copy one or more files
+    // use the standard Object Command Copy instead
+    //{ UseObjectCommand TableTypeCopy }
+    { UseObjectCommand Copy }
+    // ECR4244 end change: Copy one or more files
+    { UseObjectCommand TableTypeDelete }
+    { UseObjectCommand TableTypeRename }
+    { UseObjectCommand TableTypeLockingCommands }
+}
+
+Class 0 Ted
+{
+    { Label "Matrix Tables" }
+    { Image "all_control_spec_tables" }
+    { ShowOnDesktop True }
+    { OMSObjects
+        { Match "file[TedTable]" }
+        { Editor "ted" }
+    }
+ 
+    { UseClassCommand StartTableEditor }
+
+    { UseObjectCommand EditTable }
+    { UseObjectCommand PrintTable }
+    { UseObjectCommand PrintTableAs }  // SPR 2287 - PrintAs crashes from stpdt
+    { UseObjectCommand Copy }
+    { UseObjectCommand Rename }
+    { UseObjectCommand Delete }
+    { UseObjectCommand LockingCommands }
+}
+
+Class 0 Migration
+{
+    { Label "Migration from 4.2D to 5.0" }
+    { Image "mig_32" }
+    { ShowOnDesktop False }
+    { UseClassCommand MigrateAnnotations }
+    { UseClassCommand MigrateSystem }
+}
+
+Class 0 SEDirectory
+{
+    { Label "Directory Objects" }
+    { Image "directory_objects" }
+    { ShowOnDesktop True }
+    { OMSObjects
+        { Match "node[SEDirectory]" }
+        { Editor "sce" }
+    }
+
+    { UseClassCommand ReapplyFilterCommand }
+
+    { UseObjectCommand DesktopGlobalObjectRename }
+    { UseObjectCommand EditAnnotation }  //spr 2722 - I add this new attribute.
+    { ObjectCommand
+	{ Name EditAnnotation }
+        { Label "Edit Object Annotation..." }
+        { Type Nowin }
+        { Command "stpem -ed oae -s ${system} -p ${projdir} -C EditorShowDeiconify -C \"EditorQrlEval LoadByNameType(\\"${cmd.objects}\\",\\"SEDirectory\\",\\"node\\");\"" }
+        { Chdir False }
+        { SingleObject True }
+    }
+    { ObjectCommand
+	{ Name "RemoveDirFromSemanticModel" }
+	{ Label "Remove Object(s) From RE Semantic Model..." }
+        { SingleObject False }
+        { Type Nowin} 
+        { Command "re_db_rollback -forward_messages ${msgd_handle} -p ${projdir} -s ${system} -force -v -d ${cmd.objects}" }
+    }
+    { UseObjectCommand GenerateCCodeObject } 
+    { ObjectCommand 
+	{ Name "GenerateCCodeObject" } 
+	{ Label "Generate C Code for Object(s)..." } 
+	{ Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} ${prop.kandr_or_ansi} -x file_directory '${prop.file_directory}' -x file_name \"${prop.file_name}\" ${prop.view_file} -x view_editor \"${prop.view_editor}\" -x file_interface_extension \"${prop.file_interface_extension}\" -x file_extension \"${prop.file_extension}\" ${prop.delete_old_code} ${prop.verbose} ${prop.gen_code_body} ${prop.gen_comment} ${prop.check_only} -x obj_name \"${cmd.objects}\" -x obj_type \"${cmd.type}\" qrl/code_gen/codegen.qrl" }
+        { Type Nowin }
+    }     
+}
+
+Class 0 SEFile
+{
+    { Label "File Objects" }
+    { Image "file_objects" }
+    { ShowOnDesktop True }
+    { OMSObjects
+        { Match "node[SEFile]" }
+        { Editor "sce" }
+    }
+
+    { UseClassCommand ReapplyFilterCommand }
+
+    { UseObjectCommand DesktopGlobalObjectRename } 
+    // It would perhaps be nicer to use a property sheet for this, but
+    // at this point there  are several things not implemented yet in
+    // the desktop to do it.
+    { UseObjectCommand EditAnnotation }  //spr 2722 - I add this new attribute.
+    { ObjectCommand
+	{ Name EditAnnotation }
+        { Label "Edit Object Annotation..." }
+        { Type Nowin }
+        { Command "stpem -ed oae -s ${system} -p ${projdir} -C EditorShowDeiconify -C \"EditorQrlEval LoadByNameType(\\"${cmd.objects}\\",\\"SEFile\\",\\"node\\");\"" }
+        { Chdir False }
+        { SingleObject True }
+    }
+    { ObjectCommand
+	{ Name "RemoveFileFromSemanticModel" }
+	{ Label "Remove Object(s) From RE Semantic Model" }
+        { SingleObject True }
+        { Type Nowin }
+        { Command "re_db_rollback -forward_messages ${msgd_handle} -p ${projdir} -s ${system} -force -v -f ${cmd.objects}" }
+    }
+    { UseObjectCommand GenerateCCodeObject }
+    { ObjectCommand
+        { Name "GenerateCCodeObject" }
+        { Label "Generate C Code for Object(s)..." }
+        { Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} ${prop.kandr_or_ansi} -x file_directory '${prop.file_directory}' -x file_name \"${prop.file_name}\" ${prop.view_file} -x view_editor \"${prop.view_editor}\" -x file_interface_extension \"${prop.file_interface_extension}\" -x file_extension \"${prop.file_extension}\" ${prop.delete_old_code} ${prop.verbose} ${prop.gen_code_body} ${prop.gen_comment} ${prop.check_only} -x obj_name \"${cmd.objects}\" -x obj_type \"${cmd.type}\" qrl/code_gen/codegen.qrl" } 
+        { Type Nowin }
+    }
+}
+
+Class 0 EntireSEModel
+{
+    { Label "Structured Model" }
+    { Image "diagrams" } // ECR 6173
+    { ShowOnDesktop True }
+
+    { OMSObjects
+        { Editor "sebr" } 
+        { Match "file[SETabularBrowser]" }
+    }
+
+    { UseClassCommand StartTableEditor }
+    { UseObjectCommand EditTable }
+    { ObjectCommand
+        { Name "EditTable" }
+	{ SpaceBefore True }
+    }
+    { UseObjectCommand PrintTable }
+    { UseObjectCommand Copy }
+    { UseObjectCommand Delete }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+    { UseObjectCommand VccCommands }
+
+    { UseClassCommand RECCodeBrowse }
+    { ClassCommand
+        { Name "RECCodeBrowse" }
+	{ SpaceBefore True }
+    }
+    { UseClassCommand REReportGen }
+    { UseClassCommand GenerateCCodeClass }
+    { ClassCommand
+        { Name "GenerateCCodeClass" }
+        { Label "Generate C Code for Entire Model..." }
+        { ResetAfterExec False }
+        { Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} ${prop.kandr_or_ansi} -x file_directory '${prop.file_directory}' -x file_name \"${prop.file_name}\" ${prop.view_file} -x view_editor \"${prop.view_editor}\" -x file_interface_extension \"${prop.file_interface_extension}\" -x file_extension \"${prop.file_extension}\" ${prop.delete_old_code} ${prop.verbose} ${prop.gen_code_body} ${prop.gen_comment} ${prop.check_only} -x obj_name \"${cmd.objects}\" -x obj_type \"${cmd.type}\" qrl/code_gen/codegen.qrl" }
+        { Type Nowin }
+	{ Button
+	    { Name "OK" }
+	    { Event
+                { Type Select }
+                { Callback "GenCodefromDesktop_cb" }
+            }
+        }
+	{ Button
+	    { Name "Apply" }
+	    { Event
+                { Type Select }
+                { Callback "GenCodefromDesktop_cb" }
+            }
+        }
+    }
+
+    // ECR 5887 { UseObjectCommand CheckSemanticsAll }
+    { ObjectCommand 
+        { Name "CheckSemanticsAll" }
+        { Label "Check Semantics for Selected Objects" }
+        { Chdir False }
+        { SingleObject False }
+        { UseProperty CheckSemanticsWholeModelProperty }
+        { UseProperty CheckSemanticsWholeModelFilesButtonsProperty }
+    }
+    { UseClassCommand CheckSemanticsWholeModel }
+
+    { UseClassCommand GenerateAnalysisReviewReportClass }
+    { ClassCommand
+	{ Name "GenerateAnalysisReviewReportClass" }
+        { Label "Generate Analysis Review Report for Entire Model..." }
+        { ResetAfterExec False }
+	{ Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} -t ${prop.output_target} -o ${prop.output_dir}/${prop.output_file_analysis}.${prop.output_target} ${prop.include_cspec_tables} ${prop.include_dse_diagrams} ${prop.include_annotations} ${prop.include_all_file_history} ${prop.output_symbols} ${prop.verbose} qrl/report/analysis_review.qrl" }
+        { Type Nowin }
+    }
+    { UseClassCommand GenerateDesignReviewReportClass }
+    { ClassCommand
+        { Name "GenerateDesignReviewReportClass" }
+        { Label "Generate Design Review Report for Entire Model..." }
+        { ResetAfterExec False }
+        { Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} -t ${prop.output_target} -o ${prop.output_dir}/${prop.output_file_design}.${prop.output_target} ${prop.include_sce_diagrams} ${prop.include_dse_diagrams} ${prop.include_annotations} ${prop.include_source_listings} ${prop.include_all_file_history} ${prop.verbose} qrl/report/design_review.qrl" }
+        { Type Nowin }
+    }
+    { UseClassCommand FindAllFilesWithErrors }
+}
+
+Class 0 RevEng
+{
+    { Label "Reverse Engineering" }
+//    { Image "revc_32" }
+    { ShowOnDesktop True }
+
+    { UseClassCommand REParse }
+    { ClassCommand
+	{ Name "REParse" }
+        { Type Nowin }
+	{ Command "cparser -forward_messages ${msgd_handle} -p ${projdir} -s ${system} -SP Specifiers -Desktop" }
+    }
+    { UseClassCommand RECommentGather }
+    { UseClassCommand REDiagramGen }
+    { UseClassCommand RESynchronizer }
+}
+
+
+Class 0 Utilities
+{
+    { ClassCommand
+	{ SpaceBefore True }
+	{ Name "SMLocks" }
+	{ Label "Check RE Semantic Model Locks" }
+        { Type Nowin }
+	{ Command "re_db_locks -forward_messages ${msgd_handle} -p ${projdir} -s ${system}" }
+    }
+    { ClassCommand
+	{ Name "SMCheck" }
+	{ Label "Check RE Semantic Model Consistency" }
+        { Type Nowin }
+	{ Command "re_db_check -forward_messages ${msgd_handle} -p ${projdir} -s ${system}" }
+    }
+}
+
+// property sheet for rename chooser
+
+
+PropertySheet SEFileChooser
+{
+    { Name "SEFileChooser" }
+    { Label "StP: Choose Proper SEFile" }
+    { Properties
+        { Qrl { QrlFile "ct/rules/qrl/stp_object_rename.inc" } }
+        // the chooser
+        { List
+            { Name "Chooser" }
+            { Label "Select the proper SEFile:" }
+            { Rows 6 }
+            { Width 80 }
+            { Exclusive True }
+            { LabelAbove True }
+            { Event
+                { Type DoubleClickRow }
+                { Callback "special_file_callback" }
+            }
+        }
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "special_file_callback" }
+            }
+        }
+    }
+}
+
+
+// Whole Model semantic checks.  Taken from UML.
+
+Global 1 CheckSemanticsWholeModelButtonsProperty
+{
+    { Properties
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "StartCheckWholeModel_cb" }
+            }
+        }
+        //{ Button
+        //    { Name "Apply" }
+        //    { Event
+        //        { Type Select }
+        //        { Callback "StartCheckWholeModel_cb" }
+        //    }
+        //}
+    }
+}
+
+
+Global 1 CheckSemanticsWholeModelFilesButtonsProperty
+{
+    { Properties
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "StartCheckWholeModelFiles_cb" }
+            }
+        }
+        //{ Button
+        //    { Name "Apply" }
+        //    { Event
+        //        { Type Select }
+        //        { Callback "StartCheckWholeModel_cb" }
+        //    }
+        //}
+    }
+}
+
+Global 1 CheckSemanticsDfeButtonsProperty
+{
+    { Properties
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "StartCheckDfeFile_cb" }
+            }
+        }
+        //{ Button
+        //    { Name "Apply" }
+        //    { Event
+        //        { Type Select }
+        //        { Callback "StartCheckWholeModel_cb" }
+        //    }
+        //}
+    }
+}
+
+Global 1 CheckSemanticsDseButtonsProperty
+{
+    { Properties
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "StartCheckDseFile_cb" }
+            }
+        }
+        //{ Button
+        //    { Name "Apply" }
+        //    { Event
+        //        { Type Select }
+        //        { Callback "StartCheckWholeModel_cb" }
+        //    }
+        //}
+    }
+}
+
+Global 1 CheckSemanticsSceButtonsProperty
+{
+    { Properties
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "StartCheckSceFile_cb" }
+            }
+        }
+        //{ Button
+        //    { Name "Apply" }
+        //    { Event
+        //        { Type Select }
+        //        { Callback "StartCheckWholeModel_cb" }
+        //    }
+        //}
+    }
+}
+
+Global 1 CheckSemanticsSteButtonsProperty
+{
+    { Properties
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "StartCheckSteFile_cb" }
+            }
+        }
+        //{ Button
+        //    { Name "Apply" }
+        //    { Event
+        //        { Type Select }
+        //        { Callback "StartCheckWholeModel_cb" }
+        //    }
+        //}
+    }
+}
+
+Global 1 CheckSemanticsCseButtonsProperty
+{
+    { Properties
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "StartCheckCseFile_cb" }
+            }
+        }
+        //{ Button
+        //    { Name "Apply" }
+        //    { Event
+        //        { Type Select }
+        //        { Callback "StartCheckWholeModel_cb" }
+        //    }
+        //}
+    }
+}
+
+Global 1 CheckSemanticsDETButtonsProperty
+{
+    { Properties
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "StartCheckDETFile_cb" }
+            }
+        }
+    }
+}
+
+
+Global 1 CheckSemanticsPATButtonsProperty
+{
+    { Properties
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "StartCheckPATFile_cb" }
+            }
+        }
+    }
+}
+
+
+Global 1 CheckSemanticsPAMButtonsProperty
+{
+    { Properties
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "StartCheckPAMFile_cb" }
+            }
+        }
+    }
+}
+
+
+Global 1 CheckSemanticsSTTButtonsProperty
+{
+    { Properties
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "StartCheckSTTFile_cb" }
+            }
+        }
+    }
+}
+
+
+Global 1 CheckSemanticsSEMButtonsProperty
+{
+    { Properties
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "StartCheckSEMFile_cb" }
+            }
+        }
+    }
+}
+
+
+Global 1 CheckSemanticsELTButtonsProperty
+{
+    { Properties
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "StartCheckELTFile_cb" }
+            }
+        }
+    }
+}
+
+
+Global 1 CheckSemanticsALTButtonsProperty
+{
+    { Properties
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "StartCheckALTFile_cb" }
+            }
+        }
+    }
+}
+
+
+
+Global 1 CheckSemanticsWholeModelProperty
+{
+    { Properties
+        { Name "CheckSemanticsWholeModelProperty" }
+        { Qrl { QrlFile "se/qrl/check/semantic_check_whole_model.qrl" } }
+        { Footer
+            { Name "Footer1" }
+            { LeftFooter "" }
+        }
+        { Text
+            { Name "out_dir" }
+            { Label "Output File:" }
+            { Type Text }
+            { MinLength 0 }
+            { DispLength 52 }
+            { InActive True }
+            { Resizable ResizeNone }
+        }
+        // ECR 3651a begin
+        { Button
+            { Name "browse_for_out_file" }
+            { Label "Choose" }
+            { InActive True }
+            { Event
+                { Type Select }
+                { Callback "select_out_file_callback" }
+            }
+        }
+        { Group
+            { Name "out_file_group" }
+            { Label "" }
+            { Type Horizontal }
+            { Resizable ResizeAny }
+            { ChildSizePolicy ResizeWidth }
+            { LayoutPolicy ResizeAny }
+// ECR 6616 begin
+            { Align Labels }
+            //{ Align Bottom }
+// ECR 6616 end
+            { Members ( out_dir browse_for_out_file ) }
+        }
+        // ECR 3651a end
+        { Choice
+            { Name "out_form" }
+            { Label "Output Format:" }
+            { Type AbbrMenu }
+            { Event
+               { Type Select }
+               { Callback "select_format_check_sem_cb" }
+            }
+            { ChoiceItem
+                { Name "FM" }
+                { Label "FrameMaker                                                      " }
+            }
+            { ChoiceItem
+                { Name "RTF" }
+                { Label "RTF (Microsoft Word)                                            " }
+            }
+            { ChoiceItem
+                { Name "HTML" }
+                { Label "HTML File                                                       " }
+            }
+            { ChoiceItem
+                { Name "ML" }
+                { Label "Message Log                                                     " }
+                { Init On }
+            }
+        } 
+// ECR 7410 begin
+        { Choice
+            { ParseCondition "is_windows_platform();"}
+            { Name "view_after_run" }
+            { Label "" }
+            { Type CheckBox }
+            { Active False }
+            { ChoiceItem
+                { Label "View After Run" }
+                { OffValue "" }
+                { OnValue " -viewafter" }
+                { Init On }
+            }
+        }
+// ECR 7410 end
+        { Group
+           { Name "TheGroup" }
+           { Type Vertical }
+           { HorizontalAlign AlignLabels }
+           //ECR 5468 begin
+           //{ Members ( out_form out_dir ) }
+           { Members ( out_form view_after_run ) }
+           //ECR 5468 end
+        } 
+    }
+}
+
+//ECR 4461 begin - this replaces ScriptFileTypes from ct/rules/stp.rules
+Global 1 ScriptsFileTypes
+{
+    { Properties
+        { Choice
+            { Name "filetypes" }
+            { Label "File Type(s):" }
+            { Type AbbrMenu }
+	        { ChoiceItem
+	    	    { Label "Data Flow Diagram" }
+	    	    { Value "DfeDiagram" }
+	        }
+	        { ChoiceItem
+	    	    { Label "Data Structure Diagram" }
+	    	    { Value "DseDiagram" }
+	        }
+	        { ChoiceItem
+	    	    { Label "Structure Chart Diagram" }
+	    	    { Value "SceDiagram" }
+	        }
+	        { ChoiceItem
+	    	    { Label "Flow Chart Diagram" }
+	    	    { Value "FceDiagram" }
+	        }
+	        { ChoiceItem
+	    	    { Label "State Transition Diagram" }
+	    	    { Value "SteDiagram" }
+	        }
+	        { ChoiceItem
+	    	    { Label "Cspec Decision Table" }
+	    	    { Value "DecisionTable" }
+	        }
+	        { ChoiceItem
+	    	    { Label "Cspec Process Activation Table" }
+	    	    { Value "ProcessActivationTable" }
+	        }
+	        { ChoiceItem
+	    	    { Label "Cspec Process Activation Matrix Table" }
+	    	    { Value "ProcessActivationMatrix" }
+	        }
+	        { ChoiceItem
+	    	    { Label "Cspec State Transition Table" }
+	    	    { Value "StateTransitionTable" }
+	        }
+	        { ChoiceItem
+	    	    { Label "Cspec State Event Matrix Table" }
+	    	    { Value "StateEventMatrix" }
+	        }
+	        { ChoiceItem
+	    	    { Label "Cspec Event Logic Table" }
+	    	    { Value "EventLogicTable" }
+	        }
+	        { ChoiceItem
+	    	    { Label "Cspec Action Logic Table" }
+	    	    { Value "ActionLogicTable" }
+	        }
+	        { ChoiceItem
+	    	    { Label "Matrix Table" }
+	    	    { Value "TedTable" }
+	        }
+        }
+    }
+}
+//ECR 4461 end
+
+Include "se/rules/code.menu"
+Include "ct/rules/stp_re.rules"
+Include "se/rules/revc.rules"
+Include "se/rules/codegen.rules"
+Include "se/rules/report.rules"
+Include "se/rules/dse_check.rules"
+Include "se/rules/sce_check.rules"
+Include "se/rules/dfe_check.rules"
+Include "se/rules/ste_check.rules"

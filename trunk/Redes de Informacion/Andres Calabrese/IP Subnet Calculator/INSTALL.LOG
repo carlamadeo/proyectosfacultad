@@ -1,0 +1,60 @@
+***  Installation Started 01/20/2002 15:18  ***
+Title: WildPackets IP Subnet Calculator 3.2.1 Installation
+Source: C:\WINDOWS\DESKTOP\CDSOFT~1\IPSUBN~1\SETUPI~1.EXE
+Made Dir: C:\Program Files\WildPackets
+Made Dir: C:\Program Files\WildPackets\Network Calculator
+File Copy: C:\Program Files\WildPackets\Network Calculator\UNWISE.EXE
+RegDB Key: Software\Microsoft\Windows\CurrentVersion\Uninstall\WildPackets IP Subnet Calculator 3.2.1
+RegDB Val: WildPackets IP Subnet Calculator 3.2.1
+RegDB Name: DisplayName
+RegDB Root: 2
+RegDB Key: Software\Microsoft\Windows\CurrentVersion\Uninstall\WildPackets IP Subnet Calculator 3.2.1
+RegDB Val: C:\PROGRA~1\WILDPA~1\NETWOR~1\UNWISE.EXE C:\PROGRA~1\WILDPA~1\NETWOR~1\INSTALL.LOG
+RegDB Name: UninstallString
+RegDB Root: 2
+File Copy: C:\Program Files\WildPackets\Network Calculator\Network Calculator ReadMe.txt
+File Copy: C:\Program Files\WildPackets\Network Calculator\Network Calculator Help.hlp
+File Copy: C:\Program Files\WildPackets\Network Calculator\Network Calculator Help.cnt
+File Copy: C:\Program Files\WildPackets\Network Calculator\IP Subnet Calculator.exe
+File Copy: C:\Program Files\WildPackets\Network Calculator\IP Subnet Calculator License.txt
+Shell Link: C:\WINDOWS\Start Menu\Programs\WildPackets IP Subnet Calculator.lnk
+***  Installation Started 06/19/2005 21:57  ***
+Title: WildPackets IP Subnet Calculator 3.2.1 Installation
+Source: C:\MYDOCU~1\ALEJAN~1\ESPE\CLASES\TCP-IP\SETUPI~1.EXE
+File Overwrite: C:\Program Files\WildPackets\Network Calculator\UNWISE.EXE
+RegDB Key: Software\Microsoft\Windows\CurrentVersion\Uninstall\WildPackets IP Subnet Calculator 3.2.1
+RegDB Val: WildPackets IP Subnet Calculator 3.2.1
+RegDB Name: DisplayName
+RegDB Root: 2
+RegDB Old: WildPackets IP Subnet Calculator 3.2.1
+RegDB Key: Software\Microsoft\Windows\CurrentVersion\Uninstall\WildPackets IP Subnet Calculator 3.2.1
+RegDB Val: C:\PROGRA~1\WILDPA~1\NETWOR~1\UNWISE.EXE C:\PROGRA~1\WILDPA~1\NETWOR~1\INSTALL.LOG
+RegDB Name: UninstallString
+RegDB Root: 2
+RegDB Old: C:\PROGRA~1\WILDPA~1\NETWOR~1\UNWISE.EXE C:\PROGRA~1\WILDPA~1\NETWOR~1\INSTALL.LOG
+File Overwrite: C:\Program Files\WildPackets\Network Calculator\Network Calculator ReadMe.txt
+File Overwrite: C:\Program Files\WildPackets\Network Calculator\Network Calculator Help.hlp
+File Overwrite: C:\Program Files\WildPackets\Network Calculator\Network Calculator Help.cnt
+File Overwrite: C:\Program Files\WildPackets\Network Calculator\IP Subnet Calculator.exe
+File Overwrite: C:\Program Files\WildPackets\Network Calculator\IP Subnet Calculator License.txt
+Shell Link: C:\WINDOWS\Start Menu\Programs\WildPackets IP Subnet Calculator.lnk
+***  Installation Started 11/13/2005 21:39  ***
+Title: WildPackets IP Subnet Calculator 3.2.1 Installation
+Source: C:\MYDOCU~1\ALEJAN~1\ESPE\CLASES\TCP-IP\SETUPI~1.EXE
+File Overwrite: C:\Program Files\WildPackets\Network Calculator\UNWISE.EXE
+RegDB Key: Software\Microsoft\Windows\CurrentVersion\Uninstall\WildPackets IP Subnet Calculator 3.2.1
+RegDB Val: WildPackets IP Subnet Calculator 3.2.1
+RegDB Name: DisplayName
+RegDB Root: 2
+RegDB Old: WildPackets IP Subnet Calculator 3.2.1
+RegDB Key: Software\Microsoft\Windows\CurrentVersion\Uninstall\WildPackets IP Subnet Calculator 3.2.1
+RegDB Val: C:\PROGRA~1\WILDPA~1\NETWOR~1\UNWISE.EXE C:\PROGRA~1\WILDPA~1\NETWOR~1\INSTALL.LOG
+RegDB Name: UninstallString
+RegDB Root: 2
+RegDB Old: C:\PROGRA~1\WILDPA~1\NETWOR~1\UNWISE.EXE C:\PROGRA~1\WILDPA~1\NETWOR~1\INSTALL.LOG
+File Overwrite: C:\Program Files\WildPackets\Network Calculator\Network Calculator ReadMe.txt
+File Overwrite: C:\Program Files\WildPackets\Network Calculator\Network Calculator Help.hlp
+File Overwrite: C:\Program Files\WildPackets\Network Calculator\Network Calculator Help.cnt
+File Overwrite: C:\Program Files\WildPackets\Network Calculator\IP Subnet Calculator.exe
+File Overwrite: C:\Program Files\WildPackets\Network Calculator\IP Subnet Calculator License.txt
+Shell Link: C:\WINDOWS\Start Menu\Programs\WildPackets IP Subnet Calculator.lnk

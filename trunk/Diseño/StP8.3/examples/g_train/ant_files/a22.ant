@@ -1,0 +1,258 @@
+FileObject 1
+{
+    { Name "a22" }
+    { Type ObjectAnnotation }
+    { GUID "UID_FC34C21F-8398-4c57-B207-55A3BAB05737" }
+}
+
+NodeObject 99999
+{
+    { Name "count pulse" }
+    { Type Process }
+    { ObjectId 2783 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_C3F70C88-B7FC-498d-8EC4-05F09DA5226E" }
+}
+
+NoteObject 2
+{
+    { Type Pspec }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 2977 }
+    { DescLine "This process computes the location of the train depending on the number of pulses it receives. Since the distance between the sensors is known:" }
+    { DescLine "Current g_train location = no of pulses received * 5" }
+    { DescLine "Note : the distance between the sensors is 5 Km." }
+}
+
+ItemObject 3
+{
+    { Type ProcessSpec }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 2978 }
+}
+
+NoteObject 4
+{
+    { Type PerformanceRequirement }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 2980 }
+    { DescLine "As specified in the Manual." }
+}
+
+ItemObject 5
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 4 }
+    { ObjectId 2981 }
+}
+
+ItemObject 6
+{
+    { Type PerformanceRequirementName }
+    { Value "fixed" }
+    { NoteId 4 }
+    { ObjectId 2982 }
+}
+
+NoteObject 7
+{
+    { Type DerivedRequirement }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 2984 }
+    { DescLine "There are no derived requirements for this system." }
+}
+
+ItemObject 8
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 7 }
+    { ObjectId 2985 }
+}
+
+ItemObject 9
+{
+    { Type DerivedRequirementName }
+    { Value "N/A" }
+    { NoteId 7 }
+    { ObjectId 2986 }
+}
+
+NoteObject 10
+{
+    { Type SystemState }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 2988 }
+}
+
+ItemObject 11
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 10 }
+    { ObjectId 2989 }
+}
+
+ItemObject 12
+{
+    { Type SystemState }
+    { Value "real-time" }
+    { NoteId 10 }
+    { ObjectId 2990 }
+}
+
+NoteObject 13
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 2992 }
+    { DescLine "This process increments a counter for every pulse coming from the speed sensor. This way the location of the train is also tracked. Since the distance between the sensors is fixed." }
+    { DescLine "location-of-train = no-of-pulses*sensor-spacing" }
+}
+
+ItemObject 14
+{
+    { Type ObjectName }
+    { Value "count pulse" }
+    { NoteId 13 }
+    { ObjectId 2993 }
+}
+
+ItemObject 15
+{
+    { Type Author }
+    { Value "ide" }
+    { NoteId 13 }
+    { ObjectId 2994 }
+}
+
+ItemObject 16
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 13 }
+    { ObjectId 2995 }
+}
+
+NoteObject 17
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 2997 }
+    { DescLine "Verified" }
+}
+
+ItemObject 18
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 17 }
+    { ObjectId 2998 }
+}
+
+ItemObject 19
+{
+    { Type RequirementName }
+    { Value "location-sub-system" }
+    { NoteId 17 }
+    { ObjectId 2999 }
+}
+
+ItemObject 20
+{
+    { Type RequirementDocument }
+    { Value "SSS" }
+    { NoteId 17 }
+    { ObjectId 3000 }
+}
+
+ItemObject 21
+{
+    { Type RequirementParagraph }
+    { Value "speed" }
+    { NoteId 17 }
+    { ObjectId 3001 }
+}
+
+ItemObject 22
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 17 }
+    { ObjectId 3002 }
+}
+
+ItemObject 23
+{
+    { Type QualificationMethod }
+    { Value "Test I" }
+    { NoteId 17 }
+    { ObjectId 3003 }
+}
+
+ItemObject 24
+{
+    { Type QualificationLevel }
+    { Value "A" }
+    { NoteId 17 }
+    { ObjectId 3004 }
+}
+
+ItemObject 25
+{
+    { Type FormalTestParagraph }
+    { Value "12" }
+    { NoteId 17 }
+    { ObjectId 3005 }
+}
+
+NoteObject 26
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99999 }
+    { ObjectId 3007 }
+}
+
+ItemObject 27
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 26 }
+    { ObjectId 3008 }
+}
+
+ItemObject 28
+{
+    { Type DocumentName }
+    { Value "SRS" }
+    { NoteId 26 }
+    { ObjectId 3009 }
+}
+
+ItemObject 29
+{
+    { Type DocumentNumber }
+    { Value "1" }
+    { NoteId 26 }
+    { ObjectId 3010 }
+}
+
+ItemObject 30
+{
+    { Type ParagraphNumber }
+    { Value "12" }
+    { NoteId 26 }
+    { ObjectId 3011 }
+}
+

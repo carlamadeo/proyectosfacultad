@@ -1,0 +1,596 @@
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+
+Global 1 UmlNameProp
+{
+    { Properties
+        { Text
+            { Name "ObjectName" }
+            { Label "Name:" }
+            { MinLength 1 }
+            { DispLength 25 }
+            { Resizable ResizeNone }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+    }
+}
+
+Global 1 UmlMessageNameProp
+{
+    { Properties
+        { Text
+            { Name "MessageObjectName" }
+            { Label "Label:" }
+            { MinLength 1 }
+            { DispLength 61 }
+            { Resizable ResizeNone }
+        }
+    }
+}
+
+Global 1 UmlMultiplicityProp
+{
+    { Properties
+        // Begin Change ECR 4654
+        { Choice
+            { Name "MultiplicityChoice" }
+            { Label "Multiplicity:" }
+            { Type AbbrMenu }
+            { ChoiceItem { Label "    " } }
+            { ChoiceItem { Label "0..1" } }
+            { ChoiceItem { Label "0..*" } }
+            { ChoiceItem { Label "1..*" } }
+            { ChoiceItem { Label "1   " } }
+            { ChoiceItem { Label "*   " } }
+            { Event
+                { Type Select }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Text
+            { Name Multiplicity }
+            { Label "" }
+            { MinLength 0 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { InitVal "Many" }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Group
+            { Name "MultiplicityGroup" }
+            { Type Horizontal }
+            { HorizontalAlign AlignLabels }
+            { Members ( MultiplicityChoice Multiplicity ) } 
+        }
+        // End Change ECR 4654
+    }
+}
+
+Global 1 UmlComponentProp
+{
+    { Properties
+        { Text
+            { Name "Component" }
+            { Label "Component:" }
+            { MinLength 0 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+    }
+}
+
+Global 1 UmlRefineArgsProp
+{
+    { Properties
+        { Text
+            { Name "RefineArgs" }
+            { Label "Bind Arguments:" }
+            { MinLength 0 }
+            { DispLength 25 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+    }
+}
+
+Global 1 UmlVisibilityProp
+{
+    { Properties
+        { Choice
+            { Name Visibility }
+            { Label "Visibility:" }
+            { Type AbbrMenu }
+            // Added "    " for ECR4270, lower case for ECR 5281
+            { ChoiceItem { Label "                           " } }
+            { ChoiceItem { Label "public                     " } }
+            { ChoiceItem { Label "protected                  " } }
+            { ChoiceItem { Label "private                    " } }
+            { Event
+                { Type Select }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+    }
+}
+
+Global 1 UmlInheritanceVisibilityProp
+{
+    { Properties
+
+        { Choice
+            { Name "InheritanceVisibility" }
+            { Label "C++ Inheritance Visibility:" }
+            { Type AbbrMenu }
+            // Added "    " for ECR4270, lower case for ECR 5281
+            { ChoiceItem { Label "                           " } }
+            { ChoiceItem { Label "public                     " } }
+            { ChoiceItem { Label "protected                  " } }
+            { ChoiceItem { Label "private                    " } }
+            { Event
+                { Type Select }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+    }
+}
+
+Global 1 UmlVirtualInheritanceProp
+{
+    { Properties
+        { Choice
+            { Name VirtualInheritance }
+            { Type CheckBox }
+            { ChoiceItem
+                { Label "C++ Inheritance is Virtual" }
+            }
+            { Event
+                { Type Select }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+    }
+}
+
+
+//ECR4791
+Global 1 UmlDiscriminatorProp
+{
+    { Properties
+        { Text
+            { Name "ObjectName" }
+            { Label "Discriminator:" }
+            { MinLength 1 }
+            { DispLength 25 }
+            { Resizable ResizeNone }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+    }
+}
+
+
+Global 1 UmlAbstractProp
+{
+    { Properties
+        { Choice
+            { Name Abstract }
+            { Type CheckBox }
+            { ChoiceItem
+                { Label "Abstract" }   // ECR 6280
+            }
+            { Event
+                { Type Select }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+    }
+}
+
+Global 1 UmlExternalProp
+{
+    { Properties
+        { Choice
+            { Name External }
+            { Type CheckBox }
+            { ChoiceItem
+                { Label "External" }
+            }
+            { Event
+                { Type Select }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+    }
+}
+
+Global 1 UmlParametersProp
+
+{
+    { Properties
+        { Text
+            { Name Parameters }
+            { Label "Parameters:" }
+            { MinLength 0 }
+            { DispLength 43 }
+            { Resizable ResizeWidth}
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+    }
+}
+
+
+
+Global 1 UmlExtensibilityProps
+{
+    { Properties
+        { Text
+            // Added ParseCondition for ECR3162
+            { ParseCondition "current_editor_apptype() != \"UmlStereotypeDiagram\";" }
+            { Name "Stereotype" }
+            { Label "Stereotype:" }
+            // Changed to 15 for ECR3162
+            { DispLength 15 }
+            { Resizable ResizeWidth }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        // Begin Add ECR3162
+        { Button
+            { ParseCondition "current_editor_apptype() != \"UmlStereotypeDiagram\";" }
+        	{ Name "ChooseStereotype" }
+        	{ Label "Choose..." }
+        	{ Event
+        		{ Type Select }
+        		{ Callback "ps_ChooseStereotype_cb" }
+        	}
+        }
+        // End Add ECR3162
+        { Text
+            { Name "Constraints" }
+            { Label "Constraints (one per line):" }
+            { DispRows 3 }
+            { DispLength 20 }
+            { Resizable ResizeAny }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        { Text
+            { Name "TaggedValues" }
+            { Label "Tagged Values (one per line):" }
+            { DispRows 3 }
+            { DispLength 20 }
+            { Resizable ResizeAny }
+            { Event
+                { Type Text }
+                { Callback "ps_ValueChanged_cb" }
+            }
+        }
+        // Begin Add ECR3162
+        { Group
+            { ParseCondition "current_editor_apptype() != \"UmlStereotypeDiagram\";" }
+        	{ Name StereotypeGroup }
+        	{ Type Horizontal }
+          { ResizePolicy ResizeAny } //ECR 4501
+            { Align Labels }        //ECR 6073
+        	{ Members (Stereotype ChooseStereotype ) }
+        }
+        // End Add ECR3162
+        { Group
+            { Name Extensibility }
+            { Label "Extensibility" }
+            { Type Vertical }
+            { VerticalSpacing 5 }
+            { HorizontalAlign AlignLabels }
+            //{ ChildSizePolicy ResizeAny } //ECR 4501
+            { VariableRow "1 2" }
+            //{ Resizable ResizeAny } //ECR 4501
+            //{ LayoutPolicy ResizeAny } //ECR 4501
+            { ResizablePolicy ResizeAny } //ECR 4501
+            // Changed to StereotypeGroup for ECR3162
+            { Members ( StereotypeGroup
+                        Constraints
+                        TaggedValues ) }
+        }
+    }
+}
+
+
+Global 1 UmlBottomButtons
+{
+    { Properties
+
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "ps_Apply_cb" }
+            }
+        }
+
+        { Button
+            { Name "Apply" }
+            { Event
+                { Type Select }
+                { Callback "ps_Apply_cb" }
+            }
+        }
+
+        { Button
+            { Name "Cancel" }
+            { Event
+                { Type Select }
+                { Callback "ps_Cancel_cb" }
+            }
+        }
+        { Button
+            { Name "Reset" }
+            { Event
+                { Type Select }
+                { Callback "ps_Reset_cb" }
+            }
+        }
+        { Footer
+            { Name "Status" }
+            { LeftFooter "" }
+            { Active True }
+        }
+    }
+}
+
+//ECR2653
+Global 1 UmlBottomHierarchyButtons
+{
+    { Properties
+
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "ps_ApplyHierarchy_cb" }
+            }
+        }
+
+        { Button
+            { Name "Apply" }
+            { Event
+                { Type Select }
+                { Callback "ps_ApplyHierarchy_cb" }
+            }
+        }
+
+        { Button
+            { Name "Cancel" }
+            { Event
+                { Type Select }
+                { Callback "ps_Cancel_cb" }
+            }
+        }
+        { Button
+            { Name "Reset" }
+            { Event
+                { Type Select }
+                { Callback "ps_Reset_cb" }
+            }
+        }
+        { Footer
+            { Name "Status" }
+            { LeftFooter "" }
+            { Active True }
+        }
+    }
+}
+
+// Begin Add ECR3162
+PropertySheet StereotypeChooser
+{
+    { Name "StereotypeChooser" }
+    { Label "Choose Stereotype"} 
+    { OwnerActionCallback StereotypeChooser_deactivate } // ECR 6880
+    { Properties
+        { Qrl { QrlFile "rules/qrl/stereotype.ps.qrl" } }
+        { Button 
+            {Name "OK" } // Name must be "OK", otherwise the sheet
+                         // will not be closed
+            { Label "OK" }
+            { Event 
+                { Type Select }
+                { Callback "ps_StereoTypeChooser_OK_cb" }
+            }
+        }
+        { List
+            { Name StereotypeList }
+            { Label "Stereotypes" }
+            { Rows 17 }
+            { Width 30 }
+            { Exclusive True }
+            { LabelAbove True }
+            { Event
+                { Type Select }
+                { Callback "ps_StereotypeList_cb" }
+            }
+            // ECR 7170 begin
+            { Event
+                { Type DoubleClick }
+                { Callback "ps_StereotypeList_DoubleClick_cb" }
+            }
+            // ECR 7170 end
+            { Resizable ResizeNone }
+
+        }
+        { Text
+            { Name "StereotypeUMLRefPage" }
+            { Label "Page in UML Reference:" }
+            { LabelAbove True }
+            { DispRows 1 }
+            { DispLength 20 }
+            { Resizable ResizeAny }
+        }
+        { Text
+            { Name "StereotypeDescription" }
+            { Label "Description" }
+            { LabelAbove True }
+            { DispRows 15 }
+            { DispLength 30 }
+            { Resizable ResizeNone }
+        }
+        { Choice
+            { Name StereoTypeGroupChoice }
+            { Label "Class:" }
+            { LabelAbove True }
+            { Type AbbrMenu }
+            // Added "    " for ECR4270
+            { ChoiceItem { Label "Predefined    " } }
+            { ChoiceItem { Label "User defined" } }
+            { Event
+                { Type Select }
+                { Callback "ps_ChangeStereotypeGroup_cb" }
+            }
+        }
+        { Group
+            {Name StereoChooserVG1 }
+            { Type Vertical }
+            { Label "Selection" }
+            { ChildSizePolicy ResizeAny }
+            { Resizable ResizeAny }
+            { Members ( StereotypeList StereoTypeGroupChoice) }
+        }
+        { Group
+            { Name StereoChooserVG2 }
+            { Type Vertical }
+            { Label "Documentation" }
+            { ChildSizePolicy ResizeAny }
+            { Resizable ResizeAny }
+            { Members ( StereotypeDescription StereotypeUMLRefPage ) }
+        }
+        { Group
+            { Name StereoChooserMain }
+            { Type Horizontal }
+            { ChildSizePolicy ResizeAny }
+            { Resizable ResizeAny }
+            { Members ( StereoChooserVG1 StereoChooserVG2 ) }
+        }
+    }
+}
+// End Add ECR3162
+
+// ECR 3789 begin
+// 000224-01 AG: Setting MaxLength Value for Text entry. Up to now
+//				 only 80 characters could be entered.
+
+Global 1 UmlExtensibilityPropsXXX
+{
+    { Properties
+        
+        { Button
+            { Name "ObjectDescriptionXXX" }
+            { Label "Description..." }
+            { Event
+                { Type Select }
+                { Callback "ps_NoteDescription_cb" }
+            }
+        }
+
+ 	    { Group
+            { Name Extensibility }
+            { Members ( Stereotype 
+                        Constraints
+                        TaggedValues ObjectDescriptionXXX) }
+        }
+    }
+}
+
+// This is the new button that will be introduced into
+// the property sheets of all objects, so that the description
+// can be modified
+//
+Global 1 UmlObjectDescriptionButton
+{
+	
+	{ Properties
+        
+        { Button
+            { Name "ObjectDescription" }
+            { Label "Description..." }
+            { Event
+                { Type Select }
+                { Callback "ps_NoteDescription_cb" }
+            }
+            { Resizable ResizeNone }
+        }
+	}
+}
+
+// This is the property sheet that allows text entry. It is
+// basically only a large text entry field. Note that the
+// use of this PS can be overriden by setting the toolinfo
+// NoteDescEditor for using an external editor
+//
+PropertySheet UmlObjectDescriptionSheet
+{
+	{ Name "UmlObjectDescriptionSheet" }
+    { Label "Object Description" }
+    { OwnerActionCallback ObjectDescriptionPS_deactivate } // ECR 6880
+    { Properties
+    { Qrl { QrlFile "rules/qrl/objectdescription.ps.qrl" } }
+            { Button 
+			{Name "OK" } // Name must be "OK", otherwise the sheet
+						 // will not be closed
+			{ Label "OK" }
+			{ Event 
+				{ Type Select }
+				{ Callback "ps_ObjectDescription_OK_cb" }
+			}
+			}
+
+
+        	{ Text
+            { Name "ObjectDescription" }
+            { Label "Description" }
+            { LabelAbove True }
+            { DispRows 15 }
+            { DispLength 80 }
+            // 000224-02 AG:  Set MaxLength
+            { MaxLength 8192 }
+            { Resizable ResizeNone }
+        	}
+
+    
+            
+            { Group
+            	{ Name ObjectDescriptionMain }
+            	{ Type Horizontal }
+				{ ChildSizePolicy ResizeAny }
+                
+                { Resizable ResizeAny }
+            	{ Members ( ObjectDescription ) }
+         	}
+        
+    }
+}
+
+// ECR 3789 end

@@ -1,0 +1,66 @@
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+NodeSymbol StereotypeableOnPackageNodeSet
+{
+    { DisplayMark
+	{ Name Stereotype }
+	{ ItemCond (UmlStereotype) }
+	{ StringMark "«${annot.UmlExtensibilityDefinition.UmlStereotype}»" }
+// SPR 4052 Model management, changed the location of stereotype display mark
+	{ Anchor LabelUpperLeft }
+	{ HAdjust Left }
+	{ VAdjust Bottom }
+	{ Help "Package Stereotype" }
+    }
+}
+
+NodeSymbol StereotypeableOnSymbolNodeSet
+{
+    { DisplayMark
+	{ Name Stereotype }
+	{ ItemCond (UmlStereotype) }
+	{ StringMark "«${annot.UmlExtensibilityDefinition.UmlStereotype}»" }
+	{ Anchor UpperCenter }
+	{ HAdjust Center }
+	{ Help "Stereotype Display mark" }
+    }
+}
+
+NodeSymbol StereotypeableInLabelNodeSet
+{
+    { DisplayMark
+	{ Name Stereotype }
+	{ ItemCond (UmlStereotype) }
+	{ StringMark "«${annot.UmlExtensibilityDefinition.UmlStereotype}»" }
+	{ Anchor LabelUpperCenter }
+	{ HAdjust Center }
+	{ Help "Stereotype Display mark" }
+    }
+}
+
+TypeSet StereotypeableNodeSet
+{
+    StereotypeableOnSymbolNodeSet
+    StereotypeableInLabelNodeSet
+}
+
+LinkSymbol StereotypeableLinkSet
+{
+    { DisplayMark
+	{ Name StereotypeLink }
+	{ ItemCond (UmlStereotype) }
+	{ Anchor LabelUpperCenter }
+	{ HAdjust Center }
+	{ VAdjust Bottom }
+	{ XPixelOffset 0 }
+	//{ YPixelOffset 5 }
+	{ StringMark "«${annot.UmlExtensibilityDefinition.UmlStereotype}»" }
+	{ Help "Stereotype Display mark" }
+    }
+}
+
+
+

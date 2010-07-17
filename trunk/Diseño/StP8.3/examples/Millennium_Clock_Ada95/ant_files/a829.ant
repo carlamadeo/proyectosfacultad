@@ -1,0 +1,43 @@
+FileObject 1
+{
+    { Name "a829" }
+    { Type ObjectAnnotation }
+    { GUID "UID_B9CD2383-3BFD-11d6-8192-00105A2E4732" }
+}
+
+NodeObject 99999
+{
+    { Name "enumeration" }
+    { Type UmlStereotype }
+    { ObjectId 1602 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_C2F96712-AC11-11d4-8034-00105A2E4732" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1604 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1606 }
+    { DescLine "Maps class to Ada enumeration type. The enumeration literals are the names of the attributes of the class." }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "enumeration" }
+    { NoteId 3 }
+    { ObjectId 1607 }
+}
+

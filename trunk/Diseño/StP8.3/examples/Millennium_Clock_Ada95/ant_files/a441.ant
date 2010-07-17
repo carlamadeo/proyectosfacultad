@@ -1,0 +1,42 @@
+FileObject 1
+{
+    { Name "a441" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65C46-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "Display,Door" }
+    { Type UmlAssociation }
+    { ObjectId 1067 }
+    { AnnotFileId 1 }
+    { Sig "display:" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD931E-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1069 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1071 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Display,Door" }
+    { NoteId 3 }
+    { ObjectId 1072 }
+}
+

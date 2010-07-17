@@ -1,0 +1,95 @@
+FileObject 1
+{
+    { Name "a43" }
+    { Type ObjectAnnotation }
+    { GUID "UID_6ABF4718-6CC5-4d8b-9BD0-F05875F0DA62" }
+}
+
+NodeObject 99999
+{
+    { Name "Account,Customer" }
+    { Type UmlAssociation }
+    { ObjectId 484 }
+    { Sig "account:customer" }
+    { ScopeNodeId 0 }
+    { GUID "UID_DBA18FC6-0FDB-11d5-8C6E-000000000000" }
+}
+
+NodeObject 99998
+{
+    { Name "Customer" }
+    { Type UmlClass }
+    { ObjectId 399 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_41F11F95-0B6F-11d5-8C6A-000000000000" }
+}
+
+LinkObject 99997
+{
+    { Name "customer" }
+    { Type UmlRole }
+    { ObjectId 497 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_DBA18FCA-0FDB-11d5-8C6E-000000000000" }
+}
+
+NoteObject 2
+{
+    { Type UmlRoleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 499 }
+}
+
+ItemObject 3
+{
+    { Type UmlMultiplicity }
+    { Value "0..1" }
+    { NoteId 2 }
+    { ObjectId 500 }
+}
+
+ItemObject 4
+{
+    { Type UmlRoleNavigability }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 501 }
+}
+
+ItemObject 5
+{
+    { Type UmlAggregationType }
+    { Value "None" }
+    { NoteId 2 }
+    { ObjectId 502 }
+}
+
+NoteObject 6
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 504 }
+}
+
+NoteObject 7
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 506 }
+}
+
+ItemObject 8
+{
+    { Type ObjectName }
+    { Value "customer" }
+    { NoteId 7 }
+    { ObjectId 507 }
+}
+

@@ -1,0 +1,42 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//	StP Core
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1995
+//      All rights reserved
+//
+
+
+PropertySheet	RecentFilesList
+{
+    { Name RecentFilesList }
+    { Label "Load from Recent Files List" }
+    { Properties
+	{ List
+	    { Name Files }
+	    { Label "" }
+	    { Rows  10 }
+	    { Width 40 }
+	    { Exclusive True }
+	    { LabelAbove True }
+	    { Event
+		{ Type PropEventDoubleClick }
+		{ Callback "RecentListLoad" }
+	    }
+	}
+	{ Button
+	    { Name OK }
+	    { Event
+		{ Type Select }
+		{ Callback "RecentListLoad" }
+	    }
+	}
+	{ Button
+	    { Name Apply }
+	    { Event
+		{ Type Select }
+		{ Callback "RecentListLoad" }
+	    }
+	}
+    }
+}

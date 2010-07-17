@@ -1,0 +1,1350 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/SE
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1994
+//      All rights reserved
+//
+
+TableType 1 SETabularBrowser
+{ 
+  { Label "SE Tabular Browser" }
+  { Browser True }
+
+
+  // modifiable borders
+  { EmptyBorder 	{ Visible False } }
+  { RowBorder 		{ Visible True } { Pattern Dotted } }
+  { ColBorder 		{ Visible False } { Pattern Dotted } }
+  { HsectBorder 	{ Double False }  { Thickness Thin } } 
+  { VsectBorder 	{ Double False }  { Thickness Thin } } 
+  { LeftBorder 		{ Thickness Medium } }
+  { RightBorder 	{ Thickness Medium } }
+  
+  { Initialize
+
+      // modifiable symbols
+      { Unsecured 
+	  { ROW_HEIGHT	          18 } 
+	  { WIDE_COL_WIDTH	 160 }
+	  { NARROW_COL_WIDTH	 100 }
+	  { ID_COL_WIDTH	  70 }
+	  { HEADER_HEIGHT         23 } }
+
+      // non-modifiable symbols
+      { Secured
+
+	  // indices for the horizontal sections, 
+	  // which correspond to the major semantic categories in the methodology
+          { SE_MODEL_HEADER_HSECT       1 } 
+	  { SE_MODEL_QBE_HSECT          2 } 
+	  { SE_MODEL_HSECT              3 } 
+
+	  { MODULE_HEADER_HSECT	        4 } 
+	  { MODULE_QBE_HSECT            5 }
+	  { MODULE_HSECT                6 }
+
+	  { PARAMETER_HEADER_HSECT      7 } 
+	  { PARAMETER_QBE_HSECT         8 }
+	  { PARAMETER_HSECT	        9 }
+
+	  { PROCESS_HEADER_HSECT        10 } 
+	  { PROCESS_QBE_HSECT	        11 }
+	  { PROCESS_HSECT	        12 }
+
+	  { FLOW_HEADER_HSECT           13 } 
+	  { FLOW_QBE_HSECT              14 }
+	  { FLOW_HSECT	                15 }
+
+	  { ADT_HEADER_HSECT            16 } 
+	  { ADT_QBE_HSECT               17 }
+	  { ADT_HSECT	                18 }
+
+	  // indices for the vertical sections
+	  { ID_VSECT                    1 } 
+	  { DESCRIPTION_VSECT           2 }
+
+	  // column indices for each horizontal section. 
+	  // used in semantics, methods, and/or sorting.
+
+	  { OID_COL		        1 }
+	  // first column in second section
+          { OBJECT_NAME_COL             1 }
+	
+	  { DIAGRAM_TYPE_COL            2 }
+
+	  { MODULE_PARENTS_COL          2 }
+
+	  { PARAMETER_TYPE_COL	        2 }
+	  { PARAMETER_KIND_COL	        3 }
+
+	  { PROCESS_INDICES_COL	        2 }
+	  { PROCESS_PARENT_COL	        3 }
+	  { PROCESS_CHILDREN_COL	4 }
+
+	  { FLOW_TYPE_COL	        2 }
+	  { FLOW_KIND_COL	        3 }
+
+	  { T_PRIMTYPE_COL	        2 }
+	}
+    } // end Initialize
+  
+  { RowHeight ROW_HEIGHT } 
+  { ColWidth NARROW_COL_WIDTH }
+
+  // SE Diagrams 
+
+  { Hsect 
+      { Label "Diagrams Header" } 	
+      { ReadOnly True }
+      { Shading Shade1 }
+      { Frozen True } 
+      { Scrollbar False }
+      { RowHeight HEADER_HEIGHT }
+      { Vsect 
+	  { Label "Object Ids" }		
+          { Frozen True } 
+          { Hidden True }
+	  { Scrollbar False } 
+	  { Row 	
+	      { Cell 
+		  { Label "Id" }
+                  { Width ID_COL_WIDTH }
+		  { HorzAlignment Right }
+		  { Bold True } } } }
+      { Vsect 
+	  { Label "Object Descriptions" }	 
+	  { Frozen True }
+	  { ColBorder { Visible False } }
+	  { Row 			
+	      { Cell 
+		  { Label "Diagram" } 
+                  { Width WIDE_COL_WIDTH }
+		  { HorzAlignment Left }	
+		  { Bold True }	}
+	      { Cell 
+		  { Label "Type" } 
+		  { HspanSection True }
+		  { HorzAlignment Left }	
+		  { Bold True }	} } } }
+  { Hsect 
+      { Label "Diagrams QBE" } 	
+      { Shading Unshaded }
+      { Frozen True } 
+      { Scrollbar False }
+      { Vsect
+	  { Row 	
+              { Type SEModelQuery }
+	      { Cell } } } 
+      { Vsect 
+	  { Row 	
+              { Type SEModelQuery }
+	      { Cell 
+                  { Type SEModelPattern }
+		  { Label "*" }
+		  { HorzAlignment Left }
+		  { Bold True } }
+	      { Cell 
+                  { Type SEModelTypePattern }
+		  { Label "*" }
+		  { HspanSection True }
+		  { HorzAlignment Left }
+		  { Bold True } } } } }
+  { Hsect 
+      { Type SEModel }
+      { Label "Diagrams Body" } 	
+      { Vsect 
+	  { Row 	
+              { Type SEModel }
+              { RepeatToEnd True }
+	      { Cell 
+                  { Type SEModelId }
+		  { HorzAlignment Right } } } }
+      { Vsect 
+	  { Row 	
+              { Type SEModel }
+              { RepeatToEnd True }
+	      { Cell 
+                  { Type SEModel }
+		  { HorzAlignment Left } } 
+	      { Cell 
+                  { Type SEModelType }
+		  { HspanSection True } 
+		  { HorzAlignment Left } } } } }
+
+  // Modules
+
+  { Hsect 
+      { Label "Modules Header" } 	
+      { ReadOnly True }
+      { Shading Shade1 }
+      { Frozen True } 
+      { Scrollbar False }
+      { RowHeight HEADER_HEIGHT }
+      { Vsect 
+	  { Row 	
+	      { Cell 
+		  { Label "Id" }
+		  { HorzAlignment Right }
+		  { Bold True } } } }
+      { Vsect 
+	  { Row 			
+	      { Cell 
+		  { Label "Module" } 	
+		  { HorzAlignment Left }	
+		  { Bold True }	}
+	      { Cell 
+		  { Label "Parent Modules" } 
+                  { Width WIDE_COL_WIDTH }	
+		  { HspanSection True }
+		  { HorzAlignment Left }	
+		  { Bold True }	} } } }
+  { Hsect 
+      { Label "Modules QBE" } 	
+      { Shading Unshaded }
+      { Frozen True } 
+      { Scrollbar False }
+      { Vsect 
+	  { Row 	
+              { Type ModuleQuery }
+	      { Cell } } } 
+      { Vsect 
+	  { Row 	
+              { Type ModuleQuery }
+	      { Cell 
+                  { Type ModulePattern }
+		  { Label "*" }
+		  { HorzAlignment Left }
+		  { Bold True } }
+	      { Cell 
+                  { RepeatToEnd True }
+                  { Type ModuleParentPattern }
+		  { Label "*" }
+		  { HspanSection True }
+		  { HorzAlignment Left }
+		  { Bold True } } } } }
+
+  { Hsect 
+      { Type Module }
+      { Label "Modules Body" } 	
+      { Vsect 
+	  { Row 	
+              { Type Module }
+              { RepeatToEnd True }
+	      { Cell 
+                  { Type ModuleId }
+		  { HorzAlignment Right } } } }
+      { Vsect 
+	  { Row 	
+              { Type Module }
+              { RepeatToEnd True }
+	      { Cell 
+                  { Type Module }
+		  { HorzAlignment Left } } 
+	      { Cell 
+                  { Type ModuleParent }
+		  { HspanSection True }
+		  { HorzAlignment Left } } } } }
+
+  // Parameters
+
+  { Hsect 
+      { Label "Parameters Header" } 	
+      { ReadOnly True }
+      { Shading Shade1 }
+      { Frozen True } 
+      { Scrollbar False }
+      { RowHeight HEADER_HEIGHT }
+      { Vsect 
+	  { Row 	
+	      { Cell 
+		  { Label "Id" }
+		  { HorzAlignment Right }
+		  { Bold True } } } }
+      { Vsect 
+	  { Row 			
+	      { Cell 
+		  { Label "Parameter" } 	
+		  { HorzAlignment Left }	
+		  { Bold True }	}
+	      { Cell 
+		  { Label "Type" } 	
+		  { HorzAlignment Left }	
+		  { Bold True }	} 
+	      { Cell 
+		  { Label "Kind" } 	
+		  { HspanSection True }
+		  { HorzAlignment Left }	
+		  { Bold True }	} } } }
+  
+  { Hsect 
+      { Label "Parameters QBE" } 	
+      { Shading Unshaded }
+      { Frozen True } 
+      { Scrollbar False }
+      { Vsect 
+	  { Row 	
+              { Type ParameterQuery }
+	      { Cell } } } 
+      { Vsect 
+	  { Row 	
+              { Type ParameterQuery }
+	      { Cell 
+                  { Type ParameterPattern }
+		  { Label "*" }
+		  { HorzAlignment Left }
+		  { Bold True } }
+	      { Cell 
+                  { Type ParameterTypePattern }
+		  { Label "*" }
+		  { HorzAlignment Left }
+		  { Bold True } } 
+	      { Cell 
+                  { Type ParameterKindPattern }
+		  { Label "*" }
+		  { HspanSection True }
+		  { HorzAlignment Left }
+		  { Bold True } } } } }
+
+  { Hsect 
+      { Type Parameter }
+      { Label "Parameters Body" } 	
+      { Vsect 
+	  { Row 	
+              { Type Parameter }
+              { RepeatToEnd True }
+	      { Cell 
+                  { Type ParameterId }
+		  { HorzAlignment Right } } } }
+      { Vsect 
+	  { Row 	
+              { Type Parameter }
+              { RepeatToEnd True }
+	      { Cell 
+                  { Type Parameter }
+		  { HorzAlignment Left } }
+	      { Cell 
+                  { Type ParameterType }
+		  { HorzAlignment Left } }
+	      { Cell 
+                  { Type ParameterKind }
+		  { HspanSection True }
+	          { HorzAlignment Left } } } } } 
+
+  // Processes
+
+  { Hsect 
+      { Label "Processes Header" } 	 
+      { ReadOnly True }
+      { Shading Shade1 }
+      { Frozen True } 
+      { Scrollbar False }
+      { RowHeight HEADER_HEIGHT }
+      { Vsect 
+	  { Row 	
+	      { Cell 
+		  { Label "Id" }
+		  { HorzAlignment Right }
+		  { Bold True } } } }
+      { Vsect 
+	  { Row 			
+	      { Cell 
+		  { Label "Process" } 	
+		  { HorzAlignment Left }	
+		  { Bold True }	}
+	      { Cell 
+		  { Label "Index" } 	
+		  { HorzAlignment Left }	
+		  { Bold True }	}
+	      { Cell 
+		  { Label "Parent Process" } 	
+		  { HorzAlignment Left }	
+		  { Bold True }	}
+	      { Cell 
+		  { Label "Children Processes" } 	
+                  { Width WIDE_COL_WIDTH }
+		  { HorzAlignment Left }	
+		  { HspanSection True }
+		  { Bold True }	} } } } 
+  { Hsect 
+      { Label "Processes QBE" } 	
+      { Shading Unshaded }
+      { Frozen True } 
+      { Scrollbar False }
+      { Vsect 
+	  { Row 	
+              { Type ProcessQuery }
+	      { Cell } } } 
+      { Vsect 
+	  { Row 	
+              { Type ProcessQuery }
+	      { Cell 
+                  { Type ProcessPattern }
+		  { Label "*" }
+		  { HorzAlignment Left }
+		  { Bold True } }
+	      { Cell 
+                  { Type ProcessIndicesPattern }
+		  { Label "*" }
+		  { HspanSection True }
+		  { HorzAlignment Left }
+		  { Bold True } } } } }
+  { Hsect 
+      { Type Process }
+      { Label "Processes Body" } 	
+      { Vsect 
+	  { Row 	
+              { Type Process }
+              { RepeatToEnd True }
+	      { Cell 
+                  { Type ProcessId }
+		  { HorzAlignment Right } } } }
+      { Vsect 
+	  { Row 	
+              { Type Process }
+              { RepeatToEnd True }
+	      { Cell 
+                  { Type Process }
+		  { HorzAlignment Left } }
+	      { Cell 
+                  { Type ProcessIndices }
+		  { HorzAlignment Left } }
+	      { Cell 
+                  { Type ProcessParent }
+		  { HorzAlignment Left } }
+	      { Cell 
+                  { RepeatToEnd True }
+                  { Type ProcessChildren }
+		  { HorzAlignment Left } } } } } 
+
+  // Data and Control Flows
+
+  { Hsect 
+      { Label "Flows Header" } 	
+      { ReadOnly True }
+      { Shading Shade1 }
+      { Frozen True } 
+      { Scrollbar False }
+      { RowHeight HEADER_HEIGHT }
+      { Vsect 
+	  { Row 	
+	      { Cell 
+		  { Label "Id" }
+		  { HorzAlignment Right }
+		  { Bold True } } } }
+      { Vsect 
+	  { Row 			
+	      { Cell 
+		  { Label "Flow" } 	
+		  { HorzAlignment Left }	
+		  { Bold True }	}
+	      { Cell 
+		  { Label "Type" } 	
+		  { HorzAlignment Left }	
+		  { Bold True }	} 
+	      { Cell 
+		  { Label "Kind" } 	
+		  { HspanSection True }
+		  { HorzAlignment Left }	
+		  { Bold True }	} } } }
+  
+  { Hsect 
+      { Label "Flows QBE" } 	
+      { Shading Unshaded }
+      { Frozen True } 
+      { Scrollbar False }
+      { Vsect 
+	  { Row 	
+              { Type FlowQuery }
+	      { Cell } } } 
+      { Vsect 
+	  { Row 	
+              { Type FlowQuery }
+	      { Cell 
+                  { Type FlowPattern }
+		  { Label "*" }
+		  { HorzAlignment Left }
+		  { Bold True } }
+	      { Cell 
+                  { Type FlowTypePattern }
+		  { Label "*" }
+		  { HorzAlignment Left }
+		  { Bold True } } 
+	      { Cell 
+                  { Type FlowKindPattern }
+		  { Label "*" }
+		  { HspanSection True }
+		  { HorzAlignment Left }
+		  { Bold True } } } } }
+
+  { Hsect 
+      { Type Flow }
+      { Label "Flows Body" } 	
+      { Vsect 
+	  { Row 	
+              { Type Flow }
+              { RepeatToEnd True }
+	      { Cell 
+                  { Type FlowId }
+		  { HorzAlignment Right } } } }
+      { Vsect 
+	  { Row 	
+              { Type Flow }
+              { RepeatToEnd True }
+	      { Cell 
+                  { Type Flow }
+		  { HorzAlignment Left } }
+	      { Cell 
+                  { Type FlowType }
+		  { HorzAlignment Left } }
+	      { Cell 
+                  { Type FlowKind }
+		  { HspanSection True }
+	          { HorzAlignment Left } } } } } 
+
+  // Abstract Data Types
+
+  { Hsect 
+      { Label "Abstract Data Types Header" } 	
+      { ReadOnly True }
+      { Shading Shade1 }
+      { Frozen True } 
+      { Scrollbar False }
+      { RowHeight HEADER_HEIGHT }
+      { Vsect 
+	  { Label "Object Ids" }		
+          { Frozen True } 
+          { Hidden True }
+	  { Scrollbar False } 
+	  { Row 	
+	      { Cell 
+		  { Label "Id" }
+                  { Width ID_COL_WIDTH }
+		  { HorzAlignment Right }
+		  { Bold True } } } }
+      { Vsect 
+	  { Label "Object Descriptions" }	 
+	  { Frozen True }
+	  { ColBorder { Visible False } }
+	  { Row 			
+	      { Cell 
+		  { Label "Abstract Data Type" } 
+                  { Width WIDE_COL_WIDTH }
+		  { HspanSection True }
+		  { HorzAlignment Left }	
+		  { Bold True }	} } } }
+  { Hsect 
+      { Label "Abstract Data Types QBE" } 	
+      { Shading Unshaded }
+      { Frozen True } 
+      { Scrollbar False }
+      { Vsect
+	  { Row 	
+              { Type SEADTQuery }
+	      { Cell } } } 
+      { Vsect 
+	  { Row 	
+              { Type SEADTQuery }
+	      { Cell 
+                  { Type SEADTPattern }
+		  { Label "*" }
+		  { HspanSection True }
+		  { HorzAlignment Left }
+		  { Bold True } } } } }
+  { Hsect 
+      { Type SEADT }
+      { Label "Abstract Data Types Body" } 	
+      { Vsect 
+	  { Row 	
+              { Type SEADT }
+              { RepeatToEnd True }
+	      { Cell 
+                  { Type SEADTId }
+		  { HorzAlignment Right } } } }
+      { Vsect 
+	  { Row 	
+              { Type SEADT }
+              { RepeatToEnd True }
+	      { Cell 
+                  { Type SEADT }
+		  { HspanSection True }
+		  { HorzAlignment Left } } } } }
+
+}
+
+// TABLE ELEMENT TYPE DEFINITIONS
+// these are used to define the operations for each section of the table
+
+HsectType 1 SEModel
+{
+  { RowSorts
+      { Sort
+	  { Name SortByNameIncreasing }
+	  { Label "Diagrams By Name" }
+	  { Key 	
+	      { Value 
+		  { LabelSelector Label }
+		  { Cell
+		      { Hsect HSECT }
+		      { Vsect DESCRIPTION_VSECT }
+		      { Row ROW }
+		      { Col OBJECT_NAME_COL } } } 
+	      { Ordering LexicographicalIncreasing } } } 
+      { Sort
+	  { Name SortByNameTypeIncreasing }
+	  { Label "Diagrams By Type, Name" }
+	  { Key 	
+	      { Value 
+		  { LabelSelector Label }
+		  { Cell
+		      { Hsect HSECT }
+		      { Vsect DESCRIPTION_VSECT }
+		      { Row ROW }
+		      { Col DIAGRAM_TYPE_COL } } } 
+	      { Ordering LexicographicalIncreasing } } 
+	  { Key 	
+	      { Value 
+		  { LabelSelector Label }
+		  { Cell
+		      { Hsect HSECT }
+		      { Vsect DESCRIPTION_VSECT }
+		      { Row ROW }
+		      { Col OBJECT_NAME_COL } } } 
+	      { Ordering LexicographicalIncreasing } } } } }
+
+RowType 10 SEModel
+{ 
+  { Semantics
+      { FileMapping 
+	  { MappingName Id }
+	  { Id 
+	      { LabelSelector Label }  
+	      { Cell { Hsect HSECT } { Vsect ID_VSECT } { Row ROW } { Col OID_COL } } } } }
+  { Methods
+      { Navigation 
+	  { Name SEModel }
+	  { Label "SE Diagram" }
+	  { MappingName Id }
+	  { Query "file[id=${file.id}]" } }
+      { Browse
+	  { Name classes }
+	  { Label "SE Diagram's Modules" }
+	  { MappingName Id }
+	  { Eval "SEHyperbrowse(\"node[Module && node_refs[file_id==${file.id}]]\");" } }
+      { Browse
+	  { Name allnodes }
+	  { Label "SE Diagram's Processes" }
+	  { MappingName Id }
+	  { Eval "SEHyperbrowse(\"node[Process && node_refs[file_id==${file.id}]]\");" } }
+      { Browse
+	  { Name everything }
+	  { Label "SE Diagram's Entire Contents" }
+	  { MappingName Id }
+	  { Eval "SEHyperbrowseModelContents();" } }
+    }
+}
+
+RowType 11 SEModelQuery
+{ 
+  { Query
+      { Template "file[${type_clause}${name_clause}]" }
+      { Var
+	  { Name name_clause }
+	  { Value
+	      { LabelFunc "SEQBENameClause();" }
+	      { Cell { Hsect HSECT } { Vsect DESCRIPTION_VSECT } { Row ROW } { Col OBJECT_NAME_COL } } } } 
+      { Var
+	  { Name type_clause }
+	  { Value
+	      { LabelFunc "SEDiagramQBETypeClause();" }
+	      { Cell { Hsect HSECT } { Vsect DESCRIPTION_VSECT } { Row ROW } { Col DIAGRAM_TYPE_COL } } } } }
+}
+
+CellType 100 SEModelId 		{ }
+CellType 101 SEModel 		{ }
+CellType 102 SEModelType 	{ }
+CellType 111 SEModelPattern	{ }
+CellType 112 SEModelTypePattern	{ }
+
+HsectType 2 Module
+{
+  { RowSorts
+      { Sort
+	  { Name SortByNameIncreasing }
+	  { Label "Modules By Name" }
+	  { Key 	
+	      { Value 
+		  { LabelSelector Label }
+		  { Cell
+		      { Hsect HSECT }
+		      { Vsect DESCRIPTION_VSECT }
+		      { Row ROW }
+		      { Col OBJECT_NAME_COL } } } 
+	      { Ordering LexicographicalIncreasing } } }
+
+      { Sort
+	  { Name SortByRankDecreasingNameIncreasing }
+	  { Label "Modules By Rank, Name" }
+	  { Key 	
+	      { Value 
+		  { LabelFunc "SEBrowserModuleRank();" }
+		  { Cell
+		      { Hsect HSECT }
+		      { Vsect DESCRIPTION_VSECT }
+		      { Row ROW }
+		      { Col OBJECT_NAME_COL } } } 
+	      { Ordering IntegerDecreasing } }
+	  { Key 	
+	      { Value 
+		  { LabelSelector Label }
+		  { Cell
+		      { Hsect HSECT }
+		      { Vsect DESCRIPTION_VSECT }
+		      { Row ROW }
+		      { Col OBJECT_NAME_COL } } } 
+	      { Ordering LexicographicalIncreasing } } } } }
+
+RowType  20  Module                     
+{ 
+  { Semantics
+      { NodeMapping 
+	  { MappingName Id }
+	  { Id 
+	      { LabelSelector Label }  
+	      { Cell { Hsect HSECT } { Vsect ID_VSECT } { Row ROW } { Col OID_COL } } } } }
+  { Methods
+      { Navigation 
+	  { Name DefaultView }
+	  { Label "Any View of Module" }
+	  { MappingName Id }
+          { Query "node_ref[file[SceDiagram] && node_id == ${node.id}]" }         
+	  { Query "node_ref[node_id == ${node.id}]"} 
+       }
+      { Navigation
+	  { Name Formal }
+	  { MappingName Id }
+	  { Label "Formal Signature for Module" }
+	  { Query "node_ref[node_id == ${node.id} && file[SceDiagram] && in_link_refs[link[SubprogramCall && from_node[FormalCaller]]]]" }	}
+      { Navigation
+	  { Name Actual }
+	  { MappingName Id }
+	  { Label "Actual Occurance of Module" }
+	  { Query "node_ref[node_id == ${node.id} && file[SceDiagram] && ! in_link_refs[link[SubprogramCall && from_node[FormalCaller]]]]" }	}
+      { Browse
+	  { Name module_parent }
+	  { Label "Module's Callers" }
+	  { MappingName Id }
+	  { Eval "SEHyperbrowse(\"node[Module && node_refs && out_links[SubprogramCall && to_node_id == ${node.id}]]\");" } }
+      { Browse
+	  { Name module_children }
+	  { Label "Module's Callees" }
+	  { MappingName Id }
+	  { Eval "SEHyperbrowse(\"node[Module && node_refs && in_links[SubprogramCall && from_node_id == ${node.id}]]\");" } }
+      { Browse
+	  { Name module_formal }
+	  { Label "Module's Formal Parameters" }
+	  { MappingName Id }
+	  { Eval "SEHyperbrowse(\"cntx[cntx_refs && link[SubprogramCall && from_node[FormalCaller] && to_node[id = ${node.id}]]]\");" } }
+      { Browse
+	  { Name module_actual }
+	  { Label "Module's Actual Parameters" }
+	  { MappingName Id }
+	  { Eval "SEHyperbrowse(\"cntx[cntx_refs && link[SubprogramCall && ! from_node[FormalCaller] && to_node[id = ${node.id}]]]\");" } }
+    }
+}
+
+RowType  21  ModuleQuery                 
+{ 
+  { Query
+      { Template "node[Module && node_refs${name_clause}${parents_clause}]"}
+      { Var
+	  { Name name_clause }
+	  { Value
+	      { LabelFunc "SEQBENameClause();" }
+	      { Cell { Hsect HSECT } { Vsect DESCRIPTION_VSECT } { Row ROW } { Col OBJECT_NAME_COL } } } }
+      { Var
+	  { Name parents_clause }
+	  { Value
+	      { LabelFunc "SEModuleQBEParentsClause();" }
+	      { Cell { Hsect HSECT } { Vsect DESCRIPTION_VSECT } { Row ROW } { Col MODULE_PARENTS_COL } } } } }
+}
+
+CellType 200 ModuleId 		        { }
+CellType 201 Module 		        { }
+CellType 202 ModuleParent 	        { }
+CellType 211 ModulePattern	        { }
+CellType 212 ModuleParentPattern        { }
+
+HsectType 3 Parameter
+{
+  { RowSorts
+      { Sort
+	  { Name SortByNameIncreasing }
+	  { Label "Parameters By Name, Type, Kind" }
+	  { Key 	
+	      { Value 
+		  { LabelSelector Label }
+		  { Cell
+		      { Hsect HSECT }
+		      { Vsect DESCRIPTION_VSECT }
+		      { Row ROW }
+		      { Col OBJECT_NAME_COL } } } 
+	      { Ordering LexicographicalIncreasing } }
+	  { Key 	
+	      { Value 
+		  { LabelSelector Label }
+		  { Cell
+		      { Hsect HSECT }
+		      { Vsect DESCRIPTION_VSECT }
+		      { Row ROW }
+		      { Col PARAMETER_TYPE_COL } } } 
+	      { Ordering LexicographicalIncreasing } }
+	  { Key 	
+	      { Value 
+		  { LabelSelector Label }
+		  { Cell
+		      { Hsect HSECT }
+		      { Vsect DESCRIPTION_VSECT }
+		      { Row ROW }
+		      { Col PARAMETER_KIND_COL } } } 
+	      { Ordering LexicographicalIncreasing } } } } }
+
+RowType  30  Parameter                     
+{ 
+  { Semantics
+      { CntxMapping 
+	  { MappingName Id }
+	  { Id 
+	      { LabelSelector Label }  
+	      { Cell { Hsect HSECT } { Vsect ID_VSECT } { Row ROW } { Col OID_COL } } } } }
+  { Methods
+      { Navigation 
+	  { Name parameter }
+	  { Label "Parameter" }
+	  { MappingName Id }
+	  { Query "cntx_ref[cntx_id==${cntx.id}]"} }
+      { Browse
+	  { Name object_models }
+	  { Label "Parameter's Diagrams" }
+	  { MappingName Id }
+	  { Eval "SEHyperbrowse(\"file[SceDiagram && cntx_refs[cntx_id = ${cntx.id}]]\");" } }
+    }
+}
+
+RowType  31  ParameterQuery                 
+{ 
+  { Query
+      { Template "cntx[${kind_clause} cntx_refs ${name_clause}${type_clause}]"}
+      { Var
+	  { Name name_clause }
+	  { Value
+	      { LabelFunc "SEQBENameClause();" }
+	      { Cell { Hsect HSECT } { Vsect DESCRIPTION_VSECT } { Row ROW } { Col OBJECT_NAME_COL } } } }
+      { Var
+	  { Name type_clause }
+	  { Value
+	      { LabelFunc "SEParameterQBETypeClause();" }
+	      { Cell { Hsect HSECT } { Vsect DESCRIPTION_VSECT } { Row ROW } { Col PARAMETER_TYPE_COL } } } }
+      { Var
+	  { Name kind_clause }
+	  { Value
+	      { LabelFunc "SEParameterQBEKindClause();" }
+	      { Cell { Hsect HSECT } { Vsect DESCRIPTION_VSECT } { Row ROW } { Col PARAMETER_KIND_COL } } } }
+    }
+}
+
+CellType 300 ParameterId 		{ }
+CellType 301 Parameter 		        { }
+CellType 302 ParameterType 		{ }
+CellType 303 ParameterKind 		{ }
+CellType 311 ParameterPattern		{ }
+CellType 312 ParameterTypePattern	{ }
+CellType 313 ParameterKindPattern	{ }
+
+HsectType 4 Process
+{
+  { RowSorts
+      { Sort
+	  { Name SortByNameTypeIncreasing }
+	  { Label "Processes By Name" }
+	  { Key 	
+	      { Value 
+		  { LabelSelector Label }
+		  { Cell
+		      { Hsect HSECT }
+		      { Vsect DESCRIPTION_VSECT }
+		      { Row ROW }
+		      { Col OBJECT_NAME_COL } } } 
+	      { Ordering LexicographicalIncreasing } } }
+      { Sort
+	  { Name SortByTypeNameIncreasing }
+	  { Label "Processes By Index, Name" }
+	  { Key 	
+	      { Value 
+		  { LabelSelector Label }
+		  { Cell
+		      { Hsect HSECT }
+		      { Vsect DESCRIPTION_VSECT }
+		      { Row ROW }
+		      { Col PROCESS_INDICES_COL } } } 
+	      { Ordering LexicographicalIncreasing } }
+	  { Key 	
+	      { Value 
+		  { LabelSelector Label }
+		  { Cell
+		      { Hsect HSECT }
+		      { Vsect DESCRIPTION_VSECT }
+		      { Row ROW }
+		      { Col OBJECT_NAME_COL } } } 
+	      { Ordering LexicographicalIncreasing } } } } } 
+
+RowType  40 Process                 
+{ 
+  { Semantics
+      { NodeMapping 
+	  { MappingName Id }
+	  { Id 
+	      { LabelSelector Label }  
+	      { Cell { Hsect HSECT } { Vsect ID_VSECT } { Row ROW } { Col OID_COL } } } } }
+  { Methods
+      { Navigation 
+	  { Name AnyView }
+	  { Label "Any View of Process" }
+	  { MappingName Id }
+	  { Query "node_ref[node_id == ${node.id} && file[DfeDiagram]]" }
+	  { Query "node_ref[node_id==${node.id}]"} }
+      { Browse
+	  { Name procparent }
+	  { Label "Process's Parents" }
+	  { MappingName Id }
+	  { Eval "SEBrowseProcHier(\"PARENT\", ${node.id});" } } 
+      { Browse
+	  { Name procchild }
+	  { Label "Process's Children" }
+	  { MappingName Id }
+	  { Eval "SEBrowseProcHier(\"CHILD\", ${node.id});" } }  
+    }
+}
+
+RowType  41 ProcessQuery       
+{
+  { Query
+      { Template "node[Process${name_clause}${indices_clause}]"}
+      { Var
+	  { Name name_clause }
+	  { Value
+	      { LabelFunc "SEQBENameClause();" }
+	      { Cell { Hsect HSECT } { Vsect DESCRIPTION_VSECT } { Row ROW } { Col OBJECT_NAME_COL } } } }
+      { Var
+	  { Name indices_clause }
+	  { Value
+	      { LabelFunc "SEProcessQBEIndicesClause();" }
+	      { Cell { Hsect HSECT } { Vsect DESCRIPTION_VSECT } { Row ROW } { Col PROCESS_INDICES_COL } } } }
+    }
+}
+
+CellType 400 ProcessId 			{ }
+CellType 401 Process  			{ }
+CellType 402 ProcessIndices 	        { }
+CellType 403 ProcessParent       	{ }
+CellType 404 ProcessChildren       	{ }
+CellType 411 ProcessPattern  		{ }
+CellType 412 ProcessIndicesPattern      { }
+
+HsectType 5 Flow
+{
+  { RowSorts
+      { Sort
+	  { Name SortByNameIncreasing }
+	  { Label "Flows By Name, Type, Kind" }
+	  { Key 	
+	      { Value 
+		  { LabelSelector Label }
+		  { Cell
+		      { Hsect HSECT }
+		      { Vsect DESCRIPTION_VSECT }
+		      { Row ROW }
+		      { Col OBJECT_NAME_COL } } } 
+	      { Ordering LexicographicalIncreasing } }
+	  { Key 	
+	      { Value 
+		  { LabelSelector Label }
+		  { Cell 
+		      { Hsect HSECT }
+		      { Vsect DESCRIPTION_VSECT }
+		      { Row ROW }
+		      { Col FLOW_TYPE_COL } } } 
+	      { Ordering LexicographicalIncreasing } }
+	  { Key 	
+	      { Value 
+		  { LabelSelector Label }
+		  { Cell
+		      { Hsect HSECT }
+		      { Vsect DESCRIPTION_VSECT }
+		      { Row ROW }
+		      { Col FLOW_KIND_COL } } } 
+	      { Ordering LexicographicalIncreasing } } } } }
+
+RowType  50  Flow                     
+{ 
+  { Semantics
+      { LinkMapping 
+	  { MappingName Id }
+	  { Id 
+	      { LabelSelector Label }  
+	      { Cell { Hsect HSECT } { Vsect ID_VSECT } { Row ROW } { Col OID_COL } } } } }
+  { Methods
+      { Navigation 
+	  { Name flow }
+	  { Label "Flow" }
+	  { MappingName Id }
+	  { Query "link_ref[link_id==${link.id}]"} }
+      { Browse
+	  { Name object_models }
+	  { Label "Flow's Diagrams" }
+	  { MappingName Id }
+	  { Eval "SEHyperbrowse(\"file[DfeDiagram && link_refs[link_id = ${link.id}]]\");" } }
+    }
+}
+
+RowType  51  FlowQuery                 
+{ 
+  { Query
+      { Template "link[${kind_clause}link_refs${name_clause}${type_clause}]"}
+      { Var
+	  { Name name_clause }
+	  { Value
+	      { LabelFunc "SEQBENameClause();" }
+	      { Cell { Hsect HSECT } { Vsect DESCRIPTION_VSECT } { Row ROW } { Col OBJECT_NAME_COL } } } }
+      { Var
+	  { Name type_clause }
+	  { Value
+	      { LabelFunc "SEFlowQBETypeClause();" }
+	      { Cell { Hsect HSECT } { Vsect DESCRIPTION_VSECT } { Row ROW } { Col FLOW_TYPE_COL } } } }
+      { Var
+	  { Name kind_clause }
+	  { Value
+	      { LabelFunc "SEFlowQBEKindClause();" }
+	      { Cell { Hsect HSECT } { Vsect DESCRIPTION_VSECT } { Row ROW } { Col FLOW_KIND_COL } } } }
+    }
+}
+
+CellType 500 FlowId 		{ }
+CellType 501 Flow 		{ }
+CellType 502 FlowType 		{ }
+CellType 503 FlowKind 		{ }
+CellType 511 FlowPattern	{ }
+CellType 512 FlowTypePattern	{ }
+CellType 513 FlowKindPattern	{ }
+
+HsectType 6 SEADT
+{
+  { RowSorts
+      { Sort
+	  { Name SortByNameIncreasing }
+	  { Label "Abstract Data Types By Name" }
+	  { Key 	
+	      { Value 
+		  { LabelSelector Label }
+		  { Cell
+		      { Hsect HSECT }
+		      { Vsect DESCRIPTION_VSECT }
+		      { Row ROW }
+		      { Col OBJECT_NAME_COL } } } 
+	      { Ordering LexicographicalIncreasing } } } } }
+
+RowType 60 SEADT
+{ 
+  { Semantics
+      { NodeMapping 
+	  { MappingName Id }
+	  { Id 
+	      { LabelSelector Label }  
+	      { Cell { Hsect HSECT } { Vsect ID_VSECT } { Row ROW } { Col OID_COL } } } } }
+  { Methods
+      { Navigation 
+	  { Name SEADT }
+	  { Label "SE Abstract Data Type" }
+	  { MappingName Id }
+	  { Query "file[DseDiagram && node_refs[node_id=${node.id}]]" } }
+      { Browse
+	  { Name children }
+	  { Label "Abstract Data Type's Children" }
+	  { MappingName Id }
+	  { Eval "SEHyperbrowse(\"\");" } }
+      { Browse
+	  { Name parent }
+	  { Label "Abstract Data Type's Parent" }
+	  { MappingName Id }
+	  { Eval "SEHyperbrowse(\"\");" } }
+      { Browse
+	  { Name users }
+	  { Label "Parameters of Abstract Data Type" }
+	  { MappingName Id }
+	  { Eval "SEHyperbrowse(\"cntx[cntx_refs && items[DataType && value == '${node.name}']]\");" } }
+    }
+}
+
+RowType 61 SEADTQuery
+{ 
+  { Query
+      { Template "node[Sequence && ! in_links && out_links && node_refs[file[DseDiagram]]${name_clause}]" }
+      { Var
+	  { Name name_clause }
+	  { Value
+	      { LabelFunc "SEQBENameClause();" }
+	      { Cell { Hsect HSECT } { Vsect DESCRIPTION_VSECT } { Row ROW } { Col OBJECT_NAME_COL } } } } }
+}
+
+CellType 600 SEADTId 		{ }
+CellType 601 SEADT 		{ }
+CellType 611 SEADTPattern	{ }
+ 
+
+// MENU DEFINITIONS
+// we'll include all the standard ones here for table editors,
+// and append browser-specific stuff to it
+Include "rules/gte_menu_bar.std"
+Include "rules/gte_annot_menu.std"
+Include "rules/gte_edit_menu.std"
+Include "se/rules/feature.rule"
+
+Menu Repository
+{
+    { InMenuBar False }
+}
+
+// put frequently used option on the canvas menu
+Menu Edit
+{
+  { Spacer { Name SebrSpacer1 } }
+  { MenuEntry
+      { Name ExecuteQBE }
+      { Label "Execute QBE" }
+      { Builtin "EditorQrlEval SEQueryByExample();" }
+      { ActiveFunc idehook_is_row_with_query } } }
+
+Menu View
+{
+  { Spacer { Name OtbrSpacer1 } }
+  { SubMenu { Label "Hide/Show Groups" } { Name HideShowGroups } }
+}
+
+Menu HideShowGroups
+{
+  { Label "Hide/Show Groups" }
+  { Pin True }
+  { MenuEntry
+      { Name HideAllEmpty }
+      { Label "Hide All Empty Groups" }
+      { Builtin "EditorQrlEval SEBrowserHideEmptySemanticGroups();" }
+      { ActiveFunc SEBrowserHideEmptySemanticGroupsActiveFunc }
+    }
+  { MenuEntry
+      { Name ToggleQBE }
+      { LabelFunc SEBrowserToggleQBEVisibilityLabelFunc }
+      { Builtin "EditorQrlEval SEBrowserToggleQBEVisibility();" }
+    }
+  { Spacer { Name Spacer1 } }
+  { MenuEntry
+      { Name ToggleSEModel }
+      { LabelFunc SEBrowserToggleSEModelVisibilityLabelFunc }
+      { Builtin "EditorQrlEval SEBrowserToggleSEModelVisibility();" }
+    }
+  { MenuEntry
+      { Name ToggleModule }
+      { LabelFunc SEBrowserToggleModuleVisibilityLabelFunc }
+      { Builtin "EditorQrlEval SEBrowserToggleModuleVisibility();" }
+    }
+  { MenuEntry
+      { Name ToggleParameter }
+      { LabelFunc SEBrowserToggleParameterVisibilityLabelFunc }
+      { Builtin "EditorQrlEval SEBrowserToggleParameterVisibility();" }
+    }
+  { MenuEntry
+      { Name ToggleProcess }
+      { LabelFunc SEBrowserToggleProcessVisibilityLabelFunc }
+      { Builtin "EditorQrlEval SEBrowserToggleProcessVisibility();" }
+    }
+  { MenuEntry
+      { Name ToggleFlow }
+      { LabelFunc SEBrowserToggleFlowVisibilityLabelFunc }
+      { Builtin "EditorQrlEval SEBrowserToggleFlowVisibility();" }
+    }
+  { MenuEntry
+      { Name ToggleAdt }
+      { LabelFunc SEBrowserToggleAdtVisibilityLabelFunc }
+      { Builtin "EditorQrlEval SEBrowserToggleAdtVisibility();" }
+    }
+  { Spacer { Name Spacer2 } }
+  { MenuEntry
+      { Name ToggleOid }
+      { LabelFunc SEBrowserToggleOidVisibilityLabelFunc }
+      { Builtin "EditorQrlEval SEBrowserToggleOidVisibility();" }
+    }
+}
+
+Menu Sort
+{
+	{ InMenuBar True }
+	{ Label "Sort" }
+	{ Pin True }
+	{ GenerationFunc idehook_table_sorts_main_generation_func_by_type }
+	{ Tag "RowSorts" }
+}
+
+Menu Navigation
+{
+	{ InMenuBar True }
+	//spr 3004
+	{ Label "&GoTo" }
+	{ Pin True }	
+	{ GenerationFunc idehook_table_methods_main_generation_func_by_type }
+	{ Tag "Navigation" }
+}
+
+//ECR 3792 begin
+Menu NavigationSubmenu
+{
+    { GenerationFunc idehook_table_methods_main_generation_func_by_type }
+    { Tag "Navigation" }
+
+}
+//ECR 3792 end
+
+Menu Browse
+{
+	{ InMenuBar True }
+	{ Label "Browse" }
+	{ Pin True }	
+	{ GenerationFunc idehook_table_methods_main_generation_func_by_type }
+	{ Tag "Browse" }
+}
+ 
+Menu Query
+{
+  { InMenuBar True }
+  { Label "Query" }
+  { Pin True }	
+  { MenuEntry 
+      { Name ExecuteQBE }
+      { Label "Execute QBE" }
+      { Builtin "EditorQrlEval SEQueryByExample();" }
+      { ActiveFunc idehook_is_row_with_query } }
+  { MenuEntry 
+      { Name ExecuteQBEAsOms }
+      { Label "Edit QBE as OMS Query..." }
+      { Builtin "EditorQrlEval SEExpressQueryFromExample();" }
+      { ActiveFunc idehook_is_row_with_query } }
+  { MenuEntry 
+      { Name ExecuteOMS }
+      { Label "Execute OMS Query..." } 
+      { Builtin "QueryDialogShow" } }
+
+  { Spacer { Name Spacer1 } }
+  { MenuEntry
+      { Name ToggleQBE }
+      { LabelFunc SEBrowserToggleQBEVisibilityLabelFunc }
+      { Builtin "EditorQrlEval SEBrowserToggleQBEVisibility();" }
+    }
+}
+
+// spr 3004
+Menu HelpMenu
+{
+   {InMenuBar False}
+   {HelpMenu False}
+}
+
+Menu HelpInSebr
+{
+    { InMenuBar True }
+    { Label "&Help" }
+    { Pin True }
+    { HelpMenu True }
+    { MenuEntry
+        { Name ContentsAndIndex }
+//         { Label "&Contents and Index" }
+        { Label "&Online Manuals" }
+        { Builtin "EditorHelp HelpOnlineManuals" }
+    }
+//     { MenuEntry
+//         { Name WhatsThis }
+//         { Label "What's &This?" }
+//         { Builtin "EditorHelp HelpOnWindow" }
+//     }
+    { Spacer { Name Spacer1 } }
+// ECR 4034 - begin
+    { MenuEntry
+        { Name TechSupport }
+        { Label "&Technical Support" }
+        { Builtin "TechSupport" }
+    }
+// ECR 4034 - end
+    { MenuEntry
+        { Name AboutStP }
+        { Label "&About StP" }
+        { Builtin "EditorVersion" }
+    }
+}
+
+Menu ProductMenu 
+{
+  { InMenuBar True }
+  { Label "SE" }
+  { Pin True }	
+  { MenuEntry 
+      { Name ReduceToSelectedRows }
+      { Label "Reduce To Selected Rows" }
+      { Builtin "EditorQrlEval SEBrowserReduce();" }
+      { ActiveFunc idehook_table_method_active_func_by_type }
+      { Tag "Browse" } // only reduce to browsable rows
+      }
+  { MenuEntry 
+      { Name Fill }
+      { Label "Fill Browser" }
+      { Builtin "EditorQrlEval SEBrowserFill();" }
+    }
+  { MenuEntry 
+      { Name Clear }
+      { Label "Clear Browser" }
+      { Builtin "EditorQrlEval SEBrowserClear();" }
+    }
+  { Spacer { Name Spacer1 } }
+  { MenuEntry 
+      { Name RecompileGeneralizations }
+      { Label "Recompile Relationships" }
+      { Builtin "EditorQrlEval SEBrowserCompileGraph();" }
+    }
+}
+
+Menu Edit
+{ 
+    { SubMenu
+	{ Name LabelMenu }
+	{ Show False }
+    }
+}
+
+Menu Tools
+{
+     { MenuEntry 
+        { Name CheckSemantics }
+	{ Show False }
+    }
+}
+
+
+
+Menu MenuBarEdit
+{
+    { SubMenu
+	{ Name LabelMenu }
+	{ Show False }
+    }
+}
+
+PassWord "23A809B3"
+
+//  Add any user customizations to the file included below:
+// IncludeIfExists "user/ct/rules/user_otbr.rules"

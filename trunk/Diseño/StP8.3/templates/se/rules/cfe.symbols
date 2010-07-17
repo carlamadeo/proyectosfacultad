@@ -1,0 +1,17 @@
+SymbolList
+{
+    { ShowStraightArc True }
+    { ShowSpline True }
+    { Symbols
+	(
+	    External
+	    Process
+	    Store
+	    ControlSpec
+	    Anchor
+	    OffPageProcess
+	    OffPageExternal
+	    Comment
+	)
+    }
+}

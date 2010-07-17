@@ -1,0 +1,28 @@
+
+//     StP/UML
+//     Confidential property of Aonix
+//     Copyright (c) 1997
+//     All rights reserved
+
+// SPR 4052 - Model Management
+Note 801974
+{
+  { AppType UmlExternalSubsystem }
+  { PrintName "External Subsystem" }
+  { HelpText "The External Subsystem note specifies the external subsystem that owns this model element." }
+  { Bounds { Min 0 } { Max 1 } }
+  { Item
+      { AppType UmlExternalSubsystemName }
+      { PrintName "External Subsystem Name" }
+      { HelpText "The External Subsystem Name Property item specifies the name of the subsystem that owns this model element"}
+      { Bounds { Min 0 } { Max 1 } }
+      { InitValue "unassigned" }
+  }
+//  { Item
+//      { AppType UmlExternalSubsystemVersion }
+//      { PrintName "External Subsystem Version" }
+//      { HelpText "The External Subsystem Version Property item specifies the version number of the subsystem that owns this model element"}
+//      { Bounds { Min 0 } { Max 1 } }
+//      { InitValue "1.0" } // TODO: change this(maybe) !!!!!!!!!!!
+//  }
+}

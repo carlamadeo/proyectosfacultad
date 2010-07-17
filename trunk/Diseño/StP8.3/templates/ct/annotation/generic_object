@@ -1,0 +1,111 @@
+//
+// 	sccsid[] = @(#)generic_object	4.3  95/02/20
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+
+Note 800035
+{
+    { AppType GenericObject }
+    { HelpText "The Object note lets you add items containing basic information about an object, such as its name, its author, and the time and date of its annotation." }
+    { Bounds { Min 1 } { Max 1 } }
+    { PrintName "Object" }
+    { Item
+	{ AppType ObjectName }
+	{ HelpText "The Name item specifies the name of the object being annotated." }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Name" }
+	{ InitValue "${sym_label}" }
+	{ IsReadOnly True }
+    }
+    { Item
+	{ AppType Author }
+	{ HelpText "The Author item specifies the name of the user who is annotating the object. When you annotate an object, the value of the user system variable is inserted into the Author item." }
+	{ PrintName "Author" }
+	{ InitValue "${user}" }
+    }
+//ECR 3161 begin
+    { Item
+	{ AppType ExternalFile }
+	{ HelpText "The External File item specifies the link to external document." }
+	{ PrintName "External File" }
+    }
+//ECR 3161 end
+    { Item
+	{ AppType Generated }
+	{ HelpText "The Generated item specifies the time and date the annotation was generated. The value of this item is read from the time and date system variables when it is added to an annotation." }
+	{ PrintName "Generated" }
+	{ InitValue "${time} ${date}" }
+    }
+    { Item
+	{ AppType GenerateAs }
+	{ HelpText "This item is used in the I18N version only. The Generate As Item allows you to specify the exact name of the code to be generated for this item." }
+	{ PrintName "(I18N)Generate As" }
+	{ Bounds { Min 0 } { Max 1 } }
+    }
+    { Item
+	{ AppType UniqueID }
+	{ HelpText "This item holds a unique identifier that is used as a key for relationships between StP objects and objects in other programs."}
+	{ PrintName "UniqueID" }
+	{ Bounds { Min 0 } { Max 1 } }
+	// { IsVisible False }
+    }
+}
+
+Note 800036
+{
+    { AppType Requirement }
+    { HelpText "The Requirement note lets you add items that tie the object being annotated to a particular requirement or requirements document." }
+    { PrintName "Requirement" }
+    { Item
+	{ AppType NoteKey }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Key" }
+	{ IsKey True }
+	{ IsVisible False }
+	{ InitValue "${unique_key}" }
+    }
+    { Item
+	{ AppType RequirementName }
+	{ HelpText "The Requirement Name item specifies the name of the requirement associated with the object being annotated. This item is required by the Requirement note, and is added automatically when you add Requirement." }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Requirement Name" }
+    }
+    { Item
+	{ AppType RequirementDocument }
+	{ HelpText "The Requirement Document item ties the object being annotated to a particular requirements document." }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Requirement Document" }
+    }
+    { Item
+	{ AppType RequirementParagraph }
+	{ HelpText "The Requirement Paragraph item ties the object being annotated to a particular paragraph in a requirements document." }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Requirement Paragraph" }
+    }
+}
+
+// Glossary Note and Item
+Note 800041
+{
+    { AppType GlossaryDefinition}
+    { HelpText "Definition of Glossary items for future StP reports. The name of the item is defined in GlossaryItem, the description is defined in the GlossaryDefinition Note Description." }
+    { Bounds { Min 0 } }
+    { PrintName "Glossary Definition" }
+    { Item
+	{ AppType GlossaryItem}
+	{ HelpText "Name of an Item to appear in the Glossary of an StP report." }
+        { IsKey True }
+        { Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Glossary Item" }
+    }
+}
+
+
+Include "annotation/requirement_assignment.note"
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_generic_object"

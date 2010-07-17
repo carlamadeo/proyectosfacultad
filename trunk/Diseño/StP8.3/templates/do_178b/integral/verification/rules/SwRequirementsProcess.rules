@@ -1,0 +1,20 @@
+
+
+Class 0 SwRequirementsAnalysisVerification
+{
+    { ParseCondition "(toolinfo_variable(\"RqtsModeler_5_3_4\") == \"True\");" }
+    { Label "Verification (Model)" }
+    { Image "requirements_tables" }
+    { ShowOnDesktop True }
+ { ClassCommand
+        { Name "VerifyTestReadiness" }
+	{ Label "Verify Test Readiness" }
+	{ ShowPropsOnExec True }
+	{ Type Nowin }
+	{ Command "qrp -p ${projdir} -s ${system} -t asc -o TestReadinessReport.txt lifecycle/support/verification/qrl/VerifyTestReadiness.qrl"}
+
+  }
+
+
+}
+

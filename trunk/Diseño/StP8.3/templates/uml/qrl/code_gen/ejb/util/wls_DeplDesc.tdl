@@ -1,0 +1,68 @@
+/**********************************************
+ *
+ * Utility-Functions for Weblogic specific
+ * DeploymentDescriptors.
+ *
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    03/27/2001
+ **********************************************/
+
+// Returns the fully qualified name (except
+// for primitive types) of the specified 
+// method parameter.
+proc getWlsMethodParameter(type)
+	switch([type])
+		case "byte" :
+		case "short" :
+		case "int" :
+		case "long" :
+		case "float" :
+		case "double" :
+		case "boolean" :
+		case "char" :
+		case "java.lang.String" :
+		case "java.lang.Boolean" :
+		case "java.lang.Character" :
+		case "java.lang.Short" :
+		case "java.lang.Byte" :
+		case "java.lang.Integer" :
+		case "java.lang.Long" :
+		case "java.lang.Float" :
+		case "java.lang.Double" :
+		case "java.sql.Date" :
+		case "java.sql.Timestamp" :
+		case "java.util.Vector" :
+		case "java.util.List" :
+		case "java.util.Array" :
+		case "java.util.Collection" :
+			return [type];
+		  break;
+		case "String" :
+		case "Boolean" :
+		case "Character" :
+		case "Short" :
+		case "Byte" :
+		case "Integer" :
+		case "Long" :
+		case "Float" :
+		case "Double" :
+			return "java.lang." [type];
+		  break;
+		case "Vector" :
+		case "Array" :
+		case "List" :
+		case "Collection" :
+			return "java.util." [type];
+		  break;
+		case "Date" :
+		case "Timestamp" :
+			return "java.sql." [type];
+		  break;
+		default:
+			loop(Instances->MClass Where [MClass.name] == [type])
+				return [MClass:package_name] "." [MClass.name];
+			end loop
+		  break;
+	end switch
+end proc

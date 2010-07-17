@@ -1,0 +1,170 @@
+//*****************************************************************************
+// $RCSfile: corba_genInterface.tdl,v $
+// $Revision: 1.1 $
+// $Date: 2001/06/15 02:12:07 $
+// Author: Oliver Maus
+//*****************************************************************************
+
+/*
+   Generates an idl file for all interfaces.
+   Generated are interfaces for model element class with <<interface>> and 
+   factory, if interface has tagged value 'HasFactory=<factor class name>'
+*/
+
+/*
+import other template files
+*/
+USES corbaidl_std;
+USES corbaidl_genClassHeader;
+
+
+proc MPackage.startGenInterfaceFile()
+	/* local variables */
+	local fileName;
+
+		[fileName] = [fileName] [MPackage.name] "/";
+		/* Build the final filename for idl file on basis of package name */
+		[fileName] = [srcdir] "/" [fileName] [MPackage.name] ".idl";
+		/* Redirect output to standard output */
+		info = "generate " [fileName] "\n";
+		/* make subdirectory if necessary. lsdir is a Tcl procedure (defined 
+		   in std.tdl) */
+		mkdir(lsdir( [fileName]));
+		
+		/* Set the output redirection to [fileName]. setOutput is a predefined
+		   function */
+		output( [fileName] );
+
+		/* Call the appropriate template and redirect output to the 
+		channel set by setOutput (s. above) */
+		out = [MPackage].genIDLfile();
+		genImplementationClasses([MPackage]);
+end proc
+
+/*	Start template
+*/
+template MPackage.genIDLfile()
+[/* generate module based on package symbol that encloses 
+the interfaces with the appropriate implementation class
+*/]
+module [MPackage.name] {	
+[loop (MPackage->MClass)]	[// loop over all classes, enclosed by package symbol	]
+
+[[MClass].genInterfaces()]	[// start generating interfaces]
+[end loop]
+};
+end template
+
+/*	template for generating the interfaces
+*/
+template MInterface.genInterfaces()
+[// check existence of Factory generation request]
+[if (getFactoryNameFromInterface([MInterface], "FALSE") != "")]	[// generate factory]
+
+	[// forward interface declaration]
+	interface [MInterface.name];	
+	
+	[// factory interface declaration, extract factory name from interface]
+	interface [getFactoryNameFromInterface([MInterface], "FALSE")]
+	{
+        // Standard operations:
+        
+        // Create one [MInterface.name] object
+        [MInterface.name] create[MInterface.name] (); [// create<class name> method]
+        
+	[if (InterfaceHasStaticOps([MInterface], "FALSE") == "TRUE")]
+		[genStaticInterfaceOp([MInterface], "CORBAIDL")]	[// proc. defined in corbaidl_std]
+		
+	[end if]
+	};
+	interface [MInterface.name] {
+		
+	[genAttribute([MInterface])]
+	[genMethod([MInterface])]
+	};
+[else]	[// don't generate factory]
+	interface [MInterface.name] {
+		
+	[genAttribute([MInterface])]
+	[genMethod([MInterface])]
+	};
+[end if]
+end template
+
+/*	generate header for implementation class
+*/
+proc genImplementationClasses(MPackage)
+	loop (MPackage->MClass)
+	[MClass].genImplClasses();
+	end loop
+end proc
+
+/* gen header for implementation class
+*/
+proc MInterface.genImplClasses()	
+genClassHeader([MInterface]);	 // defined in corbaidl_genClassHeader.tdl
+end proc
+
+/* generate attributes of interface MInterface
+ */
+template genAttribute(MInterface)
+[setLanguage("CORBAIDL")]	[/* sets the tag for typemapping. See TDL documentation for further information */]
+[loop(MInterface->MAttribute)]
+	attribute [MAttribute.type] [MAttribute.name];
+[end loop]
+end template
+
+/* generate methods of interface MInterface
+ */
+template genMethod(MInterface)
+[setLanguage("CORBAIDL")]	[/* sets the tag for typemapping. See TDL documentation for further information */]
+[/* extract all operations from interface, that != static */]
+[loop(MInterface->MOperation WHERE [MOperation.binding] != "static")]
+	[getDataType([MOperation.returnType])] [MOperation.name]([getOpTypeList([MOperation])]);
+[end loop]
+
+[/* if interface has factory, add lifecycle operation(s) */]
+[if (hasFactory([MInterface]) == "TRUE")]
+
+	// Lifecycle operations
+	//
+	// Remove object
+	void remove();
+[end if]
+end template
+
+/* check if class is marked as external, return TRUE if class is external
+	normaly there is no code generation for external classes
+*/ 
+proc ClassIsExternal(MElement)
+	loop(MElement->Note->Item where [Item.type] == "UmlClassIsImported")
+		return TRUE;
+	end loop
+	return FALSE;
+end proc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

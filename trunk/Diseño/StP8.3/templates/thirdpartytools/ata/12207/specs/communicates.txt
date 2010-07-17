@@ -1,0 +1,180 @@
+#  Communicates Container Specification
+#
+#  This file defines what Communicates information is processed,
+#  how it is processed, and the order it is processed.
+#
+#  This file may be specified as the starting Specification or referenced by
+#  another Specification.
+#
+#  This file may be modified by the user.
+#
+#  NOTE=    The preferred approach is for the user to copy this file
+#           into their workspace.  The copy of this file can then be
+#           modified as desired.
+#
+#  The following lines specify the Communicates Container format.
+#  A description of the available directives follows the specification.
+
+TYPE=Communicates
+
+
+# Generate a Section Title
+#SECTION=$NAME $TYPE
+
+# Output the Annotation for the Communicates
+#NOTE=%ATAHOME%\doc\ctools\stp\specs\uml\defaults\note.txt
+
+# Get all the Objects of type UCDActor for the Communicates
+UCDActor=%ATAHOME%\doc\ctools\stp\specs\uml\LifeCycleDesktop\ucdactor.txt
+
+
+#  Directives for the Communicates Specification are as follows=
+#
+#  The text in a Specification must comply with the following rules=
+#	1.	Comment lines begin with a pound sign (i.e., #)
+#	2.	All other lines must have at least (2) fields and no more
+#		than four (4).  The fields are separated by an equals sign (=)
+#		and described as follows=
+#  		<directive>=<value>=<unused>=<description>
+#	3.	The Directives are specific to a type of Specification where
+#		the Specification type is defined with the 'Type' Directive.
+#	4.	The 'Type' Directive must exist and be a valid Method Type.
+#	5.	Directives values are dependent on the Directive.
+#		They may be blank, enumerated, filenames, lists, numeric,
+#		strings, subfields, or text.
+#	5.a	Blank values have no value.
+#	5.b	Enumerated values have values specific to the Directive
+#		(see the Directive below).
+#	5.c	Filenames reference other Specifications.  They must be the
+#		complete path to the Specification.
+#		Environment variables may be used within the file specification.
+#		The file must exist or an error will be issued.
+#	5.d	List values are a series of names separated by spaces.
+#	5.e	The numeric values must be Integer or Real numbers.
+#	5.f	Strings usually refer to specific values such as the name of a
+#		Property.
+#	5.g	A Subfield value has sub-records.  The sub-records are
+#		separated semi-colons (;).  The sub-records have sub-fields.
+#		The sub-fields are separated by colons (=).  Thus, a subfield
+#		syntax is as follows=
+#		<sub-directive>=<sub-value>;<sub-directive>=<sub-value>;...
+#	5.h	A text value is any alpha-numeric characters.  It may contain
+#		variables.
+#	5.h.1	Valid variables are specified in the VARIABLES section below.  
+#	5.h.2	In addition, the Section Directive may contain the
+#		following variables=
+#			$INCREMENT - increment the section's level.
+#			$DECREMENT - decrement the section's level.
+#
+# Communicates Traversal Directives
+#       UseCase               Traversal      Get all the Objects of type 
+#                                            UseCase for the Communicates
+#
+#       UCDActor              Traversal      Get all the Objects of type 
+#                                            UCDActor for the Communicates
+#
+#       SD                    Traversal      Get all the Objects of type SD for 
+#                                            the Communicates
+#
+#       CPD                   Traversal      Get all the Objects of type CPD 
+#                                            for the Communicates
+#
+#       RequirementNote       Traversal      Get all the Objects of type 
+#                                            RequirementNote for the 
+#                                            Communicates
+#
+# Communicates Container Directives
+#       ADD                   Subfield       Adds the Communicates to the 
+#                                            output if the specified Item has 
+#                                            the specified value.
+#
+#                                                                               
+#                                            ITEMTYPE = Specifies the name of 
+#                                            the annotation Item.
+#                                                                               
+#                                            NOTETYPE = Specifies the name of 
+#                                            the annotation.
+#                                                                               
+#                                            VALUE = Specifies the desired 
+#                                            value of the annotation Item.
+#       DIRECTION             Enumeration    Specifies wether Communicates's 
+#                                            coming In or Out are desired.
+#
+#                                                                               
+#                                            BOTH = Specifies that the 
+#                                            direction of the Communicates is 
+#                                            BOTH into and out of the Object or 
+#                                            System.
+#                                                                               
+#                                            IN = Specifies that the direction 
+#                                            of the Communicates is IN to the 
+#                                            Object or System.
+#                                                                               
+#                                            OUT = Specifies that the direction 
+#                                            of the Communicates is OUT of the 
+#                                            Object or System.
+#       EXECUTE               Filename       Specifies the path and parameters 
+#                                            for an executable.
+#
+#       INCLUDEFILE           Filename       Specifies the path for a file 
+#                                            compatible with the selected 
+#                                            Document Publishing System.
+#
+#       NAME                  String         Specifies a specific Communicates 
+#                                            by name.
+#
+#       PARAGRAPH             Text           Specifies the text to be output 
+#                                            and variables to be resolved for a 
+#                                            paragraph.
+#
+#       PRUNE                 Subfield       Prunes the Communicates from the 
+#                                            output if the specified Item has 
+#                                            the specified value.
+#
+#                                                                               
+#                                            ITEMTYPE = Specifies the name of 
+#                                            the annotation Item.
+#                                                                               
+#                                            NOTETYPE = Specifies the name of 
+#                                            the annotation.
+#                                                                               
+#                                            VALUE = Specifies the desired 
+#                                            value of the annotation Item.
+#       SECTION               Text           Specifies the text to be output 
+#                                            and variables to be resolved for a 
+#                                            Section Title.
+#
+#       SKIP                  Subfield       Skips the Communicates in the 
+#                                            output if the specified Item has 
+#                                            the specified value.
+#
+#                                                                               
+#                                            ITEMTYPE = Specifies the name of 
+#                                            the annotation Item.
+#                                                                               
+#                                            NOTETYPE = Specifies the name of 
+#                                            the annotation.
+#                                                                               
+#                                            VALUE = Specifies the desired 
+#                                            value of the annotation Item.
+#       TAG                   String         Specifies a Symbolic Tag name.
+#
+#       TYPE                  String         Identifies the Specification type 
+#                                            and thus, determines all other 
+#                                            Directives which may be used in the
+#
+#       VISIBILITY            Enumeration    Specifies wether Internal or 
+#                                            External Communicatess are desired.
+#
+#                                                                               
+#                                            BOTH = Specifies that all 
+#                                            instances of the Communicates are 
+#                                            desired.
+#                                                                               
+#                                            EXTERNAL = Specifies that the 
+#                                            Communicates comes from or goes to 
+#                                            an external Object.
+#                                                                               
+#                                            INTERNAL = Specifies that the 
+#                                            Communicates comes from or goes to 
+#                                            NO external Objects.

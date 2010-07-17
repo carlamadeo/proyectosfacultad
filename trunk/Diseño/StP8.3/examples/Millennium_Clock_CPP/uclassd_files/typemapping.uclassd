@@ -1,0 +1,46 @@
+Diagram UmlClassDiagram
+{
+    { Name "typemapping" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -256 }
+    { PanY -192 }
+    { Alignment 32 }
+    { GUID "UID_F92477A6-C886-11d5-90AA-0050045C27F0" }
+    { Summary
+        { Nodes 2 }
+        { Arcs 0 }
+    }
+}
+
+Node 1
+{
+    { Type Class }
+    { Loc -96 0 }
+    { Scale 399.00 112.00 }
+    { Label
+        { Text "boolean" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 1119 }
+        { GUID "UID_22D67420-5E64-11d5-AEEA-00C0DFC00963" }
+    }
+}
+
+Node 3
+{
+    { Type Class }
+    { Loc 160 0 }
+    { Scale 356.00 112.00 }
+    { Label
+        { Text "String" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ClassMapping }
+        { ID 1128 }
+        { GUID "UID_823E245A-5F14-11d5-AEEB-00C0DFC00963" }
+    }
+}

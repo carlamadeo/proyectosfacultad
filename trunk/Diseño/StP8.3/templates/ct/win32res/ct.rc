@@ -1,0 +1,174 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+RME_32                  ICON    DISCARDABLE     "rme_32.ico"
+ALIGN                   ICON    DISCARDABLE     "align.ico"
+ARC                     ICON    DISCARDABLE     "arc.ico"
+CLOSED_FOLDER           ICON    DISCARDABLE     "closed_folder.ico"
+COMMENT                 ICON    DISCARDABLE     "comment.ico"
+COPY                    ICON    DISCARDABLE     "copy.ico"
+COPY_DIAGRAM            ICON    DISCARDABLE     "copy_diagram.ico"
+CURRENT_CELL            ICON    DISCARDABLE     "current_cell.ico"
+CUT                     ICON    DISCARDABLE     "cut.ico"
+DELETE                  ICON    DISCARDABLE     "delete.ico"
+DIAGRAMS                ICON    DISCARDABLE     "diagrams.ico"
+EDIT_DIAGRAM            ICON    DISCARDABLE     "edit_diagram.ico"
+FIND                    ICON    DISCARDABLE     "find.ico"
+FIT_TO_LABEL            ICON    DISCARDABLE     "fit_to_label.ico"
+FOLDER                  ICON    DISCARDABLE     "folder.ico"
+GRID                    ICON    DISCARDABLE     "grid.ico"
+HIDE-SHOW               ICON    DISCARDABLE     "hide-show.ico"
+MESSAGE_LOG             ICON    DISCARDABLE     "message_log.ico"
+MODEL_ELEMENTS          ICON    DISCARDABLE     "model_elements.ico"
+NEW_DIAGRAM             ICON    DISCARDABLE     "new_diagram.ico"
+NEW_FILE                ICON    DISCARDABLE     "new_file.ico"
+NEW_MODEL               ICON    DISCARDABLE     "new_model.ico"
+NEW_TABLE               ICON    DISCARDABLE     "new_table.ico"
+NOTE                    ICON    DISCARDABLE     "note.ico"
+NOTE_ITEM               ICON    DISCARDABLE     "note_item.ico"
+OPEN_FILE               ICON    DISCARDABLE     "open_file.ico"
+OPEN_FOLDER             ICON    DISCARDABLE     "open_folder.ico"
+OPEN_MODEL              ICON    DISCARDABLE     "open_model.ico"
+PARENT_DIR              ICON    DISCARDABLE     "parent_dir.ico"
+PASTE                   ICON    DISCARDABLE     "paste.ico"
+PRINT                   ICON    DISCARDABLE     "print.ico"
+PRINT_PREVIEW           ICON    DISCARDABLE     "print_preview.ico"
+REDO                    ICON    DISCARDABLE     "redo.ico"
+REFRESH                 ICON    DISCARDABLE     "refresh.ico"
+SAVE_ALL                ICON    DISCARDABLE     "save_all.ico"
+SAVE_FILE               ICON    DISCARDABLE     "save_file.ico"
+SCRIPT_MANAGER          ICON    DISCARDABLE     "script_manager.ico"
+SELECT                  ICON    DISCARDABLE     "select.ico"
+SPLINE                  ICON    DISCARDABLE     "spline.ico"
+TABLES                  ICON    DISCARDABLE     "tables.ico"
+UNDO                    ICON    DISCARDABLE     "undo.ico"
+WHATS_THIS              ICON    DISCARDABLE     "whats_this.ico"
+ZOOM_IN                 ICON    DISCARDABLE     "zoom_in.ico"
+ZOOM_OUT                ICON    DISCARDABLE     "zoom_out.ico"
+ZOOM_TO_FIT             ICON    DISCARDABLE     "zoom_to_fit.ico"
+REQUIREMENTS_TABLES     ICON    DISCARDABLE     "requirements_tables.ico"
+ARROW_RIGHT             ICON    DISCARDABLE     "arrow_right.ico"
+ARROW_LEFT              ICON    DISCARDABLE     "arrow_left.ico"
+CHECK                   ICON    DISCARDABLE     "check.ico"
+BAD                     ICON    DISCARDABLE     "bad.ico"
+MICROSOFT_WORD_FILES_16 ICON    DISCARDABLE     "microsoft_word_files_16.ico"
+ORTHO_DRAW              ICON    DISCARDABLE     "ortho_draw.ico"
+STRAIGHT_DRAW           ICON    DISCARDABLE     "straight_draw.ico"
+PROPERTIES              ICON    DISCARDABLE     "properties.ico"
+DIAG_ANNOT              ICON    DISCARDABLE     "diag_annot.ico"
+OBJECT_ANNOT            ICON    DISCARDABLE     "object_annot.ico"
+TABLE_ANNOT             ICON    DISCARDABLE     "table_annot.ico"
+OPEN_REPORT             ICON    DISCARDABLE     "open_report.ico"
+REPLACE                 ICON    DISCARDABLE     "replace.ico"
+DELETE_ROW              ICON    DISCARDABLE     "delete_row.ico"
+INSERT_ROW              ICON    DISCARDABLE     "insert_row.ico"
+FORMAT_SELECTION        ICON    DISCARDABLE     "format_selection.ico"
+EXECUTE_QUERY           ICON    DISCARDABLE     "execute_query.ico"
+EDIT_NOTEDESC           ICON    DISCARDABLE     "edit_notedesc.ico"
+CHECK_SYNTAX            ICON    DISCARDABLE     "check_syntax.ico"
+CHECK_SEMANTICS         ICON    DISCARDABLE     "check_semantics.ico"
+PANNER                  ICON    DISCARDABLE     "panner.ico"
+SHOWDESKTOP             ICON    DISCARDABLE     "showdesktop.ico"
+RME_COVER_PAGE          ICON    DISCARDABLE     "rme_cover_page.ico"
+RME_DIAGRAM             ICON    DISCARDABLE     "rme_diagram.ico"
+RME_DIAGRAM_SET         ICON    DISCARDABLE     "rme_diagram_set.ico"
+RME_TABLE               ICON    DISCARDABLE     "rme_table.ico"
+RME_TABLE_SET           ICON    DISCARDABLE     "rme_table_set.ico"
+RME_TEXT_SET            ICON    DISCARDABLE     "rme_text_set.ico"
+RME_OBJECT_SET          ICON    DISCARDABLE     "rme_object_set.ico"
+FRAME_32                ICON    DISCARDABLE     "frame_32.ico"
+ILEAF_32                ICON    DISCARDABLE     "ileaf_32.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+ARC                     CURSOR  DISCARDABLE     "arc.cur"
+ARC_L                   CURSOR  DISCARDABLE     "arc_l.cur"
+COMMENT                 CURSOR  DISCARDABLE     "comment.cur"
+COMMENT_L               CURSOR  DISCARDABLE     "comment_l.cur"
+COPY                    CURSOR  DISCARDABLE     "copy.cur"
+SPLINE                  CURSOR  DISCARDABLE     "spline.cur"
+SPLINE_L                CURSOR  DISCARDABLE     "spline_l.cur"
+SIZE_VERT               CURSOR  DISCARDABLE     "size_vert.cur"
+SIZE_HOR                CURSOR  DISCARDABLE     "size_hor.cur"
+SIZE_4WAY               CURSOR  DISCARDABLE     "size_4way.cur"
+CORNER                  CURSOR  DISCARDABLE     "corner.cur"
+RIGHT_POINTER           CURSOR  DISCARDABLE     "right_pointer.cur"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+BLUE_SHADE              BITMAP  DISCARDABLE     "blue_shade.bmp"
+YELLOW_SHADE            BITMAP  DISCARDABLE     "yellow_shade.bmp"
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

@@ -1,0 +1,71 @@
+/*************************************************
+ *
+ * Helper-Routines for Strings. Removes whitespace
+ * Upcases characters and more. 
+ *
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    11/18/2000
+ *************************************************/
+ 
+// Removes excessive whitespace on both ends 
+// of the specified string.
+tcl_proc trim_whitespace(word)
+    return [string trim $word];
+end proc
+
+// Removes excessive whitespace on the right end
+// of the specified string.
+tcl_proc trim_right_whitespace(word)
+    return [string trimright $word];
+end proc
+
+// Removes excessive whitespace on the left end
+// of the specified string.
+tcl_proc trim_left_whitespace(word)
+    return [string trimleft $word];
+end proc
+
+// Removes the last newline character of a 
+// longer string.
+tcl_proc remove_last_newline(word)
+    return [string trimright $word "\n"];
+end proc
+
+// Upcases the first character of a word.
+tcl_proc upcase_firstchar(word)
+    set fc [string index $word 0];
+    set fc [string toupper $fc];
+    set rest [string range $word 1 end];
+    set word [append fc $rest];
+    return $word;
+end proc
+
+
+// Lowercases the first character of a word.
+tcl_proc lowercase_firstchar(word)
+    set fc [string index $word 0];
+    set fc [string tolower $fc];
+    set rest [string range $word 1 end];
+    set word [append fc $rest];
+    return $word;
+end proc
+
+
+// getFileFromPackage(string)
+// --------------------------
+// Returns the last part of a fully
+// qualified class names.
+
+tcl_proc getFileFromPackage(fqcn)
+    set wlist [split $fqcn "."];
+    return [lindex $wlist [expr [llength $wlist] - 1]];
+end proc
+
+
+// Given a string consisting of whitespace separated words,
+// returns a string consisting of the same words, but this
+// time newline separated.
+tcl_proc convertWhitespaceToNewline(word)
+  return [join [split $word] "\n"];
+end proc

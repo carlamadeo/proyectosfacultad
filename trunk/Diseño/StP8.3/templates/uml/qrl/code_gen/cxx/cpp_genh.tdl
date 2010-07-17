@@ -1,0 +1,463 @@
+//*****************************************************************************
+// $RCSfile: cpp_genh.tdl,v $
+// $Revision: 1.15 $
+// $Date: 2002/03/26 17:44:50 $
+// Author: Markus Kern
+//*****************************************************************************
+/*
+Generates the header file for each instance of meta type MClass.
+genH is called by main (defined in cpp_main.tdl).
+*/
+
+
+template genH(MClass)
+#ifndef _[MClass.name]_h
+#define _[MClass.name]_h
+
+#include "classes.h"
+[/* mark this place as an insertion point (named "include") for include 
+    statements. Include statements are inserted here during generation of the 
+    class content by using the insert procedure. */]
+[mark("base_include","include_proc")]
+
+[mergeOut("UDIF","includes")]
+
+[/* base classes from the model are put by calling genInheritance (defined below) */]
+class [MClass.name] : [genInheritance([MClass])]
+{
+[/* friend should be implemented by dependencies later, but they */]
+[/* cannot yet be dynamically added */]
+[loop(MClass->Client->MDependency Where [MDependency:stereotype] == "friend"  || [MDependency.stereotype] == "friend") ]
+    friend [Client.name];
+[end loop]
+
+[/* Constructor and destructor generation */] 
+[genConstructorsAndDestructors([MClass])]
+
+[/* Attributes generation */] 
+[genAttributes([MClass])]
+
+[/* Getter and setter for attributes generation */] 
+[genAttributesGetterAndSetters([MClass])]
+
+[/* Associations generation */] 
+[genAssociations([MClass])]
+
+[/* Operations generation */] 
+[genOperations([MClass])]
+
+[/* if the class has a state machine in the model, it is an active class. 
+    genStateMachine (defined in cpp_gensm.tdl) generates declarations for the state
+    machine in this case. */]   
+[if([MClass.active] == TRUE)]
+
+    // --StateMachine Code ----------------------------------------------------
+    [genStateMachine([MClass])]
+[end if]
+
+};
+
+
+//----------------------------------------------------------------------------------
+// Inline operations
+//
+//----------------------------------------------------------------------------------
+[/* Getter and setter bodies generation */] 
+[genAttributesGetterAndSettersBodies([MClass])]
+
+[genInlineOperationBodies([MClass])]
+#endif
+end template
+
+//*****************************************************************************
+// Constructors/Destructors section
+// 
+//
+//*****************************************************************************
+/* constructor and/or destructor specified generation
+   sorted by visibility and category: public, protected, private then constructor, 
+   destructor
+*/
+template genConstructorsAndDestructors(MClass)
+[initForConstructorsAndDestructors()]
+\
+[if (existSpecifiedConstructor([MClass]))]
+[/* constructor specified generated with the visiblity public */]
+[genSpecifiedConstructorsWithVisibility([MClass], "public")]
+[else]
+[/* default public constructor is generated automatically */]
+[genDefaultConstructor([MClass])]
+[end if]
+\
+[if (existSpecifiedDestructor([MClass]))]
+[/* destructor specified generated with the visiblity public */]
+[genSpecifiedDestructorsWithVisibility([MClass], "public")]
+[else]
+[/* default public destructor is generated automatically */]
+[genDefaultDestructor([MClass])]
+[end if]
+\
+[/* constructor and/or destructor specified generated with the visiblity protected */]
+[genSpecifiedConstructorsWithVisibility([MClass], "protected")]
+[genSpecifiedDestructorsWithVisibility([MClass], "protected")]
+\
+[/* constructor and/or destructor specified generated with the visiblity private */]
+[genSpecifiedConstructorsWithVisibility([MClass], "private")]
+[genSpecifiedDestructorsWithVisibility([MClass], "private")]
+end template
+
+/* default public constructor and destructor are generated automatically */
+template genDefaultConstructor(MClass)
+    [generateVisibilityIfNecessary("public")]
+        [MClass.name]();
+end template
+
+/* default public constructor and destructor are generated automatically */
+template genDefaultDestructor(MClass)
+    [generateVisibilityIfNecessary("public")]
+        virtual ~[MClass.name]();
+end template
+
+/* constructor specified with the given visibility generation */
+template genSpecifiedConstructorsWithVisibility(MClass, Visibility)
+[loop(MClass->MOperation where isConstructor([MOperation], [MClass]) && getOperationVisibility([MOperation]) == [Visibility])]
+    [generateVisibilityIfNecessary([Visibility])]
+        [genOperationBinding([MOperation])][MClass.name]([genDefinitionOpParaList([MOperation])]);
+[end loop]
+end template
+
+/* destructor specified with the given visibility generation */
+template genSpecifiedDestructorsWithVisibility(MClass, Visibility)
+[loop(MClass->MOperation where isDestructor([MOperation], [MClass]) && getOperationVisibility([MOperation]) == [Visibility])]
+    [generateVisibilityIfNecessary([Visibility])]
+        [genOperationBinding([MOperation])]~[MClass.name]();
+[end loop]
+end template
+
+/* Return True if the class contains at least one operation specified as a constructor */
+proc existSpecifiedConstructor(MClass)
+if (hasLoop(MClass->MOperation where (isConstructor([MOperation], [MClass]))))
+    return True;
+else
+    return False;
+end if
+end proc
+
+/* Return True if the class contains at least one operation specified as a destructor */
+proc existSpecifiedDestructor(MClass)
+if (hasLoop(MClass->MOperation where (isDestructor([MOperation], [MClass]))))
+    return True;
+else
+    return False;
+end if
+end proc
+
+/* Return True if the given operation is either a constructor (<ClassName>) or a destructor (~<ClassName>) */
+proc isConstructorOrDestructor(MOperation, MClass)
+if (isConstructor([MOperation], [MClass]) || isDestructor([MOperation], [MClass]))
+    return True;
+else
+    return False;
+end if
+end proc
+
+/* Return True if the given operation is a constructor (<ClassName>) */
+proc isConstructor(MOperation, MClass)
+if (toLower([MOperation.name]) == toLower([MClass.name]))
+    return True;
+else
+    return False;
+end if
+end proc
+
+/* Return True if the given operation is a destructor (~<ClassName>) */
+proc isDestructor(MOperation, MClass)
+if (toLower([MOperation.name]) == "~"toLower([MClass.name]))
+    return True;
+else
+    return False;
+end if
+end proc
+
+/* Initialisation for constructors and destructors
+*/
+proc initForConstructorsAndDestructors()
+    [publicVisibility] = FALSE;
+    [protectedVisibility] = FALSE;
+    [privateVisibility] = FALSE;
+end proc
+
+/* Generation of "public:" "protected:" or "private:" if not already generated
+*/
+template generateVisibilityIfNecessary(Visibility)
+[if (![[Visibility]"Visibility"])]
+[Visibility]:
+[setVisibilityAlreadyGenerated([Visibility])]\      
+[end if]
+end template
+
+/* Stores the fact that the visibility has already been generated
+*/
+proc setVisibilityAlreadyGenerated(Visibility)
+    [[Visibility]"Visibility"] = TRUE;
+end proc
+
+
+//*****************************************************************************
+// Attributes section
+//
+// Attributes visibility is respected (public, protected, private)
+// No getter nor setter is generated - If you want getter or setter, specify it
+// explicitly as an operation and give it the visibility desired
+// If in you project all attributes shall have getters and setters, just add
+// templates for them (in fact, remove comments)
+//
+//*****************************************************************************
+/* Attributes generation for the given class */
+template genAttributes(MClass)
+[/* Procedure genAttributeBinding (defined in cpp_std.tdl) puts "virtual", 
+    "static" or "". 
+    getDataType (defined in std.tdl) maps type names used in the model onto 
+    language specific type names. See the documentation for type mapping. */]
+    
+    //--Attributes------------------------------------------------------------------
+[genAttributesWithVisibility([MClass], "public")]
+[genAttributesWithVisibility([MClass], "protected")]
+[genAttributesWithVisibility([MClass], "private")]
+
+    [mergeOut("UDA","Attributes")]
+end template
+
+/* Generation of attributes declaration according to the given visibility */
+template genAttributesWithVisibility(MClass, Visibility)
+    [loop(MClass->MAttribute where getAttributeVisibility([MAttribute]) == [Visibility]; setDelim([Visibility]":"); setDelim(""))]
+    [delim()]
+        [if ([Visibility] == "private")]
+	    [genAttributeBinding([MAttribute])][genAttConst([MAttribute])][getDataType([MAttribute.type])] [MAttribute.name];
+        [else]
+            [genAttributeBinding([MAttribute])][genAttConst([MAttribute])][getDataType([MAttribute.type])] [MAttribute.name];    
+	[end if]    
+    [end loop]
+end template
+
+
+//*****************************************************************************
+// Getters and setters section
+//
+//*****************************************************************************
+/* Generation of getters and setters of attributes of the given class */
+template genAttributesGetterAndSetters(MClass)
+
+    //--Getters and setters------------------------------------------------------------------
+    public:
+        [loop(MClass->MAttribute)]
+        [if([MAttribute.binding] != "static" )]
+        inline [genAttributeBinding([MAttribute])][getDataType([MAttribute.type])] get[MAttribute.name]() const;
+        [else]
+        inline [genAttributeBinding([MAttribute])][getDataType([MAttribute.type])] get[MAttribute.name]();
+        [end if]
+
+        [end loop]
+    
+    protected:
+        [loop(MClass->MAttribute)]
+        [if (!isAttConst([MAttribute]))]
+        inline [genAttributeBinding([MAttribute])]void set[MAttribute.name] ([getDataType([MAttribute.type])] const &);
+        [end if]
+        [end loop] 
+end template
+
+/* Generation of getters and setters bodies of attributes of the given class */
+template genAttributesGetterAndSettersBodies(MClass)
+[// inline the accessor get and set operations for attributes ]
+[loop(MClass->MAttribute; setDelim("//--Getters and Setters-------------------------------------------------------------"); setDelim("")) ]
+[delim()]
+inline [getDataType([MAttribute.type])] [MClass.name]::get[MAttribute.name]() const
+{
+    [mergeOut("UDGA::" getUniqueId([MAttribute]),"Get Accessor")]
+    return [MAttribute.name] ;
+}
+
+[if (!isAttConst([MAttribute]))]
+inline void [MClass.name]::set[MAttribute.name]([getDataType([MAttribute.type])] const &a)
+{
+    [MAttribute.name] = a;
+
+    [mergeOut("UDSA::" getUniqueId([MAttribute]),"Set Accessor")]
+}
+[end if]
+    [end loop]
+end template
+
+
+//*****************************************************************************
+// Associations section
+//
+// associations are considered as public
+//
+//*****************************************************************************
+/* Associations generation related to the given class */
+template genAssociations(MClass)
+
+    //--Associations----------------------------------------------------------------
+    [/* each relation (MAssociation) has two end points (MAssociationEnd). 
+        We look for pairs of end points where one end point is attached to 
+        the source class and the other end point is attached to the 
+        destination class. We use the alias name 'FromRole' for the end point
+        of the source class, 'ToRole' for the end point of the destination 
+        class, and 'Partner' for the destination class itself. The condition
+        'Where [FromRole.id] != [ToRole.id]' assures that both end points are
+        different. */]
+    [/* associations are public. For each relationship an attribute is generated 
+        by genRelationship (defined in cpp_std.tdl). */]
+    [loop(MClass->Role As FromRole->MAssociation->MAssociationEnd As ToRole->MClass As Partner Where [FromRole.id] != [ToRole.id]; setDelim("public:"); setDelim(""))]
+        [if (checkNavigability([FromRole], [ToRole]))]
+            [insert("assoc_include",[Partner.name])]
+    [delim()]
+        [Partner.name] [genRelationship([ToRole])];
+            [if([MClass.active] == TRUE)]
+                [setTargetType([ToRole])]
+            [end if]
+        [end if]
+    [end loop]
+end template
+
+
+//*****************************************************************************
+// Operations section
+//
+// Operations visibility is respected (public, protected, private)
+//
+//*****************************************************************************
+/* Operations generation for the given class */
+template genOperations(MClass)
+
+    //--Operations------------------------------------------------------------------
+    [/* operations are sorted according to the access specified in the model. 
+        Procedure genOperationBinding (defined in cpp_std.tdl) puts "virtual", 
+        "static" or "".
+        Procedure genDefinitionOpParaList (defined in cpp_std.tdl) puts the parameter list */]
+[genOperationsWithVisibility([MClass], "public")]
+[genOperationsWithVisibility([MClass], "protected")]
+[genOperationsWithVisibility([MClass], "private")]
+
+    [mergeOut("UDO","Operations")]
+end template
+
+/* Generation of operations declaration according to the given visibility */
+template genOperationsWithVisibility(MClass, Visibility)
+[loop(MClass->MOperation where getOperationVisibility([MOperation]) == [Visibility] && !isConstructorOrDestructor([MOperation], [MClass]); setDelim([Visibility]":"); setDelim(""))]
+    [delim()]
+        [inlineOperation([MOperation])][genOperationBinding([MOperation])][getDataType(returnType([MOperation]))] [MOperation.name]([genDefinitionOpParaList([MOperation])])[constOperation([MOperation])][abstractOperation([MOperation])]; 
+[end loop]
+end template
+
+/* Generation of inline operation bodies */
+template genInlineOperationBodies(MClass)
+[loop(MClass->MOperation where isInlineOperation([MOperation]); setDelim("//--Inline operations---------------------------------------------------------------"); setDelim("")) ]
+[delim()]
+inline [getDataType(returnType([MOperation]))] [MClass.name]::[MOperation.name]([genOpParaList([MOperation])])[constOperation([MOperation])] 
+{
+    [mergeOut("UDIO::" getUniqueId([MOperation]),"Inline operation")]
+}
+[end loop]
+[mark("assoc_include","include_proc")]
+end template
+
+
+//*****************************************************************************
+// Other
+//
+//*****************************************************************************
+/* TokenSet.include_proc is called for each insertion at the place marked above 
+   as insertion point "include" and puts the final include statement */
+template TokenSet.include_proc()
+#include "[TokenSet.line].h"
+end template
+
+/* return the base class of the instance of MClass. This is either a base class 
+   in the model (MClass->SuperClass) or 'ActiveInstance' or 'InactiveInstance'.
+   Insert an include for the base classes header file. */
+proc genBaseClass(MClass)
+    loop(MClass->SuperClass)
+                insert("base_include",[SuperClass.name]);
+        return [SuperClass.name];
+    end loop
+
+        insert("base_include","baseclasses");
+    if([MClass.active])
+        return "ActiveInstance";
+    else
+        return "InactiveInstance";
+    end if
+end proc
+
+/* maps the multiplicity of the end point MAssociationEnd. We distinguish the 
+   following cases:
+   "One"  : a single pointer
+   "Many" : an array of pointers, currently 100
+   "n"    : an array of n pointers 
+   Procedure getMultiplicity (defined in std.tdl) provides the multiplicity of 
+   the end point */
+proc genRelationship(MAssociationEnd)
+
+    local multiplicity = getMultiplicity([MAssociationEnd.multiplicity]);
+    switch([multiplicity])
+    case "Many" : return " *_" [MAssociationEnd.name] "[100]";
+    case "One"  : return " *_" [MAssociationEnd.name];
+    default     : return " *_" [MAssociationEnd.name] "[" [multiplicity] "]";
+    end switch
+end proc
+
+proc genInheritance(MClass)
+    local visib;
+    local virt;
+    local inh_stmt = "";
+    
+    loop(MClass->SuperClass->MInheritance; setDelim(""); setDelim(", ")) 
+        insert("base_include",[SuperClass.name]);
+        [visib] = "public";
+        [virt]  = "";
+        loop(MInheritance->Note->Item Where [Item.type] == "UmlCxxInheritanceIsVirtual")    
+            if ([Item.value] == "True")        
+                [virt] = "virtual";
+            end if
+        end loop        
+        loop(MInheritance->Note->Item Where [Item.type] == "UmlCxxInheritanceVisibility")    
+            [visib] = [Item.value];
+        end loop                                                                            
+        if ([virt] == "")
+            [inh_stmt] = [inh_stmt] delim() [visib] " " [SuperClass.name];                
+        else
+            [inh_stmt] = [inh_stmt] delim() [virt] " " [visib] " " [SuperClass.name];                    
+        end if        
+    end loop   
+    
+    if ([inh_stmt] == "")     
+        insert("base_include","baseclasses");
+        if ([MClass.active]) 
+            [inh_stmt] = "public ActiveInstance";
+        else
+            [inh_stmt] = "public InactiveInstance";
+        end if    
+    end if
+    
+    return [inh_stmt];
+end proc
+
+// Returns whether or not there is a directed relationsship
+// from "FromRole" to "ToRole". No navigability means "bidirectional".
+proc checkNavigability(MAssociationEnd AS FromRole, MAssociationEnd AS ToRole)
+	// if both "TRUE" or both "FALSE" generate it!
+	if ([FromRole.isNavigable] == [ToRole.isNavigable])
+		return "TRUE";
+	end if
+	// now only the opposite end is of interest
+	// if it's true, it's an unidirectional association
+	// generate it!
+	if ([ToRole.isNavigable] == "TRUE")
+		return "TRUE";
+	end if
+	return "FALSE";
+end proc
+

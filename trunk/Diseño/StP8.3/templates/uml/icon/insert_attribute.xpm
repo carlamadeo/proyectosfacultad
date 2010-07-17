@@ -1,0 +1,28 @@
+/* XPM */
+static char* insert_attribute_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 6 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #000000	c #000080",
+"o	m #000000	c #0000ff",
+"x	m #000000	c #00ffff",
+/* pixels */
+"................",
+".XXXXXXX....XX..",
+".      X...XXXX.",
+".      X...X..X.",
+".      X...XXXX.",
+".XXXXXXX...X..X.",
+"......O...oooooo",
+".....OO...oxxxxx",
+"....OOOOOOoxxxxx",
+".....OO...oxxxxx",
+"......O...oooooo",
+".XXXXXXX........",
+".      X........",
+".      X........",
+".      X........",
+".XXXXXXX........"};

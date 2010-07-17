@@ -1,0 +1,101 @@
+FileObject 1
+{
+    { Name "a181" }
+    { Type ObjectAnnotation }
+    { GUID "UID_ACDEA62B-F7D6-43b8-B3C6-0EA721C0B7F9" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "calculate_delay.c" }
+    { Type SEFile }
+    { ObjectId 2086 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_4A21DBB6-0BA7-4829-BFF6-25B0EE7178D7" }
+}
+
+NodeObject 99997
+{
+    { Name "calculate delay" }
+    { Type Module }
+    { ObjectId 2087 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_F805EA5E-DFFE-424b-A7B6-63498961A9C0" }
+}
+
+NodeObject 99996
+{
+    { Name "" }
+    { Type FormalCaller }
+    { ObjectId 2522 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_9B6F2467-4C1B-4512-BF8C-1535D2BB0E84" }
+}
+
+LinkObject 99995
+{
+    { Name "" }
+    { Type SubprogramCall }
+    { ObjectId 2785 }
+    { Sig "" }
+    { ToNodeId 99997 }
+    { FromNodeId 99996 }
+    { GUID "UID_1CF62505-77D0-461e-BCA7-477866D89998" }
+}
+
+CntxObject 99994
+{
+    { Name "num pulses" }
+    { Type DataOut }
+    { ObjectId 2786 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { LinkId 99995 }
+    { GUID "UID_1C5B67A1-8422-432e-A127-4C2752506619" }
+}
+
+NoteObject 2
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99994 }
+    { ObjectId 2788 }
+}
+
+ItemObject 3
+{
+    { Type ObjectName }
+    { Value "num pulses" }
+    { NoteId 2 }
+    { ObjectId 2789 }
+}
+
+NoteObject 4
+{
+    { Type ParameterDefinition }
+    { Name "" }
+    { OwnerId 99994 }
+    { ObjectId 2791 }
+}
+
+ItemObject 5
+{
+    { Type DataType }
+    { Value "int" }
+    { NoteId 4 }
+    { ObjectId 2792 }
+}
+

@@ -1,0 +1,777 @@
+#include "qrl/include/general.inc"
+
+const string zip_ext = ".zip";
+boolean use_version_control = ( toolinfo_variable("use_version_control") == "True" ); // ECR 5262
+
+// ECR 6130 begin
+string DirSeparator()
+{
+    if(is_windows_platform())
+        return "\\";
+    return "/";
+}
+// ECR 6130 end
+
+boolean
+WriteSystemBaselineFile(string basedir, string basename)
+{
+    string curproj, cursys;
+
+    // Archive the system
+    curproj = current_projdir();
+    cursys = current_system();
+
+    path_convert_to_right_slash(curproj);
+    path_convert_to_right_slash(basedir);
+
+    int stpemHandle = editor_send_msg("ngoae", "EditorStart " + to_string(editor_get_msgd_name()) + " "
+		    + to_string(editor_get_msgd_handle()), -1);
+    editor_send_msg("ngoae", "CiForwardMessages " + to_string(editor_get_msgd_handle()), stpemHandle); // ECR 6853
+    string cmd = "sys_dump_system_baseline(\\\"" + curproj + "\\\",\\\"" + cursys + "\\\",\\\"" + basedir + "\\\",\\\""
+	       + basename + "\\\");";
+    editor_send_msg_sync("ngoae", "EditorQrlEval " + cmd, stpemHandle); // ECR 6625
+
+    return True;
+}
+
+
+boolean
+BaselineFileExist(string basename, int add_zip_extension)
+{
+    // Check if ".zip" is in the file name
+    boolean zip_extension_found = string_find(basename, 0, zip_ext) != string_length(basename);
+
+    // If the ".zip" extension is not in the filename then add it
+    if( add_zip_extension ) 
+    {
+        if( !zip_extension_found )
+            basename += zip_ext;
+    }
+    else
+    { 
+        // Remove ".zip" extension
+        basename = string_search_and_replace(basename, zip_ext, "");
+    }
+ 
+    return file_exists(basename);
+}
+
+
+void
+SetSystemBaselineName()
+{
+    ui_prop myProp = to_ui_prop( "CreateSystemBaseline", "basename" );
+    string new_filename;
+
+    if ( myProp != NULL ) 
+    {
+		ui_text_set_value(myProp, current_system());
+    }
+}
+
+
+void
+SetRestoreToSystemName( string baseline_filename )
+{
+    ui_prop myProp = to_ui_prop( "RestoreSystemBaseline", "system_name" );
+    if ( myProp != NULL ) 
+    {
+    	string system_name = ui_text_value(myProp);
+		string basename = file_part(baseline_filename);
+
+        // Remove ".zip" extension
+        basename = string_search_and_replace(basename, zip_ext, "");
+		ui_text_set_value(myProp, basename);
+    }
+}
+
+void
+SetBaselineFiles( string prop_sheet, string prop_name )
+{
+    ui_prop myProp = to_ui_prop( prop_sheet, prop_name );
+ 
+    if ( myProp != NULL ) 
+    {
+        string baseline_path = ui_text_value( myProp );
+        list zips = directory_files( baseline_path, "*" + zip_ext );
+        int idx;
+
+        myProp = to_ui_prop( prop_sheet, "basename" );
+        ui_list_clear(myProp);
+
+        for( idx = 0; idx < list_count(zips); ++ idx )
+            ui_list_append(myProp, string_search_and_replace( file_part( list_get( zips, idx ) ), zip_ext, "") );
+    }
+}
+
+void
+SetBaselineDir( string prop_sheet, string prop_name )
+{
+    ui_prop myProp = to_ui_prop( prop_sheet, prop_name );
+
+    if ( myProp != NULL ) 
+    {
+        string baseline_path = toolinfo_variable("baseline_path");
+
+        // If the env variable is not set then 
+        // set it to a default directory
+        if( baseline_path == NULL )
+            // ECR 6130 begin
+            // ui_text_set_value( myProp, path_normalize( current_projdir() + "baseline/" ) );
+            ui_text_set_value( myProp, path_normalize( current_projdir() + "baseline" + DirSeparator() ) );
+            // ECR 6130 end
+        else
+            ui_text_set_value(myProp, baseline_path);
+    }
+}
+
+int CreateSystemBaselineFuncIsInitialized = 0;
+
+void
+CreateSystemBaselineFunc(ui_event_tp event, ui_prop theprop, int id, string v)
+{
+    if(CreateSystemBaselineFuncIsInitialized == 1) {
+	// set the intial baseline name
+	SetSystemBaselineName();
+	// set the intial baseline directory
+	SetBaselineDir( "CreateSystemBaseline", "basedir" );
+    }
+    else
+	++ CreateSystemBaselineFuncIsInitialized;
+}
+
+
+int
+CreateSystemBaseline_cb(ui_event_tp event, ui_prop theprop, int id, string v)
+{
+    ui_owner uiOwner = to_ui_owner(theprop);
+    string basename = ui_get_value(to_ui_prop(uiOwner, "basename"));
+    string basedir = ui_get_value(to_ui_prop(uiOwner, "basedir"));
+    
+    if ( basename != "" && basedir != "" ) 
+    {
+        if( !HandleSaveDirectory(basedir, uiOwner, "create_dir") )
+        {
+            // something went wrong.  get out.
+            return 0;
+        }
+
+        int ignore_lock = ui_choice_value(to_ui_prop( uiOwner, "ignore_lock" ));
+
+        // Get the list of lock files in the system
+        string lock_list = SystemLockFile("\t", "\n", "\n\n");    
+
+        if( lock_list != "" )
+        {
+            if( ignore_lock )
+            {
+                // The user wants to ignore lock file(s).
+                // We're just write out the lock list so
+                // that when they restore the system they'll know
+                // that lock file(s) exist when the baseline was created.
+                WriteLockInfo(lock_list);   
+            }
+            else
+            {
+                // We don't want to create baseline if
+                // lock files exist 
+                print_error("Baseline not created.  Locks exist.");
+                return 0;
+            }
+    
+        }
+
+        int overwrite_file = ui_choice_value(to_ui_prop( uiOwner, "overwrite_file" ));
+
+        // TODO: We will probably need to pass the overwrite into the C code
+        // and delay removing the file until we are sure no other errors have
+	// been encountered. This will be ok until we solidify the C code.
+	// TODO: if multiple baselines, we have to check for all of them, not only the top-baseline
+        if ( overwrite_file && BaselineFileExist( path_compose( basedir, basename ), 1) )
+            delete_file(path_compose( basedir, basename + zip_ext ));
+        if ( !BaselineFileExist(path_compose( basedir, basename ), 1) )
+        {
+            if(WriteSystemBaselineFile(basedir, basename) == False)
+            {
+                //ECR 6242 - next line is commented, because OAE crashes
+                //editor_send_msg("ngoae", "EditorQuit", -1); // ECR 6130
+		        return 0; // no message here, this is done in WriteSystemBaselineFile
+            }
+ 
+           // Check if version control should be started.
+           // TODO: since the baseline is created in oae, here needs to be some additional hacking done,
+           // maybe a callback?
+
+            if( use_version_control )
+              // Begin add ECR 5268 
+              {
+                 ShowVersionControlDialog(basedir, basename + zip_ext);
+              }
+              // End add ECR 5268
+            
+            //ECR 6242 - next line is commented, because OAE crashes
+            //editor_send_msg("ngoae", "EditorQuit", -1); // ECR 6130
+            return 1;
+        }
+ 
+	print_error("Baseline not created.  \"" + path_compose( basedir, basename ) + "\" already exist.");
+	return 0;
+    }
+ 
+    if( basedir == "" )
+	print_error("Baseline not created.  Missing directory.");
+    else    
+	print_error("Baseline not created.  Missing filename.");
+ 
+    return 0;
+}
+
+int
+HandleSaveDirectory(string basedir, ui_owner owner, string checkbox)
+{
+    int create_dir = ui_choice_value(to_ui_prop(owner, checkbox));
+    boolean dir_exist = file_exists(basedir);
+
+    if( dir_exist )
+	return 1;
+ 
+    if ( create_dir )
+    {
+	if( mkdir(basedir) == -1 )
+	{
+	    // Could not create directory
+	    print_error("Baseline not created.  Could not create " + basedir);
+	    return 0;
+	}
+	return 1;
+    }
+ 
+    print_error("Baseline not created.  \"" +  basedir + "\" does not exist.");
+    return 0;
+}
+
+
+int RestoreSystemBaselineFuncIsInitialized = 0;
+
+void
+RestoreSystemBaselineFunc(ui_event_tp event, ui_prop theprop, int id, string v)
+{
+    if(RestoreSystemBaselineFuncIsInitialized == 1) {
+//	// If the "baseline_path" toolinfo variable is set then
+//	// we'll use that as a default.
+	// set the intial baseline directory
+	SetBaselineDir( "RestoreSystemBaseline", "basename" );
+	// We going to assume the user is going to restore the baseline
+	// to the project directory.
+	// set the intial baseline name
+        SetBaselineFiles( "RestoreSystemBaseline", "system_name" );
+    }
+    else
+	++ RestoreSystemBaselineFuncIsInitialized;
+}
+
+   
+int
+RestoreSystemBaseline_cb(ui_event_tp event, ui_prop theprop, int id, string v)
+{
+    ui_owner uiOwner = to_ui_owner(theprop);
+    string basename = ui_text_value(to_ui_prop( uiOwner, "basename" ));
+    string basedir = ui_text_value(to_ui_prop( uiOwner, "basedir" ));
+
+	if(basename == NULL || basename == "") 
+    {
+        print_error("System not restored.  Invalid filename.");
+        return -1;
+    } 
+    if(basedir == NULL || basedir == "") 
+    {
+        print_error("System not restored.  Invalid directory.");
+        return -1;
+    } 
+
+	// ECR7232
+	return HandleRestoreSystemBaseline( basedir+DirSeparator(), basename );
+}
+
+
+int
+HandleRestoreSystemBaseline(string restore_to_dir, string restore_basename)
+{
+    int overwrite_checkbox_val = ui_choice_value( to_ui_prop( "RestoreSystemBaseline", "overwrite_existing_system" ));
+    boolean overwrite_existing_system = to_boolean(overwrite_checkbox_val);
+    boolean restore_file_exist;
+
+    // Check to see if the directory we're going to restore it to exist
+    if( !file_exists(restore_to_dir) )
+    {
+	print_error("System not restored.  Directory \"" + restore_to_dir + "\" does not exist.");
+	return 0;
+    }
+
+    string system_name = ui_text_value(
+        to_ui_prop( "RestoreSystemBaseline", "system_name" ));
+    if( system_name == NULL || system_name == "") {
+        print_error("System not restored.  You must enter a system name.");
+        return -1;
+    }
+
+ 	// Check to see if that system exist or not
+    // ECR 6130 begin
+    // restore_file_exist = BaselineFileExist(restore_to_dir + "\\" + system_name, 0);
+    restore_file_exist = BaselineFileExist(restore_to_dir + DirSeparator() + system_name, 0);
+    // ECR 6130 end
+
+// ECR 7289 begin
+    if (restore_file_exist)
+    {
+        if (editor_confirm(
+               "The system " + restore_to_dir + system_name + " already exists.\nDo you want to overwrite it?",
+               "Overwrite existing system", "Cancel restoring") == False)
+            return -1;
+    }
+// ECR 7289 end
+
+    // If the user selected to over write the file then
+    // we need to delete the old system if it exist
+    if( overwrite_existing_system && restore_file_exist )
+    {
+        if(sys_destroy(restore_to_dir, system_name, True))
+        {
+            // ECR 6130 begin
+            // print_error("Unable to destroy " + restore_to_dir + "\\" + system_name);
+            print_error("Unable to destroy " + restore_to_dir + DirSeparator() + system_name);
+            // ECR 6130 end
+            return -1;
+        }
+        // Since it was destroy it no longer exist
+        restore_file_exist = False;
+    }
+
+    if( !restore_file_exist ) 
+    {
+        // Restore the system
+        sys_load_system_baseline(restore_to_dir,
+                                    restore_basename,
+                                    overwrite_existing_system,
+                                    system_name);
+        return 0;
+    }
+    else 
+    {
+        if (system_name == NULL)
+        {
+            print_error("System not restored.  \"" + 
+                    // ECR 6130 begin
+                    // restore_to_dir + "\\" + basename + "\" already exist.");	
+                    restore_to_dir + DirSeparator() + basename + "\" already exist.");	
+                    // ECR 6130 end
+        }
+        else 
+        {
+            print_error("System not restored.  \"" + 
+                    // ECR 6130 begin
+                    // restore_to_dir + "\\" + system_name + "\" already exist.");	
+                    restore_to_dir + DirSeparator() + system_name + "\" already exist.");	
+                    // ECR 6130 end
+        }
+        return 0;
+    }
+}
+
+
+//////////////////////////// Version Control  //////////////////////////////
+string
+WhichPropSheet()
+{
+    // Figure out which property sheet to use
+    string propsheet = "VccCommandProp";
+
+    string cm_system = toolinfo_variable("vcc_cmds");
+
+    if (cm_system != NULL) {
+	if ( string_find(cm_system, 0, "continuus") < 
+	     string_length(cm_system) )
+	    propsheet = "VccCommandPropContinuus";
+    }
+
+    return propsheet;
+}
+
+void
+StartVersionControlSA()
+{
+    string propsheet = WhichPropSheet();
+
+    int new_window = 0;
+    if ( to_ui_prop( propsheet, "vcc_filename" ) == NULL )
+      new_window = 1;
+
+    ui_prop_sheet_pop_up( propsheet );
+    if ( new_window )
+	SetBaselineDir( propsheet, "vcc_fileloc" );
+}
+
+
+void
+ShowVersionControlDialog(string basedir, string basename)
+{
+    string propsheet = WhichPropSheet();
+
+    ui_prop_sheet_pop_up( propsheet );
+
+    ui_prop myProp = to_ui_prop( propsheet, "vcc_filename" );
+    ui_text_set_value( myProp, basename);
+
+    myProp = to_ui_prop( propsheet, "vcc_fileloc" );
+    ui_text_set_value( myProp, basedir);
+}
+
+
+string
+GetVccRev()
+{
+    string propsheet = WhichPropSheet();
+
+    // ClearCase & RCS
+    if (propsheet == "VccCommandProp") {
+        int vcc_rev_option = 
+         ui_choice_value ( to_ui_prop( propsheet, "vcc_rev_option" ));
+        string vcc_rev = 
+         ui_text_value ( to_ui_prop( propsheet, "vcc_rev" ));
+
+        if( !vcc_rev_option || vcc_rev == "" )
+            return "";
+	return " -r " + vcc_rev + " ";
+    }
+
+    // Continuus
+    else {
+	int vcc_ver_option = 
+         ui_choice_value ( to_ui_prop( propsheet, "vcc_ver_option" ));
+        string vcc_version = 
+         ui_text_value ( to_ui_prop( propsheet, "vcc_version" ));
+
+        if ( !vcc_ver_option || vcc_version == "" )
+            return "";
+	return " -r " + vcc_version + " ";
+    }
+}
+
+
+string
+GetVccComment()
+{
+    string propsheet = WhichPropSheet();
+
+    int vcc_com_option = ui_choice_value (
+            to_ui_prop( propsheet, "vcc_com_option" ));
+    string vcc_comment = ui_text_value (
+            to_ui_prop( propsheet, "vcc_comment" ));
+
+    if( !vcc_com_option || vcc_comment == "" )
+        return "";
+    return " -c \\\"" + vcc_comment + "\\\" ";
+}
+
+// Enumeration type for version control options
+enum VC_Command { Create, Get_Read_Only, Get_Version_and_Lock, Unlock, 
+                  Check_In, History, Delete, List };
+
+// Return correct VC_Command for the given propsheet
+VC_Command
+GetVC_Command(string propsheet)
+{
+    int choice_val = ui_choice_value ( to_ui_prop( propsheet, "vcc_command" ));
+    if (propsheet == "VccCommandPropContinuus") {
+        if (choice_val == 0) return Create;
+        if (choice_val == 1) return Get_Version_and_Lock;
+        if (choice_val == 2) return Check_In;
+        if (choice_val == 3) return History;
+        if (choice_val == 4) return Delete;
+        if (choice_val == 5) return List; 
+    }
+    else 
+        return to_enum(choice_val, "VC_Command");
+}
+
+//TODO: indent this routine properly
+int
+VersionControl_cb(ui_event_tp event, ui_prop theprop, int id, string v)
+{
+    string propsheet = WhichPropSheet();
+
+    string vcc_filename = ui_text_value (
+            to_ui_prop( propsheet, "vcc_filename" ));
+    string vcc_fileloc = ui_text_value (
+            to_ui_prop( propsheet, "vcc_fileloc" ));
+    string vcc_file_path = path_compose( vcc_fileloc, vcc_filename );
+
+    string filename_cmd = " -p " + vcc_filename;
+    string filepath_cmd = " -p " + path_compose( vcc_fileloc, vcc_filename );
+    string vcc_comment = GetVccComment();
+    string vcc_rev = GetVccRev();
+   
+    string vcc_projectname;
+    string vcc_projectver;
+    if (propsheet == "VccCommandPropContinuus") {
+	vcc_projectname = " -j " + 
+	 ui_text_value ( to_ui_prop(propsheet, "vcc_projname") );
+	vcc_projectver = " -k " + 
+	 ui_text_value ( to_ui_prop(propsheet, "vcc_projver") );
+    }
+
+    // ok...now run the right command
+
+    // Get the enum value for this property sheet
+    VC_Command command = GetVC_Command(propsheet);
+
+    // Create Initial Version
+    if( command == Create ) {
+
+        // Check if the file exist
+    	if ( !file_exists(vcc_file_path) )
+    	{
+	    print_error( "\"" + vcc_file_path + "\" does not exist.");
+	    return 0;
+    	}
+
+ 	// ClearCase & RCS
+	if (propsheet == "VccCommandProp") 
+            RunVersionControl("vcc create" + vcc_comment + filepath_cmd);
+
+	// Continuus
+	else
+            RunVersionControl("vcc create" + vcc_projectname + vcc_projectver 
+             + vcc_comment + filepath_cmd);
+	
+    } 
+
+    // Get Read-Only Version
+    else if( command == Get_Read_Only ) {
+
+        // Check if the directory exist
+        if ( !file_exists(vcc_fileloc) )
+        {
+	    print_error( "\"" + vcc_fileloc + "\" does not exist.");
+	    return 0;
+        }
+
+        RunVersionControl("vcc get" + vcc_rev + filepath_cmd);
+    }
+
+
+    // Get Version and Lock
+    else if( command == Get_Version_and_Lock ) {
+
+        // Check if the directory exist
+    	if ( !file_exists(vcc_fileloc) )
+    	{
+	    print_error( "\"" + vcc_fileloc + "\" does not exist.");
+	    return 0;
+    	}
+
+ 	// ClearCase & RCS
+	if (propsheet == "VccCommandProp") 
+            RunVersionControl("vcc edit" + vcc_rev + filepath_cmd);
+
+	// Continuus
+	else
+            RunVersionControl("vcc edit" + vcc_projectname + vcc_projectver
+             + vcc_rev + filepath_cmd);
+    }
+
+    // Unlock File
+    else if( command == Unlock ) {
+        RunVersionControl("vcc unedit" + filename_cmd);
+    }
+
+    // Check In New Version
+    else if( command == Check_In ) {
+
+        // Check if the file exist
+    	if ( !file_exists(vcc_file_path) )
+    	{
+	    print_error( "\"" + vcc_file_path + "\" does not exist.");
+	    return 0;
+    	}
+    
+ 	// ClearCase & RCS
+	if (propsheet == "VccCommandProp") 
+            RunVersionControl("vcc delta" + vcc_comment + filepath_cmd);
+
+	// Continuus
+	else 
+            RunVersionControl("vcc delta" + vcc_projectname + vcc_projectver
+             + vcc_comment + filepath_cmd);
+    }
+
+    // Show Change History
+    else if( command == History ) {
+
+	// ClearCase & RCS
+	if (propsheet == "VccCommandProp")
+            RunVersionControl("vcc history" + filename_cmd);
+
+	// Continuus
+	else 
+	    RunVersionControl("vcc history" + vcc_projectname + vcc_projectver
+             + filepath_cmd);
+    }
+
+    // Delete File From Version Control
+    else if( command == Delete ) {
+
+	// ClearCase & RCS
+	if (propsheet == "VccCommandProp")
+            RunVersionControl("vcc delete" + filename_cmd);
+
+	// Continuus
+	else 
+            RunVersionControl("vcc delete" + vcc_projectname + vcc_projectver
+             + filename_cmd);
+    }
+
+    // List Files Under Version Control
+    else if( command == List ) {
+	// ClearCase & RCS
+	if (propsheet == "VccCommandProp")
+            RunVersionControl("vcc list");
+
+	// Continuus
+	else 
+	    RunVersionControl("vcc list" + vcc_projectname + vcc_projectver);
+    }
+
+    return 0;
+}
+
+void
+RunVersionControl(string vcc_command)
+{
+    string stputil_cmd = "stputil -Quiet -forward_messages " + 
+              editor_get_msgd_handle() + 
+              " -C \"" +
+              vcc_command +
+              "\"";
+    // Execute version control 
+    system( stputil_cmd );
+}
+
+void
+WriteLockInfo(string lock_list)
+{
+    string baseline_lock_path = path_compose( current_projdir(),
+               current_system(),
+               "baseline_lock.log" );
+    write_file(baseline_lock_path, lock_list);
+}
+
+string
+SystemLockFile(string delim1, string delim2, string delim3)
+{
+    file_lock lck;
+    file lck_file;
+    string revision;
+    string msg = "";
+
+    // Check for lock files
+    for_each_in_select("file_lock[type != Permanent | user != 'stp@aonix']", lck)
+    {
+        lck_file = find_by_query("file[${lck.file_id}]");
+        if(lck_file != NULL)
+        {
+            if(lck_file.rev == "")
+                revision = "(current revision)";
+            else
+                revision = lck_file.rev;
+
+            msg += lck.type + ":" + delim1 + lck_file.type 
+                      + "  :  " + lck_file.name + delim2 + " " + revision + delim1 + delim2 + "Locked by: " 
+                      + lck.user + delim2 + " at " + lck.time + delim3;
+        }
+    }
+    return msg;
+}
+
+// ECR 3651
+int select_baseline_basedir_callback(ui_event_tp event, ui_prop theprop, int id, string value)
+{
+    string str;
+    ui_owner uiOwner;
+
+    uiOwner = to_ui_owner(theprop);
+    str = ui_get_value(to_ui_prop(uiOwner, "basedir"));
+    
+    str = editor_show_dirchooser("Select Baseline Directory", str);
+
+    if (str != NULL && string_length(str) != 0)
+    {
+        str = path_normalize(str);
+        ui_set_value(to_ui_prop(uiOwner, "basedir"), str);
+    }
+
+    return 0;
+}
+
+int select_baseline_file_callback(ui_event_tp event, ui_prop theprop, int id, string value)
+{
+    string str;
+    ui_owner uiOwner;
+
+    uiOwner = to_ui_owner(theprop);
+    str = ui_get_value(to_ui_prop(uiOwner, "basename"));
+    
+    str = editor_show_filechooser("Open Baseline File", str,
+                                  "ZIP Files (*.zip)|*.ZIP|All Files (*.*)|*");
+
+    if (str != NULL && string_length(str) != 0)
+    {
+        str = path_normalize(str);
+        ui_set_value(to_ui_prop(uiOwner, "basename"), str);
+        SetRestoreToSystemName( str );
+    }
+
+    return 0;
+}
+// ECR 3651
+
+// ECR 3651a begin
+int select_vcc_location_callback(ui_event_tp event, ui_prop theprop, int id, string value)
+{
+    string str;
+    ui_owner uiOwner;
+
+    uiOwner = to_ui_owner(theprop);
+    str = ui_get_value(to_ui_prop(uiOwner, "vcc_fileloc"));
+    
+    str = editor_show_dirchooser("Select Directory", str);
+
+    if (str != NULL && string_length(str) != 0)
+    {
+        str = path_normalize(str);
+        ui_set_value(to_ui_prop(uiOwner, "vcc_fileloc"), str);
+    }
+
+    return 0;
+}
+
+int select_vcc_filename_callback(ui_event_tp event, ui_prop theprop, int id, string value)
+{
+    string str;
+    ui_owner uiOwner;
+
+    uiOwner = to_ui_owner(theprop);
+    str = ui_get_value(to_ui_prop(uiOwner, "vcc_filename"));
+    
+    str = editor_show_filechooser("Open File", str, "All Files (*.*)|*");
+
+    if (str != NULL && string_length(str) != 0)
+    {
+        str = path_normalize(str);
+        ui_set_value(to_ui_prop(uiOwner, "vcc_filename"), str);
+    }
+
+    return 0;
+}
+// ECR 3651a end
+

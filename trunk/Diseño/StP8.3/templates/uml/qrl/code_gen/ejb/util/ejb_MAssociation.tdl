@@ -1,0 +1,23 @@
+/*********************************************
+ *
+ * Utility functions for associtions
+ *
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    12/04/2000
+ ********************************************/
+ 
+ 
+proc checkNavigability(MAssociationEnd AS FromRole, MAssociationEnd AS ToRole)
+	// if both "True" or both "False" generate it!
+	if ([FromRole.isNavigable] == [ToRole.isNavigable])
+		return "True";
+	end if
+	// now only the opposite end is of interest
+	// if it's true, it's an unidirectional association
+	// generate it!
+	if ([ToRole.isNavigable] == "TRUE")
+		return "True";
+	end if
+	return "False";
+end proc

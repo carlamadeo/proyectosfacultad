@@ -1,0 +1,42 @@
+FileObject 1
+{
+    { Name "a71" }
+    { Type ObjectAnnotation }
+    { GUID "UID_BAF7803F-0408-4db1-885F-27EBF51E15C1" }
+}
+
+NodeObject 99999
+{
+    { Name "Account,Transaction" }
+    { Type UmlAssociation }
+    { ObjectId 526 }
+    { AnnotFileId 1 }
+    { Sig ":" }
+    { ScopeNodeId 0 }
+    { GUID "UID_DBA191A3-0FDB-11d5-8C6E-000000000000" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 528 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 530 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Account,Transaction" }
+    { NoteId 3 }
+    { ObjectId 531 }
+}
+

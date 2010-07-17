@@ -1,0 +1,276 @@
+Diagram SteDiagram
+{
+    { Name "BARRERA" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -343 }
+    { PanY -198 }
+    { Alignment 32 }
+    { GUID "UID_4DD13FCC-2425-42ab-92F3-28FD6E9E44C7" }
+    { Summary
+        { Nodes 9 }
+        { Arcs 7 }
+    }
+}
+
+Node 1
+{
+    { Type State }
+    { Loc -21 -84 }
+    { Scale 409.60 102.40 }
+    { Label
+        { Text "barrera alta" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 102 }
+        { GUID "UID_5D5B6B35-5D24-43b2-89A2-4C62231838B6" }
+    }
+}
+
+Node 2
+{
+    { Type State }
+    { Loc -14 84 }
+    { Scale 409.60 102.40 }
+    { Label
+        { Text "barrera baja" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 103 }
+        { GUID "UID_F1AE1B8B-EED9-4223-B860-99DEB202FEFB" }
+    }
+}
+
+Node 27
+{
+    { Type Vertex }
+    { Loc 127 -76 }
+    { Scale 128.00 128.00 }
+}
+
+Node 29
+{
+    { Type Vertex }
+    { Loc 128 79 }
+    { Scale 128.00 128.00 }
+}
+
+Node 32
+{
+    { Type Vertex }
+    { Loc -146 -84 }
+    { Scale 128.00 128.00 }
+}
+
+Node 34
+{
+    { Type Vertex }
+    { Loc -146 73 }
+    { Scale 128.00 128.00 }
+}
+
+Node 39
+{
+    { Type Vertex }
+    { Loc 126 81 }
+    { Scale 128.00 128.00 }
+}
+
+Arc 23
+{
+    { Type Transition }
+    { From
+        { ID 1 }
+        { Loc 404 101 }
+        { Offset 75 8 }
+    }
+    { To
+        { ID 27 }
+        { Loc 470 101 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 25
+{
+    { Type Transition }
+    { From
+        { ID 2 }
+        { Loc 247 249 }
+        { Offset -67 -12 }
+    }
+    { To
+        { ID 34 }
+        { Loc 197 250 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 28
+{
+    { Type Transition }
+    { From
+        { ID 27 }
+        { Loc 470 101 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 39 }
+        { Loc 469 258 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 30
+{
+    { Type Transition }
+    { From
+        { ID 29 }
+        { Loc 471 256 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 2 }
+        { Loc 411 256 }
+        { Offset 70 -5 }
+    }
+}
+
+Arc 33
+{
+    { Type Transition }
+    { From
+        { ID 32 }
+        { Loc 197 93 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 1 }
+        { Loc 240 93 }
+        { Offset -60 0 }
+    }
+}
+
+Arc 38
+{
+    { Type Transition }
+    { From
+        { ID 34 }
+        { Loc 197 250 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 32 }
+        { Loc 197 93 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 40
+{
+    { Type Transition }
+    { From
+        { ID 39 }
+        { Loc 469 258 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 29 }
+        { Loc 471 256 }
+        { Offset 0 0 }
+    }
+}
+
+Cntx 31
+{
+    { Type EventAction }
+    { Loc 178 13 }
+    { Scale 256.00 128.00 }
+    { Label
+        { Text "CCBB" }
+    }
+    { Label
+        { Type Auxiliary }
+        { Text "Velocidad alta" }
+    }
+    { Parent 28 }
+    { Object
+        { PDMType Node }
+        { MappingName EventMap }
+        { ID 108 }
+        { GUID "UID_69866F4D-1A4D-4ca9-98E3-39627CD00261" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ActionMap }
+        { ID 116 }
+        { GUID "UID_60D16038-6B9A-4436-944E-D83E9A842CA1" }
+    }
+    { Object
+        { PDMType Cntx }
+        { MappingName ActionInstanceMap }
+        { ID 135 }
+        { GUID "UID_CC0D25DD-BDC3-47a1-9BBA-B26ED6B094E8" }
+    }
+}
+
+Cntx 36
+{
+    { Type EventAction }
+    { Loc -178 8 }
+    { Scale 256.00 128.00 }
+    { Label
+        { Text "CCBA" }
+    }
+    { Label
+        { Type Auxiliary }
+        { Text "Multa" }
+    }
+    { Parent 38 }
+    { Object
+        { PDMType Node }
+        { MappingName EventMap }
+        { ID 111 }
+        { GUID "UID_1839FAEF-9AF8-4d66-9C50-F3706A1BEA35" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ActionMap }
+        { ID 119 }
+        { GUID "UID_8AA732CB-A41D-4a1a-ADCF-62D86C23DB74" }
+    }
+    { Object
+        { PDMType Cntx }
+        { MappingName ActionInstanceMap }
+        { ID 133 }
+        { GUID "UID_81A18069-A345-4ff8-8864-4C28AC8A39D3" }
+    }
+}
+
+Link 24
+{
+    { FirstArc 23 }
+    { LastArc 30 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 134 }
+        { GUID "UID_FB435C30-4D22-413a-A84C-EB27BB9D042A" }
+    }
+}
+
+Link 26
+{
+    { FirstArc 25 }
+    { LastArc 33 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 132 }
+        { GUID "UID_4E2AC92F-28BF-4c0d-A017-CB6937B186B7" }
+    }
+}

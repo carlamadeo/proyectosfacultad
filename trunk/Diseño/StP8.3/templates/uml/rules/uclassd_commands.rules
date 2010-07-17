@@ -1,0 +1,501 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+//
+
+
+// This file defines the commands and methods of symbols used in
+// uclassd.
+
+NodeSymbol ParameterizedClass
+{
+    { Methods
+	 { Method
+             // { UseMappings ( ObjectMapping ) }
+	     { Name DoubleClick }
+	     { MethodFunc UmlParamClass_ps_double_click }
+         }
+    }
+}
+
+NodeSymbol InstantiatedClass
+{
+    { Methods
+	 { Method
+             // { UseMappings ( ClassMapping ) }
+	     { Name DoubleClick }
+	     { MethodFunc UmlClass_ps_double_click }
+         }
+    }
+}
+
+NodeSymbol Interface
+{
+    { Methods
+	 { Method
+             // { UseMappings ( ObjectMapping ) }
+	     { Name DoubleClick }
+	     { MethodFunc UmlClass_ps_double_click }
+         }
+    }
+}
+
+NodeSymbol Class
+{
+    { Methods
+	 { Method
+             // { UseMappings ( ObjectMapping ) }
+	     { Name DoubleClick }
+	     { MethodFunc UmlClass_ps_double_click }
+         }
+    }
+}
+
+NodeSymbol Package
+{
+    { Methods
+	 { Method
+             // { UseMappings ( ObjectMapping ) }
+	     { Name DoubleClick }
+	     { MethodFunc UmlPackage_ps_double_click }
+         }
+    }
+}
+
+LinkSymbol Dependency
+{
+    { Methods
+	 { Method
+	     { Name DoubleClick }
+	     { MethodFunc UmlClassLinkDependency_ps_double_click }
+         }
+    }
+}
+
+
+LinkSymbol Association
+{
+    { Methods
+	 { Method
+	     { Name DoubleClick }
+	     { MethodFunc UmlClassLinkAssociation_ps_double_click }
+         }
+    }
+}
+
+// ECR 3856 - begin
+LinkSymbol Aggregation
+{
+    { Methods
+	 { Method
+	     { Name DoubleClick }
+	     { MethodFunc UmlClassLinkAssociation_ps_double_click }
+         }
+    }
+}
+// ECR 3856 - end
+
+// ECR 7480 start
+LinkSymbol NavigableAssociation
+{
+    { Methods
+	 { Method
+	     { Name DoubleClick }
+	     { MethodFunc UmlClassLinkAssociation_ps_double_click }
+         }
+    }
+}
+// ECR 7480 end
+
+LinkSymbol Refines
+{
+    { Methods
+	 { Method
+	     { Name DoubleClick }
+	     { MethodFunc UmlClassLinkRefines_ps_double_click }
+         }
+    }
+}
+
+TypeSet GenImplTypeSet
+{
+        Generalization
+        Implements
+}
+
+LinkSymbol GenImplTypeSet
+{
+    { Methods
+	 { Method
+	     { Name DoubleClick }
+	     { MethodFunc UmlClassLinkGenImpl_ps_double_click }
+         }
+    }
+}
+
+// Menu Navigation
+// {
+//     { InMenuBar True }
+//     { Label "&Navigation" }
+//     { Pin True }
+//     { GenerationFunc idehook_navigation_menu_gen_func }
+// }
+
+
+
+Menu ProductMenu//UML
+{
+    { InMenuBar True }
+    { Label "&UML" }
+    { Pin True }
+    { MenuEntry
+	{ Name CreateAssocRoles }
+	{ Label "Create Ass&ociation Roles" }
+	{ Builtin "SymbolBachLabels" }
+	{ ActiveFunc idehook_bach_labels_active_func }
+		{ Accelerator
+			 { Label "Alt+Ctrl+L" }
+			 { Value "Alt Ctrl<Key>L" }
+		}
+    }
+
+    { MenuEntry
+	{ Name CreateAssociationClass }
+	{ Label "Create A&ssociation Class" } 
+	{ Builtin "EditorQrlEval CreateAttributedAssociation();" }
+	{ ActiveFunc idehook_attributed_association_active_func }
+    }
+    { MenuEntry
+	{ Name CreateNaryAssociation }
+	{ Label "Create &N-ary Association" } 
+	{ Builtin "EditorQrlEval uml_create_nary_association();" }
+	{ ActiveFunc idehook_multiple_class_selected_active_func }
+    }
+    { MenuEntry
+	{ Name CreateOrAssociation }
+	{ Label "Create Or Association" }
+	{ Builtin "EditorQrlEval CreateOrAssociation();" }
+	{ ActiveFunc idehook_or_association_active_func }
+    }
+
+// Begin ECR947, ECR 4494
+    { MenuEntry
+	{ Name ConnectNoteToLink }
+	{ Label "Connect Note To Link" }
+	{ Builtin "EditorQrlEval ConnectNoteToLink();" }
+//    	{ Accelerator
+//             { Value "Ctrl<Key>n" }
+//	}
+	{ ActiveFunc idehook_note_link_active_func }
+    }
+// End ECR947, ECR 4494
+
+    { Spacer }
+
+    { SubMenu
+        // 12746 fix.
+	//{ ParseCondition "is_smdb_available();" } 
+	{ Name GeneralizationMenu }
+	{ Label "General&ization Hierarchy" }
+	{ ActiveFunc idehook_single_class_selected_active_func }
+    }
+
+    { SubMenu
+	{ Name AttrsAndOpsMenu }
+	{ Label "Attributes and &Operations" }
+	{ ActiveFunc idehook_class_selected_active_func }
+    }
+    { SubMenu
+	{ Name PackageMenu }
+	{ Label "Packages and &Classes" }
+	{ ActiveFunc idehook_cat_selected_active_func }
+    }
+    { MenuEntry
+	{ Name CreateAttribute }
+	{ Label "Create Attribute " }
+	{ Builtin "EditorQrlEval create_new_attribute();" }
+	{ ActiveFunc idehook_class_selected_active_func }
+	{ Show False }
+	{ Accelerator
+		{ Label "Alt+Ctrl+A" }
+		{ Value "Alt Ctrl<Key>a" }
+	}
+    }
+    { MenuEntry
+	{ Name CreateOperaton }
+	{ Label "Create Operaton " }
+	{ Builtin "EditorQrlEval create_new_operation();" }
+	{ ActiveFunc idehook_class_selected_active_func }
+	{ Show False }
+	{ Accelerator
+		{ Label "Alt+Ctrl+O" }
+		{ Value "Alt Ctrl<Key>o" }
+	}
+    }
+}
+
+Menu ProductMenu//UML
+{
+    { ParseCondition "getPE() == \"ObjectAda\";" }
+    { Spacer }
+    { MenuEntry
+        { Name ShowPEDialog }
+        { Label "Set ObjectAda Options" }
+        { Builtin "EditorQrlEvalNoSave ObjectAdaDialogue();" }
+    }
+}
+
+Menu GeneralizationMenu
+{
+    { Label "Generalization Hierarchy" }
+    { Pin True }
+
+    // ECR 4703 - begin
+    { MenuEntry  
+        { Name DrawGeneralizationMenu }
+        { Label "Draw Generalization Hierarchy" }
+        { Builtin "EditorQrlEval DrawGeneralization();" }
+    	{ Accelerator
+             { Value "Ctrl<Key>g" }
+    	}
+	    { ActiveFunc class_or_ellipsis_selected_active_func }
+    }
+    // ECR 4703 - end
+    { MenuEntry
+	{ Name CreateHierarchyFromPE }
+	{ Label "Create Subclass Hierarchy from Reverse Engineering" } 
+	{ Builtin "EditorQrlEval CC_query_class_subclasses();" }
+        // 12746 fix.
+	//{ ActiveFunc idehook_single_class_selected_active_func }
+	{ ActiveFunc UmlGeneralizationActive }
+    }
+    { MenuEntry
+	{ Name CreateSuperHierarchyFromPE }
+	{ Label "Create Superclass Hierarchy from Reverse Engineering" } 
+	{ Builtin "EditorQrlEval CC_query_class_superclasses();" }
+        // 12746 fix.
+	//{ ActiveFunc idehook_single_class_selected_active_func }
+	{ ActiveFunc UmlGeneralizationActive }
+    }
+    { MenuEntry
+	{ Name CreateWholeHierarchyFromPE }
+	{ Label "Create Whole Hierarchy from Reverse Engineering" } 
+	{ Builtin "EditorQrlEval CC_query_class_allclasses();" }
+        // 12746 fix.
+	//{ ActiveFunc idehook_single_class_selected_active_func }
+	{ ActiveFunc UmlGeneralizationActive }
+    }
+}
+
+Menu AttrsAndOpsMenu
+{
+    { Label "Attributes and Operations" }
+    { Pin True }
+    { MenuEntry  
+	{ Name AddSelectively }
+      	{ Label "Construct Class by &Adding Selectively..." } 
+	{ Builtin "EditorQrlEval DecorateSelectedBoochClassSymbolsFromSelectedAll();" }
+	{ ActiveFunc idehook_single_class_selected_active_func }
+    }
+    { MenuEntry  
+	{ Name RebuildFromTable }
+      	{ Label "&Construct Class from Class Table Definitions" } 
+      	{ Builtin "EditorQrlEval DecorateSelectedBoochClassSymbolsFromTable();" }
+	{ ActiveFunc idehook_class_selected_active_func }
+	{ Accelerator
+       	     { Label "Alt+Ctrl+C" }
+             { Value "Alt Ctrl<Key>c" }
+	}
+    }
+    { MenuEntry  
+	{ Name RebuildFromModel }
+      	{ Label "C&onstruct Class from All Definitions" } 
+      	{ Builtin "EditorQrlEval DecorateSelectedBoochClassSymbolsFromAll();" }
+	{ ActiveFunc idehook_class_selected_active_func }
+	{ Accelerator
+       	     { Label "Ctrl+Shift+A" }
+             { Value "Ctrl Shift<Key>a" }
+	}
+    }
+    { Spacer { Name Spacer1 } }
+    { MenuEntry
+        // 12746 fix. idehook_uml.. checks for smdb anyway.
+	//{ ParseCondition "is_smdb_available();" }
+	{ Name RebuildFromPE }
+	{ Label "Construct from Reverse Engineering" } 
+	{ Builtin "EditorQrlEval CC_query_class_members();" }
+	{ ActiveFunc idehook_uml_reverse_engineering_active_func }
+    }
+}
+
+Menu PackageMenu
+{
+    { Label "Packages" }
+    { Pin True }
+    { MenuEntry  
+	{ Name AddLSelectively }
+      	{ Label "Construct Package by &Adding Selectively..." } 
+	{ Builtin "EditorQrlEval DecorateSelectedBoochCatSymbolsFromSelectedAll();" }
+	{ ActiveFunc idehook_single_cat_selected_active_func }
+    }
+    { MenuEntry  
+	{ Name AddGSelectively }
+      	{ Label "&Construct Package by Adding Selectively (Global)..." } 
+	{ Builtin "EditorQrlEval DecorateSelectedBoochCatSymbolsFromSelectedGlobal();" }
+	{ ActiveFunc idehook_single_cat_selected_active_func }
+    }
+    { MenuEntry  
+	{ Name RebuildFromModel }
+      	{ Label "C&onstruct Package from All Components" } 
+      	{ Builtin "EditorQrlEval DecorateSelectedBoochCatSymbolsFromAll();" }
+	{ ActiveFunc idehook_cat_selected_active_func }
+    }
+}
+
+// Removed for ECR3609
+// Menu AutoDrawing
+// {
+//     { Label "Auto Drawing" }
+// 	   { Pin True }
+//     { MenuEntry  
+//         { Name BuildInheritanceHierarchy }
+//         { Label "Build &Inheritance Hierarchy from Repository" } 
+//         { Builtin "EditorQrlEval BuildInheritanceHierarchy();" }
+//         { ActiveFunc idehook_single_class_selected_active_func }
+//     }
+//     { MenuEntry  
+//         { Name BuildAggregationHierarchy }
+//         { Label "Build &Aggregation Hierarchy from Repository" } 
+//         { Builtin "EditorQrlEval BuildAggregationHierarchy();" }
+//         { ActiveFunc idehook_single_class_selected_active_func }
+//     }
+// }
+// End Remove for ECR3609
+
+// Begin Add ECR3609
+Menu ProductMenu//UML
+{
+    { SubMenu
+      { Name AutoDrawMenu }
+      { Label "Auto Draw" }
+      { PlaceBefore GeneralizationMenu }
+      { ActiveFunc one_class_selected_active_func }
+    }
+}
+
+Menu AutoDrawMenu
+{
+    { Label "Auto Draw" }
+    { Pin True }
+    { MenuEntry
+		{ Name CreateGeneralizationParentView }
+		{ Label "Draw Superclass(es)" }
+		{ Builtin "EditorQrlEval CreateHierarchyView(\"superclasses\");" }
+		{ ActiveFunc one_class_selected_active_func }
+    }
+    { MenuEntry
+		{ Name CreateGeneralizationView }
+		{ Label "Draw Subclass(es)" }
+		{ Builtin "EditorQrlEval CreateHierarchyView(\"subclasses\");" }
+		{ ActiveFunc one_class_selected_active_func }
+    }
+    { Spacer { Name Spacer100 } }
+    { MenuEntry
+		{ Name DrawDependenceOut }
+		{ Label "Draw Dependent Class(es)" }
+		{ Builtin "EditorQrlEval CreateHierarchyView(\"dependentclasses\");" }
+		{ ActiveFunc one_class_selected_active_func }
+    }
+    { MenuEntry
+		{ Name DrawDependenceIn }
+		{ Label "Draw Dependencies" }
+		{ Builtin "EditorQrlEval CreateHierarchyView(\"classdependencies\");" }
+		{ ActiveFunc one_class_selected_active_func }
+    }
+    { Spacer { Name Spacer101 } }
+    { MenuEntry
+		{ Name DrawAssociationView1 }
+		{ Label "Draw Associations/Aggregations" }
+		{ Builtin "EditorQrlEval DrawAssociationView();" }
+		{ ActiveFunc two_classes_selected_active_func }
+    }
+	{ SubMenu 
+		{ Name DrawAssociationView2 }
+		{ Label "Draw Associated Class(es)" } // ECR 7293 - removed ellipsis
+		{ ActiveFunc one_class_selected_active_func }
+	}
+}
+
+Menu DrawAssociationView2 
+{
+    { MenuEntry
+		{ Name DrawAssociationView3 }
+		{ Label "into this diagram" }
+		{ ActiveFunc one_class_selected_active_func }
+		{ Builtin "EditorQrlEval UclassdAutoDraw(\"associations\",\"\",0);" }
+    }
+    { MenuEntry
+		{ Name DrawAssociationView4 }
+		{ Label "into new diagram" }
+		{ ActiveFunc one_class_selected_active_func }
+		{ Builtin "EditorQrlEval UclassdAutoDraw(\"associations\",\"\",1);" }
+    }
+}
+
+//Menu ObjectContextMenu//Edit
+//{
+//    { SubMenu
+//		{ Name AutoDrawMenu }
+//		{ PlaceAfter ListLabels }
+//		{ Label "Auto Dra&w ..." }
+//    }
+//}
+// End Add ECR3609
+
+Menu MenuBarEdit
+{
+    { MenuEntry
+        { Name ObjectProperties }
+        { Show True }
+        { Builtin "EditorQrlEvalNoSave UmlPopUpPropSheet(\"uclassd\");" }
+        { ActiveFunc UmlClassObjectPropsActive }
+    }
+}
+
+Menu ObjectContextMenu
+{
+    { MenuEntry
+        { Name ObjectProperties }
+        { Show True }
+        { Builtin "EditorQrlEvalNoSave UmlPopUpPropSheet(\"uclassd\");" }
+        { ActiveFunc UmlClassObjectPropsActive }
+    }
+}
+
+Command CheckSemantics
+{
+  { PrintName "Check Semantics" }
+  { StartMessage "Check Diagram Semantics" }
+  // ECR 7464
+  // { Builtin "EditorQrlEval uml_diag_check_semantics(\"uclassd_check_semantics\");" }
+  { Builtin "EditorQrlEvalNoSave uml_diag_check_semantics(\"uclassd_check_semantics\");" }
+}
+
+// Begin Add ECR4350
+// Draw Generalization in Tree Style
+//
+Menu ObjectContextMenu //Edit
+{
+    { MenuEntry  
+        { Name DrawGeneralizationMenu }
+        { Label "Draw Generalization Hierarchy" }
+        { Builtin "EditorQrlEval DrawGeneralization();" }
+    	{ Accelerator
+             { Value "Ctrl<Key>g" }
+	}
+        { ActiveFunc idehook_class_selected_active_func }
+    }
+}
+// End Add ECR4350

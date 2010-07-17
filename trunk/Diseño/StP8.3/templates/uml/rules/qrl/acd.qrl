@@ -1,0 +1,46 @@
+// ECR 4506 start
+int select_tdl_template_callback(ui_event_tp event, ui_prop theprop, int id, string value)
+{
+    string str;
+    string strPath;
+    ui_owner uiOwner;
+
+    uiOwner = to_ui_owner(theprop);
+    str = ui_get_value(to_ui_prop(uiOwner, "tdl_template"));
+
+    strPath = str;
+    if (path_part(strPath) == NULL || string_length(path_part(strPath)) == 0)
+        strPath = path_compose("${ti.tdl_path}", str);
+
+    str = editor_show_filechooser("Open TDL Template", strPath,
+                                  "TDL Files (*.tdl)|*.tdl|All Files (*.*)|*");
+
+    if (str != NULL && string_length(str) != 0)
+    {
+        str = path_normalize(str);
+        ui_set_value(to_ui_prop(uiOwner, "tdl_template"), str);
+    }
+
+    return 0;
+}
+
+int select_tdl_output_dir_callback(ui_event_tp event, ui_prop theprop, int id, string value)
+{
+    string str;
+    ui_owner uiOwner;
+
+    uiOwner = to_ui_owner(theprop);
+    str = ui_get_value(to_ui_prop(uiOwner, "output_dir"));
+
+    str = editor_show_dirchooser("Select Output Directory", str);
+
+    if (str != NULL && string_length(str) != 0)
+    {
+        str = path_normalize(str);
+        ui_set_value(to_ui_prop(uiOwner, "output_dir"), str);
+    }
+
+    return 0;
+}
+
+// ECR 4506 end

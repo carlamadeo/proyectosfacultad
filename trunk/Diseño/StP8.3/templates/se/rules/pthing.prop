@@ -1,0 +1,63 @@
+
+//
+//      StP/SE
+//      Confidential property of Aonix
+//      Copyright (c) 1999
+//      All rights reserved
+//
+
+// Property sheet to enter a pspec or pdl description
+
+PropertySheet PThing_ps
+{
+    { Name "PThing_ps" }
+    { Label "Description" }
+
+    { Properties
+        //{ Qrl { QrlFile "rules/qrl/ustereotyped.ps.qrl" } }
+
+        { Text
+            { Name "Desc" }
+            { Label "Description:" }
+            { LabelAbove True }
+            { DispRows 12 }
+            { MinLength 0 }
+            { DispLength 80 }
+            { HorzScrollbar True }
+            { VertScrollbar True }
+            //{ Resizable ResizeAny }
+            { MaxLength 32000 }
+        }
+
+        { Button
+            { Name "OK" }
+            { Event
+                { Type Select }
+                { Callback "PThing_ps_cb" }
+            }
+        }
+
+        { Button
+            { Name "Apply" }
+            { Event
+                { Type Select }
+                { Callback "PThing_ps_cb" }
+            }
+        }
+
+        { Button
+            { Name "Cancel" }
+            { Event
+                { Type Select }
+                { Callback "PThing_Cancel_cb" }
+            }
+        }
+        { Footer
+            { Name "Status" }
+            { LeftFooter "" }
+            { Active True }
+        }
+    }
+
+}
+

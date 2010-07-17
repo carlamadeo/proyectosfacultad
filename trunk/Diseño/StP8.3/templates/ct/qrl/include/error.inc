@@ -1,0 +1,17 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/Core
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1995
+//      All rights reserved
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void
+print_warning(string message)
+{
+    message(message);
+}
+
+

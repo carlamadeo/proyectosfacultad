@@ -1,0 +1,25 @@
+
+
+Class 0 GenJavaCode
+{
+  { ParseCondition "(toolinfo_variable(\"JavaCode\") == \"True\");" }
+  { Label "Java Code Development" }
+  { Image "classes" }
+  { ShowOnDesktop True }
+  { OMSObjects
+      { Match "node[UmlClass && node_refs] sort by name" }
+  } 
+  { UseObjectCommand GenerateJavaCodeObjects }
+}
+
+global 1 GenerateJavaCodeObjects
+{
+  { ObjectCommand
+      { Name "GenerateJavaCodeObjects" }
+      { Label "Generate Java for Class..." }
+      { ShowPropsOnExec True }
+      { Type Nowin }
+      { Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} -x interface_extension '${prop.javaextension}' -x file_directory '${prop.output_dir}' ${prop.file_per_class} ${prop.keep_old_classes} ${prop.implement_associations_using} ${prop.java_comments} -x exclusion_predicate \"${prop.exclusions}\" -x classes '${cmd.objects}' qrl/code_gen/java/code_gen.qrl" }
+  }
+}
+

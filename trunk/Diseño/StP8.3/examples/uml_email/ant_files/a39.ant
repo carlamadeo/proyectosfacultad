@@ -1,0 +1,61 @@
+FileObject 1
+{
+    { Name "a39" }
+    { Type ObjectAnnotation }
+    { GUID "UID_5A041719-8BBD-4951-9B7F-3ACECBADCF68" }
+}
+
+NodeObject 99999
+{
+    { Name "Mailbox" }
+    { Type UmlClass }
+    { ObjectId 494 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_CFF94409-538F-11d4-8777-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "add_msg" }
+    { Type UmlOperation }
+    { ObjectId 628 }
+    { AnnotFileId 1 }
+    { Sig "m:Message*" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_CFF9440E-538F-11d4-8777-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlOperationCxxCode }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 630 }
+    { DescLine "return (Message*)Consistsof.add(m);" }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 632 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 634 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "add_msg" }
+    { NoteId 4 }
+    { ObjectId 635 }
+}
+

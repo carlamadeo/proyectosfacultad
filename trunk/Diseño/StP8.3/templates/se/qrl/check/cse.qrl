@@ -1,0 +1,27 @@
+
+// 	StP/SE
+// 	Confidential property of Aonix
+// 	Copyright (c) 1992-1999
+// 	All rights reserved
+//
+
+#include "qrl/check/check_common.inc"
+#include "qrl/check/check_cse.impl"
+
+external string files = "";
+external_help = "The name(s) of the table(s) to be checked.";
+
+external string table_type = "";
+external_help = "The name(s) of the table types(s) to be checked.";
+
+external int verbose = 0;	
+external_help = "Print ongoing status information?";
+
+script_help = "This template performs semantic checks on CSE Tables";
+
+int 
+main()
+{
+    return checkCseSemantics(files, table_type, verbose);
+}
+

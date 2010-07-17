@@ -1,0 +1,297 @@
+Diagram UmlSequenceDiagram
+{
+    { Name "ForceClockToRun__1" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -453 }
+    { PanY -315 }
+    { Alignment 32 }
+    { GUID "UID_4AC517C5-34FB-11d6-8DB9-00500445CF96" }
+    { Summary
+        { Nodes 6 }
+        { Arcs 4 }
+    }
+}
+
+Node 2
+{
+    { Type ScenarioInstance }
+    { Loc 179 -129 }
+    { Scale 1490.00 45.00 }
+    { Label
+        { Text "Weight_is_sinking(UmlUseCase:ForceClockToRun)" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ScenarioMapping }
+        { ID 3256 }
+        { GUID "UID_A91134AA-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3258 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 3260 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ParentName }
+        { ID 3259 }
+    }
+}
+
+Node 7
+{
+    { Type Vertex }
+    { Loc -236 -19 }
+    { Scale 128.00 128.00 }
+}
+
+Node 9
+{
+    { Type Vertex }
+    { Loc -235 128 }
+    { Scale 128.00 128.00 }
+}
+
+Node 13
+{
+    { Type ActiveObject }
+    { Loc -7 53 }
+    { Scale 128.00 1298.00 }
+    { Label
+        { Text "weight:Weight" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 863 }
+        { GUID "UID_A91134AB-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 3262 }
+        { GUID "UID_224624E4-CE14-11d5-A046-0010A4B8EFF8" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 864 }
+        { GUID "UID_224624E1-CE14-11d5-A046-0010A4B8EFF8" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ActiveObjectMapping }
+        { ID 3261 }
+        { GUID "UID_224624DE-CE14-11d5-A046-0010A4B8EFF8" }
+    }
+}
+
+Node 18
+{
+    { Type PassiveObject }
+    { Loc 356 65 }
+    { Scale 128.00 1280.00 }
+    { Label
+        { Text "pend:Pendulum" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 922 }
+        { GUID "UID_A91134AC-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 923 }
+        { GUID "UID_224624ED-CE14-11d5-A046-0010A4B8EFF8" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 936 }
+        { GUID "UID_224624EA-CE14-11d5-A046-0010A4B8EFF8" }
+    }
+}
+
+Node 23
+{
+    { Type Note }
+    { Loc -268 -103 }
+    { Scale 905.00 832.00 }
+    { Label
+        { Text "We assume, that while the" }
+        { Text "weight sinks there is free energy " }
+        { Text "that is used to force the pendulum " }
+        { Text "to move from side to side." }
+        { Text "While sinking, the energy of" }
+        { Text "the weight is decreased by an " }
+        { Text "amount e." }
+    }
+}
+
+Arc 8
+{
+    { Type SimpleMessage }
+    { From
+        { ID 13 }
+        { Loc -44 -34 }
+        { Offset 0 -71 }
+    }
+    { To
+        { ID 7 }
+        { Loc -270 -35 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 10
+{
+    { Type SimpleMessage }
+    { From
+        { ID 7 }
+        { Loc -270 -35 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 9 }
+        { Loc -269 112 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "*[Energy-e>=0]:decrease(int e)" }
+    }
+}
+
+Arc 11
+{
+    { Type SimpleMessage }
+    { From
+        { ID 9 }
+        { Loc -269 112 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 13 }
+        { Loc -44 112 }
+        { Offset 2 75 }
+    }
+}
+
+Arc 19
+{
+    { Type SimpleMessage }
+    { From
+        { ID 13 }
+        { Loc -38 64 }
+        { Offset -2 27 }
+    }
+    { To
+        { ID 18 }
+        { Loc 316 64 }
+        { Offset 0 15 }
+    }
+    { Label
+        { Text "pend.takeEvent(move)" }
+    }
+}
+
+Link 12
+{
+    { FirstArc 8 }
+    { LastArc 11 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 865 }
+        { GUID "UID_A91134AE-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3272 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 3278 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 3277 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 3276 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 3275 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 3274 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 3273 }
+    }
+}
+
+Link 20
+{
+    { FirstArc 19 }
+    { LastArc 19 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 937 }
+        { GUID "UID_A91134AD-6EAE-11d4-8044-00104BF16798" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 3264 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 3270 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 3269 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 3268 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 3267 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 3266 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 3265 }
+    }
+}

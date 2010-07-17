@@ -1,0 +1,27 @@
+/* XPM */
+static char* message_log_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 5 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #000000	c #ff0000",
+"o	m #ffffff	c #c0c0c0",
+/* pixels */
+"................",
+".XXXXXXXXXXXXXX.",
+".X          X.X.",
+".X      OO  XXX.",
+".X      OOo X.X.",
+".X XoXX OOo X.X.",
+".X      OOo X.X.",
+".X XoXX OOo X.X.",
+".X       oo X.X.",
+".X XoXX OO  X.X.",
+".X      OOo X.X.",
+".X       oo XXX.",
+".X          X.X.",
+".XXXXXXXXXXXXXX.",
+"................",
+"................"};

@@ -1,0 +1,48 @@
+external string UseCases;
+external string RequirementsTools;
+external string DocumentFormat;
+
+#include "qrl/tsdl_extract.inc"
+#include "qrl/basic_textract_dt.inc"
+#include "qrl/include/error.inc"
+
+#include "qrl/include/TConfig.inc"
+#include "qrl/include/TUseCase.inc"
+
+
+
+void 
+main ()
+{
+
+  string OUTPUTPATH = current_projdir() + current_system() + "/qrl_files/";
+  string OUTFILE;
+
+  list UseCaseList;
+  int count, i;
+  string use_case_name, test_unit_id;
+
+  UseCaseList = string_to_list (UseCases, " ");
+
+  count = list_count (UseCaseList);
+
+  for (i=0;i<count;i++)
+    {
+
+      use_case_name = list_get(UseCaseList,i);
+
+      if (!CheckExistance (use_case_name) )
+        {
+          print_error ("Use Case: " + use_case_name + " is not in the selected model");
+          continue;
+        }
+
+      test_unit_id = Get_T_test_unit_id(use_case_name, "");
+      OUTFILE = OUTPUTPATH + "/" + test_unit_id + "_Report." + DocumentFormat;
+print_message ("HERE");
+
+      system ("qrp -p ${projdir} -s ${system} -x use_case_name '${use_case_name}' -x DocumentFormat ${DocumentFormat} -x RequirementsTools ${RequirementsTools} -t ${DocumentFormat} -o ${OUTFILE} support/joint_reviews/qrl/GenerateOneReviewDocument.qrl");
+
+    }
+
+}

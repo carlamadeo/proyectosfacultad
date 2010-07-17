@@ -1,0 +1,348 @@
+//*****************************************************************************
+// $RCSfile: interface2stp_std.tdl,v $
+// $Revision: 1.3 $
+// $Date: 2002/04/04 14:48:44 $
+// Author: Markus Kern / Dirk Dinger
+//*****************************************************************************
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// math functions
+//
+////////////////////////////////////////////////////////////////////////////////
+
+tcl_proc abs(num1)
+    if ($num1>0) { return $num1; }
+    return [expr -$num1];
+end proc
+
+tcl_proc max(num1, num2)
+    if ($num1>$num2) { return $num1; }
+    return $num2;
+end proc
+
+tcl_proc min(num1, num2)
+    if ($num1>$num2) { return $num2; }
+    return $num1;
+end proc
+
+tcl_proc add(num1, num2)
+    return [expr $num1 + $num2]
+end proc
+
+tcl_proc sub(num1, num2)
+    return [expr $num1 - $num2]
+end proc
+
+tcl_proc mul(num1, num2)
+    return [expr $num1 * $num2]
+end proc
+
+tcl_proc div(num1, num2)
+    return [expr $num1 / $num2]
+end proc
+
+tcl_proc mod(num1, num2)
+    return [expr $num1 % $num2]
+end proc
+
+tcl_proc sqrt(num1)
+    return [expr sqrt($num1)]
+end proc
+
+tcl_proc floor(num)
+    set res [expr floor($num)]
+    return [expr int($res)]
+end proc
+
+tcl_proc ceil(num)
+    set res [expr ceil($num)]
+    return [expr int($res)]
+end proc
+
+tcl_proc dist(w, h)
+    set res [expr $w * $w + $h * $h]
+    return [expr int(sqrt($res))]
+end proc
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ID functions
+//
+////////////////////////////////////////////////////////////////////////////////
+
+proc setCount(count)
+    [__COUNT__] = [count];
+end proc
+
+proc addCount(number)
+    [__COUNT__] = add([__COUNT__],[number]);
+end proc
+
+proc getCount()
+    return [__COUNT__];
+end proc
+
+proc setDelim(delim)
+    [__DELIM__] = [delim];
+end proc
+
+proc delim()
+    return [__DELIM__];
+end proc
+
+proc setString(init)
+    [__INIT__] = [init];
+    return [init];
+end proc
+
+proc getString()
+    local txt = [__INIT__];
+    [__INIT__] = "";
+    return [txt];
+end proc
+
+tcl_proc string_compare(str1,str2)
+    return [string compare $str1 $str2]
+end proc
+
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+tcl_proc time()
+    return [clock format [clock seconds] -format "%T"]
+end proc
+
+tcl_proc date()
+    return [clock format [clock seconds] -format "%D"]
+end proc
+
+////////////////////////////////////////////////////////////////////////////////
+
+tcl_proc hostname()
+    return [info hostname]
+end proc
+
+////////////////////////////////////////////////////////////////////////////////
+
+proc dinfo(text)
+  info = "Debug:  " [text] "\n";
+end proc
+
+////////////////////////////////////////////////////////////////////////////////
+
+tcl_proc trim(str,chars)
+    return [string trim $str $chars]
+end proc
+
+tcl_proc trimType(str)
+    return [string trim $str _]
+end proc
+
+////////////////////////////////////////////////////////////////////////////////
+
+tcl_proc replace(str, expr, subSpec)
+    regsub -all $expr $str $subSpec ret;
+    return $ret;
+end proc
+
+tcl_proc replaceQuotes(str)
+    regsub -all \" $str \\" ret;
+    return $ret;
+end proc
+
+tcl_proc toUpper(str)
+    return [string toupper $str];
+end proc
+
+tcl_proc toLower(str)
+    return [string tolower $str];
+end proc
+
+tcl_proc getLength(str)
+    return [string length $str];
+end proc
+
+tcl_proc lsdir(dir)
+    return [file dirname $dir];
+end proc
+
+tcl_proc mkdir(dir)
+    file mkdir $dir;
+end proc
+
+tcl_proc regexp(str,reg)
+    set ret ""
+    regexp $reg $str ret;
+    return $ret;
+end proc
+
+tcl_proc createString(str,count)
+    set x 0
+    set ret ""
+    while {$x < $count} {
+        set ret $ret$str
+        incr x
+    }
+    return $ret
+end proc
+
+////////////////////////////////////////////////////////////////////////////////
+
+tcl_proc split(str,delim,pos)
+
+    set li [split $str $delim];
+    switch $pos {
+        "L" {
+            return [lindex $li 0]
+        }
+
+        "T" {
+            return  [lindex $li [ expr [llength $li] - 1]]
+        }
+
+        default {
+            return [lindex $li $pos]
+        }
+    }
+end proc
+////////////////////////////////////////////////////////////////////////////////
+
+proc setVar(varName, varContent)
+        [[varName]] = [varContent];
+end proc
+
+////////////////////////////////////////////////////////////////////////////////
+
+tcl_proc debug(value)
+  puts "***DEBUG-START***"
+  puts $value
+  puts "***DEBUG-END  ***"
+  gets stdin taste
+end proc
+
+////////////////////////////////////////////////////////////////////////////////
+proc output(fileName)
+    [ACT_OUTPUT_FILE] = [fileName];
+    mkdir(lsdir([fileName]));
+    setOutput([fileName] );
+end proc
+
+////////////////////////////////////////////////////////////////////////////////
+
+proc getOutput()
+    return [ACT_OUTPUT_FILE];
+end proc
+
+////////////////////////////////////////////////////////////////////////////////
+
+tcl_proc eraseFirstWord(str)
+    set strTemp [string trim $str]
+    set i1 [string first \x1 $strTemp]
+    if ($i1<0) { set i1 0 }
+    return [string trim [string range $strTemp $i1 end]]
+end proc
+
+tcl_proc getFirstWord(str)
+    set strTemp [string trim $str]
+    set i1 [string first \x1 $strTemp]
+    if ($i1<0) { set i1 0 }
+    return [string trim [string range $strTemp 0 $i1]]
+end proc
+
+////////////////////////////////////////////////////////////////////////////////
+
+proc isReflexiveAssociation(MAssociation)
+    local nClassCount;
+
+    [nClassCount] = getAssociationClassesCount([MAssociation]);
+    if ([nClassCount] == 1 && !isNaryAssociation([MAssociation]))
+        return TRUE;
+    else
+        return FALSE;
+    end if
+end proc
+
+proc isBinaryAssociation(MAssociation)
+    if (!isReflexiveAssociation([MAssociation]) && !isNaryAssociation([MAssociation]))
+        return TRUE;
+    else
+        return FALSE;
+    end if
+end proc
+
+proc isNaryAssociation(MAssociation)
+    if (loopCount(MAssociation->MAssociationEnd) >= 3)
+        return TRUE;
+    else
+        return FALSE;
+    end if
+end proc
+
+proc getAssociationClassesCount(MAssociation)
+    local nClassCount;
+
+    loop (MAssociation->MAssociationEnd->MClass)
+        [ASS_END_CLASS_[MClass.id]] = 1;
+    end loop
+
+    [nClassCount] = 0;
+    loop (MAssociation->MAssociationEnd->MClass)
+        [nClassCount] = add([nClassCount], [ASS_END_CLASS_[MClass.id]]);
+        [ASS_END_CLASS_[MClass.id]] = 0;
+    end loop
+
+    return [nClassCount];
+end proc
+
+// ECR 5318 begin
+proc getParaItemString(MParaItem)
+    local strRes;
+
+    [strRes] = [MParaItem.name];
+    if ([MParaItem.type] != "")
+        [strRes] = [strRes] ":" [MParaItem.type];
+    end if
+    if ([MParaItem.multiplicity] != "")
+        [strRes] = [strRes] "[" [MParaItem.multiplicity] "]";
+    end if
+    if ([MParaItem.defaultValue] != "")
+        [strRes] = [strRes] "=" [MParaItem.defaultValue];
+    end if
+    
+    return [strRes];
+end proc
+// ECR 5318 end
+
+// ECR 6721 begin
+proc generateOperationParameters(MOperation)
+    local OpParam;
+    local Delim;
+
+    [OpParam] = "";
+    [Delim] = "";
+    loop(MOperation->OpPara)
+        [OpParam] = [OpParam] [Delim] getParaItemString([OpPara]);
+        [Delim] = ", ";
+    end loop
+
+    return [OpParam];
+end proc
+// ECR 6721 end
+
+////////////////////////////////////////////////////////////////////////////////
+
+// ECR 5673 begin
+proc MElement.getGuid()
+    return [MElement.id];
+end proc
+
+proc MSemElement.getGuid()
+    if ([MSemElement.guid] == "")
+        return [MSemElement.id];
+    end if
+
+    return [MSemElement.guid];
+end proc
+// ECR 5673 end
+

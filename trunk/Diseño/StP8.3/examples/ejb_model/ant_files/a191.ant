@@ -1,0 +1,46 @@
+FileObject 1
+{
+    { Name "a191" }
+    { Type ObjectAnnotation }
+    { GUID "UID_7CC23063-8A6F-474c-816F-5F3D0B0CD5F0" }
+}
+
+NodeObject 99999
+{
+    { Name "EntityBean" }
+    { Type UmlStereotype }
+    { ObjectId 402 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_7A2C12E0-1676-11d5-8C78-000000000000" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 404 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 406 }
+    { DescLine "This Stereotype denotes an EJB EntityBean." }
+    { DescLine "It can be used to differentiate this class from " }
+    { DescLine "SessionBeans, Datasources or non-EJB-related" }
+    { DescLine "Java classes." }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "EntityBean" }
+    { NoteId 3 }
+    { ObjectId 407 }
+}
+

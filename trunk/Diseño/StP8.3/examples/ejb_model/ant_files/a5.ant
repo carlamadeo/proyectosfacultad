@@ -1,0 +1,50 @@
+FileObject 1
+{
+    { Name "a5" }
+    { Type ObjectAnnotation }
+    { GUID "UID_485992EA-51AB-45fb-8FA7-6BAD981900BD" }
+}
+
+NodeObject 99999
+{
+    { Name "InsufficientBalanceException" }
+    { Type UmlClass }
+    { ObjectId 509 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_41F11FA9-0B6F-11d5-8C6A-000000000000" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 511 }
+}
+
+ItemObject 3
+{
+    { Type UmlStereotype }
+    { Value "Exception" }
+    { NoteId 2 }
+    { ObjectId 512 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 514 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "InsufficientBalanceException" }
+    { NoteId 4 }
+    { ObjectId 515 }
+}
+

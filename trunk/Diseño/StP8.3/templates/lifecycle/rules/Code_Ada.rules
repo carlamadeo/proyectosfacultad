@@ -1,0 +1,24 @@
+
+Class 0 GenAdaCode
+{
+  { ParseCondition "(toolinfo_variable(\"AdaCode\") == \"True\");" }
+  { Label "Ada 95 Code Development" }
+  { Image "packages" }
+  { ShowOnDesktop True }
+  { OMSObjects
+      { Match "node[UmlPackage && node_refs] sort by name" }
+  }
+  { UseObjectCommand GenerateAda95CodeObjects }
+}
+
+
+global 1 GenerateAda95CodeObjects 
+{
+  { ObjectCommand
+      { Name "GenerateAda95CodeObjects" }
+      { Label "Generate Ada 95 for Package..." }
+      { ShowPropsOnExec True }
+      { Type Nowin }
+      { Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} -x file_directory '${prop.output_dir}' ${prop.file_per_package} ${prop.use_component} ${prop.ada_file_name_base} ${prop.generated_file_name_case} -x file_name '${prop.output_file}' ${prop.ada_generate_spec} -x interface_extension '${prop.adapkgspec}' ${prop.ada_generate_body} -x implementation_extension '${prop.adapkgbody}' ${prop.ada_generate_subunit} -x operation_extension '${prop.adasubunit}' ${prop.ada_root_class_type_privacy} ${prop.ada_root_class_options} ${prop.ada_subclass_type_privacy} ${prop.ada_access_types} ${prop.ada_implement_associations} ${prop.ada_subprograms_use_subunits} -x exclusion_predicate \"${prop.exclusions}\" ${prop.comments} ${prop.format_comments} -x format_comments_line_length '${prop.format_comments_line_length}' -x packages '${cmd.objects}' qrl/code_gen/ada_95/code_gen.qrl" }
+  }
+}

@@ -1,0 +1,1199 @@
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1998
+//      All rights reserved
+
+
+Include "uml/rules/uml.feature"
+
+TableType 1 UmlStateTable
+{ 
+  { Label "State Definition Table" } 
+  { SyntaxCheckFunc UStateTCheckSyntax }
+  { Initialize
+      { Secured
+          // key positions in the table
+          { MainDefinitionVsect 1 }
+
+	  { UmlStateMachineHsect 1 }
+	  { UmlStateMachineCol 1}
+	  { UmlStateMachineNameCol 2}
+
+	  { UmlStateHsect 2 }
+	  { UmlStateTypeCol 1 }
+	  { UmlStateNameCol 2 }
+
+	  { UmlEntryActionHsect 4 } 
+	  { UmlEntryActionTextCol 1 } 
+
+	  { UmlActivityHsect 6 } 
+	  { UmlActivityTextCol 1 } 
+
+	  { UmlExitActionHsect 8 } 
+	  { UmlExitActionTextCol 1 }
+
+	  { UmlInternalActionHsect 10 } 
+	  { UmlInternalEventCol 1 } 
+	  { UmlInternalActionCol 2 } 
+
+	  { UmlVariablesHsect 12 } 
+	  { UmlVariableNameCol 1 } 
+	  { UmlVariableTypeCol 2 } 
+	  { UmlVariableDefaultValueCol 3 } 
+
+      // JED - added for UML 1.1
+      // each state can list a set of deferred events
+      { UmlDeferredEventHsect 14 }
+      { UmlDeferredEventNameCol 1 }
+
+          { UmlActionTextCol 1 } } }
+
+
+  { ColWidth 250 }
+  { RowHeight 25 }
+  { ColBorder { Visible False } }	
+
+  // The StateMachineHsect and StateHsects define the Uml state object (and enclosing states)
+  // to which the actions and activities are attached.
+  // We presume that this section is initialized when the table
+  // is first navigated to from an Uml state diagram.
+  // Each row in the StateHsect defines a state,
+  // and the sequence of rows defines a scope chain of nested states.
+
+  { Hsect 
+      { Type UmlStateMachineHsect }
+      { Label "State Machine" }
+      { Frozen True }
+      { Shading Shade1 }
+      { RowHeight 35 }
+      { Vsect 
+	  { Frozen True }
+	// { Scrollbar False }
+	  { Row
+	      { RepeatToEnd True }    
+	      { Type UmlStateMachineRow }
+	      { Cell
+		  { ReadOnly True }
+		  { Type UmlStateMachineCell }
+ 		  { Bold True } }
+	      { Cell
+		  { ReadOnly True }
+		  { Type UmlStateMachineNameCell }
+ 		  { Bold True } }
+// ECR 4562 begin
+	      { Cell
+		  { ReadOnly True }
+ 		  { Bold True } }
+// ECR 4562 end
+	       } } }
+ 
+
+  { Hsect 
+      // KLUDGE: SEE DEFINITION BELOW
+      { Type UmlStateHsect }
+      { Label "State" }
+      { Frozen True }
+      { Shading Shade1 }
+      { RowHeight 35 }
+      { Vsect 
+	  { Frozen True }
+	// { Scrollbar False }
+	  { Row
+	      { RepeatToEnd True }    
+	      { Type UmlStateRow }
+	      { Cell
+		  { ReadOnly True }
+		  { Type UmlStateTypeCell }
+ 		  { Bold True } }
+	      { Cell
+		  { ReadOnly True }
+		  { Type UmlStateCell }
+		  { Bold True } } 
+// ECR 4562 begin
+	      { Cell
+		  { ReadOnly True }
+ 		  { Bold True } }
+// ECR 4562 end
+          } } }
+ 
+
+  // the entry actions for the state
+  { Hsect 
+      { Label "Entry Actions Header" }
+      { Frozen True }
+      { Scrollbar False } 
+      { ReadOnly True }
+      { Shading Shade1 }
+      { BottomBorder { Thickness Thin } }
+      { Vsect 
+	  { Frozen True }
+	  { Row
+	      { Cell
+		  { Label "Entry Action" }
+		  { Bold True }
+		  { HorzAlignment Left } }
+	      { Cell } // EC 4562
+	      { Cell } } } } 
+  { Hsect 
+      { Type UmlActionsHsect }
+      { Label "Entry Actions" }
+      { Vsect 
+      { ColBorder { Visible True } } // ECR 4562
+	  { Row
+	      { RepeatToEnd True }
+	      { Type UmlEntryActionRow }
+	      { Cell
+		  { Type UmlEntryActionCell }
+		  { HorzAlignment Left } }
+// ECR 4562 begin 
+	      //{ Cell { ReadOnly False } { Shading Shade1 } } 
+	      { Cell { ReadOnly True } { Shading Shade1 } } 
+	      { Cell { ReadOnly True } { Shading Shade1 } }
+// ECR 4562 end
+          } } } 
+
+  // the activities for the state
+  { Hsect 
+      { Label "Activities Header" }
+      { Frozen True }
+      { Scrollbar False } 
+      { ReadOnly True }
+      { Shading Shade1 }
+      { BottomBorder { Thickness Thin } }
+      { Vsect 
+	  { Frozen True }
+	  { Row
+	      { Cell
+		  { Label "Activity" }
+		  { Bold True }
+		  { HorzAlignment Left } }
+// ECR 4562 begin
+	      //{ Cell } 
+	      { Cell { ReadOnly True } } 
+	      { Cell { ReadOnly True } }
+// ECR 4562 end
+          } } }
+  { Hsect 
+      { Type UmlActionsHsect }
+      { Label "Activities" }
+      { Vsect 
+      { ColBorder { Visible True } } // ECR 4562
+	  { Row
+	      { RepeatToEnd True }
+	      { Type UmlActivityRow }
+	      { Cell
+		  { Type UmlActivityCell }
+		  { HorzAlignment Left } } 
+// ECR 4562 begin
+	      //{ Cell { ReadOnly False } { Shading Shade1 } } 
+	      { Cell { ReadOnly True } { Shading Shade1 } } 
+	      { Cell { ReadOnly True } { Shading Shade1 } }
+// ECR 4562 end
+          } } } 
+
+  // the exit actions for the state
+  { Hsect 
+      { Label "Exit Actions Header" }
+      { Frozen True }
+      { Scrollbar False } 
+      { ReadOnly True }
+      { Shading Shade1 }
+      { BottomBorder { Thickness Thin } }
+      { Vsect 
+	  { Frozen True }
+	  { Row
+	      { Cell
+		  { Label "Exit Action" }
+		  { Bold True }
+		  { HorzAlignment Left } }
+// ECR 4562 begin
+	      //{ Cell } 
+	      { Cell { ReadOnly True } } 
+	      { Cell { ReadOnly True } }
+// ECR 4562 end
+          } } }
+  { Hsect 
+      { Type UmlActionsHsect }
+      { Label "Exit Actions" }
+      { Vsect 
+	  { ColBorder { Visible True } } // ECR 4562
+	  { Row
+	      { RepeatToEnd True }
+	      { Type UmlExitActionRow }
+	      { Cell
+		  { Type UmlExitActionCell }
+		  { HorzAlignment Left } } 
+// ECR 4562 begin
+	      //{ Cell { ReadOnly False } { Shading Shade1 } } 
+	      { Cell { ReadOnly True } { Shading Shade1 } } 
+	      { Cell { ReadOnly True } { Shading Shade1 } } 
+// ECR 4562 end
+          } } } 
+
+  // the internal actions for the state
+  { Hsect 
+      { Label "Internal Actions Header" }
+      { Frozen True }
+      { Scrollbar False } 
+      { ReadOnly True }
+      { Shading Shade1 }
+      { BottomBorder { Thickness Thin } }
+      { Vsect 
+	  { Frozen True }
+	  { ColBorder { Visible True } }
+	  { Row
+	      { Cell
+		  { Label "Internal Event" }
+		  { Width 100 }
+		  { Bold True }
+		  { HorzAlignment Left } }
+	      { Cell
+		  { Label "Internal Action" }
+		  { Bold True }
+		  { HorzAlignment Left } } 
+// ECR 4562 begin
+	      { Cell { ReadOnly True } } 
+// ECR 4562 end
+          } } }
+  { Hsect 
+      { Type UmlInternalActionsHsect }
+      { Label "Internal Actions" }
+      { Vsect 
+       	  { ColBorder { Visible True } }
+	  { Row
+	      { RepeatToEnd True }
+	      { Type UmlInternalActionRow }
+	      { Cell
+		  { Type UmlInternalEventCell }
+		  { HorzAlignment Left } }
+	      { Cell
+		  { Type UmlInternalActionCell }
+		  { HorzAlignment Left } } 
+// ECR 4562 begin
+	      { Cell { ReadOnly True } { Shading Shade1 } } 
+// ECR 4562 end
+          } } }
+  { Hsect 
+      { Label "State Variables Header" }
+      { Frozen True }
+      { Scrollbar False } 
+      { ReadOnly True }
+      { Shading Shade1 }
+      { BottomBorder { Thickness Thin } }
+      { Vsect 
+	  { Frozen True }
+	  { ColBorder { Visible True } }
+	  { Row
+	      { Cell
+		  { Label "State Variable" }
+		  { Bold True }
+		  { HorzAlignment Left } }
+	      { Cell
+		  { Label "Type" }
+		  { Bold True }
+		  { HorzAlignment Left } }
+	      { Cell
+		  { Label "Default Value" }
+		  { Bold True }
+		  { HorzAlignment Left } } } } }
+  { Hsect 
+      { Label "State Variables" }
+      { Vsect 
+       	  { ColBorder { Visible True } }
+	  { Row
+	      { RepeatToEnd True }
+	      { Type UmlVariablesRow }
+	      { Cell
+		  { Type UmlVariableCell }
+		  { HorzAlignment Left } }
+	      { Cell
+		  { Type UmlVariableTypeCell }
+		  { HorzAlignment Left } }
+	      { Cell
+		  { Type UmlVariableDefaultValueCell }
+		  { HorzAlignment Left } } } } }
+
+  // JED - added for UML 1.1
+  { Hsect 
+      { Label "Deferred Events Header" }
+      { Frozen True }
+      { Scrollbar False } 
+      { ReadOnly True }
+      { Shading Shade1 }
+      { BottomBorder { Thickness Thin } }
+      { Vsect 
+	  { Frozen True }
+	  { Row
+	      { Cell
+		  { Label "Deferred Events" }
+		  { Bold True }
+		  { HorzAlignment Left } }
+	      { Cell } // ECR 4562
+	      { Cell } } } }
+  { Hsect
+      { Label "Deferred Events" }
+      { Vsect
+          { ColBorder { Visible True } }
+          { Row
+              { RepeatToEnd True }
+              { Type UmlDeferredEventRow }
+              { Cell
+                  { Type UmlDeferredEventCell }
+                  { HorzAlignment Left }
+              }
+// ECR 4562 begin              
+              //{ Cell { ReadOnly False } { Shading Shade1 } }
+	          { Cell { ReadOnly True } { Shading Shade1 } } 
+	          { Cell { ReadOnly True } { Shading Shade1 } } 
+// ECR 4562 end
+          }
+      }
+  }
+
+}
+
+// *** ROOT OBJECT SEMANTICS HERE
+
+// KLUDGE BELOW -- NON-SEMANTIC LINK
+// because the state table creates a reference for each "ambassador" state,
+// we need to distinguish the innermost state 
+// to allow external navigation from ustated
+// hence this kludgey link mapping to the innermost state
+
+HsectType 1 UmlStateMachineHsect
+{
+  { Semantics
+      { LinkMapping
+          { MappingName StateTableDefinesState }
+	  { Type UmlStateTableDefinesState }
+          { FromNode 
+              { MappingName UmlState }
+	      { Cell
+		  { Hsect UmlStateMachineHsect } 
+		  { Vsect MainDefinitionVsect }
+		  { Row 1 }
+		  { Col UmlStateMachineNameCol } } }
+          { ToNode 
+	      { MappingName UmlState }
+	      { Cell
+		  { Hsect UmlStateHsect } 
+		  { Vsect MainDefinitionVsect }
+		  { Row "UmlLastStateRow();" }
+		  { Col UmlStateNameCol } } }
+	}
+    }
+}
+
+// the first row represents the outermost state and is not scoped
+// each following row is scoped to its predecessor 
+
+RowType 1 UmlStateMachineRow
+{}
+
+RowType 2 UmlStateRow
+{}
+
+CellType 1 UmlStateMachineNameCell
+{
+  { Semantics
+      { NodeMapping
+          { MappingName UmlState }
+	  { Name
+	      { LabelSelector Label } }
+	  { Type UmlStateMachine }
+      }
+  }
+  { Methods
+        { Navigation 
+            { Name Requirements }
+            { Label "Allocate Requirements" }
+            { MappingName UmlState }
+            { Eval "to_requirements_table_from_node(${node.id});" }
+        }
+	{ Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+	    { Name DOORS }
+	    { Label "DOORS" }
+	    { MappingName UmlState }
+	    { Eval "node_navigate_to_doors(${node.id});" }
+	}
+
+	{ Navigation 
+	  { Name StateDiagram }
+	  { Label "State Diagram" }
+	  { MappingName UmlState }
+	  { Query "node_ref[node_id = ${node.id} && file[UmlStateDiagram]]" } }
+      { Navigation 
+	  { Name ClassTable }
+	  { Label "Class Table for Class" }
+	  { MappingName UmlState }
+	  { Query "node_ref[node[name = '${node.name}' && UmlClass] && file[UmlClassTable]]" } }
+      { Navigation 
+	  { Name ClassDiagram }
+	  { Label "Class Diagram for Class" }
+	  { MappingName UmlState }
+	  { Query "node_ref[node[name = '${node.name}' && UmlClass] && file[UmlClassDiagram]]" } }
+// ECR 5184 start 
+      { Navigation 
+	  { Name ComponentDiagram }
+	  { Label "Component Diagram for Class" }
+	  { MappingName UmlClass }
+	  { Query "node_ref[node[name = '${node.name}' && UmlClass] && file[UmlComponentDiagram]]" } }
+      { Navigation 
+	  { Name DeploymentDiagram }
+	  { Label "Deployment Diagram for Class" }
+	  { MappingName UmlState }
+	  { Query "node_ref[node[name = '${node.name}' && UmlClass] && file[UmlDeploymentDiagram]]" } }
+// ECR 5184 end
+      { Navigation 
+	  { Name SequenceDiagram }
+	  { Label "Sequence Diagram Where Class Is Used" }
+	  { MappingName UmlState }
+	  { Query "node_ref[node[name = '${node.name}' && UmlObjectClassScope] && file[UmlSequenceDiagram]]" } } 
+      { Navigation 
+	  { Name CollaborationDiagram }
+	  { Label "Collaboration Diagram Where Class Is Used" }
+	  { MappingName UmlState }
+	  { Query "node_ref[node[name = '${node.name}' && UmlObjectClassScope] && file[UmlCollaborationDiagram]]" } } }
+}
+
+
+CellType 2 UmlStateMachineCell
+{
+  { Label "State Machine" }
+}
+
+
+CellType 3 UmlStateCell
+{
+  { Semantics
+      { NodeMapping
+          { MappingName UmlState }
+	  { Name
+	      { LabelSelector Label } }
+	  { Type UmlState }
+	  { Scope
+	      { MappingName UmlState } 
+	      { Cell
+		  { Hsect "StateScopeHsect(HSECT, VSECT, ROW, COL);" }
+		  { Vsect MainDefinitionVsect }
+		  { Row "StateScopeRow(HSECT, VSECT, ROW, COL);" } 
+		  { Col UmlStateNameCol } } } } 
+  }
+  { Methods
+        { Navigation 
+            { Name Requirements }
+            { Label "Allocate Requirements" }
+            { MappingName UmlState }
+            { Eval "to_requirements_table_from_node(${node.id});" }
+        }
+      { Navigation 
+	  { Name Navigation }
+	  { Label "State Diagram" }
+	  { MappingName UmlState }
+	  { Query "node_ref[node_id = ${node.id} && !viewpoints[UmlScopeAmbassador] && file[UmlStateDiagram]]" } } }
+}
+
+CellType 4 UmlStateTypeCell
+{
+  { Label "State" }
+}
+
+// entry actions
+
+HsectType 10 UmlActionsHsect
+{ 	
+  { RowSorts
+      { Sort
+	  { Name SortByTextAlphaIncreasing }
+	  { Label "By Name" }
+	  { Key 	
+	      { Value
+		  { LabelSelector Label }
+		  { Cell 
+		      { Hsect HSECT }
+		      { Vsect MainDefinitionVsect }
+		      { Row ROW }
+		      { Col UmlActionTextCol } } } 
+	      { Ordering LexicographicalIncreasing } } } } }
+
+
+// The scope of an action or activity is the statemachine,
+// i.e. the statemachine which corresponds to the class,
+// because the action corresponds to an operation.
+// The link to an action is from the innermost nested state.
+
+RowType 10 UmlEntryActionRow
+{ }
+
+
+CellType 10 UmlEntryActionCell
+{
+  { Methods
+        { Navigation 
+            { Name Requirements }
+            { Label "Allocate Requirements" }
+            { MappingName UmlAction }
+            { Eval "to_requirements_table_from_node(${node.id});" }
+        }
+	{ Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+	    { Name DOORS }
+	    { Label "DOORS" }
+	    { MappingName UmlAction }
+	    { Eval "node_navigate_to_doors(${node.id});" }
+	}
+
+  }
+  { Semantics
+      { NodeMapping
+          { MappingName UmlAction }
+	  { Precondition 
+	      { LabelSelector Label } 
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect MainDefinitionVsect }
+		  { Row ROW }
+		  { Col UmlEntryActionTextCol } } }
+	  { Name 
+	      { LabelSelector Label } 
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect MainDefinitionVsect }
+		  { Row ROW }
+		  { Col UmlEntryActionTextCol } } }
+          { Type UmlAction }
+          { Scope 
+              { MappingName UmlState }
+	      { Cell
+		  { Hsect UmlStateMachineHsect } 
+		  { Vsect MainDefinitionVsect }
+		  { Row 1 }
+		  { Col UmlStateMachineNameCol } } } }
+      { LinkMapping
+          { MappingName UmlStateEntryAction }
+          { Type UmlStateEntryAction }
+          { FromNode 
+              { MappingName UmlState }
+	      { Cell
+		  { Hsect UmlStateHsect } 
+		  { Vsect MainDefinitionVsect }
+		  { Row "UmlLastStateRow();" }
+		  { Col UmlStateNameCol } } }
+          { ToNode 
+              { MappingName UmlAction }
+	      { Cell
+		  { Hsect UmlEntryActionHsect } 
+		  { Vsect MainDefinitionVsect }
+		  { Row ROW }
+		  { Col UmlEntryActionTextCol } } } }
+  }
+}
+// activities
+
+RowType 20 UmlActivityRow
+{}
+
+
+CellType 20 UmlActivityCell 
+{
+  { Methods
+        { Navigation 
+            { Name Requirements }
+            { Label "Allocate Requirements" }
+            { MappingName UmlActivity }
+            { Eval "to_requirements_table_from_node(${node.id});" }
+        }
+	{ Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+	    { Name DOORS }
+	    { Label "DOORS" }
+	    { MappingName UmlActivity }
+	    { Eval "node_navigate_to_doors(${node.id});" }
+	}
+
+  }
+  { Semantics
+      { NodeMapping
+	  { MappingName UmlActivity }
+	  { Precondition 
+	      { LabelSelector Label } 
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect MainDefinitionVsect }
+		  { Row ROW }
+		  { Col UmlActivityTextCol } } }
+	  { Name 
+	      { LabelSelector Label } 
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect MainDefinitionVsect }
+		  { Row ROW }
+		  { Col UmlActivityTextCol } } }
+          { Type UmlAction }
+          { Scope 
+              { MappingName UmlState }
+	      { Cell
+		  { Hsect UmlStateMachineHsect } 
+		  { Vsect MainDefinitionVsect }
+		  { Row 1 }
+		  { Col UmlStateMachineNameCol } } } }
+      { LinkMapping
+          { MappingName UmlStateActivity }
+          { Type UmlStateActivity }
+          { FromNode 
+              { MappingName UmlState }
+	      { Cell
+		  { Hsect UmlStateHsect } 
+		  { Vsect MainDefinitionVsect }
+		  { Row "UmlLastStateRow();" }
+		  { Col UmlStateNameCol } } }
+          { ToNode 
+              { MappingName UmlActivity }
+	      { Cell
+		  { Hsect UmlActivityHsect } 
+		  { Vsect MainDefinitionVsect }
+		  { Row ROW }
+		  { Col UmlActivityTextCol } } } }
+  }
+}
+
+// internal actions
+
+HsectType 30 UmlInternalActionsHsect
+{ 	
+  { RowSorts
+      { Sort
+	  { Name SortByEventTextAlphaIncreasing }
+	  { Label "By Event, Action" }
+	  { Key 	
+	      { Value
+		  { LabelSelector Label }
+		  { Cell 
+		      { Hsect HSECT }
+		      { Vsect MainDefinitionVsect }
+		      { Row ROW }
+		      { Col UmlInternalEventCol } } } 
+	      { Ordering LexicographicalIncreasing } }
+	  { Key 	
+	      { Value
+		  { LabelSelector Label }
+		  { Cell 
+		      { Hsect HSECT }
+		      { Vsect MainDefinitionVsect }
+		      { Row ROW }
+		      { Col UmlInternalActionCol } } } 
+	      { Ordering LexicographicalIncreasing } } }
+      { Sort
+	  { Name SortByTextEventAlphaIncreasing }
+	  { Label "By Action, Event" }
+	  { Key 	
+	      { Value
+		  { LabelSelector Label }
+		  { Cell 
+		      { Hsect HSECT }
+		      { Vsect MainDefinitionVsect }
+		      { Row ROW }
+		      { Col UmlInternalActionCol } } } 
+	      { Ordering LexicographicalIncreasing } }
+	  { Key 	
+	      { Value
+		  { LabelSelector Label }
+		  { Cell 
+		      { Hsect HSECT }
+		      { Vsect MainDefinitionVsect }
+		      { Row ROW }
+		      { Col UmlInternalEventCol } } } 
+	      { Ordering LexicographicalIncreasing } } } } }
+
+RowType 30 UmlInternalActionRow
+{}
+
+CellType 30 UmlInternalEventCell
+{
+  { NameCompletion { MappingName UmlStateInternalAction } }
+  { Methods
+        { Navigation 
+            { Name Requirements }
+            { Label "Allocate Requirements" }
+            { MappingName UmlAction }
+            { Eval "to_requirements_table_from_node(${node.id});" }
+        }
+	{ Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+	    { Name DOORS }
+	    { Label "DOORS" }
+	    { MappingName UmlAction }
+	    { Eval "node_navigate_to_doors(${node.id});" }
+	}
+
+  }
+  { Semantics
+      { NodeMapping
+	  { MappingName UmlAction }
+	  { Precondition 
+	      { LabelSelector Label } 
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect MainDefinitionVsect }
+		  { Row ROW }
+		  { Col UmlInternalActionCol } } }
+	  { Name 
+	      { LabelSelector Label } 
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect MainDefinitionVsect }
+		  { Row ROW }
+		  { Col UmlInternalActionCol } } }
+	  { Type UmlAction }
+	  { Scope 
+	      { MappingName UmlState }
+	      { Cell
+		  { Hsect UmlStateMachineHsect } 
+		  { Vsect MainDefinitionVsect }
+		  { Row 1 }
+		  { Col UmlStateMachineNameCol } } } }
+      { LinkMapping
+	  { MappingName UmlStateInternalAction }
+	  { Name 
+	      { LabelSelector Label } 
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect MainDefinitionVsect }
+		  { Row ROW }
+		  { Col UmlInternalEventCol } } }
+	  { Type UmlStateEvent }
+	  { FromNode 
+	      { MappingName UmlState }
+	      { Cell
+		  { Hsect UmlStateHsect } 
+		  { Vsect MainDefinitionVsect }
+		  { Row "UmlLastStateRow();" }
+		  { Col UmlStateNameCol } } }
+	  { ToNode 
+	      { MappingName UmlAction }
+	      { Cell
+		  { Hsect UmlInternalActionHsect } 
+		  { Vsect MainDefinitionVsect }
+		  { Row ROW }
+		  { Col UmlInternalEventCol } } } }
+  }
+}
+
+CellType 31 UmlInternalActionCell 
+{
+  // when the action label changes, 
+  // the action node and internal action link must be remapped.
+  // these dependent mappings belong to the first cell in this row
+  { DependentMapping
+      { MappingName ANY }
+      { Cell
+	  { Hsect HSECT }
+	  { Vsect MainDefinitionVsect }
+	  { Row ROW }
+	  { Col UmlInternalEventCol } } } 
+}
+
+
+// exit actions
+
+RowType 40 UmlExitActionRow
+{ }
+
+
+CellType 40 UmlExitActionCell
+{
+    { Methods
+        { Navigation 
+            { Name Requirements }
+            { Label "Allocate Requirements" }
+            { MappingName UmlAction }
+            { Eval "to_requirements_table_from_node(${node.id});" }
+        }
+	{ Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+	    { Name DOORS }
+	    { Label "DOORS" }
+	    { MappingName UmlAction }
+	    { Eval "node_navigate_to_doors(${node.id});" }
+	}
+
+  }
+  { Semantics
+     { NodeMapping
+	 { MappingName UmlAction }
+	 { Precondition 
+	     { LabelSelector Label } 
+	     { Cell 
+		 { Hsect HSECT }
+		 { Vsect MainDefinitionVsect }
+		 { Row ROW }
+		 { Col UmlExitActionTextCol } } }
+	 { Name 
+	     { LabelSelector Label } 
+	     { Cell 
+		 { Hsect HSECT }
+		 { Vsect MainDefinitionVsect }
+		 { Row ROW }
+		 { Col UmlExitActionTextCol } } }
+	 { Type UmlAction }
+	 { Scope 
+	     { MappingName UmlState }
+	     { Cell
+		 { Hsect UmlStateMachineHsect } 
+		 { Vsect MainDefinitionVsect }
+		 { Row 1 }
+		 { Col UmlStateMachineNameCol } } } }
+     { LinkMapping
+	 { MappingName UmlStateExitAction }
+	 { Type UmlStateExitAction }
+	 { FromNode 
+	     { MappingName UmlState }
+	     { Cell
+		 { Hsect UmlStateHsect } 
+		 { Vsect MainDefinitionVsect }
+		 { Row "UmlLastStateRow();" }
+		 { Col UmlStateNameCol } } }
+	 { ToNode 
+	     { MappingName UmlAction }
+	     { Cell
+		 { Hsect UmlExitActionHsect } 
+		 { Vsect MainDefinitionVsect }
+		 { Row ROW }
+		 { Col UmlExitActionTextCol } } } }
+  }
+}
+
+
+RowType 50 UmlVariablesRow
+{ }
+
+
+CellType 50 UmlVariableCell
+{
+  { Methods
+        { Navigation 
+            { Name Requirements }
+            { Label "Allocate Requirements" }
+            { MappingName UmlVariable }
+            { Eval "to_requirements_table_from_node(${node.id});" }
+        }
+	{ Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+	    { Name DOORS }
+	    { Label "DOORS" }
+	    { MappingName UmlVariable }
+	    { Eval "node_navigate_to_doors(${node.id});" }
+	}
+
+  }
+  { Semantics
+     { NodeMapping
+	 { MappingName UmlVariable }
+	 { Precondition 
+	     { LabelSelector Label } 
+	     { Cell 
+		 { Hsect HSECT }
+		 { Vsect MainDefinitionVsect }
+		 { Row ROW }
+		 { Col UmlVariableNameCol } } }
+	 { Name 
+	     { LabelSelector Label } 
+	     { Cell 
+		 { Hsect HSECT }
+		 { Vsect MainDefinitionVsect }
+		 { Row ROW }
+		 { Col UmlVariableNameCol } } }
+	 { Type UmlAttribute }
+	 { Scope 
+	     { MappingName UmlState }
+	     { Cell
+		 { Hsect UmlStateMachineHsect } 
+		 { Vsect MainDefinitionVsect }
+		 { Row 1 }
+		 { Col UmlStateMachineNameCol } } } }
+    { NoteMapping
+	 { MappingName VariableDefinition }
+	 { Type UmlAttributeDefinition }
+	 { Parent  
+		{ MappingName UmlVariable }
+		{ Cell
+			{ Hsect HSECT } 
+			{ Vsect MainDefinitionVsect } 
+			{ Row ROW }
+			{ Col UmlVariableNameCol }
+		}
+	 }
+	 { ContinuousUpdate True }
+     } 
+     { LinkMapping
+	 { MappingName UmlStateVariable }
+	  { Precondition 
+	      { LabelSelector Label } 
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect MainDefinitionVsect }
+		  { Row "UmlLastStateRow();" }
+		  { Col UmlStateNameCol } } }
+
+	 { Type UmlStateAttribute }
+	 { FromNode 
+	     { MappingName UmlState }
+	     { Cell
+		 { Hsect UmlStateHsect } 
+		 { Vsect MainDefinitionVsect }
+		 { Row "UmlLastStateRow();" }
+		 { Col UmlStateNameCol } } }
+	 { ToNode 
+	     { MappingName UmlVariable }
+	     { Cell
+		 { Hsect UmlVariablesHsect } 
+		 { Vsect MainDefinitionVsect }
+		 { Row ROW }
+		 { Col UmlVariableNameCol } } } }
+  }
+}
+
+CellType 51 UmlVariableTypeCell
+{
+	{ Semantics
+		{ ItemMapping
+			{ MappingName VariableType }
+			{ Precondition { LabelSelector Label } }
+			{ Type UmlAttributeType }
+			{ Value { LabelSelector Label } }
+			{ Note  
+				{ MappingName VariableDefinition }
+				{ Cell
+					{ Hsect HSECT } 
+					{ Vsect MainDefinitionVsect } 
+					{ Row ROW }
+					{ Col UmlVariableNameCol }
+				}
+			}
+			{ ContinuousUpdate True }
+		}
+	} 
+}
+
+CellType 52 UmlVariableDefaultValueCell
+{
+	{ Semantics
+		{ ItemMapping
+			{ MappingName VariableDefaultValue }
+			{ Precondition { LabelSelector Label } }
+			{ Type UmlAttributeDefaultValue }
+			{ Value { LabelSelector Label } }
+			{ Note  
+				{ MappingName VariableDefinition }
+				{ Cell
+					{ Hsect HSECT } 
+					{ Vsect MainDefinitionVsect } 
+					{ Row ROW }
+					{ Col UmlVariableNameCol }
+				}
+			}
+			{ ContinuousUpdate True }
+		}
+	}
+} 
+
+
+// JED - added for UML 1.1
+// deferred events are mapped the way other things here are (e.g.
+// scope the node to the topmost state machine, then create a link
+// from the state to the event
+RowType 60 UmlDeferredEventRow
+{ }
+
+
+CellType 60 UmlDeferredEventCell
+{
+  { Methods
+        { Navigation 
+            { Name Requirements }
+            { Label "Allocate Requirements" }
+            { MappingName UmlVariable }
+            { Eval "to_requirements_table_from_node(${node.id});" }
+        }
+	{ Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+	    { Name DOORS }
+	    { Label "DOORS" }
+	    { MappingName UmlVariable }
+	    { Eval "node_navigate_to_doors(${node.id});" }
+	}
+
+  }
+  { Semantics
+     { NodeMapping
+	 { MappingName UmlDeferredEvent }
+	 { Precondition 
+	     { LabelSelector Label } 
+	     { Cell 
+		 { Hsect HSECT }
+		 { Vsect MainDefinitionVsect }
+		 { Row ROW }
+		 { Col UmlDeferredEventNameCol } } }
+	 { Name 
+	     { LabelSelector Label } 
+	     { Cell 
+		 { Hsect HSECT }
+		 { Vsect MainDefinitionVsect }
+		 { Row ROW }
+		 { Col UmlDeferredEventNameCol } } }
+	 { Type UmlDeferredEvent }
+	 { Scope 
+	     { MappingName UmlState }
+	     { Cell
+		 { Hsect UmlStateMachineHsect } 
+		 { Vsect MainDefinitionVsect }
+		 { Row 1 }
+		 { Col UmlStateMachineNameCol } } } }
+     { LinkMapping
+	 { MappingName UmlDeferredEventLink }
+	  { Precondition 
+	      { LabelSelector Label } 
+	      { Cell 
+		  { Hsect UmlStateHsect }
+		  { Vsect MainDefinitionVsect }
+		  { Row "UmlLastStateRow();" }
+		  { Col UmlStateNameCol } } }
+
+	 { Type UmlDeferredEventLink }
+	 { FromNode 
+	     { MappingName UmlState }
+	     { Cell
+		 { Hsect UmlStateHsect } 
+		 { Vsect MainDefinitionVsect }
+		 { Row "UmlLastStateRow();" }
+		 { Col UmlStateNameCol } } }
+	 { ToNode 
+	     { MappingName UmlDeferredEvent }
+	     { Cell
+		 { Hsect UmlDeferredEventHsect } 
+		 { Vsect MainDefinitionVsect }
+		 { Row ROW }
+		 { Col UmlDeferredEventNameCol } } } }
+  }
+}
+
+Include "rules/gte_menu_bar.std"
+Include "rules/gte_annot_menu.std"
+Include "rules/gte_edit_menu.std"
+
+Menu Tools
+{
+  { MenuEntry
+    { Name CheckSemantics }
+    { Show False }
+  }
+  { SubMenu
+    { Label "&Sort" }
+    { Name Sort }
+    { PlaceBefore Options }
+  }
+  { Spacer
+    { PlaceBefore Options }
+  }
+}
+
+Menu Sort
+{
+// ECR 6149
+    { Pin True }
+    { Label "Sort" }
+// ECR 6149 end
+	{ GenerationFunc idehook_table_sorts_main_generation_func_by_type }
+	{ Tag "RowSorts" }
+}
+
+//ECR 3792 begin
+Menu NavigationSubmenu
+{
+    { GenerationFunc idehook_table_methods_main_generation_func_by_type }
+    { Tag "Navigation" }
+
+}
+//ECR 3792 end
+
+Menu Navigation
+{
+  { InMenuBar True }
+  { Label "&GoTo" }
+  { Pin True }	
+  { GenerationFunc idehook_table_methods_main_generation_func_by_type }
+  { Tag "Navigation" }
+}
+
+Menu ProductMenu//UML
+{
+    { InMenuBar True }
+    { Label "&UML" }
+    { Show False }
+    { Pin True }
+}
+
+// ECR 6329 begin
+Menu MenuBarEdit
+{
+    { MenuEntry
+        { Name EditObjectDescription }
+        { Label "Cell Description..." }
+        { PlaceBefore AnnotEdit }
+        { Builtin "EditorQrlEval ps_EOD_cb(\"GenericObject\");" }
+        { Accelerator
+            { Label "Ctrl+T" }
+            { Value "Ctrl<Key>T" }
+        }
+        { ActiveFunc idehook_table_edit_annot_item_active_func }
+    }
+}
+
+Menu Edit
+{
+    { MenuEntry
+        { Name EditObjectDescription }
+        { PlaceBefore AnnotEdit }
+        { Label "Cell Description..." }
+        { Builtin "EditorQrlEval ps_EOD_cb(\"GenericObject\");" }
+        { Accelerator
+            { Label "Ctrl+T" }
+            { Value "Ctrl<Key>T" }
+        }
+        { ActiveFunc idehook_table_edit_annot_item_active_func }
+    }
+}
+
+// ECR 8008
+// Property sheet 'UmlObjectDescriptionSheet' is removed from this file.
+// Instead, one from riles/extensibility.prop is used
+Include "rules/extensibility.prop"
+
+// ECR 6329 end
+
+
+IncludeIfExists "user/uml/rules/user_ustatet.rules"
+
+PassWord "C1C5FA73"

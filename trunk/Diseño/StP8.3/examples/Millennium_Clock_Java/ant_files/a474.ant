@@ -1,0 +1,46 @@
+FileObject 1
+{
+    { Name "a474" }
+    { Type ObjectAnnotation }
+    { GUID "UID_7CAD2664-0206-11d6-AE65-000000000000" }
+}
+
+FileObject 99999
+{
+    { Name "Weight__1" }
+    { Type UmlActivityDiagram }
+    { ObjectId 366 }
+    { AnnotFileId 1 }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1080 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1082 }
+    { DescLine "This diagram clarifies again the energy source of the " }
+    { DescLine "whole clock. " }
+    { DescLine "Once the weight is raised up to a higher energetic level" }
+    { DescLine "it delivers energy by sinking. This energy is used to move" }
+    { DescLine "the pendulum (send event move to pendulum)." }
+    { DescLine "While sinking the potential energy is decreasing until it " }
+    { DescLine "is zero. Then the whole process stops." }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Weight__1" }
+    { NoteId 3 }
+    { ObjectId 1083 }
+}
+

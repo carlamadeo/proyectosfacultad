@@ -1,0 +1,15 @@
+Action notes:
+
+<description_string> must be the name of a constant of subtype stringlong
+   or double-quoted text "...".
+<initiation_act> must be the name of a constant of subtype string
+   or double-quoted text "...".
+<conclusion_act> must be the name of a constant of subtype string
+   or double-quoted text "...".
+<condexp_value> must be a condition expression or the name of a condition.
+<method_description> is often used to describe some procedural
+   logic by which the action can be accomplished.
+The "is tested exhaustively on" clause is a cue that values of
+   the named dataitems are to be combined exhaustively in testing; the
+   dataitems listed in this clause must be a subset of those listed in the
+   "uses" clause.

@@ -1,0 +1,84 @@
+
+external string use_case_name;
+external string Tool;  // values will be  'validator'  or 'T'
+
+#include "val/qrl/include/GenExecutableScripts.inc"
+#include "val/qrl/include/CreateDir.inc"
+
+void
+main ()
+
+{
+
+  list TestUnitList, ActionList;
+  int count1, i;
+  int count2, j;
+  string test_unit_id, action_name;
+  node scenario;
+  int scenario_id = 0;
+  string outputdir;
+  string sdf_path, action_path;
+
+
+
+  if (Tool == "validator")
+      test_unit_id = Get_T_test_unit_id(use_case_name, "");
+  else
+      test_unit_id = use_case_name;
+
+
+  sdf_path = OUTPUTPATH + test_unit_id;
+
+  if (!CheckForSDF(sdf_path, "TDDB"))
+    {
+      message ("TDDB file for " + test_unit_id + " does not exist.");
+      return;
+    }
+
+  message ("Generating Data for Test Unit: " + use_case_name); 
+
+  if (Tool == "validator" )
+    {
+      ActorIDs = GetActorIDList(use_case_name);
+      ActionList = GetScenarioList(use_case_name);
+    }
+      else
+    {
+      ActionList = GetActionList(sdf_path);
+    }
+
+  count2 = list_count (ActionList);
+  for (j=0;j<count2;j=j+1)
+    {
+
+      if (Tool == "validator" )
+        {
+          scenario = list_get(ActionList,j);
+          action_name = RemoveSpaces(scenario.name);
+          scenario_id = scenario.id;
+        }
+      else
+        {
+          action_name = list_get(ActionList,j);
+          scenario_id = 0;
+
+        }
+
+      message ("##" + action_name + "##" );
+      action_path = sdf_path + "/" + action_name;
+      
+      message ("");
+      message ("Creating: Action Script");
+      message ("");
+
+      InitializeActionDir(sdf_path, action_name);
+    
+      CreateExecuteScript(sdf_path, action_path, test_unit_id, 
+          action_name, use_case_name, Tool);
+
+      CreateActionScript(action_path,  
+          action_name, scenario_id, use_case_name, Tool);
+
+   }
+}
+

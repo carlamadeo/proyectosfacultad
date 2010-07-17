@@ -1,0 +1,132 @@
+
+Global TTargetFormat
+{
+    { Properties
+        { Choice
+            { Name "targetformat" }
+            { Label "Report format:" }
+            { Type AbbrMenu }
+            { ChoiceItem
+                { Label "HTML" }
+                { Value "html" }
+                { Init On }
+            }
+            { ChoiceItem
+                { Label "Adobe Frame Maker(MIF)" }
+                { Value "mif" }
+            }
+            { ChoiceItem
+                { Label "MS Word(RTF)" }
+                { Value "rtf" }
+            }
+        }
+    }
+}
+
+
+Global 7 TTFormatFile
+{
+    { Properties
+        { Text
+            { Name "tformatfile" }
+            { Label "Format File:" }
+            //{ Init "stpreport" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 80 }
+            { DispLength 20 }
+        }
+    }
+}
+
+Global 8 TTOutputFile
+{
+    { Properties
+        { Text
+            { Name "toutputfile" }
+            { Label "Generated Report Filename:" }
+            { Type Text }
+            { MinLength 1 }
+            { MaxLength 80 }
+            { DispLength 20 }
+        }
+    }
+}
+
+
+Global 8 TTDocAuthor
+{
+    { Properties
+        { Text
+            { Name "tdocauthor" }
+            { Label "Document Author" }
+            { Type Text }
+            // { MinLength 1 }
+            { MaxLength 255 }
+            { DispLength 20 }
+        }
+    }
+}
+
+Global 8 TTCompany
+{
+    { Properties
+        { Text
+            { Name "tcompany" }
+            { Label "Company" }
+            { Type Text }
+            // { MinLength 1 }
+            { MaxLength 80 }
+            { DispLength 20 }
+        }
+    }
+}
+
+
+Global 8 TTDivision
+{
+    { Properties
+        { Text
+            { Name "tdivision" }
+            { Label "Division" }
+            { Type Text }
+            // { MinLength 1 }
+            { MaxLength 80 }
+            { DispLength 20 }
+        }
+    }
+}
+
+
+Global 8 TTDocVersion
+{
+    { Properties
+        { Text
+            { Name "tdocversion" }
+            { Label "Document Version" }
+            { Init "1.0"}
+            { Type Text }
+            // { MinLength 1 }
+            { MaxLength 20 }
+            { DispLength 20 }
+        }
+    }
+}
+
+
+Global 8 TTDocStatus
+{
+    { Properties
+        { Text
+            { Name "tdocstatus" }
+            { Label "Document Status" }
+            { Init "Analysis"}
+            { Type Text }
+            // { MinLength 1 }
+            { MaxLength 80 }
+            { DispLength 20 }
+        }
+    }
+}
+
+

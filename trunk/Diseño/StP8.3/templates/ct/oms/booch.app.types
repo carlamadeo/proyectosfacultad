@@ -1,0 +1,549 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/Booch
+//      StP Core
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1995
+//      All rights reserved
+//
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////
+//
+// file objects
+// 
+// FileObject	401600	BoochFileFirst
+
+FileObject	401600	BoochClassDiagram
+{
+    { Method 
+	{ Name	"Navigate" }
+	{ Cmd 	"stpem -ed class -first -p ${projdir} -s ${system} -C 'EditorQrlEval NavLoadAndFind(\"${file.name}\",\"${symbol_ref.appid}\");' &" } }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Cmd 	"stpem -ed class -first -p ${projdir} -s ${system} -C 'EditorQrlEval NavLoadAndFind(\"${file.name}\",\"${symbol_ref.appid}\");' &" } }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Cmd 	"stpem -ed class -first -p ${projdir} -s ${system} -C 'EditorQrlEval NavLoadAndFind(\"${file.name}\",NULL);' &" } }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"dprint -ed class -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } }
+}
+
+FileObject	401601	BoochObjectDiagram
+{
+    { Method 
+	{ Name	"Navigate" }
+	{ Cmd 	"stpem -ed object -first -p ${projdir} -s ${system} -C 'EditorQrlEval NavLoadAndFind(\"${file.name}\",\"${symbol_ref.appid}\");' &" } }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Cmd 	"stpem -ed object -first -p ${projdir} -s ${system} -C 'EditorQrlEval NavLoadAndFind(\"${file.name}\",\"${symbol_ref.appid}\");' &" } }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Cmd 	"stpem -ed object -first -p ${projdir} -s ${system} -C 'EditorQrlEval NavLoadAndFind(\"${file.name}\",NULL);' &" } }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"dprint -ed object -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } }
+}
+
+FileObject	401603	BoochModuleDiagram
+{
+    { Method 
+	{ Name	"Navigate" }
+	{ Cmd 	"stpem -ed module -first -p ${projdir} -s ${system} -C 'EditorQrlEval NavLoadAndFind(\"${file.name}\",\"${symbol_ref.appid}\");' &" } }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Cmd 	"stpem -ed module -first -p ${projdir} -s ${system} -C 'EditorQrlEval NavLoadAndFind(\"${file.name}\",\"${symbol_ref.appid}\");' &" } }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Cmd 	"stpem -ed module -first -p ${projdir} -s ${system} -C 'EditorQrlEval NavLoadAndFind(\"${file.name}\",NULL);' &" } }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"dprint -ed module -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } }
+}
+
+FileObject	401604	BoochProcessDiagram
+{
+    { Method 
+	{ Name	"Navigate" }
+	{ Cmd 	"stpem -ed process -first -p ${projdir} -s ${system} -C 'EditorQrlEval NavLoadAndFind(\"${file.name}\",\"${symbol_ref.appid}\");' &" } }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Cmd 	"stpem -ed process -first -p ${projdir} -s ${system} -C 'EditorQrlEval NavLoadAndFind(\"${file.name}\",\"${symbol_ref.appid}\");' &" } }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Cmd 	"stpem -ed process -first -p ${projdir} -s ${system} -C 'EditorQrlEval NavLoadAndFind(\"${file.name}\",NULL);' &" } }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"dprint -ed process -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } }
+}
+
+FileObject	401605 ClassTabularBrowser
+{
+    { Method 
+	{ Name	"FileNavigate" }		// navigate to browser file from browser
+	{ Cmd 	"stpem -ed ootbr -p ${projdir} -s ${system} -C EditorShowDeiconify -C 'FileLoad ${file.name}' &" } }	
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"tprint -ed ootbr -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } }
+}
+
+FileObject	401606	ObjectInteractionTable
+{
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"oite\\",\\"EditorQrlEval NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"oite\\",\\"EditorQrlEval NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"oite\\",\\"EditorQrlEval NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method 
+	{ Name	"Print" }
+	{ Cmd 	"tprint -ed oite -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+}
+
+// FileObject   401699  BoochFileLast   
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// node objects
+//
+// NodeObject	701700	BoochNodeFirst			
+
+NodeObject	701701	Category			{ { Annot "annotation/Category" } }
+NodeObject	701702	Metaclass			{}
+NodeObject	701703	ParameterizedClass		{}
+NodeObject	701704	InstantiatedClass		{}
+NodeObject	701705	ClassUtility			{}
+NodeObject	701706	ParameterizedClassUtility	{}
+NodeObject	701707	InstantiatedClassUtility	{}
+NodeObject	701708	Using				{ { Annot "annotation/Using" } }
+NodeObject	701709	ObjectClassScope		{}
+NodeObject	701710	ObjectDiagOperationScope	{}
+NodeObject	701711	ObjectDiagClassScope		{}
+NodeObject	701712	ObjectDiagCategoryScope		{}
+NodeObject	701713	ObjectInstance			{ { Annot "annotation/ObjectInstance" } }
+NodeObject	701714	Processor			{ { Annot "annotation/Processor" } }
+NodeObject	701715	Device				{}
+NodeObject	701716	Subsystem			{}
+NodeObject	701717	ModuleSpec			{}
+NodeObject	701718	ModuleBody			{}
+NodeObject	701719	ModuleSpecBody			{}
+NodeObject	701720	ModuleMain			{}
+NodeObject	701721	CategoryQualifier		{}
+NodeObject	701722	ObjectTableCategoryScope	{}  // object diagram counter-part
+NodeObject	701723	ObjectTableClassScope		{}  // object diagram counter-part
+NodeObject	701724	ObjectTableOperationScope	{}  // object diagram counter-part
+
+// NodeObject	701999	BoochNodeLast			
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// link objects
+// 
+// LinkObject	601700	BoochLinkFirst
+
+//LinkObject	601701	Metaclass			{} use OMTMetaclass 
+LinkObject	601702	Instantiation			{}  
+LinkObject	601703	UsingSupplier			{ { Annot "annotation/OMTRole" } }
+LinkObject	601704	UsingClient			{ { Annot "annotation/OMTRole" } }
+LinkObject	601705	ComponentOf			{}  
+LinkObject	601706	ObjectLink			{ { Annot "annotation/ObjectLink" } }
+LinkObject	601707	Communication			{ { Annot "annotation/Communication" } }
+LinkObject      601708  ObjectDiagIsContext             {}
+LinkObject      601709  ClassDiagIsContext              {}
+LinkObject	601711	SimpleMessage			{ { Annot "annotation/MessageInstance" } }
+LinkObject	601712	SynchronousMessage		{ { Annot "annotation/MessageInstance" } }
+LinkObject	601713	BalkingMessage			{ { Annot "annotation/MessageInstance" } }
+LinkObject	601714	TimeoutMessage			{ { Annot "annotation/MessageInstance" } }
+LinkObject	601715	AsynchronousMessage		{ { Annot "annotation/MessageInstance" } }
+LinkObject	601716	ModuleDependency		{}
+LinkObject      601717  ModuleDiagIsContext             {}
+LinkObject      601718  ObjectTableIsContext            {}  // object diagram counter-part
+
+// LinkObject 	601999	BoochLinkLast
+
+/////////////////////////////////////////////////////////////////////////////////
+//
+// cntx objects
+// 
+// CntxObject	101001	BoochCntxFirst
+
+CntxObject	101001	O_SimpleMessage			{}
+CntxObject	101002	O_SynchronousMessage		{}
+CntxObject	101003	O_BalkingMessage		{}
+CntxObject	101004	O_TimeoutMessage		{}
+CntxObject	101005	O_AsynchronousMessage		{}
+
+// CntxObject	101099	BoochCntxLast
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// note objects
+// 
+// NoteObject	801700  BoochNoteFirst
+
+NoteObject 	801700  StateDefinition                         {}
+NoteObject 	801701  SuperclassDefinition                    {}
+NoteObject 	801702  ObjectInstanceDefinition                {}
+NoteObject 	801703  ObjectLinkDefinition                    {}
+NoteObject	801704	MessageDefinition			{}
+NoteObject	801705	OperationExtendedDefinition		{}
+NoteObject	801706	ProcessorDefinition			{}
+NoteObject	801707	CommunicationDefinition			{}
+NoteObject	801708	CategoryDefinition			{}
+
+NoteObject	801709	OMTAttributeIDLImplementation		{}
+NoteObject	801710	OMTOperationIDLImplementation		{}
+NoteObject	801711	OMTRoleIDLImplementation		{}
+NoteObject	801712	OMTClassIDLDeclarations			{}
+NoteObject	801713	OMTClassCxxDeclarations			{}
+
+// NoteObject	801799	BoochNoteLast
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// item objects
+// 
+// ItemObject	503000  BoochItemFirst
+
+ItemObject	503000	StateHasHistory 	{ { DataType "StateHistoryType" } }
+ItemObject	503001	RelationshipIsStatic 	{ { DataType "Boolean" } }
+ItemObject	503002	RelationshipIsFriend 	{ { DataType "Boolean" } }
+ItemObject	503004	RelationshipContainment	{ { DataType "BoochContainmentType" } }
+ItemObject	503005	ObjectConcurrency	{ { DataType "ConcurrencyType" } }
+ItemObject	503006	ObjectVisibility	{ { DataType "VisibilityType" } }
+ItemObject	503007	ObjectSharing		{ { DataType "Boolean" } }
+ItemObject	503008	MessageSequenceValue	{ { DataType "String" } }
+ItemObject	503009	MessageNameValue	{ { DataType "String" } }
+ItemObject	503010	MessageArgsValue	{ { DataType "String" } }
+ItemObject	503011	ClassIsAbstract		{ { DataType "Boolean" } }
+ItemObject	503012	ClassExportControl	{ { DataType "ClassExportControlType" } }
+//ItemObject	503013	XXX			{ { DataType "XXX" } }
+ItemObject	503014	ClassPersistence	{ { DataType "ClassPersistenceType" } }
+ItemObject	503015	ClassSpaceComplexity	{ { DataType "String" } }
+ItemObject	503016	OperationQualification	{ { DataType "String" } }
+ItemObject	503017	OperationProtocol	{ { DataType "String" } }
+ItemObject	503018	OperationPreconditions	{ { DataType "String" } }
+ItemObject	503019	OperationSemantics	{ { DataType "String" } }
+ItemObject	503020	OperationPostconditions	{ { DataType "String" } }
+ItemObject	503021	OperationExceptions	{ { DataType "String" } }
+ItemObject	503022	OperationConcurrency	{ { DataType "OperationConcurrencyType" } }
+ItemObject	503023	OperationSpaceComplexity{ { DataType "String" } }
+ItemObject	503024	OperationTimeComplexity	{ { DataType "String" } }
+ItemObject	503025	ProcessorProcess	{ { DataType "String" } }
+ItemObject	503026	ProcessorScheduling	{ { DataType "ProcessorSchedulingType" } }
+ItemObject	503027	LinkIsDirected		{ { DataType "Boolean" } }
+ItemObject	503028	CategoryIsGlobal	{ { DataType "Boolean" } }
+ItemObject	503029	MessageIsEvent		{ { DataType "Boolean" } }
+ItemObject	503030	ClassModule		{ { DataType "String" } }
+ItemObject	503031	ClassParameters		{ { DataType "String" } }
+
+ItemObject	503032	OMTAttributeIDLType		{ { DataType "String" } }
+ItemObject	503033	OMTAttributeIDLIsReadOnly	{ { DataType "Boolean" } }
+ItemObject	503034	OMTOperationIDLParameters	{ { DataType "String" } }
+ItemObject	503035	OMTOperationIDLReturnType	{ { DataType "String" } }
+ItemObject	503036	OMTOperationIDLAttribute	{ { DataType "String" } }
+ItemObject	503037	OMTOperationIDLRaises		{ { DataType "String" } }
+ItemObject	503038	OMTOperationIDLContext		{ { DataType "String" } }
+ItemObject	503039	OMTRoleImplementationIDL	{ { DataType "IDLAssociationImplementationEnum" } }
+ItemObject	503040	OMTRoleReadOnlyIDL	{ { DataType "Boolean" } }
+
+// ItemObject	503999  BoochItemLast
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// viewpoint objects
+// 
+// ViewpointObject 901700	BoochViewpointFirst
+
+ViewpointObject	901701	Category		{}
+ViewpointObject	901702	Members			{}
+ViewpointObject	901703	Superclass		{}
+ViewpointObject	901704	Has			{}
+ViewpointObject	901705	Using			{}
+ViewpointObject	901706	TopLevel		{}
+
+// ViewpointObject 901799	BoochViewpointLast
+
+//////////////////// Rename code ////////////////////
+
+
+NodeObject Category
+{
+    { Update
+	{ DependentsFunc "Category_dependents" }
+    }
+}
+
+FileObject BoochObjectDiagram
+{
+    { Update
+	{ Dependency // Dependency on Category
+	    { Name "CategoryScenarios" }
+	    { DeriveAttrsFunc "Category_BoochObjectDiagram_CategoryScenarios_derattrs" }
+	}
+    }
+}
+
+NodeObject ModuleSpec
+{
+    { Update
+	{ DependentsFunc "ModuleSpec_dependents" }
+    }
+}
+
+NodeObject ModuleBody
+{
+    { Update
+	{ DependentsFunc "ModuleBody_dependents" }
+    }
+}
+
+NodeObject ModuleSpecBody
+{
+    { Update
+	{ DependentsFunc "ModuleSpecBody_dependents" }
+    }
+}
+
+NodeObject ModuleMain
+{
+    { Update
+	{ DependentsFunc "ModuleMain_dependents" }
+    }
+}
+
+
+NodeObject Subsystem
+{
+    { Update
+	{ DependentsFunc "Subsystem_dependents" }
+    }
+}
+
+FileObject BoochModuleDiagram
+{
+    { Update
+	{ Dependency // Dependency on Subsystem
+	    { Name "SubsystemName" }
+	    { DeriveAttrsFunc "Subsystem_BoochModuleDiagram_SubsystemName_derattrs" }
+	}
+    }
+}
+
+LinkObject UsingSupplier
+{
+    { Update
+	{ DependentsFunc "UsingSupplier_dependents" }
+	{ Dependency // Dependency on UsingClient
+	    { Name "UsingClient" }
+	    { DeriveAttrsFunc "UsingClient_UsingSupplier_UsingClient_derattrs" }
+	}
+	{ Dependency // Dependency on Using
+	    { Name "Using" }
+	    { DeriveAttrsFunc "Using_UsingSupplier_Using_derattrs" }
+	}
+    }
+}
+
+LinkObject UsingClient
+{
+    { Update
+	{ DependentsFunc "UsingClient_dependents" }
+	{ Dependency // Dependency on UsingSupplier
+	    { Name "UsingSupplier" }
+	    { DeriveAttrsFunc "UsingSupplier_UsingClient_UsingSupplier_derattrs" }
+	}
+	{ Dependency // Dependency on Using
+	    { Name "Using" }
+	    { DeriveAttrsFunc "Using_UsingClient_Using_derattrs" }
+	}
+    }
+}
+
+NodeObject Using
+{
+    { Update
+	{ DependentsFunc "Using_dependents" }
+	{ Dependency // Dependency on UsingSupplier
+	    { Name "UsingSupplier" }
+	    { DeriveAttrsFunc "UsingSupplier_Using_UsingSupplier_derattrs" }
+	}
+	{ Dependency // Dependency on UsingClient
+	    { Name "UsingClient" }
+	    { DeriveAttrsFunc "UsingClient_Using_UsingClient_derattrs" }
+	}
+	{ Dependency // Dependency on OMTClass
+	    { Name "ClassUsing" }
+	    { DeriveAttrsFunc "OMTClass_Using_ClassUsing_derattrs" }
+	}
+    }
+}
+
+
+LinkObject SimpleMessage
+{
+    { Update
+	{ DependentsFunc "SimpleMessage_dependents" }
+	{ Dependency // Optional dependency on Any Message Type
+	    { Name "MessagesInSameCntx" }
+	    { DeriveAttrsFunc "SimpleMessage_SimpleMessage_MessagesInSameCntx_derattrs" }
+
+	}
+    }
+}
+
+LinkObject SynchronousMessage
+{
+    { Update
+	{ DependentsFunc "SimpleMessage_dependents" }
+	{ Dependency // Optional dependency on Any Message Type
+	    { Name "MessagesInSameCntx" }
+	    { DeriveAttrsFunc "SimpleMessage_SimpleMessage_MessagesInSameCntx_derattrs" }
+
+	}
+    }
+}
+
+LinkObject BalkingMessage
+{
+    { Update
+	{ DependentsFunc "SimpleMessage_dependents" }
+	{ Dependency // Optional dependency on Any Message Type
+	    { Name "MessagesInSameCntx" }
+	    { DeriveAttrsFunc "SimpleMessage_SimpleMessage_MessagesInSameCntx_derattrs" }
+	}
+    }
+}
+
+LinkObject TimeoutMessage
+{
+    { Update
+	{ DependentsFunc "SimpleMessage_dependents" }
+	{ Dependency // Optional dependency Any Message Type
+	    { Name "MessagesInSameCntx" }
+	    { DeriveAttrsFunc "SimpleMessage_SimpleMessage_MessagesInSameCntx_derattrs" }
+	}
+
+    }
+}
+
+LinkObject AsynchronousMessage
+{
+    { Update
+	{ DependentsFunc "SimpleMessage_dependents" }
+	{ Dependency // Optional dependency on Any Message Type
+	    { Name "MessagesInSameCntx" }
+	    { DeriveAttrsFunc "SimpleMessage_SimpleMessage_MessagesInSameCntx_derattrs" }
+	}
+
+    }
+}
+
+ItemObject MessageNameValue
+{
+    { Update
+	{ Dependency // Dependency on SimpleMessage, SynchronousMessage, BalkingMessage, TimeoutMessage, AsynchronousMessage
+	    { Name "MessageName" }
+	    { DeriveAttrsFunc "SimpleMessage_MessageNameValue_MessageName_derattrs" }
+	}
+    }
+}
+
+ItemObject MessageIsEvent
+{
+    { Update
+	{ Dependency // Dependency on SimpleMessage, SynchronousMessage, BalkingMessage, TimeoutMessage, AsynchronousMessage
+	    { Name "MessageEvent" }
+	    { DeriveAttrsFunc "SimpleMessage_MessageIsEvent_MessageEvent_derattrs" }
+	}
+    }
+}
+
+ItemObject MessageArgsValue
+{
+    { Update
+	{ Dependency // Dependency on SimpleMessage, SynchronousMessage, BalkingMessage, TimeoutMessage, AsynchronousMessage
+	    { Name "MessageArgs" }
+	    { DeriveAttrsFunc "SimpleMessage_MessageArgsValue_MessageArgs_derattrs" }
+	}
+    }
+}
+
+LinkObject SimpleMessage
+{
+    { Update
+	{ Dependency // Optional dependency on OMTOperation
+	    { Name "MsgNameCntx" }
+	    { DeriveAttrsFunc "OMTOperation_Message_MsgNameCntx_derattrs" }
+	}
+	{ Dependency // Optional dependency on OMTOperation
+	    { Name "MsgOperName" }
+	    { DeriveAttrsFunc "OMTOperation_Message_MsgOperName_derattrs" }
+	}
+    }
+}
+
+LinkObject SynchronousMessage
+{
+    { Update
+	{ Dependency // Optional dependency on OMTOperation
+	    { Name "MsgNameCntx" }
+	    { DeriveAttrsFunc "OMTOperation_Message_MsgNameCntx_derattrs" }
+	}
+	{ Dependency // Optional dependency on OMTOperation
+	    { Name "MsgOperName" }
+	    { DeriveAttrsFunc "OMTOperation_Message_MsgOperName_derattrs" }
+	}
+    }
+}
+
+LinkObject BalkingMessage
+{
+    { Update
+	{ Dependency // Optional dependency on OMTOperation
+	    { Name "MsgNameCntx" }
+	    { DeriveAttrsFunc "OMTOperation_Message_MsgNameCntx_derattrs" }
+	}
+	{ Dependency // Optional dependency on OMTOperation
+	    { Name "MsgOperName" }
+	    { DeriveAttrsFunc "OMTOperation_Message_MsgOperName_derattrs" }
+	}
+    }
+}
+
+LinkObject TimeoutMessage
+{
+    { Update
+	{ Dependency // Optional dependency on OMTOperation
+	    { Name "MsgNameCntx" }
+	    { DeriveAttrsFunc "OMTOperation_Message_MsgNameCntx_derattrs" }
+	}
+	{ Dependency // Optional dependency on OMTOperation
+	    { Name "MsgOperName" }
+	    { DeriveAttrsFunc "OMTOperation_Message_MsgOperName_derattrs" }
+	}
+    }
+}
+
+LinkObject AsynchronousMessage
+{
+    { Update
+	{ Dependency // Optional dependency on OMTOperation
+	    { Name "MsgNameCntx" }
+	    { DeriveAttrsFunc "OMTOperation_Message_MsgNameCntx_derattrs" }
+	}
+	{ Dependency // Optional dependency on OMTOperation
+	    { Name "MsgOperName" }
+	    { DeriveAttrsFunc "OMTOperation_Message_MsgOperName_derattrs" }
+	}
+    }
+}

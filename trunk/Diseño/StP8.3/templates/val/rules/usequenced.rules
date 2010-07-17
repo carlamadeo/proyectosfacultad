@@ -1,0 +1,12 @@
+
+//      Validator
+//      Confidential property of Aonix
+//      Copyright (c) 1997-1999
+//      All rights reserved
+
+Include "val/rules/val.feature"
+
+Include "uml/rules/usequenced_impl.rules"
+
+PassWord "1647692A"
+

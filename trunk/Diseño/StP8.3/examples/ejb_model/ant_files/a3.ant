@@ -1,0 +1,50 @@
+FileObject 1
+{
+    { Name "a3" }
+    { Type ObjectAnnotation }
+    { GUID "UID_EE49ABDA-CE9D-497a-86B1-FB5C7B6CE7F2" }
+}
+
+NodeObject 99999
+{
+    { Name "BankStatement" }
+    { Type UmlClass }
+    { ObjectId 329 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_47881ED2-0F47-11d5-8C6D-000000000000" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 461 }
+}
+
+ItemObject 3
+{
+    { Type UmlStereotype }
+    { Value "SessionBean" }
+    { NoteId 2 }
+    { ObjectId 462 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 464 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "BankStatement" }
+    { NoteId 4 }
+    { ObjectId 465 }
+}
+

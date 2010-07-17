@@ -1,0 +1,244 @@
+//*****************************************************************************
+// $RCSfile: c_main.tdl,v $
+// $Revision: 1.2 $
+// $Date: 2001/06/15 02:10:33 $
+// Author: Markus Kern
+//*****************************************************************************
+/*
+Contains the main routine of the C code generator.
+
+Generates for each class in the model:
+	 - header file (template genH, defined in c_genh.tdl)
+	 - a body (template genC, defined in c_genc.tdl)
+
+Generates the main routine of the generated application 
+(template genMain, defined below).
+
+Generates one file (classes.h) containing all forward declarations 
+(template genClassesH, defined below).
+
+Initializes for every class a list, which contains all operation of the class
+themselve and all inherited classes (procedure initFuncList, defined below).
+This list is used to find out which operation is virtual
+
+The mapping of metatypes and StP/Uml types is documented in the ACD description.
+*/
+
+/*
+imports other template files
+*/
+USES c_std;
+USES c_genh;
+USES c_genbody;
+USES c_gensm;
+
+/******************************************************************************
+This is the entry procedure of the cpp code generator.
+******************************************************************************/
+proc main()
+
+	/* Initializes language specific settings. (defined in c_std.tdl) */
+	init();
+
+	/* Redirect output to generated file <[srcdir]"/<fileName.ext>">. 
+	   srcdir is a global variable which is provided by the code generation 
+	   dialog srcdir will be generated, if it is necessary.
+	   info redirects output to message log.
+	   out redirects output to the file, which is defined by output. */
+	output([srcdir] "/classes.h");
+	info = "generate " getOutput() "\n";
+	/* calls the template genClassesH (defined below)*/
+	out = genClassesH();			
+
+	output([srcdir] "/main.c");
+	info = "generate " getOutput() "\n";
+	/* calls the template genMain (defined in cpp_main.tdl)*/
+	out = genMain();				
+
+	/* loop over all MNormalClasses in the model.
+	   MNormalClass is a metaclass which represents classes in StP */
+	loop (Instances->MNormalClass Where !isExternal([MNormalClass]))
+		
+		/* Initialize the operation list for each instance of MNormalClas
+		   (defined below) */
+		initOperationList([MNormalClass]);
+
+		/* Generates a header file for each instance of MNormalClass */
+		// ECR 5570 begin
+		// output([srcdir] "/" toLower([MNormalClass.name]) ".h");
+		output([srcdir] "/" [MNormalClass.name] ".h");
+		// ECR 5570 end
+		info = "generate " getOutput() "\n";
+		out = genH([MNormalClass]);
+
+		/* Generates a body file for each instance of MNormalClass */
+		// ECR 5570 begin
+		// output([srcdir] "/" toLower([MNormalClass.name]) ".c");
+		output([srcdir] "/" [MNormalClass.name] ".c");
+		// ECR 5570 end
+		info = "generate " getOutput() "\n";
+		out = genC([MNormalClass]);
+	end loop
+end proc
+
+
+/******************************************************************************
+generates main.c which contains the main routine of the application.
+This is just an example of how the main routine could look like.
+******************************************************************************/
+template genMain()
+
+[/* Generates a marked section in the output. The content of this section can 
+be changed by the user in the generated file. These changes will not be 
+overwritten, in the following cycles of code generation */]
+[mergeOut("UDIF","")]
+
+void Applic_Init() {
+	[mergeOut("UDSC","StartUp Code")]
+}
+
+int main() {
+
+	[mergeOut("UDVD", "Variable Declaration")]
+
+	Applic_Init();
+
+	[mergeOut("UDMC","Main Program Code")]
+
+	return 0;
+}
+end template
+
+/******************************************************************************
+generates classes.h which contains a forward declaration for each class
+in the model. Each class is represented as a struct with the name of the class
+and a trailing "_obj". An unique ClassID is assigned to each class, to handle a
+simple runtime type information mechanism. Every generated class file includes
+classes.h
+******************************************************************************/
+template genClassesH()
+#ifndef _CLASSES_H_
+#define _CLASSES_H_
+
+	enum ClassID {
+		/* loop over all MNormalClasses in the model.
+		   MNormalClass is a metaclass which represents classes in 
+		   StP */
+		[setDelim("")]
+		[loop(Instances->MNormalClass)][delim()][setDelim(",")]
+		[MNormalClass.name]Type[end loop]
+
+	};
+
+	[loop(Instances->MNormalClass)]
+	struct [MNormalClass.name]_obj;
+	[end loop]
+#endif
+end template
+
+/******************************************************************************
+loops through the inheritance tree and returns the topmost class, which
+operation name matches with the operation name given by the parameter argument.
+It matches only virtual operations. This procedure is used from genC, defined
+in c_genc.tdl and genH, defined in c_genh.tdl.
+******************************************************************************/
+proc getClassName(MClass,MOperation)
+	/* get an id list of all direct and indirect parent classes. invIdOrder
+	   causes that the id of the topmost class comes first. */
+	local superClassList = invIdOrder(getIdListRec(MClass->SuperClass) [MClass.id]);
+	/* loop over all operations of the class and all his direct and indirect
+	   parents. Note that the operations of the topmost class comes first */
+	loop(Instances->MClass([superClassList]) As SClass->MOperation As Operation
+	/* only the virtual operations will be looped. If the operation name of the
+	   parameter argument matches with the looped operation, the actual class
+	   instance will be returned */
+	Where [Operation.binding] == "virtual" && [MOperation.name] == [Operation.name])
+		return [SClass.name];
+	end loop
+	return "";
+end proc
+
+/******************************************************************************
+This procedure is used, to collect all operations, which belongs to one class.
+An operation belongs to a class, if the operation is defined at this
+class or the operation is defined by a direct or indirect parent class.
+There are two lists:
+
+ "MClass:opIdList"     : contains the id's of all operations. (used in
+                         genOperationClass, c_genh.tdl)
+                         
+ "MClass:virtOpIdList" : contains the id's of all virtual operations.
+                         (used in genH, c_genh.tdl and genC, c_genc.tdl)
+
+The lists are realized as meta properties (described in the acd description)
+******************************************************************************/
+proc initOperationList(MClass)
+
+	/* SuperClassList contains a list of all direct and indirect parent
+	   classes, including the own class. This list is used here, in genH
+	   (defined in c_genh.tdl) and genC (defined in c_genc.tdl).
+	   getIdListRec is an internal tdl procedure, who returns an id list.
+	   It is triggered by a loop statement like 'MClass->SuperClass'. In
+	   difference to getIdList, getIdListRec delivers also all indirect
+	   parent classes. */
+	[SuperClassList] = getIdListRec(MClass->SuperClass) [MClass.id];
+	
+	/* loop over all operations of all direct and indirect parent classes.
+	   invIdOrder inverses the order of the id list (defined in std.tdl).
+	   Normally getIdListRec returns the id list in the order, that the
+	   class at the bottom of an inheritance tree, comes first. In this
+	   case it is necessary that the topmost class comes first. */
+	loop(Instances->MClass(invIdOrder([SuperClassList])) As SClass->MOperation)
+		/* create an id list 'MClass:opIdList', which contains the
+		   id's of all unique operations of all direct and indirect
+		   parent classes. The list is used in procedure
+		   genOperationCall (defined in c_genh.tdl). List
+		   'MClass:opList' is only used to filter out operations
+		   with the same name. */
+		if(!([MOperation.name] " " in [MClass:opList]))
+			[MClass:opList] = [MClass:opList] [MOperation.name] " ";
+			[MClass:opIdList] = [MClass:opIdList] [MOperation.id] " ";
+		end if
+	end loop
+	
+	/* loop over all virtual operations of all direct and indirect parent
+	   classes. An operation is also virtual, if a direct or indirect parent
+	   class has a virtual operation with the same name. The condition who
+	   selects the virtual operations is realized by the procedure
+	   'isOpVirtual' (defined below) */
+	loop(Instances->MClass([SuperClassList]) As SClass->MOperation Where isOpVirtual([MOperation]))
+		/* create an id list 'MClass:virtOpList', which contains the id's
+		   of all unique virtual operations triggered by the surounding
+		   loop. List 'MClass:virtOpList' is only used to filter out
+		   virtual operations with the same name. */
+		if(!([MOperation.name] " " in [MClass:virtOpList]))
+			[MClass:virtOpList] = [MClass:virtOpList] [MOperation.name] " ";
+			if(!([MOperation.id] " " in [[MClass.id]"_"[SClass.id] "virtOpIdList"]))
+				[[MClass.id]"_"[SClass.id] "virtOpIdList"] = [[MClass.id]"_"[SClass.id] "virtOpIdList"] [MOperation.id] " ";
+			end if
+		end if
+	end loop
+end proc
+
+
+/******************************************************************************
+returns true, if the operation at the argument list is virtual. It returns
+also true if a direct or indirect parent class has a virtual operation with the
+same name. (used by initOperationList, previous procedure)
+******************************************************************************/
+proc isOpVirtual(MOperation)
+	if([MOperation.binding] == "virtual")
+		return TRUE;
+	end if
+	
+	local superClassList;
+	loop(MOperation->MClass)
+		[superClassList] = getIdListRec(MClass->SuperClass);
+	end loop
+	loop(Instances->MClass([superClassList])->MOperation As Operation)
+		if([MOperation.name] == [Operation.name] && [Operation.binding] == "virtual")
+			return TRUE;
+		end if
+	end loop
+	return FALSE;
+end proc

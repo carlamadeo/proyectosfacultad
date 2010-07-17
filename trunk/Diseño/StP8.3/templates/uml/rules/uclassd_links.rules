@@ -1,0 +1,325 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+//
+
+// This file contains all the definitions of the links regarding their
+// appearance and connections.
+
+
+//----------------------------------------------------------------------------//
+
+LinkSymbol Generalization
+{
+    { PrintName "Generalization" }
+// ECR2653 All generalizations can have a discriminator label
+    { CanHaveLabel True }
+// ECR2653
+    { Uncentered True }
+    { ToLargeArrow True }	// the arrow points to the superclass
+    { ToFilledArrow False }
+	{ Connects 
+		{ From GeneralizationFromTypeset }
+		{ To GeneralizationToTypeset }
+	}
+	{ Connects 
+		{ From AllPackageTypes }
+		{ To AllPackageTypes }
+	}
+
+    { ReplaceSet ( LinkReplaceTypeset ) }
+}
+
+LinkSymbol Dependency
+{
+	{ PrintName "Dependency" }
+    // ECR 190
+	{ ToOpenArrow True }
+	{ Dashed True }
+	{ Uncentered True }
+    { CanHaveLabel True }
+	{ Connects 
+		{ From DependencyFromTypeset }
+		{ To DependencyToTypeset }
+		{ IsDefault True }
+	}
+	{ Connects 
+		{ From InstantiatedClass }
+		{ To InstantiatedClassDependencyToTypeset }
+	}
+    { ReplaceSet ( LinkReplaceTypeset ) }
+}
+
+LinkSymbol Association
+{
+    { PrintName "Association" }
+    { CanHaveLabel True }
+    { Uncentered True }
+    { ReplaceSet ( AssociationLinkReplaceTypeset ) } // ECR 7544
+	{ Connects 
+		{ From AssociationFromTypeset }
+		{ To AssociationToTypeset }
+	}
+//  ECR 7533 begin
+//	{ Connects 
+//		{ From InstantiatedClass }
+//		{ To AssociationToTypeset }
+//	}
+//	{ Connects 
+//		{ From AssociationFromTypeset }
+//		{ To InstantiatedClass }
+//	}
+//	{ Connects 
+//		{ From ParameterizedClass }
+//		{ To AssociationToTypeset }
+//	}
+//	{ Connects 
+//		{ From AssociationFromTypeset }
+//		{ To ParameterizedClass }
+//	}
+//	{ Connects 
+//		{ From InstantiatedClass }
+//		{ To ParameterizedClass }
+//	}
+//	{ Connects 
+//		{ From ParameterizedClass }
+//		{ To InstantiatedClass }
+//	}
+//  ECR 7533 end
+	// to support association classes
+	{ Cardinality
+		{ Min 0 }
+		{ Max 1 }
+		{ CntxSymbols AssociationAnchor }
+	}
+}
+
+// ECR 3856 - begin
+LinkSymbol Aggregation
+{
+    { PrintName "Aggregation" }
+    { CanHaveLabel True }
+    { Uncentered True }
+    { ReplaceSet ( AssociationLinkReplaceTypeset ) } // ECR 7544
+	{ Connects 
+		{ From AssociationFromTypeset }
+		{ To AssociationToTypeset }
+	}
+	{ Connects 
+		{ From InstantiatedClass }
+		{ To AssociationToTypeset }
+	}
+	{ Connects 
+		{ From AssociationFromTypeset }
+		{ To InstantiatedClass }
+	}
+	{ Connects 
+		{ From ParameterizedClass }
+		{ To AssociationToTypeset }
+	}
+	{ Connects 
+		{ From AssociationFromTypeset }
+		{ To ParameterizedClass }
+	}
+	{ Connects 
+		{ From InstantiatedClass }
+		{ To ParameterizedClass }
+	}
+	{ Connects 
+		{ From ParameterizedClass }
+		{ To InstantiatedClass }
+	}
+	// to support association classes
+	{ Cardinality
+		{ Min 0 }
+		{ Max 1 }
+		{ CntxSymbols AssociationAnchor }
+	}
+}
+// ECR 3856 - end
+
+// ECR 7480 start
+LinkSymbol NavigableAssociation
+{
+    { PrintName "NavigableAssociation" }
+    { CanHaveLabel True }
+    { Uncentered True }
+    { ReplaceSet ( AssociationLinkReplaceTypeset ) } // ECR 7544
+	{ Connects 
+		{ From AssociationFromTypeset }
+		{ To AssociationToTypeset }
+	}
+	{ Connects 
+		{ From InstantiatedClass }
+		{ To AssociationToTypeset }
+	}
+	{ Connects 
+		{ From AssociationFromTypeset }
+		{ To InstantiatedClass }
+	}
+	{ Connects 
+		{ From ParameterizedClass }
+		{ To AssociationToTypeset }
+	}
+	{ Connects 
+		{ From AssociationFromTypeset }
+		{ To ParameterizedClass }
+	}
+	{ Connects 
+		{ From InstantiatedClass }
+		{ To ParameterizedClass }
+	}
+	{ Connects 
+		{ From ParameterizedClass }
+		{ To InstantiatedClass }
+	}
+	// to support association classes
+	{ Cardinality
+		{ Min 0 }
+		{ Max 1 }
+		{ CntxSymbols AssociationAnchor }
+	}
+}
+// ECR 7480 end
+
+LinkSymbol NaryAssociationRole
+{
+    { PrintName "N-ary Association Role" }
+    { CanHaveLabel False }
+    { Uncentered True }
+    { ReplaceSet ( None ) }
+	{ Connects 
+		{ From NaryAssociationHub }
+		{ To AssociationFromTypeset }
+	}
+	{ Connects 
+		{ From NaryAssociationHub }
+		{ To AssociationToTypeset }
+	}
+	{ Connects 
+		{ From NaryAssociationHub }
+		{ To InstantiatedClass }
+	}
+    { ReplaceSet ( AssociationClassLink NaryAssociationRole ) }
+}
+
+LinkSymbol ObjectAssociation
+{
+    { PrintName "Object Association" }
+	{ Connects
+		{ From Object }
+		{ To Object }
+		{ IsDefault True }
+	}
+    { CanHaveLabel True }
+}
+
+LinkSymbol ObjectInstantiation
+{
+	// JED - TODO: how should this appear?
+    { PrintName "Object Instantiation" }
+	{ Connects
+		{ From Object }
+		{ To ObjectInstantiationToTypeset }
+		{ IsDefault True }
+	}
+    { CanHaveLabel True }
+    { Uncentered True } // ECR 5954
+}
+
+
+LinkSymbol Refines
+{
+    { PrintName "Binds" }
+    { CanHaveLabel False }
+    { Uncentered True }
+    { ToLargeArrow True }	// the arrow points to the parameterized class
+    { ToFilledArrow False }
+    { Dashed True }
+    { ReplaceSet ( LinkReplaceTypeset ) }
+	{ Connects 
+		{ From RefinesFromTypeset }
+		{ To RefinesToTypeset }
+	}
+}
+
+LinkSymbol Implements
+{
+    // Begin Change ECR 6241
+    { PrintName "Realizes" }
+    { ToLargeArrow True }	// the arrow points to the superclass
+    { ToFilledArrow False }
+    { Dashed True }
+    // End Change ECR 6241
+    { CanHaveLabel False }
+    { Uncentered True }
+    { ReplaceSet ( LinkReplaceTypeset ) }
+	{ Connects 
+		{ From ImplementsFromTypeset }
+		{ To ImplementsToTypeset }
+	}
+}
+
+LinkSymbol Contains  
+{
+    { PrintName "Containment Link" }
+	{ Connects
+		{ From Package }
+		{ To PackageContainsToTypeset }
+	}
+	{ Connects
+		{ From ClassContainsFromTypeset }
+		{ To ClassContainsToTypeset }
+	}
+    { Uncentered True }
+    { CanBeVisible False }
+    { CanBeInclude True }
+    { ReplaceSet ( None ) }
+}
+
+// JED - this is a dummy link so that packages can contain the
+// interface symbols without mapping a link to them
+LinkSymbol DummyContainLink
+{
+	{ Connects
+		{ From Package }
+		{ To Interface }
+	}
+    { Uncentered True }
+    { CanBeVisible False }
+    { CanBeInclude True }
+    { ReplaceSet ( None ) }
+}
+
+LinkSymbol AssociationOr
+{
+    { PrintName "Or Association" }
+    { CanHaveLabel True }
+    { Uncentered True }
+    { Dashed True }
+    { ToArrow False }
+	{ Connects
+		{ From AssociationAnchor }
+		{ To AssociationAnchor }
+	}
+}
+
+LinkSymbol AssociationClassLink
+{
+    { PrintName "AssociationClass Link" }
+    { CanHaveLabel False }
+    { Uncentered True }
+    { Dashed True }
+	{ Connects
+		{ From AssociationAnchor }
+		{ To Class }
+	}
+	{ Connects
+		{ From NaryAssociationHub }
+		{ To Class }
+	}
+    { ReplaceSet ( NaryAssociationRole AssociationClassLink ) }
+}

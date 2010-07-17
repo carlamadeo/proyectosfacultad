@@ -1,0 +1,605 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Aonix.
+// 	Copyright (c) 1992-1997
+// 	All rights reserved
+//
+
+////////////////////////////////////////////////////////////////////////////
+//
+//	all_files.qrl
+//	
+//	print files (all if none named) and objects on them with annotations
+//	using format file (for all targets): all_files
+//
+////////////////////////////////////////////////////////////////////////////
+
+#include "qrl/include/files.inc"
+#include "qrl/include/all_files_formats.inc"
+#include "qrl/include/return_codes.inc"
+
+external string  files = "";  
+external_help = "Limit report to file(s) named by this variable.";
+
+external string file_types = "";
+external_help = "Limit report to filetype(s) named by this variable.";
+
+const string report_contents_both     = "both";
+const string report_contents_graphics = "graphics";
+const string report_contents_text     = "text";
+
+external string report_contents       = "both";
+external_help = "Report contents: 'text' = objects and annotations only; 'graphics' = diagram and table files only; 'both' = graphics and text combined. If target is ascii, 'text' is recommended.";
+
+external boolean include_all_file_history = False;
+external_help = "If True, the report includes a complete history of the file. If False, the report includes only the most recent type of action performed on the file, such as Modified, Viewed.";
+
+external boolean include_all_scope_nodes_cntxs = True;
+external_help = "Include scoped nodes and cntxs (such as Inherited Keys, Parameters) even if not referenced on the diagram or table.";
+
+external boolean include_all_plain_links = False;
+external_help = "Include links without annotations or cntx objects.";
+
+external boolean verbose = False;
+external_help = "Give status messages as report executes.";
+
+script_help = "Print files (diagrams and tables) and objects on them with annotations. If no file names are given all files are included in the report. This report requires the print format file all_files.";
+
+
+boolean page_break_just_printed = True;
+
+//
+// main()
+//
+// retrieve file objects for named files
+// print report context and file history for each file
+// for each file, 
+//   check to see if file is out of sync with repository,
+//   print the diagram or table,
+//   call functions to list objects and annotations
+// report any errors
+//
+
+int
+main()
+{
+    list   list_of_files;
+    file   one_file;
+    int    ix, count, errors = 0;
+    string time, file_type_expr;
+    
+    message("Generating All Files Report...");
+
+    // set default format
+    format(DefaultFormatFile);
+    table_cell_paragraph_format_set(TableBodyCellFormat);
+    table_cell_bold_paragraph_format_set(TableHeaderCellFormat);
+    table_caption_paragraph_format_set(FigureTitleFormat);
+    diagram_caption_paragraph_format_set(FigureTitleFormat);
+
+    if (file_types == "")
+    	file_type_expr = "";
+    else    
+        file_type_expr = "(" + list_to_string(string_to_list(file_types, ","), 
+    	    	    	" || ") + ")";
+    list_of_files = file_list(file_type_expr, files);
+
+    // Remove non-printable sources from the file list
+    count = list_count(list_of_files);
+    for (ix = 0; ix < count;)
+    {
+    	one_file = list_get(list_of_files, ix);
+    	if (!file_is_printable(one_file))
+    	{
+    	    list_delete(list_of_files, ix);
+    	    /* adjust count; don't adjust index as everything ahead of this
+    	       just moved back one index */
+    	    count = list_count(list_of_files);
+    	}
+    	else
+    	    ix = ix + 1;
+    }
+
+    if (list_count(list_of_files) == 0) 
+    { 
+	ide_error("No printable files found."); 
+	errors = errors + 1;
+    } 
+    else
+    {
+	paragraph(SectionFormat);
+	print("All Files Report");
+
+	paragraph(SeparatorFormat); print("");
+
+	paragraph(Object1Format);
+	print("Project directory: " + current_projdir());
+	paragraph(Object1Format);
+	print("System: " + current_system());
+	paragraph(Object1Format);
+	time = time_to_string(time_now(), NULL);
+	print("Time: " + time );
+	paragraph(Object1Format);
+	print("User: " + user() );
+
+	paragraph(SeparatorFormat); print("");
+
+	for (ix = 0; ix < list_count(list_of_files); ix = ix + 1)
+	{
+	    one_file = list_get(list_of_files, ix);
+
+	    paragraph(Object1Format);
+	    print(app_type_print_string(one_file) + ": " + one_file.name);
+
+	    if (verbose == True)
+		message("Checking " + app_type_print_string(one_file) + 
+			": " + one_file.name);
+
+	    errors = errors + file_history(one_file);
+	    errors = errors + file_hist_print(one_file, 2);
+	    
+            if(one_file.annot_file_id != 0)
+	        errors = errors + file_annot_print(one_file, 1);
+	}
+
+        // Taken out at the request of bug number 14290
+	//if (errors) return errors; // if some files are not in sync with rep
+
+	for (ix = 0; ix < list_count(list_of_files); ix = ix + 1)
+	{
+	    one_file = list_get(list_of_files, ix);
+
+	    if (verbose == True)
+		message("Reporting on " + app_type_print_string(one_file) + 
+			": " + one_file.name);
+
+	    if (report_contents != report_contents_text) 
+	        errors = errors + oms_file_print(one_file, time); 
+
+	    if (report_contents == report_contents_graphics) continue;
+
+	    errors = errors + objs_print(one_file, time); // object and annot listing
+	}
+    }
+    error_count("file printing", errors);
+    return errors;
+}
+
+void
+maybe_print_page_break()
+{
+    if (page_break_just_printed)
+	return;
+    else
+    {
+	page();
+        page_break_just_printed = True;
+    }    
+}
+
+void
+printed_something_on_page()
+{
+    page_break_just_printed = False;
+}
+
+//
+// oms_file_print()
+//
+// graphically print file depending on file type (diagram or table)
+// with timestamp of report execution
+//
+
+int
+oms_file_print(file one_file, string time)
+{
+    int errors = 0;
+    string file_type = one_file.type;
+    string caption = app_type_print_string(one_file) + ": " + 
+	one_file.name + " (" + time + ")" ;
+
+    // print file if a repository source but not an annotation file
+    if (file_is_printable(one_file))
+    {
+	file_print( one_file, caption );
+	printed_something_on_page();
+	maybe_print_page_break();
+    }
+    else
+    {
+	ide_error( one_file, "Unknown File Type: " + file_type + 
+		" Name: " + one_file.name);
+	errors = errors + 1;
+    }
+    return errors;
+}
+
+//
+// file_hist_print()
+//
+// print either all file history objects or just the most recent for the file
+// depending on the external variable include_all_file_history
+// 
+
+
+int
+file_hist_print(file one_file, int level )
+{
+    int errors = 0;
+    file_hist one_file_hist;
+    file_hist last_file_hist = NULL;
+    string sort_clause;
+
+    if (include_all_file_history == True)
+	sort_clause = "sort by time";
+    else
+	sort_clause = "sort by type, time";
+
+    for_each_in_select("file_hist[file_id == ${one_file.id}]" +
+	    sort_clause, one_file_hist)
+    {
+	if (include_all_file_history == False)
+	{
+	    if (last_file_hist == NULL )
+		last_file_hist = one_file_hist;
+
+	    if (last_file_hist.type != one_file_hist.type)
+	    {
+		paragraph(ObjectFormat + level);
+		print(last_file_hist.time + ": " + 
+			app_type_print_string(last_file_hist) );
+	    }
+	    last_file_hist = one_file_hist;
+	}
+	else
+	{
+	    paragraph(ObjectFormat + level);
+	    print(one_file_hist.time + ": " + 
+		    app_type_print_string(one_file_hist) );
+	}
+    }
+
+    if (include_all_file_history == False)
+	if (last_file_hist != NULL ) // && last_file_hist != one_file_hist)
+	{
+	    paragraph(ObjectFormat + level);
+	    print(last_file_hist.time + ": " + 
+		    app_type_print_string(last_file_hist) );
+	}
+
+    paragraph(SeparatorFormat); print("");
+    return errors;
+}
+
+//
+// print file's annotation, if include_annot == True
+//
+
+int
+file_annot_print(file one_file, int level)
+{
+    int errors = 0;
+   
+    paragraph(ObjectFormat + level);
+        
+    annot_print(one_file.id, level);
+    paragraph(SeparatorFormat); print("");
+    
+    return errors;
+}
+
+//
+// objs_print()
+//
+// for all nodes in the file not scoped to another node
+//   print the node and its annotations
+//   find all nodes scoped to this node
+//     print the scoped nodes and their annotations
+// for all links in the file
+//   print the link and its annotations
+//   find all cntxs connected to this link
+//     print the cntx and its annotations
+//
+
+int
+objs_print(file one_file, string time)
+{
+    int     errors = 0;
+    int     cur_level;
+    boolean objs_found = False;
+    boolean cntx_found = False;
+    node    one_node, one_scope_node;
+    link    one_link;
+    cntx    one_cntx;
+    string  scope_query, link_query;
+
+    if (include_all_scope_nodes_cntxs)
+	scope_query = "";
+    else
+	scope_query = "[file_id == ${one_file.id}]";
+	
+    //special case for DseDiagrams
+    
+    if(app_type_print_string(one_file) == "DseDiagram")
+        scope_query = "[file_id == ${one_file.id}]";
+
+    for_each_in_select("node[node_refs[file_id == ${one_file.id}] && "
+	+ "scope_node_id == 0 ] sort by type, name", one_node)
+    {
+	if (objs_found == False)
+	{
+            maybe_print_page_break();
+	    paragraph(SectionFormat);
+	    print("Nodes for " + app_type_print_string(one_file) + 
+		    ": " + one_file.name);
+	    paragraph(SeparatorFormat); print("");
+	    objs_found = True;
+	    printed_something_on_page();
+	}
+	if (one_node.scope_node_id == 0 || one_node.scope_node_id == NULL)
+ 	{
+	    cur_level = 1;
+	
+	//print nodes and their scoped_nodes
+	    
+	    cur_level = print_node_and_scope(one_file, one_node, cur_level, scope_query);
+
+	    printed_something_on_page();
+	}
+    }
+
+    if (include_all_plain_links)
+	link_query = "";
+    else
+	link_query = "&& (cntxs[cntx_refs] || annot_file_id != 0)";
+
+    if (include_all_scope_nodes_cntxs)
+	scope_query = "";
+    else
+	scope_query = "[file_id == ${one_file.id}]";
+
+    objs_found = False;
+    id_list_create("link[link_refs[file_id == ${one_file.id}]]", "file_links");
+    for_each_in_select("link[file_links " +
+	    "${link_query}] sort by type, name", one_link)
+    {
+	if (objs_found == False)
+	{
+            maybe_print_page_break();
+	    paragraph(SectionFormat);
+	    print("Links for " + app_type_print_string(one_file) + 
+		    ": " + one_file.name);
+	    paragraph(SeparatorFormat); print("");
+	    objs_found = True;
+	    printed_something_on_page();
+	}
+	link_print(one_link, 1, True, "", "");
+	cntx_found = False;
+	for_each_in_select("cntx[link_id == ${one_link.id} && " +
+		"cntx_refs ${scope_query}] sort by type, name", 
+		one_cntx)
+	{
+	    if (cntx_found == False)
+	    {
+		paragraph(SeparatorFormat); print("");
+		cntx_found = True;
+	    }
+	    cntx_print(one_cntx, 2, True, "", "");
+	    printed_something_on_page();
+	}
+    }
+    id_list_free("file_links");
+    return errors;
+}
+
+//
+// print_node_and_scope()
+// recursively prints nodes and their scoped nodes --
+// text indentation is based on a node's decomposition level
+//
+// "scope_cntx" is defined in function "objs_print", as "scope_query,
+// and is used throughout that function.  Note that it requires the
+// reference to the current file.
+//
+
+int
+print_node_and_scope(file one_file, node one_node, int level, string scope_cntx)
+{
+    list next_level_node_list = list_create("node", 0);
+    int count, i;
+
+    string query = "node[scope_node_id == ${one_node.id} && " +
+		    "node_refs ${scope_cntx}]";	
+		    	    
+    node_print(one_node, level, True, "", "");
+    
+    //create a list of decomposition nodes
+    
+    next_level_node_list = list_select(query);
+    count = list_count(next_level_node_list);
+    
+    //If list is empty, return to parent's level, else print first node
+    //in decomposition list, get its child nodes, etc.
+    
+    if (count ==0)
+        return (level);
+    else
+    {
+        level = level + 1;
+        
+        for(i = 0; i < count; i = i + 1)
+        {
+            one_node = list_get(next_level_node_list, i);
+            level = print_node_and_scope(one_file, one_node, level, scope_cntx);
+        }
+    }
+    return (level - 1);
+}
+
+//
+// node_print()
+//
+// print a node's type, name and signature (if not null)
+// call function to print annotation (if it is to be included)
+// 
+
+int
+node_print(node one_node, int level, boolean include_annot, 
+	string prefix, string paragraph)
+{
+    int errors = 0;
+    string this_paragraph;
+
+    if (paragraph == NULL || paragraph == "")
+	paragraph = ObjectFormat;
+
+    if (level <= 0)
+	this_paragraph = paragraph + "1";
+    else
+	this_paragraph = paragraph + level;
+
+    paragraph(this_paragraph);
+    print(prefix + app_type_print_string(one_node) + ": " + one_node.name);
+
+    if (one_node.sig != NULL && one_node.sig != "")
+	print(" (" + one_node.sig + ")");
+
+    if (include_annot)
+    {
+	annot_print(one_node.id, level);
+	paragraph(SeparatorFormat); print("");
+    }
+    printed_something_on_page();
+    return errors;
+}
+
+//
+// link_print()
+//
+// print a link's type, name and signature (if not null)
+// print the link's from and to nodes (with their annotations)
+// call function to print annotation (if it is to be included)
+// 
+
+int
+link_print(link one_link, int level, boolean include_annot, 
+	string prefix, string paragraph)
+{
+    int errors = 0;
+    node one_node;
+    string this_paragraph;
+
+    if (paragraph == NULL || paragraph == "")
+	paragraph = ObjectFormat;
+
+    if (level <= 0)
+	this_paragraph = paragraph + "1";
+    else
+	this_paragraph = paragraph + level;
+
+    paragraph(this_paragraph);
+    print(prefix + app_type_print_string(one_link) + ": " + one_link.name);
+
+    if (one_link.sig != NULL && one_link.sig != "")
+	print(" (" + one_link.sig + ")");
+
+    for_each_in_select("node[id == ${one_link.from_node_id} || " +
+	    "id == ${one_link.to_node_id}]", one_node)
+    {
+	if (one_node.id == one_link.from_node_id)
+	    node_print(one_node, level + 1, False, "From ", "");
+	else
+	if (one_node.id == one_link.to_node_id)
+	    node_print(one_node, level + 1, False, "To ", "");
+    }
+
+    if (include_annot)
+    {
+	annot_print(one_link.id, level);
+	paragraph(SeparatorFormat); print("");
+    }
+    printed_something_on_page();
+    return errors;
+}
+
+//
+// cntx_print()
+//
+// print a cntx's type, name and signature (if not null)
+// call function to print annotation (if it is to be included)
+// 
+
+int
+cntx_print(cntx one_cntx, int level, boolean include_annot, 
+	string prefix, string paragraph)
+{
+    int errors = 0;
+    link one_link;
+    string this_paragraph;
+
+    if (paragraph == NULL || paragraph == "")
+	paragraph = ObjectFormat;
+
+    if (level <= 0)
+	this_paragraph = paragraph + "1";
+    else
+	this_paragraph = paragraph + level;
+
+    paragraph(this_paragraph);
+    print(prefix + app_type_print_string(one_cntx) + ": " + one_cntx.name);
+
+    if (one_cntx.sig != NULL && one_cntx.sig != "")
+	print(" (" + one_cntx.sig + ")");
+
+    if (include_annot)
+    {
+	annot_print(one_cntx.id, level);
+	paragraph(SeparatorFormat); print("");
+    }
+    printed_something_on_page();
+    return errors;
+}
+
+//
+// annot_print()
+//
+// print an object's notes' type, and name 
+//   print note description line by line
+//   print a note's item's type, value
+// 
+
+int
+annot_print(int objid, int level)
+{
+    note one_note;
+    item one_item;
+    int errors = 0;
+    int line;
+    list note_lines;
+
+    for_each_in_select("note[obj_id == ${objid}] sort by type, name", one_note)
+    {
+	paragraph(NoteFormat + level);
+	print(app_type_print_string(one_note) + ": " + one_note.name);
+
+	if (one_note.desc != NULL && one_note.desc != "" )
+	{
+	    note_lines = string_to_list(one_note.desc, "\n");
+	    for (line = 0; line < list_count(note_lines); line = line + 1)
+	    {
+		paragraph(DescriptionFormat + level);
+		print(list_get(note_lines, line));
+	    }
+	}
+
+	for_each_in_select("item[note_id == ${one_note.id}] " +
+		"sort by type, value", one_item)
+	{
+	    paragraph(ItemFormat + level);
+	    print(app_type_print_string(one_item) + ": " + one_item.value);
+	}
+    }
+    printed_something_on_page();
+    return errors;
+}

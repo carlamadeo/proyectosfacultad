@@ -1,0 +1,23 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1994
+// 	All rights reserved
+//
+
+
+Note 801509
+{
+  { AppType OMTGeneralizationDefinition }
+  { HelpText "The Generalization Definition note lets you add items that capture modeling information about generalization relationships." }
+  { PrintName "Generalization Definition" }
+  { Bounds { Min 1 } { Max 1 } }
+  { Item
+      { AppType OMTDiscriminator }
+      { HelpText "The Discriminator item lets you indicate which property of a superclass is being abstracted by the generalization relationship; the discriminator is a name for the basis of the generalization.  Discriminators are optional in the OMT notation." }
+      { PrintName "Discriminator" }
+      { Bounds { Min 0 } { Max 1 } }
+    }
+}
+

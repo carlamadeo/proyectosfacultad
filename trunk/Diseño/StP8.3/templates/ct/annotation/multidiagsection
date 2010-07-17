@@ -1,0 +1,86 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/Core
+//      Confidential property of Aonix.
+//      Copyright (c) 1992-1996
+//      All rights reserved
+//
+
+Note 806003
+{
+    { AppType MultiDiagRptOptions }
+    { PrintName "Multi-Diagram Report Options" }
+    { HelpText "The Multi-Diagram Report Options note lets you add items containing basic information about the diagrams to be included in a report such as their type, whether they should be portrait or landscape, and which (if any) to omit." }
+    { Bounds { Min 1 } { Max 1 } }
+    { Item
+        { AppType DiagramType }
+        { PrintName "Diagram Type" }
+        { Bounds { Min 1 } { Max 1 } }
+        { HelpText "This item is required, and represents the diagram type that will be produced. Choose from the list of available types." }
+    }
+    { Item
+        { AppType StartEachNewPage }
+        { PrintName "Start Each On New Page" }
+        { InitValue "True" }
+        { Bounds { Min 0 } { Max 1 } }
+        { HelpText "This item determines if each diagram should start on a new page." }
+    }
+    { Item
+        { AppType Caption }
+        { PrintName "Caption" }
+        { Bounds { Min 0 } { Max 1 } }
+        { HelpText "This item specifies the caption shown for each diagram. The default caption used if this item is not specified is 'Diagram : ' followed by the name of the diagram." }
+    }
+    { Item
+        { AppType CaptionOrientation }
+        { PrintName "Caption Orientation" }
+        { InitValue "AsDiagram" }
+        { Bounds { Min 0 } { Max 1 } }
+        { HelpText "This item determines whether the caption should be oriented as Portrait, Landscape, or AsDiagram (default)." }
+    }
+    { Item
+        { AppType Orientation }
+        { PrintName "Orientation" }
+        { InitValue "BestFit" }
+        { Bounds { Min 1 } { Max 1 } }
+        { HelpText "This item determines whether the diagram should be oriented as PortraitFit, LandscapeFit, PortraitScale, LandscapeScale, or BestFit (default)." }
+    }
+    { Item
+        { AppType DiagramFrameHeight }
+        { PrintName "Diagram Frame Height" }
+        { InitValue "7.0" }
+        { Bounds { Min 0 } { Max 1 } }
+        { HelpText "This item determines the height of the frame into which the diagram will be placed." }
+    }
+    { Item 
+        { AppType DiagramFrameWidth } 
+        { PrintName "Diagram Frame Width" } 
+        { InitValue "4.5" }  
+        { Bounds { Min 0 } { Max 1 } } 
+        { HelpText "This item determines the width of the frame into which the diagram will be placed." } 
+    }
+    { Item
+        { AppType OmitDiagCalled }
+        { PrintName "Omit Diagram Called" }
+        { Bounds { Min 0 } { Max 1 } }
+        { HelpText "This item allows a multi-diagram section to omit one particular diagram. This is most useful when printing dataflow diagrams which contain a 'top' diagram which should occur first, but which alphabetically comes last." }
+    }
+    { Item
+        { AppType SortBy }
+        { PrintName "Sort By" }
+        { Bounds { Min 0 } { Max 1 } }
+        { HelpText "This item allows the order of the diagrams to be specified. Typically, this order might be by name or another attribute of a file type." }
+    }
+    { Item 
+        { AppType PrintSetting }
+        { PrintName "Use Print Setting" }
+        { Bounds { Min 0 } { Max 1 } }   
+        { HelpText "This item specifies a common named print setting to use when printing these diagrams." }
+    }
+}
+
+Include "annotation/GenericRptOptions.note"
+Include "annotation/generic_object"
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_multidiagsection"

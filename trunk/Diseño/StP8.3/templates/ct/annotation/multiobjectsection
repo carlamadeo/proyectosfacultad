@@ -1,0 +1,121 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/Core
+//      Confidential property of Aonix.
+//      Copyright (c) 1992-1996
+//      All rights reserved
+//
+
+Note 806007
+{
+    { AppType DBObjectRptOptions }
+    { PrintName "DB Object Report Options" }
+    { HelpText "The DB Object Report Options note lets you add items containing basic information about specific database objects to report on. Objects can be extracted and formatted with paragraph styles." }
+    { Bounds { Min 1 } { Max 10 } }
+    { Item
+        { AppType NoteKey }
+        { Bounds { Min 1 } { Max 1 } }
+        { PrintName "Key" }
+        { IsKey True }
+        { IsVisible False }
+        { InitValue "${unique_key}" }
+    }
+    { Item
+        { AppType DBObjectType }
+        { PrintName "DB Object Type" }
+        { Bounds { Min 1 } { Max 1 } }
+        { HelpText "This item is required, and refers to the database type of the object to be reported on. These types can often be best determined through the OMS Browser. Only node types can currently be reported on." }
+    }
+    { Item
+        { AppType StartEachNewPage }
+        { PrintName "Start Each On New Page" }
+        { InitValue "True" }
+        { Bounds { Min 0 } { Max 1 } }
+        { HelpText "This item determines if each object should start on a new page." }
+    }
+    { Item 
+        { AppType DBObjectName }
+        { PrintName "Specific Object Name" }
+        { Bounds { Min 0 } { Max 1 } }
+        { HelpText "This item allows a specific named object to be reported on, instead of all objects of a given type." }
+    }
+    { Item 
+        { AppType ParagraphStyle } 
+        { PrintName "Custom Paragraph Style" } 
+        { Bounds { Min 0 } { Max 1 } } 
+        { HelpText "This item allows a specific paragraph style to be applied to all the data that is returned regarding the database object. This item overrides all other document specific paragraph styles." }
+    }
+    { Item
+        { AppType AsciiParagraphStyle }
+        { PrintName "Ascii Paragraph Style" }
+        { Bounds { Min 0 } { Max 1 } }
+	{ InitValue "left" }
+        { HelpText "This item allows a specific paragraph style to be applied to all the text that is specified. Choose from a list of styles. Note that the item labeled Custom Paragraph Style will override this item." }
+    }
+    { Item
+        { AppType MifParagraphStyle }
+        { PrintName "Frame Paragraph Style" }
+        { Bounds { Min 0 } { Max 1 } }
+	{ InitValue "Body" }
+        { HelpText "This item allows a specific paragraph style to be applied to all the text that is specified. Choose from a list of styles. Note that the item labeled Custom Paragraph Style will override this item." }
+    }
+//    { Item
+//        { AppType IleafParagraphStyle }
+//        { PrintName "Ileaf Paragraph Style" }
+//        { Bounds { Min 0 } { Max 1 } }
+//    	{ InitValue "para1" }
+//        { HelpText "This item allows a specific paragraph style to be applied to all the text that is specified. Choose from a list of styles. Note that the item labeled Custom Paragraph Style will override this item." }
+//    }
+    { Item
+        { AppType RtfParagraphStyle }
+        { PrintName "RTF Paragraph Style" }
+        { Bounds { Min 0 } { Max 1 } }
+	{ InitValue "Body" }
+        { HelpText "This item allows a specific paragraph style to be applied to all the text that is specified. Choose from a list of styles. Note that the item labeled Custom Paragraph Style will override this item." }
+    }
+    { Item 
+        { AppType ListAttributes }
+        { PrintName "List Object Attributes" }
+        { Bounds { Min 0 } { Max 1 } }
+        { InitValue "True" }
+        { HelpText "This item will cause a list of attributes to be shown after the object name. This item only works for objects of type UmlClass." }
+    }
+    { Item 
+        { AppType ListOperations }
+        { PrintName "List Object Operations" }
+        { Bounds { Min 0 } { Max 1 } }
+        { InitValue "True" }
+        { HelpText "This item will cause a list of operations to be shown after the object name. This item will only work for objects of type UmlClass." }
+    }
+    { Item 
+        { AppType ListInLinks }
+        { PrintName "List Object In Links" }
+        { Bounds { Min 0 } { Max 1 } }
+        { InitValue "True" }
+        { HelpText "This item will list all incoming links after the object name. This is most useful for displaying data flow information." }
+    }
+    { Item 
+        { AppType ListOutLinks }
+        { PrintName "List Object Out Links" }
+        { Bounds { Min 0 } { Max 1 } }
+        { InitValue "True" }
+        { HelpText "This item will list all outgoing links after the object name. This is most useful for displaying data flow information." }
+    }
+    { Item
+        { AppType ShowItemValueFor }
+        { PrintName "Show Item Value For" }
+        { HelpText "This item will allow a specific item value to be retrived and listed for the specified objects. The name of the item should be the database representation of the item type, rather than the common displayed label." }
+    }
+    { Item
+        { AppType ShowNoteDescFor }
+        { InitValue "GenericObject" }
+        { PrintName "Show Note Description For" }
+        { HelpText "This item will allow a specific note description to be retrived and listed for the specified objects. The name of the note should be the database representation of the note type, rather than the common displayed label." }
+    }
+}
+
+Include "annotation/GenericRptOptions.note"
+Include "annotation/generic_object"
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_multiobjectsection"

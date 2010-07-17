@@ -1,0 +1,22 @@
+/* XPM */
+static char *dir_14x12[] = {
+/* width height ncolors chars_per_pixel */
+"14 12 3 1",
+/* colors */
+"` c #000000",
+"a c #FFFFFF",
+"b c #FFFF00",
+/* pixels */
+"aaaaaaaa````aa",
+"aaaaaaa`bbbb`a",
+"```````bbbbbb`",
+"`bbbbbbbbbbbb`",
+"`bbbbbbbbbbbb`",
+"`bbbbbbbbbbbb`",
+"`bbbbbbbbbbbb`",
+"`bbbbbbbbbbbb`",
+"`bbbbbbbbbbbb`",
+"`bbbbbbbbbbbb`",
+"`bbbbbbbbbbbb`",
+"``````````````"
+};

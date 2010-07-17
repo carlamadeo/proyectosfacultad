@@ -1,0 +1,422 @@
+%
+% 	sccsid[] = @(#)new_msgs.txt	4.1  94/01/14
+% 	StP/Core
+% 	Confidential property of Interactive Development Environments, Inc.
+% 	Copyright (c) 1992-1993
+% 	All rights reserved
+%
+
+% CSE related messages
+4000;Could not allocate new table
+4002;Could not allocate new row
+4003;Could not allocate new column
+4004;Could not allocate new table cell
+4005;Could not open table file
+4006;Number of rows and number of columns expected
+4007;Illegal number of rows or columns
+4008;Could not allocate table
+4009;Error reading cell label
+4010;Could not allocate label for cell
+4015;No table name
+4017;"%s" written, %d lines
+4018;Could not write "%s"
+4019;Could not open "%s" for writing
+4020;exchange
+4021;Number of lines in cell label expected
+4022;Select section to expand
+4023;Select section to shrink
+4024;Select row or column to scale
+4025;Insertion of row into that section is not allowed
+4026;Insertion of column into that section is not allowed
+4027;Not enough rows
+4028;Not enough rows
+4029;Not enough columns
+4030;Not enough columns
+4031;Deletion of row from that section is not allowed
+4032;Deletion of column from that section is not allowed
+4033;Cannot expand that section, expand cancelled
+4034;Cannot shrink that section, shrink cancelled
+4035;expand cancelled
+4036;Table annotation deleted.
+4037;Illegal table type: %d\n
+% Section headers
+% Detab
+4038;Control In
+4039;Control Out
+% Pat
+4040;Control In
+4041;Activate Processes
+% Event Logic
+4042;Control In
+4043;Events
+% Action Logic
+4044;Activate Processes
+4045;Control Out
+4046;Actions
+% Process Activation Matrix
+4047;Control
+4048;Process
+% State-Event Matrix
+4049;State
+4050;Event
+% State Transition Table
+4051;Current
+4052;State
+4053;Event
+4054;Actions
+4055;Next
+4056;State
+4057;(lo)
+4058;(hi)
+4059;(lo)
+4060;(hi)
+4061;Illegal selection for this operation, %d
+4062;Select the new section division border
+4063;Illegal selection for this operation
+4064;Illegal selection for this operation
+4065;Illegal selection for this operation
+4066;Illegal selection for this operation
+4067;Illegal selection for this operation
+4068;\"%s\", loaded
+4069;Error reading Table Type
+4070;Number of sect 2 columns, frozen columns, expected
+4071;row size expected
+4072;row number or 0 expected
+4073;col size expected
+4074;col number or 0 expected
+4075;could not read page breaks
+4076;could not read page ranges
+% panel labels
+4077;Table Type:
+4078;Decision Table
+4079;Process Activation Table
+4080;Process Activation Matrix
+4081;State Transition Table
+4082;State-Event Matrix
+4083;Event Logic
+4084;Action Logic
+4085;Decision/PA Table
+4086;Move To
+4087;Loc:
+4088;Find
+4089;Pattern:
+4090;Cspec:
+% more messages
+4091;No Cspec name
+4092;Finish Cut first
+4093;Finish Paste first
+4094;Cspec
+4095;Select column from %s
+4096;Values command canceled
+4097;Illegal section for values command, try again or cancel command
+4098;Column has no label
+% New menu related items
+% New pullright item label for printing pullright menu
+4100;print
+% Ada menu item labels
+% DSE-Ada
+4101;Ada dcl
+% ERE-Ada
+4102;Ada dcl
+% find - replaces pan for release 3.0
+4103;find
+% DSE command to associate tag field values with selection components
+4104;tag values
+% pullright label for edit/show/del hidden node message commands
+% SCE
+4105;messages
+% DSE
+4106;messages
+% ERE
+4107;messages
+% TDE/PCT/DFE
+4108;messages
+% CSE
+4109;imports
+4110;exports
+4111;values
+4112;check decomp
+4113;check table
+4114;check cspec
+% SADT
+4115;connect
+4116;disconnect
+4117;reconnect
+4118;show zigzag
+4119;labels
+% PICture PUSH/POP messages
+4200;No node name for pushed node
+4201;Creating environment
+4202;Could not get anchor point to replace connected nodes
+4203;PICture node stack is empty
+4204;Illegal node type for push -- push cancelled
+4205;ToolInfo variable specifies illegal node type id for arc push
+% Ada code generation messages
+4300;Generating Ada declarations: too deeply nested iterations
+4301;Gen Ada: iteration %s has no bounds
+4302;Generate Ada declarations
+4303;Structure to Ada\n
+4304;Open Ada declaration output failed\n
+4305;Ada declarations %s\n
+4306;Ada type declarations %s\n
+% Messages for the 'find' command
+4400;Search failed
+4401;Bad regular expression
+4402;Finish typing pattern
+4405;Pattern: 
+4406;Pattern '%s' not found
+% Dynamic node allocation related messages
+4500;Node allocation failed, store the diagram, reload, and try again
+4501;Arc allocation failed, store the diagram, reload, and try again
+4502;Upper limit on number of nodes reached, allocation failed
+4503;Upper limit on number of arcs reached, allocation failed
+4504;Node allocation failed while reading in diagram
+4505;Arc allocation failed while reading in diagram
+% DSE tag field related messages
+4600;Illegal node type to assign/change tag value
+4601;Tag value:
+4602;tag field value flag expected
+4603;'%s' defined with conflicting tag fields (%s and %s)
+4604;Tag values of children differ %s\n
+4605;Iteration values differ %s..%s and %s..%s\n
+% key and relation messages
+4606;Component %s of %s defined with conflicting key values: %d and %d\n
+4607;Component %s of relation %s defined with conflicting relation type\n
+% messages for reading and writing large diagrams
+4700;Writing %d'th object
+4701;Reading %d'th object
+% Messages from tosca.
+% In general, there are three versions of each message:
+% Formatted messages refer to the output from tosca -a -l
+% Unformatted messages refer to the output from tosca -a
+% Schema messages refer to normal tosca output, without the -a or -l flags.
+% When there are three version of a given message they follow
+% the order given above.
+%
+% If a format includes the .* sequence the
+% printout is truncated to DD_NAME_LEN characters
+% which is currently defined at 75 significant characters
+%
+% Domain header
+% Formatted
+4800;.sp\n.nf\n%s\n.sp .5\n
+4801;\\s+2\\fBDomains:\\fP\\s-2
+% Unformatted
+4802;\n\nDomains\n\n
+% Leading character for lines of domain declarations
+4803;\t
+4804;\t
+4805;
+% Last line of domain declarations
+4806;\n
+4807;\n
+4808;\n
+% Entity header
+% formatted
+4809;.sp 2\n.nf\n%s\n.sp .5\n
+4810;\\s+2\\fBEntities:\\fP\\s-2
+% unformatted
+4811;\n\n\nEntities:\n\n
+% external declaration
+4812;extern
+% not an external declaration
+4813;\ 
+% first line of entity description
+4814;\tentity %.*s %s\n
+4815;\tentity %.*s %s\n
+4816;entity %.*s %s\n
+% last line of entity description
+4817;\n
+4818;\n
+4819;\n
+% relationship header
+% formatted
+4820;.sp 2\n.nf\n%s\n.sp .5\n
+4821;\\s+2\\fBRelationships:\\fP\\s-2
+% unformatted
+4822;\n\n\nRelationships:\n\n
+% first line of relationship description
+4823;\trelationship %.*s\n
+4824;\trelationship %.*s\n
+4825;relationship %.*s\n
+% last line of relationship description
+4826;\n
+4827;\n
+4828;\n
+% first line of attribute description, locally defined
+4829;\t    attribute %.*s\n
+4830;\t    attribute %.*s\n
+4831;\    attribute %.*s\n
+4832;\t    attribute %.*s : key\n
+4833;\t    attribute %.*s : key\n
+4834;\    attribute %.*s : key\n
+4835;\t    attribute %.*s : key\n
+4836;\t    attribute %.*s : key\n
+4837;\    attribute %.*s : key\n
+% first line of relation description
+4838;\t    relation %.*s : %s;\n
+4839;\t    relation %.*s : %s;\n
+4840;\    relation %.*s : %s;\n
+4841;\t    relation %.*s : %s;\n
+4842;\t    relation %.*s : %s;\n
+4843;\    relation %.*s : %s;\n
+% used in concatenating labels
+4844;\ 
+% attribute type and constraint definitions, when both present
+4845;\t\t%.70s\n\t\t%.70s;\n
+4846;\t\t%.70s\n\t\t%.70s;\n
+4847;\t%.70s\n\t%.70s;\n
+% these are used on old ERE file versions when no type or constraint are found
+4848;\t\t
+4849;\t;\n
+4850;\t\t
+4851;\t;\n
+4852;\t
+4853;;\n
+% attribute type or constraint definition, when only one is present
+4854;\t\t%.70s;\n
+4855;\t\t%.70s;\n
+4856;\t%.70s;\n
+% first line of entity declaration when found in data dictionary
+4857;\t\tentity
+4858;\t\tentity
+4859;\tentity
+% type and constraint definitions when found in data dictionary
+4860;\t\t%.70s\n\t\t%s
+4861;\t\t%.70s\n\t\t%s
+4862;\t%.70s\n\t%s
+% type definition when found in data dictionary
+4863;\t\t%.70s
+4864;\t\t%.70s
+4865;\t%.70s
+% constraint definition when found in data dictionary
+4866;\t\t%s
+4867;\t\t%s
+4868;\t%s
+% when no type or constraint is found in DD
+4869;\t\tundefined
+4870;\t\tundefined
+4871;\tundefined
+4872;\t\tundefined
+4873;\t\tundefined
+4874;\tundefined
+% last line of attribute description when found in DD
+4875;;\n
+4876;;\n
+4877;;\n
+% first line of attribute definitions when found in DD
+4878;\t    attribute %s : key\n
+4879;\t    attribute %s : key\n
+4880;\    attribute %s : key\n
+% name used of no name is found
+4881;NULL
+% first line of attribute definitions when found in DD
+4882;\t    attribute %s\n
+4883;\t    attribute %s\n
+4884;\    attribute %s\n
+% used in relationship definitions to indicate one-to-many, on-to-one, etc.
+4885;1
+4886;m
+% Description line header for entities
+4887;\tDescription:\n
+4888;\tDescription:\n
+% Leading characters for entity description lines
+4889;\t\t
+4890;\t\t
+% Description line header for relationships
+4891;\tDescription:\n
+4892;\tDescription:\n
+% Leading characters for relationship description lines
+4893;\t\t
+4894;\t\t
+% Description line header for attributes
+4895;\t    Description:\n
+4896;\t    Description:\n
+% Leading characters for attribute description lines
+4897;\t\t    
+4898;\t\t    
+% Text messages used when printing structures with struct_dd
+% in general, these also come in pairs, one for formatted,
+% one for unformatted
+% Formatted global message header
+4919;struct_dd: -Prt disables gen StP/DD, -C, -Ct, -P, -Pt, -A, -At\n
+4920;.sp 2\n.nf\n%s\n.sp .5\n
+4921;\\s+2\\fBGlobal Declarations:\\fP\\s-2
+% Unformatted global message header
+4922;\n\n\nGlobal Declarations:\n\n
+% Comment lines in the global declaration
+4923;\ * %s\n
+4924;\ * %s\n
+% Non-comment lines in the global declaration
+4925;%s\n
+4926;%s\n
+% Formatted structure section header
+4927;.sp 2\n.nf\n%s\n.sp .5\n
+4928;\\s+2\\fBStructures:\\fP\\s-2
+% Unformatted structure section header
+4929;\n\n\nStructures:\n\n
+% Line separating structure and element sections
+4930;\n
+4931;\n
+% Formatted element section header
+4932;.sp 2\n.nf\n%s\n.sp .5\n
+4933;\\s+2\\fBElements:\\fP\\s-2
+% Unformatted element section header
+4934;\n\n\nElements:\n\n
+% Line that separates element and structure definition sections
+4935;\n
+4936;\n
+% Line that prints out the name of the component
+4937;%s\n
+4938;%s\n
+4939;\tExternally Defined\n
+4940;\tExternally Defined\n
+4941;\tAlias:\n
+4942;\t\t%s\n
+4943;\tAlias:\n
+4944;\t\t%s\n
+4945;Undefined
+4946;Undefined
+4947;\tType:\n
+4948;\t\t%s\n
+4949;\tType:\n
+4950;\t\t%s\n
+4951;\tConstraint:\n
+4952;\t\t%s\n
+4953;\tConstraint:\n
+4954;\t\t%s\n
+4955;\tKeys:\n
+4956;\t\t%s\n
+4957;\tKeys:\n
+4958;\t\t%s\n
+4959;\tDescription:\n
+4960;\t\t%s\n
+4961;\tDescription:\n
+4962;\t\t%s\n
+4963;\n
+4964;\n
+4965;.sp 2\n.nf\n%s\n.sp .5\n
+4966;\\s+2\\fBStructure Definition:\\fP\\s-2
+4967;\n\n\nStructure Definition:\n\n
+% each line of the structure definition
+4968;%s\n
+4969;%s\n
+% header's
+4970;.sp 1\n.nf\n\\s+2\\fBERE Diagram:  %s\\fP\\s-2\n.sp .5\n
+4971;\n\nERE Diagram:  %s\n\n
+4972;.sp 1\n.nf\n\\s+2\\fBDSE Diagram:  %s\\fP\\s-2\n.sp .5\n
+4973;\n\nDSE Diagram:  %s\n\n
+% line preceding a block of comments in the Global declaration
+4974;/*\n
+4975;/*\n
+% line after a block of comments in the Global declaration
+4976;\ */\n
+4977;\ */\n
+% Type of Structure
+4978;Sequence
+4979;Selection
+4980;Iteration
+4981;Relationship
+4982;structure
+4983;Attribute
+4984;Entity

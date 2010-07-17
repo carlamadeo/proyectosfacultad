@@ -1,0 +1,79 @@
+FileObject 1
+{
+    { Name "a1" }
+    { Type ObjectAnnotation }
+    { GUID "UID_A921C7F8-C328-4fea-BB5E-0E4EC617F9E2" }
+}
+
+NodeObject 99999
+{
+    { Name "Calcular /_\ Velocidad multa" }
+    { Type Process }
+    { ObjectId 303 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_97063A49-FB30-44a1-95A1-267B04F2C8D6" }
+}
+
+NodeObject 99998
+{
+    { Name "Sensor velocidad" }
+    { Type External }
+    { ObjectId 302 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_F537E981-53DE-48df-A78D-588EDB9DC144" }
+}
+
+LinkObject 99997
+{
+    { Name "Velocidad alta" }
+    { Type DataFlow }
+    { ObjectId 310 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_31E8F70C-EA13-43aa-A28F-FAE96C748785" }
+}
+
+NoteObject 2
+{
+    { Type InterfaceDesign }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 408 }
+}
+
+ItemObject 3
+{
+    { Type InterfaceName }
+    { Value "Velocidad alta" }
+    { NoteId 2 }
+    { ObjectId 409 }
+}
+
+ItemObject 4
+{
+    { Type InterfacePriority }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 410 }
+}
+
+NoteObject 5
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 412 }
+}
+
+ItemObject 6
+{
+    { Type ObjectName }
+    { Value "Velocidad alta" }
+    { NoteId 5 }
+    { ObjectId 413 }
+}
+

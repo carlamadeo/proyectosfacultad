@@ -1,0 +1,32 @@
+
+//     StP/UML
+//     Confidential property of Aonix
+//     Copyright (c) 1997
+//     All rights reserved
+
+Note 801950
+{
+    { AppType UmlExtensibilityDefinition }
+    { HelpText "The Extensibility Definition note lets you add items that capture modeling information about an object's extensibility properties." }
+    { PrintName "Extensibility Definition" }
+    { Bounds { Min 1 } { Max 1 } }
+    { Item
+        { AppType UmlStereotype }
+        { HelpText "The Stereotype item lets you specify a stereotype name for an object." }
+        { PrintName "Stereotype" }
+        { Bounds { Min 0 } { Max 1 } }
+    }
+    { Item
+        { AppType UmlConstraintItem }
+        { HelpText "The Constraint item lets you specify a list of constraints for an object." }
+        { PrintName "Constraint" }
+        { Bounds { Min 0 } }
+    }
+    { Item
+        { AppType UmlTaggedValue }
+        { HelpText "The Tagged Value item lets you specify a list of Tagged Values (properties) for an object." }
+        { PrintName "Tagged Value" }
+        { Bounds { Min 0 } }
+    }
+}
+

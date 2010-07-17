@@ -1,0 +1,513 @@
+Diagram UmlSequenceDiagram
+{
+    { Name "ClockBirdBehaviourAtTotalSolarEclipse__1" }
+    { Format "1.6" }
+    { Scale 0.65 }
+    { PanX -533 }
+    { PanY -391 }
+    { Alignment 32 }
+    { GUID "UID_140B8045-C887-11d5-90AA-0050045C27F0" }
+    { Summary
+        { Nodes 9 }
+        { Arcs 8 }
+    }
+}
+
+Node 2
+{
+    { Type ScenarioInstance }
+    { Loc 57 -307 }
+    { Scale 2588.00 50.00 }
+    { Label
+        { Text "ClockBirdBehaviourAtTotalSolarEclipse(UmlUseCase:ClockBirdBehaviourAtTotalSolarEclipse)" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ScenarioMapping }
+        { ID 2502 }
+        { GUID "UID_C812C890-63A4-11d4-A4BA-00008606A51E" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2504 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2506 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ParentName }
+        { ID 2505 }
+    }
+}
+
+Node 3
+{
+    { Type Note }
+    { Loc 79 -247 }
+    { Scale 798.00 426.00 }
+    { Label
+        { Text "If there is a total solar eclipse" }
+        { Text "during daytime that meets" }
+        { Text "a solid hour the owl is crying" }
+    }
+}
+
+Node 4
+{
+    { Type PassiveObject }
+    { Loc 423 72 }
+    { Scale 128.00 2992.00 }
+    { Label
+        { Text ":Owl" }
+    }
+    { PropertyList
+        { Property
+            { Name "AnonymousName" }
+            { Value "%%object%%933079790_337" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 782 }
+        { GUID "UID_8F1FFB81-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 2508 }
+        { GUID "UID_8F1FFB87-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 2507 }
+        { GUID "UID_8F1FFB84-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 5
+{
+    { Type PassiveObject }
+    { Loc 92 72 }
+    { Scale 128.00 2992.00 }
+    { Label
+        { Text ":Owl" }
+    }
+    { PropertyList
+        { Property
+            { Name "AnonymousName" }
+            { Value "%%object%%933079824_337" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 782 }
+        { GUID "UID_8F1FFB81-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 2508 }
+        { GUID "UID_8F1FFB87-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 783 }
+        { GUID "UID_8F1FFB8B-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 6
+{
+    { Type ActiveObject }
+    { Loc -305 72 }
+    { Scale 128.00 2992.00 }
+    { Label
+        { Text ":Clockwork" }
+    }
+    { PropertyList
+        { Property
+            { Name "AnonymousName" }
+            { Value "%%object%%933083130_307" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 740 }
+        { GUID "UID_7CFB96D1-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 2510 }
+        { GUID "UID_7CFB96D7-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 741 }
+        { GUID "UID_8F1FFB95-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ActiveObjectMapping }
+        { ID 2509 }
+        { GUID "UID_8F1FFB92-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 7
+{
+    { Type Vertex }
+    { Loc -392 142 }
+    { Scale 128.00 128.00 }
+}
+
+Node 8
+{
+    { Type Vertex }
+    { Loc -392 212 }
+    { Scale 128.00 128.00 }
+}
+
+Node 9
+{
+    { Type Vertex }
+    { Loc -392 -138 }
+    { Scale 128.00 128.00 }
+}
+
+Node 10
+{
+    { Type Vertex }
+    { Loc -392 -68 }
+    { Scale 128.00 128.00 }
+}
+
+Arc 11
+{
+    { Type SimpleMessage }
+    { From
+        { ID 6 }
+        { Loc 91 170 }
+        { Offset 0 -70 }
+    }
+    { To
+        { ID 5 }
+        { Loc 479 170 }
+        { Offset 0 -70 }
+    }
+    { Label
+        { Text "[(hour>6&&hour<=18)&&minute==0]:cry(int hour)" }
+    }
+}
+
+Arc 12
+{
+    { Type SimpleMessage }
+    { From
+        { ID 6 }
+        { Loc 91 240 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 4 }
+        { Loc 810 240 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "[(hour>18 || hour<=6) && minute=0]:cry(int hour)" }
+    }
+}
+
+Arc 13
+{
+    { Type SimpleMessage }
+    { From
+        { ID 6 }
+        { Loc 85 30 }
+        { Offset 0 -210 }
+    }
+    { To
+        { ID 9 }
+        { Loc 1 30 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 14
+{
+    { Type SimpleMessage }
+    { From
+        { ID 9 }
+        { Loc 1 30 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 10 }
+        { Loc 1 100 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "showTime()" }
+    }
+}
+
+Arc 15
+{
+    { Type SimpleMessage }
+    { From
+        { ID 10 }
+        { Loc 1 100 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 6 }
+        { Loc 85 100 }
+        { Offset 0 -140 }
+    }
+}
+
+Arc 16
+{
+    { Type SimpleMessage }
+    { From
+        { ID 6 }
+        { Loc 85 310 }
+        { Offset 0 70 }
+    }
+    { To
+        { ID 7 }
+        { Loc 1 310 }
+        { Offset 0 0 }
+    }
+}
+
+Arc 17
+{
+    { Type SimpleMessage }
+    { From
+        { ID 7 }
+        { Loc 1 310 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 8 }
+        { Loc 1 380 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "addMinute(15)" }
+    }
+}
+
+Arc 18
+{
+    { Type SimpleMessage }
+    { From
+        { ID 8 }
+        { Loc 1 380 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 6 }
+        { Loc 85 380 }
+        { Offset 0 140 }
+    }
+}
+
+Link 19
+{
+    { FirstArc 11 }
+    { LastArc 11 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 784 }
+        { GUID "UID_8F1FFBA4-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2539 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2545 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 2544 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 2543 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 2542 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 2541 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 2540 }
+    }
+}
+
+Link 20
+{
+    { FirstArc 12 }
+    { LastArc 12 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 2529 }
+        { GUID "UID_EE4D90A8-544D-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2531 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2537 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 2536 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 2535 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 2534 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 2533 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 2532 }
+    }
+}
+
+Link 21
+{
+    { FirstArc 13 }
+    { LastArc 15 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 2520 }
+        { GUID "UID_EE4D90AA-544D-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2522 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2528 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 2527 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 2526 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 2525 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 2524 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 2523 }
+    }
+}
+
+Link 22
+{
+    { FirstArc 16 }
+    { LastArc 18 }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 2511 }
+        { GUID "UID_EE4D90A5-544D-11d4-8778-00C04F8DEC45" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2513 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2519 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 2518 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 2517 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 2516 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 2515 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 2514 }
+    }
+}

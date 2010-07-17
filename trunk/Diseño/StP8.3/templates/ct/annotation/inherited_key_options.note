@@ -1,0 +1,31 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Note 800006
+{
+    { AppType InheritedKeyOptions }
+    { HelpText "The Inherited Key Options note lets you add items that contain modifiable information about inherited keys. This information is used in SQL generation." }
+    { PrintName "Inherited Key Options" }
+    { Bounds { Min 0 } { Max 1 } }
+    { Item
+	{ AppType SqlName }
+	{ HelpText "The Inherited Key Name item specifies the table column name of the inherited key." }
+	{ PrintName "Inherited Key Name" }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ InitValue "${sym_label}" }
+    }
+    { Item
+	{ AppType Position }
+	{ HelpText "The Column Position item lets you override the default position of a column for SQL generation. By default, SQL generation orders inherited keys by the left-to-right, top-to-bottom position of the base attributes on a diagram or in a table with the name of the entity that has the base attributes in the relationship. Using the Column Position item allows you to override this default ordering. The value you specify for Column Position is an index that indicates the relative ordering of the column" }
+	{ PrintName "Column Position" }
+	{ Bounds { Min 0 } { Max 1 } }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_inherited_key_options.note"

@@ -1,0 +1,33 @@
+// Rename some object in batch mode
+
+// We need the optional dependencies defined here
+#include "rules/qrl/uml_optional_dependencies.inc"
+// We need several structs and functions defined in uml.inc and its included files
+// and referenced in uml.app.types.qrl
+// Unfortunately we now have an unwanted external named generate_namespace
+#include "rules/qrl/uml.inc"
+
+external int id = 0;
+external_help = "The object id of the object to rename";
+
+external string name = "";
+external_help = "The new name of the object";
+
+external string sig = "";
+external_help = "The new signature of the object";
+
+
+int main()
+{
+    set_multi_gor_defaults();
+
+    node N = find_by_query("node[id=${id}]");
+    if(N == NULL)
+        return 1;
+
+    node newN = N;
+    node_name_set(newN, name);
+    node_sig_set(newN, sig);
+    node_rename(N, newN);
+    return 0;
+}

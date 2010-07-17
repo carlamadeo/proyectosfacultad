@@ -1,0 +1,50 @@
+%
+% 	sccsid[] = %W% %Y% %D%
+% 	StP/Core
+% 	Confidential property of Interactive Development Environments, Inc.
+% 	Copyright (c) 1992-1993
+% 	All rights reserved
+%
+
+% updated on 7/24/90 by DLW
+
+% filename	first msg no	last msg used	last reserved msg
+IDEdd.txt	3000		3241
+ade.txt		9994		10429		10499
+annot.txt	8200		8341
+apollo_msg.txt	8000		8154
+csdecomp.txt	5600		5636
+cspec.txt	5000		5428		
+dispdef.txt	300		355		499
+doc.txt		9000		9477
+dod_tabgen.txt	8800		8990
+dod_tabgen.txt	9600		9733
+edit.txt	1350		2979
+erschema.txt	2600		2631
+help_win.txt	500		694
+idepdb.txt	7500		7875
+ideutil.txt	1		299
+label.txt	10800		10802
+locking.txt	6500		6816
+menu_win.txt	700		798
+msgdev.txt	7000		7356
+new_msgs.txt	4000		4984
+objlib.txt	10600		10649
+objlib.txt	10660		10794		10799
+oml.txt		8600		8780
+panel.txt	3400		3473
+print.txt	1300		2514
+reccontrol.txt	6800		6296
+rel4x.txt	9500		9845
+reuse.txt	11000		11063
+rules.txt	10501		10504		10599
+rules.txt	10650		10658		10659
+sadt.txt	8500		8551
+source.txt	800		1290
+sunview_msg.txt	11100		11102		11299
+ted.txt		5700		5860
+user_msgs.txt	13500				15799
+
+
+
+obj_type.txt	11200		11303

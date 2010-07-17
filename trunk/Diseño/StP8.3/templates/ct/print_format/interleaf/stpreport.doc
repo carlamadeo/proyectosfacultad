@@ -1,0 +1,1416 @@
+<!OPS, Version = 8.3>
+
+<!Page Number Stream,
+ 	Name =			"page",
+	Starting Page # = 	Inherit>
+
+<!Document,
+	Header Page =		no,
+	Final Output Device =	"ileaf",
+	Default Printer =	"nearest-ileaf",
+	Default Page Stream Name = "page",
+	Lisp = "(if (not (fboundp 'ileaf::r))<#0a>
+                   (defun ileaf::r (data)<#0a>
+                     (tell *load-object* mid:put-data 'ileaf::saved-data<#0a>
+                           data)))(ileaf::r '(:il-hleaf-uid-list nil)<#0a>
+)">
+
+<!Font Definitions,
+	F2 = Times 12,
+	F3 = Symbols 11,
+	F4 = Helvetica 18 Bold,
+	F5 = Helvetica 14 Bold,
+	F6 = Times 10,
+	F7 = Times 8,
+	F8 = Times 6,
+	F9 = Thames 6,
+	F10 = Helvetica 9 Bold,
+	F11 = Helvetica 12,
+	F12 = Helvetica 10,
+	F13 = Helvetica 11 Bold,
+	F14 = Helvetica 10 Bold,
+	F15 = Helvetica 24 Bold,
+	F16 = Helvetica 28 Bold,
+	F17 = Times 11 Bold,
+	F18 = Times 18,
+	F19 = Helvetica 10 Italic,
+	F20 = Helvetica 9,
+	F21 = Courier 12 Bold,
+	F22 = Helvetica 12 Italic,
+	F23 = Helvetica 12 Bold,
+	F24 = Helvetica 10 Bold Italic,
+	F25 = Helvetica 11,
+	F26 = Helvetica 9 Bold Italic,
+	F27 = Helvetica 11 Italic,
+	F28 = Helvetica 16 Bold,
+	F29 = Symbol_A 10,
+	F30 = Symbol_B 10,
+	F31 = Helvetica 11 Bold Italic>
+
+<!Color Definitions,
+	C1 = 0, 100, 100, 0,
+	C2 = 50, 100, 0, 0,
+	C3 = 83.61, 66.88, 0, 0,
+	C6 = 50, 0, 50, 50,
+	C8 = 0, 0.005, 100, 0,
+	C9 = 0, 50, 100, 0,
+	C10 = 0, 28.055, 40, 49.445,
+	C0 = 0, 0, 0, 0,
+	C11 = 0, 0, 0, 12.5,
+	C4 = 0, 0, 0, 25,
+	C5 = 0, 0, 0, 50,
+	C12 = 0, 0, 0, 75,
+	C7 = 0, 0, 0, 100,
+	C13 = 0, 0, 0, 50.001>
+
+<!Pattern Definitions,
+	P3 = 0c0c0c0c0c0c0c0cfcfcfcfc000000000c0c0c0c0c0c0c0cfcfcfcfc00000000,
+	P4 = 08080c0c0c0c1c1cfcfc78780000000008080c0c0c0c1c1cfcfc787800000000,
+	P0 = 40014001e003180c04100220022001400140014003e00c181004200220024001,
+	P1 = e0e0e0e0e0e0e0e0b1b1b1b11b1b1b1b0e0e0e0e0e0e0e0e1b1b1b1bb1b1b1b1,
+	P2 = aaaa0000aaaa0000aaaa0000aaaa0000aaaa0000aaaa0000aaaa0000aaaa0000,
+	P6 = aaaa5555aaaa5555aaaa5555aaaa5555aaaa5555aaaa5555aaaa5555aaaa5555,
+	P7 = 5555ffff5555ffff5555ffff5555ffff5555ffff5555ffff5555ffff5555ffff,
+	P5 = ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff,
+	P8 = ffffffffffffffff0000000000000000ffffffffffffffff0000000000000000,
+	P9 = f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0,
+	P10 = f0f078783c3c1e1e0f0f8787c3c3e1e1f0f078783c3c1e1e0f0f8787c3c3e1e1,
+	P11 = 0f0f1e1e3c3c7878f0f0e1e1c3c387870f0f1e1e3c3c7878f0f0e1e1c3c38787,
+	P12 = c0c06060303018180c0c060603038181c0c06060303018180c0c060603038181,
+	P13 = 8181030306060c0c181830306060c0c08181030306060c0c181830306060c0c0,
+	P14 = f0f0f0f0f0f0f0f00f0f0f0f0f0f0f0ff0f0f0f0f0f0f0f00f0f0f0f0f0f0f0f,
+	P15 = fdfd0000dfdfdfdfdfdf0000fdfdfdfdfdfd0000dfdfdfdfdfdf0000fdfdfdfd>
+
+<!Page,
+	Top Margin =		1.15 Inches,
+	Bottom Margin =		1.50 Inches,
+	Left Margin =		1.25 Inches,
+	Right Margin =		1 Inches,
+	Hyphenation =		on,
+	Consecutive Hyphens =	3,
+	Revision Bar Placement = Left,
+	Feathering =		off>
+
+<!Autonumber Stream, "list", 1>
+
+<!Autonumber Stream, "footnote", 1,
+	Level 1 Suffix =	"">
+
+<!Class, "<<Rev>",
+	Top Margin =		0.0266667 Inches,
+	Bottom Margin =		0.0266667 Inches,
+	Font =			F2@Z7@Lnl@i*,
+	Alt Font =		F2@Z7@Lnl,
+	Line Spacing =		1.162 lines,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+<!Class, "AONIXSubtitle",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F15@Z7@Lam,
+	Alt Font =		F15@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "AONIXTitle",
+	Top Margin =		1.1110002 Inches,
+	Bottom Margin =		0.3329997 Inches,
+	Alignment =		Left,
+	Font =			F16@Z7@Lam,
+	Alt Font =		F16@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "Body",
+	Top Margin =		0.1670003 Inches,
+	Bottom Margin =		0.0829997 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.3939998/0.7870003/1.1810001/2.1660001/3.1500001/4.1350002/5.119/5.5 Inches>
+
+<!Class, "BodyFett",
+	Top Margin =		0.1670003 Inches,
+	Bottom Margin =		0.0829997 Inches,
+	Alignment =		Left,
+	Font =			F14@Z7@Lam,
+	Alt Font =		F14@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.3939998/0.7870003/1.1810001/2.1660001/3.1500001/4.1350002/5.119/5.5 Inches>
+
+<!Class, "BodyoA",
+	Top Margin =		0.0420003 Inches,
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.3939998/0.7870003/1.1810001/2.1660001/3.1500001/4.1350002/5.119/5.5 Inches>
+
+<!Class, "DAbteilung",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		1.9689999/2/0.5*7 Inches>
+
+<!Class, "DAutor",
+	Top Margin =		1.3889998 Inches,
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		1.9689999/2/0.5*7 Inches>
+
+<!Class, "DFirma",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		1.9689999/2/0.5*7 Inches>
+
+<!Class, "DInfo",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		1.9689999/2/0.5*7 Inches>
+
+<!Class, "DTitel",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		1.9689999/2/0.5*7 Inches>
+
+<!Class, "DUntertitel",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		1.9689999/2/0.5*7 Inches>
+
+<!Class, "DVersion",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		1.9689999/2/0.5*7 Inches>
+
+<!Class, "Ebene1",
+	Top Margin =		0.1670003 Inches,
+	Bottom Margin =		0.0829997 Inches,
+	Left Margin =		0.1970003 Inches,
+	First Indent =		-0.1970003 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0/0.3029997/0.5*10 Inches>
+
+<!Class, "Ebene10",
+	Top Margin =		0.0829997 Inches,
+	Bottom Margin =		0.0829997 Inches,
+	Left Margin =		1.9689999 Inches,
+	First Indent =		-1.9689999 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		-1.7720003/0/0.0310002/0.5*7 Inches>
+
+<!Class, "Ebene2",
+	Top Margin =		0.0829997 Inches,
+	Bottom Margin =		0.0829997 Inches,
+	Left Margin =		0.3939998 Inches,
+	First Indent =		-0.3939998 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0/0.1060002/0.5*10 Inches>
+
+<!Class, "Ebene3",
+	Top Margin =		0.0829997 Inches,
+	Bottom Margin =		0.0829997 Inches,
+	Left Margin =		0.5910001 Inches,
+	First Indent =		-0.5910001 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0/0.4089998/0.5*9 Inches>
+
+<!Class, "Ebene4",
+	Top Margin =		0.0829997 Inches,
+	Bottom Margin =		0.0829997 Inches,
+	Left Margin =		0.7870003 Inches,
+	First Indent =		-0.7870003 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0/0.2120003/0.7129997/1.2120004/1.7120004/2.2119994/0.5*3/4.2129998/4.7129998 Inches>
+
+<!Class, "Ebene5",
+	Top Margin =		0.0829997 Inches,
+	Bottom Margin =		0.0829997 Inches,
+	Left Margin =		0.985 Inches,
+	First Indent =		-0.985 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0/0.015/0.5*9 Inches>
+
+<!Class, "Ebene6",
+	Top Margin =		0.0829997 Inches,
+	Bottom Margin =		0.0829997 Inches,
+	Left Margin =		1.1810001 Inches,
+	First Indent =		-1.1810001 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0/0.3189998/0.5*8 Inches>
+
+<!Class, "Ebene7",
+	Top Margin =		0.0829997 Inches,
+	Bottom Margin =		0.0829997 Inches,
+	Left Margin =		1.3779997 Inches,
+	First Indent =		-1.3779997 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0/0.1220003/0.5*8 Inches>
+
+<!Class, "Ebene8",
+	Top Margin =		0.0829997 Inches,
+	Bottom Margin =		0.0829997 Inches,
+	Left Margin =		1.575 Inches,
+	First Indent =		-1.575 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0/0.425/0.5*7 Inches>
+
+<!Class, "Ebene9",
+	Top Margin =		0.0829997 Inches,
+	Bottom Margin =		0.0829997 Inches,
+	Left Margin =		1.7720003 Inches,
+	First Indent =		-1.7720003 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0/0.2279997/0.5*7 Inches>
+
+<!Class, "Equation",
+	Top Margin =		0.1389998 Inches,
+	Bottom Margin =		0.0829997 Inches,
+	Alignment =		Center,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "Extract",
+	Top Margin =		0.0829997 Inches,
+	Bottom Margin =		0 Inches,
+	Left Margin =		0.7870003 Inches,
+	Right Margin =		0.7870003 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.2120003/0.7129997/1.2120004/1.7120004/2.2119994/0.5*3/4.2129998/4.7129998 Inches>
+
+<!Class, "Figure",
+	Bottom Margin =		0.1670003 Inches,
+	Left Margin =		0.2010002 Inches,
+	Alignment =		Center,
+	Font =			F10@Z7@Lam,
+	Alt Font =		F10@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.2989998/0.5*10 Inches>
+
+<!Class, "Footnote",
+	Top Margin =		0.1670003 Inches,
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "Heading4",
+	Top Margin =		0.1939998 Inches,
+	Bottom Margin =		0.0420003 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Allow Page Break After = no,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "Indent",
+	Top Margin =		0.0829997 Inches,
+	Bottom Margin =		0 Inches,
+	Left Margin =		0.1179997 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.2760002/0.6689999/1.0629997/2.0480006/3.0320003/4.0170002/5.0009999/5.3820004 Inches>
+
+<!Class, "NoIVZ",
+	Top Margin =		0.1670003 Inches,
+	Bottom Margin =		0.0420003 Inches,
+	Alignment =		Left,
+	Font =			F4@Z7@Lam,
+	Alt Font =		F4@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Begin New Page =		yes,
+	Allow Page Break After = no,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "Normal",
+	Top Margin =		0.1670003 Inches,
+	Bottom Margin =		0.1670003 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "Nummer",
+	Top Margin =		0.0420003 Inches,
+	Bottom Margin =		0 Inches,
+	Left Margin =		0.1970003 Inches,
+	First Indent =		-0.1970003 Inches,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0/0.3029997/0.5*10 Inches>
+
+<!Class, "Nummer1",
+	Top Margin =		0.0829997 Inches,
+	Bottom Margin =		0 Inches,
+	Left Margin =		0.1970003 Inches,
+	First Indent =		-0.1970003 Inches,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0/0.3029997/0.5*10 Inches>
+
+<!Class, "ONummer",
+	Top Margin =		0.0420003 Inches,
+	Bottom Margin =		0 Inches,
+	Left Margin =		0.1970003 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.3029997/0.5*10 Inches>
+
+<!Class, "OPunkt",
+	Top Margin =		0.0420003 Inches,
+	Bottom Margin =		0 Inches,
+	Left Margin =		0.1970003 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.3029997/0.5*10 Inches>
+
+<!Class, "Punkt",
+	Top Margin =		0.0829997 Inches,
+	Bottom Margin =		0 Inches,
+	Left Margin =		0.1970003 Inches,
+	First Indent =		-0.1970003 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0/0.3029997/0.5*10 Inches>
+
+<!Class, "StPstandard",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "StdZelle",
+	Top Margin =		0.0279997 Inches,
+	Bottom Margin =		0.0560002 Inches,
+	Alignment =		Left,
+	Font =			F20@Z7@Lam,
+	Alt Font =		F20@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "TabFussnote",
+	Top Margin =		0.0420003 Inches,
+	Bottom Margin =		0 Inches,
+	Left Margin =		0.1970003 Inches,
+	Right Margin =		0.1970003 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.3029997/0.5*10 Inches>
+
+<!Class, "TabTitel",
+	Bottom Margin =		0 Inches,
+	Left Margin =		0.1970003 Inches,
+	Alignment =		Left,
+	Font =			F14@Z7@Lam,
+	Alt Font =		F14@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.3029997/0.5*10 Inches>
+
+<!Class, "TitelZelle",
+	Top Margin =		0.0829997 Inches,
+	Bottom Margin =		0.0829997 Inches,
+	Alignment =		Left,
+	Font =			F14@Z7@Lam,
+	Alt Font =		F14@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "bullet",
+	Top Margin =		0.05 Inches,
+	Bottom Margin =		0.05 Inches,
+	Left Margin =		0.4981323 Inches,
+	First Indent =		-0.25 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Alt Font =		F2@Z7@Lnl,
+	Line Spacing =		1.1667 lines,
+	Left Tab =		0/0.5/1/2/3 Inches,
+	Composition =		Optimum,
+	Contents =		Prefix>
+
+<"|:bullet",
+	Hidden =		yes,
+	Font =			F2@i*,
+	Alt Font =		F2@Z7@Lnl,
+	Subcomponent =		yes,
+	Contents =		Shared><F3@Z7@Lam>S<F0><Tab>
+<End Sub><F0>
+
+<!Class, "cs: Unterstrichen",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F11@U@Z7@Lam,
+	Alt Font =		F11@U@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "cs:Achtung",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F6@Z7@Lam,
+	Alt Font =		F6@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "cs:DSEtext",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Alt Font =		F2@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "cs:Displaymark",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F7@Z7@Lam,
+	Alt Font =		F7@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "cs:Fett10",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F14@Z7@Lam,
+	Alt Font =		F14@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "cs:Fett11",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F13@Z7@Lam,
+	Alt Font =		F13@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "cs:Fett12",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F23@Z7@Lam,
+	Alt Font =		F23@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "cs:FettEng",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F13@Z7@Lam,
+	Alt Font =		F13@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "cs:FettKursiv",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F22@Z7@Lam,
+	Alt Font =		F22@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "cs:FettUnter",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F11@U@Z7@Lam,
+	Alt Font =		F11@U@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "cs:ImKopf",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F11@Z7@Lam,
+	Alt Font =		F11@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "cs:Klein",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F20@Z7@Lam,
+	Alt Font =		F20@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "cs:Knoedel",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F21@Z7@Lam,
+	Alt Font =		F21@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "cs:Kursiv",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F19@Z7@Lam,
+	Alt Font =		F19@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "cs:OttoNormal",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "cs:PROZtext",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F18@Z7@Lam,
+	Alt Font =		F18@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "cs:RunInHead",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F17@Z7@Lam,
+	Alt Font =		F17@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "cs:page number",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F11@Z7@Lam,
+	Alt Font =		F11@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "footer",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Center Tab =		3.1500001 Inches,
+	Right Tab =		6.6939998 Inches>
+
+<!Class, "head",
+	Top Margin =		0.35 Inches,
+	Bottom Margin =		0.05 Inches,
+	Alignment =		Left,
+	Font =			F4@Z3@Lam,
+	Alt Font =		F4@Z3@Lnl,
+	Line Spacing =		1.1111 lines,
+	Allow Page Break Within = no,
+	Allow Page Break After = no,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+<!Class, "header",
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Center Tab =		3.1500001 Inches,
+	Right Tab =		6.3000002 Inches>
+
+<!Class, "heading 1",
+	Top Margin =		0.1670003 Inches,
+	Bottom Margin =		0.0420003 Inches,
+	Alignment =		Left,
+	Font =			F4@Z7@Lam,
+	Alt Font =		F4@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Begin New Page =		yes,
+	Allow Page Break After = no,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "heading 2",
+	Top Margin =		0.25 Inches,
+	Bottom Margin =		0.0420003 Inches,
+	Alignment =		Left,
+	Font =			F28@Z7@Lam,
+	Alt Font =		F28@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Allow Page Break After = no,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "heading 3",
+	Top Margin =		0.2220003 Inches,
+	Bottom Margin =		0.0420003 Inches,
+	Alignment =		Left,
+	Font =			F5@Z7@Lam,
+	Alt Font =		F5@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Allow Page Break After = no,
+	Left Tab =		0.5/0.5*10 Inches>
+
+<!Class, "indentpara",
+	Top Margin =		0.05 Inches,
+	Bottom Margin =		0.05 Inches,
+	Left Margin =		0.50 Inches,
+	Font =			F2@Z7@Lam,
+	Alt Font =		F2@Z7@Lnl,
+	Line Spacing =		1.1667 lines,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+<!Class, "list",
+	Top Margin =		0.05 Inches,
+	Bottom Margin =		0.05 Inches,
+	Left Margin =		0.4981323 Inches,
+	First Indent =		-0.50 Inches,
+	Alignment =		Left,
+	Font =			F2@Z7@Lam,
+	Alt Font =		F2@Z7@Lnl,
+	Line Spacing =		1.1667 lines,
+	Left Tab =		0/1*3 Inches,
+	Decimal Tab =		-0.15 Inches,
+	Composition =		Optimum,
+	Contents =		Prefix>
+
+<"|:list",
+	Hidden =		yes,
+	Font =			F2@i*,
+	Alt Font =		F2@Z7@Lnl,
+	Subcomponent =		yes,
+	Contents =		Shared><F0><Tab><Autonum, "list", 1><Tab>
+<End Sub><F0>
+
+<!Class, "micro:caption",
+	Top Margin =		0.0393701 Inches,
+	Bottom Margin =		0.0393701 Inches,
+	Font =			F6@Z7@Lam,
+	Alt Font =		F6@Z7@Lnl,
+	Line Spacing =		1.2 lines,
+	Left Tab =		0/0.4724406/0.9842521/1.5748031 Inches,
+	Composition =		Optimum>
+
+<!Class, "micro:ftnote",
+	Top Margin =		0.0393701 Inches,
+	Bottom Margin =		0.0393701 Inches,
+	Alignment =		Left,
+	Font =			F6@Z7@Lam,
+	Alt Font =		F6@Z7@Lnl,
+	Line Spacing =		1.1124 lines,
+	Left Tab =		0/0.25 Inches,
+	Composition =		Optimum>
+
+<!Class, "para",
+	Top Margin =		0.05 Inches,
+	Bottom Margin =		0.05 Inches,
+	Font =			F2@Z7@Lam,
+	Alt Font =		F2@Z7@Lnl,
+	Line Spacing =		1.1667 lines,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+<!Class, "rule",
+	Bottom Margin =		0 Inches,
+	Font =			F2@Z7@Lam,
+	Alt Font =		F2@Z7@Lnl,
+	Line Spacing =		1.1667 lines,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum,
+	Contents =		Shared>
+
+<Frame,
+	Name =			"rule",
+	Placement =		At Anchor,
+	Width =			6.25 Inches,
+	Width =			Page Without Margins,
+	Size Contents To Width = yes,
+	Height =		0.0533333 Inches,
+	Height =		Contents,
+	Hidden =		yes,
+	Diagram =
+V11,
+(g9,1,0,
+ (v7,1,0,,0,0,6.2133331,0,7,0,2,0)
+ (E16,0,0,,5,1,0,0.0533333,1,15,0,0,1,0.0133333,0.0133333,0,1,5,127,7,0,0,7,1,0,
+  1,0.0666667,0.0666667,6,6,0,0.0666667,6))>
+
+<!Class, "subhead",
+	Top Margin =		0.25 Inches,
+	Bottom Margin =		0.05 Inches,
+	Alignment =		Left,
+	Font =			F5@Z7@Lam,
+	Alt Font =		F5@Z7@Lnl,
+	Line Spacing =		1.1429 lines,
+	Allow Page Break Within = no,
+	Allow Page Break After = no,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum>
+
+<!Class, "toc 1",
+	Top Margin =		0.1670003 Inches,
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F14@Z7@Lam,
+	Alt Font =		F14@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Right Tab =		6.2989998 Inches>
+
+<!Class, "toc 2",
+	Top Margin =		0.0560002 Inches,
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F12@Z7@Lam,
+	Alt Font =		F12@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Right Tab =		6.2989998 Inches>
+
+<!Class, "toc 3",
+	Top Margin =		0.0279997 Inches,
+	Bottom Margin =		0 Inches,
+	Alignment =		Left,
+	Font =			F25@Z7@Lam,
+	Alt Font =		F25@Z7@Lam,
+	Line Spacing =		1.16 lines,
+	Right Tab =		6.2989998 Inches>
+
+<!Class, "|:bullet",
+	Top Margin =		0.0266667 Inches,
+	Bottom Margin =		0.0266667 Inches,
+	Font =			F2@Z7@Lnl@i*,
+	Alt Font =		F2@Z7@Lnl,
+	Line Spacing =		1.162 lines,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum,
+	Contents =		Shared>
+
+<F3@Z7@Lnl>S<F0><Tab>
+
+<!Class, "|:list",
+	Top Margin =		0.0266667 Inches,
+	Bottom Margin =		0.0266667 Inches,
+	Font =			F2@Z7@Lnl@i*,
+	Alt Font =		F2@Z7@Lnl,
+	Line Spacing =		1.162 lines,
+	Left Tab =		0/1*3 Inches,
+	Composition =		Optimum,
+	Contents =		Shared>
+
+<Tab><Autonum, "list", 1><Tab>
+
+<!Class, "~Warning",
+	Font =			F6@Z7@Lam,
+	Alt Font =		F6@Z7@Lam,
+	Line Spacing =		1.31 lines>
+
+<!Master Frame,
+	Name =			"floating",
+	Placement =		Following Anchor,
+	Horizontal Alignment =	Center,
+	Width =			2 Inches,
+	Width =			Page Without Margins,
+	Height =		1 Inches,
+	Height =		Page Without Margins * 0.33,
+	Diagram =
+V11,
+(g9,0,0,
+ (E16,0,0,,5,1,1,0.0533333,1,15,0,0,1,0,0,0,1,5,127,7,0,0,7,0,1,1,0.0666667,0.06
+  66667,6,6,0,0.0666667,6))>
+
+<!Master Frame,
+	Name =			"footnote:numbered",
+	Placement =		Bottom of Page,
+	Horizontal Alignment =	Left,
+	Same Page =		yes,
+	Width =			6.25 Inches,
+	Width =			Column,
+	Size Contents To Width = yes,
+	Height =		0.20 Inches,
+	Height =		Contents,
+	Auto Edit =		yes,
+	Numbered = 		'<Autonum, "footnote", 1, Tagname = "EiXYY2e4vr">',
+	Superscript =		yes,
+	Diagram =
+V11,
+(g9,1,0,
+ (T15,1,12,,0,0,5,127,5,7,127,1,0,2,
+<!Page, Width = 6.2266665 Inches, Height = 0.19837 Inches,
+	Top Margin =		0.03 Inches,
+	Bottom Margin =		0.03 Inches,
+	Revision Bar Placement = Left>
+<"micro:ftnote",
+	Hidden =		yes>
+
+<Ref, Auto #, Tag = "EiXYY2e4vr">.<Tab>
+
+<End Text>)
+ (E16,0,0,,5,1,1,0.0533333,1,15,0,0,1,0,0,0,1,5,127,7,0,0,7,0,1,1,0.0666667,0.06
+  66667,6,6,0,0.0666667,6))>
+
+<!Master Frame,
+	Name =			"footnote:unnumbered",
+	Placement =		Bottom of Page,
+	Horizontal Alignment =	Left,
+	Same Page =		yes,
+	Width =			6.25 Inches,
+	Width =			Column,
+	Size Contents To Width = yes,
+	Height =		0.1466667 Inches,
+	Height =		Contents,
+	Auto Edit =		yes,
+	Diagram =
+V11,
+(g9,1,0,
+ (T15,1,12,,0.0266667,0.0266667,5,127,5,7,127,1,0,2,
+<!Page, Width = 6.2266665 Inches, Height = 0.1383699 Inches,
+	Revision Bar Placement = Left>
+<"micro:ftnote",
+	Hidden =		yes>
+
+<End Text>)
+ (E16,0,0,,5,1,1,0.0533333,1,15,0,0,1,-0.0266667,-0.0266667,0,1,5,127,7,0,0,7,0,
+  1,1,0.0666667,0.0666667,6,6,0,0.0666667,6))>
+
+<!Master Frame,
+	Name =			"fullpage",
+	Placement =		Overlay,
+	Horizontal Alignment =	Center,
+	Vertical Alignment =	Center,
+	Horizontal Reference =	Page With Both Margins,
+	Vertical Reference =	Page With Both Margins,
+	Width =			2 Inches,
+	Width =			Page With Both Margins,
+	Height =		1 Inches,
+	Height =		Page With Both Margins,
+	Diagram =
+V11,
+(g9,0,0,
+ (E16,0,0,,5,1,1,0.0533333,1,15,0,0,1,0,0,0,1,5,127,7,0,0,7,0,1,1,0.0666667,0.06
+  66667,6,6,0,0.0666667,6))>
+
+<!Master Frame,
+	Name =			"inline",
+	Placement =		At Anchor,
+	Width =			0.50 Inches,
+	Height =		0.1655558 Inches,
+	Diagram =
+V11,
+(g9,0,0,
+ (E16,0,0,,5,1,1,0.0533333,1,15,0,0,1,0,0,0,1,5,127,7,0,0,7,0,1,1,0.0666667,0.06
+  66667,6,6,0,0.0666667,6))>
+
+<!Master Frame,
+	Name =			"page",
+	Placement =		At Anchor,
+	Vertical Alignment =	Top,
+	Width =			2 Inches,
+	Width =			Page Without Margins,
+	Height =		1 Inches,
+	Height =		Page Without Margins,
+	Diagram =
+V11,
+(g9,0,0,
+ (E16,0,0,,5,1,1,0.0533333,1,15,0,0,1,0,0,0,1,5,127,7,0,0,7,0,1,1,0.0666667,0.06
+  66667,6,6,0,0.0666667,6))>
+
+<!Master Frame,
+	Name =			"rule",
+	Placement =		At Anchor,
+	Width =			6.25 Inches,
+	Width =			Page Without Margins,
+	Size Contents To Width = yes,
+	Height =		0.0533333 Inches,
+	Height =		Contents,
+	Diagram =
+V11,
+(g9,1,0,
+ (v7,1,0,,0,0,6.2133331,0,7,0,2,0)
+ (E16,0,0,,5,1,0,0.0533333,1,15,0,0,1,0.0133333,0.0133333,0,1,5,127,7,0,0,7,1,0,
+  1,0.0666667,0.0666667,6,6,0,0.0666667,6))>
+
+<!Master Frame,
+	Name =			"side:left",
+	Placement =		Overlay,
+	Horizontal Alignment =	Left,
+	Vertical Alignment =	Top,
+	Horizontal Reference =	Left Page Margin,
+	Vertical Reference =	Anchor,
+	Width =			1.25 Inches,
+	Width =			Left Page Margin,
+	Height =		8.35 Inches,
+	Height =		Page Without Margins,
+	Diagram =
+V11,
+(g9,0,0,)>
+
+<!Master Frame,
+	Name =			"side:right",
+	Placement =		Overlay,
+	Horizontal Alignment =	Right,
+	Vertical Alignment =	Top,
+	Horizontal Reference =	Right Page Margin,
+	Vertical Reference =	Anchor,
+	Width =			1 Inches,
+	Width =			Right Page Margin,
+	Height =		8.35 Inches,
+	Height =		Page Without Margins,
+	Diagram =
+V11,
+(g9,0,0,)>
+
+<Page Header, Frame =
+V11,
+(g9,1,0,
+ (t14,1,4,,6.2399998,0.6066667,2,7,0,0,,wst:timsps10,)
+ (t14,2,4,,3.1133332,0.6066667,1,7,0,0,,wst:timsps10,)
+ (t14,3,4,,0,0.6066667,0,7,0,0,,wst:timsps10,)
+ (E16,0,0,,5,1,1,0.0533333,1,15,0,0,1,0,0,0,1,5,127,7,0,0,7,0,1,1,0.0666667,0.06
+  66667,6,6,0,0.0666667,6))>
+
+<Page Footer, Frame =
+V11,
+(g9,1,0,
+ (t14,1,4,,6.2399998,0.7866667,2,7,0,0,,wst:timsps10,)
+ (t14,2,4,,3.1199999,0.7866667,1,7,0,0,,wst:timsps10,\X80a0)
+ (t14,3,4,,0,0.7866667,0,7,0,0,,wst:timsps10,)
+ (E16,0,0,,5,1,1,0.0533333,1,15,0,0,1,0,0,0,1,5,127,7,0,0,7,0,1,1,0.0666667,0.06
+  66667,6,6,0,0.0666667,6))>
+
+<!End Declarations>
+
+<"para">
+
+<|,"1">
+
+<"~Warning">
+
+<F3@Z7@Lam>.<F0> Inter-character space expansion/contraction is not 
+supported. <F3@Z7@Lam>,
+
+<"AONIXTitle",
+	Top Margin =		1.3889998 Inches,
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+AONIXTitle
+
+<"AONIXSubtitle",
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+AONIXSubtitle
+
+<"DAutor",
+	Left Tab =		1.9689999/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+DAutor (needed for footer)
+
+<"DFirma",
+	Left Tab =		1.9689999/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+DFirma (needed for header)
+
+<"DAbteilung",
+	Left Tab =		1.9689999/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+DAbteilung (needed for header)
+
+<"DTitel",
+	Left Tab =		1.9689999/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+DTitel (needed for header)
+
+<"DUntertitel",
+	Left Tab =		1.9689999/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+DUntertitel (needed for header)
+
+<"DVersion",
+	Left Tab =		1.9689999/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+DVersion (needed for header)
+
+<"DInfo",
+	Left Tab =		1.9689999/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+DInfo (general document info)
+
+<"toc 1",
+	Top Margin =		0.3060002 Inches,
+	Left Tab =		6.3920002 Inches,
+	Right Tab =		6.2989998 Inches>
+
+Table of Contents:
+
+<"toc 1",
+	Left Tab =		6.3920002 Inches,
+	Right Tab =		6.2989998 Inches>
+
+Verzeichnis1 (IVZ)
+
+<"toc 2",
+	Left Tab =		6.3920002 Inches,
+	Right Tab =		6.2989998 Inches>
+
+Verzeichnis2 (IVZ)
+
+<"toc 3",
+	Left Tab =		6.3920002 Inches,
+	Right Tab =		6.2989998 Inches>
+
+Verzeichnis3 (IVZ)
+
+<"Normal",
+	Top Margin =		0.3060002 Inches,
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+Headers and Footers
+
+<"header",
+	Left Tab =		6.3920002 Inches,
+	Center Tab =		3.1500001 Inches,
+	Right Tab =		6.3000002 Inches>
+
+Header  or  Kopfzeile (header)
+
+<"footer",
+	Left Tab =		6.3920002 Inches,
+	Center Tab =		3.1500001 Inches,
+	Right Tab =		6.3000002 Inches>
+
+Footer or Fusszeile (footer)
+
+<"heading 1",
+	Top Margin =		0.3060002 Inches,
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+<|,"2"><"cs:ImKopf",
+	Font =			F4@i*,
+	Subcomponent =		yes><F0><#dc>berschrift 1
+<End Sub><F0> (heading 1), internal format for auto<SR>
+numbered Headings 
+
+<"heading 2",
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+<#dc>berschrift 2 (heading 2), s.o.
+
+<"heading 3",
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+<#dc>berschrift 3 (heading 3), s.o.
+
+<"Heading4",
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+Heading 4 , not numbered !
+
+<"Body",
+	Left Tab =		0.3939998/0.7870003/1.1810001/2.1660001/3.1500001/4.1350002/5.119/5.4079995/5.9000001/6.3920002 Inches>
+
+Body (normal Text with default distance)
+
+<"BodyoA",
+	Left Tab =		0.3939998/0.7870003/1.1810001/2.1660001/3.1500001/4.1350002/5.119/5.4079995/5.9000001/6.3920002 Inches>
+
+BodyoA (normal Text , less distance)
+
+<"BodyFett",
+	Left Tab =		0.3939998/0.7870003/1.1810001/2.1660001/3.1500001/4.1350002/5.119/5.4079995/5.9000001/6.3920002 Inches>
+
+BodyFett (normal Text (like Body) but bold)
+
+<"Normal",
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+Standard (word standard)
+
+<"StPstandard",
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+StPStandard (this is the basic report format !!!!)
+
+<"Punkt",
+	Top Margin =		0 Inches,
+	Left Margin =		0 Inches,
+	First Indent =		0 Inches,
+	Font =			F29@Z7@Lam,
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+<F30@Z7@Lam>w<F0><Tab><F12@Z7@Lam>Punkt (Punktlaufzaehlung) beruht 
+auf der Standardformatvorlage Aufz<#e4>hlungszeichen und <SR>
+wurde als linksb<#fc>ndig definiert.
+
+<"OPunkt",
+	Left Tab =		0.2939999/0.7860002/1.2779996/1.7689998/2.2610002/2.7529998/3.2439997/3.7360001/4.2280006/4.7189999/5.211/5.7029996/6.1939998 Inches>
+
+OPunkt (Folgeabsatz fuer Punkt)
+
+<"Nummer1",
+	Top Margin =		0 Inches,
+	Left Margin =		0 Inches,
+	First Indent =		0 Inches,
+	Alignment =		Left,
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+1.<Tab>Nummer1 (erste nummerierte Aufzaehlung, d.h. 1.)
+
+<"Nummer",
+	Top Margin =		0 Inches,
+	Left Margin =		0 Inches,
+	First Indent =		0 Inches,
+	Alignment =		Left,
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+2.<Tab>Nummer (weitere nummerierte Aufzaehlung, d.h. ab 2.
+
+<"ONummer",
+	Left Tab =		0.2939999/0.7860002/1.2779996/1.7689998/2.2610002/2.7529998/3.2439997/3.7360001/4.2280006/4.7189999/5.211/5.7029996/6.1939998 Inches>
+
+ONummer (Folgeabsatz fuer Nummer1 bzw. Nummer)
+
+<"Equation",
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+Equation
+
+<"Extract",
+	Left Tab =		0.1960002/0.6879997/1.1789998/1.6710001/2.1630006/2.6539998/3.1460001/3.6379998/4.1289997/4.6210003/5.1120005/5.6039996 Inches>
+
+Extract
+
+<"Indent",
+	Left Tab =		0.2760002/0.6689999/1.0629997/2.0480006/3.0320003/4.0170002/5.0009999/5.29/5.7820005/6.2739997 Inches>
+
+Indent
+
+<"Figure",
+	Left Tab =		0.2910002/0.7829997/1.2739998/1.7660002/2.2579997/2.7489998/3.2410002/3.7329996/4.224/4.7160001/5.2080007/5.6989999/6.191 Inches>
+
+Figure
+
+<"Footnote",
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+Footnote
+
+<"Normal",
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+Tabellen:
+
+<"StdZelle",
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+StdZelle
+
+<"TitelZelle",
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+TitelZelle
+
+<"TabTitel",
+	Left Tab =		0.2939999/0.7860002/1.2779996/1.7689998/2.2610002/2.7529998/3.2439997/3.7360001/4.2280006/4.7189999/5.211/5.7029996/6.1939998 Inches>
+
+TabTitel
+
+<"TabFussnote",
+	Left Tab =		0.2939999/0.7860002/1.2779996/1.7689998/2.2610002/2.7529998/3.2439997/3.7360001/4.2280006/4.7189999/5.211/5.7029996/6.1939998 Inches>
+
+TabFussnote
+
+<"NoIVZ",
+	Top Margin =		0.3060002 Inches,
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+<|,"3"><"cs:ImKopf",
+	Font =			F4@i*,
+	Subcomponent =		yes><F0>NoIVZ<End Sub><F0>, wie <#dc>berschrift
+1, aber nicht im IVZ
+
+<"StPstandard",
+	Top Margin =		0.1389998 Inches,
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+Ebenen fuer verschachtelte Anforderungen
+
+<"Ebene1",
+	Left Tab =		0/0.2939999/0.7860002/1.2779996/1.7689998/2.2610002/2.7529998/3.2439997/3.7360001/4.2280006/4.7189999/5.211/5.7029996/6.1939998 Inches>
+
+1<Tab>Ebene1 xxxxx xxxxxx xxxxxx xxxxxxxxx xxxxxx xxxxxx xxxxxx xxxxxx 
+xxxxxxx xxx x x x x x x x x <SR>
+x x xx
+
+<"Ebene2",
+	Left Tab =		0/0.0979997/0.59/1.0810002/1.5729997/2.0650001/2.5560002/3.0480006/3.54/4.0310001/4.5229998/5.0149999/5.506/5.9980006 Inches>
+
+2<Tab>Ebene2 xxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxx 
+xxxx xxxxxx xxxxx <SR>
+xxxxxxxxxxxx
+
+<"Ebene3",
+	Left Tab =		0/0.3920003/0.8839998/1.3760002/1.8670003/2.3589997/2.8510001/3.3420002/3.8339999/4.3260002/4.8169994/5.309/5.8010001 Inches>
+
+3<Tab>Ebene3 xxxxxxxxxxxxxxxxx
+
+<"Ebene4",
+	Left Tab =		0/0.1960002/0.6879997/1.1789998/1.6710001/2.1630006/2.6539998/3.1460001/3.6379998/4.1289997/4.6210003/5.1120005/5.6039996 Inches>
+
+4<Tab>Ebene4
+
+<"Ebene5",
+	Left Tab =		0/0.49/0.9820004/1.4739999/1.965/2.4570003/2.9489999/3.4400001/3.9320004/4.4239998/4.915/5.4070005 Inches>
+
+5<Tab>Ebene5
+
+<"Ebene6",
+	Left Tab =		0/0.2939999/0.785/1.2770003/1.7689998/2.26/2.7520003/3.2439997/3.7349999/4.2270002/4.7189999/5.21 Inches>
+
+6<Tab>Ebene6
+
+<"Ebene7",
+	Left Tab =		0/0.0970003/0.5879997/1.08/1.5720004/2.0629997/2.5550001/3.0470004/3.5380006/4.0300002/4.5219994/5.0129995 Inches>
+
+7<Tab>Ebene7
+
+<"Ebene8",
+	Left Tab =		0/0.3920003/0.8829997/1.375/1.8670003/2.3579996/2.8499999/3.3420002/3.8329997/4.3249998/4.8169994 Inches>
+
+8<Tab>Ebene8
+
+<"Ebene9",
+	Left Tab =		0/0.1939998/0.6860002/1.1779996/1.6689998/2.1610003/2.6530006/3.1439998/3.6360002/4.1279998/4.619 Inches>
+
+9<Tab>Ebene9
+
+<"Ebene10",
+	Left Tab =		-1.7720003/0/0.49/0.9810002/1.4729997/1.965/2.4560001/2.9479997/3.4400001/3.9310002/4.4229999 Inches>
+
+10<Tab><Tab>Ebene10
+
+<"StPstandard",
+	Left Tab =		0.4920003/0.9829997/1.475/1.9670004/2.4579997/2.95/3.4419994/3.9330006/4.4250002/4.9169993/5.4079995/5.9000001/6.3920002 Inches>
+
+Zeichenformate
+
+<"Body",
+	Alignment =		Both,
+	Left Tab =		0.3939998/0.7870003/1.1810001/2.1660001/3.1500001/4.1350002/5.119/5.4079995/5.9000001/6.3920002 Inches>
+
+Absatzstandardschrift x <"cs:Achtung",
+	Font =			F6@iH@iE@iI@iL@iS@iU@iR@iT@iB@iP@iK@iC@iZ@iO,
+	Subcomponent =		yes><F6@Z7@Lam>Achtung<End Sub><F0> 
+x <"cs:Displaymark",
+	Font =			F7@iE@iI@iL@iS@iU@iR@iT@iB@iP@iK@iC@iZ@iO,
+	Subcomponent =		yes><F7@Z7@Lam>Displaymark
+<End Sub><F0> x <"cs:DSEtext",
+	Font =			F2@iE@iI@iL@iS@iU@iR@iT@iB@iP@iK@iC@iZ@iO,
+	Subcomponent =		yes><F2@Z7@Lam>DSEText<End Sub><F0> 
+x <"cs:Fett10",
+	Font =			F14@iF@iH@iI@iL@iS@iU@iR@iT@iB@iP@iK@iC@iZ@iO,
+	Subcomponent =		yes><F14@Z7@Lam>Fett10<End Sub><F0> 
+x <"cs:Fett11",
+	Font =			F13@iF@iI@iL@iS@iU@iR@iT@iB@iP@iK@iC@iZ@iO,
+	Subcomponent =		yes><F13@Z7@Lam>Fett11<End Sub><F0> 
+x <"cs:Fett12",
+	Font =			F23@iF@iI@iL@iS@iU@iR@iT@iB@iP@iK@iC@iZ@iO,
+	Subcomponent =		yes><F23@Z7@Lam>Fett12<End Sub><F0> 
+x <"cs:FettEng",
+	Font =			F13@iF@iI@iL@iS@iU@iR@iT@iB@iP@iK@iC@iZ@iO,
+	Subcomponent =		yes><F13@Z7@Lam>FettEng<End Sub><F0> 
+x <"cs:FettKursiv",
+	Font =			F31@iF@iL@iS@iU@iR@iT@iB@iP@iK@iC@iZ@iO,
+	Subcomponent =		yes><F31@Z7@Lam>Fett<SR>
+Kursiv<End Sub><F0> x <"cs:FettUnter",
+	Font =			F13@iF@iI@iL@iS@U@iR@iT@iB@iP@iK@iC@iZ@iO,
+	Subcomponent =		yes><F13@U@Z7@Lam>FettUnter
+<End Sub><F0> x <"cs:Klein",
+	Font =			F20@iF@iE@iI@iL@iS@iU@iR@iT@iB@iP@iK@iC@iZ@iO,
+	Subcomponent =		yes><F20@Z7@Lam>Klein<End Sub><F0> 
+x <"cs:Knoedel",
+	Font =			F21@iI@iL@iS@iU@iR@iT@iB@iP@iK@iC@iZ@iO,
+	Subcomponent =		yes><F21@Z7@Lam>Knoedel<End Sub><F0> 
+x <"cs:Kursiv",
+	Font =			F19@iF@iH@iE@iL@iS@iU@iR@iT@iB@iP@iK@iC@iZ@iO,
+	Subcomponent =		yes><F19@Z7@Lam>Kursiv<End Sub><F0> 
+x <"cs:OttoNormal",
+	Font =			F12@i*,
+	Subcomponent =		yes><F0>Normal<End Sub><F0> x 
+<"cs:PROZtext",
+	Font =			F18@iE@iI@iL@iS@iU@iR@iT@iB@iP@iK@iC@iZ@iO,
+	Subcomponent =		yes><F18@Z7@Lam>PROZText
+<End Sub><F0> x <"cs:RunInHead",
+	Font =			F17@iI@iL@iS@iU@iR@iT@iB@iP@iK@iC@iZ@iO,
+	Subcomponent =		yes><F17@Z7@Lam>RunInHead
+<End Sub><F0> x <"cs:page number",
+	Font =			F12@i*,
+	Subcomponent =		yes><F0>Seiten<SR>
+zahl<End Sub><F0> x <"cs: Unterstrichen",
+	Font =			F12@iF@iH@iE@iI@iL@iS@U@iR@iT@iB@iP@iK@iC@iZ@iO,
+	Subcomponent =		yes><F12@U@Z7@Lam>Unterstrichen
+<End Sub><F0>

@@ -1,0 +1,4 @@
+filterfile1
+Operator: LOAD_ALL
+Operator: SHOW
+Operator: Show Labels

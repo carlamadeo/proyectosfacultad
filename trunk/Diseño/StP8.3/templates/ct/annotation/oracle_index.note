@@ -1,0 +1,107 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Note 800013
+{
+    { AppType OracleIndex }
+    { HelpText "The Oracle Index note lets you add items needed to declare an Oracle index object. This information is used in SQL generation." }
+    { Bounds { Min 0 } } 
+    { PrintName "Oracle Index" }
+    { Item
+	{ IsKey True }
+	{ AppType SqlName }
+	{ HelpText "The Index Name item specifies the name of the index. You can include columns in the index by using the Index Name item under the In Index note to associate the name of the index with an attribute." }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Index Name" }
+	{ InitValue "${sym_label} index" }
+    }
+    { Item
+	{ AppType IsUnique }
+	{ HelpText "The Unique Index? item specifies that this index must be unique." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Unique Index?" }
+	{ InitValue "True" }
+    }
+    { Item
+	{ AppType TableSpace }
+	{ HelpText "The Table Space item lists the name of an existing table space in which this index should be stored." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Table Space" }
+    }
+    { Item
+	{ AppType PctFree }
+	{ HelpText "The Percent Free item specifies the percentage of the total space of a block allocated to an object that should be reserved for future updates to that object's data. Providing a value for this item allows you to override the default specified for your database. The value of Percent Free can be any positive integer between 0 and 100." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Percent Free" }
+    }
+    { Item
+	{ AppType IniTrans }
+	{ HelpText "The Initial Trans item specifies the initial number of transaction entries that are allocated within each block. Providing a value for this item allows you to override the default specified for your database. The value of Initial Trans can be any positive integer between 1 and 255." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Initial Trans" }
+    }
+    { Item
+	{ AppType MaxTrans }
+	{ HelpText "The Max Trans item specifies the maximum number of transactions that can update a data block concurrently. Providing a value for this item allows you to override the default specified for your database. The value of Initial Trans can be any positive integer between 1 and 255." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Max Trans" }
+    }
+    { Item
+	{ AppType FirstExtent }
+	{ HelpText "The Initial Extent item specifies, in bytes, the first extent (the initial amount of space) provided for the index." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Initial Extent" }
+    }
+    { Item
+	{ AppType NextExtent }
+	{ HelpText "The Next Extent item specifies the size in bytes of every subsequent extent to be allocated after the first extent. This size is a base value, meaning that it can either remain constant or change according to the value specified by Percent Increase. You can supply any positive integer value for this item." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Next Extent" }
+    }
+    { Item
+	{ AppType MinExtents }
+	{ HelpText "The Min Extents item specifies the total number of extents to be allocated when an object is created. By default this value is 1, which means that just the initial extent is allocated. If you change the value of Min Extents to be greater than 1, then the specified number of subseqent extents will be allocated when an object is created using the values of First Extent, Next Extent, and Percent Increase. You can supply any positive integer value for this item." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Min Extents" }
+    }
+    { Item
+	{ AppType MaxExtents }
+	{ HelpText "The Max Extents item specifies the total number of extents, including the first, that can ever be allocated. You can supply any positive integer value for this item." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Max Extents" }
+    }
+    { Item
+	{ AppType PctIncrease }
+	{ HelpText "The Percent Increase item specifies the percent by which each Next Extent will grow over the last extent allocated. If the value of Percent Increase is 0, then the size of each additional extent stays constant. The default value of Percent Increase is 50, which means that every time Next Extent is calculated, it grows by 50%. This allows the size of each extent to grow as the object grows. You can supply any positive integer value for this item." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Percent Increase" }
+    }
+    { Item
+	{ AppType OptimalExtents }
+	{ HelpText "The Optimal Extents item specifies the size of the rollback segment. NULL if not specified." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Optimal Extents" }
+    }
+    { Item
+	{ AppType FreeLists }
+	{ HelpText "The Free Lists item specifies the number of Free Lists in a Free List Group. Used with Parallel Server in parallel mode only." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "Free Lists" }
+	{ InitValue "1" }
+    }
+    { Item
+	{ AppType SystemSort }
+	{ HelpText "The System Sort? item specifies that the table data has already been sorted, so that it does not need to be sorted again before creating an index." }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ PrintName "No Sort?" }
+	{ InitValue "True" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_oracle_index.note"

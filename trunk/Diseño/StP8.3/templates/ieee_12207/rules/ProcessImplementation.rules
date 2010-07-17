@@ -1,0 +1,7 @@
+
+
+Class 0 ProcessModeler
+{
+    { ParseCondition "(toolinfo_variable(\"ProcessImplementation\") == \"True\");" }
+    { Label "Implement Development Process (TBD)" }
+}

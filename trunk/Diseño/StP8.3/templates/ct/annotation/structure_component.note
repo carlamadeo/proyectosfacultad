@@ -1,0 +1,24 @@
+//	structure component note
+//	for DSE iterations, selections, sequences
+
+Note 802007
+{
+    { AppType StructureComponent }
+    { Bounds { Min 0 } { Max 1 } }
+    { PrintName "Structure Component" }
+    { Item
+        { AppType Parent }
+	{ HelpText " The Parent item lets you specify the parent symbol for the object being annotated." }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Parent" }
+    }
+    { Item
+        { AppType Usage }
+	{ HelpText "The Usage note lets you specify the function of this object in its data structure." }
+	{ Bounds { Min 1 } { Max 1 } }
+	{ PrintName "Usage" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_structure_component.note"

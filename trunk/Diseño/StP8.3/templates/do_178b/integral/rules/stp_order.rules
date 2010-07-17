@@ -1,0 +1,57 @@
+//
+//	StP/UML
+//      ConfStP-UMLntial property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+//
+
+
+
+
+Category SoftwareRequirementsProcess
+{
+    { ParseCondition "(toolinfo_variable(\"SoftwareRequirementsProcess\") == \"True\");" }
+    { Group
+      (
+          SwRequirementsAnalysisVerification
+          SwRequirementsAnalysisValidation
+          SwRequirementsAnalysisJointReview
+          SwRequirementsAnalysisDocumentation
+      )
+    }
+}
+
+Category SoftwareDesignProcess
+{
+    { ParseCondition "(toolinfo_variable(\"SoftwareDesignProcess\") == \"True\");" }
+//    { Group
+//       (
+//          SwDesignDocumentation
+//          SwDesignVerification
+//          SwDesignValidation
+//          )
+//    }
+}
+
+Category SoftwareCodingProcess
+{
+    { ParseCondition "(toolinfo_variable(\"SoftwareCodingProcess\") == \"True\");" }
+//    { Group
+//         (
+//	     TBD
+//         )
+//    }
+
+}
+
+
+Category IntegrationProcess
+{
+    { ParseCondition "(toolinfo_variable(\"IntegrationProcess\") == \"True\");" }
+//    { Group
+//         (
+//	     TBD
+//         )
+//    }
+}
+

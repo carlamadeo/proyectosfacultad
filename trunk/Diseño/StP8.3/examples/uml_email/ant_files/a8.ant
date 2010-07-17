@@ -1,0 +1,61 @@
+FileObject 1
+{
+    { Name "a8" }
+    { Type ObjectAnnotation }
+    { GUID "UID_9BBF2334-C23A-4393-8328-53FB8084EBF4" }
+}
+
+NodeObject 99999
+{
+    { Name "Mailbox" }
+    { Type UmlClass }
+    { ObjectId 494 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_CFF94409-538F-11d4-8777-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "print_mbx" }
+    { Type UmlOperation }
+    { ObjectId 742 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_CFF9440F-538F-11d4-8777-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlOperationCxxCode }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 744 }
+    { DescLine "CollIterator next(Consistsof);Printable *msg;int n = 1;while (msg = next())	cout << n++ << \" \" << *msg << \"\n\";" }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 746 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 748 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "print_mbx" }
+    { NoteId 4 }
+    { ObjectId 749 }
+}
+

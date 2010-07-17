@@ -1,0 +1,74 @@
+/*********************************************
+ *
+ * Utility functions for associtions
+ *
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    21/10/2001
+ ********************************************/
+ 
+
+// Returns whether or not there is a directed relationsship
+// from "FromRole" to "ToRole". No navigability means "bidirectional".
+proc checkNavigability(MAssociationEnd AS FromRole, MAssociationEnd AS ToRole)
+	// if both "TRUE" or both "FALSE" generate it!
+	if ([FromRole.isNavigable] == [ToRole.isNavigable])
+		return "TRUE";
+	end if
+	// now only the opposite end is of interest
+	// if it's true, it's an unidirectional association
+	// generate it!
+	if ([ToRole.isNavigable] == "TRUE")
+		return "TRUE";
+	end if
+	return "FALSE";
+end proc
+
+
+/* Returns the role visibility for Java, if annotated 
+ * (currently only with OAE). Returns the default 
+ * role visibility from "java_globals.tdl" otherwise.
+ */
+proc getRoleVisib(MAssociationEnd)
+  loop(MAssociationEnd->Note->Item Where [Item.type] == "UmlRoleJavaVisibility")
+    if ([Item.value] == "package private")
+      return "";
+    else
+      return [Item.value];
+    end if
+  end loop
+  return [DEF_ROLE_VISIB];
+end proc
+
+// Returns the collection class, in case a Role has multiplicity "many".
+// If the TaggedValue "collection=<COLLECTION_CLASS>" is defined for
+// a association end, this value is taken, otherwise the default value
+// for collection classes (defined in "java_globals.tdl" under "DEF_COLL_CLASS")
+proc getCollClass(MAssociationEnd)
+  loop(MAssociationEnd->TaggedValue Where toLower([TaggedValue.tag]) == "collection")
+    return [TaggedValue.value];
+  end loop
+  return [DEF_COLL_CLASS];
+end proc
+
+
+// Returns whether or not this association has
+// an association class.
+proc hasAssocClass(MAssociation)
+  loop(MAssociation->AssociationClass)
+    return TRUE;
+  end loop
+  return FALSE;
+end proc
+
+
+// Returns whether or not this class _is_ an association class.
+// If a class is an instanceof "MAssociationClass"
+// it has _direct_ navigation to "MAssociation"
+// unlike normal associations. 
+proc isAssocClass(MClass)
+  loop(MClass->MAssociation)
+    return TRUE;
+  end loop
+  return FALSE;
+end proc

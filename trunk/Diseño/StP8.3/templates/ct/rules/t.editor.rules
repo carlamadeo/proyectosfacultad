@@ -1,0 +1,43 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/T
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1994
+//      All rights reserved
+ 
+
+Editor tut
+{
+    { PrintName "TestUnit Table Editor" }
+    { IconFile "t" }
+    { RulesFile "rules/tut.rules" }
+    { QrlFile "rules/qrl/tut.qrl" }
+    { CreationCommand "stp_startup -C 'gte -p ${projdir} -s ${system} -ed tut'" }
+    { FileType Table }
+    { EditorFile
+	{ AppType TTestUnitTable }
+	{ PrintName "TestUnit Table Editor" }
+	{ Suffix ".tut" }
+	{ FileStore "test_files" }
+        { IsRepSource True }
+    }
+}
+
+Editor tte
+{
+    { PrintName "StP/T Type Table Editor" }
+    { IconFile "t_types" }
+    { RulesFile "rules/tte.rules" }
+    { QrlFile "rules/qrl/tte.qrl" }
+    { CreationCommand "stp_startup -C 'gte -p ${projdir} -s ${system} -ed tte'" }
+    { FileType Table }
+    { EditorFile
+	{ AppType TTypeTable }
+	{ PrintName "StP/T Type Table Editor" }
+	{ Suffix ".tte" }
+	{ FileStore "test_files" }
+        { IsRepSource True }
+    }
+}
+	
+

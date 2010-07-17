@@ -1,0 +1,55 @@
+FileObject 1
+{
+    { Name "a837" }
+    { Type ObjectAnnotation }
+    { GUID "UID_ED7D9EAD-70B4-417e-826B-E78B77E2E42D" }
+}
+
+FileObject 99999
+{
+    { Name "Ada_Package_Stereotypes" }
+    { Type UmlStereotypeDiagram }
+    { ObjectId 440 }
+    { AnnotFileId 1 }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 2117 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 2119 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Ada_Package_Stereotypes" }
+    { NoteId 3 }
+    { ObjectId 2120 }
+}
+
+NoteObject 5
+{
+    { Type UmlSubsystem }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 2122 }
+}
+
+ItemObject 6
+{
+    { Type UmlSubsystemName }
+    { Value "Ada_Environment" }
+    { NoteId 5 }
+    { ObjectId 2123 }
+}
+

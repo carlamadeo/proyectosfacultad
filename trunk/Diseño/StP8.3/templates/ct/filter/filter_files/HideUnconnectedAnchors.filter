@@ -1,0 +1,11 @@
+viewfile1
+Operator: LOAD_ALL_NODES
+Find Symbols with Type: Anchor
+Operator on Set: DUPLICATE
+Operator: LOAD_SHOWN_SYMBOLS
+Operator: LOAD_ALL_LINKS
+Operator on Set: INTERSECTION
+Operator: INCLUDE_LINK_ENDS
+Operator on Set: INTERSECTION
+Operator on Set: DIFFERENCE
+Operator: HIDE

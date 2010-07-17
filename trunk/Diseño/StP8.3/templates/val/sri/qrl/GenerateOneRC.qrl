@@ -1,0 +1,52 @@
+external string use_case_name;
+
+#include "qrl/tsdl_extract.inc"
+#include "qrl/basic_textract_dt.inc"
+#include "qrl/include/error.inc"
+
+#include "val/qrl/include/TConfig.inc"
+#include "val/qrl/include/TUseCase.inc"
+#include "val/qrl/include/CreateDir.inc"
+
+
+void 
+main ()
+{
+  message ("");
+  message ("");
+  message ("Creating RC File  \"" + use_case_name + ".rc.template\"");
+  message ("");
+  message ("");
+
+  string test_unit_id;
+
+
+
+  test_unit_id = Get_T_test_unit_id(use_case_name, "");
+
+
+  PrintRC(test_unit_id);
+
+}
+
+void
+PrintRC(string test_unit_id)
+{
+
+
+  print_line ( "atsfile = \"" + test_unit_id + ".ats\"");
+  print_line ( "help = \"/usr/lib/SR/smarts.hlp\"");
+  print_line ( "logfile = \"" + test_unit_id + ".log\"");
+  print_line ( "reportfile = \"" + test_unit_id + ".rpt\"");
+  print_line ( "statusfile = \"" + test_unit_id + ".status\"");
+  print_line ( "shellstring = \"\"");
+  print_line ( "edit = \"xterm -e vi \"");
+  print_line ( "diff = \"diff\"");
+  print_line ( "filesave");
+  print_line ( "nodiffsave");
+  print_line ( "noshowsource");
+  print_line ( "noshowinclude");
+  print_line ( "interrupt");
+  print_line ( "width = 30");
+
+}

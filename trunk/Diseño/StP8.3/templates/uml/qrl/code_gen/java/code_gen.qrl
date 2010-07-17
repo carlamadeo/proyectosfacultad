@@ -1,0 +1,3501 @@
+//
+//      StP/UML 
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+//
+//  Java code generation for UML
+//
+
+#include "qrl/code_gen/code_gen.inc"
+#include "qrl/code_gen/java/string_constants.inc"
+#include "qrl/code_gen/java/association_patterns.inc"
+#include "rules/qrl/oper_parse.inc"
+
+//
+//  External variables specific to Java
+//
+ 
+external string implement_associations_using_pattern_family = "Generic";
+external_help = "Use this pattern family to implement association roles.";
+
+/////////////////////////////////////////////////////////////////////////////
+
+const string  SD      = "::";	   // scope delimiter
+const string  MINDENT = "    ";    // member indent
+
+struct all_visibilities
+{
+    string public;
+    string protected;
+    string private;
+    string not_specified;
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+list
+UmlAttributeItems(node attribute)
+{
+    return list_select("item[obj_id=${attribute.id} & note[UmlAttributeJavaDefinition]]");
+}
+
+list
+UmlOperationItems(node operation)
+{
+    return list_select("item[obj_id=${operation.id} & 
+                        note[(UmlOperationJavaDefinition||UmlOperationCxxDefinition)]]");
+}
+
+note
+UmlOperationCode(node operation)
+{
+    return find_by_query("note[obj_id=${operation.id} & UmlOperationJavaCode]");
+}
+
+list
+UmlRoleItems(link role)
+{
+    return list_select("item[obj_id=${role.id} & note[UmlRoleJavaDefinition]]");
+}
+
+list
+UmlAssociationItems(node association)
+{
+    list item_list = list_create("item", 0);
+    return item_list;
+}
+
+list
+UmlGeneralizationItems(link generalization)
+{
+    list l = list_select("item[obj_id=${generalization.id} & 
+                          note[UmlCxxInheritanceDefinition]]");
+
+    // For refinement args when inheriting from a parameterized class
+    list_concatenate(l, list_select("item[obj_id=${generalization.id} & 
+                     note[UmlRefinesDefinition]]"));
+
+    return l;
+}
+
+list
+UmlClassItems(node class)
+{
+    return list_select("item[obj_id=${class.id} & note[UmlClassJavaDeclarations || 
+                        UmlClassCxxTableNote ]]");
+}
+
+void
+LanguageUmlGeneralizations(list generalizations, node class)
+{
+
+//    int i, n;
+//    link implements_link, corresponding_generalization_link;
+ 
+//    // get the UmlImplements links for this class
+//    list implementations = list_select("link[UmlImplements & from_node_id=${class.id} & link_refs]");
+ 
+//    // append each implements link to the generalizations list, but
+//    // not if there is already a corresponding generalization link
+//    for (i = 0, n = list_count(implementations); i < n; i = i + 1) {
+//        implements_link = list_get(implementations, i);
+//        corresponding_generalization_link = find_by_query("link[UmlGeneralization & from_node_id=${implements_link.from_node_id} & to_node_id=${implements_link.to_node_id} & link_refs]");
+//        if(corresponding_generalization_link == NULL)
+//            list_append(generalizations, implements_link);
+//    }
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+ClassCodeVariant
+ClassCodeVariant(node class)
+{
+    ClassCodeVariant self;
+ 
+    self.is_template = False;
+    self.template_prefix = "";
+    self.template_parameters = "";
+    self.constructor_initialization_list = "";
+    self.static_attribute_initializers = "";
+    self.instantiated_class_typedefs = list_create("string", 0);
+ 
+    self.generalizations = list_create("string", 0);
+    self.associations = list_create("string", 0);
+    self.dependencies = set_create ("string");
+ 
+    return self;
+}
+ 
+void
+ClassCodeVariant__Compile(ClassCodeVariant self, ClassCodeDescriptor c)
+{
+    UmlAttribute    uml_attribute;
+    item            def, plist, stereotype;
+    string          separator, attribute_name, attribute_type, parameters;
+    list            instances;
+    node            instance, instance_elaborated;
+    link            refines_link;
+    int             i;
+ 
+    for (i = 0; i < list_count(c.uml_class.UmlAttributes); i = i + 1)
+    {
+        uml_attribute = list_get(c.uml_class.UmlAttributes, i);
+        def = UmlAttribute__GetItem(uml_attribute, "UmlAttributeDefaultValue");
+        if (def != NULL)
+        {
+            attribute_name = make_attribute_name(uml_attribute);
+            if (UmlAttribute__GetItemValue(uml_attribute,
+                                           "UmlMemberIsClass") == "True")
+            {
+                attribute_type = make_attribute_type(uml_attribute);
+                if (self.is_template == False) // supported by compilers yet?
+                    self.static_attribute_initializers =
+                        self.static_attribute_initializers +
+                        attribute_const_string(uml_attribute) +
+                        attribute_volatile_string(uml_attribute) +
+                        attribute_type + " " +
+                        c.def.language_base_name + "::" + attribute_name +
+                        " = " + def.value + ";\n";
+ 
+            }
+        }
+    }
+    return;
+}
+
+
+void
+ClassCodeVariant__AppendGeneralizations(ClassCodeVariant self, 
+					ClassCodeDescriptor c, 
+					node superclass_node)
+{
+    list_append(self.generalizations, 
+		language_make_dependency_name(superclass_node));
+
+    return;
+}
+
+void
+ClassCodeVariant__AppendAssociations(ClassCodeVariant self, 
+				     ClassCodeDescriptor c, 
+				     node target_node)
+{
+    list_append(self.associations, 
+		language_make_dependency_name(target_node));
+
+    return;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+void
+ClassCodeFile__AdjustName(ClassCodeFile self, ClassCodeDescriptor c)
+{
+    return;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+void
+ClassCodeDefinition__SetIdentifier(ClassCodeDefinition self, 
+				   ClassCodeDescriptor c)
+{
+
+    self.language_base_name = language_make_base_name(c.oms_class);
+}
+
+list java_code_gen_abstract_and_interface_classes =
+                  list_create("int", 0);
+
+void
+ClassCodeDefinition__SetDefinitionHeader(ClassCodeDefinition self, 
+					 ClassCodeDescriptor c)
+{
+    UmlGeneralization  uml_generalization;
+    int                i, n;
+    string             generalization, visibility, virtual,
+                       refinement_args, superclass_instantiation_params;
+    list interfaces;
+    node implements_oms_node;
+    node interface_oms_node;
+    item interface_stereotype_oms_item;
+    item class_visibility_item;
+    item class_java_visibility_item;
+    item class_java_is_final_item;
+    item class_java_is_static_class_item;
+    item class_enclosing_item;
+    node outer_class_node;
+    item class_abstract_item;
+    string java_implements_delimiter = ""; 
+    string interface_string = ""; 
+
+    // Bug 112 (Carlos Lin) Added operation list and operation item
+    list UmlOperations = c.uml_class.UmlOperations;
+    UmlOperation       uml_operation;
+    boolean abstract = False;
+  
+   // Check if any of the classe's operations are abstract. 
+    for (i = 0, n = list_count(UmlOperations); i < n; i = i + 1)
+    {
+	uml_operation = list_get(UmlOperations, i);
+	if (UmlOperation__GetItemValue(uml_operation, 
+				   "UmlOperationIsAbstract") == "True")
+	{
+	abstract = True;
+	}
+     }
+    // End Bug 112 Section
+
+    self.definition_header = "";
+
+    if (comment_classes == True)
+	self.definition_header = self.definition_header + 
+	    java_generic_generate_object_comment(c.oms_class, 
+					    "Class", java_com_indent(c) + "/** ", 
+                                                     java_com_indent(c) + " * ", 
+                                                     java_com_indent(c) + " */", "");
+
+    class_visibility_item = find_by_query("item[obj_id = " + c.oms_class.id + 
+                     " && UmlClassVisibility]");
+    class_java_visibility_item = find_by_query("item[obj_id = " + c.oms_class.id +
+                     " && UmlClassJavaVisibility]");
+ 
+    if (class_visibility_item != NULL)
+        self.definition_header = self.definition_header +
+                                 to_lower(class_visibility_item.value) +
+                                 " ";
+    else if (class_java_visibility_item != NULL)
+        self.definition_header = self.definition_header +
+                                 to_lower(class_java_visibility_item.value) +
+                                 " ";
+    else 
+        self.definition_header = self.definition_header +
+                                 ""; 
+
+
+    class_java_is_final_item = find_by_query("item[obj_id = " + c.oms_class.id +
+                     " && UmlClassJavaIsFinal]");
+    if (class_java_is_final_item != NULL && class_java_is_final_item.value == "True")
+    self.definition_header = self.definition_header +
+                             "final ";
+
+//ECR 114 begin - added support for static classes
+    class_enclosing_item = find_by_query("item[obj_id = " + c.oms_class.id +
+                     " && UmlEnclosingScope]");
+    if (NULL != class_enclosing_item)
+    {
+        outer_class_node = find_by_query("node[UmlClass && name = '" + class_enclosing_item.value + "']");
+        if (NULL != outer_class_node)
+        {
+            class_java_is_static_class_item = find_by_query("item[obj_id = " + c.oms_class.id +
+                     " && UmlClassJavaIsStaticClass]");
+            if (class_java_is_static_class_item != NULL && class_java_is_static_class_item.value == "True")
+            self.definition_header = self.definition_header +
+                             "static ";
+        }
+    }
+//ECR 114 end
+
+    class_abstract_item = find_by_query("item[obj_id = " + c.oms_class.id +
+                     " && UmlClassIsAbstract]");
+    
+    // Bug 112 (Carlos Lin) also checks if member operations are abstract
+    if  ((class_abstract_item != NULL && class_abstract_item.value ==
+    "True")|| (abstract))
+    {
+        self.definition_header = self.definition_header +
+                                 "abstract ";
+        //list_append(java_code_gen_abstract_and_interface_classes, c.oms_class.id);
+    }
+
+
+    interface_oms_node = find_by_query("node[" + c.oms_class.id + 
+                     " && in_links[link_refs && UMLImplements]]");
+
+    interface_stereotype_oms_item = find_by_query("item[obj_id = " + c.oms_class.id + 
+                     " && UmlStereotype && value = 'Interface']");
+
+    if (interface_stereotype_oms_item != NULL)
+    {
+        self.definition_header = self.definition_header + "interface " + 
+                                 self.language_base_name;
+        list_append(java_code_gen_abstract_and_interface_classes, c.oms_class.id);
+    }
+    else if (interface_oms_node != NULL)
+    {
+        self.definition_header = self.definition_header + "interface " + 
+                                 self.language_base_name;
+        list_append(java_code_gen_abstract_and_interface_classes, c.oms_class.id);
+    }
+    else
+        self.definition_header = self.definition_header + "class " + 
+                                 self.language_base_name;
+
+    if (list_count(c.uml_class.UmlGeneralizations) > 0)
+    {
+        uml_generalization = list_get(c.uml_class.UmlGeneralizations, 0);
+        self.definition_header = self.definition_header + " extends ";
+	generalization = language_make_base_name(uml_generalization.class);
+        self.definition_header = self.definition_header + generalization;
+
+	ClassCodeVariant__AppendGeneralizations(c.var, c, uml_generalization.class);
+
+        if (list_count(c.uml_class.UmlGeneralizations) > 1)
+        {
+            ide_warning ("  Warning: Class " + self.language_base_name + 
+                         " is derived from more than one base class." );
+            ide_warning ("  Using  " + generalization); 
+        }
+    }
+    
+    interfaces = list_select("node[UMLClass && node_refs && " + 
+                 "in_links[link_refs && from_node_id = " + c.oms_class.id + 
+                 " && UmlImplements]]");
+
+    for (i = 0; i<list_count(interfaces); i=i+1) 
+    {
+	implements_oms_node = list_get(interfaces, i);
+
+        if (i==0)
+            java_implements_delimiter = " implements ";
+        else 
+            java_implements_delimiter = ", ";
+
+        interface_string = interface_string + java_implements_delimiter + 
+                           implements_oms_node.name; 
+    }
+
+    self.definition_header = self.definition_header +
+        interface_string;
+
+    self.definition_header = self.definition_header + "\n";
+
+    return;
+}
+
+void
+ClassCodeDefinition__SetDefinition(ClassCodeDefinition self, 
+				   ClassCodeDescriptor c)
+{
+    all_visibilities  attrs, ops, assns;
+    string            declarations, friends;
+
+    if (is_class_table_defined(c.oms_class) == False &&
+	c.oms_class.type == "UmlClass")   // Don't warn for pseudo-classes
+        ide_warning("  Warning: Class '" + class_base_name(c.oms_class) + 
+                    "' does not have a class table definition.");
+
+    // generic "before" declarations
+    declarations = UmlClass__GetNoteDescription(c.uml_class, 
+						"UmlClassJavaDeclarations");
+    if (declarations != "" && 
+	string_extract(declarations, string_length(declarations)-1, 1) != "\n")
+	declarations = declarations + "\n";
+
+    attrs        = generate_attributes(c);
+    ops          = generate_operations(c);
+    assns        = generate_associations(c);
+    
+    generate_dependencies(c.oms_class, c.var.dependencies);
+
+    self.definition =
+	declarations +
+
+        assns.not_specified + assns.public + assns.protected + assns.private +
+        "\n" +
+        attrs.not_specified + attrs.public + attrs.protected + attrs.private +
+        "\n" +
+        ops.not_specified + ops.public + ops.protected + ops.private +
+        "\n" +
+        mark_inner_class_position(c.oms_class);
+
+    return;
+}
+
+
+string
+mark_inner_class_position(node c_node)
+{
+
+    int x;
+    item gen_id_item;
+    node inner_class_node;
+    string return_string = "";
+    list inner_class_node_list = list_select("node[node_refs && UmlClass " + 
+                                "&& items[UmlEnclosingScope && value = '" + 
+                                 c_node.name + "']]");
+
+    for (x=0; x<list_count(inner_class_node_list); x++)
+    {
+        inner_class_node = list_get(inner_class_node_list, x);
+
+        return_string = return_string + 
+                        STP_INNER_CLASS_POS_MARK + to_string(inner_class_node.id) +
+                        "\n";
+    }
+    return return_string;
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+all_visibilities
+generate_attributes(ClassCodeDescriptor c)
+{
+    list              UmlAttributes = c.uml_class.UmlAttributes;
+    all_visibilities  generated;
+    int               i, n;
+    UmlAttribute      uml_attribute;
+    string            visibility, java_visibility;
+
+    generated.public = "";
+    generated.protected = "";
+    generated.private = "";
+    generated.not_specified = "";
+
+    for (i = 0, n = list_count(UmlAttributes); i < n; i = i + 1)
+    {
+	uml_attribute = list_get(UmlAttributes, i);
+
+	//visibility = UmlAttribute__GetItemValue(uml_attribute, 
+	//					"UmlMemberVisibility");
+	java_visibility = UmlAttribute__GetItemValue(uml_attribute, 
+						"UmlMemberJavaVisibility");
+        //#13747 fix. unspecified access should be preserved.
+        //if (java_visibility != "")
+	visibility = java_visibility;
+
+        if (to_lower(visibility) == "public")
+	    generated.public = generated.public + 
+		generate_attribute(c, uml_attribute, "public ");
+	else if (to_lower(visibility) == "protected")
+	    generated.protected = generated.protected + 
+		generate_attribute(c, uml_attribute, "protected ");
+	else if (to_lower(visibility) == "private")
+            generated.private = generated.private +
+		generate_attribute(c, uml_attribute, "private ");
+
+	else // default not specified (package visibility)
+             generated.not_specified = generated.not_specified + 
+		generate_attribute(c, uml_attribute, "");
+    }
+
+    return generated;
+}
+
+all_visibilities
+generate_operations(ClassCodeDescriptor c)
+{
+    list              UmlOperations = c.uml_class.UmlOperations;
+    all_visibilities  generated;
+    int               i, n;
+    UmlOperation      uml_operation;
+    string            visibility, java_visibility;
+
+    generated.public = "";
+    generated.protected = "";
+    generated.private = "";
+    generated.not_specified = "";
+
+    for (i = 0, n = list_count(UmlOperations); i < n; i = i + 1)
+    {
+	uml_operation = list_get(UmlOperations, i);
+
+	//visibility = UmlOperation__GetItemValue(uml_operation, 
+	//					"UmlMemberVisibility");
+	java_visibility = UmlOperation__GetItemValue(uml_operation, 
+						"UmlMemberJavaVisibility");
+        //#13747 fix. unspecified access should be preserved.
+	//if (java_visibility != "")
+	visibility = java_visibility;
+
+	if (to_lower(visibility) == "protected")
+	    generated.protected = generated.protected + 
+		generate_operation(c, uml_operation, "protected ");
+	else if (to_lower(visibility) == "private")
+	    generated.private = generated.private + 
+		generate_operation(c, uml_operation, "private ");
+        else if (to_lower(visibility) == "public")
+	    generated.public = generated.public + 
+		generate_operation(c, uml_operation, "public ");
+        else // default not specified
+	    generated.not_specified = generated.not_specified + 
+		generate_operation(c, uml_operation, "");
+    }
+
+    return generated;
+}
+
+all_visibilities
+generate_associations(ClassCodeDescriptor c)
+{
+    list              UmlAssociations = c.uml_class.UmlAssociations;
+    all_visibilities  generated;
+    int               i, j, m, n;
+    UmlAssociation    uml_association;
+    UmlRole           source, target;
+    string            visibility;
+
+    generated.public = "";
+    generated.protected = "";
+    generated.private = "";
+    generated.not_specified = "";
+
+    for (i = 0, n = list_count(UmlAssociations); i < n; i = i + 1)
+    {
+	uml_association = list_get(UmlAssociations, i);
+
+	source = uml_association.UmlSourceRole;
+
+	if (list_count(uml_association.UmlTargetRoles) == 0)
+	    target = source;
+	else
+	    target = list_get(uml_association.UmlTargetRoles, 0);
+
+	visibility = UmlRole__GetItemValue(target, "UmlRoleJavaVisibility");
+
+	if (to_lower(visibility) == "public")
+	    generated.public = generated.public + 
+		generate_association(c, uml_association, source, target, 
+				     uml_association.class, "public ");
+	else if (to_lower(visibility) == "private")
+	    generated.private = generated.private + 
+		generate_association(c, uml_association, source, target, 
+				     uml_association.class, "private ");
+	else if (to_lower(visibility) == "protected")
+	    generated.protected = generated.protected + 
+		generate_association(c, uml_association, source, target, 
+				     uml_association.class, "protected ");
+	else // default not specified
+	    generated.not_specified = generated.not_specified + 
+		generate_association(c, uml_association, source, target, 
+				     uml_association.class, "");
+
+	// look for reflexive associations
+	for (j=0, m=list_count(uml_association.UmlTargetRoles); j<m; j=j+1)
+	{
+	    target = list_get(uml_association.UmlTargetRoles, j);
+
+	    if (source.role.from_node_id == target.role.from_node_id) 
+	    {
+		visibility = UmlRole__GetItemValue(source, 
+						   "UmlRoleJavaVisibility");
+
+		if (to_lower(visibility) == "public")
+		    generated.public = generated.public + 
+			generate_association(c, uml_association, target, source,
+					     uml_association.class, "public ");
+		else if (to_lower(visibility) == "private")
+		    generated.private = generated.private + 
+			generate_association(c, uml_association, target, source,
+					     uml_association.class, "private ");
+		else if (to_lower(visibility) == "protected")
+		    generated.protected = generated.protected + 
+			generate_association(c, uml_association, target, source,
+					     uml_association.class, "protected ");
+		else // default not specified 
+		    generated.not_specified = generated.not_specified + 
+			generate_association(c, uml_association, target, source,
+					     uml_association.class, "");
+	    }
+	}
+    }
+
+    generated.protected = generated.protected + 
+	generate_associations_from_association_class(c) +
+	generate_associations_from_pseudo_class(c);
+
+    return generated;
+}
+
+string
+generate_attribute(ClassCodeDescriptor c, UmlAttribute uml_attribute, string vis)
+{
+    // generate a single attribute definition
+    string          attribute_name, attribute_type, attribute_comment,
+                    attribute_stat, attribute_const, attribute_volatile,
+                    attribute_init_val, attribute_transient;
+
+    // name and type
+    attribute_name = make_attribute_name(uml_attribute);
+    attribute_type = make_attribute_type(uml_attribute);
+
+    attribute_init_val = make_attribute_init_val(uml_attribute);
+
+    // static and const and volatile
+    if (UmlAttribute__GetItemValue(uml_attribute, "UmlMemberIsClass") == "True")
+	attribute_stat = "static ";
+    else
+	attribute_stat = "";
+
+    attribute_const    = attribute_const_string(uml_attribute);
+    attribute_volatile = attribute_volatile_string(uml_attribute);
+    
+    attribute_transient = attribute_transient_string(uml_attribute);
+
+    // comments
+    if (comment_attributes == True)
+	attribute_comment = 
+        //generic_generate_object_comment(uml_attribute.attribute, 
+        //                                "Attribute", "", "//", "", "");
+	java_generic_generate_object_comment(uml_attribute.attribute, 
+	   	    "Field", java_com_indent(c) + "    /** ", 
+                                 java_com_indent(c) + "     * ", 
+                                 java_com_indent(c) + "     */", "");
+    else
+	attribute_comment = "";
+
+    return
+	attribute_comment +
+	java_indent(c) +
+        vis +
+	attribute_stat +
+	attribute_const +
+	attribute_volatile +
+	attribute_transient +
+	attribute_type +
+	" " +
+	attribute_name +
+        attribute_init_val +
+	";\n";
+}
+
+string
+generate_operation(ClassCodeDescriptor c, UmlOperation uml_operation, string vis)
+{
+    // generate a single operation definition
+    int     i, n;
+    boolean  abstract = False, inline = False;
+    string   operation_id, operation_type, operation_sig, operation_comment,
+	operation_abstract, operation_virtual, operation_inline, operation_const,
+	operation_static, operation_body, operation_end, 
+	constructor_initialization_list,
+	operation_throws, file_extension,
+	operation_native, operation_synchronized, end_string = "", end_semicolon;
+
+    // code gen id
+    operation_id = UmlOperation__GetItemValue(uml_operation, "UmlCxxCodeGenId");
+    if (operation_id == "")
+	operation_id = "0";
+
+    // operation type
+    operation_type = UmlOperation__GetItemValue(uml_operation, 
+                     "UmlOperationReturnType");
+
+    operation_type = operation_type + " ";
+
+    // argument list
+    operation_sig = uml_operation.operation.sig;
+    operation_sig = uml_args_to_format(operation_sig , Cxx);
+
+    operation_inline = "";
+    operation_const = "";
+
+    if (UmlOperation__GetItemValue(uml_operation, 
+				   "UmlOperationIsAbstract") == "True")
+    {
+	abstract = True;
+	operation_abstract = "abstract ";
+    } 
+    else
+    {
+	operation_abstract = "";
+    }
+
+    if (UmlOperation__GetItemValue(uml_operation, "UmlMemberIsClass") == "True")
+	operation_static = "static ";
+    else
+	operation_static = "";
+
+    // comments
+    if (comment_operations == True)
+	operation_comment = 
+	java_generic_generate_object_comment(uml_operation.operation, 
+	   	    "Method", java_com_indent(c) + "    /** ", 
+                                 java_com_indent(c) + "     * ", 
+                                 java_com_indent(c) + "     */", "");
+    else
+	operation_comment = "";
+
+        constructor_initialization_list = "";
+
+    operation_native = operation_native_string(uml_operation);
+    if (operation_native != "") 
+        abstract = True;
+
+    operation_synchronized = operation_synchronized_string(uml_operation);
+
+    // throws exceptions
+    operation_throws = UmlOperation__GetItemValue(uml_operation, 
+						  "UmlOperationThrows");
+    if (operation_throws != "")
+	operation_throws = " throws " + operation_throws;
+
+
+    // inline code
+    operation_end = "\n";
+
+
+    if (list_find(java_code_gen_abstract_and_interface_classes, 0, c.oms_class.id) ==
+        list_count(java_code_gen_abstract_and_interface_classes) && abstract != True)
+        abstract = False;
+    else
+        abstract = True;
+
+
+    if (!abstract)
+    {
+	if (uml_operation.UmlOperationCode == NULL)
+	    operation_body = "";
+        else
+            operation_body = uml_operation.UmlOperationCode.desc;
+
+        file_extension = c.file.implementation_extension;
+
+        ClassCodeOperations__Append(c.ops, to_int(operation_id), 
+                     generate_operation_header(c, uml_operation.operation, 
+                     operation_type, operation_inline, operation_sig, 
+                     operation_const, constructor_initialization_list, 
+                     operation_throws), operation_body, "", "", file_extension);
+    }
+
+
+    if (!abstract)
+        end_semicolon = "";
+    else
+        end_semicolon = ";";
+
+    if (operation_sig == "")
+        operation_sig = "( )" + end_semicolon;
+    else
+        operation_sig = "( " + operation_sig + " )" + end_semicolon;
+
+
+    if (!abstract)
+        end_string = END_OPERATION_TAG + " declaration " + 
+                     c.id + "::" + operation_id + "\n";
+    else
+        end_string = "\n";
+
+    return
+	operation_comment +
+	java_indent(c) +
+        vis +
+	operation_native +
+	operation_synchronized +
+	operation_static +
+	operation_abstract +
+	operation_type +
+	make_operation_identifier(operation_name(c.oms_class, 
+                                  uml_operation.operation)) + 
+	operation_sig + 
+	operation_throws +
+	operation_const +
+	operation_end + 
+        end_string;
+
+}
+
+
+
+string
+generate_operation_header(ClassCodeDescriptor c, node operation, string operation_type, string operation_inline, string operation_sig, string operation_const, string constructor_initialization_list, string operation_throws)
+{
+    //
+    // function-definition:  [decl-specs] decl [ctor-init] fct-body
+    //
+    string          template_prefix = "";
+ 
+    if (c.var.template_prefix != "")
+        template_prefix = c.var.template_prefix + "\n";
+ 
+    if (operation_type != "")
+        operation_type = operation_type + "\n";
+ 
+    return
+        template_prefix +
+        operation_type +
+        c.def.language_base_name + c.var.template_parameters + "::" + make_operation_identifier(operation_name(c.oms_class, operation)) + "(" + strip_argument_list_default_values(operation_sig) + ")" +
+        operation_throws +
+        operation_const +
+        constructor_initialization_list +
+        "\n";
+}
+
+
+//
+// constructs that are implemented as classes, e.g. ternary associations
+//
+set pseudo_classes = set_create("node");
+
+string
+generate_association(ClassCodeDescriptor c, UmlAssociation uml_association, 
+		     UmlRole source, UmlRole target, 
+		     node link_attribute_or_target_class, string vis)
+{
+    boolean is_binary, is_navigable_forward, 
+	is_aggregation = False, is_composition = False;
+    string  association_identifier, role_visibility, role_pattern_family;
+    uml_java_pattern_descriptor pattern;
+    node target_elaborated_type;
+    string role_init_val;
+
+    role_init_val = UmlRole__GetItemValue(target, 
+					"UmlRoleJavaInit");
+    if (role_init_val != "")
+        role_init_val = " = " + role_init_val;
+
+    role_pattern_family = UmlRole__GetItemValue(target, 
+						"UmlRoleJavaPatternFamily");
+    if (role_pattern_family == "")
+	role_pattern_family = implement_associations_using_pattern_family;
+
+    pattern = get_family_uml_java_pattern_descriptor(role_pattern_family);
+
+    is_binary = (list_count(uml_association.UmlTargetRoles) < 2);
+
+    if (is_binary)
+    {
+	is_aggregation = 
+	    (UmlRole__GetItemValue(source, "UmlAggregationType") == "Aggregation") ||
+	    (UmlRole__GetItemValue(target, "UmlAggregationType") == "Aggregation");
+
+	is_composition = 
+	    (UmlRole__GetItemValue(source, "UmlAggregationType") == "Composition") ||
+	    (UmlRole__GetItemValue(target, "UmlAggregationType") == "Composition");
+
+	is_navigable_forward = 
+	    (UmlRole__GetItemValue(target, "UmlRoleNavigability") == "True");
+
+	// Remedy 2632. (C.L.) Return empty string if link is cannot be 
+	// navigable forward and it is not a composition or aggregation.
+	if (!(is_navigable_forward || is_aggregation || is_composition))
+	    return "";
+
+	// Also return empty string if it is composition or aggragation 
+	// target.
+	if (is_composition && !(UmlRole__GetItemValue(source, "UmlAggregationType")=="Composition"))
+	  return "";
+
+	if (is_aggregation && !(UmlRole__GetItemValue(source, "UmlAggregationType")=="Aggregation"))
+	  return "";
+	// End Remedy 2632.
+    
+	if (link_attribute_or_target_class == NULL)
+	    link_attribute_or_target_class = 
+            find_by_query("node[id=${target.role.from_node_id} & node_refs]");
+
+	// Do not implement association to a parameterized class.
+	target_elaborated_type = 
+	    class_elaborated_type(link_attribute_or_target_class);
+	if (target_elaborated_type != NULL && 
+	    target_elaborated_type.type == "UmlParameterizedClass")
+	    return "";
+
+	association_identifier = language_make_identifier(target.role.name);
+
+	//
+	//  Don't use the name of the association because it only makes
+	//  sense in one direction.
+	//
+
+	if (association_identifier == "")
+	    association_identifier = "ref_" + 
+            language_make_identifier(class_base_name(link_attribute_or_target_class));
+
+	ClassCodeVariant__AppendAssociations(c.var, c, link_attribute_or_target_class);
+
+    } else
+    {
+	if (link_attribute_or_target_class == NULL)
+	{
+	    link_attribute_or_target_class = uml_association.association;
+
+	    set_add(pseudo_classes, link_attribute_or_target_class);
+
+	    association_identifier = language_make_identifier(link_attribute_or_target_class.name);
+
+	    ClassCodeVariant__AppendAssociations(c.var, c, link_attribute_or_target_class);
+
+	} else
+	{
+	    //association_identifier = "ptr" + 
+	    association_identifier = "ref" + 
+            language_make_identifier(class_base_name(link_attribute_or_target_class));
+
+	    ClassCodeVariant__AppendAssociations(c.var, c, link_attribute_or_target_class);
+	} 
+    }
+
+    return 
+	java_indent(c) + vis + get_class_enclosing_scope(link_attribute_or_target_class) + 
+	generate_association_java_data_member
+	(association_identifier, c.oms_class, link_attribute_or_target_class, 
+	 source, target, is_binary, is_aggregation, is_composition, pattern) + role_init_val +
+	";\n";
+}
+
+string
+get_class_enclosing_scope(node c)
+{
+
+    string scope_string = "";
+
+    if (list_find(ALL_JAVA_INNER_CLASSES, 0, c) ==
+        list_count(ALL_JAVA_INNER_CLASSES))
+    return scope_string;
+
+    item scope_item = find_by_query("item[UmlEnclosingScope && obj_id = " +
+                      c.id + "]");
+    if (scope_item != NULL) 
+        scope_string = scope_item.value + "."; 
+    else 
+        scope_string = "";
+
+    return scope_string;
+}
+
+
+string
+generate_associations_from_association_class(ClassCodeDescriptor c)
+{
+    string generated = "";
+    link   association_class_link, first_link, second_link;
+    set    link_set;
+    int    i, num_links;
+
+    //
+    // If the class is an association class, we need to implement
+    // associations for it since navigation along the association goes through
+    // this class.  This needs to be implemented as a simple 1-1 association.
+    //
+
+    // for each association to which the association class is attached
+    for_each_in_select("link[UmlAssociationClassLink & to_node_id=${c.oms_class.id} & link_refs]", association_class_link)
+    {
+	// get links from each class involved in the association
+	link_set = set_select("link[((UmlRole & to_node_id=${association_class_link.from_node_id})) & link_refs]");
+	
+	// num_links == 1 for reflexive with no roles defined,
+	//              2 for reflexive with roles,
+	//              2 for binary, 
+	//              3 for ternary, ...
+	num_links = set_count (link_set);
+	
+	if (num_links == 1)
+        {
+            ide_warning ("  Warning: Roles are not defined for reflexive association.");
+        }
+        else if (num_links == 2)
+        {
+            first_link = set_get_element (link_set, 0);
+            second_link = set_get_element (link_set, 1);
+
+            generated = generated + 
+	        generate_ref_for_binary_association_class 
+		(c, first_link, second_link);
+
+            generated = generated + 
+	        generate_ref_for_binary_association_class 
+		(c, second_link, first_link);
+        }
+        else if (num_links > 2)
+        {
+	    // generate association references to all involved classes
+	    for (i=0; i < num_links; i=i+1)
+	    {
+		first_link = set_get_element (link_set, i);
+		
+		generated = generated + 
+		    generate_ref_for_nary_association_class (c, first_link);
+	    }
+        }
+    }
+    return generated;
+}
+
+string
+generate_ref_for_binary_association_class(ClassCodeDescriptor c,
+					  link source_link, 
+					  link target_link)
+{
+    string generated = "", java_data_member, association_identifier, 
+	target_pattern_family;
+    UmlRole source_role, target_role;
+    node   target_class, target_elaborated;
+    uml_java_pattern_descriptor pattern;
+    boolean is_navigable_forward;
+
+    source_role = UmlRole (source_link);
+    target_role = UmlRole (target_link);
+
+    is_navigable_forward = 
+	(UmlRole__GetItemValue(target_role, "UmlRoleNavigability") == "True");
+
+    if (is_navigable_forward)
+    {
+	target_class = find_by_query("node[id=${target_link.from_node_id} & node_refs]");
+
+	target_pattern_family = 
+	    UmlRole__GetItemValue(target_role, "UmlRoleJavaPatternFamily");
+	if (target_pattern_family == "")
+	    target_pattern_family = "implement_associations_using_pattern_family";
+    
+	pattern = get_family_uml_java_pattern_descriptor(target_pattern_family);
+	association_identifier = language_make_identifier(target_link.name);
+	if (association_identifier == "")
+	    association_identifier = "ref_" + 
+		language_make_identifier(class_base_name(target_class));
+	
+	java_data_member = pattern.associations.unqualified_single_pattern;
+	java_data_member = string_search_and_replace(java_data_member, "${target_class.name}", language_make_base_name(target_class));
+	
+	java_data_member = string_search_and_replace(java_data_member, "${identifier_name}", association_identifier);
+	
+	ClassCodeVariant__AppendAssociations(c.var, c, target_class);
+
+	generated = generated + java_indent(c) + get_class_enclosing_scope(target_class) + 
+                    java_data_member + ";\n";
+    }
+    
+    return generated;
+}
+
+string
+generate_ref_for_nary_association_class(ClassCodeDescriptor c,
+					link target_link)
+{
+    string generated = "", java_data_member, association_identifier, 
+	target_pattern_family;
+    UmlRole target_role;
+    node   target_class;
+    uml_java_pattern_descriptor pattern;
+
+    target_role = UmlRole (target_link);
+
+    target_class = find_by_query("node[id=${target_link.from_node_id} & node_refs]");
+    
+    target_pattern_family = 
+	UmlRole__GetItemValue(target_role, "UmlRoleJavaPatternFamily");
+    if (target_pattern_family == "")
+	target_pattern_family = "implement_associations_using_pattern_family";
+    
+    pattern = get_family_uml_java_pattern_descriptor(target_pattern_family);
+    association_identifier = language_make_identifier(target_link.name);
+    if (association_identifier == "")
+	association_identifier = "ref_" + 
+	    language_make_identifier(class_base_name(target_class));
+    
+    java_data_member = pattern.associations.unqualified_single_pattern;
+    java_data_member = string_search_and_replace(java_data_member, 
+                       "${target_class.name}", language_make_base_name(target_class));
+    
+    java_data_member = string_search_and_replace(java_data_member, 
+                          "${identifier_name}", association_identifier);
+    
+    ClassCodeVariant__AppendAssociations(c.var, c, target_class);
+
+    generated = generated + java_indent(c) + get_class_enclosing_scope(target_class) + 
+                        java_data_member + ";\n";
+
+    return generated;
+}
+
+string
+generate_associations_from_pseudo_class(ClassCodeDescriptor c)
+{
+    string          generated = "";
+    uml_java_pattern_descriptor pattern;
+    string          java_data_member, association_identifier;
+    link            association, association_class;
+    node            class;
+
+    // types of pseudo-classes: ternary association w/o association class
+   
+    //
+    // if the class is ternary association w/o class, we need to implement
+    // associations for it since navigations along the association goes through 
+    // it.  This needs to be implemented as a simple 1-1 association.
+    //
+
+    pattern = get_family_uml_java_pattern_descriptor(implement_associations_using_pattern_family);
+
+    if (c.oms_class.type == "UmlAssociation")
+    {
+	for_each_in_select("link[UmlRole & to_node_id=${c.oms_class.id} & link_refs]", association)
+	{
+	    class = find_by_query("node[id=${association.from_node_id} & node_refs]");
+
+	    association_identifier = language_make_identifier(association.name);
+	    if (association_identifier == "")
+		association_identifier = "ref_" + 
+		    language_make_identifier(class_base_name(class));
+
+	    java_data_member = pattern.associations.unqualified_single_pattern;
+	    java_data_member = string_search_and_replace
+		(java_data_member, 
+		 "${target_class.name}", language_make_base_name(class));
+	    java_data_member = string_search_and_replace(java_data_member, "${identifier_name}", association_identifier);
+    
+	    ClassCodeVariant__AppendAssociations(c.var, c, class);
+
+	    generated = generated + java_indent(c) + get_class_enclosing_scope(class) + 
+                        java_data_member + ";\n";
+	}
+    }
+
+    return generated;
+}
+
+string
+generate_association_java_data_member(string name, node class, node target_class,
+				     UmlRole from_role, UmlRole to_role,
+				     boolean is_binary, boolean is_aggregation,
+				     boolean is_composition,
+				     uml_java_pattern_descriptor patterns)
+{
+    boolean is_multiple, is_ordered, is_qualified = False, 
+	is_inverse_qualified = False;
+    string java_data_member, qualifier, qualifier_name = "", 
+	inverse_qualifier_name = "", qualifier_type = "", 
+	inverse_qualifier_type = "", multiplicity,
+	target_class_name_replacement;
+    node target_elaborated;
+
+
+    multiplicity = UmlRole__GetItemValue(to_role, "UmlMultiplicity");
+
+    is_multiple = (multiplicity != "" && 
+		   multiplicity != "0" && 
+		   multiplicity != "1" && 
+		   multiplicity != "0-1" && 
+		   multiplicity != "0,1" && 
+		   multiplicity != "ExactlyOne" && 
+		   multiplicity != "One" && 
+		   multiplicity != "Single" && 
+		   multiplicity != "Optional");
+
+    is_ordered = (UmlRole__GetItemValue(to_role, "UmlRoleIsOrdered") == "True");
+
+    if ((qualifier = UmlRole__GetItemValue(from_role, "UmlRoleQualifier")) != "")
+    {
+	is_qualified = True;
+	qualifier_name = uml_name_type_syntax_2_type_space_name_syntax(qualifier, "N");
+	qualifier_type = uml_name_type_syntax_2_type_space_name_syntax(qualifier, "T");
+	if (qualifier_type == "")
+	    qualifier_type = attribute_type(get_attribute_by_name(class, qualifier_name));
+	qualifier_type = parse_array_syntax_from_type(qualifier_type);
+	
+	if (qualifier_type == "")
+	    ide_warning("  Warning: Qualifier '" + class_base_name(class) + "::" + 
+                        qualifier_name + "' missing type.");
+    }
+
+    if ((qualifier = UmlRole__GetItemValue(to_role, "UmlRoleQualifier")) != "")
+    {
+	is_inverse_qualified = True;
+	inverse_qualifier_name = uml_name_type_syntax_2_type_space_name_syntax(qualifier, "N");
+	inverse_qualifier_type = uml_name_type_syntax_2_type_space_name_syntax(qualifier, "T");
+	if (inverse_qualifier_type == "")
+	    inverse_qualifier_type = attribute_type(get_attribute_by_name(target_class, 
+                                     inverse_qualifier_name));
+	inverse_qualifier_type = parse_array_syntax_from_type(inverse_qualifier_type);
+
+	if (inverse_qualifier_type == "")
+	    ide_warning("  Warning: Qualifier '" + class_base_name(target_class) + "::" + 
+                        inverse_qualifier_name + "' missing type.");
+    }
+
+    if (!is_binary)
+    {
+	java_data_member = patterns.nary_pattern;
+    } else if (is_composition)
+    {
+	if (is_qualified == False && is_inverse_qualified == False)
+	{
+	    if (is_multiple == False)
+		java_data_member = 
+		    patterns.compositions.unqualified_single_pattern;
+	    else if (is_ordered == False)
+		java_data_member = 
+		    patterns.compositions.unqualified_unordered_pattern;
+	    else
+		java_data_member = 
+		    patterns.compositions.unqualified_ordered_pattern;
+	} else if (is_qualified == True && is_inverse_qualified == False)
+	{
+	    if (is_multiple == False)
+		java_data_member = 
+		    patterns.compositions.qualified_single_pattern;
+	    else if (is_ordered == False)
+		java_data_member = 
+		    patterns.compositions.qualified_unordered_pattern;
+	    else
+		java_data_member = 
+		    patterns.compositions.qualified_ordered_pattern;
+	} else if (is_qualified == False && is_inverse_qualified == True)
+	{
+	    if (is_multiple == False)
+		java_data_member = 
+		    patterns.compositions.inverse_qualified_single_pattern;
+	    else if (is_ordered == False)
+		java_data_member = 
+		    patterns.compositions.inverse_qualified_unordered_pattern;
+	    else
+		java_data_member =
+		    patterns.compositions.inverse_qualified_ordered_pattern;
+	} else if (is_qualified == True && is_inverse_qualified == True)
+	{
+	    if (is_multiple == False)
+		java_data_member = 
+		    patterns.compositions.double_qualified_single_pattern;
+	    else if (is_ordered == False)
+		java_data_member = 
+		    patterns.compositions.double_qualified_unordered_pattern;
+	    else
+		java_data_member = 
+		    patterns.compositions.double_qualified_ordered_pattern;
+	}
+    } else if (is_aggregation)
+    {
+	if (is_qualified == False && is_inverse_qualified == False)
+	{
+	    if (is_multiple == False)
+		java_data_member = 
+		    patterns.aggregations.unqualified_single_pattern;
+	    else if (is_ordered == False)
+		java_data_member = 
+		    patterns.aggregations.unqualified_unordered_pattern;
+	    else
+		java_data_member = 
+		    patterns.aggregations.unqualified_ordered_pattern;
+	} else if (is_qualified == True && is_inverse_qualified == False)
+	{
+	    if (is_multiple == False)
+		java_data_member = 
+		    patterns.aggregations.qualified_single_pattern;
+	    else if (is_ordered == False)
+		java_data_member = 
+		    patterns.aggregations.qualified_unordered_pattern;
+	    else
+		java_data_member = 
+		    patterns.aggregations.qualified_ordered_pattern;
+	} else if (is_qualified == False && is_inverse_qualified == True)
+	{
+	    if (is_multiple == False)
+		java_data_member = 
+		    patterns.aggregations.inverse_qualified_single_pattern;
+	    else if (is_ordered == False)
+		java_data_member = 
+		    patterns.aggregations.inverse_qualified_unordered_pattern;
+	    else
+		java_data_member =
+		    patterns.aggregations.inverse_qualified_ordered_pattern;
+	} else if (is_qualified == True && is_inverse_qualified == True)
+	{
+	    if (is_multiple == False)
+		java_data_member = 
+		    patterns.aggregations.double_qualified_single_pattern;
+	    else if (is_ordered == False)
+		java_data_member = 
+		    patterns.aggregations.double_qualified_unordered_pattern;
+	    else
+		java_data_member = 
+		    patterns.aggregations.double_qualified_ordered_pattern;
+	}
+    } else // regular binary association
+    {
+	if (is_qualified == False && is_inverse_qualified == False)
+	{
+	    if (is_multiple == False)
+		java_data_member = 
+		    patterns.associations.unqualified_single_pattern;
+	    else if (is_ordered == False)
+		java_data_member = 
+		    patterns.associations.unqualified_unordered_pattern;
+	    else
+		java_data_member = 
+		    patterns.associations.unqualified_ordered_pattern;
+	} else if (is_qualified == True && is_inverse_qualified == False)
+	{
+	    if (is_multiple == False)
+		java_data_member = 
+		    patterns.associations.qualified_single_pattern;
+	    else if (is_ordered == False)
+		java_data_member = 
+		    patterns.associations.qualified_unordered_pattern;
+	    else
+		java_data_member = 
+		    patterns.associations.qualified_ordered_pattern;
+	} else if (is_qualified == False && is_inverse_qualified == True)
+	{
+	    if (is_multiple == False)
+		java_data_member = 
+		    patterns.associations.inverse_qualified_single_pattern;
+	    else if (is_ordered == False)
+		java_data_member = 
+		    patterns.associations.inverse_qualified_unordered_pattern;
+	    else
+		java_data_member =
+		    patterns.associations.inverse_qualified_ordered_pattern;
+	} else if (is_qualified == True && is_inverse_qualified == True)
+	{
+	    if (is_multiple == False)
+		java_data_member = 
+		    patterns.associations.double_qualified_single_pattern;
+	    else if (is_ordered == False)
+		java_data_member = 
+		    patterns.associations.double_qualified_unordered_pattern;
+	    else
+		java_data_member = 
+		    patterns.associations.double_qualified_ordered_pattern;
+	}
+    }
+    
+    target_class_name_replacement = language_make_base_name(target_class);
+
+/*
+    // handle associations to anonymous instantiated type
+    target_elaborated = class_elaborated_type(target_class);
+	
+    if (target_elaborated != NULL &&
+	target_elaborated.type == "UmlInstantiatedClass" &&
+	target_elaborated.sig != "")
+	target_class_name_replacement = target_class_name_replacement +
+	    "<" + target_elaborated.sig + ">";
+*/
+
+    java_data_member = string_search_and_replace(java_data_member,
+					 "${target_class.name}",
+					 target_class_name_replacement);
+    java_data_member = string_search_and_replace(java_data_member,
+					 "${qualifier.type}",
+					 qualifier_type);
+    java_data_member = string_search_and_replace(java_data_member,
+					 "${inverse_qualifier.type}",
+					 inverse_qualifier_type);
+
+
+    if (multiplicity != "")
+	multiplicity = "[" + multiplicity + "]";
+    java_data_member = string_search_and_replace(java_data_member,
+					 "${explicit_multiplicity}",
+					 multiplicity);
+
+
+    java_data_member = string_search_and_replace(java_data_member,
+					 "${identifier_name}",
+					 name);
+
+    return java_data_member;
+}
+
+
+void
+generate_dependencies(node server_node, set dependency_set)
+{
+    set    servers;
+    node   server;
+    string server_name;
+    int    i, n;
+    
+    servers = set_select("node[(UmlClass||UMLPackage) && " +
+              "in_links[UmlDependency & from_node_id= " +
+              server_node.id + " && link_refs] && node_refs]");
+
+    for (i = 0, n = set_count(servers); i < n; i = i + 1) 
+    {
+	server = set_get_element(servers, i);
+	server_name = language_make_dependency_name(server);
+	set_add (dependency_set, server_name);
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+string
+language_file_name (string class_file_name)
+{
+    return class_file_name;
+}
+
+string
+language_code_gen_id (UmlClass uml_class)
+{
+    return UmlClass__GetItemValue(uml_class, "UmlCxxCodeGenId");
+}
+
+void
+language_check_options()
+{
+    if (interface_extension == "" || interface_extension == ".")
+	interface_extension = ".java";
+    if (implementation_extension == "" || implementation_extension == ".")
+	implementation_extension = ".java";
+    if (operation_extension == "" || operation_extension == ".")
+	operation_extension = interface_extension;
+    if (use_module)
+	file_per_class = False;
+    return;
+}
+
+list ALL_JAVA_INNER_CLASSES = list_create("node", 0);
+
+set
+language_compile_preprocessing(set class_set)
+{
+    //
+    // given the input classes, as a set of class nodes, perform pre-processing
+    //
+
+    int  i, n, x;
+    node class, type;
+    set  classes = set_create("node");
+    list class_list;
+    item scope_item;
+    node scope_class;
+    node current_inner_class;
+
+    item class_anonymous_item; //ECR 116
+
+    // filter classes
+    for (i = 0, n = set_count(class_set); i < n; i = i + 1)
+    {
+	class = set_get_element(class_set, i);
+
+	if (class_base_name(class) == "") {
+	    ide_warning("  Ignoring unnamed class with id " + class.id + "...");
+	    continue;
+	}
+	
+	if (is_class_excluded(class) == True) {
+	    ide_warning("  Ignoring excluded class '" + class_base_name(class) + 
+			"'...");
+	    continue;
+	}
+//ECR 116 begin - exclude anonymous classes from code generation
+    class_anonymous_item = find_by_query("item[UmlClassJavaIsAnonymous && obj_id = " +
+                                            class.id + "]");
+    if (NULL != class_anonymous_item && class_anonymous_item.value == "True")
+    {
+        ide_warning("  Ignoring anonymous class '" + class_base_name(class) + 
+			"'...");
+	    continue;
+    }
+//ECR 116 end
+
+	type = class_elaborated_type(class);
+	if (type != NULL && type.type == "UmlInstantiatedClass") {
+	    // don't add Instantiated Class to set, but no need to warn.
+	    // named Instantiated Class appears as typedef
+	    // anonymous Instantiated Class only as target of association
+	    continue;
+	}
+
+
+        scope_item = find_by_query("item[UmlEnclosingScope && obj_id = " + 
+                       class.id + "]");
+        if (scope_item != NULL)
+        {
+            scope_class = find_by_query("node[node_refs && UmlClass && name = '" + 
+                          scope_item.value + "']");
+
+            if (scope_class != NULL)
+                list_append(ALL_JAVA_INNER_CLASSES, class);
+        }
+
+	
+	set_add(classes, class);
+    }
+
+    class_list = set_to_list(classes);
+    for (x=0; x<list_count(ALL_JAVA_INNER_CLASSES); x++)
+    {
+        current_inner_class = list_get(ALL_JAVA_INNER_CLASSES, x);
+
+        if (list_find(class_list, 0, current_inner_class) ==
+            list_count(class_list))
+	set_add(classes, current_inner_class);
+    }
+
+    return classes;
+}
+
+list
+language_compile_postprocessing(list classes)
+{
+    //
+    // given the compiled classes, as a list of class descriptors, perform
+    // post-processing
+    //
+
+    int             i, j, n, m;
+    string          class_name, class_template;
+    ClassCodeDescriptor c;
+    list            sorted_class_names, sorted_classes, class_names;
+    node            class;
+    graph           G;
+    list sorted_classes2 = list_create("ClassCodeDescriptor", 0);
+
+    // pseudo_classes
+    for (i = 0, n = set_count(pseudo_classes); i < n; i = i + 1)
+    {
+	class = set_get_element(pseudo_classes, i);
+	if (class.type == "UmlAssociation")
+	{
+	    ide_warning("  Generating code for association pseudo-class '" + 
+                         class_base_name(class) + "'...");
+	    c = ClassCodeDescriptor(class);
+	    ClassCodeDescriptor__FillFromRepository(c);
+	    if (ClassCodeDescriptor__IsOk(c) == False)
+	    {
+		global_errors = global_errors + 1;
+		continue;
+	    }
+	    ClassCodeDescriptor__Compile(c);
+	    list_append(classes, c);
+	}
+    }
+
+    // project compiled classes' names
+    class_names = list_create("string", 0);
+    for (i = 0; i < list_count(classes); i = i + 1)
+    {
+	c = list_get(classes, i);
+	list_append(class_names, class_base_name(c.oms_class));
+    }
+
+    // create dependency graph
+
+    // subclasses depend on generalizations
+    G = UmlClassGraph(NULL, list_select("link[UmlGeneralization && link_refs]"));
+
+    // template classes depend on class templates
+    for (i = 0, n = list_count(class_names); i < n; i = i + 1)
+    {
+	class_name = list_get(class_names, i);
+	class_template = get_class_template_from_class_name(class_name);
+	if (class_template != "")
+	{
+	    graph_add_node(G, class_template);
+	    graph_add_node(G, class_name);
+	    graph_add_arc(G, class_template, class_name);
+	}
+    }
+
+    // classes with embedded instances dependency?
+
+    // any others?
+
+    // finally, sort them topologically for lexical ordering
+    sorted_class_names = graph_topological_sort(G);
+    m = list_count(class_names);
+    sorted_classes = list_create("ClassCodeDescriptor", 0);
+    for (i = 0, n = list_count(sorted_class_names); i < n; i = i + 1)
+    {
+	class_name = list_get(sorted_class_names, i);
+	// only return it if it's in the compiled list
+	if ((j = list_find(class_names, 0, class_name)) != m)
+	{
+	    c = list_get(classes, j);
+	    list_append(sorted_classes, c);
+	    // maintain the parallelism in the two collections
+	    list_delete(classes, j);
+	    list_delete(class_names, j);
+	    m = m - 1;
+	}
+    }
+
+    //
+    // add the rest of the classes that didn't happen to be in the graph
+    //
+    for (i = 0, n = list_count(classes); i < n; i = i + 1)
+	list_append(sorted_classes, list_get(classes, i));
+
+
+    ClassCodeDescriptor current_class;
+
+    
+//skp - adding new code - bug fix 0002483
+    string dependency_name;
+    string nested_dir;
+    int nn;
+    if( file_per_class == True)
+    {
+        for (i = 0, n = list_count(sorted_classes); i < n; i = i + 1)
+        {
+            current_class = list_get(sorted_classes, i);
+            dependency_name = language_make_dependency_name(current_class.oms_class);
+            if( dependency_name != NULL )
+            {
+                dependency_name = string_strip(dependency_name, "L", ".");
+                dependency_name = string_search_and_replace(dependency_name, current_class.file.name , "");
+                dependency_name = string_search_and_replace(dependency_name, ".", "/");
+                current_class.file.dir += "/" + dependency_name;
+                current_class.file.full_path = path_compose(current_class.file.dir, current_class.file.name);
+                current_class.file.full_path_interface_name = current_class.file.full_path;
+                current_class.file.full_path_implementation_name = current_class.file.full_path;
+                current_class.file.full_path_operation_name = current_class.file.full_path;
+                if( !file_exists(current_class.file.dir) )
+                {
+                    for(nn = string_find(current_class.file.dir, 0, "/");; nn = string_find(current_class.file.dir, nn + 1, "/"))
+                    {
+                        nested_dir = string_extract(current_class.file.dir, 0, nn);
+                        if( !file_exists( nested_dir ) )
+                        {
+                            mkdir(nested_dir);
+                        }
+                        if ((nn + 1) >= string_length(current_class.file.dir))
+                            break;
+                    }
+                }
+                list_set(sorted_classes, i, current_class);
+            }
+        }
+    }
+// end adding new code                               
+
+    ClassCodeFile file_info;
+    for (i = 0, n = list_count(sorted_classes); i < n; i = i + 1)
+    {
+        current_class = list_get(sorted_classes, i);
+
+        if (file_per_class == False)
+        {
+
+            if (list_find(ALL_JAVA_INNER_CLASSES, 0, current_class.oms_class) != 
+                list_count(ALL_JAVA_INNER_CLASSES))
+            {
+    
+                file_info = current_class.file;
+
+                current_class.file.name = current_class.oms_class.name;
+                current_class.file.full_path_interface_name = 
+                                  file_info.dir + "/" + current_class.file.name;
+                current_class.file.full_path_implementation_name = 
+                                  file_info.dir + "/" + current_class.file.name;
+                current_class.file.full_path_operation_name = 
+                                  file_info.dir + "/" + current_class.file.name;
+                current_class.file.full_path = 
+                                  file_info.dir + "/" + current_class.file.name;
+            }
+        }
+
+        list_append(sorted_classes2, current_class);
+    }
+
+    //return sorted_classes;
+    return sorted_classes2;
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+string
+language_generate_declaration_list(list classes, string file)
+{
+    // generate a set of forward declarations
+    string          generated = "";
+    int             i, n;
+    string          template_prefix;
+    ClassCodeDescriptor c;
+
+    for (i = 0, n = list_count(classes); i < n; i = i + 1)
+    {
+        c = list_get(classes, i);
+        if (file == c.file.full_path_interface_name + c.file.interface_extension)
+        {
+            if (c.var.template_prefix != "")
+                template_prefix = c.var.template_prefix;
+            else
+                template_prefix = "";
+            generated = generated + template_prefix + "class " + c.def.language_base_name + ";\n";
+        }
+    }    
+    return generated;
+}
+
+string
+generate_tagged_attribute(ClassCodeDescriptor c)
+{
+	return "";
+}
+
+string
+generate_tagged_operation(ClassCodeDescriptor c, int i)
+{
+    return
+	generate_tagged_operation_header(c, i) +
+	"{\n\n" +
+	generate_tagged_operation_body(c, i) +
+	"\n\n}\n" +
+	generate_tagged_operation_footer(c, i) +
+	"\n";
+}
+
+string
+generate_tagged_operation_header(ClassCodeDescriptor c, int i)
+{
+    return
+	START_OPERATION_TAG + c.id + "::" + list_get(c.ops.ids, i) + "\n" +
+	list_get(c.ops.headers, i);
+}
+
+string
+generate_tagged_operation_body(ClassCodeDescriptor c, int i)
+{
+    return
+	//"\t" + START_OP_IMPLEMENTATION_TAG + "\n" +
+	START_OP_IMPLEMENTATION_TAG + "\n" +
+	list_get(c.ops.bodies, i) +
+	//"\n\t" + END_OP_IMPLEMENTATION_TAG;
+	"\n" + END_OP_IMPLEMENTATION_TAG;
+}
+
+string
+generate_tagged_operation_footer(ClassCodeDescriptor c, int i)
+{
+    return
+	END_OPERATION_TAG +
+	"\n";
+}
+
+string
+generate_tagged_class(ClassCodeDescriptor c)
+{
+    return
+	generate_tagged_class_header(c) +
+	generate_tagged_class_body(c) +
+	"}\n" +
+	generate_tagged_class_footer(c) + 
+	"\n";
+}
+
+string
+generate_tagged_class_header(ClassCodeDescriptor c)
+{
+    //if (list_find(ALL_JAVA_INNER_CLASSES, 0, c.oms_class) !=
+    //    list_count(ALL_JAVA_INNER_CLASSES))
+    //    return
+    //        START_INNER_CLASS_DEFINITION_TAG + c.id + "\n" +
+    //        c.def.definition_header + "{\n";
+    //else
+        return
+            START_CLASS_DEFINITION_TAG + c.id + "\n" +
+            c.def.definition_header + "{\n";
+}
+
+string
+generate_tagged_class_body(ClassCodeDescriptor c)
+{
+    return
+	START_CLASS_BODY_TAG + "\n" +
+	c.def.definition +
+	END_CLASS_BODY_TAG + "\n";
+}
+
+string
+generate_tagged_class_second_body(ClassCodeDescriptor c)
+{
+    return "";
+}
+
+string
+generate_tagged_class_footer(ClassCodeDescriptor c)
+{
+    //if (list_find(ALL_JAVA_INNER_CLASSES, 0, c.oms_class) !=
+    //    list_count(ALL_JAVA_INNER_CLASSES))
+    //    return
+    //        END_INNER_CLASS_DEFINITION_TAG +
+    //        "\n";
+    //else
+        return
+            END_CLASS_DEFINITION_TAG +
+            "\n";
+}
+
+string
+generate_tagged_class_derivatives (ClassCodeDescriptor c)
+{
+    return "";
+}
+
+string
+generate_tagged_class_implementation (ClassCodeDescriptor c)
+{
+    return "";
+}
+ 
+string
+generate_tagged_class_implementation_header (ClassCodeDescriptor c)
+{
+    return "";
+}
+ 
+string
+generate_tagged_class_implementation_footer (ClassCodeDescriptor c)
+{
+    return "";
+ 
+}
+ 
+string
+generate_tagged_interface_file_footer(string file)
+{
+
+    /*
+    return
+	START_FOOTER_TAG + "\n" +
+	language_generate_interface_file_footer(file) +
+	END_FOOTER_TAG + "\n";
+    */
+
+    return "";
+}
+
+
+
+string
+language_generate_package(ClassCodeDescriptor c) 
+{
+
+    node inner_class;
+    item scope_item;
+    node scope_node;
+
+
+    scope_node = find_by_query("node[node_refs && UmlPackage && " +
+                 "out_links[link_refs && UmlContains && to_node_id = " +
+                  c.oms_class.id + "]]");
+
+    if (scope_node != NULL)
+            return "package " + scope_node.name + ";\n\n";
+
+
+    scope_item = find_by_query("item[UmlEnclosingScope && obj_id = " + 
+                   c.oms_class.id + "]");
+    if (scope_item != NULL)
+    {
+        inner_class = find_by_query("node[node_refs && UmlClass && name = '" + 
+                      scope_item.value + "']");
+
+        if (inner_class == NULL)
+            return "package " + scope_item.value + ";\n\n";
+    }
+    return "";
+}
+
+
+string
+generate_tagged_includes(ClassCodeDescriptor c)
+{
+    // generate all the includes for the specified class
+    string          generated = "";
+
+    int             i, n;
+    set             includes;
+    set             big_includes = set_create("string");
+    set             include_set;
+    string          include;
+
+    generated = language_generate_package(c); 
+
+    includes = list_to_set(c.var.generalizations);
+    set_union(includes, list_to_set(c.var.associations));
+    set_union(includes, c.var.dependencies);
+
+    for (i = 0, n = set_count(includes); i < n; i = i + 1)
+    {
+	include = set_get_element(includes, i);
+
+        if (include == NULL) continue;
+
+        if (string_find(include, 0, "\n") != string_length(include))
+        {
+            include_set = list_to_set(string_to_list(include, "\n"));
+            set_union(big_includes, include_set);
+        }
+        else
+            set_add(big_includes, include);
+
+    }
+
+    //for (i = 0, n = set_count(includes); i < n; i = i + 1)
+    for (i = 0, n = set_count(big_includes); i < n; i = i + 1)
+    {
+	//include = set_get_element(includes, i);
+	include = set_get_element(big_includes, i);
+
+        if (include == NULL) continue;
+
+	generated = generated + 
+                   language_generate_include(include);
+    }
+
+    if (generated != "")
+	generated =
+	    START_INCLUDES_TAG + c.id + "\n" +
+	    generated +
+	    END_INCLUDES_TAG + "\n";
+
+    return generated;
+}
+
+string
+language_generate_include(string filename)
+{
+    return "import " + filename + ";\n";
+}
+
+string
+tag_declarations(string declarations)
+{
+
+    return
+	START_CLASS_DECLARATION_TAG + "\n" +
+	declarations +
+	END_CLASS_DECLARATION_TAG + "\n";
+}
+
+string
+generate_tagged_declarations(list classes, string file)
+{
+    // generate all the declarations for the specified file
+
+    //return tag_declarations(language_generate_declaration_list(classes, file));
+    return "";
+}
+
+string
+generate_tagged_definitions(list classes, string file)
+{
+    string          generated = "";
+    int             i, n;
+    ClassCodeDescriptor       c;
+
+    // generate all the definitions for the specified file
+    for (i = 0, n = list_count(classes); i < n; i = i + 1)
+    {
+	c = list_get(classes, i);
+	if (file == c.file.full_path_interface_name + c.file.interface_extension)
+	{
+	    generated = generated + generate_tagged_class(c);
+	    c.written = True;
+	    list_set(classes, i, c);
+	}
+    }
+    return generated;
+}
+
+string 
+language_generate_interface_file_footer(string file)
+{
+    return "#endif\n";
+}
+
+int
+language_find_class_definition_start(string line)
+{
+    //
+    // return an index to the start of the class definition, otherwise the
+    // length of line (same as string_find())
+    //
+    int             i;
+
+    i = string_find(line, 0, "{");
+    // we need to try to make sure this is really the start of the class definition,
+    //	and not part of a comment or anything else
+    return i;
+}
+
+int
+language_find_class_implementation_start(string line)
+{
+    return 0;
+}
+
+int
+language_find_operation_header_end(string line)
+{
+    //
+    // return an index to the end of the operation, otherwise the
+    // length of line (same as string_find())
+    //
+    int             i;
+
+    i = string_find(line, 0, ")");
+    // we need to try to make sure this is really the end of the operation,
+    // and not part of a comment or anything else
+    return i;
+}
+
+int
+language_find_operation_body_begin(string line)
+{
+    //
+    // return an index to the start of the operation body, otherwise the
+    // length of line (same as string_find())
+    //
+    int             i;
+
+    i = string_find(line, 0, "{");
+    // we need to try to make sure this is really the start of the operation body,
+    //	and not part of a comment or anything else 
+    return i;
+}
+
+string
+language_generate_file_header(ClassCodeDescriptor c)
+{
+    // this is the string that is written at the top of the interface file
+    string s = "";
+
+    if (list_find(ALL_JAVA_INNER_CLASSES, 0, c.oms_class) ==
+        list_count(ALL_JAVA_INNER_CLASSES))
+        s = "// StP" + NL +
+            "// Created on " + time_to_string(time_now(), NULL) + 
+            " for " + user() + "@" + hostname() + NL +
+            "//   from system " + current_projdir() + current_system() + NL + NL;
+
+        //"#ifndef _" + 
+        //language_make_identifier(c.file.name + c.file.interface_extension) + 
+        //"_" + NL +
+        //"#define _" + 
+        //language_make_identifier(c.file.name + c.file.interface_extension) + 
+        //"_" + NL + NL;
+
+    return s;
+}
+
+string
+language_make_dependency_name(node target_node)
+{
+    string dependency_name;
+    item scope_item;
+    node scope_node;
+    item extern_item;
+    node target_type, param_class;
+    link refines_link;
+    node contains_node;
+
+    dependency_name = target_node.name;
+
+    if (target_node.type == "UmlClass")
+    {
+        scope_item = find_by_query("item[UmlEnclosingScope && obj_id = " + 
+                       target_node.id + "]");
+
+        extern_item = find_by_query("item[UmlClassIsImported && obj_id = " + 
+                       target_node.id + "]");
+
+        contains_node = find_by_query("node[node_refs && out_links[link_refs && " + 
+                                      "UmlContains && to_node_id = " + target_node.id + "]]");
+
+        if (scope_item != NULL)
+        {
+            if (extern_item != NULL && extern_item.value == "True")
+            {
+                dependency_name = scope_item.value + ".*";
+            }
+            else 
+            {
+                dependency_name = scope_item.value + "." + dependency_name;
+            }
+
+            scope_node = find_by_query("node[UmlClass && node_refs && name = '" + 
+                         scope_item.value + "']");
+
+            if (scope_node != NULL) 
+                dependency_name = NULL;
+
+        }
+        else if (contains_node != NULL)
+        {
+            dependency_name = 
+                list_to_string(get_all_scope_strings(target_node), "\n");
+        }
+        else 
+            dependency_name = NULL;
+    }
+
+    if (target_node.type == "UmlPackage")
+    {
+        dependency_name = 
+            list_to_string(get_all_scope_strings(target_node), "\n");
+    }
+
+    if (dependency_name != NULL)
+        dependency_name = string_strip(dependency_name, "L", ".");
+
+    return dependency_name;
+}
+
+
+
+list java_uml_inner_scope_string_list = list_create("string", 0);
+ 
+list
+get_all_scope_strings(node package)
+{
+ 
+    int x;
+    node outer_scope_node = find_by_query("node[node_refs && out_links" +
+                                          "[link_refs && UmlContains && to_node_id = " +
+                                           package.id + "]]");
+    string outer_string = "";
+    string current_string;
+    string inner_scope_string = "";
+    list return_list = list_create("string", 0);
+ 
+    while (outer_scope_node != NULL)
+    {
+        if (outer_string == "")
+            outer_string = outer_scope_node.name;
+        else    
+            //skp - bug fix 0002483
+            outer_string = outer_scope_node.name + "." + outer_string;
+            // outer_string = outer_string + "." + outer_scope_node.name; 
+ 
+        outer_scope_node =
+        find_by_query("node[node_refs && out_links" +
+                      "[link_refs && UmlContains && to_node_id = " +
+                       outer_scope_node.id + "]]");
+    }
+ 
+    if (package.type == "UmlClass")
+    {
+        list_append(return_list, outer_string + "." + package.name);
+        return return_list;
+    }
+ 
+    get_next_inner_node(package, inner_scope_string);
+ 
+    for (x=0; x<list_count(java_uml_inner_scope_string_list); x++)
+    {
+        current_string = list_get(java_uml_inner_scope_string_list, x);
+ 
+        if (current_string != NULL &&
+            string_length(current_string) > 0 &&
+            string_extract(current_string, (string_length(current_string)-1), 1) == "*")
+        {
+            current_string = string_search_and_replace(current_string, "*", "");
+            current_string = current_string + ".*";
+        }
+        else if (current_string != NULL)
+        {
+            current_string = string_search_and_replace(current_string, "*", "");
+            current_string = current_string;
+        }
+        if (outer_string != "")
+            list_append(return_list, outer_string + "." + current_string);
+        else
+            list_append(return_list, current_string);
+    }
+    list_clear(java_uml_inner_scope_string_list);
+    return return_list;
+}
+
+
+
+void
+get_next_inner_node(node inner_node, string inner_scope_string)
+{
+    int x;
+    node inner_scope_node;
+    list inner_scope_node_list;
+    string delim = ".";
+ 
+    if (inner_node != NULL)
+    {
+        if (inner_scope_string == "") 
+            delim = "";
+
+        if (inner_node.type == "UmlPackage")
+            inner_scope_string = inner_scope_string + delim + inner_node.name + "*";
+        // Should fix bug 14242 where wild card imports corresponding 
+        // to packages already account for classes contained in them.
+        //else
+        //    inner_scope_string = inner_scope_string + delim + inner_node.name;
+ 
+        list_append(java_uml_inner_scope_string_list, inner_scope_string);
+ 
+        inner_scope_node_list =
+        list_select("node[node_refs && in_links" +
+                    "[link_refs && UmlContains && from_node_id = " +
+                     inner_node.id + "]]");
+ 
+        for (x=0; x<list_count(inner_scope_node_list);x++)
+        {
+           inner_scope_node = list_get(inner_scope_node_list, x);
+           get_next_inner_node(inner_scope_node, inner_scope_string);
+        }
+    }
+}
+
+
+
+
+const string    BAD_CXX_IDENTIFERS_TRANSLATE_TABLE = " !@#$%^&*()+-=|\\{}[],./<>?~`;:'\"\n\t";
+const string    GOOD_CXX_IDENTIFERS_TRANSLATE_TABLE = string_repeat("_", string_length(BAD_CXX_IDENTIFERS_TRANSLATE_TABLE));
+
+string
+language_make_identifier(string s)
+{
+    //
+    // given a string, translate it into a valid identifier for the language
+    //
+    return string_translate(s, BAD_CXX_IDENTIFERS_TRANSLATE_TABLE, GOOD_CXX_IDENTIFERS_TRANSLATE_TABLE);
+}
+
+const string    BAD_CXX_CLASS_IDENTIFERS_TRANSLATE_TABLE = " !@#$%^&*()+-=|\\{},./<>?~`;'\"\n\t";
+const string    GOOD_CXX_CLASS_IDENTIFERS_TRANSLATE_TABLE = string_repeat("_", string_length(BAD_CXX_CLASS_IDENTIFERS_TRANSLATE_TABLE));
+
+string
+language_make_base_name(node class)
+{
+    //
+    // given a UML class, or some UML construct that is supposed to be
+    // implemented as a class, translate its name into a valid class 
+    // name for the language (ignore anything enclosed in <>'s, e.g.
+    // template arguments, and filter out bad characters)
+    //
+    string          s;
+
+    if (class.type == "UmlClass")
+	s = class_base_name(class);
+    else
+	s = language_make_identifier(class.name);
+
+    int             f = string_find(s, 0, "<");
+    int             l = string_length(s);
+    string          t = "";
+
+    if (f != l)
+    {
+	t = string_extract(s, f, l - f);
+	s = string_extract(s, 0, f);
+    }
+
+    return string_translate(s, BAD_CXX_CLASS_IDENTIFERS_TRANSLATE_TABLE, 
+                            GOOD_CXX_CLASS_IDENTIFERS_TRANSLATE_TABLE) + t;
+}
+
+list
+language_make_scope_list(node class)
+{
+    // not used for Java right now
+    return NULL;
+}
+
+string
+language_build_qualified_name(list scope_list, string base_name)
+{
+    // not used for Java right now
+    //return "";
+    return base_name;
+}
+
+string
+language_make_qualified_name(node class)
+{
+    // not used for Java right now
+    return language_build_qualified_name(
+	language_make_scope_list(class), 
+	language_make_base_name(class));
+}
+
+const string BAD_CXX_ATTR_IDENTIFERS_TRANSLATE_TABLE = "!@#$%^&*()+-=|\\{},./<>?~`;:'\"\n\t";
+const string GOOD_CXX_ATTR_IDENTIFERS_TRANSLATE_TABLE = 
+    string_repeat("_", string_length(BAD_CXX_ATTR_IDENTIFERS_TRANSLATE_TABLE));
+
+string
+language_make_attribute_identifier(string s)
+{
+    //
+    // given a string, translate it into a valid class identifier for the language
+    //
+    return string_translate(s, BAD_CXX_ATTR_IDENTIFERS_TRANSLATE_TABLE, GOOD_CXX_ATTR_IDENTIFERS_TRANSLATE_TABLE);
+}
+
+const string    BAD_CXX_OPERATION_IDENTIFERS_TRANSLATE_TABLE = "@#$\\{}.?`;:'\"\n\t";
+const string    GOOD_CXX_OPERATION_IDENTIFERS_TRANSLATE_TABLE = string_repeat("_", string_length(BAD_CXX_OPERATION_IDENTIFERS_TRANSLATE_TABLE));
+string
+make_operation_identifier(string s)
+{
+    return string_translate(s, BAD_CXX_OPERATION_IDENTIFERS_TRANSLATE_TABLE, GOOD_CXX_OPERATION_IDENTIFERS_TRANSLATE_TABLE);
+}
+
+string
+make_attribute_name(UmlAttribute uml_attribute)
+{
+    string          attribute_name, attribute_type;
+
+    attribute_type = UmlAttribute__GetItemValue(uml_attribute, "UmlAttributeType");
+    attribute_name = language_make_attribute_identifier(uml_attribute.attribute.name);
+    //return parse_array_syntax_from_name(attribute_name, attribute_type);
+    return attribute_name;
+}
+
+string
+make_attribute_type(UmlAttribute uml_attribute)
+{
+    string          attribute_type;
+
+    attribute_type = UmlAttribute__GetItemValue(uml_attribute, "UmlAttributeType");
+    //return parse_array_syntax_from_type(attribute_type);
+    return attribute_type;
+}
+
+
+string
+make_attribute_init_val(UmlAttribute uml_attribute)
+{
+    string          attribute_init_val;
+
+    attribute_init_val = UmlAttribute__GetItemValue(uml_attribute,
+                                                    "UmlAttributeDefaultValue");
+    if (attribute_init_val != "")
+        return " = " + attribute_init_val;
+    else
+        return attribute_init_val;
+}
+
+
+string
+attribute_const_string(UmlAttribute uml_attribute)
+{
+    string  attribute_const;
+
+    if (UmlAttribute__GetItemValue(uml_attribute, 
+				   "UmlMemberJavaIsFinal") == "True")
+	attribute_const = "final ";
+    else
+	attribute_const = "";
+
+    return attribute_const;
+}
+
+string
+attribute_volatile_string(UmlAttribute uml_attribute)
+{
+    string  attribute_volatile;
+
+    if (UmlAttribute__GetItemValue(uml_attribute, 
+				   "UmlAttributeJavaIsVolatile") == "True")
+	attribute_volatile = "volatile ";
+    else
+	attribute_volatile = "";
+
+    return attribute_volatile;
+}
+
+string
+attribute_transient_string(UmlAttribute uml_attribute)
+{
+    string  attribute_transient;
+
+    if (UmlAttribute__GetItemValue(uml_attribute,
+                                   "UmlAttributeJavaIsTransient") == "True")
+        attribute_transient = "transient ";
+    else
+        attribute_transient = "";
+
+    return attribute_transient;
+}
+
+
+string
+operation_native_string(UmlOperation uml_operation)
+{
+    string  operation_native;
+
+    if (UmlOperation__GetItemValue(uml_operation,
+                                   "UmlOperationJavaIsNative") == "True")
+        operation_native = "native ";
+    else
+        operation_native = "";
+
+    return operation_native;
+}
+
+string
+operation_synchronized_string(UmlOperation uml_operation)
+{
+    string  operation_syncronized;
+ 
+    if (UmlOperation__GetItemValue(uml_operation,
+                                   "UmlOperationJavaIsSynchronized") == "True")
+        operation_syncronized = "synchronized ";
+    else
+        operation_syncronized = "";
+ 
+    return operation_syncronized;
+}
+
+boolean
+is_operation_constructor(node class, node operation)
+{
+
+    if (class_base_name(class) == strip_whitespace(operation.name))
+	return True;
+    return False;
+}
+
+boolean
+is_operation_type_assumed_void(node class, node operation)
+{
+    if (is_operation_constructor_destructor(class, operation))
+	return False;
+    if (is_operation_operator(class, operation))
+	return False;
+    return True;
+}
+
+boolean
+is_operation_constructor_destructor(node class, node operation)
+{
+    string          operation_name;
+
+    if (string_extract(operation.name, 0, 1) == "~")
+	operation_name = string_extract(operation.name, 1, string_length(operation.name) - 1);
+    else
+	operation_name = operation.name;
+
+    if (class_base_name(class) == strip_whitespace(operation_name))
+	return True;
+    return False;
+}
+
+boolean
+is_operation_operator(node class, node operation)
+{
+    if (string_length(operation.name) >= 9 &&
+	(string_extract(operation.name, 0, 9) == "operator " ||
+	strpbrk(operation.name, "+-*/%^&|~!=<>,()[]") != 0))
+	return True;
+    return False;
+}
+
+string
+operation_name(node class, node operation)
+{
+
+    if (is_operation_constructor_destructor(class, operation))
+	return strip_whitespace(operation.name);
+    return operation.name;
+}
+
+string
+parse_array_syntax_from_name(string attribute_name, string attribute_type)
+{
+    int             array_open, array_close, i;
+
+    if (attribute_type != "")
+    {
+	array_open = string_find(attribute_type, 0, "[");
+	if (array_open < string_length(attribute_type))
+	{
+	    array_close = 0;
+	    for (i = 0; i < string_length(attribute_type); i = i + 1)
+		if (string_extract(attribute_type, i, 1) == "]")
+		    array_close = i;
+	    if (array_close < string_length(attribute_type))
+		attribute_name = attribute_name + 
+                string_extract(attribute_type, array_open, (array_close - array_open) + 1);
+	}
+    }
+    return attribute_name;
+}
+
+string
+parse_array_syntax_from_type(string attribute_type)
+{
+    int             array_open, array_close;
+
+    if (attribute_type != "")
+    {
+	array_open = string_find(attribute_type, 0, "[");
+	if (array_open < string_length(attribute_type))
+	{
+	    array_close = string_find(attribute_type, array_open, "]");
+	    if (array_close < string_length(attribute_type))
+		attribute_type = string_extract(attribute_type, 0, array_open);
+	}
+    }
+    return attribute_type;
+}
+
+string
+strip_argument_list_default_values(string argument_list)
+{
+    int             i, j, k, n;
+    string character    , string;
+    string          stripped_argument_list;
+
+    //
+    // strip out default values for definitions (until we get a real c++
+    // parser)
+    //
+
+    // trivial case
+    if (argument_list == "" || string_find(argument_list, 0, "=") == string_length(argument_list))
+	return argument_list;
+
+    stripped_argument_list = "";
+    for (i = 0, n = string_length(argument_list); i < n; i = i + 1)
+    {
+	character = string_extract(argument_list, i, 1);
+
+	//
+	// i don't think we have to worry about an equal sign appearing
+	// before the default value equal sign, e.g., inside a string,
+	// otheriwse it's a syntax error anyway
+	//
+	if (character == "=")
+	{
+	    //
+	    // skip everything until next argument!  how do we find that?
+	    // well, simply ship to the next argument separator (comma), but
+	    // that's not trivial to find given quoted string and functions
+	    //
+	    for (j = i + 1; j < n; j = j + 1)
+	    {
+		character = string_extract(argument_list, j, 1);
+
+		// found arg separator, so copy it and advance
+		if (character == ",")
+		{
+		    stripped_argument_list = stripped_argument_list + character;
+		    break;
+		}
+		//
+		// found string as a default value, so skip it as a unit to
+		// avoid the appearance of an arg separator and advance
+		//
+		if (character == "\"")
+		{
+		    string = get_string(argument_list, j);
+		    j = (j + string_length(string)) - 1;
+		    break;
+		}
+		//
+		// found function as a default value, so skip it as a unit to
+		// avoid the appearance of an arg separator and advance
+		//
+		if (character == "(")
+		{
+		    string = get_parenthesized_expression(argument_list, j);
+		    j = (j + string_length(string)) - 1;
+		    break;
+		}
+	    }
+	    i = j;
+	} else
+	    stripped_argument_list = stripped_argument_list + character;
+    }
+    return stripped_argument_list;
+}
+
+
+string
+get_string(string stream, int from)
+{
+    string          character, string;
+
+    // safety
+    if (stream == NULL || stream == "" || from >= string_length(stream))
+	return "";
+
+    // stream must start with a quote
+    character = string_extract(stream, from, 1);
+    if (character != "\"")
+	return "";
+
+    // find the end quote (don't forget about escaped ones)
+    string = character;
+    from = from + 1;
+    while (from < string_length(stream))
+    {
+	character = string_extract(stream, from, 1);
+	if (character == "\"")
+	{
+	    string = string + character;
+	    from = from + 1;
+	    break;
+	} else if (character == qrl_parser_bug__back_slash())
+	{
+	    string = string + character;
+	    from = from + 1;
+	    if (from < string_length(stream))
+	    {
+		character = string_extract(stream, from, 1);
+		string = string + character;
+		from = from + 1;
+	    }
+	} else
+	{
+	    string = string + character;
+	    from = from + 1;
+	}
+    }
+
+    //
+    // return full string (with end quote, otherwise not if we ran off the end)
+    //
+    return string;
+}
+
+string
+qrl_parser_bug__back_slash()
+{
+    return string_extract("\\ ", 0, 1);
+}
+
+string
+get_parenthesized_expression(string stream, int from)
+{
+    string          character, string;
+
+    // safety
+    if (stream == NULL || stream == "" || from >= string_length(stream))
+	return "";
+
+    // stream must start with a left parenthesis
+    character = string_extract(stream, from, 1);
+    if (character != "(")
+	return "";
+
+    //
+    // find the closing parenthesis (don't forget about nested parens and
+    // strings)
+    //
+    string = character;
+    from = from + 1;
+    while (from < string_length(stream))
+    {
+	character = string_extract(stream, from, 1);
+	if (character == ")")
+	{
+	    string = string + character;
+	    from = from + 1;
+	    break;
+	} else if (character == "(")
+	{
+	    character = get_parenthesized_expression(stream, from);
+	    string = string + character;
+	    from = from + string_length(character);
+	} else if (character == "\"")
+	{
+	    character = get_string(stream, from);
+	    string = string + character;
+	    from = from + string_length(character);
+	} else
+	{
+	    string = string + character;
+	    from = from + 1;
+	}
+    }
+
+    //
+    // return the full string (with closing parenthesis, otherwise not if we
+    // ran off the end)
+    //
+    return string;
+}
+
+string
+get_class_template_from_class_name(string class_name)
+{
+    int             i;
+
+    if ((i = string_find(class_name, 0, "<")) != string_length(class_name))
+	return string_extract(class_name, 0, i);
+    return "";
+}
+
+ 
+
+int
+main()
+{
+    //file_per_class = True;
+    return code_gen_main("Java");
+}
+
+
+// New stuff to move around method bodies.
+
+struct end_points
+{
+    int start;
+    int end;
+};
+
+struct java_method_body_return_list
+{
+    list method_body;
+    list lines_to_delete;
+};
+
+struct method_move_info
+{
+    end_points begin_n_end;
+    string move_to_search;
+    java_method_body_return_list method_body_list;
+};
+
+
+void
+arrange_java_inner_classes(list classes, boolean before)
+{
+    int x, y, z;
+    int move_to_index;
+    string search_string;
+    ClassCodeDescriptor current_class;
+    ClassCodeDescriptor current_find_class;
+    int class_id;
+    list inner_class_node_list;
+    list inner_file_list;
+    list parent_file_list = NULL;
+    node inner_class_node;
+    boolean found_in_struct = False;
+    list top_return_list = list_create("string", 0);
+    list inner_class_out_list = list_create("string", 0);
+    list parent_list_indexes_to_delete = list_create("int", 0);
+    list return_parent_list = list_create("string", 0);
+    end_points begin_n_end;
+    string code_indent;
+    string current_line;
+
+    for (x=0; x<list_count(classes); x++)
+    {
+
+        current_class = list_get(classes, x);
+        class_id = current_class.id;
+
+        inner_class_node_list = list_select("node[node_refs && UmlClass " + 
+                                "&& items[UmlEnclosingScope && value = '" + 
+                                 current_class.oms_class.name + "']]");
+
+        list_clear(return_parent_list);
+        list_clear(parent_list_indexes_to_delete);
+
+        if (list_count(inner_class_node_list) < 1)
+            continue;
+
+        for (y=0; y<list_count(inner_class_node_list); y++) 
+        {
+            inner_class_node = list_get(inner_class_node_list, y);
+
+            found_in_struct = False;
+            for (z=0; z<list_count(classes); z++) 
+            {
+                current_find_class = list_get(classes, z);
+
+                if (inner_class_node.id == current_find_class.oms_class.id)
+                {
+                    found_in_struct = True;
+                    break;
+                }
+            }
+
+            if (found_in_struct)
+            {
+
+                if (before)
+                {
+                    parent_file_list = return_java_code_file_list(current_class, True);
+                    if (parent_file_list == NULL) continue;
+
+                    begin_n_end = return_inner_class_start_and_end_points(parent_file_list, 
+                                                            current_find_class.id);
+
+                    for (z=begin_n_end.start; z<=begin_n_end.end; z++)
+                    {
+                        current_line = list_get(parent_file_list, z);
+                        list_append(inner_class_out_list, current_line);
+                        list_append(parent_list_indexes_to_delete, z);
+                    }
+
+                    list_append(inner_class_out_list, "<STPCODEGENNEWLINE>");
+
+                    write_java_code_file_list(inner_class_out_list, current_find_class, False);
+                    list_clear(inner_class_out_list);
+
+                }
+
+                if (!before)
+                {
+                    inner_file_list = return_java_code_file_list(current_find_class, False);
+
+                    if (inner_file_list == NULL)
+                    {
+                        ide_warning("Cannot find inner class source file for " + 
+                                     inner_class_node.name);
+                        continue;
+                    }
+                    else
+                    {
+                        parent_file_list = return_java_code_file_list(current_class, False);
+
+                        //search_string = STP_INNER_CLASS_POS_MARK + current_find_class.id;
+                        search_string = STP_INNER_CLASS_POS_MARK + current_find_class.oms_class.id;
+                        move_to_index = list_find(parent_file_list, 0, search_string);
+    
+                        for (z=0; z<move_to_index; z++)
+                            list_append(top_return_list, list_get(parent_file_list, z));
+
+                        for (z=0; z<list_count(inner_file_list); z++)
+                        {
+                            current_line = list_get(inner_file_list, z);
+
+                            if (return_java_indent(current_line) == "") 
+                                code_indent = MINDENT;
+                            else
+                                code_indent = "";
+
+                            if (current_line != "<STPCODEGENNEWLINE>")
+                                list_append(top_return_list, code_indent + current_line);
+                            else
+                                list_append(top_return_list, current_line);
+                        }
+
+                        for (z=(move_to_index+1); z<list_count(parent_file_list); z++)
+                            list_append(top_return_list, list_get(parent_file_list, z));
+
+                        write_java_code_file_list(top_return_list, current_class, False);
+                        list_clear(top_return_list);
+                    }
+                }
+            }
+        }
+
+        if (before && parent_file_list != NULL && 
+            (list_count(parent_list_indexes_to_delete) > 0))
+        {
+            for (z=0; z<list_count(parent_file_list); z++)
+            {
+                if (list_find(parent_list_indexes_to_delete, 0, z) ==
+                    list_count(parent_list_indexes_to_delete))
+                list_append(return_parent_list, list_get(parent_file_list, z));
+            }
+            write_java_code_file_list(return_parent_list, current_class, False);
+        }
+    }
+}
+
+
+
+void
+arrange_java_method_bodies(list classes, boolean before)
+{
+
+
+    int x, y, z;
+    int class_id;
+    int op_id;
+    int mid_count;
+    int move_to_index;
+    int start_stp_code, end_stp_code;
+    string myindent = "", brakindent = "", codeindent = "";
+    string one_two_line;
+    ClassCodeDescriptor current_class;
+    list file_list, output_list;
+    end_points begin_n_end;
+    method_move_info move_info;
+    list method_move_list = list_create("method_move_info", 0);
+    list all_lines_to_delete_list = list_create("int", 0);
+    list top_return_list = list_create("string", 0);
+    list bottom_return_list = list_create("string", 0);
+    string current_line;
+
+    string import_string = "";
+    string import_file_name = "";
+
+    for (x=0; x<list_count(classes); x++)
+    {
+        current_class = list_get(classes, x);
+        class_id = current_class.id;
+
+        if (file_per_class == False)
+        //import_string = import_string + generate_tagged_includes(current_class);
+        import_string = generate_tagged_includes(current_class);
+
+        if (list_find(java_code_gen_abstract_and_interface_classes, 0, class_id) !=
+             list_count(java_code_gen_abstract_and_interface_classes))
+        continue;
+
+        file_list = return_java_code_file_list(current_class, before);
+        if (file_list == NULL) continue;
+
+        output_list = file_list;
+
+        if (list_find(ALL_JAVA_INNER_CLASSES, 0, current_class.oms_class) != 
+            list_count(ALL_JAVA_INNER_CLASSES))
+        {
+            brakindent = MINDENT + MINDENT;
+            codeindent = MINDENT + MINDENT + MINDENT;
+        }
+        else
+        {
+            brakindent = MINDENT;
+            codeindent = MINDENT + MINDENT;
+        }
+
+        for (y=0; y<list_count(current_class.ops.ids); y++) 
+        {
+            op_id = list_get(current_class.ops.ids, y);
+
+            move_info.begin_n_end = 
+                return_start_and_end_points(file_list, class_id, op_id);
+            move_info.method_body_list = 
+                return_java_method_body(file_list, move_info.begin_n_end);
+            move_info.move_to_search = END_OPERATION_TAG + " declaration " + 
+                             current_class.id + "::" + op_id;
+
+            list_concatenate(all_lines_to_delete_list, 
+                             move_info.method_body_list.lines_to_delete);
+            list_append(method_move_list, move_info);
+        }
+
+        if (!before)
+        output_list = delete_moved_java_func_lines(output_list, 
+                                                   all_lines_to_delete_list);
+
+        if (before)
+        {
+            for (y=0; y<list_count(method_move_list); y++)
+            {
+                move_info = list_get(method_move_list, y);
+                list_concatenate(output_list, move_info.method_body_list.method_body);
+            }
+        }
+        else
+        {
+            for (y=0; y<list_count(method_move_list); y++)
+            {
+                move_info = list_get(method_move_list, y);
+                move_to_index = list_find(output_list, 0, move_info.move_to_search);
+    
+                for (z=0; z<move_to_index; z++)
+                    list_append(top_return_list, list_get(output_list, z));
+    
+                for (z=(move_to_index+1); z<list_count(output_list); z++)
+                    list_append(bottom_return_list, list_get(output_list, z));
+
+                mid_count = list_count(move_info.method_body_list.method_body); 
+
+                start_stp_code = 
+                return_java_file_location(move_info.method_body_list.method_body, 
+                    0, START_OP_IMPLEMENTATION_TAG);
+                end_stp_code = 
+                return_java_file_location(move_info.method_body_list.method_body, 
+                    start_stp_code, END_OP_IMPLEMENTATION_TAG);
+
+                for (z=0; z<mid_count; z++)
+                {
+                    current_line = list_get(move_info.method_body_list.method_body, z);
+
+                    if (z==0) 
+                    {
+                        list_insert(top_return_list, (list_count(top_return_list) -1),
+                            brakindent + current_line);
+                        continue;
+                    }
+
+                    if (z==1||z==2) 
+                    {
+                        one_two_line = current_line;
+
+                        if (strip_whitespace(one_two_line) != "{")
+                        continue;
+                    }
+
+                    if (z==1||z==2||z==3||z==mid_count-2||z==mid_count-1)
+                    {
+                        if (return_java_indent(current_line) == "")
+                            myindent = brakindent;
+                        else 
+                            myindent = "";
+                    }
+                    else if (z >= start_stp_code && z <= end_stp_code)
+                    {
+                        if (z == start_stp_code && return_java_indent(current_line) == "")
+                            myindent = codeindent;
+                    }
+                    else 
+                        myindent = "";
+
+                    //if (current_line == "<STPCODEGENNEWLINE>")
+                    //    myindent = "";
+
+                    list_append(top_return_list, myindent + current_line);
+                }
+
+                if (y != list_count(method_move_list)-1)
+                    list_append(top_return_list, "<STPCODEGENNEWLINE>");
+
+                list_concatenate(top_return_list, bottom_return_list);
+                output_list = top_return_list;
+
+                list_clear(top_return_list);     
+                list_clear(bottom_return_list);     
+            }
+
+
+            if (file_per_class == False && 
+                list_find(ALL_JAVA_INNER_CLASSES, 0, current_class.oms_class) ==
+                          list_count(ALL_JAVA_INNER_CLASSES))
+            {
+                if (return_java_file_location_cls(output_list, 0, 
+                     START_INCLUDES_TAG , current_class.id) == list_count(output_list))
+                {
+                    list_insert(output_list, 5, import_string);
+                    import_string = "";
+                }
+            }
+
+        }
+        list_clear(top_return_list);     
+        list_clear(bottom_return_list);     
+        list_clear(method_move_list);     
+        list_clear(all_lines_to_delete_list);     
+
+        write_java_code_file_list(output_list, current_class, True);
+        list_clear(output_list);     
+    }
+
+}
+
+
+list
+delete_moved_java_func_lines(list file, list delete)
+{
+    int x;
+    int f_cnt = list_count(file);
+    int d_cnt = list_count(delete);
+    list out_list = list_create("string", 0);
+
+    for(x=0; x<f_cnt; x++)
+        if (list_find(delete, 0, x) == d_cnt)
+            list_append(out_list, list_get(file, x));
+
+    return out_list;
+}
+
+
+end_points
+return_start_and_end_points(list file_list, int class_id, int op_id)
+{
+    end_points ep;
+    int file_list_count = list_count(file_list);
+    //int start_index = list_find(file_list, 0, start_search); 
+    int start_index = return_java_file_location_op(file_list, 
+                                   0, START_OPERATION_TAG, class_id, op_id);
+
+    if (start_index == NULL) 
+    {
+        return NULL;
+    }
+ 
+    //int end_index = list_find(file_list, start_index, END_OPERATION_TAG); 
+    int end_index = return_java_file_location(file_list, start_index, END_OPERATION_TAG);
+    if (end_index == NULL) 
+    {
+        return NULL;
+    }
+
+    ep.start = start_index;
+    ep.end = end_index;
+    return ep;
+}
+
+
+
+end_points
+return_inner_class_start_and_end_points(list file_list, int class_id)
+{
+    end_points ep;
+    int file_list_count = list_count(file_list);
+    //string start_search = START_INNER_CLASS_DEFINITION_TAG + class_id;
+    string start_search = START_CLASS_DEFINITION_TAG + class_id;
+    int start_index = return_java_file_location_cls(file_list, 0, START_CLASS_DEFINITION_TAG, class_id);
+
+    if (start_index == NULL)
+    {
+        return NULL;
+    }
+
+    int end_index = return_java_file_location(file_list, 
+                               //start_index, END_INNER_CLASS_DEFINITION_TAG);
+                               start_index, END_CLASS_DEFINITION_TAG);
+    if (end_index == NULL)
+    {
+        return NULL;
+    }
+
+    ep.start = start_index;
+    ep.end = end_index;
+    return ep;
+}
+
+
+
+java_method_body_return_list
+return_java_method_body(list file_list, end_points begin_n_end)
+{
+    int x;
+    java_method_body_return_list jmbrl;
+    jmbrl.method_body = list_create("string", 0);
+    jmbrl.lines_to_delete = list_create("int", 0);
+
+    if (begin_n_end.start == begin_n_end.end ||
+        (begin_n_end.start == list_count(file_list) ||
+         begin_n_end.end == list_count(file_list)))
+        return jmbrl;
+
+    for (x=begin_n_end.start; x <= begin_n_end.end; x++)
+    {
+        list_append(jmbrl.method_body, list_get(file_list, x));
+        list_append(jmbrl.lines_to_delete, x);
+    }
+    return jmbrl;
+}
+
+
+void
+save_java_backups(list classes, boolean before)
+{
+
+    int x;
+    ClassCodeDescriptor current_class;
+    string file_name;
+
+    for (x=0; x<list_count(classes); x++)
+    {
+        current_class = list_get(classes, x);
+        file_name = current_class.file.full_path_implementation_name +
+                        current_class.file.implementation_extension;
+
+        if (before)
+           if (list_find(ALL_JAVA_INNER_CLASSES, 0, current_class.oms_class) == 
+                list_count(ALL_JAVA_INNER_CLASSES))
+
+                if (read_file_access(file_name))
+                {
+                    //system("cp " + file_name + " " + 
+                    //        file_name + ".STPJAVACODEGENBAK");
+                    copy_file(file_name,
+                              file_name + ".STPJAVACODEGENBAK");
+                }
+
+        if (!before)
+        {
+            if (list_find(ALL_JAVA_INNER_CLASSES, 0, current_class.oms_class) !=
+                list_count(ALL_JAVA_INNER_CLASSES))
+            {
+                delete_file(file_name);
+                delete_file(file_name + ".BAK");
+            }
+            else
+                if (read_file_access(file_name + ".STPJAVACODEGENBAK"))
+                {
+                    //system("mv " + file_name + ".STPJAVACODEGENBAK" + 
+                    //       " " + file_name + ".BAK");
+                    copy_file(file_name + ".STPJAVACODEGENBAK",
+                              file_name + ".BAK");
+                    delete_file(file_name + ".STPJAVACODEGENBAK");
+                }
+        }
+    }
+}
+
+
+list
+return_java_code_file_list(ClassCodeDescriptor current_class, boolean before)
+{
+    string blank_line_designator = "<STPCODEGENNEWLINE>" + "\n";
+    string file_name = current_class.file.full_path_implementation_name +
+                    current_class.file.implementation_extension;
+
+   // if (before)
+   //     if (list_find(ALL_JAVA_INNER_CLASSES, 0, current_class.oms_class) == 
+   //         list_count(ALL_JAVA_INNER_CLASSES))
+   //             file_name = file_name + ".STPJAVACODEGENBAK";
+
+
+    if (!read_file_access(file_name)) 
+    {
+        return NULL;
+    }
+ 
+    string file_string = read_file(file_name);
+    file_string = string_search_and_replace(file_string,
+                                            "\n\n",
+                                            "\n" + blank_line_designator);
+
+    //delete_file(file_name);
+
+    return string_to_list(file_string, "\n");
+}
+
+
+
+int
+write_java_code_file_list(list out_list, ClassCodeDescriptor current_class, boolean output)
+{
+    string blank_line_designator = "<STPCODEGENNEWLINE>" + "\n";
+    string file_name = current_class.file.full_path_implementation_name +
+                    current_class.file.implementation_extension;
+
+    string file_string = list_to_string(out_list, "\n");
+    file_string = string_search_and_replace(file_string,
+                                            blank_line_designator, 
+                                            "\n");
+    file_string = string_search_and_replace(file_string,
+                                            "<STPCODEGENNEWLINE>", 
+                                            "");
+
+    file_string = file_string + "\n";
+    write_file(file_name, file_string);
+
+    if (output && list_find(ALL_JAVA_INNER_CLASSES, 0, current_class.oms_class) == 
+        list_count(ALL_JAVA_INNER_CLASSES))
+    ide_warning("Wrote java source to file:" + "\n" + "    " +
+                      file_name);
+
+    return 0;
+}
+
+int
+return_java_file_location_op (list file_list, 
+                               int start, 
+                               string search_string,
+                               int id,
+                               int op_id)
+{
+    int x, tag , cls_id;
+    string current_line;
+
+    for (x=start; x<list_count(file_list); x++)
+    {
+        current_line = list_get(file_list, x);
+
+        tag = string_find(current_line, 0, search_string);
+        if (tag != string_length(current_line))
+        {
+            // get the id of the class
+            cls_id = get_int(current_line, tag + string_length(search_string));
+            
+            if (cls_id != id)
+                continue;
+
+            tag = string_find(current_line, tag + string_length(search_string),
+                              "::");
+
+            if (tag == string_length(current_line))
+                continue;
+
+            // get the id of the op
+            if (op_id == get_int(current_line, tag + 2))
+                return x;
+        }
+    }
+    return x;
+}
+
+int
+return_java_file_location_cls (list file_list, 
+                               int start, 
+                               string search_string,
+                               int id)
+{
+    int x, tag ;
+    string current_line;
+
+    for (x=start; x<list_count(file_list); x++)
+    {
+        current_line = list_get(file_list, x);
+
+        tag = string_find(current_line, 0, search_string);
+        if (tag != string_length(current_line))
+        {
+            // get the id of the class
+            if (id == get_int(current_line, tag + string_length(search_string)))
+                return x;
+        }
+    }
+    return x;
+}
+
+int
+return_java_file_location(list file_list, int start, string search_string)
+{
+    int x;
+    string current_line;
+
+    for (x=start; x<list_count(file_list); x++)
+    {
+        current_line = list_get(file_list, x);
+
+        if (string_find(current_line, 0, search_string) !=
+            string_length(current_line))
+        return x;
+    }
+    return x;
+}
+
+string
+return_java_indent(string third_string)
+{
+    int x;
+    string current_char = "";
+    string indent = "";
+
+    for (x=0; x<string_length(third_string); x++)
+    {
+        current_char = string_extract(third_string, x, 1); 
+        if (current_char != " " && current_char != "\t") break;
+ 
+        indent = indent + current_char; 
+    }
+    return indent;
+}
+
+
+string 
+java_indent(ClassCodeDescriptor c)
+{
+    string indent;
+
+    if (list_find(ALL_JAVA_INNER_CLASSES, 0, c.oms_class) != 
+        list_count(ALL_JAVA_INNER_CLASSES))
+        indent = MINDENT + MINDENT;
+    else
+        indent = MINDENT;
+
+    return indent;
+}
+
+string
+java_com_indent(ClassCodeDescriptor c)
+{
+    string indent;
+
+    if (list_find(ALL_JAVA_INNER_CLASSES, 0, c.oms_class) !=
+        list_count(ALL_JAVA_INNER_CLASSES))
+        indent = MINDENT;
+    else
+        indent = "";
+
+    return indent;
+}
+
+string
+java_generic_generate_object_comment(node object, string object_type,
+    string start_comment, string start_comment_line, string end_comment,
+    string end_comment_line)
+{
+    string          generated = "";
+    note            note;
+    item            item;
+
+    // start_comment
+    // start_comment_line  object_type : object.name end_comment_line
+    // start_comment_line    generic annotations end_comment_line
+    // end_comment
+
+    // the generic annotation
+    note = find_by_query("note[GenericObject & obj_id=${object.id}]");
+
+    list desc_list;
+    int x;
+    string current_line;
+    list out_list = list_create("string", 0);
+
+    if (note != NULL)
+    {
+        // description
+        if (note.desc != "")
+        {
+            generated = generated + start_comment_line + "" +
+                end_comment_line + "\n";
+
+            desc_list = string_to_list(note.desc, "\n");
+
+            for (x=0; x<list_count(desc_list); x++)
+            {
+                current_line = list_get(desc_list, x);
+                current_line = start_comment_line + 
+                               current_line + end_comment_line;
+
+                list_append(out_list, current_line);
+            }
+
+            generated = generated + list_to_string(out_list, "\n");
+            list_clear(out_list);
+
+            generated = generated + end_comment_line + "\n";
+        }
+
+        // the generic object items (ignore StP ones)
+        for_each_in_select("item[note_id=${note.id}]", item)
+        {
+            if (item.type == "ObjectName")
+                continue;
+ 
+            generated = generated + start_comment_line + "    " + item.type +
+                ": " + item.value + end_comment_line + "\n";
+        }
+ 
+        // the requirements
+        for_each_in_select("note[Requirement & obj_id=${object.id}]", note)
+        {
+            generated = generated + start_comment_line + "    Requirement " +
+                note.name + end_comment_line + "\n";
+
+            if (note.desc != "")
+            {
+                generated = generated + start_comment_line +
+                    "      Description:" + end_comment_line + "\n";
+ 
+                desc_list = string_to_list(note.desc, "\n");
+ 
+                for (x=0; x<list_count(desc_list); x++)
+                {
+                    current_line = list_get(desc_list, x);
+                    current_line = start_comment_line +
+                                   current_line + end_comment_line;
+ 
+                    list_append(out_list, current_line);
+                }
+
+                generated = generated + list_to_string(out_list, "\n");
+                list_clear(out_list);
+ 
+                generated = generated + end_comment_line + "\n";
+            }
+ 
+            for_each_in_select("item[note_id=${note.id}]", item)
+            {
+                if (item.type == "NoteKey")
+                    continue;
+ 
+                generated = generated + start_comment_line + "      " +
+                    item.type + ": " + item.value + end_comment_line + "\n";
+            }
+        }
+    }
+ 
+ 
+    if (generated != "")
+        return start_comment + "\n" + generated +
+            //end_comment + "\n\n";
+            end_comment + "\n";
+ 
+    return "";
+}
+

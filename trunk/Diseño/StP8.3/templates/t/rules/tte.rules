@@ -1,0 +1,566 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/T
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1993
+//      All rights reserved
+//
+
+// Type Table Definition
+
+TableType 1 TTypeTable
+{ 
+    { Label "Test Type Table" } 
+    { Initialize
+        { Secured 
+	    { TTABLEBODY_HSECT 3 } 
+
+	    { TTYPE_VSECT 1 }
+	    { TBASIC_VSECT 2 }
+
+	    { TTYPE_COL 1 }
+
+	    { TTYPECLASS_COL 1 }
+	    { TINVALIDSUBDOMAIN_COL 2 }
+	    
+        }
+    }
+
+  { ColWidth 110 }
+  { RowHeight 40 }
+
+  // and on with the definition of the table
+
+  // The row above the header
+  { Hsect
+      { Label "Header" }
+      { Frozen True }
+      { Scrollbar False } 
+      { ReadOnly True }
+      { Shading Shade2 }
+      // type name section
+      { Vsect
+          { Frozen True }
+          { Row
+              { RepeatToEnd True }
+              { Cell
+                  { Label "Type" }
+                  { HspanSection True }
+                  { Bold True } } } }
+      // basic attributes section
+      { Vsect
+          { Frozen True }
+          { Row
+              { RepeatToEnd True }
+              { Cell
+                  { Label "Basic Type Attributes" }
+                  { HspanSection True }
+                  { Bold True } } } }
+      // int and real section
+      { Vsect
+          { Frozen True }
+          { Row
+              { RepeatToEnd True }
+              { Cell
+                  { Label "Integer and Real Type Attributes" }
+                  { HspanSection True }
+                  { Bold True } } } }
+      // boolean section
+      { Vsect
+          { Frozen True }
+          { Row
+              { RepeatToEnd True }
+              { Cell
+                  { Label "Boolean Type Attributes" }
+                  { HspanSection True }
+                  { Bold True } } } }
+      // test values
+      { Vsect
+          { Row
+              { RepeatToEnd True }
+              { Cell
+                  { Label "Test Values" }
+                  { HspanSection True }
+                  { Bold True } } } } }
+
+  // the header  
+  { Hsect 
+      { Label "Test Type Header" }
+      { Frozen True }
+      { Scrollbar False } 
+      { ReadOnly True }
+      { Shading Shade1 }
+      // type name section
+      { Vsect 
+          { Scrollbar False }
+          { Label "Type Name" }
+	  { Row
+	      { Cell
+		  { Label "Name" }
+		  { Bold True } } } }
+      // basic attributes section
+      { Vsect 
+          { Label "Basic Type Atts" }
+	  { Row { Cell { Label "Type Class" } { Bold True } }
+	        { Cell { Label "Invalid Subdom." } { Bold True } }
+	        { Cell { Label "Units" } { Bold True } }
+	        { Cell { Label "Format" } { Bold True } } } }
+      // int and real section
+      { Vsect 
+          { Label "Int/Real Type Atts" }
+	  { Row { Cell { Label "Min Value" } { Bold True } }
+	        { Cell { Label "Max Value" } { Bold True } }
+	        { Cell { Label "Resolution" } { Bold True } } } }
+      // boolean section
+      { Vsect 
+          { Label "Boolean Type Atts" }
+	  { Row { Cell { Label "True Value" } { Bold True } }
+	        { Cell { Label "False Value" } { Bold True } }
+	        { Cell { Label "Unknown Value" } { Bold True } } } }
+      // test values
+      { Vsect 
+          { Label "Test Values" }
+	  { Row { Cell { Label "Value" } { Bold True } } } } }
+
+  // the body  
+  { Hsect 
+      { Label "Types" }
+      { Type TTABLEBODY_HSECT }
+      // type name section
+      { Vsect 
+          { Scrollbar False }
+	  { Row
+	      { RepeatToEnd True }
+	      { Cell
+		  { Type TDataTypeName }
+		  { HorzAlignment Left } } } }
+      // basic attributes section
+      { Vsect 	
+	  { Row
+	      { RepeatToEnd True }
+	      { Cell
+		  { Type TDataTypeClass }
+		  { HorzAlignment Left } }
+	      { Cell
+		  { Type TInvalidSubdomain }
+		  { HorzAlignment Left } }
+	      { Cell
+		  { Type TTestUnits }
+		  { HorzAlignment Left } }
+	      { Cell
+		  { Type TFormat }
+		  { HorzAlignment Left } } } }
+      // int and real section
+      { Vsect 	
+	  { Row
+	      { RepeatToEnd True }
+	      { Cell
+		  { Type TMinimumValue }
+		  { HorzAlignment Left } }
+	      { Cell
+		  { Type TMaximumValue }
+		  { HorzAlignment Left } }
+	      { Cell
+		  { Type TResolution }
+		  { HorzAlignment Left } } } }
+      // boolean section
+      { Vsect 	
+	  { Row
+	      { RepeatToEnd True }
+	      { Cell
+		  { Type TTrueValue }
+		  { HorzAlignment Left } }
+	      { Cell
+		  { Type TFalseValue }
+		  { HorzAlignment Left } }
+	      { Cell
+		  { Type TUnknownValue }
+		  { HorzAlignment Left } } } }
+      // test values
+	{ Vsect 	
+	    { Row
+		{ RepeatToEnd True }
+		{ Cell
+		    { Type TTestValue }
+		    { HorzAlignment Left } 
+		    { RepeatToEnd True }
+		    { HorzAlignment Left } } } } } }
+
+// TTestType Node Semantics
+
+CellType 1 TDataTypeName
+{ 
+  { Semantics
+      { NodeMapping
+          { MappingName TTestType }
+	  { Precondition { LabelSelector Label } }
+	  { Name
+	      { LabelSelector Label }
+	  } 
+	  { Type TTestType } } 
+      { NoteMapping  
+          { MappingName TestDataType }
+	  { Type TestDataType } 
+	  { Parent
+              { MappingName TTestType }
+              { Cell
+                  { Hsect HSECT }
+                  { Vsect VSECT }
+                  { Row ROW }
+                  { Col COL } } } } }
+  { Methods
+      { Navigation
+          { Name Attributes }
+          { Label "Attribute on Class Table" }
+          { MappingName TTestType }
+          { Query "node_ref[node[OMTAttribute && items[OMTAttributeType && value = '${node.name}']] && file[OMTClassTable]]" } } }
+
+}
+
+// TestDataType Note/Item Semantics
+
+// CellTypes for TTE
+
+CellType 43 TDataTypeClass
+{ { Semantics
+      { ItemMapping
+          { MappingName TDataTypeClass }
+	  { Precondition { LabelSelector Label } }
+          { Type TDataTypeClass }
+          { Value { LabelSelector Label } }
+	  { Note  
+	      { MappingName TestDataType }
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect 1 }
+		  { Row ROW }
+		  { Col 1 } } } } }
+  { ValidValues
+      { ItemValType TCG_DataTypetype } }
+  //{ Label "string" } 
+} 
+
+
+CellType 44 TInvalidSubdomain
+{ { Semantics
+      { ItemMapping
+          { MappingName TInvalidSubdomain }
+	  { Precondition { LabelSelector Label } }
+          { Value { LabelSelector Label } }
+          { Type TInvalidSubdomain }
+	  { Note  
+	      { MappingName TestDataType }
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect 1 }
+		  { Row ROW }
+		  { Col 1 } } } } }
+  { ValidValues
+      { ItemValType TCG_InvalidSubDomainType } }
+  //{ Label "None" }  
+}
+
+
+CellType 45 TTestUnits
+{ { Semantics
+      { ItemMapping
+          { MappingName TTestUnits }
+	  { Precondition { LabelSelector Label } }
+          { Value { LabelSelector Label } }
+          { Type TTestUnits }
+	  { Note  
+	      { MappingName TestDataType }
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect 1 }
+		  { Row ROW }
+		  { Col 1 } } } } }
+} 
+
+
+CellType 46 TFormat
+{ { Semantics
+      { ItemMapping
+          { MappingName TFormat }
+	  { Precondition { LabelSelector Label } }
+          { Type TFormat }
+          { Value { LabelSelector Label } }
+	  { Note  
+	      { MappingName TestDataType }
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect 1 }
+		  { Row ROW }
+		  { Col 1 } } } } }
+}
+
+CellType 47 TMinimumValue
+{ { Semantics
+      { ItemMapping
+          { MappingName TMinimumValue }
+	  { Precondition { LabelSelector Label } }
+          { Type TMinimumValue }
+          { Value { LabelSelector Label } }
+	  { Note  
+	      { MappingName TestDataType }
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect 1 }
+		  { Row ROW }
+		  { Col 1 } } } } } 
+}
+
+CellType 48 TMaximumValue
+{ { Semantics
+      { ItemMapping
+          { MappingName TMaximumValue }
+	  { Precondition { LabelSelector Label } }
+          { Type TMaximumValue }
+          { Value { LabelSelector Label } }
+	  { Note  
+	      { MappingName TestDataType }
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect 1 }
+		  { Row ROW }
+		  { Col 1 } } } } } 
+}
+
+CellType 49 TResolution
+{ { Semantics
+      { ItemMapping
+          { MappingName TResolution }
+	  { Precondition { LabelSelector Label } }
+          { Type TResolution }
+          { Value { LabelSelector Label } }
+	  { Note  
+	      { MappingName TestDataType }
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect 1 }
+		  { Row ROW }
+		  { Col 1 } } } } } 
+}
+
+CellType 50 TTrueValue
+{ { Semantics
+      { ItemMapping
+          { MappingName TTrueValue }
+	  { Precondition { LabelSelector Label } }
+          { Type TTrueValue }
+          { Value { LabelSelector Label } }
+	  { Note  
+	      { MappingName TestDataType }
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect 1 }
+		  { Row ROW }
+		  { Col 1 } } } } }
+} 
+
+CellType 51 TFalseValue
+{ { Semantics
+      { ItemMapping
+          { MappingName TFalseValue }
+	  { Precondition { LabelSelector Label } }
+          { Type TFalseValue }
+          { Value { LabelSelector Label } }
+	  { Note  
+	      { MappingName TestDataType }
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect 1 }
+		  { Row ROW }
+		  { Col 1 } } } } }
+} 
+
+CellType 52 TUnknownValue
+{ { Semantics
+      { ItemMapping
+          { MappingName TUnknownValue }
+	  { Precondition { LabelSelector Label } }
+          { Type TUnknownValue }
+          { Value { LabelSelector Label } }
+	  { Note  
+	      { MappingName TestDataType }
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect 1 }
+		  { Row ROW }
+		  { Col 1 } } } } }
+} 
+
+CellType 53 TTestValue
+{ { Semantics
+      { ItemMapping
+          { MappingName TTestValue }
+	  { Precondition { LabelSelector Label } }
+          { Type TTestValue }
+          { Value { LabelSelector Label } }
+	  { Note  
+	      { MappingName TestDataType }
+	      { Cell 
+		  { Hsect HSECT }
+		  { Vsect 1 }
+		  { Row ROW }
+		  { Col 1 } } } } }
+} 
+
+HsectType 10 TTABLEBODY_HSECT
+{
+    { RowSorts
+	{ Sort
+	    { Name SortByName }
+	    { Label "By Name" }
+	    { Key
+		{ Value
+		    { LabelSelector Label }
+		    { Cell
+			{ Hsect HSECT }
+			{ Vsect TTYPE_VSECT }
+			{ Row ROW }
+			{ Col TTYPE_COL } } }
+		{ Ordering LexicographicalIncreasing } 
+	    } 
+	} 
+	{ Sort
+	    { Name SortByTypeClass }
+	    { Label "By Type Class" }
+	    { Key
+		{ Value
+		    { LabelSelector Label }
+		    { Cell
+			{ Hsect HSECT }
+			{ Vsect TBASIC_VSECT }
+			{ Row ROW }
+			{ Col TTYPECLASS_COL } } }
+		{ Ordering LexicographicalIncreasing } 
+	    } 
+	} 
+	{ Sort
+	    { Name SortByInvalidSubdomain }
+	    { Label "By Invalid Subdomain" }
+	    { Key
+		{ Value
+		    { LabelSelector Label }
+		    { Cell
+			{ Hsect HSECT }
+			{ Vsect TBASIC_VSECT }
+			{ Row ROW }
+			{ Col TINVALIDSUBDOMAIN_COL } } }
+		{ Ordering LexicographicalIncreasing } 
+	    } 
+	} 
+	{ Sort
+	    { Name SortByTypeClassName }
+	    { Label "By Type Class, then by Name" }
+	    { Key
+		{ Value
+		    { LabelSelector Label }
+		    { Cell
+			{ Hsect HSECT }
+			{ Vsect TBASIC_VSECT }
+			{ Row ROW }
+			{ Col TTYPECLASS_COL } } }
+		{ Ordering LexicographicalIncreasing } 
+	    } 
+	    { Key
+		{ Value
+		    { LabelSelector Label }
+		    { Cell
+			{ Hsect HSECT }
+			{ Vsect TTYPE_VSECT }
+			{ Row ROW }
+			{ Col TTYPE_COL } } }
+		{ Ordering LexicographicalIncreasing } 
+	    } 
+	} 
+	{ Sort
+	    { Name SortByInvalidSubdomainName }
+	    { Label "By Invalid Subdomain, then by Name" }
+	    { Key
+		{ Value
+		    { LabelSelector Label }
+		    { Cell
+			{ Hsect HSECT }
+			{ Vsect TBASIC_VSECT }
+			{ Row ROW }
+			{ Col TINVALIDSUBDOMAIN_COL } } }
+		{ Ordering LexicographicalIncreasing } 
+	    } 
+	    { Key
+		{ Value
+		    { LabelSelector Label }
+		    { Cell
+			{ Hsect HSECT }
+			{ Vsect TTYPE_VSECT }
+			{ Row ROW }
+			{ Col TTYPE_COL } } }
+		{ Ordering LexicographicalIncreasing } 
+	    } 
+	} 
+    } 
+}
+
+
+Features
+{
+    { Feature "T" }
+}
+
+PassWord "E33E5234"
+
+Include "rules/gte_menu_bar.std"
+Include "rules/gte_annot_menu.std"
+Include "rules/gte_edit_menu.std"
+
+
+Command CheckSyntax
+{
+    { PrintName "Check Table Syntax" }
+    { CheckFullName True }
+    { StopOnFailure True }
+    { StartMessage "Executing Check Table Syntax..."}
+    { FailureMessage "Check Table Syntax failed." }
+    { SuccessMessage "Check Table Syntax succeeded." }
+    { Builtin "BufferCheckSyntax" }
+}
+
+
+
+Command CellToggleValue
+{
+    { PrintName "Cell Toggle Value" }
+    { Builtin "EditorQrlEval CellToggleValue();" }
+}
+
+Menu Sort
+{
+  { InMenuBar True }
+  { Label "&Sort" }
+  { Pin True }
+  { GenerationFunc idehook_table_sorts_main_generation_func_by_type }
+  { Tag "RowSorts" }
+}
+
+
+Menu Navigation
+{
+    { InMenuBar True }
+    { Label "&Navigation" }
+    { Pin True }
+    { GenerationFunc idehook_table_methods_main_generation_func_by_type }
+    { Tag "Navigation" }
+}
+//ECR 3792 begin
+Menu NavigationSubmenu
+{
+    { GenerationFunc idehook_table_methods_main_generation_func_by_type }
+    { Tag "Navigation" }
+
+}
+//ECR 3792 end
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/t/rules/user_tte.rules"
+

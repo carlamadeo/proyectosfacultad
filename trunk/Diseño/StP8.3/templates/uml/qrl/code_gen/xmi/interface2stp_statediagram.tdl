@@ -1,0 +1,238 @@
+proc generateStateDiagrams()
+    loop(Instances->MClass)
+        generateStateDiagram([MClass]);
+    end loop
+end proc
+
+proc generateStateDiagram(MClass)
+    loop(MClass->MStateDiagram)
+        output([ProjectDir] "ustated_files/" getFileName([MClass.name],"") ".ustated");
+        generateStateDiagramInfo([MClass]);
+        generateStateInfo([MClass]);
+        generateTransitionInfo([MClass]);
+    end loop
+end proc
+
+proc generateTransitionInfo(MClass)
+    loop(MClass->MStatemachine->MState->ToState->MTransition->TriggerEvent As MEvent)
+        local TRAN_LinkNode_ID = getNextNodeID();
+        local TRAN_LINK_ID = getNextID();
+        local TRAN_NOTE_ID = getNextID();
+        local TRAN_ITEM_ID = getNextID();
+
+        [TRAN_ARC_2] = getNextARCID();
+
+        if( [MState.name] == [ToState.name] )
+            [VERTEX_1] = getNextNodeID();
+            [VERTEX_2] = getNextNodeID();
+
+            [TRAN_ARC_1] = getNextARCID();
+            [TRAN_ARC_3] = getNextARCID();
+
+            [LX] = sub(["XP" [MClass.name] [MState.name]],"100");
+            [RX] = add(["XP" [MClass.name] [MState.name]],"100");
+
+            >>
+
+            Node [VERTEX_1]
+            {
+                { Type Vertex }
+                { Loc [LX] -100 }
+            }
+
+            Node [VERTEX_2]
+            {
+                { Type Vertex }
+                { Loc [RX] -100 }
+            }
+
+            Arc [TRAN_ARC_1]
+            {
+                { Type StateTransitionLink }
+                { From
+                    { ID [[STATE_NODE_ID getStateQualifiedName([MState])]] }
+                }
+                { To
+                    { ID [VERTEX_1] }
+                }
+            }
+
+            Arc [TRAN_ARC_2]
+            {
+                { Type StateTransitionLink }
+                { From
+                    { ID [VERTEX_1] }
+                }
+                { To
+                    { ID [VERTEX_2] }
+                }
+                { Label
+                    { Text "[MEvent.name]" }
+                }
+            }
+
+            Arc [TRAN_ARC_3]
+            {
+                { Type StateTransitionLink }
+                { From
+                    { ID [VERTEX_2] }
+                }
+                { To
+                    { ID [[STATE_NODE_ID getStateQualifiedName([MState])]] }
+                }
+            }
+            >> out
+        else
+            >>
+
+            Arc [TRAN_ARC_2]
+            {
+                { Type StateTransitionLink }
+                { From
+                    { ID [[STATE_NODE_ID getStateQualifiedName([MState])]] }
+                }
+                { To
+                    { ID [[STATE_NODE_ID getStateQualifiedName([MState])]] }
+                }
+                { Label
+                    { Text "[MEvent.name]" }
+                }
+            }
+            >> out
+        end if
+
+        >>
+        Link [TRAN_LinkNode_ID]
+        {
+            { FirstArc [TRAN_ARC_2] }
+            { LastArc [TRAN_ARC_2] }
+            { Object
+                { PDMType Link }
+                { MappingName Transition }
+                { ID 0 }
+            }
+            { Object
+                { PDMType Note }
+                { MappingName Default }
+                { ID 0 }
+            }
+            { Object
+                { PDMType Item }
+                { MappingName TransitionEvent }
+                { ID 0 }
+            }
+        }
+        >> out
+    end loop
+end proc
+
+proc getStateInfo(MState)
+    loop(MState->MNormalState)
+        return "State";
+    end loop
+    loop(MState->MCreationState)
+        return "InitialState";
+    end loop
+    loop(MState->MFinalState)
+        return "FinalState";
+    end loop
+    return "State";
+end proc
+
+proc getXLocation(MState)
+    loop(MState->MSNodeChild)
+        return [MSNodeChild.xPos];
+    end loop
+    loop(MState->MNormalState->MSNodeChild)
+        return [MSNodeChild.xPos];
+    end loop
+    loop(MState->MCreationState->MSNodeChild)
+        return [MSNodeChild.xPos];
+    end loop
+    loop(MState->MFinalState->MSNodeChild)
+        return [MSNodeChild.xPos];
+    end loop
+    return 0;
+end proc
+
+proc getYLocation(MState)
+    loop(MState->MSNodeChild)
+        return [MSNodeChild.yPos];
+    end loop
+    loop(MState->MNormalState->MSNodeChild)
+        return [MSNodeChild.yPos];
+    end loop
+    loop(MState->MCreationState->MSNodeChild)
+        return [MSNodeChild.yPos];
+    end loop
+    loop(MState->MFinalState->MSNodeChild)
+        return [MSNodeChild.yPos];
+    end loop
+    return 0;
+end proc
+
+proc generateStateInfo(MClass)
+    loop (MClass->MStatemachine->MState)
+        >>
+        Node [[STATE_NODE_ID getStateQualifiedName([MState])]]
+        {
+            { Type [getStateInfo([MState])] }
+            { Loc [getXLocation([MState])] [getYLocation([MState])] }
+            { Label
+                { Text "[MState.name]" }
+            }
+            { Object
+                { PDMType Node }
+                { MappingName Default }
+                { ID 0 }
+                { GUID "[[MState].getGuid()]" }
+            }
+        }
+        >> out
+    end loop
+end proc
+
+proc generateStateDiagramInfo(MClass)
+    local NodeCount = 0;
+    local ArcCount = 0;
+
+    loop(MClass->MStatemachine->MState)
+        [NodeCount] = add([NodeCount],1);
+        loop(MState->ToState->MTransition->TriggerEvent As MEvent)
+            [ArcCount] = add([ArcCount],1);
+        end loop
+    end loop
+    >>
+    Diagram UmlStateDiagram
+    {
+        { Name "[MClass.name]__1" }
+        { Format "1.6" }
+        { Scale 1.00 }
+        { PanX -287 }
+        { PanY -180 }
+        { Alignment 32 }
+        { Summary
+            { Nodes [NodeCount] }
+            { Arcs [ArcCount] }
+        }
+    }
+    >> out
+    loop(MClass->MStatemachine)
+        >>
+        Node [getNextID()]
+        {
+            { Type StateMachine }
+            { Label
+                { Text "[MClass.name]" }
+            }
+            { Object
+                { PDMType Node }
+                { MappingName Default }
+                { ID 0 }
+                { GUID "[[MStatemachine].getGuid()]" }
+            }
+        }
+        >> out
+    end loop
+end proc
+

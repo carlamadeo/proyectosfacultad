@@ -1,0 +1,226 @@
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+// general qrl utility functions 
+#include "rules/qrl/ct.inc"
+
+// uml-specific common constants (queries, app types) used by both editors 
+#include "rules/qrl/uml.inc"
+
+// this comes from the core
+#include "rules/qrl/gte_qrl_std.inc"
+
+// syntax checking	
+#include "rules/qrl/ustatet_syntax.inc"
+
+// gte specific functions for uml
+#include "rules/qrl/gte.inc"
+
+// ECR 6329 begin
+// We need to include definition of structure '_ps_field_tp' (located in file 'ps.inc'),
+// because this structure is used in file 'objectdescription.ps.qrl', introduced with
+// ECR 3789. To make parser happy, we need either copy/paste structure here or provide 
+// fake definition of another structure (gde_symbol), which is not used in GTE.
+
+struct gde_symbol {
+    int fake;
+};
+
+#include "rules/qrl/ps.inc"
+// ECR 6329 end
+
+
+/***************************************************************************************
+ * STARTUP FUNCTION
+ */
+
+void
+EditorStartupFunction()
+{
+    gte_stpem("EditorDragDropDone 2000 DragDropDone();");
+    // gte_load_default_visibility();  // ECR 4072 // ECR 6626 - commented
+}
+
+/***************************************************************************************
+ * DRAG AND DROP SUPPORT
+ */
+
+int
+DragDropDone()
+{
+  /* when the ustatet supports drag and drop, this will need to be defined */
+
+  string	apptype, label, dmsg, tp;
+  int		ind, rc = 0;
+  int		x, y;
+
+  x = y = 0;
+
+  dmsg = toolinfo_variable("DropMessage");
+  if (dmsg == NULL)
+    {
+      return(rc);
+    }
+  // message("DD received:");
+  // message("message " + dmsg);
+  if (string_length(dmsg) == 0)
+    {
+      return(rc);
+    }
+  if(root_part(dmsg) != NULL)
+      return rc;
+
+  apptype = toolinfo_variable("DropType");
+  if (apptype == NULL)
+    {
+      apptype = "NULL";
+    }
+  label = toolinfo_variable("DropLabel");
+  if (label == NULL)
+    {
+      label = "NULL";
+    }
+  if (NULL != toolinfo_variable("DropX"))
+    {
+      x = to_int(toolinfo_variable("DropX"));
+    }
+  if (NULL != toolinfo_variable("DropY"))
+    {
+      y = to_int(toolinfo_variable("DropY"));
+    }
+
+  // message("type " + apptype);
+  // message("label " + label);
+  // message("X/Y (" + x + "," + y + ")");
+
+  return(rc);
+}
+
+//
+// initialization
+//
+
+void
+UmlStateTableInitialize(int state_id)
+{
+  // initialize a brand new Uml state table from a state node id 
+
+  list states;
+  node statemachine;
+
+  EditorShowOnNavReceive();
+
+  // if there is an edited buffer, see if the user wants to save it 
+  if (gte_confirm_and_reset("initializeConfirm")) {
+
+    // get the chain of scoping (i.e. enclosing) states from the repository 
+    states = list_create("node", 0);       
+    node_build_scope_chain(state_id, states);
+    
+    statemachine = list_get(states,0);
+
+    // construct a new file name  
+    gte_stpem("FileLoad " + 
+       create_new_file_in_sequence(uml_state_machine_class_name(statemachine.name),NULL));
+    // fill table from scope chain    
+    gte_filltable_string("FillTable UmlStateTable {\n" +
+			   "{Hsect\n" +
+               "                {Index UmlStateMachineHsect}\n" +
+               "                {Vsect\n" +
+               "                     {Index MainDefinitionVsect}\n" +
+               "    { Row\n" +
+               "                     {Cell\n" +
+               "                         {Index UmlStateMachineCol}\n" +
+               "                         {Label \"" + "State Machine" + "\" }}\n" +
+               "                     {Cell\n" +
+               "                         {Index UmlStateMachineNameCol}\n" +
+               "                         {Label \"" + statemachine.name + "\" }}}}}\n" +
+               UmlStateScopeChainHsectExpression(states) + "}");
+
+    // save it to ensure app ids	
+    gte_stpem("FileSave");
+
+    // refresh 
+    gte_refresh_table();
+  }
+}
+
+string
+UmlStateScopeChainHsectExpression(list states)
+{
+  // construct an hsect expression from the states scope chain 
+
+  node state;
+  string hsect_expression;
+  int i;
+  string state_type;
+
+  if (list_count(states) == 0)
+    return("");
+
+  hsect_expression = "";
+  for  (i = 1; i < list_count(states); i = i + 1) {
+ 
+    // convert next state type and name to a row expression and add it to the end of the hsect expression 
+    state = list_get(states, i);
+    if(i == list_count(states) - 1)
+      state_type = "State";
+    else
+      state_type = "Parent State";
+    hsect_expression = hsect_expression + UmlStateRowExpression(state_type, state.name);
+  }
+  
+  // embed the rows in an hsect and return the entire construct 
+  return ("{Hsect{Index UmlStateHsect}{ Vsect {Index MainDefinitionVsect}" + hsect_expression + "}}");
+}
+
+string
+UmlStateRowExpression(string state_type, string state_name)
+{
+  // construct a row expression from a single typed state 
+
+  string state_type_cell_expression, state_name_cell_expression;
+
+  state_type_cell_expression = "{Cell {Index UmlStateTypeCol}{Label \"" + state_type + "\" }}";
+  state_name_cell_expression = "{Cell {Index UmlStateNameCol}{Label \"" + filltable_string_escape(state_name) + "\" }}";
+
+  return("{Row" + state_type_cell_expression + state_name_cell_expression + "}");
+}
+
+int StateScopeHsect(int hsect, int vsect, int row, int col)
+{
+    int scope_hsect;
+    
+    if(row == 1)
+	scope_hsect = gte_lookup_symbol("UmlStateMachineHsect");
+    else
+	scope_hsect = gte_lookup_symbol("UmlStateHsect");
+
+    return scope_hsect;
+}
+
+int StateScopeRow(int hsect, int vsect, int row, int col)
+{
+    if(row == 1)
+	return 1;
+    else
+	return row - 1;
+
+}
+
+int
+UmlLastStateRow()
+{
+  // returns the index of the last row in the state hsect 
+
+  int state_hsect;	
+  state_hsect = gte_lookup_symbol("UmlStateHsect");
+  state_hsect = gte_get_last_row(state_hsect);
+  return state_hsect - 1;
+}
+
+
+//  Add any user customizations to the file included below:
+#include_if_exists "user/uml/rules/qrl/user_ustatet.qrl"

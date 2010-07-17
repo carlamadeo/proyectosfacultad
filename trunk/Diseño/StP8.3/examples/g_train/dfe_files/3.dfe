@@ -1,0 +1,401 @@
+Diagram DfeDiagram
+{
+    { Name "3" }
+    { Format "1.6" }
+    { Scale 0.00 }
+    { PanX 0 }
+    { PanY 0 }
+    { Alignment 0 }
+    { GUID "UID_D44A5A8B-13CE-420c-9860-9D7E1A5B14E2" }
+    { Summary
+        { Nodes 7 }
+        { Arcs 8 }
+    }
+}
+
+Node 1
+{
+    { Type Anchor }
+    { Loc 608 288 }
+    { Scale 128.00 128.00 }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 1992 }
+        { GUID "UID_A0EA4F97-6DBC-4703-9E61-888B955B2352" }
+    }
+}
+
+Node 2
+{
+    { Type OffPageProcess }
+    { Loc 0 0 }
+    { Scale 96.00 96.00 }
+    { Label
+        { Text "1" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 4486 }
+        { GUID "UID_0167E35F-298C-4643-B0AD-1304F5EA4D03" }
+    }
+}
+
+Node 3
+{
+    { Type OffPageProcess }
+    { Loc 0 64 }
+    { Scale 96.00 96.00 }
+    { Label
+        { Text "2" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 4487 }
+        { GUID "UID_D7E349C6-D02A-4587-9F3C-D065525E5FC0" }
+    }
+}
+
+Node 4
+{
+    { Type Process }
+    { Loc 416 0 }
+    { Scale 297.00 297.00 }
+    { Label
+        { Text "calculate" }
+        { Text "in" }
+        { Text "km/hr" }
+    }
+    { PropertyList
+        { Property
+            { Name "pindex" }
+            { Value "1" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 3280 }
+        { GUID "UID_2B8C9906-0B34-4bae-993D-5F1EC70E7746" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 4489 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName Default }
+        { ID 4490 }
+    }
+}
+
+Node 5
+{
+    { Type Process }
+    { Loc 0 288 }
+    { Scale 268.00 268.00 }
+    { Label
+        { Text "convert" }
+        { Text "to" }
+        { Text "kilograms" }
+    }
+    { PropertyList
+        { Property
+            { Name "pindex" }
+            { Value "2" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 3242 }
+        { GUID "UID_97C54156-6803-4c94-AE85-3A264A96C73A" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 4492 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName Default }
+        { ID 4493 }
+    }
+}
+
+Node 6
+{
+    { Type Process }
+    { Loc 416 288 }
+    { Scale 297.00 297.00 }
+    { Label
+        { Text "display" }
+        { Text "on" }
+        { Text "screen" }
+    }
+    { PropertyList
+        { Property
+            { Name "pindex" }
+            { Value "3" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName Default }
+        { ID 3279 }
+        { GUID "UID_4AB6693B-44B9-4199-A627-EFEFF95341DD" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 4495 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName Default }
+        { ID 4496 }
+    }
+}
+
+Node 7
+{
+    { Type Vertex }
+    { Loc 288 96 }
+    { Scale 128.00 128.00 }
+}
+
+Arc 8
+{
+    { Type DataFlow }
+    { From
+        { ID 6 }
+        { Loc 475 288 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 1 }
+        { Loc 608 288 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "display" }
+        { Text "information" }
+    }
+}
+
+Arc 9
+{
+    { Type DataFlow }
+    { From
+        { ID 2 }
+        { Loc 20 0 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 4 }
+        { Loc 357 0 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "speed" }
+        { Text "of train" }
+    }
+}
+
+Arc 10
+{
+    { Type DataFlow }
+    { From
+        { ID 3 }
+        { Loc 0 84 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 5 }
+        { Loc 0 235 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "total" }
+        { Text "passenger" }
+        { Text "weight" }
+    }
+}
+
+Arc 11
+{
+    { Type DataFlow }
+    { From
+        { ID 3 }
+        { Loc 18 73 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 6 }
+        { Loc 364 260 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "number" }
+        { Text "of" }
+        { Text "passengers" }
+    }
+}
+
+Arc 12
+{
+    { Type DataFlow }
+    { From
+        { ID 2 }
+        { Loc 19 6 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 7 }
+        { Loc 288 96 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "location" }
+        { Text "of" }
+        { Text "train" }
+    }
+}
+
+Arc 13
+{
+    { Type DataFlow }
+    { From
+        { ID 5 }
+        { Loc 53 288 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 6 }
+        { Loc 357 288 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "N_Kgs" }
+    }
+}
+
+Arc 14
+{
+    { Type DataFlow }
+    { From
+        { ID 4 }
+        { Loc 416 59 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 6 }
+        { Loc 416 229 }
+        { Offset 0 0 }
+    }
+    { Label
+        { Text "Ts" }
+    }
+}
+
+Arc 15
+{
+    { Type DataFlow }
+    { From
+        { ID 7 }
+        { Loc 288 96 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 6 }
+        { Loc 383 239 }
+        { Offset 0 0 }
+    }
+}
+
+Link 16
+{
+    { FirstArc 8 }
+    { LastArc 8 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 4102 }
+        { GUID "UID_46CC4E93-0E92-4081-9834-5B64416476DE" }
+    }
+}
+
+Link 17
+{
+    { FirstArc 9 }
+    { LastArc 9 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 4498 }
+        { GUID "UID_941BFDFA-CCDB-4a42-A3F0-AEEDB1F29145" }
+    }
+}
+
+Link 18
+{
+    { FirstArc 10 }
+    { LastArc 10 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 4500 }
+        { GUID "UID_602ECFF3-2827-4162-BE1E-826286D6FBE1" }
+    }
+}
+
+Link 19
+{
+    { FirstArc 11 }
+    { LastArc 11 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 4499 }
+        { GUID "UID_807DB86E-2A56-4908-8EF1-F606BD9ECC21" }
+    }
+}
+
+Link 20
+{
+    { FirstArc 12 }
+    { LastArc 15 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 4497 }
+        { GUID "UID_F4A027DE-E945-4b14-AF07-58458087A0D6" }
+    }
+}
+
+Link 21
+{
+    { FirstArc 13 }
+    { LastArc 13 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 3793 }
+        { GUID "UID_EC11FB9D-75A6-4fc9-9F8B-964E59599ED8" }
+    }
+}
+
+Link 22
+{
+    { FirstArc 14 }
+    { LastArc 14 }
+    { Object
+        { PDMType Link }
+        { MappingName Default }
+        { ID 3281 }
+        { GUID "UID_52341821-3E03-4542-BA04-DD7B84B247CF" }
+    }
+}

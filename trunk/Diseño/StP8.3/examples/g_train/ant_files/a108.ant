@@ -1,0 +1,334 @@
+FileObject 1
+{
+    { Name "a108" }
+    { Type ObjectAnnotation }
+    { GUID "UID_52D129DF-3EE8-404a-BBD1-459F587F34C5" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "screen_display.c" }
+    { Type SEFile }
+    { ObjectId 603 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_7766590F-8612-4167-BCD4-E5AF4ED99F27" }
+}
+
+NodeObject 99997
+{
+    { Name "screen display" }
+    { Type Module }
+    { ObjectId 604 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_7F7413AB-59BE-485e-BB8E-43FB551F3B01" }
+}
+
+NoteObject 2
+{
+    { Type ModulePDL }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 659 }
+}
+
+ItemObject 3
+{
+    { Type PDL }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 660 }
+}
+
+NoteObject 4
+{
+    { Type ModuleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 662 }
+}
+
+ItemObject 5
+{
+    { Type ModuleReturnType }
+    { Value "int" }
+    { NoteId 4 }
+    { ObjectId 663 }
+}
+
+ItemObject 6
+{
+    { Type CodeGenId }
+    { Value "5" }
+    { NoteId 4 }
+    { ObjectId 664 }
+}
+
+NoteObject 7
+{
+    { Type Module }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 666 }
+}
+
+ItemObject 8
+{
+    { Type MemoryBudget }
+    { Value "N/A" }
+    { NoteId 7 }
+    { ObjectId 667 }
+}
+
+ItemObject 9
+{
+    { Type ProcessingTime }
+    { Value "N/A" }
+    { NoteId 7 }
+    { ObjectId 668 }
+}
+
+ItemObject 10
+{
+    { Type DecompositionLevel }
+    { Value "CSC" }
+    { NoteId 7 }
+    { ObjectId 669 }
+}
+
+NoteObject 11
+{
+    { Type LocalData }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 671 }
+}
+
+ItemObject 12
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 11 }
+    { ObjectId 672 }
+}
+
+ItemObject 13
+{
+    { Type DataName }
+    { Value "" }
+    { NoteId 11 }
+    { ObjectId 673 }
+}
+
+ItemObject 14
+{
+    { Type DataSize }
+    { Value "N/A" }
+    { NoteId 11 }
+    { ObjectId 674 }
+}
+
+ItemObject 15
+{
+    { Type DataType }
+    { Value "N/A" }
+    { NoteId 11 }
+    { ObjectId 675 }
+}
+
+ItemObject 16
+{
+    { Type Representation }
+    { Value "N/A" }
+    { NoteId 11 }
+    { ObjectId 676 }
+}
+
+ItemObject 17
+{
+    { Type Constraint }
+    { Value "N/A" }
+    { NoteId 11 }
+    { ObjectId 677 }
+}
+
+ItemObject 18
+{
+    { Type Units }
+    { Value "N/A" }
+    { NoteId 11 }
+    { ObjectId 678 }
+}
+
+ItemObject 19
+{
+    { Type Precision }
+    { Value "N/A" }
+    { NoteId 11 }
+    { ObjectId 679 }
+}
+
+ItemObject 20
+{
+    { Type Accuracy }
+    { Value "N/A" }
+    { NoteId 11 }
+    { ObjectId 680 }
+}
+
+NoteObject 21
+{
+    { Type SystemState }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 682 }
+}
+
+ItemObject 22
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 21 }
+    { ObjectId 683 }
+}
+
+ItemObject 23
+{
+    { Type SystemState }
+    { Value "Steady" }
+    { NoteId 21 }
+    { ObjectId 684 }
+}
+
+NoteObject 24
+{
+    { Type SystemState }
+    { Name "1" }
+    { OwnerId 99997 }
+    { ObjectId 686 }
+}
+
+ItemObject 25
+{
+    { Type NoteKey }
+    { Value "1" }
+    { NoteId 24 }
+    { ObjectId 687 }
+}
+
+ItemObject 26
+{
+    { Type SystemState }
+    { Value "Real Time" }
+    { NoteId 24 }
+    { ObjectId 688 }
+}
+
+NoteObject 27
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 690 }
+}
+
+ItemObject 28
+{
+    { Type ObjectName }
+    { Value "screen display" }
+    { NoteId 27 }
+    { ObjectId 691 }
+}
+
+ItemObject 29
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 27 }
+    { ObjectId 692 }
+}
+
+NoteObject 30
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 694 }
+}
+
+ItemObject 31
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 30 }
+    { ObjectId 695 }
+}
+
+ItemObject 32
+{
+    { Type RequirementName }
+    { Value "N/A" }
+    { NoteId 30 }
+    { ObjectId 696 }
+}
+
+ItemObject 33
+{
+    { Type RequirementDocument }
+    { Value "N/A" }
+    { NoteId 30 }
+    { ObjectId 697 }
+}
+
+ItemObject 34
+{
+    { Type RequirementParagraph }
+    { Value "N/A" }
+    { NoteId 30 }
+    { ObjectId 698 }
+}
+
+ItemObject 35
+{
+    { Type ParagraphNumber }
+    { Value "N/A" }
+    { NoteId 30 }
+    { ObjectId 699 }
+}
+
+ItemObject 36
+{
+    { Type QualificationMethod }
+    { Value "N/A" }
+    { NoteId 30 }
+    { ObjectId 700 }
+}
+
+ItemObject 37
+{
+    { Type QualificationLevel }
+    { Value "N/A" }
+    { NoteId 30 }
+    { ObjectId 701 }
+}
+
+ItemObject 38
+{
+    { Type FormalTestParagraph }
+    { Value "N/A" }
+    { NoteId 30 }
+    { ObjectId 702 }
+}
+

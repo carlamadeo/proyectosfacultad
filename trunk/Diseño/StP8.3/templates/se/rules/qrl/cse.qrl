@@ -1,0 +1,812 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+//      StP/SE
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1995
+//      All rights reserved
+//
+//////////////////////////////////////////////////////////////////////////////
+
+#include "rules/qrl/gte_qrl_std.inc"
+#include "rules/qrl/stt.inc"
+#include "rules/qrl/sem.inc"
+#include "rules/qrl/cspec.inc"
+#include "rules/qrl/det.inc"
+#include "rules/qrl/alt.inc"
+#include "rules/qrl/elt.inc"
+#include "rules/qrl/pat.inc"
+#include "rules/qrl/pam.inc"
+#include "rules/qrl/utils.inc"
+#include "rules/qrl/se_rename.inc"
+#include "se/qrl/check/check_cse.impl"
+#include "rules/qrl/dfe_navigate.inc"
+
+string
+stt_action_instance_name(int hsect, int vsect, int row, int col)
+{
+  string event, action;
+  event = gte_get_cell_label(gte_get_row(hsect, row), gte_get_col(vsect, gte_lookup_symbol("STTEventCol")));
+  action = gte_get_cell_label(gte_get_row(hsect, row), gte_get_col(vsect, gte_lookup_symbol("STTActionCol")));
+
+  return (event + "/" + action);
+}
+
+string
+sem_action_instance_name(int hsect, int vsect, int row, int col)
+{
+  string event, action;
+
+  event = gte_get_cell_label(gte_get_row(1, 2), gte_get_col(vsect, col));
+  action = gte_get_cell_label(gte_get_row(hsect, row), gte_get_col(vsect, col));
+
+  return (event + "/" + action);
+}
+
+//
+//  Initialize a CSE table 
+//
+void
+InitializeCseTable(int id, int whichtype)
+{
+    string query;
+    node cspec;
+    file std_file;
+    file f;
+    string type, name;
+   
+    f = find_by_query("file[id = ${id}]"); 
+
+    if (whichtype == 1)
+        type = "DecisionTable";
+    else if (whichtype == 2)
+        type = "ActionLogicTable";
+    else if (whichtype == 3)
+        type = "StateEventMatrix";
+    else if (whichtype == 4)
+        type = "StateTransitionTable";
+    else if (whichtype == 5)
+        type = "EventLogicTable";
+    else if (whichtype == 6)
+        type = "ProcessActivationTable";
+    else //if (whichtype == 7)
+        type = "ProcessActivationMatrix";
+
+    EditorShowOnNavReceive();
+
+    name = to_oms_string(f.name);    /* in case name has quotes in it */
+    // if there is an edited buffer, see if the user wants to save it 
+    if (gte_confirm_and_reset("initializeConfirm")) 
+    {
+      	if (type == STATE_EVENT_MATRIX || type == STATE_TRANSITION_TABLE)
+    	{  
+            query = "file[SteDiagram && name == '${name}']";    	    
+            std_file = find_by_query(query);
+    	    if (std_file == NULL)
+    	    {
+    	    	print_error("Couldn't find Ste Diagram '" + name + "'");
+    		return;
+    	    }
+    	    InitializeCseTableFromState(std_file, type, name);
+    	}
+    	else
+    	{
+    	    cspec = find_by_query("node[Cspec && node_refs[file[name == '${name}']]]");
+    	    if (cspec == NULL)
+    	    {
+		// at least make the table the correct type
+    		gte_stpem("EditorSetFileName " + name);
+    		gte_stpem("TableToggleType " + type);
+
+    	    	print_error("No node object found for Cspec " + name);
+    	    	return;
+    	    }
+    	    InitializeCseTableFromCspec(name, cspec, type);
+    	}
+    }
+}
+
+void
+InitializeCseTableFromCspec(string name, node cspec, string type)
+{
+    list control_ins = list_create("link", 0), control_outs = list_create("link", 0), 
+         processes, actions, events, transitions;
+    string query;
+
+    gte_stpem("EditorSetFileName " + name);
+    gte_stpem("TableToggleType " + type);
+
+    // Generate a fill table string
+    if (type == DECISION_TABLE)
+    {
+	control_ins = CspecControlIns(cspec.id);
+	control_outs = CspecControlOuts(cspec.id);
+	gte_filltable_string(DecisionTableExpression(control_ins, control_outs));
+    }
+    else if (type == ACTION_LOGIC_TABLE)
+    {
+        processes = CspecProcesses(name);
+	control_outs = CspecControlOuts(cspec.id);
+    	actions = CspecActions(name);
+	gte_filltable_string(ActionLogicTableExpression(processes, control_outs, actions));
+    }
+    else if (type == EVENT_LOGIC_TABLE)
+    {
+	control_ins = CspecControlIns(cspec.id);	
+    	events = CspecEvents(name);
+	gte_filltable_string(EventLogicTableExpression(control_ins, events));
+    }
+    else if (type == PROCESS_ACTIVATION_TABLE)
+    {
+    	processes = CspecProcesses(name);
+	control_ins = CspecControlIns(cspec.id);
+	gte_filltable_string(ProcessActivationTableExpression(processes, control_ins));
+    }
+    else if (type == PROCESS_ACTIVATION_MATRIX)
+    {
+        processes = CspecProcesses(name);
+	control_ins = CspecControlIns(cspec.id);
+	gte_filltable_string(ProcessActivationMatrixExpression(processes, control_ins));
+    }
+    else
+    {
+    	print_error("Unknown table type " + type);
+    	return;
+    }
+
+    // refresh 
+    add_cse_qualifications(control_ins, control_outs, type);
+
+    gte_refresh_table();
+}
+
+void    	
+InitializeCseTableFromState(file std_file, string type, string name)
+{
+    list transitions;
+
+    gte_stpem("EditorSetFileName " + name);
+    gte_stpem("TableToggleType " + type);
+
+    transitions = StateDiagramtoList(std_file.id);
+
+    if (list_count(transitions) > 0)
+    {
+	if (type == STATE_EVENT_MATRIX)
+	{
+	    gte_filltable_string(StateEventMatrixExpression(transitions));
+	}
+	else if (type == STATE_TRANSITION_TABLE)
+	{
+	    gte_filltable_string(StateTransitionTableExpression(transitions));
+	}
+    }
+	
+    // refresh 
+    gte_refresh_table();
+}
+
+// Same as InitializeCseTable, except that it is called from the STE
+// to create ELT's and ALT's, and handles the case where there is no 
+// corresponding Cspec on a DFE diagram.  If there is a Cspec, it
+// reacts exactly as InitializeCseTable does.
+void
+InitializeCseTableFromSte(int id, int whichtype)
+{
+    string query;
+    node cspec;
+    file std_file;
+    file f;
+    string type, name;
+   
+    f = find_by_query("file[id = ${id}]"); 
+
+    if (whichtype == 2)
+        type = "ActionLogicTable";
+    else //if (whichtype == 5)
+        type = "EventLogicTable";
+
+    EditorShowOnNavReceive();
+
+    name = to_oms_string(f.name);    /* in case name has quotes in it */
+    // if there is an edited buffer, see if the user wants to save it 
+    if (gte_confirm_and_reset("initializeConfirm")) 
+    {
+    	    cspec = find_by_query("node[Cspec && node_refs[file[name == '${name}']]]");
+    	    if (cspec == NULL)
+	    	InitializeCseTableSteOnly(name, type);
+	    else
+	    	InitializeCseTableFromCspec(name, cspec, type);
+    }
+}
+
+// this is called only when you want to initialize an event logic table
+// or an action logic table from the STE, and there is no corresponding
+// Cspec on a DFE diagram.  It initializes the ELT or ALT strictly from
+// information on the STE diagram.
+void
+InitializeCseTableSteOnly(string name, string type)
+{
+    list events, actions;
+    list processes = list_create("node", 0);  // there are no proceses
+    list control_outs = list_create("link", 0); // or c_o's or c_i's
+    list control_ins = list_create("link", 0); // because there is no cspec
+    string query;
+
+    gte_stpem("EditorSetFileName " + name);
+    gte_stpem("TableToggleType " + type);
+
+    if (type == ACTION_LOGIC_TABLE)
+    {
+    	actions = CspecActions(name);
+	gte_filltable_string(ActionLogicTableExpression(processes, control_outs, actions));
+    }
+    else if (type == EVENT_LOGIC_TABLE)
+    {
+    	events = CspecEvents(name);
+	gte_filltable_string(EventLogicTableExpression(control_ins, events));
+    }
+}
+
+
+int
+idehook_set_column_values_active_func()
+{
+    int row = gte_get_current_cell_row();
+    int col = gte_get_current_cell_col();
+    string cellname = gte_get_cell_label(row, col);
+
+    /* Current cell must be labelled */
+    if (cellname == "" || row != 2 || gte_get_table_type() == "ProcessActivationMatrix")
+    	return ACTIVE_FUNC_IS_INACTIVE;
+
+    if (gte_get_hsect(row) == gte_lookup_symbol("ControlHsect")
+    	&& (gte_get_vsect(col) == gte_lookup_symbol("ControlInVsect")
+    	    || gte_get_vsect(col) == gte_lookup_symbol("ControlOutVsect")))
+        return ACTIVE_FUNC_IS_ACTIVE;
+
+    if (gte_get_hsect(row) == gte_lookup_symbol("ControlHsect")
+    	&& gte_get_vsect(col) == gte_lookup_symbol("ALTControlOutVsect"))
+        return ACTIVE_FUNC_IS_ACTIVE;
+
+    return ACTIVE_FUNC_IS_INACTIVE;
+}
+
+ 
+// Add every value to a cell in the column, overwriting any existing values.
+
+void
+SetColumnValues()
+{
+    string name, qual;
+    list values;
+    int i, icnt, col, row, hsect, vsect;
+    item itm;
+
+    col = gte_get_current_cell_col(); 
+    //row = gte_get_first_row(gte_lookup_symbol("ControlQualifierHsect"));
+    //qual = gte_get_cell_label(row, col);
+    //if (qual == NULL)
+    qual = "";
+
+    row = gte_get_current_cell_row(); 
+    name = gte_get_cell_label(row, col);
+    if (name == NULL)
+	name = "";
+
+    values = CspecControlValues(name, qual, True);
+
+    hsect = gte_get_hsect(row) + 1;
+    //vsect = 2;
+    vsect = gte_get_vsect(col);
+
+    /* start an undo transaction */
+    gte_log_undo_start();
+
+    for (i = 0, icnt = list_count(values); i < icnt; i++)
+    {
+    	itm = list_get(values, i);
+    	gte_log_undo("REPLACE", row + i + 2, col, 1, 1);
+	// don't use CoordCellLabel because it all needs to go into the same Hsect/Vsect
+	gte_filltable_string("FillTable { { Hsect { Index " + hsect +
+                         "} { Vsect { Index " + vsect +
+                         "} { Row { Index " +
+                         (row + i + 2 - gte_get_first_row(hsect)) +
+                         "} { Cell { Index " +
+                         (1 + col - gte_get_first_col(vsect)) +
+                         "} { Label \"" + filltable_string_escape(itm.value) + "\"}}}}}}");
+    }
+    if (icnt > 0)
+    {
+	print_message(icnt + " Allowed Value items found for `" + name + "'.");
+        gte_refresh_table();
+    }
+
+    return;
+}
+
+
+
+
+void
+checkCseSemanticsFromCse(string filename, string table_type)
+{
+    int         errors = 0;
+    string      message;
+ 
+    if (filename == "")
+    {
+        ++errors;
+        print_error("Error: No table name. Has the table been saved?");
+    } else
+    {
+        if (table_type == "cspec")
+            table_type = "";
+
+        errors += checkCseSemantics(filename, table_type, 0);
+    }
+    message = "Cspec checking completed with " +  errors + " error";
+ 
+    if (errors != 1)
+        message = message + "s.";
+    else
+	message = message + ".";
+
+    print_message(message);
+}
+
+
+
+
+// return valid choices for ControlValue cell
+ 
+list
+control_value_item_choice_func(int hs, int vs, int row, int col)
+{
+    string name, qual;
+
+    col = gte_get_current_cell_col();
+
+    name = gte_get_cell_label(gte_get_last_row(gte_lookup_symbol("ControlHsect")), col);
+    if (name == NULL)
+	name = "";
+    //qual = gte_get_cell_label(gte_get_first_row(gte_lookup_symbol("ControlQualifierHsect")), col);
+    //if (qual == NULL)
+    qual = "";
+
+    return CspecControlValueStrings(name, qual);
+}
+
+/*
+    return valid choices for Process cell
+*/
+list
+process_value_choice_func(int hs, int vs, int row, int col)
+{
+    return CspecProcessesByName(gte_current_file_name());
+}
+
+/*
+    return valid choices for ControlIn cell
+*/
+list
+control_in_value_choice_func(int hs, int vs, int row, int col)
+{
+    return CspecControlInsByName(gte_current_file_name());
+}
+
+/*
+    return valid choices for ControlOut cell
+*/
+list
+control_out_value_choice_func(int hs, int vs, int row, int col)
+{
+    return CspecControlOutsByName(gte_current_file_name());
+}
+
+/*
+    return valid choices for State cell
+*/
+list
+state_value_choice_func(int hs, int vs, int row, int col)
+{
+    return CspecStatesByName(gte_current_file_name());
+}
+
+/*
+    return valid choices for Event cell
+*/
+list
+event_value_choice_func(int hs, int vs, int row, int col)
+{
+    return CspecEventsByName(gte_current_file_name());
+}
+
+/*
+    return valid choices for Action cell
+*/
+list
+action_value_choice_func(int hs, int vs, int row, int col)
+{
+    return CspecActionsByName(gte_current_file_name());
+}
+
+
+list 
+default_value_choice_func(int hs, int vs, int row, int col)
+{
+    list l = list_create("string", 0);
+    list_append(l, "0");
+    list_append(l, "1");
+    list_append(l, "*");
+    return l;
+}
+
+string 
+gte_current_file_name()
+{
+    return gte_substitute_string("${file}");
+}
+
+
+
+string 
+SE_table_label_func(int hsect, int vsect, int row, int col)
+
+{
+    return se_repname(gte_get_cell_label(gte_get_row(hsect, row), gte_get_col(vsect, col)));
+}
+
+
+
+
+string 
+cse_qualify_label_func(int hsect, int vsect, int row, int col)
+
+{
+    return "";
+}
+
+
+struct cse_dup_tp
+
+{
+    string name;
+    string qual;
+};
+
+int
+check_duplicate_row(boolean usequal, string obj, int hs, int vs)
+
+{
+    int firstcol, lastcol, i, errors = 0;
+    cse_dup_tp mem;
+    set s;
+
+    firstcol = gte_get_first_col(vs);
+    lastcol = gte_get_last_col(vs);
+    s = set_create("cse_dup_tp");
+    for (i = 1; i <= (lastcol - firstcol) + 1; i++)
+    {
+	mem.qual = NULL;
+        mem.name = gte_get_cell_label(gte_get_row(hs, 2), gte_get_col(vs, i));
+
+	if (mem.name == NULL || mem.name == "")
+	    continue;
+
+	//if (usequal)
+	//    mem.qual = gte_get_cell_label(gte_get_first_row(gte_lookup_symbol("ControlQualifierHsect")), gte_get_col(vs, i));
+	//if (mem.qual == NULL)
+	mem.qual = "";
+
+	if (set_is_member(s, mem))
+	{
+	    print_error("Duplicate " + obj + " `" + mem.name + "' not allowed.");
+	    errors++;
+	}
+	else
+	    set_add(s, mem);
+    }
+    return errors;
+}
+
+
+
+int
+check_duplicate_col(boolean usequal, string obj, int hs, int vs)
+
+{
+    int firstrow, lastrow, i, errors = 0;
+    cse_dup_tp mem;
+    set s;
+
+    firstrow = gte_get_first_row(hs);
+    lastrow = gte_get_last_row(hs);
+    s = set_create("cse_dup_tp");
+    for (i = 1; i <= (lastrow - firstrow) + 1; i++)
+    {
+	mem.qual = NULL;
+        mem.name = gte_get_cell_label(gte_get_row(hs, i), gte_get_col(vs, 1));
+
+	if (mem.name == NULL || mem.name == "")
+	    continue;
+
+	// Only set to True for ProcessActivationMatrix    
+	//if (usequal)
+	//    mem.qual = gte_get_cell_label(gte_get_row(hs, i), gte_get_first_col(gte_lookup_symbol("ControlQualifierVsect")));
+	//if (mem.qual == NULL)
+	mem.qual = "";
+
+	if (set_is_member(s, mem))
+	{
+	    print_error("Duplicate " + obj + " `" + mem.name + "' not allowed.");  
+	    errors++;
+	}
+	else
+	    set_add(s, mem);
+    }
+    return errors;
+}
+
+
+
+// syntax functions.  Currently just looks for controlin/out sections
+// with duplicates.
+
+boolean
+DecisionTableCheckSyntax()
+
+{
+    int rc = 0;
+
+    rc += check_duplicate_row(True, "Control In", gte_lookup_symbol("ControlHsect"), gte_lookup_symbol("ControlInVsect"));
+    rc += check_duplicate_row(True, "Control Out", gte_lookup_symbol("ControlHsect"), gte_lookup_symbol("ControlOutVsect"));
+
+    if (rc == 0)
+        return True;
+    else
+        return False;
+}
+
+boolean
+ProcessActivationTableCheckSyntax()
+
+{
+    int rc = 0;
+
+    rc += check_duplicate_row(True, "Control In", gte_lookup_symbol("ControlHsect"), gte_lookup_symbol("ControlInVsect"));
+    rc += check_duplicate_row(False, "Activate Process", gte_lookup_symbol("ControlHsect"), gte_lookup_symbol("ProcessVsect"));
+
+    if (rc == 0)
+        return True;
+    else
+        return False;
+}
+
+boolean
+ProcessActivationMatrixCheckSyntax()
+
+{
+    int rc = 0;
+
+    rc += check_duplicate_col(True, "Control In", 2, 1);
+    rc += check_duplicate_row(False, "Activate Process", gte_lookup_symbol("ActivateProcessHsect"), gte_lookup_symbol("ProcessVsect"));
+
+    if (rc == 0)
+        return True;
+    else
+        return False;
+}
+
+boolean
+StateTransitionTableCheckSyntax()
+
+{
+    int rc = 0;
+
+    if (rc == 0)
+        return True;
+    else
+        return False;
+}
+
+boolean
+StateEventMatrixCheckSyntax()
+
+{
+    int rc = 0;
+
+    rc += check_duplicate_col(False, "State", 2, 1);
+    rc += check_duplicate_row(False, "Event", gte_lookup_symbol("SEMEventHsect"), gte_lookup_symbol("SEMEventVsect"));
+    if (rc == 0)
+        return True;
+    else
+        return False;
+}
+
+boolean
+EventLogicTableCheckSyntax()
+
+{
+    int rc = 0;
+
+    rc += check_duplicate_row(True, "Control In", gte_lookup_symbol("ControlHsect"), gte_lookup_symbol("ControlInVsect"));
+    rc += check_duplicate_row(False, "Event", gte_lookup_symbol("ControlHsect"), gte_lookup_symbol("EventVsect"));
+
+    if (rc == 0)
+        return True;
+    else
+        return False;
+}
+
+boolean
+ActionLogicTableCheckSyntax()
+
+{
+    int rc = 0;
+
+    rc += check_duplicate_row(False, "Activate Process", gte_lookup_symbol("ControlHsect"), gte_lookup_symbol("ProcessVsect"));
+    rc += check_duplicate_row(True, "Control Out", gte_lookup_symbol("ControlHsect"), gte_lookup_symbol("ALTControlOutVsect"));
+    rc += check_duplicate_col(False, "Action", 2, 1);
+
+    if (rc == 0)
+        return True;
+    else
+        return False;
+}
+
+void
+qualification_filltable(int hsect, int vsect, int i, string label)
+
+{
+    gte_filltable_string("FillTable { { Hsect { Index " + hsect +
+		 "} { Vsect { Index " + vsect +
+		 "} { Row { Index 1" +
+		 "} { Cell { Index " +
+		 //(2 + i - gte_get_first_col(vsect)) +
+		 (i + 1) + 
+		 "} { Label \"" + filltable_string_escape(label) + "\"}}}}}}");
+    return;
+}
+
+
+
+void
+add_cse_qualifications(list control_ins, list control_outs, string type)
+
+{
+    link lk;
+    int i, vsect, hsect;
+
+    if (type == DECISION_TABLE)
+    {
+	for (i = 0; i < list_count(control_ins); i++)
+	{
+	    lk = list_get(control_ins, i);
+	    if (lk.sig != NULL && lk.sig != "")
+	    {
+	        // do a filltable
+		qualification_filltable(3, 1, i, lk.sig);
+	    }
+	}
+	for (i = 0; i < list_count(control_outs); i++)
+	{
+	    lk = list_get(control_outs, i);
+	    if (lk.sig != NULL && lk.sig != "")
+	    {
+	        // do a filltable
+		qualification_filltable(3, 2, i, lk.sig);
+	    }
+	}
+    }
+    else if (type == PROCESS_ACTIVATION_TABLE || type == EVENT_LOGIC_TABLE)
+    {
+	for (i = 0; i < list_count(control_ins); i++)
+	{
+	    lk = list_get(control_ins, i);
+	    if (lk.sig != NULL && lk.sig != "")
+	    {
+	        // do a filltable
+		qualification_filltable(3, 1, i, lk.sig);
+	    }
+	}
+    }
+    else if (type == ACTION_LOGIC_TABLE)
+    {
+	for (i = 0; i < list_count(control_outs); i++)
+	{
+	    lk = list_get(control_outs, i);
+	    if (lk.sig != NULL && lk.sig != "")
+	    {
+	        // do a filltable
+		qualification_filltable(3, 3, i, lk.sig);
+	    }
+	}
+    }
+    else if (type == PROCESS_ACTIVATION_MATRIX)
+    {
+	for (i = 0; i < list_count(control_ins); i++)
+	{
+	    lk = list_get(control_ins, i);
+	    if (lk.sig != NULL && lk.sig != "")
+	    {
+	        // do a special filltable since this is a vertical one
+		gte_filltable_string("FillTable { { Hsect { Index 2" + 
+			 "} { Vsect { Index 3" + 
+			 "} { Row { Index " +
+			 (i + 1) + 
+			 "} { Cell { Index 1" +
+			 "} { Label \"" + filltable_string_escape(lk.sig) + "\"}}}}}}");
+	    }
+	}
+    }
+
+    return;
+}
+
+
+
+// Navigate to data definitions using qualified information is it exists.
+// Note that there is a very similar function for DFE->DSE navigation if this changes.
+// 6/30/99, MHS removed qualifications
+
+//void
+list
+CseFindDataDefinition(string label)
+ 
+{
+    list nr_l;
+ 
+    if (label == NULL || label == "")
+    {
+	print_message("No object name to navigate to.");
+        return;
+    }
+ 
+    return list_select("node_ref[file[DseDiagram || BachDiagram || ChenDiagram] && node[(Selection || Sequence || Enumeration || Typedef || EntityGroup) && name == '${label}']]");
+
+}
+
+
+
+// Inverse map functions for event/actions cell renames from STE
+
+
+void
+se_event_inverse_map_func(node event, list rename_data_list, int hsect, int vsect, int row, int col, gocha_tp gocha_type )
+
+{
+    if ( gocha_type != gochaRename )
+    {
+	print_error( "se_event_inverse_map_func() can only handle renames" );
+	return; 
+    }
+
+    // bypass the label preservation from the rename data list, 
+    // because it uses the action name if rename started in STE.
+
+    string old_event_name = gte_get_cell_label(gte_get_row(hsect, row), gte_get_col(vsect, col));
+
+    if (old_event_name != event.name) 
+    {
+	gte_invert_cell_label(event.name, hsect, vsect, row, col);
+	gte_print_global_rename_message(old_event_name, event.name);
+    }
+
+    return;
+  
+}
+
+
+void
+se_no_op_link_map_func(link event, list rename_data_list, int hsect, int vsect, int row, int col, gocha_tp gocha_type)
+
+{
+    return;
+}
+
+void
+se_no_op_cntx_map_func(cntx event, list rename_data_list, int hsect, int vsect, int row, int col, gocha_tp gocha_type)
+
+{
+    return;
+}

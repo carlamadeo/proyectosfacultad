@@ -1,0 +1,43 @@
+//
+// 	sccsid[] = %W% %Y% %D%
+// 	StP/Core
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1993
+// 	All rights reserved
+//
+
+Note  800007
+{
+    { AppType SybaseColumn }
+    { HelpText "The Sybase Table Column note lets you add items for declaring a Sybase table column. This information is used in SQL generation." }
+    { PrintName "Sybase Table Column" }
+    { Bounds { Min 0 } { Max 1 } }
+    { Item
+	{ AppType SybaseDataType }
+	{ HelpText "The Data Type item allows you to assign a Sybase data type to an attribute or data element. The Value text field contains a menu listing all available choices." }
+	{ PrintName "Data Type" }
+	{ Bounds { Min 0 } { Max 1 } }
+    }
+    { Item
+	{ AppType Size }
+	{ HelpText "The Length item allows you to set the maximum amount of storage for a data type, such as Length for varchar." }
+	{ PrintName "Length" }
+	{ Bounds { Min 0 } { Max 1 } }
+    }
+    { Item
+	{ AppType Size2 }
+	{ HelpText "The Scale item allows you to set the number of decimal places for a data type (such as Scale for NUMERIC). See Length/Precision." }
+	{ PrintName "Scale" }
+	{ Bounds { Min 0 } { Max 1 } }
+    }
+    { Item
+	{ AppType ConstraintName }
+	{ HelpText "The Check Name item names a column constraint based on the valid values of a column." }
+	{ PrintName "Check Name" }
+	{ Bounds { Min 0 } { Max 1 } }
+	{ InitValue "${sym_label} check" }
+    }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/ct/annotation/user_sybase_column.note"

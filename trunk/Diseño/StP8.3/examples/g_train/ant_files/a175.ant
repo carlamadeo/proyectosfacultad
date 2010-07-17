@@ -1,0 +1,101 @@
+FileObject 1
+{
+    { Name "a175" }
+    { Type ObjectAnnotation }
+    { GUID "UID_F7CA1EEC-B966-4717-BBBB-4EA935A7CF7F" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "process_speed.c" }
+    { Type SEFile }
+    { ObjectId 1791 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_200A5337-B992-4d9b-ADC1-DA62FCFC20BC" }
+}
+
+NodeObject 99997
+{
+    { Name "process speed" }
+    { Type Module }
+    { ObjectId 1792 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_9E7DC827-1641-4220-9381-53097909DB04" }
+}
+
+NodeObject 99996
+{
+    { Name "" }
+    { Type FormalCaller }
+    { ObjectId 2522 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_9B6F2467-4C1B-4512-BF8C-1535D2BB0E84" }
+}
+
+LinkObject 99995
+{
+    { Name "" }
+    { Type SubprogramCall }
+    { ObjectId 2696 }
+    { Sig "" }
+    { ToNodeId 99997 }
+    { FromNodeId 99996 }
+    { GUID "UID_3D3EF64C-E428-48f3-A4D9-459000BC63A7" }
+}
+
+CntxObject 99994
+{
+    { Name "Ts" }
+    { Type DataOut }
+    { ObjectId 2697 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { LinkId 99995 }
+    { GUID "UID_6C356D96-F3E8-4a4c-8C43-87896F3FBA53" }
+}
+
+NoteObject 2
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99994 }
+    { ObjectId 2699 }
+}
+
+ItemObject 3
+{
+    { Type ObjectName }
+    { Value "Ts" }
+    { NoteId 2 }
+    { ObjectId 2700 }
+}
+
+NoteObject 4
+{
+    { Type ParameterDefinition }
+    { Name "" }
+    { OwnerId 99994 }
+    { ObjectId 2702 }
+}
+
+ItemObject 5
+{
+    { Type DataType }
+    { Value "int" }
+    { NoteId 4 }
+    { ObjectId 2703 }
+}
+

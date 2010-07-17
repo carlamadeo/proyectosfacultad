@@ -1,0 +1,1341 @@
+external string use_case_name;
+external string DocumentFormat;
+external string RequirementsTools;
+
+#include "qrl/tsdl_extract.inc"
+#include "qrl/basic_textract_dt.inc"
+#include "qrl/include/error.inc"
+
+#include "val/qrl/include/table.inc"
+#include "val/qrl/include/TConfig.inc"
+#include "val/qrl/include/TUseCase.inc"
+
+set DataTypeSet;
+
+
+const int width_2 = 400;
+const int width_3 = 500;
+const int width_4 = 350;
+
+
+const int width_5 = 350;
+const int width_6 = 300;
+const int width_7 = 600;
+
+list ACTORLIST;
+string ActorIDs;
+
+list ScenarioList;
+
+void 
+main ()
+{
+
+  ACTORLIST = GetActorList(use_case_name);
+  if (list_count(ACTORLIST) == 0)
+    {
+      print_error ("This Use Case has no Actor interactions.");
+      print_error ("No document will be generated.");
+      return;
+    }
+
+  ActorIDs = GetActorIDList(use_case_name);
+
+
+  ScenarioList = GetScenarioList(use_case_name);
+  if (list_count(ScenarioList) == 0)
+    {
+      print_error ("This Use Case has no Scenarios.");
+      print_error ("No document will be generated.");
+      return;
+    }
+
+  print_message ("Generating Requirements Document for Use Case: " + use_case_name); 
+  message ("Generating Requirements Document for Use Case: " + use_case_name); 
+  print_error ("Generating Requirements Document for Use Case: " + use_case_name); 
+
+
+  DataTypeSet = set_create("string");
+
+  format ("ValidatorDocuments." + DocumentFormat);
+
+  InitializeDiagrams();
+
+  PrintTitlePage(use_case_name);
+
+
+  if (RequirementsTools == "Validator")
+    {
+      // Section 1 Requirements Definition
+      print_message ("  Generating Requirements"); 
+      paragraph ("Sec1");
+      print ("Requirements Definition");
+      PrintRequirementsPage(use_case_name);
+    }
+  else if (RequirementsTools == "DOORS")
+    {
+      // Section 1 Requirements Traceability to DOORS
+      print_message ("  Generating Requirements Traceability to DOORS"); 
+      paragraph ("Sec1");
+      print ("Requirements Traceability to DOORS");
+      PrintDOORSRequirementsPage(use_case_name);
+    }
+
+
+  // Section 2 Use Case Diagram
+  print_message ("  Generating Use Cases"); 
+  paragraph ("Sec1");
+  print ("Use Case: " + use_case_name);
+  PrintUseCaseDiagram(use_case_name);
+
+  // Section 3 Scenario Diagrams
+  print_message ("  Generating Scenarios"); 
+  paragraph ("Sec1");
+  print ("Scenarios");
+  PrintScenarios(use_case_name);
+  // Section 4 Data Type Declarations
+  print_message ("  Generating Data Type Declarations"); 
+  paragraph ("Sec1");
+  print ("Data Type Declarations");
+  PrintDataTypeDeclarations();
+
+}
+
+
+
+void
+PrintTitlePage(string use_case_name)
+{
+
+  paragraph ("Title");
+  print ("");
+  paragraph ("BTitle");
+  print ("Requirements Specification");
+  paragraph ("BSubTitle");
+  print ("for");
+  paragraph ("BSubTitle");
+  print ( "Use Case / Requirement" );
+  paragraph ("BSubTitle");
+  print ( "");
+  paragraph ("BSubTitle");
+  print ( use_case_name);
+
+}
+
+void
+PrintDOORSRequirementsPage (string use_case_name)
+{
+  string test_unit_id;
+  int j, count2;
+  node scenario;
+  node nodevar;
+  string query = "node[UmlUseCase && name=='${use_case_name}']";
+
+
+  nodevar = find_by_query(query);
+
+  paragraph ("Sec2");
+  print ("Use Case - " + use_case_name );
+
+  ListDOORSRequirements( nodevar.id);
+
+
+  count2 = list_count (ScenarioList);
+  for (j=0;j<count2;j=j+1)
+    {
+      scenario = list_get(ScenarioList,j);
+
+      paragraph ("Sec2");
+      print ("Scenario - " + scenario.name );
+
+      ListDOORSRequirements( scenario.id);
+    }
+}
+
+
+void
+ListDOORSRequirements(int id)
+{
+
+  string query = "item[UniqueID && ${id} == obj_id]";
+
+  item itemvar;
+
+
+  itemvar = find_by_query(query);
+
+  if (itemvar != NULL)
+    {
+      paragraph("description");
+      print( itemvar.value);
+    }
+  else
+    {
+      paragraph("description");
+      print( "There are no allocated DOORS requirements");
+    }
+
+}
+
+
+void
+PrintRequirementsPage (string use_case_name)
+{
+  string test_unit_id;
+  int j, count2;
+  node scenario;
+  node nodevar;
+  string query = "node[UmlUseCase && name=='${use_case_name}']";
+
+
+  nodevar = find_by_query(query);
+
+  paragraph ("Sec2");
+  print ("Use Case - " + use_case_name );
+
+  ListRequirements( "Use Case", nodevar.id, use_case_name);
+
+
+  count2 = list_count (ScenarioList);
+  for (j=0;j<count2;j=j+1)
+    {
+      scenario = list_get(ScenarioList,j);
+
+      paragraph ("Sec2");
+      print ("Scenario - " + scenario.name );
+
+      ListRequirements( "Scenario", scenario.id, scenario.name);
+    }
+}
+
+
+void
+ListRequirements(string rqttype, int id, string name)
+{
+
+  string query;
+  int i,count;
+  item itemvar1, itemvar2;
+  note notevar;
+  list itemlist;
+  string rqts="";
+  string ReqType="";
+
+  string cell1, cell2, cell3;
+
+  string q1 = "item[REQAnalysisAssignmentItem && ${id} == obj_id]";
+
+  string q2 = "note [REQDefinitionNote && node[REQRequirement && " +
+               "name=='${itemvar1.value}'] ]";
+  string q3 = "item [REQInformalNameItem && note_id==${notevar.id}]";
+
+  itemlist = list_select(q1);
+
+  count = list_count (itemlist);
+
+  for (i=0;i<count;i++)
+    {
+      itemvar1 = list_get(itemlist, i);
+      cell1 = itemvar1.value;
+
+      notevar = find_by_query(q2);
+
+      if (notevar != NULL)
+         {
+           itemvar2 = find_by_query(q3);
+           cell2 = itemvar2.value;
+           cell3 = notevar.desc;
+         }
+      else
+         {
+           cell2 = "";
+           cell3 = "NO DESCRIPTION";
+         }
+        
+      paragraph("Sec3");
+      print( cell1 + ": " + cell2);
+      paragraph("description");
+      print( cell3);
+ 
+    }
+
+
+}
+
+
+void
+PrintUseCaseDiagram(string use_case_name)
+{
+
+  string query= "file [ UmlUseCaseDiagram && node_refs[ node[UmlUseCase && name =='${use_case_name}'] ] ]";
+  file filevar;
+
+
+
+  filevar = find_by_query(query);
+  if (filevar != NULL)
+    {
+      file_print ( filevar, "Use Case Diagram: " + filevar.name);
+    }
+
+  PrintUseCaseAnnotations(use_case_name);
+  PrintActorInformation(use_case_name);
+}
+
+void
+PrintUseCaseAnnotations(string use_case_name)
+{
+  string query = "node [UmlUseCase && name =='${use_case_name}']";
+  node nodevar;
+
+
+  nodevar = find_by_query (query);
+
+  UmlUseCaseDefinition(nodevar.id);
+
+  paragraph ("Sec2");
+  print ("Use Case Attributes");
+
+  InitializeNoteTable();
+
+
+  REQAssignmentNote(nodevar.id);
+  UmlUseCaseConditionDefinitions(nodevar.id);
+
+
+  End_Table();
+
+  print_table(use_case_name, "Use Case Attributes");
+
+
+}
+
+void
+PrintActorInformation(string use_case_name)
+{
+  string actorname;
+  int actorid;
+  list nodelist;
+  node nodevar;
+  note notevar;
+  int i,count;
+  string query = "note[UmlActorDefinition && node[UmlActor && name =='${actorname}'] ]";
+
+
+
+
+  paragraph ("Sec2");
+  print ("Actor Definition");
+
+  count = list_count(ACTORLIST);
+
+  for (i=0;i<count;i++)
+    {
+       actorname = list_get(ACTORLIST,i);
+       actorid = GetUmlActorID(actorname);
+       paragraph ("Sec3");
+       print ("Actor: " + actorname );
+
+       notevar = find_by_query(query);
+
+       paragraph ("description");
+
+       if (notevar == NULL)
+          print ("No Actor Definition");
+       else if (notevar.desc == "")
+          print ("No Actor Definition");
+       else  
+          print (notevar.desc);
+
+
+       PrintDataDefinitions(actorname, actorid);
+
+
+    }
+
+}
+
+
+void
+UmlUseCaseDefinition(int id)
+{
+
+  string query = "note[UmlUseCaseDefinition && obj_id == ${id}]";
+  note note_var;
+
+  note_var = find_by_query(query);
+
+  paragraph ("Sec2");
+  print ("Use Case Definition");
+
+
+  if(note_var != NULL)
+    {  
+      paragraph("description");
+      print (note_var.desc);
+    }
+  else
+    {  
+      paragraph("description");
+      print ("No Definition");
+    }
+
+
+}
+
+
+
+void
+REQAssignmentNote(int id)
+{
+  string query = "note[REQAssignmentNote && obj_id == ${id}]";
+  string itemquery = 
+    "item[REQAnalysisAssignmentItem && note_id == ${note_var.id} ]sort by value";
+
+
+  note note_var;
+  list item_list;
+  int count, i;
+  item item_var;
+  note_var = find_by_query(query);
+
+
+  if(note_var == NULL)
+    {  
+      return;
+    }
+
+  item_list = list_select(itemquery);
+
+  count = list_count(item_list);
+
+  for (i=0;i<count;i++)
+    {
+       item_var = list_get(item_list,i);
+
+       PrintNoteTableRow ("Requirement Allocation","Analysis Requirement Id", item_var.value);
+    }
+
+
+
+}
+
+
+void
+UmlUseCaseConditionDefinitions(int id)
+{
+  PrintConditionNote(id, "UmlUseCasePreCondition", "Use Case Precondition");
+
+  PrintConditionNote(id, "UmlUseCasePostCondition", "Use Case Postcondition");
+
+  PrintConditionNote(id, "UmlUseCaseException", "Use Case Exception");
+
+
+}
+
+void 
+PrintConditionNote(int id, string itemtype, string itemname)
+{
+  int i,count;
+  item itemvar;
+  string query = "item[${itemtype} && obj_id == ${id} ]";
+
+  itemvar = find_by_query(query);
+
+
+  if (itemvar == NULL)
+     return;
+
+  PrintNoteTableRow ("Use Case Definition",itemname, itemvar.value);
+  
+
+}
+
+
+void
+PrintScenarios(string use_case_name)
+{
+
+  node nodevar;
+  list nodelist;
+  string scenario_name;
+  int scenario_id;
+
+  string q2 = "file[UmlSequenceDiagram && node_refs[node_id == ${nodevar.id}]]";
+  file filevar;
+
+  int i,count;  
+
+
+  list InputEvents;
+  InputEvents = list_create("string",0);
+
+  list OutputEvents;
+  OutputEvents = list_create("string",0);
+
+  count = list_count(ScenarioList);
+
+  for (i=0;i<count;i++)
+    {
+       nodevar = list_get(ScenarioList,i);
+       scenario_name = nodevar.name;
+       scenario_id = nodevar.id;
+
+
+
+       paragraph ("Sec2");
+       print ("Scenario: " + nodevar.name);
+       print_message ( "     " + nodevar.name);
+
+       filevar = find_by_query(q2);
+       if (filevar != NULL)
+         {
+            file_print ( filevar, "Scenario: " + filevar.name);
+         }
+
+       UmlScenarioDefinition(scenario_id);
+
+       PrintScenarioAnnotations(scenario_id, scenario_name);
+
+
+       list_clear(InputEvents);
+       InputEvents = GetInputEvents(scenario_id, ActorIDs);
+
+       PrintEventConditions(InputEvents);
+
+/*
+       list_clear(OutputEvents);
+       OutputEvents = GetOutputEvents(scenario_id, ActorIDs);
+
+       PrintEventOracle(OutputEvents);
+*/
+
+    }
+}
+
+
+void
+PrintScenarioAnnotations(int id, string name)
+{
+
+//  paragraph ("Sec3");
+//  print ("Scenario Condition Definitions");
+
+//  ScenarioConstraintAnnotations(id);
+
+  paragraph ("Sec3");
+  print ("Scenario Attributes");
+
+  InitializeNoteTable();
+
+  REQAssignmentNote(id);
+  MeasuresAnnotation(id);
+
+  End_Table();
+
+  print_table(name, "Scenario Attributes");
+
+
+}
+
+void
+UmlScenarioDefinition(int id)
+{
+
+  string query = "note[UmlScenarioDefinition && obj_id == ${id}]";
+  note note_var;
+
+  note_var = find_by_query(query);
+
+  paragraph ("Sec3");
+  print ("Scenario Definition");
+
+
+  if(note_var != NULL)
+    {  
+      paragraph("description");
+      print (note_var.desc);
+    }
+  else
+    {  
+      paragraph("description");
+      print ("No Definition");
+    }
+
+
+}
+
+
+
+void
+MeasuresAnnotation(int id)
+{
+
+  string query = "note[Measurements && obj_id == ${id}]";
+  string itemquery = 
+    "item[note_id == ${note_var.id} ]sort by type";
+
+  note note_var;
+
+  list item_list;
+  int count, i;
+  item item_var;
+  string printname;
+
+  note_var = find_by_query(query);
+
+  if(note_var == NULL)
+    {  
+       return;
+    }
+
+
+  item_list = list_select(itemquery);
+
+  count = list_count(item_list);
+
+
+  for (i=0;i<count;i++)
+    {
+       printname = "";
+       item_var = list_get(item_list,i);
+
+       if (item_var.type == "OperationDuration")
+          printname = "Required Execution Time";
+       else if (item_var.type == "TestDuration")
+          printname = "Predicted Test Duration";
+       else if (item_var.type == "TimeUnit")
+          printname = "Time Unit";
+       else if (item_var.type == "EvaluationTime")
+          printname = "Predicted Evaluation Time";
+       else if (item_var.type == "CompletionStatus")
+          printname = "Completion Status";
+       else if (item_var.type == "SetUpTime")
+          printname = "Set Up Time";
+
+
+       PrintNoteTableRow ("Measurements", printname, item_var.value);
+
+    }
+
+
+}
+
+
+
+void
+ScenarioConstraintAnnotations(int id)
+{
+
+  string query = "note[TestAction && obj_id == ${id}]";
+  string itemquery = 
+    "item[note_id == ${note_var.id} ]sort by type";
+
+  note note_var;
+
+  list item_list;
+  int count, i;
+  item item_var;
+  string printname;
+  string tmp;
+
+  note_var = find_by_query(query);
+
+  if(note_var == NULL)
+    {  
+       return;
+    }
+
+
+  item_list = list_select(itemquery);
+
+  count = list_count(item_list);
+
+
+  for (i=0;i<count;i++)
+    {
+       item_var = list_get(item_list,i);
+
+       if (item_var.type == "UmlConstraintItem")
+         {
+            paragraph ("description");
+            print ("Acts_Only_If: " + item_var.value);
+         }
+    }
+
+}
+
+void
+PrintEventConditions(list inputevents)
+{
+  paragraph ("Sec3");
+  print ("Event Condition Definitions");
+
+  int i,count;
+  int j,count1;
+  note notevar;
+  list TNote;
+  item itemvar;
+  list itemlist;
+  string eventname, event;
+
+  link_ref linkrefvar;
+  string q = "item [UmlConstraintItem && obj_id == ${linkrefvar.link_id}]";
+
+
+  count = list_count(inputevents);
+
+  for (i=0; i<count; i=i+1)
+    {
+       linkrefvar = list_get(inputevents, i);
+
+       event = GetEventName(linkrefvar.link_id);
+       eventname = StripData(event);
+       itemlist = list_select(q);
+
+       count1 = list_count(itemlist);
+
+       if (count1 > 0)
+         {
+           paragraph ("Sec4");
+           print ("Event: " + eventname);
+         }
+
+       for (j=0; j<count1; j++)
+         {
+            itemvar = list_get(itemlist,j);
+
+            paragraph ("description");
+            print ("Constraint: " + itemvar.value);
+         }
+    }
+
+}
+
+
+
+void
+PrintEventOracle(list outputevents)
+{
+  paragraph ("Sec3");
+  print ("Event Oracles");
+
+  int i,count;
+  int j,count1;
+  note notevar;
+  list TNote;
+  item itemvar;
+  string eventname, event;
+
+  link_ref linkrefvar;
+  string q = "item [ExpectedOutputCommand && obj_id == ${linkrefvar.link_id}]";
+
+
+  count = list_count(outputevents);
+
+  for (i=0; i<count; i=i+1)
+    {
+       linkrefvar = list_get(outputevents, i);
+
+       event = GetEventName(linkrefvar.link_id);
+       eventname = StripData(event);
+
+       itemvar = find_by_query(q);
+
+       if (itemvar != NULL)
+         {
+           paragraph ("Sec4");
+           print ("Event: " + eventname);
+           paragraph ("description");
+           print ("Oracle: " + itemvar.value);
+         }
+    }
+
+}
+
+
+
+void
+InitializeDiagrams()
+{
+
+  set displaymarks;
+  displaymarks = set_create("string");
+
+  set_add (displaymarks, "UseCaseScenariosExist");
+  set_add (displaymarks, "UseCaseInfo");
+  set_add (displaymarks, "Stereotypes");
+
+  set_add (displaymarks, "Creation");
+  set_add (displaymarks, "Destruction");
+  set_add (displaymarks, "SequenceInfo");
+  set_add (displaymarks, "StereotypeLink");
+  set_add (displaymarks, "Stereotype");
+
+  diagram_orientation_scale_set(PortraitFit);
+  diagram_frame_width_set(6.75);
+  diagram_display_mark_no_print_set( displaymarks );
+
+}
+
+
+
+
+void
+PrintDataTypeDeclarations()
+{
+
+  PrintIntegerTypes();
+  PrintRealTypes();
+  PrintStringTypes();
+
+
+//  PrintUndefinedTypes();
+}
+
+
+void
+PrintIntegerTypes()
+
+{
+  string q1="node[ttesttype && node_refs && items[tdatatypeclass " +
+            " && value=='integer']] sort by name";
+  list nodelist;
+  node nodevar;
+  int i,count;
+
+  print_message ("    Printing Integer DataTypes");
+  paragraph ("Sec2");
+  print ("Integer Data Types");
+
+  nodelist = list_select(q1);
+
+  count = list_count(nodelist);
+
+  for (i=0;i<count;i++)
+    {
+      nodevar = list_get(nodelist,i);
+
+      if (set_is_member(DataTypeSet, nodevar.name))
+        {
+          paragraph ("Sec3");
+          print (nodevar.name);
+
+          PrintMinimumValue(nodevar.id);
+          PrintMaximumValue(nodevar.id);
+          PrintResolutionValue(nodevar.id);
+          PrintTestValues(nodevar.id);
+          PrintInvalidSubdomain(nodevar.id);
+
+          set_delete (DataTypeSet,nodevar.name);
+        }
+    }
+
+}
+
+
+
+void
+PrintRealTypes()
+
+{
+  string q1="node[ttesttype&& node_refs&& items[tdatatypeclass " +
+            " && value=='real']] sort by name";
+  list nodelist;
+  node nodevar;
+  int i,count;
+
+  print_message ("    Printing Real DataTypes");
+  paragraph ("Sec2");
+  print ("Real Data Types");
+
+  nodelist = list_select(q1);
+
+  count = list_count(nodelist);
+
+  for (i=0;i<count;i++)
+    {
+      nodevar = list_get(nodelist,i);
+
+      if (set_is_member(DataTypeSet, nodevar.name))
+        {
+          paragraph ("Sec3");
+          print (nodevar.name);
+
+          PrintMinimumValue(nodevar.id);
+          PrintMaximumValue(nodevar.id);
+          PrintResolutionValue(nodevar.id);
+          PrintTestValues(nodevar.id);
+          PrintInvalidSubdomain(nodevar.id);
+
+          set_delete (DataTypeSet,nodevar.name);
+        }
+    }
+
+}
+
+
+
+
+void
+PrintStringTypes()
+
+{
+  string q1="node[ttesttype&& node_refs&& items[tdatatypeclass " +
+            " && value=='string']] sort by name";
+  list nodelist;
+  node nodevar;
+  int i,count;
+
+  print_message ("    Printing String DataTypes");
+  paragraph ("Sec2");
+  print ("String Data Types");
+
+  nodelist = list_select(q1);
+
+  count = list_count(nodelist);
+
+  for (i=0;i<count;i++)
+    {
+      nodevar = list_get(nodelist,i);
+
+      if (set_is_member(DataTypeSet, nodevar.name))
+        {
+          paragraph ("Sec3");
+          print (nodevar.name);
+
+          PrintTestValues(nodevar.id);
+          PrintInvalidSubdomain(nodevar.id);
+
+          set_delete (DataTypeSet,nodevar.name);
+        }
+    }
+
+}
+
+
+void
+PrintMinimumValue(int id)
+{
+  string query = "item[tminimumvalue && obj_id==${id}]";
+  item itemvar;
+
+  itemvar = find_by_query(query);
+
+  if (itemvar != NULL)
+    {
+      paragraph("Values");
+      print("Minimum Value:\t" + itemvar.value);
+    }
+}
+
+void
+PrintMaximumValue(int id)
+{
+  string query = "item[tmaximumvalue && obj_id==${id}]";
+  item itemvar;
+
+  itemvar = find_by_query(query);
+
+  if (itemvar != NULL)
+    {
+      paragraph("Values");
+      print("Maximum Value:\t" + itemvar.value);
+    }
+
+}
+
+void
+PrintResolutionValue(int id)
+{
+  string query = "item[tresolution && obj_id==${id}]";
+  item itemvar;
+
+  itemvar = find_by_query(query);
+
+  if (itemvar != NULL)
+    {
+      paragraph("Values");
+      print("Resolution Value:\t" + itemvar.value);
+    }
+
+}
+
+void
+PrintTestValues(int id)
+{
+  string query = "item[ttestvalue && obj_id==${id}]";
+  item itemvar;
+  list itemlist;
+  int i,count,num;
+
+  itemlist = list_select(query);
+
+  count = list_count(itemlist);
+
+  for (i=0;i<count;i++)
+    {
+      itemvar = list_get(itemlist,i);
+      num=i+1;
+      paragraph("Values");
+      print ("Value " + num + ":\t" + itemvar.value);
+
+    }
+
+}
+
+void
+PrintInvalidSubdomain(int id)
+{
+  string query = "item[tinvalidsubdomain && obj_id==${id}]";
+  item itemvar;
+
+  itemvar = find_by_query(query);
+
+  if (itemvar != NULL)
+    {
+      paragraph("Values");
+      paragraph("Values");
+      print("Invalid Subdomain:\t" + itemvar.value);
+    }
+
+}
+
+
+
+void
+PrintDataDefinitions( string actorname, int actorid)
+{
+  list Events;
+  list EventList;
+  int event_id, i,count;
+  string eventname, fromclass, toclass, actionname;
+  link_ref linkrefvar;
+  int eventnumber = 0;
+
+
+
+  GetData(actorid, actorname);
+
+}
+
+
+void
+PrintDataDefinitionsXXXX( string scenario_name, int scenario_id)
+{
+  list Events;
+  list EventList;
+  int event_id, i,count;
+  string eventname, fromclass, toclass, actionname;
+  link_ref linkrefvar;
+  int eventnumber = 0;
+
+
+  Events = list_create ("string", 0);
+
+  list_clear(Events);
+
+  Events = GetEvents( scenario_id);
+
+
+  EventList = list_create("string",0);
+
+  count = list_count(Events);
+
+  paragraph ("Sec3");
+  print ("Event Data Definitions");
+
+  Initialize();
+
+
+  for (i=0; i<count; i=i+1)
+    {
+       linkrefvar = list_get(Events, i);
+       event = GetEventName(linkrefvar.link_id);
+       eventname = StripData(event);
+       event_id = linkrefvar.link_id;
+
+
+       GetData(event_id, eventname);
+    }
+
+  End_Table();
+
+  print_table(scenario_name, "Data Definitions");
+
+}
+
+
+list
+GetEvents(int scenario_id)
+{
+ 
+  string linkref_query, noderef_query;
+  node_ref nr;
+
+  noderef_query = "node_ref [node_id == ${scenario_id} ] ";
+
+  nr = find_by_query (noderef_query);
+
+  linkref_query = "link_ref [ file_id == ${nr.file_id} && 
+       link [ OMTEventInstance   ] ] sort by ycoord";
+
+  return ( list_select (linkref_query) );
+
+}
+
+
+
+void
+GetData ( int actorid, string actorname)
+{
+  int i,count;
+  note notevar;
+  list TNote, notelist;
+  item iv1, iv2, iv3, iv4, iv5;
+  string cell2, cell3, cell4;
+
+  string query = "note [TestDataItem && obj_id == ${actorid}]";
+  string q1 = "item [TDataItemName && note_id == ${notevar.id}]";
+  string q2 = "item [TDataTypeName && note_id == ${notevar.id}]";
+  string q3 = "item [TDataType && note_id == ${notevar.id}]";
+  string q4 = "item [TFixedValue && note_id == ${notevar.id}]";
+  string q5 = "item [TExhaustiveTest && note_id == ${notevar.id}]";
+
+  notelist = list_select(query);
+  TNote = SortBySequenceNumber(notelist, actorid);
+
+  count = list_count(TNote);
+  if (count == 0)
+    return;
+
+  Initialize();
+
+
+
+  for (i=0; i<count; i=i+1)
+    {
+      notevar = list_get(TNote, i);
+
+      iv1 = find_by_query(q1);
+      iv2 = find_by_query(q2);
+      iv3 = find_by_query(q3);
+      iv4 = find_by_query(q4);
+      iv5 = find_by_query(q5);
+
+
+      cell2 = "";
+      cell3 = "";
+      cell4 = "";
+
+
+      if (iv1 != NULL)
+        {
+          cell2 = iv1.value ;
+        }
+
+      if (iv2 != NULL)
+        {
+          cell3 = iv2.value + " (U)";
+          set_add(DataTypeSet, iv2.value);
+        }
+
+      if (iv3 != NULL)
+        {
+          cell3 = iv3.value + " (P)";
+        }
+
+      if (iv4 != NULL)
+        {
+          cell3 = iv4.value + " (F)";
+        }
+
+      if (iv5 != NULL)
+        {
+          cell4 = iv5.value;
+        }
+      else
+          cell4 = "FALSE";
+
+
+      PrintTableRow( cell2, cell3, cell4);
+
+      cell2 = "";
+      cell3 = "";
+      cell4 = "";
+
+    }
+
+  End_Table();
+
+  print_table(actorname, "Data Definitions");
+
+}
+
+
+
+
+
+
+void
+PrintTableRow( string cell2, string cell3, string cell4 )
+{
+
+      Begin_Row();
+
+      Make_Cell(width_2, NULL, NULL, NULL, NULL, NULL, cell2);
+      Make_Cell(width_3, NULL, NULL, NULL, NULL, NULL, cell3);
+      Make_Cell(width_4, NULL, NULL, NULL, NULL, NULL, cell4);
+
+      End_Row();
+
+}
+
+
+
+void 
+Initialize()
+{
+   table_caption_placement_set(Top);
+   table_width_set(6.75);
+
+   table_caption_paragraph_format_set ("TableTitle");
+   table_cell_bold_paragraph_format_set ("CellBody");
+   table_cell_paragraph_format_set ("CellBodyleft");
+
+
+   // create title bar
+
+   Begin_Table(4);
+
+
+   Begin_Row();
+
+
+   Make_Cell(width_2, NULL, "Shade0",
+                      NULL, NULL, NULL, "DATA DEFINITION");
+   Make_Cell(width_3, NULL, "Shade0",
+                      NULL, NULL, NULL, "DATA TYPE");
+   Make_Cell(width_4, NULL, "Shade0",
+                      NULL, NULL, NULL, "EXHAUSTIVE TEST");
+
+   End_Row();
+
+
+}
+
+
+void 
+InitializeNoteTable()
+{
+   table_caption_placement_set(Top);
+   table_width_set(6.75);
+
+   table_caption_paragraph_format_set ("TableTitle");
+   table_cell_bold_paragraph_format_set ("CellBody");
+   table_cell_paragraph_format_set ("CellBodyleft");
+
+
+   // create title bar
+
+   Begin_Table(4);
+
+
+   Begin_Row();
+
+
+   Make_Cell(width_5, NULL, "Shade0",
+                      NULL, NULL, NULL, "NOTE");
+   Make_Cell(width_6, NULL, "Shade0",
+                      NULL, NULL, NULL, "ITEM");
+   Make_Cell(width_7, NULL, "Shade0",
+                      NULL, NULL, NULL, "VALUE");
+
+   End_Row();
+
+
+}
+
+
+
+void
+PrintNoteTableRow(string cell1, string cell2, string cell3 )
+{
+
+      Begin_Row();
+
+      Make_Cell(width_5, NULL, NULL, NULL, NULL, NULL, cell1);
+      Make_Cell(width_6, NULL, NULL, NULL, NULL, NULL, cell2);
+      Make_Cell(width_7, NULL, NULL, NULL, NULL, NULL, cell3);
+
+      End_Row();
+
+}
+
+
+
+list
+GetInputEvents(int scenario_id, string actorids)
+{
+ 
+  string linkref_query, noderef_query;
+  node_ref nr;
+
+  if (actorids == "")
+      actorids = "0";
+
+  noderef_query = "node_ref [node_id == ${scenario_id} ] ";
+
+  nr = find_by_query (noderef_query);
+
+  linkref_query = "link_ref [ file_id == ${nr.file_id} && 
+           link [ UmlSimpleMessage   &&
+           from_node[${actorids}] ] ] sort by ycoord";
+
+  return ( list_select (linkref_query) );
+
+}
+
+
+list
+GetOutputEvents(int scenario_id, string actorids)
+{
+ 
+  string linkref_query, noderef_query;
+  node_ref nr;
+
+  if (actorids == "")
+      actorids = "0";
+
+  noderef_query = "node_ref [node_id == ${scenario_id} ] ";
+
+  nr = find_by_query (noderef_query);
+
+  linkref_query = "link_ref [ file_id == ${nr.file_id} && 
+           link [ UmlSimpleMessage   &&
+           to_node[${actorids}] ] ] sort by ycoord";
+
+  return ( list_select (linkref_query) );
+
+}
+
+
+string
+GetEventName( int link_id)
+{
+  link linkvar;
+  item itemvar;
+  string name;
+
+  string query2 = "link [ id == ${link_id} ]";
+
+  linkvar = find_by_query (query2);
+
+
+  if (linkvar == NULL)
+     return (NULL);
+
+
+  return (RemoveSpaces(linkvar.name));
+
+}

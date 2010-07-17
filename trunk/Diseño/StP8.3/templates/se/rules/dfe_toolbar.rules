@@ -1,0 +1,17 @@
+// ECR 3548 begin
+Toolbar Standard
+{
+    { Name "Standard" }
+    { Entry
+        { Type Separator }
+    }
+    { Entry
+        { Name "Replace" }
+        { Type MenuShortCut }
+        { Image "replace" }
+        { MenuEntry "MenuBarEdit:Replace" }
+        { HelpTip "Replace" }
+    }
+}
+// ECR 3548 end
+

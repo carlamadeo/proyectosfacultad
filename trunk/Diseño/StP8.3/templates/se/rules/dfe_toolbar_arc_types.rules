@@ -1,0 +1,36 @@
+// ECR 3556 start
+
+Toolbar DefaultArcType
+{
+    //ECR 6568 begin
+    //{ Position Top }
+    //{ IsFloating True }
+    { Position Left }
+    //ECR 6568 end
+    { Group
+        { Exclusive True }
+        { Entry
+            { Name "DataFlow" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType DataFlow" }
+            { HelpTip "Data Flow" }
+            { Image "dataflow" }
+        }
+        { Entry
+            { Name "ControlFlow" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType ControlFlow" }
+            { HelpTip "Control Flow" }
+            { Image "controlflow" }
+        }
+        { Entry
+            { Name "CommentLink" }
+            { Type Toggle }
+            { Builtin "SetDefaultArcType CommentLink" }
+            { HelpTip "Comment Link" }
+            { Image "commentlink" }
+        }
+    }
+}
+
+// ECR 3556 end

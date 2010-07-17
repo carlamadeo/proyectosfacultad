@@ -1,0 +1,42 @@
+
+external string UseCases;
+external string Tool;  // values will be  'validator'  or 'T'
+
+#include "val/qrl/include/TConfig.inc"
+#include "val/qrl/include/TUseCase.inc"
+#include "val/qrl/include/CreateDir.inc"
+
+void
+main ()
+
+{
+
+  list UseCaseList, ActionList;
+  int count1, i;
+  int count2, j;
+  string use_case_name, test_unit_id, action_name;
+  node scenario;
+  int scenario_id = 0;
+  string outputdir;
+  string sdf_path, script_path, action_path;
+
+  UseCaseList = string_to_list (UseCases, " ");
+
+  count1 = list_count (UseCaseList);
+
+  for (i=0;i<count1;i=i+1)
+    {
+      use_case_name = list_get(UseCaseList,i);
+
+      if (!CheckExistance (use_case_name) )
+        {
+          message ("Use Case: " + use_case_name + " is not in the selected model");
+          continue;
+        }
+
+
+      system ("qrp -p ${projdir} -s ${system} -x use_case_name '${use_case_name}' -x Tool ${Tool} val/qrl/GenerateOneExecutableScript.qrl");
+
+    }
+}
+

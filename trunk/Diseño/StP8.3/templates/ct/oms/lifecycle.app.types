@@ -1,0 +1,33 @@
+
+NoteObject      870001  CategoryNoteDef 	{}
+NoteObject	870002  ClassNoteDeclaration	{}
+NoteObject	870003  GlobalNoteDef	{}
+NoteObject	870004  REQQualification	{}
+NoteObject	870005  OperationalMode	{}
+NoteObject	870006  LifeCycleCategory			{}
+
+ItemObject	573001 ParseConditionDef	{}
+ItemObject	573002 ClassNameDef	        {}
+ItemObject	573003 ClassNamePosition     {}
+
+ItemObject	573004 REQQualificationMethod     { { DataType "Method_type"} }
+ItemObject	573005 REQQualificationLevel     {}
+
+ItemObject      573006 StartState  { { DataType "string" } }
+ItemObject      573007 EndState  { { DataType "string" } }
+
+ItemObject      573008 MinOccurrence  { { DataType "Float" } }
+ItemObject      573009 MaxOccurrence  { { DataType "Float" } }
+ItemObject      573010 OperationalModeName  { { DataType "String" } }
+
+ItemObject	573011 LifeCycleName	{ { DataType "LifeCycle" } }
+
+
+
+// Vector Integration 
+//
+NoteObject	870007 	VectorIntegration			{}
+
+ItemObject      573012  VectorFunctionName	{ { DataType "String" } }
+ItemObject      573013  CorrelationTableName	{ { DataType "String" } }
+

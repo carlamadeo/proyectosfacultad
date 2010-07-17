@@ -1,0 +1,814 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+//
+
+// This file contains all the definitions of display marks
+
+
+//----------------------------------------------------------------------------//
+
+LinkSymbol Dependency
+{
+    { DisplayMark
+		{ Name DependencyStereotype }
+		{ ItemCond (UmlStereotype) }
+		{ StringMark "«${annot.UmlExtensibilityDefinition.UmlStereotype}»" }
+		{ Anchor LabelCenterRight }
+		{ HAdjust Center }
+		// JED - HAdjust Right is too far. use pixels
+		{ XPixelOffset 45 }
+		{ VAdjust Center }
+		{ Help "Dependency Stereotype" }
+    }
+}
+
+
+LinkSymbol AssociationLinks
+{
+	{ DisplayMark
+		{ Name AssocToMultiplicity }
+		{ Anchor ToEnd }
+		{ ItemCond (UmlMultiplicity) }
+		{ MappingName ToMapping }
+		{ StringMark "${annot.UmlRoleDefinition.UmlMultiplicity}" }
+		{ Help "Show multiplicity indicators on associations" }
+		{ HAdjust Center }
+		{ VAdjust Center }
+		{ XPixelOffset 20 }
+		{ YPixelOffset 20 }
+	}
+    // ECR 75
+	{ DisplayMark
+		{ Name AssocToIsOrdered }
+		{ Anchor ToEnd }
+		{ CondFunc "role_is_ordered(\"${annot.UmlRoleDefinition.UmlRoleIsOrdered}\");" }
+		{ MappingName ToMapping }
+		{ StringMark "{ordered}" }
+		{ Help "Show {ordered} indicators on associations" }
+		{ HAdjust Center }
+		{ VAdjust Center }
+		{ XPixelOffset 35 }
+		{ YPixelOffset -35 }
+	}
+	// End ECR 75
+// ECR 5861 begin
+//
+//	{ DisplayMark
+//		{ Name AssocToConstraint }
+//		{ Anchor ToEnd }
+//		{ ItemCond (UmlConstraintItem) }
+//		{ MappingName ToMapping }
+//		{ StringMarkFunc "uml_dpymark_list_formatter(gde_dmark_matched_items,\"{\",\"}\",\",\");" }
+//		{ Help "Show constraints on associations" }
+//		// { HAdjust Left }
+//		// { VAdjust Top }
+//		{ XPixelOffset -2 }
+//		// { YPixelOffset -2 }
+//	}
+//
+// ECR 5861 end
+
+    // ECR 4396 moved Displaymark AssocToHasQualifier and AssocToQualifierValues to LinkSymbol Association
+	{ DisplayMark
+		{ Name AssocToNavigability }
+		// { ItemCond (UmlRoleNavigability) }
+		{ MappingName ToMapping }
+		{ Anchor ToEnd }
+		// ECR 157
+		{ EndMarkFunc "uml_navigability_mark(\"${annot.UmlRoleDefinition.UmlRoleNavigability}\",${link.id});" }
+	}
+}
+
+LinkSymbol Association
+{
+	{ DisplayMark
+		{ Name AssocFromMultiplicity }
+		{ Anchor FromEnd }
+		{ ItemCond (UmlMultiplicity) }
+		{ MappingName FromMapping }
+		{ StringMark "${annot.UmlRoleDefinition.UmlMultiplicity}" }
+		{ Help "Show multiplicity indicators on associations" }
+		{ HAdjust Center }
+		{ VAdjust Center }
+		{ XPixelOffset 20 }
+		{ YPixelOffset 20 }
+	}
+    // ECR 75
+	{ DisplayMark
+		{ Name AssocFromIsOrdered }
+		{ Anchor FromEnd }
+		{ CondFunc "role_is_ordered(\"${annot.UmlRoleDefinition.UmlRoleIsOrdered}\");" }
+		{ MappingName FromMapping }
+		{ StringMark "{ordered}" }
+		{ Help "Show {ordered} indicators on associations" }
+		{ HAdjust Center }
+		{ VAdjust Center }
+		{ XPixelOffset 35 }
+		{ YPixelOffset -35 }
+	}
+	// End ECR 75
+// ECR 5861 begin
+//
+//	{ DisplayMark
+//		{ Name AssocFromConstraint }
+//		{ Anchor FromEnd }
+//		{ ItemCond (UmlConstraintItem) }
+//		{ MappingName FromMapping }
+//		{ StringMarkFunc "uml_dpymark_list_formatter(gde_dmark_matched_items,\"{\",\"}\",\",\");" }
+//		{ Help "Show constraints on associations" }
+//		{ XPixelOffset -2 }
+//	}
+//
+// ECR 5861 end
+	{ DisplayMark
+		{ Name AssocFromHasQualifier }
+		{ ItemCond (UmlRoleQualifier) }
+		{ MappingName FromMapping }
+		{ EndMarkFunc "uml_has_qualifier(\"${annot.UmlRoleDefinition.UmlRoleQualifier}\");" }
+		{ Anchor FromEnd }
+		{ Help "Show qualifiers on association" }
+    }
+    { DisplayMark
+		{ Name AssocFromQualifierValues }
+		{ ItemCond (UmlRoleQualifier) }
+		{ MappingName FromMapping }
+		{ StringMarkFunc "uml_dpymark_list_formatter(gde_dmark_matched_items,\"\",\"\",\",\n\");" }
+		{ Anchor FromEnd }
+		{ HAdjust AtEnd } 
+		{ VAdjust AtEnd }
+		{ XPixelOffset 0 }
+		{ YPixelOffset 0 }
+		{ Help "Show qualifiers on association" }
+    }
+    // ECR 4396 moved Displaymark from LinkSymbol AssociationLinks
+    { DisplayMark
+		{ Name AssocToHasQualifier }
+		{ ItemCond (UmlRoleQualifier) }
+		{ MappingName ToMapping }
+		{ EndMarkFunc "uml_has_qualifier(\"${annot.UmlRoleDefinition.UmlRoleQualifier}\");" }
+		{ Anchor ToEnd }
+		{ Help "Show qualifiers on association" }
+    }
+    { DisplayMark
+		{ Name AssocToQualifierValues }
+		{ ItemCond (UmlRoleQualifier) }
+		{ MappingName ToMapping }
+		{ StringMarkFunc "uml_dpymark_list_formatter(gde_dmark_matched_items,\"\",\"\",\",\n\");" }
+		{ Anchor ToEnd }
+		{ HAdjust AtEnd } 
+		{ VAdjust AtEnd }
+		{ XPixelOffset 0 }
+		{ YPixelOffset 0 }
+		{ Help "Show qualifiers on association" }
+    }
+    // ECR 4396 end
+	{ DisplayMark
+		{ Name AssocFromNavigability }
+		// { ItemCond (UmlRoleNavigability) }
+		{ MappingName FromMapping }
+		{ Anchor FromEnd }
+		// ECR 157
+		{ EndMarkFunc "uml_navigability_mark(\"${annot.UmlRoleDefinition.UmlRoleNavigability}\",${link.id});" }
+	}
+	// from agg indicator
+	{ DisplayMark
+		{ Name FromAggregationIndicator }
+		{ Anchor FromEnd }
+		{ ItemCond (UmlAggregationType) }
+		{ MappingName FromMapping }
+		// There can be 2 items of this type: one for the FromEnd and
+		// one for the ToEnd. So we must pass the right one.
+		{ EndMarkFunc "uml_agg_endmark(\"${annot.UmlRoleDefinition.UmlAggregationType}\");" }
+	}
+	// to agg indicator
+	{ DisplayMark
+		{ Name ToAggregationIndicator }
+		{ Anchor ToEnd }
+		{ ItemCond (UmlAggregationType) }
+		{ MappingName ToMapping }
+		// There can be 2 items of this type: one for the FromEnd and
+		// one for the ToEnd. So we must pass the right one
+		{ EndMarkFunc "uml_agg_endmark(\"${annot.UmlRoleDefinition.UmlAggregationType}\");" }
+	}
+
+	// ECR 7178 - begin
+    { DisplayMark
+		{ Name AssocStereotype }
+		{ MappingName AssociationNodeMapping }
+		{ ItemCond (UmlStereotype) }
+		{ StringMark "«${annot.UmlExtensibilityDefinition.UmlStereotype}»" }
+		{ Anchor LabelCenterRight }
+		{ HAdjust Center }
+		// JED - HAdjust Right is too far. use pixels
+		{ XPixelOffset 0 }
+		{ YPixelOffset -15 }
+		{ VAdjust Center }
+		{ Help "Association Stereotype" }
+    }
+	// ECR 7178 - end
+}
+
+// ECR 3856 - begin
+LinkSymbol Aggregation
+{
+	{ DisplayMark
+		{ Name AssocFromMultiplicity }
+		{ Anchor FromEnd }
+		{ ItemCond (UmlMultiplicity) }
+		{ MappingName FromMapping }
+		{ StringMark "${annot.UmlRoleDefinition.UmlMultiplicity}" }
+		{ Help "Show multiplicity indicators on aggregations" }
+		{ HAdjust Center }
+		{ VAdjust Center }
+		{ XPixelOffset 20 }
+		{ YPixelOffset 20 }
+	}
+	{ DisplayMark
+		{ Name AssocFromIsOrdered }
+		{ Anchor FromEnd }
+		{ CondFunc "role_is_ordered(\"${annot.UmlRoleDefinition.UmlRoleIsOrdered}\");" }
+		{ MappingName FromMapping }
+		{ StringMark "{ordered}" }
+		{ Help "Show {ordered} indicators on aggregations" }
+		{ HAdjust Center }
+		{ VAdjust Center }
+		{ XPixelOffset 35 }
+		{ YPixelOffset -35 }
+	}
+	{ DisplayMark
+		{ Name AssocFromConstraint }
+		{ Anchor FromEnd }
+		{ ItemCond (UmlConstraintItem) }
+		{ MappingName FromMapping }
+		{ StringMarkFunc "uml_dpymark_list_formatter(gde_dmark_matched_items,\"{\",\"}\",\",\");" }
+		{ Help "Show constraints on aggregations" }
+		{ XPixelOffset -2 }
+	}
+	{ DisplayMark
+		{ Name AssocFromHasQualifier }
+		{ ItemCond (UmlRoleQualifier) }
+		{ MappingName FromMapping }
+		{ EndMarkFunc "uml_has_qualifier(\"${annot.UmlRoleDefinition.UmlRoleQualifier}\");" }
+		{ Anchor FromEnd }
+		{ Help "Show qualifiers on aggregations" }
+    }
+    { DisplayMark
+		{ Name AssocFromQualifierValues }
+		{ ItemCond (UmlRoleQualifier) }
+		{ MappingName FromMapping }
+		{ StringMarkFunc "uml_dpymark_list_formatter(gde_dmark_matched_items,\"\",\"\",\",\n\");" }
+		{ Anchor FromEnd }
+		{ HAdjust AtEnd } 
+		{ VAdjust AtEnd }
+		{ XPixelOffset 0 }
+		{ YPixelOffset 0 }
+		{ Help "Show qualifiers on aggregations" }
+    }
+	{ DisplayMark
+		{ Name AssocFromNavigability }
+		{ ItemCond (UmlRoleNavigability) }
+		{ MappingName FromMapping }
+		{ Anchor FromEnd }
+		{ EndMarkFunc "uml_navigability_mark(\"${annot.UmlRoleDefinition.UmlRoleNavigability}\",${link.id});" }
+	}
+	{ DisplayMark
+		{ Name FromAggregationIndicator }
+		{ Anchor FromEnd }
+		{ ItemCond (UmlAggregationType) }
+		{ MappingName FromMapping }
+		{ EndMarkFunc "uml_agg_endmark(\"${annot.UmlRoleDefinition.UmlAggregationType}\");" }
+	}
+	{ DisplayMark
+		{ Name AssocToMultiplicity }
+		{ Anchor ToEnd }
+		{ ItemCond (UmlMultiplicity) }
+		{ MappingName ToMapping }
+		{ StringMark "${annot.UmlRoleDefinition.UmlMultiplicity}" }
+		{ Help "Show multiplicity indicators on aggregations" }
+		{ HAdjust Center }
+		{ VAdjust Center }
+		{ XPixelOffset 20 }
+		{ YPixelOffset 20 }
+	}
+	{ DisplayMark
+		{ Name AssocToIsOrdered }
+		{ Anchor ToEnd }
+		{ CondFunc "role_is_ordered(\"${annot.UmlRoleDefinition.UmlRoleIsOrdered}\");" }
+		{ MappingName ToMapping }
+		{ StringMark "{ordered}" }
+		{ Help "Show {ordered} indicators on aggregations" }
+		{ HAdjust Center }
+		{ VAdjust Center }
+		{ XPixelOffset 35 }
+		{ YPixelOffset -35 }
+	}
+	{ DisplayMark
+		{ Name AssocToConstraint }
+		{ Anchor ToEnd }
+		{ ItemCond (UmlConstraintItem) }
+		{ MappingName ToMapping }
+		{ StringMarkFunc "uml_dpymark_list_formatter(gde_dmark_matched_items,\"{\",\"}\",\",\");" }
+		{ Help "Show constraints on aggregations" }
+		{ XPixelOffset -2 }
+	}
+	{ DisplayMark
+		{ Name AssocToHasQualifier }
+		{ ItemCond (UmlRoleQualifier) }
+		{ MappingName ToMapping }
+		{ EndMarkFunc "uml_has_qualifier(\"${annot.UmlRoleDefinition.UmlRoleQualifier}\");" }
+		{ Anchor ToEnd }
+		{ Help "Show qualifiers on aggregations" }
+    }
+    { DisplayMark
+		{ Name AssocToQualifierValues }
+		{ ItemCond (UmlRoleQualifier) }
+		{ MappingName ToMapping }
+		{ StringMarkFunc "uml_dpymark_list_formatter(gde_dmark_matched_items,\"\",\"\",\",\n\");" }
+		{ Anchor ToEnd }
+		{ HAdjust AtEnd } 
+		{ VAdjust AtEnd }
+		{ XPixelOffset 0 }
+		{ YPixelOffset 0 }
+		{ Help "Show qualifiers on aggregations" }
+    }
+	{ DisplayMark
+		{ Name AssocToNavigability }
+		{ ItemCond (UmlRoleNavigability) }
+		{ MappingName ToMapping }
+		{ Anchor ToEnd }
+		{ EndMarkFunc "uml_navigability_mark(\"${annot.UmlRoleDefinition.UmlRoleNavigability}\",${link.id});" }
+	}
+	{ DisplayMark
+		{ Name ToAggregationIndicator }
+		{ CondFunc "AggregationInit(${arcsym.psymid}, ${link.id});" } // ECR 6502, 6503
+		{ MappingName ToMapping }
+		{ Anchor ToEnd }
+		{ EndMarkFunc "uml_agg_endmark(\"${annot.UmlRoleDefinition.UmlAggregationType}\");" }
+	}
+}
+// ECR 3856 - end
+
+// ECR 7480 start
+LinkSymbol NavigableAssociation
+{
+	{ DisplayMark
+		{ Name AssocFromMultiplicity }
+		{ Anchor FromEnd }
+		{ ItemCond (UmlMultiplicity) }
+		{ MappingName FromMapping }
+		{ StringMark "${annot.UmlRoleDefinition.UmlMultiplicity}" }
+		{ Help "Show multiplicity indicators on associations" }
+		{ HAdjust Center }
+		{ VAdjust Center }
+		{ XPixelOffset 20 }
+		{ YPixelOffset 20 }
+	}
+	{ DisplayMark
+		{ Name AssocFromIsOrdered }
+		{ Anchor FromEnd }
+		{ CondFunc "role_is_ordered(\"${annot.UmlRoleDefinition.UmlRoleIsOrdered}\");" }
+		{ MappingName FromMapping }
+		{ StringMark "{ordered}" }
+		{ Help "Show {ordered} indicators on associations" }
+		{ HAdjust Center }
+		{ VAdjust Center }
+		{ XPixelOffset 35 }
+		{ YPixelOffset -35 }
+	}
+	{ DisplayMark
+		{ Name AssocFromConstraint }
+		{ Anchor FromEnd }
+		{ ItemCond (UmlConstraintItem) }
+		{ MappingName FromMapping }
+		{ StringMarkFunc "uml_dpymark_list_formatter(gde_dmark_matched_items,\"{\",\"}\",\",\");" }
+		{ Help "Show constraints on associations" }
+		{ XPixelOffset -2 }
+	}
+	{ DisplayMark
+		{ Name AssocFromHasQualifier }
+		{ ItemCond (UmlRoleQualifier) }
+		{ MappingName FromMapping }
+		{ EndMarkFunc "uml_has_qualifier(\"${annot.UmlRoleDefinition.UmlRoleQualifier}\");" }
+		{ Anchor FromEnd }
+		{ Help "Show qualifiers on association" }
+    }
+    { DisplayMark
+		{ Name AssocFromQualifierValues }
+		{ ItemCond (UmlRoleQualifier) }
+		{ MappingName FromMapping }
+		{ StringMarkFunc "uml_dpymark_list_formatter(gde_dmark_matched_items,\"\",\"\",\",\n\");" }
+		{ Anchor FromEnd }
+		{ HAdjust AtEnd } 
+		{ VAdjust AtEnd }
+		{ XPixelOffset 0 }
+		{ YPixelOffset 0 }
+		{ Help "Show qualifiers on association" }
+    }
+    { DisplayMark
+		{ Name AssocToHasQualifier }
+		{ ItemCond (UmlRoleQualifier) }
+		{ MappingName ToMapping }
+		{ EndMarkFunc "uml_has_qualifier(\"${annot.UmlRoleDefinition.UmlRoleQualifier}\");" }
+		{ Anchor ToEnd }
+		{ Help "Show qualifiers on association" }
+    }
+    { DisplayMark
+		{ Name AssocToQualifierValues }
+		{ ItemCond (UmlRoleQualifier) }
+		{ MappingName ToMapping }
+		{ StringMarkFunc "uml_dpymark_list_formatter(gde_dmark_matched_items,\"\",\"\",\",\n\");" }
+		{ Anchor ToEnd }
+		{ HAdjust AtEnd } 
+		{ VAdjust AtEnd }
+		{ XPixelOffset 0 }
+		{ YPixelOffset 0 }
+		{ Help "Show qualifiers on association" }
+    }
+	{ DisplayMark
+		{ Name AssocFromNavigability }
+		{ MappingName FromMapping }
+		{ Anchor FromEnd }
+		{ EndMarkFunc "uml_navigability_mark(\"${annot.UmlRoleDefinition.UmlRoleNavigability}\",${link.id});" }
+	}
+	// from agg indicator
+	{ DisplayMark
+		{ Name FromAggregationIndicator }
+		{ Anchor FromEnd }
+		{ ItemCond (UmlAggregationType) }
+		{ MappingName FromMapping }
+		// There can be 2 items of this type: one for the FromEnd and
+		// one for the ToEnd. So we must pass the right one.
+		{ EndMarkFunc "uml_agg_endmark(\"${annot.UmlRoleDefinition.UmlAggregationType}\");" }
+	}
+	// to agg indicator
+	{ DisplayMark
+		{ Name ToAggregationIndicator }
+		{ Anchor ToEnd }
+		{ CondFunc "DirectedAssociationInit(${arcsym.psymid}, ${link.id});" }
+		{ MappingName ToMapping }
+		// There can be 2 items of this type: one for the FromEnd and
+		// one for the ToEnd. So we must pass the right one
+		{ EndMarkFunc "uml_agg_endmark(\"${annot.UmlRoleDefinition.UmlRoleNavigability}\");" }
+	}
+}
+// ECR 7480 end
+
+LinkSymbol Refines
+{
+    { DisplayMark
+		{ Name BindsStereotype }
+		{ ItemCond (UmlStereotype) }
+		{ StringMark "«${annot.UmlExtensibilityDefinition.UmlStereotype}»" }
+		{ Anchor FromEnd }
+		{ HAdjust Right }
+		{ VAdjust Center }
+		{ Help "Binds Stereotype" }
+		//{ XPixelOffset 35 } // ECR 5020
+    }
+    { DisplayMark
+		{ Name BindsArguments }
+		{ ItemCond (UmlRefineArgs) }
+		{ StringMark "<${annot.UmlRefinesDefinition.UmlRefineArgs}>" }
+		{ Anchor FromEnd }
+		{ HAdjust Left }
+		{ VAdjust Center }
+		{ Help "Binds Arguments" }
+		// { YPixelOffset 10 } // ECR 5020
+		// { XPixelOffset 35 } // ECR 5020
+    }
+}
+
+NodeSymbol AllClassTypesWithMarks
+{
+    { DisplayMark
+		{ Name ClassStereotype }
+		{ ItemCond (UmlStereotype) }
+		{ StringMark "«${annot.UmlExtensibilityDefinition.UmlStereotype}»" }
+		// JED - TODO: overwrites label
+		{ Anchor LabelUpperCenter }
+		{ HAdjust Center }
+		{ VAdjust Bottom }
+		{ Help "Class Stereotype" }
+    }
+	// HasClassTable
+	{ DisplayMark
+		{ Name ClassTableExists }
+		{ Condition "node[UmlClass && name = '${node.name}' && node_refs[file[UmlClassTable]]]" }
+		{ BitmapMark0 "ctable0" }
+		{ BitmapMark1 "ctable1" }
+		{ BitmapMark2 "ctable2" }
+		{ Anchor UpperLeft }
+		{ HAdjust Left }
+		{ VAdjust Bottom }
+		{ YPixelOffset -3 }
+		{ Help "Class table exists" }
+    }
+	{ DisplayMark
+		{ Name ClassConstraint }
+		{ ItemCond (UmlConstraintItem) }
+		{ Anchor LowerCenter }
+		{ HAdjust Center }
+		{ VAdjust Top }
+		{ Help "Class constraints" }
+		// { StringMark "{${annot.UmlExtensibilityDefinition.UmlConstraintItem}}" }
+		{ StringMarkFunc "uml_dpymark_list_formatter(gde_dmark_matched_items,\"{\",\"}\",\",\");" }
+	}
+	{ DisplayMark
+		{ Name ClassProperties }
+		{ ItemCond (UmlTaggedValue UmlClassIsAbstract) }
+        // Changed for ECR 4781
+        { Anchor CenterRight }
+		{ HAdjust Left }
+		{ VAdjust Center }
+		{ StringMarkFunc "uml_class_property_dpymark_formatter(gde_dmark_matched_items,\"{\",\"}\",\", \");" }
+        // End Change ECR 4781
+	}
+
+	{ EditAnnotation { UseMappings (ClassMapping) } }
+}
+
+NodeSymbol Package
+{
+    { DisplayMark
+		{ Name PackageStereotype }
+		{ ItemCond (UmlStereotype) }
+		{ StringMark "«${annot.UmlExtensibilityDefinition.UmlStereotype}»" }
+// SPR 4052 Model management, changed the location of stereotype display mark
+		{ Anchor LabelUpperLeft }
+		{ HAdjust Left }
+		{ VAdjust Bottom }
+		{ Help "Package Stereotype" }
+    }
+
+	//{ EditAnnotation { UseMappings (PackageMapping) } }
+}
+
+NodeSymbol AllClassSymbolsThatCanBeInAPackage
+{
+    { DisplayMark
+		{ Name ClassQualifiedName }
+		{ MappingName ClassMapping }
+		{ Condition "node[id=${node.id} && in_links[UmlContains && link_refs]];" }
+		{ StringMarkFunc "\"( from \" + uml_class_id_scope_name(${node.id}) + \")\";" }
+		{ Anchor LabelLowerCenter }
+		{ HAdjust Center }
+		{ VAdjust Top }
+		{ YPixelOffset 10 }   // ECR 4224
+		{ Help "Package scope qualified name" }
+    }
+}
+
+NodeSymbol Package
+{
+    { DisplayMark
+		{ Name PackageQualifiedName }
+		{ MappingName ClassMapping }
+		{ Condition "node[id=${node.id} && in_links[UmlContains && link_refs]];" }
+		{ StringMarkFunc "\"( from \" + uml_class_id_scope_name(${node.id}) + \")\";" }
+		{ Anchor LabelCenterRight }
+		{ HAdjust Left }
+		{ VAdjust Center }
+		{ Help "Package scope qualified name" }
+    }
+}
+
+NodeSymbol ParameterizedClass
+{
+	{ DisplayMark
+		{ Name ClassParameters }
+		{ ItemCond (UmlClassParameters) }
+		{ StringMark "<${annot.UmlClassDefinition.UmlClassParameters}>" }
+		{ MappingName ClassMapping }
+		{ Anchor UpperRight }
+		{ HAdjust Right }
+		{ VAdjust Top }
+
+		// ECR4876
+		//{ XPixelOffset -3 }
+		{ YPixelOffset -5 }
+	}
+}
+
+// Begin Add ECR 6389
+NodeSymbol AllClassTypesWithMarks
+{
+    { DisplayMark
+        { Name CDescription }
+        { CondFunc "symbol_has_description(0${node.id});" }
+        { Anchor LowerRight }
+        { VAdjust Bottom }
+        { HAdjust Center }
+        { YPixelOffset 19 }
+        { BitmapMark0 "descln0" }
+        { BitmapMark1 "descln1" }
+        { BitmapMark2 "descln2" }
+        { Help "Class has description." }
+    }
+}
+
+NodeSymbol Interface
+{
+    { DisplayMark
+        { Name IfDescription }
+        { CondFunc "symbol_has_description(0${node.id});" }
+        { Anchor LowerRight }
+        { VAdjust Bottom }
+        { HAdjust Center }
+        { YPixelOffset 19 }
+        { BitmapMark0 "descln0" }
+        { BitmapMark1 "descln1" }
+        { BitmapMark2 "descln2" }
+        { Help "Interface has description." }
+    }
+}
+// End Add ECR 6389
+
+NodeSymbol Operation
+{
+    { DisplayMark
+		{ Name OperationVisibility }
+		{ ItemCond (UmlMemberVisibility) }
+		{ StringMarkFunc "uml_member_display_mark_str(gde_dmark_matched_items);" }
+		{ Anchor LabelCenterLeft }
+		{ HAdjust Right }
+		{ VAdjust Center }
+		{ Help "Operation Visibility" }
+    }
+    { DisplayMark
+		{ Name OpIsClass }
+		{ ItemCond (UmlMemberIsClass) }
+		{ LabelMarkFunc "uml_member_is_class(gde_dmark_matched_items);" }
+		{ Help "Operation Is Class-scoped" }
+    }
+    { DisplayMark
+		{ Name OperationReturnType }
+		{ ItemCond (UmlOperationReturnType) }
+		{ StringMarkFunc "uml_operation_return_type(gde_dmark_matched_items);" }
+		// JED - is not vertically aligned with label
+		// I could use LabelLowerRight, but that screws up printing.
+		// decision: live with it being a little off
+		{ Anchor LabelCenterRight }
+		{ HAdjust Left }
+		{ VAdjust Center }
+		{ Help "Operation Return Type" }
+    }
+    // --- START PATCH ECR 6726 ---
+    { DisplayMark
+   		{ Name OperationStereotype }
+    	{ ItemCond (UmlStereotype) }
+    	{ Anchor CenterLeft } 
+		{ HAdjust Right }
+		{ XPixelOffset -15 }
+		{ YPixelOffset 13 }
+    	{ StringMark "«${annot.UmlExtensibilityDefinition.UmlStereotype}»" }
+    	{ Help "Stereotype for Operation" }
+    }
+    // --- END PATCH ECR 6726 ---
+}
+
+NodeSymbol Attribute 
+{
+    { DisplayMark
+		{ Name AttributeVisibility }
+		{ ItemCond (UmlMemberVisibility) }
+		{ StringMarkFunc "uml_member_display_mark_str(gde_dmark_matched_items);" }
+		{ Anchor LabelCenterLeft }
+		{ HAdjust Right }
+		{ VAdjust Center }
+		{ Help "Attribute Visibility" }
+    }
+    { DisplayMark
+		{ Name AttributeIsDerived }
+		{ ItemCond (UmlAttributeIsDerived) }
+		{ StringMarkFunc "uml_member_display_mark_str(gde_dmark_matched_items);" }
+		{ Anchor LabelCenterLeft }
+		{ HAdjust Right }
+		{ VAdjust Center }
+		{ Help "Attribute Is Derived" }
+    }
+    { DisplayMark
+		{ Name AttributeTypeAndValue }
+		{ ItemCond (UmlAttributeType UmlAttributeDefaultValue) }
+		{ StringMarkFunc "uml_attribute_type_and_defval(gde_dmark_matched_items);" }
+		{ Anchor LabelCenterRight }
+		{ HAdjust Left }
+		{ VAdjust Center }
+		{ Help "Attribute Type and Default Value" }
+    }
+    // --- START PATCH ECR 6726 ---
+    { DisplayMark
+   		{ Name AttrStereotype }
+    	{ ItemCond (UmlStereotype) }
+    	{ Anchor CenterLeft } 
+		{ HAdjust Right }
+		{ XPixelOffset -15 }
+		{ YPixelOffset 13 }
+    	{ StringMark "«${annot.UmlExtensibilityDefinition.UmlStereotype}»" }
+    	{ Help "Stereotype for Attribute" }
+    }
+    // --- END PATCH ECR 6726 ---
+    { DisplayMark
+		{ Name AttrIsClass }
+		{ ItemCond (UmlMemberIsClass) }
+		{ LabelMarkFunc "uml_member_is_class(gde_dmark_matched_items);" }
+		{ Help "Attribute Is Class-scoped" }
+    }
+}
+
+
+DisplayMarkGroups
+{
+	{ Group
+		// ECR 7178 - begin ( "AssocStereotype" added )
+		{ DisplayMarks ( DependencyStereotype BindsStereotype ClassStereotype PackageStereotype AssocStereotype OperationStereotype AttrStereotype) }
+		{ Name Stereotype }
+		// ECR 7178 - end
+	}
+	{ Group
+		{ DisplayMarks (FromAggregationIndicator ToAggregationIndicator) }
+		{ Name AggregationIndicators }
+	}
+	{ Group
+		{ DisplayMarks (AssocFromMultiplicity AssocToMultiplicity) }
+		{ Name RoleMultiplicity }
+	}
+	// ECR 75
+	{ Group
+		{ DisplayMarks (AssocFromIsOrdered AssocToIsOrdered) }
+		{ Name RoleIsOrdered }
+    }
+    // End ECR 75
+	{ Group 
+		{ DisplayMarks (AssocFromNavigability AssocToNavigability) }
+		{ Name Navigability }
+	}
+	{ Group 
+		{ DisplayMarks (OperationVisibility AttributeVisibility) }
+		{ Name Visibility }
+	}
+	{ Group 
+		{ DisplayMarks (OpIsClass AttrIsClass) }
+		{ Name ClassScoping }
+	}
+	{ Group 
+		{ DisplayMarks (ClassTableExists ClassProperties ) }
+		{ Name ClassInfo }
+	}
+	{ Group 
+		{ DisplayMarks (AssocFromConstraint AssocToConstraint ClassConstraint AggFromConstraint AggToConstraint) }
+		{ Name Constraints }
+	}
+	{ Group 
+		{ DisplayMarks (ClassQualifiedName PackageQualifiedName) }
+		{ Name PackageScope }
+	}
+	{ Group 
+		{ DisplayMarks (AggFromHasQualifier AggFromQualifierValues
+				AggToHasQualifier AggToQualifierValues
+				AssocFromHasQualifier AssocFromQualifierValues
+				AssocToHasQualifier AssocToQualifierValues) }
+		{ Name Qualifiers }
+	}
+	
+	// ECR 6389
+	{ Group
+	    { DisplayMarks ( PDescription CDescription IfDescription ODescription ) }
+	    { Name Description }
+	}
+
+    // ECR3857, moved RoleMultiplicity from OnDemand to Continuous
+    // ECR 75, RoleIsOrdered into Cont.
+	{ ContinuousDisplayMarks (Stereotype Visibility AggregationIndicators  AttributeTypeAndValue OperationReturnType Navigability RoleMultiplicity RoleIsOrdered) }
+	{ OnDemandDisplayMarks (ClassScoping Qualifiers Constraints Description) } // Description for ECR 6389
+	{ NoUpdateDisplayMarks (PackageScope) }
+}
+
+// ECR 5861 begin
+CntxSymbol RelLabelFrom
+{
+	{ DisplayMark
+		{ Name AssocFromConstraint }
+		{ Anchor UpperLeft }
+		{ ItemCond (UmlConstraintItem) }
+		{ StringMarkFunc "uml_dpymark_list_formatter_constrained(gde_dmark_matched_items,${link.id},\"{\",\"}\",\",\");" }
+		{ Help "Show constraints on associations" }
+		{ XPixelOffset -2 }
+	}
+}
+
+CntxSymbol RelLabelTo
+{
+	{ DisplayMark
+		{ Name AssocToConstraint }
+		{ Anchor UpperLeft }
+		{ ItemCond (UmlConstraintItem) }
+		{ StringMarkFunc "uml_dpymark_list_formatter_constrained(gde_dmark_matched_items,${link.id},\"{\",\"}\",\",\");" }
+		{ Help "Show constraints on associations" }
+		{ XPixelOffset -2 }
+	}
+}
+// ECR 5861 end

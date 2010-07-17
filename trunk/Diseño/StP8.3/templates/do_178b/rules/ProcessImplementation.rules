@@ -1,0 +1,22 @@
+
+
+Class 0 spe
+{
+
+  { Image "requirements_tables" }
+  { Label "Development Process Model" }
+  { ShowOnDesktop True }
+  { OMSObjects
+      { Match "file[SpeDiagram]" }
+      { Editor "spe" }
+  }
+    { UseClassCommand StartDiagramEditor }
+    { UseObjectCommand EditDiagram }
+    { UseObjectCommand PrintDiagram }
+    { UseObjectCommand PrintDiagramAs }
+    { UseObjectCommand Copy }
+    { UseObjectCommand Delete }
+    { UseObjectCommand Rename }
+    { UseObjectCommand LockingCommands }
+}
+

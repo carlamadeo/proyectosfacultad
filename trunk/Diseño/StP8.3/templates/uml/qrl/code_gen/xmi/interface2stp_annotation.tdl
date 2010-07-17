@@ -1,0 +1,855 @@
+/////////////////////////////////////////////////////////////////////////////
+// G l o b a l   v a r i a b l e s
+//
+// nCurrentID
+// nCurrentNote
+// nAnnotObjectID
+//
+/////////////////////////////////////////////////////////////////////////////
+
+proc generateAnnotations()
+    loop(Instances->MClass)
+        if ([MClass.isAbstract] || [MClass.stereotype] != "" || hasLoop(MClass->Note) || hasLoop(MClass->TaggedValue) || hasLoop(MClass->MTemplateClass->TemplatePara) || hasLoop(MClass->MInterface))
+            generateClassAnnotation([MClass]);
+        end if
+
+        loop(MClass->MAttribute Where
+                    hasLoop(MAttribute->Note) ||
+                    hasLoop(MAttribute->TaggedValue Where [TaggedValue.tag] != "UmlAttributeIDLDefinition:UmlAttributeIDLIsReadOnly") ||
+                    [MAttribute.stereotype] != "")
+            generateAttributeAnnotation([MAttribute]);
+        end loop
+
+        loop(MClass->MOperation Where
+                    hasLoop(MOperation->Note) ||
+                    hasLoop(MOperation->TaggedValue Where [TaggedValue.tag] != "UmlOperationDefinition:UmlOperationThrows") ||
+                    [MOperation.stereotype] != "")
+            generateOperationAnnotation([MOperation]);
+        end loop
+    end loop
+
+    loop(Instances->MInheritance Where hasLoop(MInheritance->Note) || hasLoop(MInheritance->TaggedValue) || [MInheritance.stereotype] != "")
+        generateGeneralizationAnnotation([MInheritance]);
+    end loop
+
+    // ECR 6927 begin
+    loop(Instances->MPackageInheritance Where hasLoop(MPackageInheritance->Note) || hasLoop(MPackageInheritance->TaggedValue) || [MPackageInheritance.stereotype] != "")
+        generatePackageGeneralizationAnnotation([MPackageInheritance]);
+    end loop
+    // ECR 6927 end
+
+    // ECR 5316 begin
+    loop(Instances->MPackage Where hasLoop(MPackage->Note) || hasLoop(MPackage->TaggedValue) || [MPackage.stereotype] != "")
+        generatePackageAnnotation([MPackage]);
+    end loop
+
+    loop(Instances->MDependency Where hasLoop(MDependency->Note) || hasLoop(MDependency->TaggedValue) || [MDependency.stereotype] != "")
+        generateDependencyAnnotation([MDependency]);
+    end loop
+    // ECR 5316 end
+
+    // ECR 5637 begin
+    loop(Instances->MTemplateBinding)
+        generateTemplateBindingAnnotation([MTemplateBinding]);
+    end loop
+    // ECR 5637 end
+
+    loop(Instances->MAssociation)
+        if (hasLoop(MAssociation->Note) || hasLoop(MAssociation->TaggedValue) || [MAssociation.stereotype] != "")
+            generateAssociationAnnotation([MAssociation]);
+        end if
+        loop(MAssociation->MAssociationEnd)
+            generateAssociationRoleAnnotation([MAssociationEnd]);
+        end loop
+    end loop
+end proc
+
+proc generateClassAnnotation(MClass)
+    local antFileName;
+    local strClassParameters;
+
+    [antFileName] = getNextAntFileName();
+    output([ProjectDir] "ant_files/" [antFileName] ".ant");
+
+    [nCurrentID] = 1;
+    [strClassParameters] = "";
+
+    >>
+    FileObject 1
+    {
+        { Name "[antFileName]" }
+        { Type ObjectAnnotation }
+    }
+    >> out
+
+    [nAnnotObjectID] = generateClassHeader([MClass], 100000, TRUE);
+
+    generateDefaultAnnotation([MClass], [MClass.name]);
+
+    generateAnnotationNote([MClass], "UmlClassDefinition", "");
+
+    if ([MClass.isAbstract])
+        generateAnnotationItem([MClass], "UmlClassIsAbstract", "True");
+    end if
+
+    [strClassParameters] = "";
+    loop(MClass->MTemplateClass Where [MClass.id] == [MTemplateClass.id])
+        loop(MTemplateClass->TemplatePara)
+            if ([strClassParameters] != "")
+                [strClassParameters] = [strClassParameters] ",";
+            end if
+
+            [strClassParameters] = [strClassParameters] [TemplatePara.name];
+            if ([TemplatePara.type] != "")
+                [strClassParameters] = [strClassParameters] ":" [TemplatePara.type];
+            end if
+
+            if ([TemplatePara.defaultValue] != "")
+                [strClassParameters] = [strClassParameters] "=" [TemplatePara.defaultValue];
+            end if
+        end loop
+    end loop
+
+    if ([strClassParameters] != "")
+        generateAnnotationItem([MClass], "UmlClassParameters", [strClassParameters]);
+    end if
+end proc
+
+/////////////////////////////////////////////////////////////////////////////
+
+proc generateOperationAnnotation(MOperation)
+    local antFileName;
+
+    [antFileName] = getNextAntFileName();
+    output([ProjectDir] "ant_files/" [antFileName] ".ant");
+
+    [nCurrentID] = 1;
+
+    >>
+    FileObject 1
+    {
+        { Name "[antFileName]" }
+        { Type ObjectAnnotation }
+    }
+    >> out
+
+    [nAnnotObjectID] = generateOperationHeader([MOperation], 100000, TRUE);
+
+    generateDefaultAnnotation([MOperation], [MOperation.name]);
+end proc
+
+/////////////////////////////////////////////////////////////////////////////
+
+proc generateAttributeAnnotation(MAttribute)
+    local antFileName;
+
+    [antFileName] = getNextAntFileName();
+    output([ProjectDir] "ant_files/" [antFileName] ".ant");
+
+    [nCurrentID] = 1;
+
+    >>
+    FileObject 1
+    {
+        { Name "[antFileName]" }
+        { Type ObjectAnnotation }
+    }
+    >> out
+
+    [nAnnotObjectID] = generateAttributeHeader([MAttribute], 100000, TRUE);
+
+    generateDefaultAnnotation([MAttribute], [MAttribute.name]);
+end proc
+
+/////////////////////////////////////////////////////////////////////////////
+
+proc generateGeneralizationAnnotation(MInheritance)
+    local antFileName;
+    local nFromID;
+    local nToID;
+
+    [antFileName] = getNextAntFileName();
+    output([ProjectDir] "ant_files/" [antFileName] ".ant");
+
+    [nCurrentID] = 1;
+
+    >>
+    FileObject 1
+    {
+        { Name "[antFileName]" }
+        { Type ObjectAnnotation }
+    }
+    >> out
+
+    loop(MInheritance->SuperClass)
+        [nToID] = generateClassHeader([SuperClass], 100000, FALSE);
+    end loop
+    loop(MInheritance->SubClass)
+        [nFromID] = generateClassHeader([SubClass], [nToID], FALSE);
+    end loop
+
+    [nAnnotObjectID] = sub([nFromID], 1);
+
+    >>
+    LinkObject [nAnnotObjectID]
+    {
+        { Name "[MInheritance.name]" }
+        { Type UmlGeneralization }
+        { ObjectId 0 }
+        { AnnotFileId 1 }
+        { Sig "" }
+        { ToNodeId [nToID] }
+        { FromNodeId [nFromID] }
+        { GUID "[[MInheritance].getGuid()]" }
+    }
+    >> out
+
+    generateDefaultAnnotation([MInheritance], [MInheritance.name]);
+end proc
+
+// ECR 6927 begin
+proc generatePackageGeneralizationAnnotation(MPackageInheritance)
+    local antFileName;
+    local nFromID;
+    local nToID;
+
+    [antFileName] = getNextAntFileName();
+    output([ProjectDir] "ant_files/" [antFileName] ".ant");
+
+    [nCurrentID] = 1;
+
+    >>
+    FileObject 1
+    {
+        { Name "[antFileName]" }
+        { Type ObjectAnnotation }
+    }
+    >> out
+
+    loop(MPackageInheritance->ParentPackage)
+        [nToID] = generatePackageHeader([ParentPackage], 100000, FALSE);
+    end loop
+    loop(MPackageInheritance->ChildPackage)
+        [nFromID] = generatePackageHeader([ChildPackage], [nToID], FALSE);
+    end loop
+
+    [nAnnotObjectID] = sub([nFromID], 1);
+
+    >>
+    LinkObject [nAnnotObjectID]
+    {
+        { Name "[MPackageInheritance.name]" }
+        { Type UmlGeneralization }
+        { ObjectId 0 }
+        { AnnotFileId 1 }
+        { Sig "" }
+        { ToNodeId [nToID] }
+        { FromNodeId [nFromID] }
+        { GUID "[[MPackageInheritance].getGuid()]" }
+    }
+    >> out
+
+    generateDefaultAnnotation([MPackageInheritance], [MPackageInheritance.name]);
+end proc
+// ECR 6927 end
+
+// ECR 5316 begin
+proc generatePackageAnnotation(MPackage)
+    local antFileName;
+
+    [antFileName] = getNextAntFileName();
+    output([ProjectDir] "ant_files/" [antFileName] ".ant");
+
+    [nCurrentID] = 1;
+
+    >>
+    FileObject 1
+    {
+        { Name "[antFileName]" }
+        { Type ObjectAnnotation }
+    }
+    >> out
+
+    [nAnnotObjectID] = generatePackageHeader([MPackage], 100000, TRUE);
+
+    generateDefaultAnnotation([MPackage], [MPackage.name]);
+end proc
+
+proc generateDependencyAnnotation(MDependency)
+    local antFileName;
+    local nFromID;
+    local nToID;
+
+    [antFileName] = getNextAntFileName();
+    output([ProjectDir] "ant_files/" [antFileName] ".ant");
+
+    [nCurrentID] = 1;
+
+    >>
+    FileObject 1
+    {
+        { Name "[antFileName]" }
+        { Type ObjectAnnotation }
+    }
+    >> out
+
+    loop(MDependency->Supplier)
+        [nToID] = generateDependentElementHeader([Supplier], 100000, FALSE);
+    end loop
+    loop(MDependency->Client)
+        [nFromID] = generateDependentElementHeader([Client], [nToID], FALSE);
+    end loop
+
+    [nAnnotObjectID] = sub([nFromID], 1);
+
+    >>
+    LinkObject [nAnnotObjectID]
+    {
+        { Name "[MDependency.name]" }
+        { Type UmlDependency }
+        { ObjectId 0 }
+        { AnnotFileId 1 }
+        { Sig "" }
+        { ToNodeId [nToID] }
+        { FromNodeId [nFromID] }
+        { GUID "[[MDependency].getGuid()]" }
+    }
+    >> out
+
+    generateDefaultAnnotation([MDependency], [MDependency.name]);
+end proc
+// ECR 5316 end
+
+// ECR 5637 begin
+proc generateTemplateBindingAnnotation(MTemplateBinding)
+    local antFileName;
+    local strParameters;
+    local nFromID;
+    local nToID;
+
+    [antFileName] = getNextAntFileName();
+    output([ProjectDir] "ant_files/" [antFileName] ".ant");
+
+    [nCurrentID] = 1;
+
+    >>
+    FileObject 1
+    {
+        { Name "[antFileName]" }
+        { Type ObjectAnnotation }
+    }
+    >> out
+
+    loop(MTemplateBinding->MTemplateClass)
+        [nToID] = generateClassHeader([MTemplateClass], 100000, FALSE);
+    end loop
+    loop(MTemplateBinding->MInstantiatedClass)
+        [nFromID] = generateClassHeader([MInstantiatedClass], [nToID], FALSE);
+    end loop
+
+    [nAnnotObjectID] = sub([nFromID], 1);
+
+    >>
+    LinkObject [nAnnotObjectID]
+    {
+        { Name "[MTemplateBinding.name]" }
+        { Type UmlRefines }
+        { ObjectId 0 }
+        { AnnotFileId 1 }
+        { Sig "" }
+        { ToNodeId [nToID] }
+        { FromNodeId [nFromID] }
+        { GUID "[[MTemplateBinding].getGuid()]" }
+    }
+    >> out
+
+    generateDefaultAnnotation([MTemplateBinding], [MTemplateBinding.name]);
+
+    generateAnnotationNote([MTemplateBinding], "UmlRefinesDefinition", "");
+
+    loop(MTemplateBinding->MInstantiatedClass)
+        [strParameters] = "";
+        loop(MInstantiatedClass->InstPara)
+            if ([strParameters] != "")
+                [strParameters] = [strParameters] ",";
+            end if
+
+            [strParameters] = [strParameters] [InstPara.name];
+            if ([InstPara.type] != "")
+                [strParameters] = [strParameters] ":" [InstPara.type];
+            end if
+        end loop
+    end loop
+
+    generateAnnotationItem([MTemplateBinding], "UmlRefineArgs", [strParameters]);
+end proc
+// ECR 5637 end
+
+proc generateAssociationAnnotation(MAssociation)
+    local antFileName;
+    local assName;
+
+    [antFileName] = getNextAntFileName();
+    output([ProjectDir] "ant_files/" [antFileName] ".ant");
+
+    [nCurrentID] = 1;
+    [nAnnotObjectID] = 99999;
+    [assName] = getAssociationName([MAssociation]);
+
+    >>
+    FileObject 1
+    {
+        { Name "[antFileName]" }
+        { Type ObjectAnnotation }
+    }
+
+    NodeObject [nAnnotObjectID]
+    {
+        { Name "[assName]" }
+        { Type UmlAssociation }
+        { ObjectId 0 }
+        { AnnotFileId 1 }
+        { Sig "[getAssociationSignature([MAssociation])]" }
+        { ScopeNodeId 0 }
+        { GUID "[[MAssociation].getGuid()]" }
+    }
+    >> out
+
+    generateDefaultAnnotation([MAssociation], [assName]);
+end proc
+
+proc generateAssociationRoleAnnotation(MAssociationEnd)
+    local antFileName;
+    local assName;
+    local assSig;
+    local assUID;
+    local className;
+    local classUID;
+    local multiplicity;
+
+    [antFileName] = getNextAntFileName();
+    output([ProjectDir] "ant_files/" [antFileName] ".ant");
+
+    [nCurrentID] = 1;
+    [nAnnotObjectID] = 99997;
+
+    loop(MAssociationEnd->MAssociation)
+        [assName] = getAssociationName([MAssociation]);
+        [assSig] = getAssociationSignature([MAssociation]);
+        [assUID] = [MAssociation].getGuid();
+    end loop
+    loop(MAssociationEnd->MClass)
+        [className] = [MClass.name];
+        [classUID] = [MClass].getGuid();
+    end loop
+
+    >>
+    FileObject 1
+    {
+        { Name "[antFileName]" }
+        { Type ObjectAnnotation }
+    }
+
+    NodeObject 99999
+    {
+        { Name "[assName]" }
+        { Type UmlAssociation }
+        { ObjectId 0 }
+        { Sig "[assSig]" }
+        { ScopeNodeId 0 }
+        { GUID "[assUID]" }
+    }
+
+    NodeObject 99998
+    {
+        { Name "[className]" }
+        { Type UmlClass }
+        { ObjectId 0 }
+        { Sig "" }
+        { ScopeNodeId 0 }
+        { GUID "[classUID]" }
+    }
+
+    LinkObject [nAnnotObjectID]
+    {
+        { Name "[MAssociationEnd.name]" }
+        { Type UmlRole }
+        { ObjectId 0 }
+        { AnnotFileId 1 }
+        { Sig "" }
+        { ScopeNodeId 99999 }
+        { ToNodeId 99999 }
+        { FromNodeId 99998 }
+        { GUID "[[MAssociationEnd].getGuid()]" }
+    }
+    >> out
+
+    generateDefaultAnnotation([MAssociationEnd], [MAssociationEnd.name]);
+    generateAnnotationNote([MAssociationEnd], "UmlRoleDefinition", "");
+    switch (toLower([MAssociationEnd.aggregation]))
+        case "aggregation":
+            generateAnnotationItem([MAssociationEnd], "UmlAggregationType", "Aggregation");
+            break;
+        case "composition":
+            generateAnnotationItem([MAssociationEnd], "UmlAggregationType", "Composition");
+            break;
+    end switch
+    if ([MAssociationEnd.isNavigable])
+        generateAnnotationItem([MAssociationEnd], "UmlRoleNavigability", "True");
+    else
+        generateAnnotationItem([MAssociationEnd], "UmlRoleNavigability", "False");
+    end if
+    // ECR 5319 begin
+    if ([MAssociationEnd.ordering])
+        generateAnnotationItem([MAssociationEnd], "UmlRoleIsOrdered", "True");
+    else
+        generateAnnotationItem([MAssociationEnd], "UmlRoleIsOrdered", "False");
+    end if
+    // ECR 5319 end
+    [multiplicity] = replace([MAssociationEnd.multiplicity], "n", "*");
+    if ([multiplicity] == "1..1")
+        [multiplicity] = "1";
+    end if
+    generateAnnotationItem([MAssociationEnd], "UmlMultiplicity", [multiplicity]);
+    loop(MAssociationEnd->Qualifier)
+        // ECR 5318 begin
+        // if ([Qualifier.type] == "")
+        //     generateAnnotationItem([MAssociationEnd], "UmlRoleQualifier", [Qualifier.name]);
+        // else
+        //     generateAnnotationItem([MAssociationEnd], "UmlRoleQualifier", [Qualifier.name] ":" [Qualifier.type]);
+        // end if
+        generateAnnotationItem([Qualifier], "UmlRoleQualifier", getParaItemString([Qualifier]));
+        // ECR 5318 end
+    end loop
+    generateAnnotationNote([MAssociationEnd], "UmlRoleCxxDefinition", "");
+    // ECR 5168 begin
+    // ECR 5167 begin
+    // I think 5167 is the duplicate of 5168. I'm going to change the current fix a little
+    // bit. I'll just set it to default which is public.
+    generateAnnotationItem([MAssociationEnd], "UmlRoleCxxVisibility","public");
+    // ECR 5168 end
+    // ECR 5167 end
+end proc
+
+/////////////////////////////////////////////////////////////////////////////
+// H e l p e r   F u n c t i o n s
+/////////////////////////////////////////////////////////////////////////////
+
+proc generateAnnotationNote(MSemElement, strType, strDescription)
+    if ([NOTE_[MSemElement.id]["_"][strType]] != "")
+        [nCurrentNote] = [NOTE_[MSemElement.id]["_"][strType]];
+        return;
+    end if
+
+    [nCurrentID] = add([nCurrentID], 1);
+    [nCurrentNote] = [nCurrentID];
+
+    [NOTE_[MSemElement.id]["_"][strType]] = [nCurrentNote];
+
+    >>
+
+    NoteObject [nCurrentNote]
+    {
+        { Type [strType] }
+        { Name "" }
+        { OwnerId [nAnnotObjectID] }
+        { ObjectId 0 }
+    >> out
+    if ([strDescription] != "")
+        loop(Instances->TokenSet([strDescription]))
+            >>
+                { DescLine "[replaceQuotes([TokenSet.line])]" }
+            >> out
+        end loop
+    end if
+    >>
+    }
+    >> out
+end proc
+
+proc generateMultipleAnnotationItem(MSemElement, strType, strValue)
+    [ITEM_[MSemElement.id]["_"][nCurrentNote]["_"][strType]] = TRUE;
+
+    [nCurrentID] = add([nCurrentID], 1);
+
+    if ([strValue] == "TRUE")
+        [strValue] = "True";
+    end if
+    if ([strValue] == "FALSE")
+        [strValue] = "False";
+    end if
+
+    >>
+
+    ItemObject [nCurrentID]
+    {
+        { Type [strType] }
+        { Value "[replaceQuotes([strValue])]" }
+        { NoteId [nCurrentNote] }
+        { ObjectId 0 }
+    }
+    >> out
+end proc
+
+proc generateSingleAnnotationItem(MSemElement, strType, strValue)
+    if ([ITEM_[MSemElement.id]["_"][nCurrentNote]["_"][strType]])
+        return;
+    end if
+
+    generateMultipleAnnotationItem([MSemElement], [strType], [strValue]);
+end proc
+
+proc generateAnnotationItem(MSemElement, strType, strValue)
+    // this is the default behavior for annotation items. If we have to 
+    // change it just replace the following line with a call to 
+    // generateMultipleAnnotationItem()
+    generateSingleAnnotationItem([MSemElement], [strType], [strValue]);
+end proc
+
+proc generateStereotypeItem(MSemElement)
+    local stereotype;
+
+    [stereotype] = [MSemElement.stereotype];
+    if ([stereotype] == "")
+        loop(MSemElement->MTemplateBinding)
+            [stereotype] = "bind";
+        end loop
+        loop(MSemElement->MDependentElement->MClass->MInterface)
+            [stereotype] = "interface";
+        end loop
+    end if
+
+    if ([stereotype] != "")
+        generateSingleAnnotationItem([MSemElement], "UmlStereotype", [stereotype]);
+    end if
+end proc
+
+proc generateDefaultAnnotation(MSemElement, strName)
+    loop(MSemElement->Note)
+        generateAnnotationNote([MSemElement], [Note.type], [Note.description]);
+        loop(Note->Item)
+            generateMultipleAnnotationItem([MSemElement], [Item.type], [Item.value]);
+        end loop
+    end loop
+
+    generateAnnotationNote([MSemElement], "GenericObject", [MSemElement.description]);
+    generateSingleAnnotationItem([MSemElement], "ObjectName", [strName]);
+
+    generateAnnotationNote([MSemElement], "UmlExtensibilityDefinition", "");
+    generateStereotypeItem([MSemElement]);
+    loop(MSemElement->TaggedValue Where
+                [TaggedValue.tag] != "UmlAttributeIDLDefinition:UmlAttributeIDLIsReadOnly" &&
+                [TaggedValue.tag] != "UmlOperationDefinition:UmlOperationThrows")
+        generateMultipleAnnotationItem([MSemElement], "UmlTaggedValue", [TaggedValue.tag] "=" [TaggedValue.value]);
+    end loop
+end proc
+
+proc getAssociationName(MAssociation)
+    local assName;
+    local strClasses;
+
+    if ([MAssociation.name] != "")
+        [assName] = [MAssociation.name] ":";
+    else
+        [assName] = "";
+    end if
+
+    loop(MAssociation->MAssociationEnd As Role->MClass)
+        [strClasses] = [strClasses] " {" [MClass.name] "}";
+    end loop
+
+    return [assName] getAssociationNameHelper([strClasses]);
+end proc
+
+proc getAssociationSignature(MAssociation)
+    local strClasses;
+    local strRoles;
+
+    loop(MAssociation->MAssociationEnd As Role->MClass)
+        [strClasses] = [strClasses] " {" [MClass.name] "}";
+        [strRoles] = [strRoles] " {" [Role.name] "}";
+    end loop
+
+    return getAssociationSignatureHelper([strClasses], [strRoles]);
+end proc
+
+tcl_proc getAssociationNameHelper(lstClasses)
+    set lstClasses [lsort $lstClasses]
+    return [join $lstClasses ","]
+end proc
+
+tcl_proc getAssociationSignatureHelper(lstClasses, lstRoles)
+    variable lstAll
+    variable entry
+    variable i
+
+    proc compareAssocEnds {e1 e2} {
+        variable res
+
+        set res [string compare [lindex $e1 0] [lindex $e2 0]]
+        if {$res != 0} {
+            return $res
+        }
+
+        set res [string compare [lindex $e1 1] [lindex $e2 1]]
+        return $res
+    }
+
+    set lstAll {}
+    set i 0
+    foreach entry $lstClasses {
+        lappend lstAll [list $entry [lindex $lstRoles $i]]
+        incr i
+    }
+
+    set lstAll [lsort -command compareAssocEnds $lstAll]
+
+    set lstRoles {}
+    foreach entry $lstAll {
+        lappend lstRoles [lindex $entry 1]
+    }
+
+    return [join $lstRoles ":"]
+end proc
+
+proc generateDependentElementHeader(MDependentElement, nObjectID, bAnnotID)
+    loop(MDependentElement->MPackage)
+        return generatePackageHeader([MPackage], [nObjectID], [bAnnotID]);
+    end loop
+
+    loop(MDependentElement->MClass)
+        return generateClassHeader([MClass], [nObjectID], [bAnnotID]);
+    end loop
+
+    loop(MDependentElement->MPara->MParaItem->MAttribute)
+        return generateAttributeHeader([MAttribute], [nObjectID], [bAnnotID]);
+    end loop
+
+    loop(MDependentElement->MOperation)
+        return generateOperationHeader([MOperation], [nObjectID], [bAnnotID]);
+    end loop
+end proc
+
+proc generatePackageHeader(MPackage, nObjectID, bAnnotID)
+    [nObjectID] = sub([nObjectID], 1);
+
+    >>
+    NodeObject [nObjectID]
+    {
+        { Name "[MPackage.name]" }
+        { Type UmlPackage }
+        { ObjectId 0 }
+    >> out
+
+    if ([bAnnotID])
+    >>
+        { AnnotFileId 1 }
+    >> out
+    end if
+
+    >>
+        { Sig "" }
+        { ScopeNodeId 0 }
+        { GUID "[[MPackage].getGuid()]" }
+    }
+    >> out
+
+    return [nObjectID];
+end proc
+
+proc generateClassHeader(MClass, nObjectID, bAnnotID)
+    [nObjectID] = sub([nObjectID], 1);
+
+    >>
+    NodeObject [nObjectID]
+    {
+        { Name "[MClass.name]" }
+        { Type UmlClass }
+        { ObjectId 0 }
+    >> out
+
+    if ([bAnnotID])
+    >>
+        { AnnotFileId 1 }
+    >> out
+    end if
+
+    >>
+        { Sig "" }
+        { ScopeNodeId 0 }
+        { GUID "[[MClass].getGuid()]" }
+    }
+    >> out
+
+    return [nObjectID];
+end proc
+
+proc generateAttributeHeader(MAttribute, nObjectID, bAnnotID)
+    local nClassID;
+
+    loop(MAttribute->MClass)
+        [nClassID] = generateClassHeader([MClass], [nObjectID], FALSE);
+    end loop
+
+    [nObjectID] = sub([nClassID], 1);
+
+    >>
+    NodeObject [nObjectID]
+    {
+        { Name "[MAttribute.name]" }
+        { Type UmlAttribute }
+        { ObjectId 0 }
+    >> out
+
+    if ([bAnnotID])
+    >>
+        { AnnotFileId 1 }
+    >> out
+    end if
+
+    >>
+        { Sig "" }
+        { ScopeNodeId [nClassID] }
+        { GUID "[[MAttribute].getGuid()]" }
+    }
+    >> out
+
+    return [nObjectID];
+end proc
+
+proc generateOperationHeader(MOperation, nObjectID, bAnnotID)
+    local nClassID;
+    local strSig;
+
+    loop(MOperation->MClass)
+        [nClassID] = generateClassHeader([MClass], [nObjectID], FALSE);
+    end loop
+
+    [nObjectID] = sub([nClassID], 1);
+
+    [strSig] = replaceQuotes(generateOperationParameters([MOperation]));
+
+    >>
+    NodeObject [nObjectID]
+    {
+        { Name "[MOperation.name]" }
+        { Type UmlOperation }
+        { ObjectId 0 }
+    >> out
+
+    if ([bAnnotID])
+    >>
+        { AnnotFileId 1 }
+    >> out
+    end if
+
+    >>
+        { Sig "[strSig]" }
+        { ScopeNodeId [nClassID] }
+        { GUID "[[MOperation].getGuid()]" }
+    }
+    >> out
+
+    return [nObjectID];
+end proc
+

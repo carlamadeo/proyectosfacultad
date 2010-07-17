@@ -1,0 +1,67 @@
+FINAL ECONOMIA 9/12/02
+
+1. Se ha medido en el mercado el aumento de precios P y la contracción de la demanda Q de algunos bienes, se le solicita que determine el tipo y valor de la elasticidad precio de la demanda.
+
+			Aumento%P	Disminución%Q	Valor Elasticidad	Tipo elasticidad
+Alquiler casas		10		2
+Entradas cine		20		20
+Ropa deportiva		30		10
+Muebles del hogar	33		66
+Zapatos			20		10
+Alimentos		30		10
+Seguridad privada	25		5
+Raquetas de tenis	150		20            (PARA MI EN LUGAR DE 150 ES 15...)
+Estufas			45		30
+Motoclicletas		20		40
+
+
+
+2. EXPRESE EN TÉRMINOS EL VALOR DE LAS SIGUIENTES MAGNITUDES MACROECONÓMICAS.
+
+			Ingreso per cápita	PBI a pm	PBI a cf	Valores
+Salarios									500
+Rentas										200
+Beneficios									400
+Intereses									300
+Amortizaciones									100
+Subsidios									50
+Impuestos indirectos								150
+Giros al exterior								120
+Giros del exterior								70
+Nro. habitantes									100
+
+
+3. Presupuesto de la empresa
+		Sistema presupuestario
+		Generación y Control del Presupuesto
+		Desarrolle Presupuesto de ventas
+
+4. Evaluación de proyectos de inversión
+	Se tiene la posibilidad de llevar a cabo los proyectos A y B cuyos flujos de caja son:
+
+		PROYECTO A				PROYECTO B
+Año	Inversión	Ingresos		Inversión	Ingresos
+0	1624228,4	------			2093750		------
+1	------		500000			-----		700000
+2	------		600000			-----		800000
+3	------		700000			-----		900000
+4	------		800000			-----		900000
+
+Se pide
+a) determinar el VAN de cada proyecto considerando una tasa de oportunidad de 12%
+b) determinar el TIR de cada proyecto.
+c) Cuál es el proyecto más conveniente?
+
+
+5. Una fábrica de cemento produce y vende 1800000 kg de cemento por mes.
+Incurre en los siguientes gastos todos los meses:
+gastos fijos de estructura $80000
+gastos de mano de obra 10000 hs/hombre que se abonan a razón de 4,50 $/hora, incluidas las cargas sociales.
+materias primas para 1800000 kg de cemento a razón de 0,05 $/kg.
+combustible y energía eléctrica $30000
+otros gastos variables de fabricación $15000
+
+Se pide
+a) que cantidad de kg hay que vender para alcanzar el punto de equilibrio económico si el producto se vende a razón de $ 0,20 el kg?
+b) si la situación recesiva del mercado consumidor hace que los precios de mercado disminuyan 10% y en los gastos fijos de estrucutra $20000 corresponden a amortizaciones de bienes de uso. que cantidad de kg hay que vender para alcanzar el punto de equilibrio financiero?
+c) qué beneficios económicos antes de impuestos se obtienen en los casos a) y b) si en ambos casos se vendiera toda la producción?

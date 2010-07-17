@@ -1,0 +1,28 @@
+/* XPM */
+static char* microsoft_word_files_16_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 6 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #000000	c #808080",
+"o	m #000000	c #00ffff",
+"x	m #ffffff	c #c0c0c0",
+/* pixels */
+"...OOOOOOOOOO...",
+"...O        OX..",
+"XXXXXXXXXXX O X.",
+"XoooXoXoooX XXXX",
+".XoXXoXXoXxxx xX",
+".XoXooXoXx  x xX",
+".XooXooX xx x xX",
+".XooXooX xx x xX",
+".XXXOXX  xxxx xX",
+"...O          xX",
+"...O xxxxxxxx xX",
+"...O          xX",
+"...O     xxxx xX",
+"...O          xX",
+"...OxxxxxxxxxxxX",
+"...OXXXXXXXXXXXX"};

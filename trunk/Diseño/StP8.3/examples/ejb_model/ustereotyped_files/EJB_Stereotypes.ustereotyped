@@ -1,0 +1,158 @@
+Diagram UmlStereotypeDiagram
+{
+    { Name "EJB_Stereotypes" }
+    { Format "1.6" }
+    { Scale 1.00 }
+    { PanX -293 }
+    { PanY -209 }
+    { Alignment 32 }
+    { GUID "UID_49B055B7-91C0-4387-991F-C8E319643ED4" }
+    { Summary
+        { Nodes 6 }
+        { Arcs 3 }
+    }
+}
+
+Node 1
+{
+    { Type Stereotype }
+    { Loc -155 -106 }
+    { Scale 156.00 88.00 }
+    { Label
+        { Text "EntityBean" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName StereotypeMapping }
+        { ID 402 }
+        { GUID "UID_7A2C12E0-1676-11d5-8C78-000000000000" }
+    }
+}
+
+Node 2
+{
+    { Type Stereotype }
+    { Loc -155 108 }
+    { Scale 166.00 88.00 }
+    { Label
+        { Text "DataSource" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName StereotypeMapping }
+        { ID 416 }
+        { GUID "UID_7A2C12EA-1676-11d5-8C78-000000000000" }
+    }
+}
+
+Node 3
+{
+    { Type Stereotype }
+    { Loc -155 5 }
+    { Scale 177.00 88.00 }
+    { Label
+        { Text "SessionBean" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName StereotypeMapping }
+        { ID 409 }
+        { GUID "UID_7A2C12E5-1676-11d5-8C78-000000000000" }
+    }
+}
+
+Node 4
+{
+    { Type Note }
+    { Loc 53 -108 }
+    { Scale 493.00 323.00 }
+    { Label
+        { Text "Used to denote " }
+        { Text "an EntityBean" }
+    }
+}
+
+Node 5
+{
+    { Type Note }
+    { Loc 101 2 }
+    { Scale 802.00 426.00 }
+    { Label
+        { Text "Used to denote a SessionBean" }
+        { Text "(Stateless or Stateful)" }
+    }
+}
+
+Node 6
+{
+    { Type Note }
+    { Loc 63 109 }
+    { Scale 558.00 323.00 }
+    { Label
+        { Text "Used to denote a" }
+        { Text " JDBC Datasource" }
+    }
+}
+
+Arc 7
+{
+    { Type NoteLink }
+    { From
+        { ID 4 }
+        { Loc -25 -106 }
+        { Offset -51 1 }
+    }
+    { To
+        { ID 1 }
+        { Loc -97 -106 }
+        { Offset 29 -1 }
+    }
+}
+
+Arc 9
+{
+    { Type NoteLink }
+    { From
+        { ID 5 }
+        { Loc -25 5 }
+        { Offset -93 2 }
+    }
+    { To
+        { ID 3 }
+        { Loc -88 5 }
+        { Offset 60 -1 }
+    }
+}
+
+Arc 11
+{
+    { Type NoteLink }
+    { From
+        { ID 6 }
+        { Loc -25 111 }
+        { Offset -80 1 }
+    }
+    { To
+        { ID 2 }
+        { Loc -94 111 }
+        { Offset 60 2 }
+    }
+}
+
+Link 8
+{
+    { FirstArc 7 }
+    { LastArc 7 }
+}
+
+Link 10
+{
+    { FirstArc 9 }
+    { LastArc 9 }
+}
+
+Link 12
+{
+    { FirstArc 11 }
+    { LastArc 11 }
+}

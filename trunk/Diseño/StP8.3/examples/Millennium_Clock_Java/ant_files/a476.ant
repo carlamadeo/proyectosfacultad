@@ -1,0 +1,41 @@
+FileObject 1
+{
+    { Name "a476" }
+    { Type ObjectAnnotation }
+    { GUID "UID_7CAD2668-0206-11d6-AE65-000000000000" }
+}
+
+FileObject 99999
+{
+    { Name "application" }
+    { Type REQTable }
+    { ObjectId 308 }
+    { AnnotFileId 1 }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1092 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1094 }
+    { DescLine "In this table only requirements are captured that belong to the" }
+    { DescLine "application." }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "application" }
+    { NoteId 3 }
+    { ObjectId 1095 }
+}
+

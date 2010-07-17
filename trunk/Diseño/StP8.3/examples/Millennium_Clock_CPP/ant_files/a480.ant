@@ -1,0 +1,93 @@
+FileObject 1
+{
+    { Name "a480" }
+    { Type ObjectAnnotation }
+    { GUID "UID_E0D931FC-C886-11d5-90AA-0050045C27F0" }
+}
+
+NodeObject 99999
+{
+    { Name "ClockBirdBehaviourAtTotalSolarEclipse" }
+    { Type UmlUseCase }
+    { ObjectId 878 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_7A5DA1F7-AC4F-11d4-BEDC-0060971B5EE0" }
+}
+
+NoteObject 2
+{
+    { Type UmlUseCaseDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 880 }
+}
+
+ItemObject 3
+{
+    { Type UmlUseCasePrecondition }
+    { Value "" }
+    { NoteId 2 }
+    { ObjectId 881 }
+}
+
+ItemObject 4
+{
+    { Type UmlUseCasePostcondition }
+    { Value "" }
+    { NoteId 2 }
+    { ObjectId 882 }
+}
+
+ItemObject 5
+{
+    { Type UmlUseCaseException }
+    { Value "" }
+    { NoteId 2 }
+    { ObjectId 883 }
+}
+
+NoteObject 6
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 885 }
+}
+
+NoteObject 7
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 887 }
+    { DescLine "There is a magic and still secret behaviour of the coocoo clock" }
+    { DescLine "bird if the solid hour during day falls at a total solar eclipse." }
+    { DescLine "In this really seldom situation the owl comes out to cry." }
+}
+
+ItemObject 8
+{
+    { Type ObjectName }
+    { Value "ClockBirdBehaviourAtTotalSolarEclipse" }
+    { NoteId 7 }
+    { ObjectId 888 }
+}
+
+NoteObject 9
+{
+    { Type REQAssignmentNote }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 890 }
+}
+
+ItemObject 10
+{
+    { Type REQAnalysisAssignmentItem }
+    { Value "Owl" }
+    { NoteId 9 }
+    { ObjectId 891 }
+}
+

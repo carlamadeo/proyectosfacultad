@@ -1,0 +1,27 @@
+Este fue el final que tomaron en Gestión de Datos el 17-07-2002. Profesor
+Zaffaroni.
+
+A) Quicksort
+1- Escribir el proceso de ordenamiento de los siguientes datos...... (no me
+acuerdo eran 6 o 7).... 19, 58, 9, 69, etc...
+2- Cual es el orden de complejidad dependiendo la forma en que los datos
+vienen ordenados.
+
+B) Árboles
+1- Describir árbol lleno
+2- Describir árbol balanceado
+3- Explicar con un ejemplo rotación a la izquierda.
+4- Explique el procedimiento de barrido postorden y de un ejemplo.
+
+C) Hashing
+1- Si se tiene una función hash(key) = key % 113. Describa el programa para
+dar de alta un elemento usando hashing into buckets.
+
+D) Bases de datos.
+1- Explique los elementos y/o funciones del DBMS que tiene para controlar
+la seguridad.
+2- Clave candidata, primaria, alternativa y foránea
+3- Independencia física y lógica
+
+
+

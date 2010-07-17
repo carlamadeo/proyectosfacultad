@@ -1,0 +1,442 @@
+% sccsid[] = %W% %Y% %D%; Copyright (C) IDE 1984-1993
+
+Diagram version control is used to maintain and control different
+versions of the same file, and to manage concurrent multiple accesses
+of the same StP file.  In StP, diagram version control is accessed
+through using the stputil program, which supports version control by using 
+a set of abstract operations.  The communication between the stputil 
+program and the VCC system is supported by a set of ToolInfo 
+variables available upon command execution.  For every abstract operation 
+the user can define a command by using the related ToolInfo variable.  
+This variable value is first parsed and the resulting command is executed.
+
+For example, here is the definition of the vcc_init_command:
+
+vcc_init_command=vcc_sccs_init ${ti.vcc_flags} ${ti.vcc_sys_dir} ${ti.vcc_stor_dir}
+vcc_init_flags=v0
+
+All commands are defined inside of a ToolInfo file.
+In general, VCC commands are defined in a separate ToolInfo file
+and a ToolInfo variable named `vcc_cmds' is used to designate the
+location of where the commands are defined.   The user can
+also use a more specific ToolInfo variable of the format `vcc_XXXX_cmds',
+where XXXX is the unique name of a VCC system passed to stputil via
+the -s XXXX argument.
+
+Two examples:
+vcc_cmds=/u/genuser/templates/ct/vcc/sccs/Vcc_sccs_commands
+vcc_sccs_cmds=/u/genuser/templates/ct/vcc/sccs/Vcc_sccs_commands
+
+Usually you need not set either of these two ToolInfo variables since
+by default, StP finds the Vcc_sccs_commands file in the
+templates/ct/vcc/sccs directory by looking along the stp_file_path.
+
+For every command ToolInfo variable a companion variable for flags
+may be set.  The name of this variable is derived directly from the `command'
+variable by replacing the trailing "_command" with "_flags".
+For example, if the ToolInfo command variable is `vcc_init_command', then the
+flag variable would be `vcc_init_flags'.
+
+Each flag ToolInfo is a sequence of flag characters followed by
+an integer specifying the number of arguments a flag should have.
+For example, if the vcc_init_command is executed, a ToolInfo variable 
+`vcc_init_flags=c1x0U2' would instruct the stputil program to 
+accept a -c flag with one argument, a -x flag without any arguments 
+and a -U flag with two arguments.
+
+Presented below is a list of the abstract operations along with the ToolInfo
+variables defining the real command for all the supported operations.
+
+
+Commands
+--------------------------------------------------------------------------------
+
+Initialize:	Initialize editor[s] for a VCC system
+    Syntax:	i[nit] [options]
+    Options:	-e 	Editor
+			Set the current editor for this operation.
+			This is the name of an editor in your environment.
+		-v	Perform operation in verbose mode.
+    TI:		vcc_init_command
+    Default:	vcc_init_command=SCCSDIR/vcc_sccs_init ${ti.vcc_flags} 
+		${ti.vcc_sys_dir} ${ti.vcc_stor_dir}
+		vcc_init_flags=v0
+
+
+Create:		Create initial version 
+    Syntax:	c[reate] [options] names
+    Options:	-e      Editor
+			Set the current editor for this operation.
+			This is the name of an editor in your environent.
+		-u	Update StP repository with new revision number.
+		-T	Specify a filetype.
+		-v	Perform operation in verbose mode.
+		-K	Insert keywords into vcc files.
+		-D	Delete any backup files that are a by-product
+			of the create operation.
+		-M	Prompt for mode request number.
+		-A	Perform operation on all applicable files.
+		-E	Get version of file for editing.
+    TI:		vcc_create_command
+    Default:	vcc_create_command=SCCSDIR/vcc_sccs_create ${ti.vcc_flags} 
+		${ti.vcc_file_dir} ${ti.system} ${ti.vcc_suffix} ${ti.vcc_file}
+    		vcc_create_flags=v0K0D0M0A0E0
+
+Get:		Get a file in read only mode
+    Syntax:	g[et] [options] name
+    Options:	-e	Editor
+			Set the current editor for this operation.
+			This is the name of an editor in your environment.
+		-r	File Revision
+			Apply operation to version of file with specified
+			revision.
+		-v	Perform operation in verbose mode.
+		-A	Perform operation on all applicable files.
+    TI:		vcc_get_command
+    Default:	vcc_get_command=SCCSDIR/vcc_sccs_get ${ti.vcc_flags} 
+		-r${ti.vcc_rev} ${ti.vcc_file_dir} ${ti.vcc_rev_current} 
+		${ti.vcc_suffix} ${ti.vcc_file} ${ti.vcc_out}
+    		vcc_get_flags=A0v0
+
+Edit:		Get a file for editing
+    Syntax:	e[dit] [options] name
+    Options:	-e	Editor
+			Set the current editor for this operation.
+			This is the name of an editor in your environment.
+		-r	File Revision
+			Apply operation to version of file with specified
+			revision.
+		-v	Perform operation in verbose mode.
+		-A	Perform operation on all applicable files.
+    TI:		vcc_edit_command
+    Default:	vcc_edit_command=SCCSDIR/vcc_sccs_edit ${ti.vcc_flags} 
+		-r${ti.vcc_rev} ${ti.vcc_file_dir} ${ti.vcc_rev_current} 
+		${ti.vcc_suffix} ${ti.vcc_file}
+    		vcc_edit_flags=A0v0
+
+Unedit:		Check in a file without creating a new version or saving any 
+		changes
+    Syntax:	u[nedit] [options] name
+    Options:	-e	Editor
+			Set the current editor for this operation.
+			This is the name of an editor in your environment.
+		-A	Perform operation on all applicable files.
+		-v	Perform operation in verbose mode.
+		-f 	Perform operation without asking for confirmation.
+    TI:		vcc_unedit_command
+    Default:	vcc_unedit_command=SCCSDIR/vcc_sccs_unedit ${ti.vcc_flags} 
+		${ti.vcc_file_dir} ${ti.vcc_file}
+    		vcc_unedit_flags=A0v0f0
+
+New Version:	Check in a new version of a file (delta)
+    Syntax:	d[elta] [options] name
+    Options:	-e	Editor
+			Set the current editor for this operation.
+			This is the name of an editor in your environment.
+		-A	Perform operation on all applicable files.
+		-v	Perform operation in verbose mode.
+		-u	Update StP repository with new revision number.
+    TI:		vcc_new_v_command
+    Default:	vcc_new_v_command=SCCSDIR/vcc_sccs_new_v ${ti.vcc_flags} 
+		${ti.vcc_file_dir} ${ti.vcc_file}
+    		vcc_new_v_flags=A0v0
+
+New Release:	Create a new release of files in the VCC system for the current
+		editor
+    Syntax:	r[elease] [options]
+    Options:	-e	Editor
+			Set the current editor for this operation.
+			This is the name of an editor in your environment.
+		-r	File Revision
+			Apply operation to version of file with specified
+			revision.
+		-v 	Perform operation in verbose mode.
+    TI:		vcc_new_r_command
+    Default:	vcc_new_r_command=SCCSDIR/vcc_sccs_new_r ${ti.vcc_flags} 
+		-r${ti.vcc_rev} ${ti.vcc_file_dir}
+    		vcc_new_r_flags=v0
+
+Status:		Give status (being edited..) of a file
+    Syntax:	s[tatus] [options]
+    Options:	-e 	Editor
+			Set the current editor for this operation.
+			This is the name of an editor in your environment.
+		-v 	Perform operation in verbose mode.
+    TI:		vcc_status_command
+
+History:	Print change history of a file
+    Syntax:	h[istory] [options] name
+    Options:	-e	Editor
+			Set the current editor for this operation.
+			This is the name of an editor in your environment.
+		-A	Perform operation on all applicable files.
+		-v 	Perform operation in verbose mode.
+		-L	Only give information about the last version of a file.
+    TI:		vcc_hist_command
+    Default:	vcc_status_command=SCCSDIR/vcc_sccs_status ${ti.vcc_flags} 
+		${ti.vcc_file_dir}
+    		vcc_status_flags=v0
+
+Version:	Print the current version of a file
+    Syntax:	v[ersion] [options] name
+    Options:	-e 	Editor
+			Set the current editor for this operation.
+			This is the name of an editor in your environment.
+		-A	Perform operation on all applicable files
+		-v 	Perform operation in verbose mode
+    TI:		vcc_curr_v_command
+    Default:	vcc_curr_v_command=SCCSDIR/vcc_sccs_curr ${ti.vcc_flags} 
+		${ti.vcc_file_dir} ${ti.vcc_file}
+    		vcc_curr_v_flags=A0v0
+
+Clean:		Delete any StP file that can be retrieved from the VCC system
+    Syntax:	c[lean] [options]
+    Options:	-e 	Editor
+			Set the current editor for this operation.
+			This is the name of an editor in your environment.
+		-v 	Perform operation in verbose mode.
+    TI:		vcc_clean_command
+    Default:	vcc_clean_command=SCCSDIR/vcc_sccs_clean ${ti.vcc_flags} 
+		${ti.vcc_file_dir} ${ti.vcc_suffix}
+    		vcc_clean_flags=v0
+
+Delete:		Delete files from VCC system matching pattern for current editor
+    Syntax:	dele[te] [options] pattern
+    Options:	-e	Editor
+			Set the current editor for this operation.
+			This is the name of an editor in your environment.
+		-A	Perform operation on all applicable files.
+		-v 	Perform operation in verbose mode.
+		-f 	Perform operation without asking for confirmation.
+    TI:		vcc_delete_command
+    Default:	vcc_delete_command=SCCSDIR/vcc_sccs_delete ${ti.vcc_flags} 
+		${ti.vcc_file_dir} ${ti.vcc_suffix} ${ti.vcc_file}
+    		vcc_delete_flags=A0v0f0i0
+
+Inquire:	List current version of the given files in a standard
+		format. The difference to the `current' command is that
+		we expect a standard format
+		    filename	revision
+		for the diagram given.
+		The `current' command can print the result in any form.
+		It is also necessary that the output of this command
+		is sent to the file name passed in the
+		ToolInfo $% variable, since the stputil program will extract it
+		from there.
+    Syntax:	inq[uire] [options] name
+    Options:	-e 	Editor
+			Set the current editor for this operation.
+			This is the name of an editor in your environment.
+		-v 	Perform operation in verbose mode.
+    TI:		vcc_inquire_command
+    Default:	vcc_inquire_command=SCCSDIR/vcc_sccs_inq ${ti.vcc_flags} 
+		${ti.vcc_file_dir} ${tmpfile} ${ti.vcc_file}
+    		vcc_inquire_flags=v0
+
+List:		List the current version of all files in VCC system for the
+		current editor
+    Syntax:	l[ist] [options]
+    Options:	-e	Editor
+			Set the current editor for this operation.
+			This is the name of an editor in your environment.
+		-v	Perform operation in verbose mode.
+    TI:		vcc_list_command
+    Default:	vcc_list_command=SCCSDIR/vcc_sccs_list ${ti.vcc_flags} -s 
+		${ti.vcc_suffix} ${ti.vcc_file_dir} ${ti.vcc_diag}
+    		vcc_list_flags=v0
+
+Pdb:		Synchronize revision numbers in StP repository with files in
+		VCC system
+    Syntax:	p[db] [options] [pattern]
+    Options:	-e	Editor
+			Set the current editor for this operation.
+			This is the name of an editor in your environment.
+		-v	Perform operation in verbose mode.
+
+
+Predefined ToolInfo Variables
+--------------------------------------------------------------------------------
+
+Certain predefined ToolInfo variables are available to use in defining
+commands.  These include: 
+
+	vcc_flags	Any flags passed to the abstract command
+			not understood by the utility program, but
+			part of the command specific ToolInfo flag variable.
+
+	vcc_u_flags	Any flags passed to the abstract command
+			not understood by the utility program and
+			also not part of the command specific 
+			ToolInfo flag variable.
+
+	vcc_u_args	The rest of a command line after the
+			flags and eventual diagram name are
+			parsed.
+
+	vcc_diag	The name of the diagram
+			(DFE: 2.3.4)
+
+	vcc_file	The filename the diagram is stored in
+			relative to the file storage directory.
+			(DFE: system#2.3.4.dfe)
+
+	vcc_suffix	The suffix for the given editor.
+			(DFE: .dfe)
+	
+	vcc_file_dir	The full name of the directory the file is
+			stored in
+			(DFE: /project/system/dfe_files)
+
+	vcc_proj_dir	The project directory
+
+	vcc_sys_dir	The system level directory
+			(/project/system)
+
+	vcc_stor_dir	The storage directory relative to `vcc_sys_dir'
+			(dfe_files)
+
+	vcc_out		The resulting out file name after appending
+			revision numbers etc.
+			Identical to `vcc_file' for the current revision
+
+	vcc_rev		The revision number/name
+
+	vcc_rev_current Has the value `1' if the desired version 
+			is the current revision; the variable
+			has value '0' otherwise
+
+When using the above variables in commands the user must use the 
+following syntax ${ti.[variable]}.  This tells the software that 
+the value for that variable can be found in a ToolInfo file.
+
+For example, ${ti.vcc_file}.
+
+Other special ToolInfo variables are available, besides the above 
+variables which are used to handle the VCC commands.  These include:
+
+	$p	-p projdir
+	$s	-s system
+	$d	diagram name
+	$n	-n flag; -n if pdb diabled, -n0 if enabled
+	$f	-f filesdir
+	$A	Short for $f $n $s $p $d
+	${ti}	contents of ToolInfo variable ti
+	$N	full diagram name
+	$$	$ itself
+	$%	Temporary name of file
+
+
+Examples
+--------------------------------------------------------------------------------
+
+The following examples are based on using SCCS.
+
+An example demonstrating the init command:
+
+vcc_init_command=vcc_sccs_init ${ti.vcc_flags} ${ti.vcc_sys_dir}  
+			${ti.vcc_stor_dir}
+vcc_init_flags=v0
+
+In this example the init command is mapped to a program (or shell
+script) named `vcc_sccs_init'.
+The script accepts the following arguments:
+	${ti.vcc_flags}:	
+			The flags recognozed by this specific
+			command. The init command here only accepts
+			one flag (-v) with no arguments
+			vcc_init_flags=v0
+
+	${ti.vcc_sys_dir}:	
+			The directory on the system level.
+			Assuming a project directory
+			/usr/joe/Project and a system name demo
+			this variable has the value
+				/usr/joe/Project/demo
+
+	${ti.vcc_stor_dir}:
+			The file storage directory relative to `vcc_sys_dir'.
+			For example:  dfe_files
+
+
+Here is an example using the inquire command:
+
+vcc_inquire_command=vcc_sccs_inq ${ti.vcc_file_dir} $% ${ti.vcc_file}
+
+Notice that since no flags were specified the system will store additional
+flags passed in ${vcc_u_flags}.
+The inquire command is special in that the stputil program expects
+the VCC to write the output into the given temporary file $% in the
+following standard format:
+
+	filename		revision
+
+
+(assume the project directory /usr/joe/Project and system demo)
+
+Typed: inquire -e dse nodes	
+Call:  vcc_sccs_inq /usr/joe/Project/demo/dse_files /tmp/234 nodes.dse
+	The ${ti.vcc_file_dir} variable is replaced by the directory a
+	file of the given editor type (dse) would be stored 
+	(/usr/joe/Project/demo/dse_files), $% is replaced by a
+	temporary file name generated by the stputil program and
+	${ti.vcc_file} is the full filename with suffix inside the file-store
+	directory.
+Output:
+	For diagram version 3.4 the output would be:
+	    nodes.dse	3.4
+
+Typed:	inquire -e dfe 1.5
+Call:	vcc_sccs_inq /usr/joe/Project/demo/dfe_files /tmp/456 demo#1.5.dfe
+Output:	demo#1.5.dfe	5.2
+
+
+An example using the create initial version of a diagram command:
+
+vcc_create_command=vcc_sccs_create ${ti.vcc_flags} ${ti.vcc_file_dir} 
+			${ti.system} ${ti.vcc_suffix} ${ti.vcc_file}
+vcc_create_flags=v0K0D0M0A0
+
+This command uses four additional flags for the sccs
+implementation. None of them require an argument.
+	-v	Verbose mode
+	-K	Insert SCCS ID keywords
+	-D	Delete sccs temporaries after creation
+	-M	Request sccs Modification request number if a new
+		delta is created
+	-A	Create initial version for all diagrams of a given
+		type.
+It is important to understand that another VCC could understand
+other flags or a user might change the vcc_sccs_create script
+and add more flags.
+The implementation just needs to know which flags are valid, 
+how many arguments each flag expects and the specific values.
+
+Typed:	create -e dfe -A
+Call:	vcc_sccs_create -A /usr/joe/Project/demo/dfe_files demo .dfe 
+	
+	${ti.vcc_flags}	is replaced by -A
+	${ti.vcc_file_dir} is again the file storage directory
+	${ti.system} the name of the current system 
+	${ti.vcc_suffix} the suffix of the file to expect (.dfe here)
+	${ti.vcc_file} is empty since it wasn't specified on the
+	command line.
+
+Typed:	create -K -D -e dse -M new*
+Call:	vcc_sccs_create -K -D -M /usr/joe/Project/demo/dse_files
+		demo .dse new*.dse
+
+	${ti.vcc_flags} is replaced by -K -D -M
+	Storage directory ${ti.vcc_file_dir} and suffix ${ti.vcc_suffix}
+	are replaced properly for a dse file.
+	The ${ti.vcc_file} contains the string 'new*.dse'.
+	The patterns are left in the diagram names so an
+	appropriate script implementing the command can expand
+	metacharacters if desired.
+	For the example given here the vcc_sccs_create is a shell
+	script (sh(1)) which then expands the filenames `new*.dse'
+	inside the storage directory /usr/joe/Project/demo/dse_files.
+	The sccs implementation will then insert all data structure
+	diagrams whose names start with `new'.
+
+
+

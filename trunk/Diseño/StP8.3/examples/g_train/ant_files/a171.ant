@@ -1,0 +1,101 @@
+FileObject 1
+{
+    { Name "a171" }
+    { Type ObjectAnnotation }
+    { GUID "UID_CA6C4EB4-B866-4cc9-9B16-67FF91B01E74" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "reset_scale.c" }
+    { Type SEFile }
+    { ObjectId 1927 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_6549A923-FE3F-475f-A8C2-93DC8B0C579D" }
+}
+
+NodeObject 99997
+{
+    { Name "reset scale" }
+    { Type Module }
+    { ObjectId 1928 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_91C14B80-EEAA-440a-82D0-8D931F4E8509" }
+}
+
+NodeObject 99996
+{
+    { Name "" }
+    { Type FormalCaller }
+    { ObjectId 2522 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_9B6F2467-4C1B-4512-BF8C-1535D2BB0E84" }
+}
+
+LinkObject 99995
+{
+    { Name "" }
+    { Type SubprogramCall }
+    { ObjectId 2654 }
+    { Sig "" }
+    { ToNodeId 99997 }
+    { FromNodeId 99996 }
+    { GUID "UID_47197B8D-0EAF-4254-AB99-D8ABCE0282DF" }
+}
+
+CntxObject 99994
+{
+    { Name "weight" }
+    { Type DataOut }
+    { ObjectId 2663 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { LinkId 99995 }
+    { GUID "UID_26672576-6F53-410d-B369-41F064A2105D" }
+}
+
+NoteObject 2
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99994 }
+    { ObjectId 2665 }
+}
+
+ItemObject 3
+{
+    { Type ObjectName }
+    { Value "weight" }
+    { NoteId 2 }
+    { ObjectId 2666 }
+}
+
+NoteObject 4
+{
+    { Type ParameterDefinition }
+    { Name "" }
+    { OwnerId 99994 }
+    { ObjectId 2668 }
+}
+
+ItemObject 5
+{
+    { Type DataType }
+    { Value "int" }
+    { NoteId 4 }
+    { ObjectId 2669 }
+}
+

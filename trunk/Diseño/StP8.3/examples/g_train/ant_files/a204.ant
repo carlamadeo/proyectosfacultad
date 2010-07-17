@@ -1,0 +1,70 @@
+FileObject 1
+{
+    { Name "a204" }
+    { Type ObjectAnnotation }
+    { GUID "UID_C53E83B4-69E7-439f-A366-D03F6A11431B" }
+}
+
+NodeObject 99999
+{
+    { Name "." }
+    { Type SEDirectory }
+    { ObjectId 2744 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_EC87D812-675F-4d56-950D-3302FC4EC087" }
+}
+
+NodeObject 99998
+{
+    { Name "time_1.c" }
+    { Type SEFile }
+    { ObjectId 2898 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_F66E186D-2B83-4b0b-8862-8D513FE3A89E" }
+}
+
+NodeObject 99997
+{
+    { Name "time_1" }
+    { Type DataModule }
+    { ObjectId 2899 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_D8FD99DA-405C-4459-A81F-11FBEB442FAF" }
+}
+
+NoteObject 2
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2901 }
+}
+
+ItemObject 3
+{
+    { Type ObjectName }
+    { Value "time_1" }
+    { NoteId 2 }
+    { ObjectId 2902 }
+}
+
+NoteObject 4
+{
+    { Type GlobalDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 2904 }
+}
+
+ItemObject 5
+{
+    { Type DataType }
+    { Value "int" }
+    { NoteId 4 }
+    { ObjectId 2905 }
+}
+

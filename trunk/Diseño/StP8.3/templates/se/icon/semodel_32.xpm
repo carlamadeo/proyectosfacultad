@@ -1,0 +1,42 @@
+/* XPM */
+static char *semodel_32[] = {
+/* width height ncolors chars_per_pixel */
+"32 32 3 1",
+/* colors */
+"` c #000000",
+"a c #2A5FFF",
+"b c #FFFFFF",
+/* pixels */
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+"bbbbbbbbbbbbb```````bbbbbbbbbbbb",
+"bbbbbbbbbb`````````````bbbbbbbbb",
+"bbbbbbbbb`aaaaaa````````bbbbbbbb",
+"bbbbbbbb`aa`````a````````bbbbbbb",
+"bbbbbbb`aaa`````aa`````aa`bbbbbb",
+"bbbbbb`aaaaa````aaa```aa```bbbbb",
+"bbbbb````aaaaaa`aaa```a`````bbbb",
+"bbbb`aa`````````aaa``a```````bbb",
+"bbbb`aa`````````aaa``a```````bbb",
+"bbbb`aa`````````aaaaaa```````bbb",
+"bbb`aaa``````````aaaaa````````bb",
+"bbb`aaaa````````aaaaaa````````bb",
+"bbb`aaaa``````````aaaaaaa`````bb",
+"bbb`aaaa````````````aaaaaa````bb",
+"bbb`aaaaa```````aaaaaaaaaaa```bb",
+"bbb`aaaaa````aaaaaaaaaaaaaa```bb",
+"bbb`aaaaa```aaaa``````aaaaa```bb",
+"bbbb`aaaa````aa`````````aaa``bbb",
+"bbbb`aaaaa``````````````aaaa`bbb",
+"bbbb`aaaaaaaaaa`````````aaaa`bbb",
+"bbbbb`aaaaaaaaa````````aaaa`bbbb",
+"bbbbbb`aaaaaaaaa```````aaa`bbbbb",
+"bbbbbbb`aaaaaaaaaa`````aa`bbbbbb",
+"bbbbbbbb`aaaaaaaaaaa```a`bbbbbbb",
+"bbbbbbbbb`aaaaaaaaaaaa``bbbbbbbb",
+"bbbbbbbbbb```aaaaaaa```bbbbbbbbb",
+"bbbbbbbbbbbbb```````bbbbbbbbbbbb",
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+};

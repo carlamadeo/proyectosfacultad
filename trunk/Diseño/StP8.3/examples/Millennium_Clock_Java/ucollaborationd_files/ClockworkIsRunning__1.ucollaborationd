@@ -1,0 +1,874 @@
+Diagram UmlCollaborationDiagram
+{
+    { Name "ClockworkIsRunning__1" }
+    { Format "1.6" }
+    { Scale 0.83 }
+    { PanX -406 }
+    { PanY -431 }
+    { Alignment 32 }
+    { GUID "UID_7CAD2688-0206-11d6-AE65-000000000000" }
+    { Summary
+        { Nodes 15 }
+        { Arcs 7 }
+    }
+}
+
+Node 2
+{
+    { Type ScenarioInstance }
+    { Loc 34 -333 }
+    { Scale 1556.00 50.00 }
+    { Label
+        { Text "Clockwork_is_running(UmlUseCase:ClockworkIsRunning)" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_EE4D90A0-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ScenarioMapping }
+        { ID 1167 }
+        { GUID "UID_8F1FFBB6-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2703 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2705 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ParentName }
+        { ID 2704 }
+    }
+}
+
+Node 3
+{
+    { Type PassiveObject }
+    { Loc -470 71 }
+    { Scale 429.00 128.00 }
+    { Label
+        { Text ":Display" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_EE4D90A1-544D-11d4-8778-00C04F8DEC45" }
+        }
+        { Property
+            { Name "AnonymousName" }
+            { Value "%%object%%933079721_337" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 2706 }
+        { GUID "UID_7CFB96F6-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 2708 }
+        { GUID "UID_7CFB96FC-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 2707 }
+        { GUID "UID_8F1FFBBC-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 4
+{
+    { Type PassiveObject }
+    { Loc 184 -226 }
+    { Scale 373.00 128.00 }
+    { Label
+        { Text ":Owl" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_EE4D90A2-544D-11d4-8778-00C04F8DEC45" }
+        }
+        { Property
+            { Name "AnonymousName" }
+            { Value "%%object%%933079790_337" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 2507 }
+        { GUID "UID_8F1FFB81-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 2509 }
+        { GUID "UID_8F1FFB87-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 2508 }
+        { GUID "UID_8F1FFB84-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 5
+{
+    { Type PassiveObject }
+    { Loc 470 70 }
+    { Scale 434.00 128.00 }
+    { Label
+        { Text ":Cuckoo" }
+    }
+    { PropertyList
+        { Property
+            { Name "AnonymousName" }
+            { Value "%%object%%933079824_337" }
+        }
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_3866F8C1-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 2709 }
+        { GUID "UID_8F1FFBC5-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 2711 }
+        { GUID "UID_8F1FFBCB-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 2710 }
+        { GUID "UID_8F1FFBC8-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 6
+{
+    { Type ActiveObject }
+    { Loc -48 70 }
+    { Scale 488.00 128.00 }
+    { Label
+        { Text ":Clockwork" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_EE4D90A3-544D-11d4-8778-00C04F8DEC45" }
+        }
+        { Property
+            { Name "AnonymousName" }
+            { Value "%%object%%933083130_307" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 2511 }
+        { GUID "UID_7CFB96D1-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 2514 }
+        { GUID "UID_7CFB96D7-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 2513 }
+        { GUID "UID_8F1FFB95-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ActiveObjectMapping }
+        { ID 2512 }
+        { GUID "UID_8F1FFB92-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 7
+{
+    { Type PassiveObject }
+    { Loc -276 -214 }
+    { Scale 389.00 128.00 }
+    { Label
+        { Text ":Door" }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_EE4D90A4-544D-11d4-8778-00C04F8DEC45" }
+        }
+        { Property
+            { Name "AnonymousName" }
+            { Value "%%object%%933088442_307" }
+        }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectScope }
+        { ID 2712 }
+        { GUID "UID_7CFB96FF-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectStatesMapping }
+        { ID 2714 }
+        { GUID "UID_7CFB9705-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Node }
+        { MappingName ObjectMapping }
+        { ID 2713 }
+        { GUID "UID_8F1FFBD5-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Node 8
+{
+    { Type Vertex }
+    { Loc 3 282 }
+    { Scale 128.00 128.00 }
+}
+
+Node 9
+{
+    { Type Vertex }
+    { Loc -93 282 }
+    { Scale 128.00 128.00 }
+}
+
+Arc 10
+{
+    { Type ObjectLink }
+    { From
+        { ID 6 }
+        { Loc 2 95 }
+        { Offset 51 7 }
+    }
+    { To
+        { ID 8 }
+        { Loc 2 282 }
+        { Offset 0 0 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_EE4D90AE-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 11
+{
+    { Type ObjectLink }
+    { From
+        { ID 8 }
+        { Loc 2 282 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 9 }
+        { Loc -94 282 }
+        { Offset 0 0 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_EE4D90AE-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 12
+{
+    { Type ObjectLink }
+    { From
+        { ID 9 }
+        { Loc -94 282 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 6 }
+        { Loc -94 95 }
+        { Offset -45 1 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_EE4D90AE-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 15
+{
+    { Type ObjectLink }
+    { From
+        { ID 6 }
+        { Loc -68 46 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 7 }
+        { Loc -258 -189 }
+        { Offset 0 0 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_EE4D90AD-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 19
+{
+    { Type ObjectLink }
+    { From
+        { ID 4 }
+        { Loc 164 -201 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 6 }
+        { Loc -31 46 }
+        { Offset 0 0 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_EE4D90AC-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 22
+{
+    { Type ObjectLink }
+    { From
+        { ID 5 }
+        { Loc 383 70 }
+        { Offset 0 0 }
+    }
+    { To
+        { ID 6 }
+        { Loc 45 70 }
+        { Offset 0 0 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_548435E0-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+}
+
+Arc 25
+{
+    { Type ObjectLink }
+    { From
+        { ID 3 }
+        { Loc -386 70 }
+        { Offset 0 -1 }
+    }
+    { To
+        { ID 6 }
+        { Loc -143 70 }
+        { Offset 0 0 }
+    }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_EE4D90AB-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+}
+
+Cntx 14
+{
+    { Type SimpleMessage }
+    { Loc -38 313 }
+    { Scale 128.00 128.00 }
+    { Label
+        { Text "addMinute(15)" }
+    }
+    { Parent 11 }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_EE4D90A5-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 2515 }
+        { GUID "UID_8F1FFB9B-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2716 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2722 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 2721 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 2720 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 2719 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 2718 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 2717 }
+    }
+}
+
+Cntx 17
+{
+    { Type SimpleMessage }
+    { Loc -209 -113 }
+    { Scale 128.00 128.00 }
+    { Label
+        { Text "close()" }
+    }
+    { Parent 15 }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_EE4D90A6-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 2723 }
+        { GUID "UID_8F1FFBDD-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2725 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2731 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 2730 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 2729 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 2728 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 2727 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 2726 }
+    }
+}
+
+Cntx 18
+{
+    { Type SimpleMessage }
+    { Loc -153 -38 }
+    { Scale 128.00 128.00 }
+    { Label
+        { Text "open()" }
+    }
+    { Parent 15 }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_EE4D90A7-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 2732 }
+        { GUID "UID_8F1FFBE0-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2734 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2740 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 2739 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 2738 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 2737 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 2736 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 2735 }
+    }
+}
+
+Cntx 21
+{
+    { Type RevSimpleMessage }
+    { Loc 81 -63 }
+    { Scale 128.00 128.00 }
+    { Label
+        { Text "2[(hour>18||hour<=6)&&minute=0]:cry(inthour)" }
+    }
+    { Parent 19 }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_EE4D90A8-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 2533 }
+        { GUID "UID_8F1FFBA1-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2742 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2748 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 2747 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 2746 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 2745 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 2744 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 2743 }
+    }
+}
+
+Cntx 24
+{
+    { Type RevSimpleMessage }
+    { Loc 218 98 }
+    { Scale 128.00 128.00 }
+    { Label
+        { Text "[(hour>6&&hour<=18)&&minute==0]:cry(inthour)" }
+    }
+    { Parent 22 }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_3866F8C0-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 2749 }
+        { GUID "UID_8F1FFBE4-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2751 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2757 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 2756 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 2755 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 2754 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 2753 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 2752 }
+    }
+}
+
+Cntx 27
+{
+    { Type RevSimpleMessage }
+    { Loc -265 47 }
+    { Scale 128.00 128.00 }
+    { Label
+        { Text "showTime(inthour,intminute)" }
+    }
+    { Parent 25 }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_EE4D90A9-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 2758 }
+        { GUID "UID_8F1FFBE7-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2760 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2766 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 2765 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 2764 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 2763 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 2762 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 2761 }
+    }
+}
+
+Cntx 28
+{
+    { Type SimpleMessage }
+    { Loc -38 252 }
+    { Scale 128.00 128.00 }
+    { Label
+        { Text "showTime()" }
+    }
+    { Parent 11 }
+    { PropertyList
+        { Property
+            { Name "UniqueIdProp" }
+            { Value "UID_EE4D90AA-544D-11d4-8778-00C04F8DEC45" }
+        }
+    }
+    { Object
+        { PDMType Link }
+        { MappingName MessageInstanceMapping }
+        { ID 2524 }
+        { GUID "UID_8F1FFB9E-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+    { Object
+        { PDMType Note }
+        { MappingName Default }
+        { ID 2768 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageName }
+        { ID 2774 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName ReturnType }
+        { ID 2773 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageArgs }
+        { ID 2772 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName PredecessorGuard }
+        { ID 2771 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageSequence }
+        { ID 2770 }
+    }
+    { Object
+        { PDMType Item }
+        { MappingName MessageRecurrence }
+        { ID 2769 }
+    }
+}
+
+Link 13
+{
+    { FirstArc 10 }
+    { LastArc 12 }
+    { Object
+        { PDMType Link }
+        { MappingName ForwardMapping }
+        { ID 2779 }
+        { GUID "UID_95458BDA-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Link 16
+{
+    { FirstArc 15 }
+    { LastArc 15 }
+    { Object
+        { PDMType Link }
+        { MappingName ForwardMapping }
+        { ID 2778 }
+        { GUID "UID_95458BD7-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Link 20
+{
+    { FirstArc 19 }
+    { LastArc 19 }
+    { Object
+        { PDMType Link }
+        { MappingName ForwardMapping }
+        { ID 2776 }
+        { GUID "UID_95458BD1-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Link 23
+{
+    { FirstArc 22 }
+    { LastArc 22 }
+    { Object
+        { PDMType Link }
+        { MappingName ForwardMapping }
+        { ID 2777 }
+        { GUID "UID_95458BD4-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}
+
+Link 26
+{
+    { FirstArc 25 }
+    { LastArc 25 }
+    { Object
+        { PDMType Link }
+        { MappingName ForwardMapping }
+        { ID 2775 }
+        { GUID "UID_95458BCE-AC4F-11d4-BEDC-0060971B5EE0" }
+    }
+}

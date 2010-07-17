@@ -1,0 +1,789 @@
+//
+//      sccsid[] = @(#)dse.rules
+//      StP/SE
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1995
+//      All rights reserved
+//
+
+
+DiagramType
+{
+    { SyntaxCheckFunc DseCheckSyntax }
+}
+
+
+NodeSymbol 1 Comment {}
+
+NodeSymbol 2 Vertex
+{
+    { SeeThrough True }
+    { PrintName "Vertex" }
+    { Shape { Predefined Vertex } }
+    { ReadOnly True }
+    { CanHaveLabel False }
+    { CanApplyScaleCmd False }
+}
+
+NodeSymbol 3 Sequence
+{
+    { PrintName "Sequence" }
+    { Shape 
+        { Predefined Rectangle } 
+        { ToolbarImage "sequence" }
+    }
+    { DefaultSize 3.75 1.5 }
+
+    { NodeMapping
+	// Do not change the name of this mapping without also changing the
+	// reference to it in idehook_dse_component_scope_func
+	{ MappingName ComponentMapping }
+	{ AppType Sequence }
+	{ InScopeLink Component }
+	{ ScopeFunc idehook_dse_component_scope_func }
+	{ NameIsRequired True }
+	{ NameFunc se_basic_node_name_func }
+    }
+
+    { NodeMapping
+	// Do not change the name of this mapping without also changing the
+	// reference to it in idehook_dse_component_scope_func
+        { MappingName SEFileMapping }
+	{ PreconditionFunc dse_precondition_is_parent }
+        { AppType SEFile }
+        { NameIsRequired True }
+        { Scope
+            { MappingName SEDirectoryMapping }
+            { Symbol Self }
+        }
+        { NameFunc idehook_se_file_name_func }
+        { InverseMapFunc se_file_dir_inverse_map_rename_func }
+    }
+
+    { NodeMapping
+        { MappingName SEDirectoryMapping }
+	{ PreconditionFunc dse_precondition_is_parent }
+        { AppType SEDirectory }
+        { NameIsRequired True }
+        { NameFunc idehook_se_directory_name_func }
+        { InverseMapFunc se_file_dir_inverse_map_rename_func }
+    }
+    { NameCompletion
+        { MappingName ComponentMapping }
+        { NameCompletionFunc gde_ignore_scope_name_completion_func }
+    }
+    { EditAnnotation
+	{ UseMappings ( ComponentMapping ) }
+    }
+
+}
+
+
+NodeSymbol 4 Selection
+{
+    { PrintName "Selection" }
+    { Shape 
+        { Predefined Rectangle }
+        { ToolbarImage "selection" }
+    }
+    { DefaultSize 3.75 1.5 }
+
+    { NodeMapping
+	// Do not change the name of this mapping without also changing the
+	// reference to it in idehook_dse_component_scope_func
+	{ MappingName ComponentMapping }
+	{ AppType Selection }
+	{ InScopeLink Component }
+	{ ScopeFunc idehook_dse_component_scope_func }
+	{ NameIsRequired True }
+	{ NameFunc se_basic_node_name_func }
+    }
+
+    { NodeMapping
+	// Do not change the name of this mapping without also changing the
+	// reference to it in idehook_dse_component_scope_func
+        { MappingName SEFileMapping }
+	{ PreconditionFunc dse_precondition_is_parent }
+        { AppType SEFile }
+        { NameIsRequired True }
+        { Scope
+            { MappingName SEDirectoryMapping }
+            { Symbol Self }
+        }
+        { NameFunc idehook_se_file_name_func }
+        { InverseMapFunc se_file_dir_inverse_map_rename_func }
+    }
+
+    { NodeMapping
+        { MappingName SEDirectoryMapping }
+	{ PreconditionFunc dse_precondition_is_parent }
+        { AppType SEDirectory }
+        { NameIsRequired True }
+        { NameFunc idehook_se_directory_name_func }
+        { InverseMapFunc se_file_dir_inverse_map_rename_func }
+    }
+    { NameCompletion
+        { MappingName ComponentMapping }
+        { NameCompletionFunc gde_ignore_scope_name_completion_func }
+    }
+
+    { EditAnnotation
+	{ UseMappings ( ComponentMapping ) }
+    }
+
+    { DisplayMark
+        { Name SelectMark }
+        { StringMark "O" }
+        { Anchor UpperRight }
+        { HAdjust Right }
+        { VAdjust Top }
+        { XPixelOffset -4 }
+        { YPixelOffset 2 }
+	{ Help "Identifies a selection" }
+    }
+}
+
+
+NodeSymbol 5 Enumeration
+{
+    { PrintName "Enumeration" }
+    { Shape
+        { Predefined Rectangle } 
+        { ToolbarImage "enumeration" }
+    }
+    { DefaultSize 3.75 1.5 }
+
+    { NodeMapping
+	// Do not change the name of this mapping without also changing the
+	// reference to it in idehook_dse_component_scope_func
+	{ MappingName ComponentMapping }
+	{ AppType Enumeration }
+	{ InScopeLink Component }
+	{ ScopeFunc idehook_dse_component_scope_func }
+	{ NameIsRequired True }
+	{ NameFunc se_basic_node_name_func }
+    }
+
+    { NodeMapping
+	// Do not change the name of this mapping without also changing the
+	// reference to it in idehook_dse_component_scope_func
+        { MappingName SEFileMapping }
+	{ PreconditionFunc dse_precondition_is_parent }
+        { AppType SEFile }
+        { NameIsRequired True }
+        { Scope
+            { MappingName SEDirectoryMapping }
+            { Symbol Self }
+        }
+        { NameFunc idehook_se_file_name_func }
+        { InverseMapFunc se_file_dir_inverse_map_rename_func }
+    }
+
+    { NodeMapping
+        { MappingName SEDirectoryMapping }
+	{ PreconditionFunc dse_precondition_is_parent }
+        { AppType SEDirectory }
+        { NameIsRequired True }
+        { NameFunc idehook_se_directory_name_func }
+        { InverseMapFunc se_file_dir_inverse_map_rename_func }
+    }
+    { NameCompletion
+        { MappingName ComponentMapping }
+        { NameCompletionFunc gde_ignore_scope_name_completion_func }
+    }
+
+    { EditAnnotation
+	{ UseMappings ( ComponentMapping ) }
+    }
+
+    { DisplayMark
+        { Name EnumMark }
+        { StringMark "E" }
+        { Anchor UpperRight }
+        { HAdjust Right }
+        { VAdjust Top }
+        { XPixelOffset -4 }
+        { YPixelOffset 2 }
+	{ Help "Identifies an enumeration" }
+    }
+    { DisplayMark
+        { Name Tag }
+        { ItemCond (Tag) }
+        { StringMark "Tag: ${annot.DataDefinition.Tag}" }
+        { Anchor UpperLeft }
+        { HAdjust Left }
+        { VAdjust Top }
+        { XPixelOffset 2 }
+        { YPixelOffset 2 }
+	{ Help "Show tag value" }
+    }
+}
+
+
+
+NodeSymbol 6 Typedef
+{
+    { PrintName "Typedef" }
+    { Shape
+        { Predefined DoubleRectangle } 
+        { ToolbarImage "typedef" }
+    }
+    { DefaultSize 3.75 1.5 }
+
+    { NodeMapping
+	{ MappingName ComponentMapping }
+	{ PreconditionFunc dse_precondition_is_parent }
+	{ AppType Typedef }
+        { Scope
+            { MappingName SEFileMapping }
+            { Symbol Self }
+        }
+	{ NameIsRequired True }
+	{ NameFunc se_basic_node_name_func }
+    }
+
+    { NodeMapping
+        { MappingName SEFileMapping }
+	{ PreconditionFunc dse_precondition_is_parent }
+        { AppType SEFile }
+        { NameIsRequired True }
+        { Scope
+            { MappingName SEDirectoryMapping }
+            { Symbol Self }
+        }
+        { NameFunc idehook_se_file_name_func }
+        { InverseMapFunc se_file_dir_inverse_map_rename_func }
+    }
+    { NodeMapping
+        { MappingName SEDirectoryMapping }
+	{ PreconditionFunc dse_precondition_is_parent }
+        { AppType SEDirectory }
+        { NameIsRequired True }
+        { NameFunc idehook_se_directory_name_func }
+        { InverseMapFunc se_file_dir_inverse_map_rename_func }
+    }
+    { NameCompletion
+        { MappingName ComponentMapping }
+        { NameCompletionFunc gde_ignore_scope_name_completion_func }
+    }
+
+    { EditAnnotation
+	{ UseMappings ( ComponentMapping ) }
+    }
+
+    { DisplayMark
+        { Name TypedefLeafType }
+	{ MappingName ComponentMapping }
+        { CondFunc "DSELeafTypeDisplayMarkCond();" }
+        { StringMark "${annot.TypedefDefinition.DataType}" }
+        { Anchor LowerLeft }
+        { HAdjust Left }
+        { VAdjust Bottom }
+        { XPixelOffset 10 }
+        { YPixelOffset -2 }
+	{ Help "Show data type" }
+    }
+
+    { DisplayMark
+        { Name ArraySize }
+        { ItemCond (ArraySize) }
+        { StringMarkFunc "SEArraySize(\"${annot.TypedefDefinition.ArraySize}\");" }
+        { Anchor LowerRight }
+        { HAdjust Right }
+        { VAdjust Bottom }
+        { XPixelOffset -8 }
+        { YPixelOffset -5 }
+	{ Help "Show array size" }
+    }
+    { Navigation
+        { Name TypedefSourceCodeDef }
+        { UseMappings (ComponentMapping) }
+        { Label "Source Code Definition" }
+        { TargetFunc "SEBrowseToTypedefDef(${node.id});" }
+    }
+
+    { Navigation
+	{ Name TypeNav }
+	{ Label "Type" }
+        { UseMappings ( ComponentMapping ) }
+	{ TargetFunc "FindDseType(${node.id});" }
+	{ FailureCmd CreateDseTypeDiagram }
+    }
+}
+
+
+NodeSymbol 7 Iteration
+{
+    { ReadOnly True }
+    { NodeMapping
+	{ MappingName ComponentMapping }
+        { AppType Iteration }
+        { NameIsRequired True }
+    }
+    { PrintName "Iteration" }
+    { Shape { Predefined Rectangle } }
+    { DefaultSize 3.75 1.5 }
+    { CanHaveLabel True }
+    { PreserveScale AllStructureNodes }
+    { CanApplyScaleCmd True}
+}
+
+NodeSymbol 998 MultiSelectionNavigation
+{
+    { PrintName "Hook for navigations with multiselection" }
+    { Shape { Predefined Rectangle }}
+    { ReadOnly True }
+
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { FailureCmd GoToDOORSFromMulti }
+    }
+    
+}
+
+
+TypeSet AllStructureNodes
+{
+    Sequence
+    Selection
+
+    // This is just for migration purposes
+    Iteration
+}
+
+
+TypeSet AllNodes
+{
+    Sequence
+    Selection
+    Enumeration
+    Typedef
+}
+
+
+TypeSet AllNodesButTypedef
+{
+    Sequence
+    Selection
+    Enumeration
+}
+ 
+
+NodeSymbol AllNodes
+{
+    { RenameFunc se_data_rename }
+    { CanHaveLabel True }
+    { PreserveScale AllNodes }
+    { CanApplyScaleCmd True }
+
+    { DisplayMark
+        { Name SEDirectory }
+        { CondFunc "SEDirectoryDisplayMarkCond();" }
+        { Anchor UpperRight }
+        { HAdjust Left }
+        { VAdjust Top }
+        { StringMarkFunc "se_dir_dmark(${nodesym.psymid}, False);" }
+    }
+    { DisplayMark
+        { Name SEFile }
+        { CondFunc "SEFileDisplayMarkCond();" }
+        { Anchor LowerRight }
+        { HAdjust Left }
+        { StringMarkFunc "se_file_dmark(${nodesym.psymid}, False);" }
+    }
+    { Navigation
+        { Name AllRefs }
+        { Label "All References" }
+        { UseMappings ( ComponentMapping ) }
+        { Query "node_ref[node[id = ${node.id}]]" }
+    }
+    { Navigation
+        { Name AllRefsByName }
+        { Label "All References By Name" }
+        { UseMappings ( ComponentMapping ) }
+        { Query "node_ref[node[type = ${node.type} && name = '${node.name}']]" }
+    }
+
+    { Methods
+        { Method
+            { Name DoubleClick }
+            { MethodFunc dse_structure_double_click }
+        }
+    }
+    { Navigation
+	{ ParseCondition "is_valid_programming_env();" }
+        { Name ProgrammingEnvironment }
+        { UseMappings ( ComponentMapping ) }
+        { Label "Programming Environment" }
+        { FailureCmd DSEGotoProgrammingEnvironment }
+    }
+}
+
+NodeSymbol AllNodesButTypedef
+{
+    { Navigation
+        { Name Parent }
+        { Label "Parent" }
+        { UseMappings ( ComponentMapping ) }
+	{ TargetFunc "GoToDseParent(${node.id});" }
+	//{ Query "node_ref[node[id = ${node.scope_node_id}]]" }
+	//{ FailureCmd FindDseParent }
+    }
+    { Navigation
+        { Name DefSourceCodeDef }
+        { UseMappings (ComponentMapping) }
+        { Label "Source Code Definition" }
+        { TargetFunc "SEBrowseToDefDef(${node.id});" }
+    }
+}
+
+
+
+NodeSymbol AllStructureNodes
+{
+    { DisplayMark
+        { Name LeafType }
+	{ MappingName ComponentMapping }
+        { CondFunc "DSELeafTypeDisplayMarkCond();" }
+        { StringMark "${annot.DataDefinition.DataType}" }
+        { Anchor LowerLeft }
+        { HAdjust Left }
+        { VAdjust Bottom }
+        { XPixelOffset 2 }
+        { YPixelOffset -2 }
+	{ Help "Show data type" }
+    }
+
+    { DisplayMark
+        { Name ArraySize }
+        { ItemCond (ArraySize) }
+        { StringMarkFunc "SEArraySize(\"${annot.DataDefinition.ArraySize}\");" }
+        { Anchor LowerRight }
+        { HAdjust Right }
+        { VAdjust Bottom }
+        { XPixelOffset -4 }
+        { YPixelOffset -2 }
+	{ Help "Show array size" }
+    }
+    { DisplayMark
+        { Name Tag }
+        { ItemCond (Tag) }
+        { StringMark "Tag: ${annot.DataDefinition.Tag}" }
+        { Anchor UpperLeft }
+        { HAdjust Left }
+        { VAdjust Top }
+        { XPixelOffset 2 }
+        { YPixelOffset 2 }
+	{ Help "Show tag value" }
+    }
+
+    { Navigation
+	{ Name TypeNav }
+	{ Label "Type's Definition" }
+        { UseMappings ( ComponentMapping ) }
+	{ TargetFunc "FindDseType(${node.id});" }
+	{ FailureCmd CreateDseTypeDiagram }
+    }
+
+    { Navigation
+	{ Name Decomposition }
+	{ Label "Scoped Decomposition" }
+        { UseMappings ( ComponentMapping ) }
+	{ Query "node_ref[node[id = ${node.id}] && file[name != '${file}']]" }
+	{ FailureCmd CreateDseScopeChainDiagram }
+    }
+}
+
+NodeSymbol AllNodes
+{
+    { Navigation
+        { Name AssignRequirementsToObject }
+        { Label "Allocate &Requirements" }
+        { SpaceBefore True }
+        { Accelerator
+            { Label "Alt+Ctrl+R" }
+            { Value "Alt Ctrl<Key>R" }
+        }
+        { UseMappings ( ComponentMapping ) }
+        { FailureCmd GoToRequirementsTableFromObject }
+    }
+    { Navigation
+        // ECR 5118 begin
+        { ParseCondition "use_doors_integration();" }
+	    //{ ParseCondition "is_doors_available();" }
+        // ECR 5118 end
+        { Name DOORS }
+        { Label "DOORS" }
+        { UseMappings ( ComponentMapping ) }
+        { FailureCmd GoToDOORSFromNode }
+    }
+}
+
+
+LinkSymbol 100 Component
+{
+    { PrintName "Component" }
+    { CanHaveLabel False }
+    { FromBottomToTop True }
+    { Uncentered False }
+
+    { Connects { From AllStructureNodes } { To AllStructureNodes } {IsDefault True}  }
+    { Connects { From Enumeration } { To Sequence } {IsDefault True}  }
+    { Connects { From AllStructureNodes } { To Enumeration } {IsDefault True}  }
+
+    { LinkMapping
+	//{ PreconditionFunc dse_precondition_is_parent_link }
+	{ AppType  Component }
+	{ MappingName ComponentLinkMapping }
+        { FromNode
+            { MappingName ComponentMapping }
+        }
+        { ToNode
+            { MappingName ComponentMapping }
+        }
+    }
+
+}
+
+LinkSymbol 101 CommentLink
+{
+    { PrintName "Comment Link" }
+    { Uncentered True }
+    { ToArrow True }
+    { Dashed True }
+
+    { Connects { From Comment } { To AllNodes } }
+    { Connects { From Comment } { To Vertex } }
+    { Connects { From AllNodes } { To Comment } }
+    { Connects { From Vertex } { To Comment } }
+}
+
+
+
+SymbolList
+{
+    { ShowStraightArc True }
+    { ShowSpline True }
+    { Symbols
+	(
+	    Comment
+	    Sequence
+	    Enumeration
+	    Selection
+	    Typedef
+	)
+    }
+    { OrthogonalArcsAreAllowed False }
+    { OrthogonalArcsAreDefault False }
+}
+
+Include "rules/gde_menu_bar.std"
+Include "rules/se_object_rename.rules"
+Include "rules/gde_accels.std"
+Include "rules/gde_edit_menu.std"
+Include "rules/dse.prop"
+Include "rules/t.prop"
+Include "rules/comment.symbol"
+Include "rules/re_navigate.prop"
+Include "se/rules/feature.rule"
+Include "rules/dse_toolbar_arc_types.rules" // ECR 3556
+
+Menu MenuBarEdit
+{
+    { MenuEntry
+        { Name SetPropSeq }
+//fix for spr 2847 - changes the label to Properties
+        { Label "Pr&operties" }
+	{ PlaceAfter EditAnnot }
+//end of spr2847
+        { Builtin "EditorQrlEvalNoSave DSE_structure_props_show();" }
+        { ActiveFunc idehook_dse_structure_props_active_func }
+    }
+}
+Menu DiagramContextMenu //Edit
+{
+    { MenuEntry
+        { Name CheckSemantics }
+        // ECR 7464
+        // { Builtin "EditorQrlEval checkDseSemantics();" }
+        { Builtin "EditorQrlEvalNoSave checkDseSemantics();" }
+    }
+    { MenuEntry
+        { Name CheckSemanticsSelectively }
+        { Label "Check Semantics Selectively..." }
+        { PlaceAfter CheckSemantics }
+        // ECR 7464
+        // { Builtin "EditorQrlEval checkDseSemanticsSelect();" }
+        { Builtin "EditorQrlEvalNoSave checkDseSemanticsSelect();" }
+    }
+}
+
+Menu ObjectContextMenu //Edit
+{
+    { MenuEntry
+        { Name SetPropSeq }
+//fix for spr 2847 - changes the label to Properties
+        { Label "Pr&operties" }
+	{ PlaceAfter EditAnnot }
+//end of spr2847
+        { Builtin "EditorQrlEvalNoSave DSE_structure_props_show();" }
+        { ActiveFunc idehook_dse_structure_props_active_func }
+    }
+}
+
+Menu Tools
+{
+    { MenuEntry
+        { Name CheckSemantics }
+        { Builtin "EditorQrlEvalNoSave checkDseSemantics();" }
+    }
+    { MenuEntry
+        { Name CheckSemanticsSelectively }
+        { Label "Check Semantics Selectively..." }
+        { PlaceAfter CheckSemantics }
+        { Builtin "EditorQrlEvalNoSave checkDseSemanticsSelect();" }
+        { Accelerator
+            { Label "Alt+F7" }
+            { Value "Alt<Key>F7" }
+        }
+    }
+}
+
+
+
+Command GoToRequirementsTableFromObject
+{
+   { Builtin "EditorQrlEvalNoSave to_requirements_table_from_node(0${node.id});" }
+}
+
+ 
+Command GoToDOORSFromNode
+{
+   { Builtin "EditorQrlEvalNoSave node_navigate_to_doors(0${node.id});" }
+}
+
+
+Command GoToDOORSFromMulti
+{
+   { Builtin "EditorQrlEvalNoSave doors_export_selected();" }
+}
+
+
+
+Command CreateDseTypeDiagram
+{
+    { PrintName "Create Data Structure Diagram?" }
+    { ObjectRequired True }
+    { StartMessage "Executing Create Data Structure Diagram" }
+    { FailureMessage "Create Data Structure Diagram failed." }
+    { SuccessMessage "Create Data Structure Diagram completed." }
+    { Builtin "EditorQrlEval \"InitializeDseDiagramFromNode(${node.id}, 2);\"" }
+}
+
+
+Command CreateDseScopeChainDiagram
+{
+    { PrintName "Create Data Structure Diagram?" }
+    { ObjectRequired True }
+    { StartMessage "Executing Create Data Structure Diagram" }
+    { FailureMessage "Create Data Structure Diagram failed." }
+    { SuccessMessage "Create Data Structure Diagram completed." }
+    { Builtin "EditorQrlEval \"InitializeDseDiagramWithScope(${node.id});\"" }
+}
+
+
+
+//Command FindDseParent
+//{
+//    { PrintName "Navigate to Parent?" }
+//    { ObjectRequired True }
+//    { StartMessage "Executing Navigate to Parent Diagram" }
+//    { FailureMessage "Navigate to Parent Diagram failed." }
+//    { SuccessMessage "Navigate to Parent Diagram completed." }
+//    { Builtin "EditorQrlEval \"GoToDseParent(${node.id});\"" }
+//}
+
+
+Command DSEGotoProgrammingEnvironment
+{
+    { PrintName "Show in Programming Environment" }
+    { ObjectRequired True }
+    { StartMessage "Show object in Programming Environment ..." }
+    { FailureMessage "Failed to show object in Programming Environment" }
+    { SuccessMessage "Show object in Programming Environment completed" }
+    { Builtin "EditorQrlEvalNoSave NavigateToPE(${node.id});" }
+}
+
+
+Menu Navigation
+{
+    { InMenuBar True }
+// fix for spr 2789
+    { Label "&GoTo" }
+    { Pin True }
+    { GenerationFunc idehook_navigation_menu_gen_func }
+}
+
+
+//Menu DSE 
+Menu ProductMenu 
+{
+    { InMenuBar True }
+    { Pin True }
+    { Label "&DSE" }
+    { MenuEntry  
+	{ Name GenerateBNF }
+        { Label "&Generate BNF for Diagram" }
+        { Builtin "EditorQrlEvalNoSave generate_bnf_from_dse();" }
+	{ ActiveFunc idehook_dse_generate_bnf_active_func }
+    }  
+    { MenuEntry  
+	{ Name ShowAllChildren }
+        { Label "&Show All Children" }
+        { Builtin "EditorQrlEval GetAllChildren();" }
+	{ ActiveFunc idehook_show_children_active_func }
+    }  
+
+// fix for spr 2875
+//    { Spacer }
+//
+//    { MenuEntry
+//        { Name SetPropT }
+//        { Label "Set StP/T Object Properties..." }
+//        { Builtin "EditorQrlEvalNoSave DSE_t_props_show();" }
+//        { ActiveFunc idehook_dse_t_props_active_func }
+//    }
+// end of spr 2875 fix
+
+//    { MenuEntry
+//        { Name SetProp2167A }
+//        { Label "Set 2167A Object Properties..." }
+//        { Builtin "EditorQrlEvalNoSave DSE_2167A_props_show();" }
+//        { ActiveFunc idehook_dse_structure_props_active_func }
+//    }
+}
+
+
+TypeSet DOORS
+{
+	AllNodes
+}
+
+DisplayMarkGroups
+{
+    //{ ContinuousDisplayMarks (TypedefLeafType LeafType IterMark ArraySize SelectMark EnumMark Tag SEFile SEDirectory) }
+    { ContinuousDisplayMarks ( TypedefLeafType LeafType IterMark ArraySize SelectMark EnumMark Tag ) }
+    { NoUpdateDisplayMarks ( SEFile SEDirectory ) }
+}
+
+//  Add any user customizations to the file included below:
+IncludeIfExists "user/se/rules/user_dse.rules"
+
+Include "rules/default_arc_type.rules" //ECR 6469
+
+PassWord "11E9D44D"

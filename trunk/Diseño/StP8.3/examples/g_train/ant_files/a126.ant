@@ -1,0 +1,290 @@
+FileObject 1
+{
+    { Name "a126" }
+    { Type ObjectAnnotation }
+    { GUID "UID_5B7ED90A-C8CB-4c1f-B44A-9A4FDB4C5135" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "display_information.h" }
+    { Type SEFile }
+    { ObjectId 1132 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_081EE189-5EBE-4ac6-AA19-2B8A0569627E" }
+}
+
+NodeObject 99997
+{
+    { Name "display information" }
+    { Type Sequence }
+    { ObjectId 1133 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_F9783EA1-1C3B-450d-B431-62E23F8FDFA0" }
+}
+
+NodeObject 99996
+{
+    { Name "location" }
+    { Type Sequence }
+    { ObjectId 1269 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99997 }
+    { GUID "UID_EAD7842D-BCE3-4b6d-A28E-AA950310F768" }
+}
+
+NoteObject 2
+{
+    { Type DataDefinition }
+    { Name "" }
+    { OwnerId 99996 }
+    { ObjectId 1271 }
+    { DescLine "Location in Km." }
+}
+
+ItemObject 3
+{
+    { Type DataType }
+    { Value "integer" }
+    { NoteId 2 }
+    { ObjectId 1272 }
+}
+
+ItemObject 4
+{
+    { Type Constraint }
+    { Value "None" }
+    { NoteId 2 }
+    { ObjectId 1273 }
+}
+
+ItemObject 5
+{
+    { Type DataLocation }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1274 }
+}
+
+ItemObject 6
+{
+    { Type DataSize }
+    { Value "3 CHAR" }
+    { NoteId 2 }
+    { ObjectId 1275 }
+}
+
+ItemObject 7
+{
+    { Type Representation }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1276 }
+}
+
+ItemObject 8
+{
+    { Type Legality }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1277 }
+}
+
+ItemObject 9
+{
+    { Type Units }
+    { Value "Km" }
+    { NoteId 2 }
+    { ObjectId 1278 }
+}
+
+ItemObject 10
+{
+    { Type Scaling }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1279 }
+}
+
+ItemObject 11
+{
+    { Type Precision }
+    { Value "approximate" }
+    { NoteId 2 }
+    { ObjectId 1280 }
+}
+
+ItemObject 12
+{
+    { Type Accuracy }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1281 }
+}
+
+ItemObject 13
+{
+    { Type Conventions }
+    { Value "US" }
+    { NoteId 2 }
+    { ObjectId 1282 }
+}
+
+ItemObject 14
+{
+    { Type Frequency }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 1283 }
+}
+
+NoteObject 15
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99996 }
+    { ObjectId 1285 }
+}
+
+ItemObject 16
+{
+    { Type ObjectName }
+    { Value "location" }
+    { NoteId 15 }
+    { ObjectId 1286 }
+}
+
+ItemObject 17
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 15 }
+    { ObjectId 1287 }
+}
+
+NoteObject 18
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99996 }
+    { ObjectId 1289 }
+    { DescLine "These requirements were taken from an article in 'Electronic Design' Apr 28 1988. The article outlines a model for the design of a realtime system for an underground transportation system." }
+}
+
+ItemObject 19
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 18 }
+    { ObjectId 1290 }
+}
+
+ItemObject 20
+{
+    { Type RequirementName }
+    { Value "screen-sub-system" }
+    { NoteId 18 }
+    { ObjectId 1291 }
+}
+
+ItemObject 21
+{
+    { Type RequirementDocument }
+    { Value "g_train_specifications" }
+    { NoteId 18 }
+    { ObjectId 1292 }
+}
+
+ItemObject 22
+{
+    { Type RequirementParagraph }
+    { Value "speed" }
+    { NoteId 18 }
+    { ObjectId 1293 }
+}
+
+ItemObject 23
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 18 }
+    { ObjectId 1294 }
+}
+
+ItemObject 24
+{
+    { Type QualificationMethod }
+    { Value "" }
+    { NoteId 18 }
+    { ObjectId 1295 }
+}
+
+ItemObject 25
+{
+    { Type QualificationLevel }
+    { Value "" }
+    { NoteId 18 }
+    { ObjectId 1296 }
+}
+
+ItemObject 26
+{
+    { Type FormalTestParagraph }
+    { Value "" }
+    { NoteId 18 }
+    { ObjectId 1297 }
+}
+
+NoteObject 27
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99996 }
+    { ObjectId 1299 }
+}
+
+ItemObject 28
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 27 }
+    { ObjectId 1300 }
+}
+
+ItemObject 29
+{
+    { Type DocumentName }
+    { Value "SDD" }
+    { NoteId 27 }
+    { ObjectId 1301 }
+}
+
+ItemObject 30
+{
+    { Type DocumentNumber }
+    { Value "3" }
+    { NoteId 27 }
+    { ObjectId 1302 }
+}
+
+ItemObject 31
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 27 }
+    { ObjectId 1303 }
+}
+

@@ -1,0 +1,42 @@
+FileObject 1
+{
+    { Name "a101" }
+    { Type ObjectAnnotation }
+    { GUID "UID_D3288688-6CF8-4da6-B571-A1366462E021" }
+}
+
+NodeObject 99999
+{
+    { Name "Account,BankStatement" }
+    { Type UmlAssociation }
+    { ObjectId 311 }
+    { AnnotFileId 1 }
+    { Sig ":" }
+    { ScopeNodeId 0 }
+    { GUID "UID_DEAA18D4-108E-11d5-8C6F-000000000000" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 313 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 315 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Account,BankStatement" }
+    { NoteId 3 }
+    { ObjectId 316 }
+}
+

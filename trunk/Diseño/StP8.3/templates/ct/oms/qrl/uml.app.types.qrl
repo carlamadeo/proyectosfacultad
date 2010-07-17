@@ -1,0 +1,2026 @@
+//
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+//
+
+#include "rules/qrl/ct.inc"
+
+
+// ECR 7473 begin
+void
+uml_nary_association_get_sorted_classnames_and_roles(list classnames, list rolenames,
+                                          list sorted_classnames, list sorted_rolenames)
+{
+	string clsname, rolename, result;
+	string str;
+	int i, j, k, first, last;
+
+    while (list_count(classnames) > 0)
+	{
+		clsname = list_get(classnames, 0);
+        rolename = list_get(rolenames, 0);
+
+		// first find the range of the current class
+		j = list_count(sorted_classnames);
+		first = j;
+		last = j;
+		for (i = 0; i < j; i++)
+		{
+			str = list_get(sorted_classnames, i);
+			if (str == clsname)
+			{
+				if (first == j)
+					first = i;
+			}
+			else if (str > clsname)
+			{
+				last = i;
+				break;
+			}
+		}
+
+		// now find the position of the current role
+		k = last;
+		for (i = first; i < last; i++)
+		{
+			str = list_get(sorted_rolenames, i);
+			// this coundition should be
+			// if (str >= rolename) {...}
+			// BUT IdeTString's operator >=() returns
+			// true if the left operand is empty and
+			// false if the right operand is empty.
+			if (rolename == "" || (str != "" && str >= rolename))
+			{
+				k = i;
+				break;
+			}
+		}
+
+		if (j == k)
+		{
+			list_append(sorted_classnames, clsname);
+			list_append(sorted_rolenames, rolename);
+		}
+		else
+		{
+			list_insert(sorted_classnames, k, clsname);
+			list_insert(sorted_rolenames, k, rolename);
+		}
+
+		list_delete(classnames, 0);
+		list_delete(rolenames, 0);
+	}
+
+	list_clear(classnames);
+	list_clear(rolenames);
+}
+// ECR 7473 end
+
+// SPR 4052 - Model Management -->
+//
+// DependentsFunc for: node UmlPackage
+//
+ 
+update_dependents
+UmlPackage_dependents(node theBase)
+{
+    update_dependents dependents = update_dependents_create();
+    string theBaseName = to_oms_string(theBase.name);
+    item dep_UmlPackage;
+    const string  dep_UmlPackage_query = "item[(UmlSubsystemName || UmlExternalSubsystemName) && value = '${theBaseName}']";
+ 
+    //
+    // Dependent item objects of type UmlPackage
+    // Dependency name: Name
+    //
+ 
+    for_each_in_select(dep_UmlPackage_query, dep_UmlPackage)
+        update_dependents_append(dependents, dep_UmlPackage, GOR_NM_DP_N);
+ 
+    return(dependents);
+}
+// SPR 4052 - Model Management <--
+
+//
+// DependentsFunc for: node UmlStereotype
+//
+ 
+update_dependents
+UmlStereotype_dependents(node theBase)
+{
+    update_dependents dependents = update_dependents_create();
+    string theBaseName = to_oms_string(theBase.name);
+    item dep_UmlStereotype;
+    const string  dep_UmlStereotype_query = "item[UmlStereotype && value = '${theBaseName}']";
+ 
+    //
+    // Dependent item objects of type UmlStereotype
+    // Dependency name: Name
+    //
+ 
+    for_each_in_select(dep_UmlStereotype_query, dep_UmlStereotype)
+        update_dependents_append(dependents, dep_UmlStereotype, GOR_NM_DP_N);
+ 
+    return(dependents);
+}
+
+// The state editors use UmlAttribute, but scope it to the StateMachine. 
+// So, I need to find the parent class, get the state machine by that name,
+// and then get all attributes scoped to that state machine with the
+// same name as the current attribute
+// Also UmlObjectInstanceAttribute has a name that matches attribute name.
+update_dependents
+UmlAttribute_dependents(node theBase)
+{
+    update_dependents dependents = update_dependents_create();
+    string theBaseName = to_oms_string(theBase.name);
+	node class = find_by_query("node[id=" + theBase.scope_node_id + "]");
+	node dep_UmlAttribute;
+
+	if (NULL != class) {
+		node machine = find_by_query("node[UmlStateMachine && name= '" + class.name + "']");
+
+		if ( NULL != machine ) {
+			string  dep_UmlAttribute_query = "node[UmlAttribute && name = '" +
+			     theBaseName + "' && scope_node_id = " + machine.id + "]";
+			
+			for_each_in_select(dep_UmlAttribute_query, dep_UmlAttribute)
+				update_dependents_append(dependents, dep_UmlAttribute, GOR_NM_DP_N);
+		}
+	// UmlObjectInstanceAttribute
+	// First, the owning UmlObjectInstance
+	string qry = "UmlObjectInstance && scope_node[name='" + class.name + "']";
+	// then add on the attribute stuff
+	qry = "node[UmlObjectInstanceAttribute && name='" + theBaseName +
+		"' && scope_node[" + qry + "]]";
+	for_each_in_select(qry, dep_UmlAttribute)
+		update_dependents_append(dependents, dep_UmlAttribute, GOR_NM_DP_N);
+
+	}
+ 
+    return(dependents);
+}
+
+
+// UmlOperation has the following dependencies:
+//  UmlStateMachine 
+//  UmlTransitionAction
+//  UmlTransitionEvent
+//  UmlTransitionSend
+//  UmlStateEvent
+//  UmlAction
+//  UmlObjectName
+//  UmlOperation with matching name (optional - overloaded functions)
+//
+//	
+update_dependents
+UmlOperation_dependents(node theBase)
+{
+    update_dependents dependents = update_dependents_create();
+    string theBaseName = to_oms_string(theBase.name);
+    string sm_name = uml_state_machine_name(theBase);
+    node sm = NULL;
+    node class;
+    string qry;
+    node dep_Node;
+    link dep_Link;
+    item dep_Item;
+
+    qry = "node[UmlStateMachine && name='" + sm_name + "']";
+	
+    sm = find_by_query(qry);
+    if (NULL != sm ) // there's only one of these
+	update_dependents_append(dependents, sm, "OperationStateMachine");
+
+    // OK, on to the transition stuff
+    // each one of these will have its value formatted like an operation.
+    // Since we have to match argument counts with the operation to get a 
+    // a good match, pre-parse the operation signature partially
+    list args = list_create("string",0);
+    int nargs = -1;
+    if (uml_split_arguments(theBase.sig,args)) {
+	nargs = list_count(args);
+    }
+    // Find the State Machine corresponding to the scope class, because we only want
+    // transitions and internal actions that are scoped to that State Machine
+    class = find_by_query("node[${theBase.scope_node_id}]");
+    if (NULL != class)
+	sm = find_by_query("node[UmlStateMachine & name = '${class.name}']");
+
+    if(sm != NULL && class != NULL)
+    {
+	uml_operation parsedOp;
+	if (nargs >= 0) {
+		    
+	    qry = "item[(UmlTransitionAction|UmlTransitionEvent|UmlTransitionSend) && (value $ '" + theBaseName + "(*' | value = '" + theBaseName + "') && link[scope_node_id = ${sm.id}]]";
+	    for_each_in_select(qry, dep_Item) {
+		parsedOp = uml_parse_operation(dep_Item.value);
+		// just use string_to_list because these are ACTUAL arguments
+		args = string_to_list(parsedOp.opArgs,",");
+		if (theBaseName == parsedOp.opName && list_count(args) == nargs)
+		    update_dependents_append(dependents, dep_Item, "OperationTransition");
+	    }
+	    // UmlAction
+	    qry = "node[UmlAction&& scope_node_id=" + sm.id + " && (name $ '" + theBaseName + "(*' | name = '" + theBaseName + "')]";
+	    for_each_in_select(qry, dep_Node) {
+		parsedOp = uml_parse_operation(dep_Node.name);
+		// just use string_to_list because these are ACTUAL arguments
+		args = string_to_list(parsedOp.opArgs,",");
+		if (list_count(args) == nargs)
+		    update_dependents_append(dependents, dep_Node, "OperationStateAction");
+	    }
+	    qry = "link[UmlStateEvent&& to_node[scope_node_id=" + sm.id + "] && (name $ '" + theBaseName + "(*' | name = '" + theBaseName + "')]";
+	    for_each_in_select(qry, dep_Link) {
+		parsedOp = uml_parse_operation(dep_Link.name);
+		// just use string_to_list because these are ACTUAL arguments
+		args = string_to_list(parsedOp.opArgs,",");
+		if (list_count(args) == nargs)
+		    update_dependents_append(dependents, dep_Link, "OperationStateEvent");
+	    }	
+		    
+	}
+    }
+    if (NULL != class && nargs >= 0) {
+	// Messages
+	// There are actually several Message link types, but they all can 
+	//  depend on a shared set of items they map. This convoluted set 
+	//  of queries finds those items.
+
+	// first, a string describing all ObjectInstance nodes for 
+	//  this operation's class
+	qry = "UmlObjectInstance && scope_node[name='" + class.name + "']";
+
+	// now add info to get the links going to these nodes
+	// for operations, we do all but asynchronous messages, which
+	// correspond to Signals
+	qry = "link[type!=UmlAsynchronousMessage && to_node[" + qry + "]]";
+
+	item opItem, argItem;
+	boolean argsMatch, retTypeMatch;
+	item mssgRetValItem,operRetType;
+	string retVal;
+	for_each_in_select(qry, dep_Link) {
+	    // for each of these links, get the UmlObjectName and UmlMessageArgs
+	    // items. These hold the operation call name and argument list,
+	    // respectively
+	    opItem = find_by_query("item[UmlObjectName && obj_id=" +
+				   dep_Link.id + " && value='" + theBaseName + "']");
+	    //message("DEBUG UmlOperation_dependents::theBaseName='"+theBaseName+"' opItem="+opItem);
+	    if (NULL != opItem) {
+		// same named operation, so let's see if the parameter list
+		// has the right number of arguments
+		argItem = find_by_query("item[UmlMessageArgs && obj_id=" + 
+					dep_Link.id +"]");
+		//message("DEBUG UmlOperation_dependents::nargs="+nargs+" argItem="+argItem);
+		argsMatch = NULL==argItem && 0==nargs;// no arguments - a match
+		if(!argsMatch && NULL != argItem)
+		    // check if the same number of formal and actual parameters
+		    argsMatch = list_count(string_to_list(argItem.value,","))==nargs;
+		retTypeMatch = True;
+		if(argsMatch) {
+		    // get mssg ret type
+		    mssgRetValItem = find_by_query("item[UmlReturnType & obj_id=${dep_Link.id}]");
+		    retVal = "";
+		    if(mssgRetValItem!=NULL)
+			retVal = mssgRetValItem.value;
+		    // check oper ret value
+		    if(retVal!="") {
+			operRetType = find_by_query("item[UmlOperationReturnType & obj_id=${theBase.id} & value='${retVal}']");
+			retTypeMatch = operRetType!=NULL;
+		    } else {
+			operRetType = find_by_query("item[UmlOperationReturnType & obj_id=${theBase.id}]");
+			retTypeMatch = operRetType==NULL || operRetType.value=="";
+		    }
+		    if(retTypeMatch)
+			update_dependents_append(dependents, opItem,"OperationNameChange");
+		}
+	    }
+	}
+    }		
+	
+	
+    if (dep_UmlOperation_UmlOperation_OpOverloaded) {
+	// optional replace - rename overloaded operations
+	qry = "node[UmlOperation && scope_node_id=" + theBase.scope_node_id + " && id != " + theBase.id + " && name='" + theBaseName + "']";
+	    
+	for_each_in_select(qry, dep_Node)
+	    update_dependents_append(dependents, dep_Node, GOR_NM_DP_N);
+    }
+	
+	
+	
+	
+    return(dependents);
+}
+
+
+
+// UmlSignal has the following dependencies:
+//  UmlTransitionEvent (signals recvd by class corresponding to State Machine event is scoped to)
+//  UmlTransitionSend  (signals sent by class corresponding to State Machine event is scoped to)
+//  UmlObjectName (signals received by an object of a class)
+//  UmlSignal with matching name (optional - overloaded functions)
+//
+//	
+update_dependents
+UmlSignal_dependents(node theBase)
+{
+    update_dependents dependents = update_dependents_create();
+    string theBaseName = to_oms_string(theBase.name);
+    node sm = NULL;
+    node class=NULL;
+    string qry;
+    node dep_Node;
+    link dep_Link;
+    item dep_Item;
+    list classes; //this is to get around a bug in qrl where having
+                  //nested select loops inside a transaction goes into
+                  //an infinite loop.
+	int nargs = -1;
+    
+    list args = list_create("string",0);
+    uml_operation parsedOp;
+    if (uml_split_arguments(theBase.sig,args)) 
+	{
+	    nargs = list_count(args);
+
+	    // OK, on to the transition eventssend stuff
+	    // each one of these will have its value formatted like a signal.
+	    // Since we have to match argument counts with the signal to get a 
+	    // a good match, pre-parse the signal signature partially
+	    
+	    // Find the State Machine corresponding to the receiver class, because we only want
+	    // events received by that class
+	    class = find_by_query("node[out_links[UmlSignalReceives && to_node[${theBase.id}]]]");
+	    if (NULL != class)
+		sm = find_by_query("node[UmlStateMachine & name = '${class.name}']");
+	    
+	    if(sm != NULL)
+		{
+		    qry = "item[UmlTransitionEvent && (value $ '" + theBaseName + "(*' | value = '" + theBaseName + "') && link[scope_node_id = ${sm.id}]]";
+		    for_each_in_select(qry, dep_Item) {
+			parsedOp = uml_parse_operation(dep_Item.value);
+			// just use string_to_list because these are ACTUAL arguments
+			args = string_to_list(parsedOp.opArgs,",");
+			if (theBaseName == parsedOp.opName && list_count(args) == nargs)
+			    update_dependents_append(dependents, dep_Item, "OperationTransition");
+		    }
+		}
+	    // UmlTransitionSend
+	    // Find the State Machine corresponding to the sender class, because we only want
+	    // send event sent by that class
+	    
+	    class = find_by_query("node[out_links[UmlSignalSends && to_node[${theBase.id}]]]");
+	    if (NULL != class)
+		sm = find_by_query("node[UmlStateMachine & name = '${class.name}']");
+	    if(sm != NULL)
+		{
+		    qry = "item[UmlTransitionSend && (value $ '" + theBaseName + "(*' | value = '" + theBaseName + "') && link[scope_node_id = ${sm.id}]]";
+		    for_each_in_select(qry, dep_Item) {
+			parsedOp = uml_parse_operation(dep_Item.value);
+			// just use string_to_list because these are ACTUAL arguments
+			args = string_to_list(parsedOp.opArgs,",");
+			if (theBaseName == parsedOp.opName && list_count(args) == nargs)
+			    update_dependents_append(dependents, dep_Item, "OperationTransition");
+		    }
+		}
+	    
+	}
+	item opItem, argItem;
+	if (nargs >= 0) {
+		// Messages
+		// cloned from the Operation code above
+		// altered because for Signals, there is a whole set of corresponding 
+		// classes that send/receive the signal
+		qry="node[out_links[to_node_id=" + theBase.id + "]]";
+		classes = list_select(qry);
+		int i;
+		for(i = 0;i < list_count(classes);i++) {
+		    //for_each_in_select(qry,class) { due to qrl bug use for loop
+		    class = list_get(classes,i);
+		    
+		    // first, a string describing all ObjectInstance nodes for 
+		    //  this operation's class
+		    qry = "UmlObjectInstance && scope_node[name='" + class.name + "']";
+		    
+		    // now add info to get the links going to these nodes
+		    // for signals, we do only asynchronous messages
+		    qry = "link[type=UmlAsynchronousMessage && to_node[" + qry + "]]";
+		    
+		    for_each_in_select(qry, dep_Link) {
+			// for each of these links, get the UmlObjectName and 
+			// UmlMessageArgs items. These hold the operation call 
+			// name and argument list, respectively
+			opItem = find_by_query("item[UmlObjectName && obj_id=" + 
+					       dep_Link.id + " && value='" + theBaseName + "']");
+			if (NULL != opItem) {
+			    // same named operation, so let's see if the 
+			    // parameter list has the right number of arguments
+			    argItem = find_by_query("item[UmlMessageArgs && obj_id=" + 
+						    dep_Link.id +"]");
+			    if (NULL == argItem && 0 == nargs) {
+				// no arguments - a match
+				update_dependents_append(dependents, opItem,
+							 "OperationNameChange");
+			    } else if (NULL != argItem) {
+				if (list_count(string_to_list(argItem.value,",")) == nargs) {
+				    // same number of formal and actual parameters
+				    update_dependents_append(dependents, opItem,
+							     "OperationNameChange");
+				}
+			    }
+			}
+		    }
+		}
+	}		
+	
+	if (dep_UmlOperation_UmlOperation_OpOverloaded) {
+	    // optional replace - rename overloaded signals
+	    qry = "node[UmlSignal  && id != " + theBase.id + " && name='" + theBaseName + "']";
+	    
+	    for_each_in_select(qry, dep_Node)
+		update_dependents_append(dependents, dep_Node, GOR_NM_DP_N);
+	}
+	
+	return(dependents);
+}
+
+
+// returns True if usage uses typename. Intended to be used to see if 
+// return types or arguments refer to a class by name. Examples of True
+// cases:
+// "foo","foo *"
+// "foo","foo"
+// "foo","foo&"
+boolean
+uml_uses_type(string typename, string usage)
+{
+	int typeLen = string_length(typename);
+	int useLen = string_length(usage);
+
+	if(useLen < typeLen) {
+		return False;
+	}
+	
+	// see if the type begins with the typename
+	if (useLen >= typeLen && string_extract(usage,0,typeLen) == typename) 
+	{
+		string whatsLeft;
+		if(useLen > typeLen) {
+			whatsLeft = string_extract(usage,typeLen,useLen-typeLen);
+			// so if the string is now ' ', * or & in any amount, then it's OK
+			// This should cover basic C-style pointer or reference notation
+			// if this is the case, then escaping these characters should yield
+			// a string exactly twice as long as the current one
+			int len = string_length(whatsLeft);
+			whatsLeft = string_escape(whatsLeft," &*");
+			if (string_length(whatsLeft) != (2 * len)) {
+				return False;
+			}
+		}
+	} else {
+		return False;
+	}
+	return True;
+}
+
+string
+uml_replace_type(string typeexpr, string old, string new)
+{
+	int oldlen = string_length(old);
+	int typeLen = string_length(typeexpr);
+	int i;
+	string s;
+
+	// search to find terminating character
+	for(i=oldlen;i<typeLen;i++) {
+		s = string_extract(typeexpr,i,1);
+		if (" " == s || "&" == s || "*" == s)
+			break;
+	}
+	if(i == typeLen) // whole thing is type
+		return new;
+	
+	return new + string_extract(typeexpr,i,typeLen-i);
+}
+
+	
+	
+
+
+// UmlClass has a whole lot of dependents
+//   ParameterizedClass
+//   InstantiatedClass
+//   Operation (signature contains class names)
+//   Signal (signature contains class names)
+//   Class parameter list
+//   UmlRefineArgs
+//   UmlOperationThrows
+//   UmlOperationReturnType
+//   UmlReturnType
+//   Attribute Type
+//   state machine
+//   UmlAssociation
+//   ObjectClassScope
+//   Operation (name is optional for constructor rename)
+//   ClassTable file name
+
+
+update_dependents
+UmlClass_dependents(node theBase)
+{
+    update_dependents dependents = update_dependents_create();
+    string theBaseName = to_oms_string(theBase.name);
+    string theBaseSig;
+	node dep_Node;
+	file dep_File;
+	string qry;
+	uml_argument arg;
+	list args;
+	int i;
+
+	// first, the paramterized and instantiated classes
+	// JED - Only if this is not the UmlClass node mapped by an anonymous
+	// instantiated class
+	if (NULL != theBase.sig) {
+		theBaseSig = to_oms_string(theBase.sig);
+	} else {
+		theBaseSig = NULL;
+	}
+
+	if (theBaseSig == NULL || theBaseSig == "") {
+		qry = "node[(UmlInstantiatedClass|UmlParameterizedClass) && " +
+			"(sig=NULL | sig='') && " +
+			" name='" + theBaseName + "' && scope_node_id =" +
+			theBase.scope_node_id + "]";
+
+		for_each_in_select(qry, dep_Node)
+			update_dependents_append(dependents, dep_Node, GOR_NM_DP_N);
+	}
+
+	list parsed_class;
+	string iclass_str;
+
+	qry = "node[UmlInstantiatedClass && " +
+		"(sig $ '*" + theBaseName + "*' | name='" + theBaseName + "')]";
+	for_each_in_select(qry, dep_Node) {
+		if (dep_Node.name == theBaseName) {
+			update_dependents_append(dependents, dep_Node, "ClassNameChange");
+		} else {
+			iclass_str = uml_instantiated_class_node_to_string(dep_Node);
+			parsed_class = uml_parse_instantiated_class(iclass_str);
+			if (NULL != parsed_class) {
+				if (uml_instantiated_class_uses_type(parsed_class,theBaseName)) {
+					update_dependents_append(dependents, dep_Node, "ClassNameChange");
+				}
+			}
+		}
+	}
+
+	// now, operations and signals
+	// if the optional constructor rename is selected, then exclude those
+	// operations because they will be handled later.
+	// Don't worry about destructors, because they can have no arguments
+	if (dep_UmlClass_UmlOperation_OpConstructor) {
+		qry = "node[(type=UmlSignal && sig $ '*" + theBaseName + "*') || " +
+					"(type=UmlOperation && sig $ '*" + theBaseName + "*' &&" +
+					 " name !='" + theBaseName + "')]";
+	} else {
+		qry = "node[(UmlOperation|UmlSignal) && sig $ '*" + theBaseName + "*']";
+	}
+	for_each_in_select(qry, dep_Node) {
+		// parse each signature and make sure that we have a good match
+		args = list_create("string",0);
+		if (!uml_split_arguments(dep_Node.sig,args)) {
+			continue;
+		}
+		for	(i=0;i<list_count(args);i++) {
+			arg = uml_arg_string_to_struct(list_get(args,i));
+// print_message("JED - processing " + dep_Node.type + ":" + arg.argType);
+			if (uml_uses_type(theBase.name,arg.argType)) {
+				update_dependents_append(dependents, dep_Node, "ClassNameChange");
+				break;
+			}
+		}
+	}
+
+	// class parameter lists, operation return types, attribute types,
+	// UmlOperationThrows, and UmlRefineArgs
+	qry = "item[(UmlClassParameters|UmlOperationReturnType|UmlReturnType|UmlAttributeType|UmlOperationThrows|UmlRefineArgs) && value $ '*" + theBaseName + "*']";
+
+	item dep_Item;
+
+	for_each_in_select(qry, dep_Item) {
+		// parse each value and make sure that we have a good match
+		args = list_create("string",0);
+		if (!uml_split_arguments(dep_Item.value,args)) {
+			continue;
+		}
+		for	(i=0;i<list_count(args);i++) {
+			if ("UmlClassParameters" == dep_Item.type) {
+				arg = uml_arg_string_to_struct(list_get(args,i));
+			} else if ("UmlRefineArgs" == dep_Item.type ||
+					"UmlOperationThrows" == dep_Item.type) {
+				// is just a type expression
+				arg.argType = string_strip(list_get(args,i),"B"," ");
+			} else {
+				// is just a type expression
+				arg.argType = dep_Item.value;
+			}
+// print_message("JED - processing " + dep_Item.type + ":" + arg.argType);
+			if (uml_uses_type(theBase.name,arg.argType)) {
+				update_dependents_append(dependents, dep_Item, "ClassNameChange");
+				break;
+			}
+		}
+	}
+
+	// state machines belonging to a class
+	qry = "node[UmlStateMachine && name ='" + theBaseName + "']";
+			
+	for_each_in_select(qry, dep_Node)
+		update_dependents_append(dependents, dep_Node, GOR_NM_DP_N);
+
+	// state machines belonging to an operation in this class
+	qry = "node[UmlStateMachine && name $'" + theBaseName + "::*']";
+			
+	for_each_in_select(qry, dep_Node)
+		update_dependents_append(dependents, dep_Node, "ClassStateMachine");
+
+	// UmlAssociation
+    qry = "node[UmlAssociation && in_links[UmlRole && from_node_id = " + theBase.id + "]]";
+			
+	for_each_in_select(qry, dep_Node) {
+		update_dependents_append(dependents, dep_Node, "ClassNameChange");
+	}
+
+
+	// Object Class Scope
+	qry = "node[UmlObjectClassScope && name='" + theBaseName + "']";
+			
+	for_each_in_select(qry, dep_Node)
+		update_dependents_append(dependents, dep_Node, GOR_NM_DP_N);
+
+	// optional operation renaming if they are constructors
+	if (dep_UmlClass_UmlOperation_OpConstructor) {
+		qry = "node[UmlOperation && name='" + theBaseName + "'"
+			+ " && scope_node_id=" + theBase.id + "]";
+		for_each_in_select(qry, dep_Node)
+			update_dependents_append(dependents, dep_Node, "ClassConstructor");
+		// JED - Destructors are not so simple
+		qry = "node[UmlOperation && name='~" + theBaseName + "']";
+			
+		for_each_in_select(qry, dep_Node)
+			update_dependents_append(dependents, dep_Node, "ClassDestructor");
+	}
+
+	// class table file names
+	qry = "file[UmlClassTable && name$'" + theBaseName + "*' && node_refs[node_id=" + theBase.id + "]]";
+	for_each_in_select(qry, dep_File)
+		update_dependents_append(dependents, dep_File, "ClassNameChange");
+ 
+    return(dependents);
+}
+
+// UmlInstantiatedClass 
+//   UmlClass
+update_dependents
+UmlInstantiatedClass_dependents(node theBase)
+{
+    update_dependents dependents = update_dependents_create();
+    string theBaseName = to_oms_string(theBase.name);
+    string theBaseSig = to_oms_string(theBase.sig);
+	node dep_Node;
+	file dep_File;
+	string qry;
+	uml_argument arg;
+	list args;
+	int i;
+
+	qry = "node[UmlClass && sig='" + theBaseSig + "' && name='" + theBaseName + "']";
+
+	for_each_in_select(qry, dep_Node)
+		update_dependents_append(dependents, dep_Node, "InstantiatedClassChange");
+	return dependents;
+}
+ 
+// This function assumes that the obj_id of the item is the direct
+// dependent.
+
+// Handle optional dependencies as well, but only for
+// UmlObjectName and UmlReturnType items.  Arguments not handled since
+// those changes are not well defined for all scenarios, e.g., adding
+// a new argument or renaming an argument:
+update_dependents
+UmlMessageItem_dependents(item theBase)
+{
+    //message("DEBUG UmlMessageItem_dependents::theBase="+theBase);
+    update_dependents dependents = update_dependents_create();
+    node dep_Node;
+    link dep_Link;
+    cntx dep_Cntx;	
+	 
+    dep_Node = find_by_query("node[" + theBase.obj_id + "]");
+    if (NULL != dep_Node) {
+	update_dependents_append(dependents, dep_Node, "MessageItemValueChange");
+    } else {
+	dep_Link = find_by_query("link[" + theBase.obj_id + "]");
+	if (NULL != dep_Link) {
+	    update_dependents_append(dependents, dep_Link,
+				     "MessageItemValueChange");
+	    // check peer items that belong to the same link objects, but
+	    // to different notes.  Do it for UmlObjectName and
+	    // UmlReturnType items.
+	    if(theBase.type=="UmlObjectName" || theBase.type=="UmlReturnType") {
+		item dep_PeerItem;
+		string q_dep_PeerItem="item[type=${theBase.type} & obj_id=${theBase.obj_id} & value='${theBase.value}']";
+		for_each_in_select(q_dep_PeerItem,dep_PeerItem) {
+		    if(dep_PeerItem.note_id!=theBase.note_id) {
+			update_dependents_append(dependents,dep_PeerItem,"MessageItemChange");
+			//message("DEBUG UmlMessageItem_dependents::IN dep_PeerItem="+dep_PeerItem);
+		    } //else
+			//message("DEBUG UmlMessageItem_dependents::IGNORE dep_PeerItem="+dep_PeerItem);
+		}
+	    }
+
+	    // check for optional depenendencies
+	    //message("DEBUG UmlMessageItem_dependents::check for optional depenendencies=");
+	    string optDependName = "";
+	    item mssgNameItem;
+	    item mssgRetValItem;
+	    item mssgArgsItem;
+	    int mssgArgCount, argCount;
+	    boolean retValueMatch;
+	    string retVal = "";
+	    //if(theBase.type=="UmlObjectName" || theBase.type=="UmlReturnType") {}
+	    //optDependName = "MessageItemSignatureChange";//"MessageItemObjectNameChange";
+	    if(dep_UmlMessage_UmlOperationUmlSignal && theBase.type=="UmlObjectName" || (dep_UmlMessage_UmlMessage_sameSignature && theBase.type=="UmlObjectName" || theBase.type=="UmlReturnType")) {
+		optDependName = "MessageItemSignatureChange";//"MessageItemObjectNameChange";
+		if(theBase.type=="UmlObjectName")
+		    mssgNameItem = theBase;
+		else 
+		    mssgNameItem = find_by_query("item[UmlObjectName & obj_id=${dep_Link.id} & note_id=${theBase.note_id}]");
+		if(theBase.type=="UmlReturnType")
+		    mssgRetValItem = theBase;
+		else 
+		    mssgRetValItem = find_by_query("item[UmlReturnType & obj_id=${dep_Link.id} & note_id=${theBase.note_id}]");
+		mssgArgsItem = find_by_query("item[UmlMessageArgs & obj_id=${dep_Link.id} & note_id=${theBase.note_id}]");
+		mssgArgCount = list_count(string_to_list(mssgArgsItem.value,","));
+		//message("DEBUG UmlMessageItem_dependents::mssgNameItem/mssgRetValItem/mssgArgsItem/mssgArgCount="+mssgArgCount+mssgNameItem+mssgRetValItem+mssgArgsItem);
+
+		// For optional dependencies, we need to know the server class
+		//message("DEBUG UmlMessageItem_dependents::optDependName='"+optDependName+"' dep_UmlMessage_UmlOperationUmlSignal='"+dep_UmlMessage_UmlOperationUmlSignal+"'");
+		node serverObj = find_by_query("node[UmlObjectInstance & id=${dep_Link.to_node_id}]");
+                node objScope = NULL;
+                node serverClass = NULL;
+                if(serverObj!=NULL) {
+                    objScope = find_by_query("node[UmlObjectClassScope & id=${serverObj.scope_node_id}]");
+                    serverClass = find_by_query("node[UmlClass && name='${objScope.name}']");
+                }
+		//message("DEBUG UmlMessageItem_dependents::serverObj/objScope/serverClass="+serverObj+objScope+serverClass);
+		// OPTIONAL dependency
+		// Dependent objects UmlOperation and UmlSignal 
+		// Optional dependency: dep_UmlMessage_UmlOperationUmlSignal
+		if(dep_UmlMessage_UmlOperationUmlSignal && serverClass!=NULL && theBase.type=="UmlObjectName") {
+		    // all operations and signals belonging to the corresponding
+		    // class and having the same name and number of arguments
+	
+		    //message("DEBUG UmlMessageItem_dependents::dep_UmlMessage_UmlOperationUmlSignal is SET");
+		    node dep_UmlMessage_OpSignal;
+		    string q_dep_UmlMessage_OpSignal = "node[(UmlOperation | UmlSignal) & name='${mssgNameItem.value}']";
+
+		    item operRetType = NULL;
+		    retVal = "";
+		    if(mssgRetValItem!=NULL)
+			retVal = mssgRetValItem.value;
+
+		    for_each_in_select(q_dep_UmlMessage_OpSignal,dep_UmlMessage_OpSignal) {
+                        //message("DEBUG UmlMessageItem_dependents::dep_UmlMessage_OpSignal="+dep_UmlMessage_OpSignal);
+			// check ret value
+			if(retVal!="") {
+			    operRetType = find_by_query("item[UmlOperationReturnType & obj_id=${dep_UmlMessage_OpSignal.id} & value='${retVal}']");
+			    retValueMatch = operRetType!=NULL;
+			} else {
+			    operRetType = find_by_query("item[UmlOperationReturnType & obj_id=${dep_UmlMessage_OpSignal.id}]");
+			    retValueMatch = operRetType==NULL || operRetType.value=="";
+			}
+			//message("DEBUG UmlMessageItem_dependents::retVal='"+retVal+"' retValueMatch='"+retValueMatch+"' operRetType="+operRetType);
+			if(!retValueMatch)
+			    continue;
+			// check arg count
+			argCount = list_count(string_to_list(dep_UmlMessage_OpSignal.sig,","));
+			//message("DEBUG UmlMessageItem_dependents::mssgArgCount='"+mssgArgCount+"' argCount='"+argCount+"'");
+			if(argCount==mssgArgCount)
+			    update_dependents_append(dependents,dep_UmlMessage_OpSignal,optDependName);
+		    }
+		}
+
+		// OPTIONAL dependency
+		// Dependent objects: Uml**Message
+		// Optional dependency: dep_UmlMessage_UmlMessage_sameSignature
+		if(dep_UmlMessage_UmlMessage_sameSignature && theBase.type=="UmlObjectName") {
+		    // all interaction messages with the same signature
+		    // (name, ret. type and number of arguments)
+	
+		    //message("DEBUG UmlMessageItem_dependents::dep_UmlMessage_UmlMessage_sameSignature is SET");
+		    item dep_UmlObjectName_UmlObjectName;
+		    string q_dep_UmlObjectName_UmlObjectName = "item[UmlObjectName & value='${mssgNameItem.value}']";
+		    //message("DEBUG UmlMessageItem_dependents::q_dep_UmlObjectName_UmlObjectName='"+q_dep_UmlObjectName_UmlObjectName+"'");
+
+		    item aRetType = NULL;
+		    retVal = "";
+		    if(mssgRetValItem!=NULL)
+			retVal = mssgRetValItem.value;
+
+		    item argsItem;
+		    for_each_in_select(q_dep_UmlObjectName_UmlObjectName,dep_UmlObjectName_UmlObjectName) {
+			//message("DEBUG UmlMessageItem_dependents::dep_UmlObjectName_UmlObjectName="+dep_UmlObjectName_UmlObjectName);
+			if(dep_UmlObjectName_UmlObjectName.note_id==theBase.note_id)
+			    continue; // skip, the same as source
+			// check ret value
+			if(retVal!="") {
+			    aRetType = find_by_query("item[UmlReturnType & note_id=${dep_UmlObjectName_UmlObjectName.note_id} & value='${retVal}']");
+			    retValueMatch = aRetType!=NULL;
+			} else {
+			    aRetType = find_by_query("item[UmlReturnType & note_id=${dep_UmlObjectName_UmlObjectName.note_id}]");
+			    retValueMatch = aRetType==NULL || aRetType.value=="";
+			}
+			//message("DEBUG UmlMessageItem_dependents::retVal='"+retVal+"' retValueMatch='"+retValueMatch+"' aRetType="+aRetType);
+			if(!retValueMatch)
+			    continue;
+			// check arg count
+			argsItem = find_by_query("item[UmlMessageArgs & note_id=${dep_UmlObjectName_UmlObjectName.note_id}]");
+			if(argsItem!=NULL && argsItem.value!=NULL)
+			    argCount = list_count(string_to_list(argsItem.value,","));
+			else
+			    argCount = 0;
+			//message("DEBUG UmlMessageItem_dependents::mssgArgCount='"+mssgArgCount+"' argCount='"+argCount+"'");
+			if(argCount==mssgArgCount)
+			    update_dependents_append(dependents,dep_UmlObjectName_UmlObjectName,"MessageItemChange");
+		    }
+		}
+	    }
+
+	    // end of optional dependenicies
+	} else {
+	    dep_Cntx = find_by_query("cntx[" + theBase.obj_id + "]");
+	    if (NULL != dep_Cntx) {
+		update_dependents_append(dependents, dep_Cntx,
+					 "MessageItemValueChange");
+	    }
+	}
+    }
+ 
+    //message("DEBUG UmlMessageItem_dependents::dependents='"+dependents+"'");
+    return(dependents);
+}
+
+// UmlRole dependents
+// Because UmlRole's can be named by attaching an unmapped cntx symbol, and
+// because those names are propagated to UmlAssociation nodes, we have to
+// rename the UmlAssociation nodes
+update_dependents
+UmlRole_dependents(link theBase)
+{
+	node dep_Node;
+    update_dependents dependents = update_dependents_create();
+	dep_Node = find_by_query("node[" + theBase.scope_node_id + "]");
+	update_dependents_append(dependents, dep_Node, "RoleNameChange");
+	return dependents;
+}
+
+
+//
+// Derive Attributes Function
+// Source Type    : UmlReturnType, UmlObjectName
+// Depnendent Type: UmlAsynchronousMessage, UmlBalkingMessage,
+//                  UmlSimpleMessage, UmlSynchronousMessage, UmlTimeoutMessage
+// Dependency Name: MessageItemValueChange
+
+link
+UmlMessageItem_MessageLink_derattrs(link theDep, item oldVal, item newVal)
+{
+    //
+    // handle all changes: to return value, message name, or message argument
+    //
+    //message("DEBUG UmlMessageItem_MessageLink_derattrs::theDep/oldVal/newVal="+theDep+newVal+newVal);
+    link result = theDep;
+    item mssgName, retVal, args;
+    if(newVal.type!="UmlObjectName")
+	mssgName = find_by_query("item[UmlObjectName && obj_id=${theDep.id}]");
+    else
+	mssgName = newVal;
+    if(newVal.type!="UmlReturnType")
+	retVal = find_by_query("item[UmlReturnType && obj_id=${theDep.id}]");
+    else
+	retVal = newVal;
+    if(newVal.type!="UmlMessageArgs")
+	args = find_by_query("item[UmlMessageArgs && obj_id=${theDep.id}]");
+    else
+	args = newVal;
+    //message("UmlMessageItem_MessageLink_derattrs::srcType='"+newVal.type+"'");
+    string returnVal = retVal.value;
+    if(retVal.value!="")
+	returnVal += ":=";
+    string newName = returnVal+mssgName.value+"("+args.value+")";
+    result = link_name_set(result,newName);
+    //message("DEBUG UmlMessageItem_MessageLink_derattrs::newName='"+newName+"' result="+result);
+    return result;
+}
+
+
+//
+// Derive Attributes Function
+// Source Type: UmlAsynchronousMessage, UmlBalkingMessage,
+//                  UmlSimpleMessage, UmlSynchronousMessage, UmlTimeoutMessage
+// Dependent Type: UmlAsynchronousMessage, UmlBalkingMessage,
+//                  UmlSimpleMessage, UmlSynchronousMessage, UmlTimeoutMessage
+// Dependency Name: MessageNameChange
+
+link
+UmlMessage_MessageLink_derattrs(link theDep, link oldVal, link newVal)
+{
+    //message("DEBUG UmlMessage_MessageLink_derattrs::theDep/oldVal/newVal::"+theDep+oldVal+newVal);
+    link result = theDep;
+    string newName = newVal.name;
+    result = link_name_set(result,newName);
+    //message("DEBUG UmlMessage_MessageLink_derattrs::result="+result);
+    return result;
+}
+
+
+//
+// Derive Attributes Function
+// Source Type    : item UmlObjectName
+// Dependent Type: node UmlOperation, node UmlSignal
+// Dependency Name: MessageItemObjectNameChange
+
+node
+UmlMessageItem_OperationOrSignal_derattrs(node theDep, item oldVal, item newVal)
+{
+    //message("DEBUG UmlMessageItem_OperationOrSignal_derattrs::theDep/oldVal/newVal::"+theDep+oldVal+newVal);
+    //
+    // handle only changes to message name.
+    //
+    node result = theDep;
+    if(newVal.type=="UmlObjectName") {
+	string newName = newVal.value;
+	//message("DEBUG UmlMessageItem_OperationOrSignal_derattrs::newName='"+newName+"'");
+	result=node_name_set(result,newName);
+    }
+    //result=node_name_set(result,newVal.value);
+
+    //message("DEBUG UmlMessageItem_OperationOrSignal_derattrs::result="+result);
+    return result;
+}
+
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlClass
+// Dependent Type :	node UmlAssociation
+// Dependency Name:	ClassNameChange
+//
+
+node
+UmlClass_Association_derattrs(node theDep, node oldVal, node newVal)
+{
+    node result = theDep;
+    int pos = string_find(result.name,0,":");
+	int len = string_length(result.name);
+	string name_part="";
+	string classes_part="";
+	int i;
+
+	if (pos != len) {
+		name_part = string_extract(result.name,0,pos+1);
+		if (pos+1<len)
+			classes_part = string_extract(result.name,pos+1,len-(pos+1));
+	} else {
+		classes_part = result.name;
+	}
+	list classes = string_to_list(classes_part,",");
+	for(i=0;i<list_count(classes);i++) {
+		classes_part = list_get(classes,i);
+		if (classes_part == oldVal.name) {
+			list_set(classes,i,newVal.name);
+			// break;  // ECR 7473 - commented break
+		}
+	}
+	// JED - re-sort the classes
+// ECR 7473 begin
+	//classes = list_sort(classes);
+	//classes_part = list_to_string(classes,",");
+    list roles = list_create("string", 0);
+    
+    // node is referenced -> we can get signature from sig field
+    string str = "";
+    string s;
+    len = string_length(theDep.sig);
+    for (i = 0; i < len; i++) 
+    {
+        s = string_extract(theDep.sig, i, 1);
+        if (s == ":")
+        {
+            list_append(roles, str);
+            str = "";
+        }
+        else
+            str = str + s;
+    }
+    list_append(roles, str);
+
+    list sorted_classnames = list_create("string",0);
+	list sorted_rolenames = list_create("string",0); // ECR 7157;
+    uml_nary_association_get_sorted_classnames_and_roles(classes, roles, sorted_classnames, sorted_rolenames);
+	classes_part = list_to_string(sorted_classnames, ",");
+    
+    string tmp = "";
+    int cnt = list_count(sorted_rolenames);
+    for (i = 0; i < cnt; i++)
+    {
+        if (i > 0)
+            tmp = tmp + ":";
+        tmp = tmp + list_get(sorted_rolenames, i);
+    }
+    node_sig_set(result, tmp);
+
+    list_clear(sorted_classnames);
+    list_clear(sorted_rolenames);
+// ECR 7473 end
+    result = node_name_set(result,name_part + classes_part);
+    return result;
+}
+
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlClass
+// Dependent Type :	node UmlOperation, node UmlSignal
+// Dependency Name:	ClassNameChange
+//
+node
+UmlClass_OperationOrSignal_derattrs(node theDep, node oldVal, node newVal)
+{
+    node result = theDep;
+	list args = list_create("string",0);
+	uml_argument arg;
+	int i;
+
+	if(uml_split_arguments(result.sig,args)) {
+		for(i=0;i<list_count(args);i++) {
+			arg = uml_arg_string_to_struct(list_get(args,i));
+			if (uml_uses_type(oldVal.name,arg.argType)) {
+				arg.argType = uml_replace_type(arg.argType,oldVal.name,newVal.name);
+				list_set(args,i,uml_arg_struct_to_canonical_string(arg));
+			}
+		}
+		result = node_sig_set(result,list_to_string(args,", "));
+	}
+		
+    return result;
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlClass
+// Dependent Type :	node UmlOperation
+// Dependency Name:	ClassConstructor
+//
+node
+UmlClass_OperationConstructor_derattrs(node theDep, node oldVal, node newVal)
+{
+    node result = theDep;
+	list args = list_create("string",0);
+	uml_argument arg;
+	int i;
+
+	// first fix the arguments (they may contain class name references)
+	if(uml_split_arguments(result.sig,args)) {
+		for(i=0;i<list_count(args);i++) {
+			arg = uml_arg_string_to_struct(list_get(args,i));
+			if (uml_uses_type(oldVal.name,arg.argType)) {
+				arg.argType = uml_replace_type(arg.argType,oldVal.name,newVal.name);
+				list_set(args,i,uml_arg_struct_to_canonical_string(arg));
+			}
+		}
+		result = node_sig_set(result,list_to_string(args,", "));
+	}
+	// now, the name
+	result=node_name_set(result,newVal.name);
+		
+    return result;
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlClass
+// Dependent Type :	node UmlOperation
+// Dependency Name:	ClassDestructor
+//
+node
+UmlClass_OperationDestructor_derattrs(node theDep, node oldVal, node newVal)
+{
+    node result = theDep;
+	result=node_name_set(result,"~" + newVal.name);
+    return result;
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlClass
+// Dependent Type :	item UmlClassParameters, UmlOperationType, UmlAttributeType
+//                       UmlReturnType, UmlOperationThrows, UmlRefineArgs
+// Dependency Name:	ClassNameChange
+//
+item
+UmlClass_ItemType_derattrs(item theDep, node oldVal, node newVal)
+{
+    item result = theDep;
+	uml_argument arg;
+	list args;
+	int i;
+	string s;
+
+	if (theDep.type == "UmlClassParameters" ) {
+		args = list_create("string",0);
+		uml_split_arguments(theDep.value,args);
+		for	(i=0;i<list_count(args);i++) {
+			arg = uml_arg_string_to_struct(list_get(args,i));
+			if (uml_uses_type(oldVal.name,arg.argType)) {
+				arg.argType = uml_replace_type(arg.argType,oldVal.name,newVal.name);
+				list_set(args,i,uml_arg_struct_to_canonical_string(arg));
+			}
+		}
+		result = item_value_set(result,list_to_string(args,", "));
+	} else if (theDep.type == "UmlOperationThrows" || theDep.type == "UmlRefineArgs" ) {
+		args = string_to_list(theDep.value,",");
+		for	(i=0;i<list_count(args);i++) {
+			s = list_get(args,i);
+			s = string_strip(s,"B"," ");
+			if ("" == s) {
+				list_delete(args,i);
+				i--;
+				continue;
+			}
+// print_message("JED - comparing:[" + s + "] and [" + oldVal.name + "]");
+			if (uml_uses_type(oldVal.name,s)) {
+// print_message("JED - replacing:" + s + " with " + newVal.name);
+				s = uml_replace_type(s,oldVal.name,newVal.name);
+				list_set(args,i,s);
+			}
+		}
+		result = item_value_set(result,list_to_string(args,", "));
+	} else {
+		result = item_value_set(result,uml_replace_type(result.value,oldVal.name,newVal.name));
+	}
+    return result;
+}
+
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlOperation
+// Dependent Type :	item UmlObjectName
+// Dependency Name:	OperationNameChange
+//
+item
+UmlOperation_ItemType_derattrs(item theDep, node oldVal, node newVal)
+{
+    item result = theDep;
+
+	if (theDep.type == "UmlObjectName" ) {
+		result = item_value_set(result,newVal.name);
+	}
+    return result;
+}
+
+
+//
+// Derive Attributes Function
+// Source Type	  :	item UmlObjectName
+// Dependent Type :	same as source
+// Dependency Name:	MessageItemChange
+//
+item
+UmlMessageItem_ItemType_derattrs(item theDep, item oldVal, item newVal)
+{
+    item result = theDep;
+
+    //if (theDep.type == "UmlObjectName" )
+    result = item_value_set(result,newVal.value);
+
+    return result;
+}
+
+
+
+
+//
+// DependentsFunc for: items UmlTransitionSend,UmlTransitionGuard,
+//                           UmlTransitionAction,UmlTransitionEvent
+ 
+update_dependents
+UmlTransitionItem_dependents(item theBase)
+{
+    update_dependents dependents = update_dependents_create();
+    link transition = find_by_query("link[${theBase.obj_id}]");
+
+    update_dependents_append(dependents, transition, "ItemTransition");
+ 
+    return(dependents);
+}
+
+
+//
+// DependentsFunc for: node UmlStateMachine
+//                     
+ 
+update_dependents
+UmlStateMachine_dependents(node theBase)
+{
+    update_dependents dependents = update_dependents_create();
+    file dependent;
+    string  bname_start = uml_state_machine_class_name(theBase.name)
+	+ FILE_NAME_SCOPE_SEPARATOR + "*" ;
+
+//<fix:#3592 begin>
+    for_each_in_select("file[(UmlStateDiagram | UmlStateTable | UmlActivityDiagram) && node_refs[node[${theBase.id}]]]",dependent)
+//    for_each_in_select("file[(UmlStateDiagram | UmlStateTable | UmlActivityDiagram) && name$'${bname_start}']",dependent)
+//<fix:#3592 end>
+	update_dependents_append(dependents,dependent , "StateMachineFile");
+
+    return(dependents);
+}
+
+//
+// DependentsFunc for: node UmlState
+//                     
+ 
+update_dependents
+UmlState_dependents(node theBase)
+{
+    update_dependents dependents = update_dependents_create();
+    // search up in the scope chain until you come to an unscoped node. This
+    // will be the state machine that corresponds to a class. Next, find all
+    // objects that are instances of that class. Next, find the
+    // UmlObjectInState nodes scoped to the same scope node. These are the
+    // dependents
+    node startNode = theBase;
+    string qry = "node[id=${startNode.scope_node_id}]";
+
+    while (startNode != NULL && startNode.scope_node_id != 0)
+    {
+        startNode = find_by_query(qry);
+    }
+    if (startNode == NULL)
+        return dependents;
+
+    // got the top state machine, now find the class
+    qry = "node[UmlObjectInState && scope_node[UmlObjectClassScope && name='${startNode.name}' && node_refs]]";
+
+    list tmpList;
+    for_each_in_select(qry, startNode)
+    {
+        tmpList = string_to_list(startNode.name, ", ");
+        if (list_find(tmpList,0,theBase.name) != list_count(tmpList))
+            update_dependents_append(dependents,startNode, "StateNameChange");
+    }
+ 
+    return(dependents);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlState
+// Dependent Type :	node UmlObjectInState
+// Dependency Name:	StateNameChange
+//
+
+node
+UmlObjectInState_State_derattrs(node theDep, node oldVal, node newVal)
+{
+    node result = theDep;
+    string tmp;
+    list allStates = string_to_list(theDep.name, ", ");
+    int i;
+
+    for (i=0; i < list_count(allStates); i++)
+    {
+        tmp = list_get(allStates,i);
+        if (tmp == oldVal.name)
+            list_set(allStates, i, newVal.name);
+    }
+    result = node_name_set(result,list_to_string(allStates, ", "));
+    return result;
+}
+
+
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlOperation
+// Dependent Type :	node UmlStateAction
+// Dependency Name:	OperationStateAction
+//
+
+node
+UmlOperation_StateAction_derattrs(node theDep, node oldVal, node newVal)
+{
+    node result = theDep;
+    string newName;
+    list parsedAction = uml_parse_message_label(theDep.name);
+
+    if(oldVal.sig != newVal.sig)
+	return theDep;
+
+    list_set(parsedAction,MessageNameComponent,newVal.name);
+    newName = uml_compose_message_label(parsedAction);
+
+    result = node_name_set(result,newName);
+    return result;
+}
+
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlOperation
+// Dependent Type :	node UmlStateMachine
+// Dependency Name:	OperationStateMachine
+//
+
+node
+UmlOperation_StateMachine_derattrs(node theDep, node oldVal, node newVal)
+{
+    node result = theDep;
+    string newName = uml_state_machine_name(newVal);
+    result = node_name_set(result,newName);
+    return result;
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlClass
+// Dependent Type :	node UmlStateMachine
+// Dependency Name:	ClassStateMachine
+//
+
+node
+UmlClass_StateMachine_derattrs(node theDep, node oldVal, node newVal)
+{
+    node result = theDep;
+    int pos = string_find(result.name,0,"::");
+    string newName = newVal.name + string_extract(result.name,
+						  pos,
+						  string_length(result.name) 
+						  - pos);
+    result = node_name_set(result,newName);
+    return result;
+}
+
+
+//
+// Derive Attributes Function
+// Source Type	  :	item UmlTransitionEvent,UmlTranstionGuard,
+//                           UmlTransitionAction,UmlTransitionSend
+// Dependent Type :	link UmlTransition
+// Dependency Name:	ItemTransition
+//
+
+link
+UmlItem_Transition_derattrs(link theDep, item oldVal, item newVal)
+{
+    link result = theDep;
+    UMLParsedTransition parsedTransition = 
+	uml_parse_transition_label(theDep.name);
+
+    if(newVal.type == "UmlTransitionEvent")
+	parsedTransition.event = newVal.value;
+    else if (newVal.type == "UmlTransitionSend")
+	parsedTransition.sendev = newVal.value;
+    else if (newVal.type == "UmlTransitionAction")
+	parsedTransition.action = newVal.value;
+    else if (newVal.type == "UmlTransitionGuard")
+	parsedTransition.guard = newVal.value;
+    
+    result = 
+	link_name_set(result,
+		      uml_string_from_parsed_transition(parsedTransition));
+	    
+    return result;
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlOperation
+// Dependent Type :	link UmlStateEvent
+// Dependency Name:	OperationStateEvent
+//
+
+link
+UmlOperation_StateEvent_derattrs(link theDep, node oldVal, node newVal)
+{
+    link result = theDep;
+    string newName;
+    list parsedAction = uml_parse_message_label(theDep.name);
+
+   if(oldVal.sig != newVal.sig)
+	return theDep;
+
+    list_set(parsedAction,MessageNameComponent,newVal.name);
+    newName = uml_compose_message_label(parsedAction);
+
+    result = link_name_set(result,newName);
+    return result;
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlOperation
+// Dependent Type :	item UmlTransitionEvent,UmlTransitionAction,UmlTransitionSend
+// Dependency Name:	OperationTransition
+//
+
+item
+UmlTransitionItem_derattrs(item theDep, node oldVal, node newVal)
+{
+    item result = theDep;
+    string newName;
+    list parsedAction = uml_parse_message_label(theDep.value);
+
+   if(oldVal.sig != newVal.sig)
+	return theDep;
+
+    list_set(parsedAction,MessageNameComponent,newVal.name);
+    newName = uml_compose_message_label(parsedAction);
+
+    result = item_value_set(result,newName);
+    return result;
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlStateMachine
+// Dependent Type :	file UmlStateTable,UmlStateDiagram,UmlActivityDiagram
+// Dependency Name:	OperationStateEvent
+//
+
+file
+UmlStateMachine_File_derattrs(file theDep, node oldVal, node newVal)
+{
+    file	result = theDep;
+    int         start;
+    int         length;
+    string	newClassName = uml_state_machine_class_name(newVal.name);
+    string      oldClassName = uml_state_machine_class_name(oldVal.name);
+    string      newFileName;
+
+    //If the renamed was triggered by an operation rename
+    //there are no files to rename
+
+    if (newClassName != oldClassName)
+    {
+	// ECR 7047 begin
+	// start = string_length(oldClassName);
+	// length = string_length(theDep.name) - start;
+	// newFileName = newClassName + string_extract(theDep.name,start,length);
+	newFileName = theDep.name;
+	start = string_find(theDep.name, 0, oldClassName);
+	length = string_length(oldClassName);
+	if (start < string_length(theDep.name))
+	{
+	    newFileName = string_extract(theDep.name, 0, start) +
+			  newClassName +
+			  string_extract(theDep.name,
+					 start + length,
+					 string_length(theDep.name) - (start + length));
+	}
+	// ECR 7047 end
+	result = file_name_set(result, newFileName);
+    }
+
+    return(result);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlClass
+// Dependent Type :	file UmlClassTable
+// Dependency Name:	ClassNameChange
+//
+
+file
+UmlClass_File_derattrs(file theDep, node oldVal, node newVal)
+{
+    file	result = theDep;
+    string	newClassName = newVal.name;
+    string      oldClassName = oldVal.name;
+    string      newFileName;
+
+    if (newClassName != oldClassName) {
+		int fname_len = string_length(theDep.name);
+		int cname_len = string_length(oldClassName);
+		if (cname_len < fname_len) {
+			newFileName = newClassName + string_extract(theDep.name,cname_len,fname_len-cname_len);
+		} else {
+			newFileName = newClassName;
+		}
+		result = file_name_set(result, newFileName);
+    }
+
+    return(result);
+}
+
+//
+// UmlUseCase has the following dependencies:
+// - item UmlParentNameItem whose value matches the name of UmlUseCase and
+// whose owner (UmlScenarioInstance) object has a UmlParentTypeItem
+// whose value is UmlUseCase.
+// - node UmlExtensionPoint whose name matches the name of UmlUseCase
+
+// NOTE: file objects of type UmlSequenceDiagram and
+// UmlCollaborationDiagram generated for scenarios whose names are
+// derived from the Use Case name will be left unchanged, since the
+// name itself does not carry additional semantics.
+
+// NOTE2: based on popular demand, file names may be changed as well,
+// optionally
+
+
+update_dependents UmlUseCase_dependents(node theBase)
+{
+    update_dependents dependents = update_dependents_create();
+    string theBaseName = to_oms_string(theBase.name);
+ 
+    // Dependent item objects of type UmlParentNameItem
+    // Dependency name: ParentNameChange
+    item dep_UmlUseCase_scenarios;
+    string  q_UmlUseCase_scenarios = "item[UmlParentNameItem && value='${theBaseName}' && node[UmlScenarioInstance && items[UmlParentTypeItem && value='UmlUseCase']]]";
+    for_each_in_select(q_UmlUseCase_scenarios, dep_UmlUseCase_scenarios)
+        update_dependents_append(dependents, dep_UmlUseCase_scenarios, "ParentNameChange");
+
+    //
+    // Dependent node objects of type UmlExtensionPoint
+    // Dependency name: Name
+    node dep_UmlUseCase_extPoints;
+    for_each_in_select("node[UmlExtensionPoint && name='${theBaseName}']",
+			   dep_UmlUseCase_extPoints)
+        update_dependents_append(dependents, dep_UmlUseCase_extPoints, "Name");
+
+//<fix:#3592 begin>
+    // Dependent node objects of type UmlStateMachine
+    // Dependency name: Name
+    node dep_UmlUseCase_StateMachine;
+    for_each_in_select("node[UmlStateMachine && name='${theBaseName}']",
+               dep_UmlUseCase_StateMachine)
+        update_dependents_append(dependents, dep_UmlUseCase_StateMachine, "Name");
+
+    // OPTIONAL dependency
+    // Dependent file objects of type UmlSequenceDiagram and
+    // UmlCollaborationDiagram
+    // Dependency name: ScenarioInstanceFile
+    if(dep_UmlUseCase_UmlScenarioInstance_FileName) {
+        file dep_UmlUseCase_file;
+        string  fname_start = theBaseName + FILE_NAME_SCOPE_SEPARATOR + "*";
+
+        for_each_in_select("file[(UmlSequenceDiagram | UmlCollaborationDiagram ) && node_refs[ node[UmlScenarioInstance &&  items[UmlParentTypeItem && value='UmlUseCase'] && items[UmlParentNameItem && value='${theBase.name}']]]]",dep_UmlUseCase_file) {
+//        for_each_in_select("file[(UmlSequenceDiagram | UmlCollaborationDiagram) && name$'${fname_start}' ]",dep_UmlUseCase_file) {
+            update_dependents_append(dependents,dep_UmlUseCase_file,"ScenarioInstanceFile");
+        }
+//<fix:#3592 end>
+    }
+
+    return(dependents);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlStateMachine
+// Dependent Type :	file UmlStateTable,UmlStateDiagram,UmlActivityDiagram
+// Dependency Name:	OperationStateEvent
+//
+
+file
+UmlScenarioInstance_File_derattrs(file theDep,node oldVal,node newVal)
+{
+    file	result = theDep;
+    string	newUseCaseName = newVal.name;
+    string      oldUseCaseName = oldVal.name;
+    string      newFileName;
+
+    if (newUseCaseName != oldUseCaseName)
+    {
+	//newFileName = create_new_file_in_sequence(newUseCaseName,NULL);
+	newFileName = create_new_file_in_sequence(newUseCaseName,theDep.type);
+	//message("DEBUG UmlScenarioInstance_File_derattrs newFileName='"+newFileName+"'");
+	result = file_name_set(result, newFileName);
+    }
+
+    //message("DEBUG UmlScenarioInstance_File_derattrs result="+result);
+    return(result);
+}
+
+
+//
+// 
+update_dependents UmlMessage_dependents(link theBase)
+{
+    //message("DEBUG UmlMessage_dependents::theBase="+theBase);
+    update_dependents dependents = update_dependents_create();
+    //string theBaseName = to_oms_string(theBase.name);
+ 
+//     // Dependent item objects belonging to the same object
+//     // Dependency name: MessageNameChange
+//     item dep_UmlMessageItems;
+//     string  q_dep_UmlMessageItems = "item[(UmlObjectName | UmlReturnType | UmlMessageArgs | UmlPredecessorGuard | UmlSequenceExpression | UmlMessageRecurrence) & obj_id=${theBase.id}]";
+//     for_each_in_select(q_dep_UmlMessageItems, dep_UmlMessageItems)
+//         update_dependents_append(dependents, dep_UmlMessageItems, "MessageNameChange");
+
+     //
+     // For optional dependencies, we need to know the server class
+     node serverObj = find_by_query("node[UmlObjectInstance & id=${theBase.to_node_id}]");
+     node objScope = NULL;
+     node serverClass = NULL;
+     if(serverObj!=NULL) {
+         objScope = find_by_query("node[UmlObjectClassScope & id=${serverObj.scope_node_id}]");
+         serverClass = find_by_query("node[UmlClass && name='${objScope.name}']");
+     }
+    // OPTIONAL dependency
+    // Dependent objects:Messages with the same signature
+    // Dependency name: MessageSignatureChange
+    if(dep_UmlMessage_UmlMessage_sameSignature) {
+	// all messages belonging to the same class and having the
+	// same signature (ret. value, name and number of args)
+	link dep_UmlMessageLinks;
+	node serverClass1 = NULL;
+	for_each_in_select("link[(UmlSimpleMessage || UmlSynchronousMessage || UmlBalkingMessage || UmlTimeoutMessage || UmlAsynchronousMessage) && name='${theBase.name}']",dep_UmlMessageLinks) {
+	    serverObj = find_by_query("node[UmlObjectInstance & id=${dep_UmlMessageLinks.to_node_id}]");
+            if(serverObj!=NULL) {
+                objScope = find_by_query("node[UmlObjectClassScope & id=${serverObj.scope_node_id}]");
+                serverClass1 = find_by_query("node[UmlClass && name='${objScope.name}']");
+            }
+	    if(serverClass1==serverClass) {
+		update_dependents_append(dependents,dep_UmlMessageLinks,"MessageSignatureChange");
+		//message("DEBUG UmlMessage_dependents::dep_UmlMessageLinks='"+dep_UmlMessageLinks+"' added as dependent because dep_UmlMessage_UmlMessage_sameSignature is SET");
+	    } else {
+		//message("DEBUG UmlMessage_dependents::dep_UmlMessageLinks='"+dep_UmlMessageLinks+"' has a DIFFERENT server:='"+serverClass1+"'(instead of '"+serverClass+"'");
+	    }
+	}
+    }
+
+    //message("DEBUG UmlMessage_dependents::dependents='"+dependents+"'");
+    return(dependents);
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlUseCase, UmlCollaboration
+// Dependent Type :	item UmlParentNameItem 
+// Dependency Name:	ParentNameChange
+//
+
+item UmlParentNameItem_derattrs(item theDep, node oldVal, node newVal)
+{
+    item	result = theDep;
+    string	newName;
+
+    if (newVal.name != oldVal.name) {
+	newName = newVal.name;
+	result = item_value_set(result,newName);
+    }
+    return(result);
+}
+
+
+
+//
+// Derive Attributes Function
+// Source Type	  :	link UmlRole
+// Dependent Type :	node UmlAssociation
+// Dependency Name:	RoleNameChange
+// The role names are stored in a colon separated list in the signature of the
+// UmlAssociation. This function finds the old role occurrence and replaces
+// it.
+//
+
+node
+UmlRole_Association_derattrs(node theDep, link oldVal, link newVal)
+{
+    node result = theDep;
+	string role_name="";
+	int i;
+
+	list roles = string_to_list(result.sig,":");
+
+	for(i=0;i<list_count(roles);i++) {
+		role_name = list_get(roles,i);
+		if (role_name == oldVal.name) {
+			list_set(roles,i,newVal.name);
+			break;
+		}
+	}
+	
+    result = node_sig_set(result, list_to_string(roles,":"));
+    return result;
+}
+
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlxxxMessage
+// Dependent Type :	item UmlMessageArgs
+// Dependency Name:	MessageNameChange
+//
+item UmlMessage_ItemType_derattrs(item theDep, link oldVal, link newVal)
+{
+    //message("DEBUG UmlMessage_ItemType_derattrs::theDep/oldVal/newVal::"+theDep+oldVal+newVal);
+    item result = theDep;
+//     if (theDep.type == "UmlObjectName" ) {
+// 	result = item_value_set(result,newVal.name);
+//     }
+    //message("UmlMessage_ItemType_derattrs::theDep='"+theDep+oldVal+newVal);
+    //message("DEBUG UmlMessage_ItemType_derattrs::result::"+result);
+    return result;
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlInstantiatedClass
+// Dependent Type :	node UmlClass
+// Dependency Name:	InstantiatedClassChange
+// For anonymous instantiated classes, the parameters are stored in the
+// signature of the InstatiatedClass and the Class. The InstantiatedClass is
+// renamed, which triggers the corresponding Class to be renamed.
+//
+
+node
+UmlInstantiatedClass_Class_derattrs (node theDep, node oldVal, node newVal)
+{
+    node result = theDep;
+	result = node_sig_set(result,newVal.sig);
+	result = node_name_set(result,newVal.name);
+    return result;
+}
+
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlClass
+// Dependent Type :	node UmlInstantiatedClass
+// Dependency Name:	ClassNameChange
+// This is triggered if the signature contains a reference to a class. The
+// name may also be the same as the class, in which case the name will be
+// updated also.
+//
+
+node
+UmlClass_InstantiatedClass_derattrs (node theDep, node oldVal, node newVal)
+{
+    node result = theDep;
+	uml_argument arg;
+	list parsed_class;
+	int i;
+	string iclass_str;
+	string sigstr;
+
+	if (result.name == oldVal.name)
+		result = node_name_set(result,newVal.name);
+
+	iclass_str = uml_instantiated_class_node_to_string(theDep);
+	parsed_class = uml_parse_instantiated_class(iclass_str);
+	if (NULL != parsed_class) {
+		parsed_class = uml_instantiated_class_replace_type(parsed_class,
+					oldVal.name,newVal.name);
+
+		sigstr = uml_format_instantiated_class_arguments(parsed_class);
+		result = node_sig_set(result,sigstr);
+	}
+
+    return result;
+}
+
+string UmlOperationPrintValue(node operation)
+{
+    node class = find_by_query("node[id = ${operation.scope_node_id}]");
+    if(class == NULL || operation == NULL)
+	return NULL;
+    
+    return class.name + "::" + operation.name + "(" +
+	operation.sig + ")";
+}
+
+
+// ECR 4500
+
+// UmlObjectClassScope has a whole lot of dependents
+//   ParameterizedClass
+//   InstantiatedClass
+//   Operation (signature contains class names)
+//   Signal (signature contains class names)
+//   Class parameter list
+//   UmlRefineArgs
+//   UmlOperationThrows
+//   UmlOperationReturnType
+//   UmlReturnType
+//   Attribute Type
+//   state machine
+//   UmlAssociation
+//   ObjectClassScope
+//   Operation (name is optional for constructor rename)
+//   ClassTable file name
+
+update_dependents
+UmlObjectClassScope_dependents(node theBase_object)
+{
+    update_dependents dependents = update_dependents_create();
+    string theBaseSig;
+    node dep_Node;
+    file dep_File;
+    string qry;
+    uml_argument arg;
+    list args;
+    int i;
+    node theBase;
+
+	// Check if there is a UmlClass with the same name.
+	// If so, we have to rename all the class dependants and 
+	// the class is the base,
+	// otherwhise ther is nothing to do --> return.
+	qry = "node[UmlClass && name='" + theBase_object.name + "']";
+			
+	theBase = find_by_query(qry);
+	
+	if (theBase == NULL)
+            return dependents;
+            
+        update_dependents_append(dependents, theBase, "Name");
+
+        string theBaseName = to_oms_string(theBase.name);
+
+	// first, the paramterized and instantiated classes
+	// JED - Only if this is not the UmlClass node mapped by an anonymous
+	// instantiated class
+	if (NULL != theBase.sig) {
+		theBaseSig = to_oms_string(theBase.sig);
+	} else {
+		theBaseSig = NULL;
+	}
+
+	if (theBaseSig == NULL || theBaseSig == "") {
+		qry = "node[(UmlInstantiatedClass|UmlParameterizedClass) && " +
+			"(sig=NULL | sig='') && " +
+			" name='" + theBaseName + "' && scope_node_id =" +
+			theBase.scope_node_id + "]";
+
+		for_each_in_select(qry, dep_Node)
+			update_dependents_append(dependents, dep_Node, GOR_NM_DP_N);
+	}
+
+	list parsed_class;
+	string iclass_str;
+
+	qry = "node[UmlInstantiatedClass && " +
+		"(sig $ '*" + theBaseName + "*' | name='" + theBaseName + "')]";
+	for_each_in_select(qry, dep_Node) {
+		if (dep_Node.name == theBaseName) {
+			update_dependents_append(dependents, dep_Node, "ClassNameChange");
+		} else {
+			iclass_str = uml_instantiated_class_node_to_string(dep_Node);
+			parsed_class = uml_parse_instantiated_class(iclass_str);
+			if (NULL != parsed_class) {
+				if (uml_instantiated_class_uses_type(parsed_class,theBaseName)) {
+					update_dependents_append(dependents, dep_Node, "ClassNameChange");
+				}
+			}
+		}
+	}
+
+	// now, operations and signals
+	// if the optional constructor rename is selected, then exclude those
+	// operations because they will be handled later.
+	// Don't worry about destructors, because they can have no arguments
+	if (dep_UmlClass_UmlOperation_OpConstructor) {
+		qry = "node[(type=UmlSignal && sig $ '*" + theBaseName + "*') || " +
+					"(type=UmlOperation && sig $ '*" + theBaseName + "*' &&" +
+					 " name !='" + theBaseName + "')]";
+	} else {
+		qry = "node[(UmlOperation|UmlSignal) && sig $ '*" + theBaseName + "*']";
+	}
+	for_each_in_select(qry, dep_Node) {
+		// parse each signature and make sure that we have a good match
+		args = list_create("string",0);
+		if (!uml_split_arguments(dep_Node.sig,args)) {
+			continue;
+		}
+		for	(i=0;i<list_count(args);i++) {
+			arg = uml_arg_string_to_struct(list_get(args,i));
+// print_message("JED - processing " + dep_Node.type + ":" + arg.argType);
+			if (uml_uses_type(theBase.name,arg.argType)) {
+				update_dependents_append(dependents, dep_Node, "ClassNameChange");
+				break;
+			}
+		}
+	}
+
+	// class parameter lists, operation return types, attribute types,
+	// UmlOperationThrows, and UmlRefineArgs
+	qry = "item[(UmlClassParameters|UmlOperationReturnType|UmlReturnType|UmlAttributeType|UmlOperationThrows|UmlRefineArgs) && value $ '*" + theBaseName + "*']";
+
+	item dep_Item;
+
+	for_each_in_select(qry, dep_Item) {
+		// parse each value and make sure that we have a good match
+		args = list_create("string",0);
+		if (!uml_split_arguments(dep_Item.value,args)) {
+			continue;
+		}
+		for	(i=0;i<list_count(args);i++) {
+			if ("UmlClassParameters" == dep_Item.type) {
+				arg = uml_arg_string_to_struct(list_get(args,i));
+			} else if ("UmlRefineArgs" == dep_Item.type ||
+					"UmlOperationThrows" == dep_Item.type) {
+				// is just a type expression
+				arg.argType = string_strip(list_get(args,i),"B"," ");
+			} else {
+				// is just a type expression
+				arg.argType = dep_Item.value;
+			}
+// print_message("JED - processing " + dep_Item.type + ":" + arg.argType);
+			if (uml_uses_type(theBase.name,arg.argType)) {
+				update_dependents_append(dependents, dep_Item, "ClassNameChange");
+				break;
+			}
+		}
+	}
+
+	// state machines belonging to a class
+	qry = "node[UmlStateMachine && name ='" + theBaseName + "']";
+			
+	for_each_in_select(qry, dep_Node)
+		update_dependents_append(dependents, dep_Node, GOR_NM_DP_N);
+
+	// state machines belonging to an operation in this class
+	qry = "node[UmlStateMachine && name $'" + theBaseName + "::*']";
+			
+	for_each_in_select(qry, dep_Node)
+		update_dependents_append(dependents, dep_Node, "ClassStateMachine");
+
+	// UmlAssociation
+	qry = "node[UmlAssociation && in_links[UmlRole && from_node_id = " + theBase.id + "]]";
+			
+	for_each_in_select(qry, dep_Node) {
+		update_dependents_append(dependents, dep_Node, "ClassNameChange");
+	}
+
+
+	// optional operation renaming if they are constructors
+//	if (dep_UmlClass_UmlOperation_OpConstructor) {
+// I don't know why rename of constructors is optional.
+// Therefore I always rename constructors here.
+	if (True) {
+		qry = "node[UmlOperation && name='" + theBaseName + "'"
+			+ " && scope_node_id=" + theBase.id + "]";
+		for_each_in_select(qry, dep_Node)
+			update_dependents_append(dependents, dep_Node, "ClassConstructor");
+		// JED - Destructors are not so simple
+		qry = "node[UmlOperation && name='~" + theBaseName + "']";
+			
+		for_each_in_select(qry, dep_Node)
+			update_dependents_append(dependents, dep_Node, "ClassDestructor");
+	}
+
+	// class table file names
+	qry = "file[UmlClassTable && name$'" + theBaseName + "*' && node_refs[node_id=" + theBase.id + "]]";
+	for_each_in_select(qry, dep_File)
+		update_dependents_append(dependents, dep_File, "ClassNameChange");
+ 
+    return(dependents);
+}
+
+// Begin Add ECR 3829
+//
+// Derive Attributes Function
+// Source Type	  :	node UmlActionState
+// Dependent Type :	node UmlStateMachine
+// Dependency Name:	Name
+//
+
+update_dependents UmlActionState_dependents(node theBase)
+{
+    update_dependents dependents = update_dependents_create();
+    string theBaseName = to_oms_string(theBase.name);
+ 
+    //
+    // Dependent node objects of type UmlStateMachine in Activity Diagram scenarios
+    // Dependency name: Name
+    node dep_UmlActionState_actStateMachine;
+    //for_each_in_select("node[UmlStateMachine && name='${theBaseName}' && node_refs[file[UmlActivityDiagram && !node_refs[node[UmlActionState && name='${theBaseName}']]]]]",
+    for_each_in_select("node[UmlStateMachine && name='" +
+        strip_whitespace( theBaseName ) + "' && node_refs[file[UmlActivityDiagram]]]",
+		dep_UmlActionState_actStateMachine)
+        update_dependents_append(dependents, dep_UmlActionState_actStateMachine, "Name");
+    
+    return(dependents);
+}
+// End Add ECR 3829

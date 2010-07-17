@@ -1,0 +1,28 @@
+/* XPM */
+static char* folder_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 6 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #000000	c #808080",
+"o	m #000000	c #ffff00",
+"x	m #ffffff	c #c0c0c0",
+/* pixels */
+"................",
+"..OOOOO.........",
+".OoxoxoO........",
+"OoxoxoxoOOOOOO..",
+"O            OX.",
+"O oxoxoxoxoxoOX.",
+"O xoxoxoxoxoxOX.",
+"O oxoxoxoxoxoOX.",
+"O xoxoxoxoxoxOX.",
+"O oxoxoxoxoxoOX.",
+"O xoxoxoxoxoxOX.",
+"O oxoxoxoxoxoOX.",
+"OOOOOOOOOOOOOOX.",
+".XXXXXXXXXXXXXX.",
+"................",
+"................"};

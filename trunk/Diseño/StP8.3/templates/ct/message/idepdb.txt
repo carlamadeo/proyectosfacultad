@@ -1,0 +1,176 @@
+%
+% 	sccsid[] = @(#)idepdb.txt	4.1  94/01/14
+% 	StP/Core
+% 	Confidential property of Interactive Development Environments, Inc.
+% 	Copyright (c) 1992-1993
+% 	All rights reserved
+%
+
+% Text Messages used in history
+7500;Gen DD
+7501;Check DD Fail
+7502;Check DD Ok
+7503;Check Diag Fail
+7504;Check Diag Ok
+7505;Check Decomp Fail
+7506;Check Decomp Ok
+7507;Gen DD Fail
+7508;Gen DD Ok
+7509;Create
+7510;Inv An
+7511;Edit
+7512;Modify
+7513;Cspec Text Edit
+7514;Cspec Text Modify
+7515;Locking Enabled
+7516;Locking Disabled
+7517;New Revision
+7518;VCC initialized
+7519;Gen Rapid Trace
+7520;Gen Rapid
+7521;Check Cspec Fail
+7522;Check Cspec Ok
+% DD related messages
+7550;Project Database not enabled
+7551;Matching diagram names -- illegal context
+7552;Could not open Project Database
+7553;Access diagram names table failed
+7554;Matching diagram names -- Search failed
+7555;export obj id
+%StP/DD Types
+% 7660 .. scalars as they appear in the DD
+7660;aliastp
+7661;undefdatp
+7662;elementtp
+7663;ereltp
+7664;seqtp
+7665;itertp
+7666;seltp
+7667;storetp
+7668;punittp
+7669;modltp
+7670;proctp
+7671;externaltp
+7672;interfacetp
+7673;c_flowtp
+7674;d_flowtp
+7675;mconntp
+7676;diagtp
+7677;statetp
+7678;transtp
+7679;notetp
+7680;desctp
+7681;msgtp
+7682;cspectp
+7683;csintp
+7684;csdetabtp
+7685;csevltp
+7686;csstttp
+7687;cssemtp
+7688;csstdtp
+7689;csacltp
+7690;cspattp
+7691;cspamtp
+7692;csouttp
+7693;linktp
+%7720 ... User readable text
+7720;Alias
+7721;Undefined Data
+7722;Data Element
+7723;Relationship
+7724;Sequence
+7725;Iteration
+7726;Selection
+7727;Data Store
+7728;Program Unit
+7729;Module
+7730;Process
+7731;External
+7732;Offpage Connector
+7733;Control Flow
+7734;Data Flow
+7735;Module Parameter
+7736;Diagram
+7737;State
+7738;State Transition
+7739;Note
+7740;Description
+7741;Text
+7742;Control Specification
+7743;Control Specification In
+7744;Decision Table
+7745;Event Logic
+7746;State Transition Table
+7747;State Event Matrix
+7748;State Transition Diagram
+7749;Action Logic
+7750;Process Activation Table
+7751;Process Activation Matrix
+7752;Control Specification Out
+7753;Object Link
+7754;Link
+%%%%%
+7789;Annotation
+7790;\tDeleted %d %s Object\n
+7791;Error deleting %s\n
+7792;\tError deleting %s Objects\n
+7793;\tDeleted %d %s Objects\n
+7794;Delete `%s' and referencing objects\n
+7795;referencing
+7796;Flow
+7797;Control Spec Flow
+7798;Data
+7799;Object
+% 7800
+7800;Access Object table failed -- StP/DD not generated
+7801;Access Names table failed -- StP/DD not generated
+7802;Warning: %s %s not defined from this diagram\n\t\t-- no description generated
+7803;Warning: %s %s has more than one description in this diagram
+7804;Could not insert description for %s %s
+7805;Insert '%.30s' into object table failed
+7806;Access Program Unit table failed -- no processes inserted
+7807;
+7808;%d Externals were deleted\n    because they are no longer defined from this diagram
+7809;1 External was deleted\n    because it is no longer defined from this diagram
+7810;%d Data Stores were deleted\n    because they are no longer defined from this diagram
+7811;1 Data Store was deleted\n    because it is no longer defined from this diagram
+7812;Insert diagram description
+7813;Access Notes tables failed -- StP/DD not generated
+7814;Insert alias '%.30s' into object table failed
+% sce-dd
+7815;Access Program Unit table failed -- no modules inserted
+7816;%d Global Data Items were deleted\n    because they are no longer defined from this diagram
+7817;1 Global Data Item was deleted\n    because it is no longer defined from this diagram
+7818;\tAccessing '%.30s'\n
+7819;WARNING: '%.30s' no parameters specified for access to '%.30s'
+7820;\tUpdate on '%.30s' assumed\n
+7821;\tGlobal Data '%.30s' may not call other modules
+% end sce dd
+7849;Access Object table failed -- check for undefined items in stores/flows aborted
+% Ste -> DD
+7850;No State Transitions inserted because of previous errors
+7851;%d nodes have no label --\n\tIt will not be possible to insert all State Transitions
+7852;Generating States
+7853;'%.30s' is defined as %s, could not insert as state
+7854;State '%.30s' defined in %s
+7855;\tState not inserted
+7856;%d states were deleted\n    because they are no longer defined from this diagram
+7857;1 state was deleted\n    because it is no longer defined from this diagram
+7858;\tName                         ObjectId\n
+7859;Can't insert State Transition from an unlabeled State
+7860;Generating State Transitions
+7861;'%.30s' is defined as %s, could not insert as Event
+7862;'%.30s' is defined as %s, could not insert as Action
+7863;Insert State Transition '%.30s/%.30s'\n\tfrom: %s\n\tto  : %s
+7864;Update State Transition '%.30s/%.30s'\n\tfrom: %s\n\tto  : %s
+7865;%s State Transition '%.30s/%.30s' failed
+7866;Could not insert description for State Transition
+7867;%d State Transitions were deleted\n    because they are no longer defined from this diagram
+7868;1 State Transition was deleted\n    because it is no longer defined from this diagram
+7869;Insert %s into object table failed
+7870;System %s diagram %s
+7871;No States and Transitions inserted because of previous errors
+7872;Checking Diagram
+7873;Diagram has more than one initial state
+7874;\t%.30s\n
+7875;WARNING: No initial state found\n

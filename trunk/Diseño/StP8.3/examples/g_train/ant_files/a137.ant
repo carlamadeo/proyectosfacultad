@@ -1,0 +1,496 @@
+FileObject 1
+{
+    { Name "a137" }
+    { Type ObjectAnnotation }
+    { GUID "UID_D86BEF43-CDD1-4f53-B1DB-7B1B3738A567" }
+}
+
+NodeObject 99999
+{
+    { Name "/demo/stp/core1.3.1/Examples/mig5train/src_files" }
+    { Type SEDirectory }
+    { ObjectId 602 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_BEA0A71E-2FA6-4494-9500-21DDFFBE18AD" }
+}
+
+NodeObject 99998
+{
+    { Name "process_speed.c" }
+    { Type SEFile }
+    { ObjectId 1791 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_200A5337-B992-4d9b-ADC1-DA62FCFC20BC" }
+}
+
+NodeObject 99997
+{
+    { Name "process speed" }
+    { Type Module }
+    { ObjectId 1792 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99998 }
+    { GUID "UID_9E7DC827-1641-4220-9381-53097909DB04" }
+}
+
+NoteObject 2
+{
+    { Type ModulePDL }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1794 }
+    { DescLine " send_to_screen(number_of_passengers,Ts,N_Kgs,location)" }
+    { DescLine "        (" }
+    { DescLine "                update_screen();" }
+    { DescLine "        )" }
+}
+
+ItemObject 3
+{
+    { Type PDL }
+    { Value "True" }
+    { NoteId 2 }
+    { ObjectId 1795 }
+}
+
+NoteObject 4
+{
+    { Type ModuleDefinition }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1797 }
+}
+
+ItemObject 5
+{
+    { Type ModuleReturnType }
+    { Value "int" }
+    { NoteId 4 }
+    { ObjectId 1798 }
+}
+
+ItemObject 6
+{
+    { Type CodeGenId }
+    { Value "10" }
+    { NoteId 4 }
+    { ObjectId 1799 }
+}
+
+NoteObject 7
+{
+    { Type Module }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1801 }
+    { DescLine "This fulfills the requirement that there be a mechanism available to calculate the speed of the gravity train." }
+}
+
+ItemObject 8
+{
+    { Type MemoryBudget }
+    { Value "3 WORDS" }
+    { NoteId 7 }
+    { ObjectId 1802 }
+}
+
+ItemObject 9
+{
+    { Type ProcessingTime }
+    { Value "3.4 seconds" }
+    { NoteId 7 }
+    { ObjectId 1803 }
+}
+
+ItemObject 10
+{
+    { Type DecompositionLevel }
+    { Value "CSU" }
+    { NoteId 7 }
+    { ObjectId 1804 }
+}
+
+NoteObject 11
+{
+    { Type LocalData }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1806 }
+    { DescLine "Speed Specifications" }
+}
+
+ItemObject 12
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 11 }
+    { ObjectId 1807 }
+}
+
+ItemObject 13
+{
+    { Type DataName }
+    { Value "Speed-Info" }
+    { NoteId 11 }
+    { ObjectId 1808 }
+}
+
+ItemObject 14
+{
+    { Type DataSize }
+    { Value "Standard" }
+    { NoteId 11 }
+    { ObjectId 1809 }
+}
+
+ItemObject 15
+{
+    { Type DataType }
+    { Value "High-Speed" }
+    { NoteId 11 }
+    { ObjectId 1810 }
+}
+
+ItemObject 16
+{
+    { Type Representation }
+    { Value "Digital" }
+    { NoteId 11 }
+    { ObjectId 1811 }
+}
+
+ItemObject 17
+{
+    { Type Constraint }
+    { Value "Range" }
+    { NoteId 11 }
+    { ObjectId 1812 }
+}
+
+ItemObject 18
+{
+    { Type Units }
+    { Value "Km/hr" }
+    { NoteId 11 }
+    { ObjectId 1813 }
+}
+
+ItemObject 19
+{
+    { Type Precision }
+    { Value "100 %" }
+    { NoteId 11 }
+    { ObjectId 1814 }
+}
+
+NoteObject 20
+{
+    { Type LocalDatabase }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1816 }
+    { DescLine "The  internal databases are not accessed." }
+}
+
+ItemObject 21
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 20 }
+    { ObjectId 1817 }
+}
+
+ItemObject 22
+{
+    { Type ERDiagram }
+    { Value "Internal" }
+    { NoteId 20 }
+    { ObjectId 1818 }
+}
+
+ItemObject 23
+{
+    { Type AccessMethod }
+    { Value "Direct" }
+    { NoteId 20 }
+    { ObjectId 1819 }
+}
+
+NoteObject 24
+{
+    { Type SystemState }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1821 }
+}
+
+ItemObject 25
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 24 }
+    { ObjectId 1822 }
+}
+
+ItemObject 26
+{
+    { Type SystemState }
+    { Value "steady" }
+    { NoteId 24 }
+    { ObjectId 1823 }
+}
+
+NoteObject 27
+{
+    { Type Interrupt }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1825 }
+    { DescLine "No Note Description" }
+}
+
+ItemObject 28
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 27 }
+    { ObjectId 1826 }
+}
+
+ItemObject 29
+{
+    { Type InterruptName }
+    { Value "Disabled" }
+    { NoteId 27 }
+    { ObjectId 1827 }
+}
+
+ItemObject 30
+{
+    { Type Source }
+    { Value "Computer" }
+    { NoteId 27 }
+    { ObjectId 1828 }
+}
+
+ItemObject 31
+{
+    { Type InterruptPriority }
+    { Value "Leveled" }
+    { NoteId 27 }
+    { ObjectId 1829 }
+}
+
+ItemObject 32
+{
+    { Type Response }
+    { Value "Immediate" }
+    { NoteId 27 }
+    { ObjectId 1830 }
+}
+
+ItemObject 33
+{
+    { Type InterruptTime }
+    { Value "Not Fixed" }
+    { NoteId 27 }
+    { ObjectId 1831 }
+}
+
+ItemObject 34
+{
+    { Type MinimumFrequency }
+    { Value "-" }
+    { NoteId 27 }
+    { ObjectId 1832 }
+}
+
+ItemObject 35
+{
+    { Type MaximumFrequency }
+    { Value "-" }
+    { NoteId 27 }
+    { ObjectId 1833 }
+}
+
+ItemObject 36
+{
+    { Type ProbableFrequency }
+    { Value "Unknown" }
+    { NoteId 27 }
+    { ObjectId 1834 }
+}
+
+NoteObject 37
+{
+    { Type Timing }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1836 }
+    { DescLine " There is no timing information that is location specific." }
+}
+
+ItemObject 38
+{
+    { Type TimingConditions }
+    { Value "none" }
+    { NoteId 37 }
+    { ObjectId 1837 }
+}
+
+ItemObject 39
+{
+    { Type Sequencing }
+    { Value "none" }
+    { NoteId 37 }
+    { ObjectId 1838 }
+}
+
+ItemObject 40
+{
+    { Type DynamicLogic }
+    { Value "N/A" }
+    { NoteId 37 }
+    { ObjectId 1839 }
+}
+
+NoteObject 41
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 1841 }
+}
+
+ItemObject 42
+{
+    { Type ObjectName }
+    { Value "process speed" }
+    { NoteId 41 }
+    { ObjectId 1842 }
+}
+
+ItemObject 43
+{
+    { Type ProjectUniqueIdentifier }
+    { Value "" }
+    { NoteId 41 }
+    { ObjectId 1843 }
+}
+
+NoteObject 44
+{
+    { Type Requirement }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1845 }
+    { DescLine "This fulfills the requirement that there be a mechanism available to calculate the speed of the gravity train." }
+}
+
+ItemObject 45
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 44 }
+    { ObjectId 1846 }
+}
+
+ItemObject 46
+{
+    { Type RequirementName }
+    { Value "speed-sub-system" }
+    { NoteId 44 }
+    { ObjectId 1847 }
+}
+
+ItemObject 47
+{
+    { Type RequirementDocument }
+    { Value "g_train_specifications" }
+    { NoteId 44 }
+    { ObjectId 1848 }
+}
+
+ItemObject 48
+{
+    { Type RequirementParagraph }
+    { Value "speed" }
+    { NoteId 44 }
+    { ObjectId 1849 }
+}
+
+ItemObject 49
+{
+    { Type ParagraphNumber }
+    { Value "3" }
+    { NoteId 44 }
+    { ObjectId 1850 }
+}
+
+ItemObject 50
+{
+    { Type QualificationMethod }
+    { Value "" }
+    { NoteId 44 }
+    { ObjectId 1851 }
+}
+
+ItemObject 51
+{
+    { Type QualificationLevel }
+    { Value "" }
+    { NoteId 44 }
+    { ObjectId 1852 }
+}
+
+ItemObject 52
+{
+    { Type FormalTestParagraph }
+    { Value "" }
+    { NoteId 44 }
+    { ObjectId 1853 }
+}
+
+NoteObject 53
+{
+    { Type Document }
+    { Name "0" }
+    { OwnerId 99997 }
+    { ObjectId 1855 }
+}
+
+ItemObject 54
+{
+    { Type NoteKey }
+    { Value "0" }
+    { NoteId 53 }
+    { ObjectId 1856 }
+}
+
+ItemObject 55
+{
+    { Type DocumentName }
+    { Value "SDD" }
+    { NoteId 53 }
+    { ObjectId 1857 }
+}
+
+ItemObject 56
+{
+    { Type DocumentNumber }
+    { Value "4" }
+    { NoteId 53 }
+    { ObjectId 1858 }
+}
+
+ItemObject 57
+{
+    { Type ParagraphNumber }
+    { Value "8" }
+    { NoteId 53 }
+    { ObjectId 1859 }
+}
+

@@ -1,0 +1,345 @@
+%
+% 	sccsid[] = @(#)cspec.txt	4.1  94/01/14
+% 	StP/Core
+% 	Confidential property of Interactive Development Environments, Inc.
+% 	Copyright (c) 1992-1993
+% 	All rights reserved
+%
+
+% Some of the cse related messages are also in new_msgs.txt:4000-4100
+%
+% The general syntax summary for CSE starts at 5000, last possible line is
+% 5099.
+% The end is defined by a line starting with ESC (\033)
+5000;\  Left button - select a rectangular region of cells as command operand
+5001;Middle button - undo last command
+5002;\ Right button - pop up a command menu and select new command
+5003;\n
+5004;The editor window is partitioned into 4 subwindows. The current command
+5005;area, a message subwindow, a control panel subwindow and the paint area.
+5006;\n
+5007;The current command is shown in the top left corner and may be repeated
+5008;until a new command is chosen.
+5009;\n
+5010;In the control panel subwindow area, the "button" commands are activated
+5011;by pointing at the button label and clicking the left mouse button.
+5012;To change the value of the items which require text input, point
+5013;at the item label, click the left button, and begin typing. Your
+5014;normal editing characters (character, word, line delete) are valid.
+5015;To load a new table type, you can select the "Load" button and then
+5016;select the new type from the pop-up menu which will subsequently be
+5017;displayed or you may select an item from the pull down menu that is
+5018;displayed by clicking the right mouse button on the "Table Type" item.
+5019;Click the left button on an item in the control panel to get more help
+5020;(or type a carriage return in a text item).
+5021;\n
+5022;Table editing is done in the large paint window. In general, editing
+5023;is done by selecting a command from the pop up menu and then selecting
+5024;operands for this command. For example, if you wanted to move a block of
+5025;cells from one location to another, you would first select the "move"
+5026;command from the pop up menu by pressing the right mouse button in the
+5027;editing area, and then releasing the button while the cursor is over the
+5028;"move" item. Then you would need to select the source and destination
+5029;operands for this command. In general, a command operand is selected by
+5030;pressing the left mouse button in the upper left hand cell of the
+5031;desired block of cells, and holding the button down until you drag the
+5032;mouse to the lower left hand cell in the desired block of cells.
+5033;So to move a block of cells you would need to first select the block of
+5034;cells to be moved and then select the new block of cells that they should
+5035;be moved to.
+5036;To label a block of cells, select the "insert" command, select the block
+5037;cells and begin typing. A cell label is terminated either by hitting the
+5038;ESCAPE key or clicking a mouse button.
+5039;\n
+5040;To get more help on commands in the pop up menu, select the item
+5041;from the menu.
+5042;\n
+5043;To terminate the help mode, click the left mouse button in the editing
+5044;area
+5045;\033
+% messages 5100-5199 are help messages for individual CSE commands
+5100;Label a block of cells - select block and type; insert a new row or column
+5101;Move a block of cells, select source block, select destination block 
+5102;Delete the labels from a block of cells
+5103;Copy a block of cells, select source block, select destination block
+5104;Swap a block of cells, select source block, select destination block
+5105;Scale a column or row, select column or row number and drag border 
+5106;Cancel the current selection, not the same a "undo"
+5107;Edit a text message associated with the current table
+5108;Show the text message associated with the current table
+5109;Delete the text message associated with the current table
+5110;Edit a text message associated with the entire current Cspec
+5111;Show the text message associated with the entire current Cspec
+5112;Delete the text message associated with the entire current Cspec
+5113;print the current cspec
+5114;Generate a description of the current table for the pic troff preprocessor
+5115;Generate a postscript language description of the current table
+5116;Select a row or column along which the table should be broken when printing
+5117;Delete a page break set with the "add break" command
+5118;Toggle the page break visibility, shown as dashed lines when visible
+5119;Put a lower limit on rows or columns to be printed
+5120;Put a upper limit on rows or columns to be printed
+5121;Remove all limits on rows and columns to be printed
+5122;Generate raster image of selected area of the screen
+5123;Display this general help message; get help for individual items
+5124;Alternate which horizontal sections which are to be scrolled
+5125;Add a column to a horizontal section
+5126;Remove a column from a horizontal section, does not delete, only makes invisible
+5127;Edit alternate (previously edited) Cspec
+5128;Edit next Cspec on command line argument list
+5129;Clear the current table; clears labels, does not remove from Cspec
+5130;Delete the table from the current Cspec entirely
+5131;Erase and then redraw the current table
+5132;Terminate the editing session; confirm if results not saved yet
+5133;Load a new table from the current Cspec; pop up will ask for type
+5134;Store the current table in the current Cspec
+5135;Read - not implemented yet
+5136;Location of Project Directory Database  
+5137;Disp Def - not implemented yet
+5138;Scroll to specified row and/or column number
+5139;Search for and scroll to specified text pattern
+5140;suspend
+5141;Name of Cspec within the current project/system
+5142;Name of system within the current Project Directory
+5143;Use (or don't use) the project directory structure to get Cspecs
+5144;Step through the list of messages. Errors are shown in reverse video
+5145;Put the selected block of cells or text message in globalpaste buffer
+5146;Paste the contents of the current paste buffer into table
+5147;Find the next occurrence of the pattern specified by the "Pattern:" item 
+5148;Find the next occurrence of the pattern specified by the "Pattern:" item
+5149;Undo the last command
+5150;Specify row or column number for the "Move" button (e.g R12/C4)
+5151;Specify a text pattern for the "Find" command (regular expression may be given)
+% Mapping from schema definition of Scalar type CspTable to
+% their readable counterparts
+% entries up to 5180 should be reserved
+5152;Cspec Bar
+5153;Cspec Bar In
+5154;Decision Table
+5155;Event Logic
+5156;State Trans. Table
+5157;State Event Matrix
+5158;State Trans. Diagram
+5159;Action Logic
+5160;Process Act. Table
+5161;Process Act. Matrix
+5162;Cspec Bar Out
+5200;No label in selected cell
+5201;Select a Control Flow
+5202;Must select column label, Display Def canceled
+5203;Must select column label in Control In section, Display Def canceled
+5204;Must select row label, Display Def canceled
+5205;Must select cell in table body, Display Def canceled
+5206;Must select row label or column label in Control Out section, Display Def canceled
+5207;Illegal table type in Display Def
+5208;"* "
+5209;Table deletion canceled
+5210;Table deletion cannot be undone
+5211;Must leave at least one column in the section
+5212;Editing Table text
+5213;Editing Cspec text
+5214;Cspec annotation deleted
+5215;File is being read or written - try again
+5216;error while skipping over tables
+5217;Table Loaded
+5218;New Table
+5219;Which Table Type
+5220;%s%s
+5221;Number of tables in cspec expected
+5222;table type and number of lines expected
+5223;number of lines in action label expected
+5224;First row and first col number expected
+5225;number of lines in action label expected
+5226;Col number expected in table body
+5227;Row number expected in table body
+5228;Error while reading number of imports
+5229;Error while reading imports
+5230;could not allocate CSE_NAME
+5231;could not allocate import name
+5232;Error while reading number of exports
+5233;Error while reading exports
+5234;Error while reading number of states
+5235;Error while reading states
+5236;Error while reading number of procs
+5237;Error while reading procs
+5238;Cspec must be loaded before table deletion
+5239;File %s exists, but is not readable and writable
+5240;Cspec has never been saved, table deletion canceled
+5241;Could not open %s for writing
+5242;Could not open %s for reading
+5243;File is being read or written - try again
+5244;Error reading types from %s
+5245;Error reading imports, etc. from %s
+5246;Selection has been cut
+5247;Table text message has been cut
+5248;Cspec text message has been cut
+5249;New import has been cut
+5250;New export has been cut
+5251;New value has been cut
+5252;Cut failed
+5253;Select region or text message to be cut
+5254;Cannot interpret the contents of the paste buffer - paste canceled
+5255;paste failed while reading type of selection
+5256;paste failed while reading table type
+5257;Select upper left hand corner to paste into
+5258;Error while reading table text from paste buffer.
+5259;Table text pasted in.
+5260;Error while reading Cspec text in paste buffer.
+5261;Error while reading Cspec text from paste buffer.
+5262;Cspec text pasted in.
+5263;paste failed while reading number of rows and columns
+5264;%s%.100s%s
+5265;: Cspec  
+5266;Usage: cspost ..
+5267;%s%.100s%s
+5268;: Cspec  
+5269;.sp\n\\fB\\s+2%s\\s-2\\fP\n.sp\n
+5270;\n%s\n\n
+5271;.bp\n\n
+5272;.sp\n\\fB\\s+2%s\\s-2\\fP\n.sp\n
+5273;\n%s\n\n
+5274;Usage: cspic ..
+5275;Checking Cspec %s\n\n
+5276;Check CFD - Cspec Interface
+5277;Check Cspec
+5278;Check Table
+5279;Finish making selection first
+5280;Finish scaling first
+% imports, exports, values commands
+5281;%.190s (From CFD)
+5282;%.190s (From %.100s)
+5283;Possible Imports
+5284;Import canceled
+5285;No names to import
+5286;%.190s (To CFD)
+5287;%.190s (To %.100s)
+5288;%.190s (Process)
+5289;Possible Exports
+5290;Export canceled
+5291;No names to export
+5292;Cut of new name failed
+5293;%s or %s
+5294;%s
+5295;%s
+5296;Illegal table type for this command
+5297;No entry for %s in StP/DD
+5298;%s is not an element, cannot get values
+5299;Could not get values from DD for %s
+5300;Type is "%s"
+5301;%s low value is "%s"
+5302;%s high value is "%s"
+5303;%s%s%s
+5304;boolean
+5305;TRUE
+5306;FALSE
+5307;..
+% miscellaneous drawing message
+5308;Could not allocate horizontal pixrect, garbage may appear
+% More help messages for TED items
+5309;Bring up pop-up window with table formatting options
+5310;Apply the label alignment options from the 'Format' pop-up window to a group of cells
+5311;Apply the cell border options from the 'Format' pop-up window to a group of cells
+5312;Apply the label contraint options from the 'Format' pop-up window to a group of cells
+% cse_dd messages
+5320;Usage: cspost ..
+5321;Cspec %s
+5322;Generating Cspec Flows
+5323;Access control flow table failed -- no Cspec Flows inserted
+5324;'%.30s' is defined as %s, could not insert as Cspec Flow
+5325;Insert Cspec Flow '%.30s'\n      from: %s\n      to:  %s
+5326;Update Cspec Flow '%.30s'\n      from: %s\n      to:   %s
+5327;%s Cspec Flow '%.30s' failed
+5328;%d Cspec Flows deleted\n    because they were no longer defined from this diagram
+5329;1 Cspec Flow deleted\n    because it was no longer defined from this diagram
+5330;Cannot scale row that small
+5331;Cannot scale column that small
+% cse_check messages
+5340;No file name given after -o flag  -- Cspec checking aborted
+5341;Could not open %s, -- Cspec checking aborted
+5342;Could not open Database  -- Cspec checking aborted
+5343;Could not find StP/DD DBMS scripts  -- Cspec checking aborted
+5344;Check Cspec Fail
+5345;Check Cspec Ok
+5346;Usage: cse_check ... 
+5347;Cspec checking completed with errors\n
+5348;Cspec checking successfully completed\n
+5349;%s
+5350;%s
+5351;%s: 
+5352;%s: 
+5353;ERROR: 
+5354;%s: 
+5355;ERROR: 
+5356;%s: 
+5357;WARNING: 
+5358;There is no %s in Cspec %s\n
+5359;Checking %s \n\n
+5360;\n\n
+5361;\n\n
+5362;'%s' appears more than once as a Control In label
+5363;'%s' appears more than once as a Control Out label
+5364;Control In
+5365;Control Out
+5366;'%s' appears more than once as a Control In label
+5367;'%s' appears more than once as a Process to be activated
+5368;Control In
+5369;'%s' appears more than once as a Process to be activated
+5370;'%s' appears more than once as a Control label
+5371;Control
+5372;Event
+5373;Action
+5374;State
+5375;'%s' appears more than once as an Event label
+5376;'%s' appears more than once as a State label
+5377;Event
+5378;Action
+5379;State
+5380;'%s' appears more than once as a Process to be activated
+5381;'%s' appears more than once as a Control Out label
+5382;'%s' appears more than once as a Action label
+5383;Action
+5384;Control Out
+5385;'%s' appears more than once as a Control In label
+5386;'%s' appears more than once as an Event label
+5387;Control In
+5388;Event
+5389;Illegal value, '%s', found under Process Activator %s\n
+5390;Could not resolve alias for %s '%s'\n
+5391;'%s' is an invalid value for %s '%s'\n
+5392;integer
+5393;'%s' is an invalid value for %s '%s'\n
+5394;'%s' is an invalid value for %s '%s'\n
+5395;Could not check values for %s '%s'\n
+5396;Could not allocate space for boolean values
+5397;Could not resolve alias for %s '%s'\n
+5398;%s '%s' is undefined\n
+5399;%s '%s' is defined as %s\n
+5400;Could not resolve alias for %s '%s'\n
+5401;%s StP/DD defines '%s' as %s
+5402;Process %s cannot be activated by this Cspec
+5403;%s and %s both activate process %s
+5404;Column %d is Unlabeled
+5405;Row %d is Unlabeled
+5406;cse_check internal error: Could not allocate selection\n
+5407;Row %d has no Current State\n
+5408;Row %d has no Event\n
+5409;Row %d has no Next State\n
+5410;cse_check internal error: Could not allocate selection\n
+5411;Cell (%d , %d) has an Action but no Next State\n
+5412;State '%s' appears in Next State column,\n       but not in Current State column\n
+5413;State '%s' appears in Current State column,\n    but not in Next State column\n
+5414;State '%s' appears as a Next State label in a cell,\n    but not in the State column\n
+5415;State '%s' appears in the State column,\n        but not as a Next State label in a cell\n
+5416;cse_check internal error: Could not allocate selection\n
+5417;cse_check internal error: Could not allocate selection\n
+5418;cse_check internal error: Could not allocate from_state table\n
+5419;Event '%s' appears more than once for Current State
+5420;Usage: tedpost ..
+5421;Usage: csleaf [pdb_args] [leaf_args] [-Ttable_type] cspec
+5422;Usage: tedleaf [pdb_args] [leaf_args] [-Ttable_type] matrix
+5423;Searching the Data Dictionary, be patient ...
+5424;Could not resolve alias
+5425;Usage: csmif [pdb_args] [mif_args] [-Ttable_type] cspec
+5426;Usage: tedmif [pdb_args] [mif_args] [-Ttable_type] matrix
+5427;No Cspec name given
+5428;No Matrix name given

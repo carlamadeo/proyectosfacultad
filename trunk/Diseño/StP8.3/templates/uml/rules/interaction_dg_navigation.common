@@ -1,0 +1,200 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+NodeSymbol ObjectSet
+{
+    { ParseCondition "!is_validator_available(\"standalone\");" }
+    { Navigation
+	{ Name ClassDiagramWithCorrespondingClass }
+	{ Label "Class Diagram Where Class Is Referenced" }
+	{ UseMappings (ObjectScope) }
+	{ Query "node_ref[file[UmlClassDiagram] && node[UmlClass && name = '${node.name}']]"  }
+	//{ TargetFunc "FindClassDiagramWithCorrespondingClass(${node.id});" }
+ 	//{ FailureCmd GenericCmdTargetNotFound }
+    }
+    { Navigation
+	{ Name ClassTableWithCorrespondingClass }
+	{ Label "Class Table Where Class Is Referenced" }
+	{ UseMappings (ObjectScope) }
+	{ Query "node_ref[file[UmlClassTable] && node[UmlClass && name = '${node.name}']]"  }
+	//{ TargetFunc "FindClassDiagramWithCorrespondingClass(${node.id});" }
+	{ FailureCmd DecomposeUmlClassTable } // ECR 6633
+    }
+    { Navigation
+	{ Name StateDiagramWithCorrespondingClass }
+	{ Label "State Diagram Where Class Is Referenced" }
+	{ UseMappings (ObjectScope) }
+	//{ Query "node_ref[file[UmlStateDiagram] && node[UmlClass && name = '${node.name}']]"  }
+	{ TargetFunc "FindStateDiagramWithCorrespondingClass(0${node.id});" }
+ 	//{ FailureCmd GenericCmdTargetNotFound }
+    }
+    { Navigation
+	{ Name ActivityDiagramWithCorrespondingClass }
+	{ Label "Activity Diagram Where Class Is Referenced" }
+	{ UseMappings (ObjectScope) }
+	//{ Query "node_ref[file[UmlActivityDiagram] && node[UmlClass && name = '${node.name}']]"  }
+	{ TargetFunc "FindActivityDiagramWithCorrespondingClass(0${node.id});" }
+    }
+}
+
+LinkSymbol OperationMessageSymbols
+{
+    { ParseCondition "!is_validator_available(\"standalone\");" }
+    { Navigation
+        { Name MessageToOperation }
+        { Label "Operation in Receiving Object Class" }
+        { UseMappings ( MessageInstanceMapping) }
+        { TargetFunc "FindMessageOperation(${link.id});"}
+   }
+   { Navigation
+        { Name MessageToStateDiagram }
+        { Label "State Diagram for Message" }
+        { UseMappings ( MessageInstanceMapping) }
+        { TargetFunc "FindMessageStateMachine(${link.id},\"UmlStateDiagram\");"}
+   }
+   { Navigation
+        { Name MessageToActivityDiagram }
+        { Label "Activity Diagram for Message" }
+        { UseMappings ( MessageInstanceMapping) }
+        { TargetFunc "FindMessageStateMachine(${link.id},\"UmlActivityDiagram\");"}
+   }
+
+}
+
+LinkSymbol SignalMessageSymbols
+{
+    { ParseCondition "!is_validator_available(\"standalone\");" }
+    { Navigation
+        { Name MessageToSignalRecvd }
+        { Label "Signal in Receiving Object Class" }
+        { UseMappings (MessageInstanceMapping) }
+        { TargetFunc "FindMessageSignal(${link.id},\"UmlSignalReceives\");"}
+   }
+    { Navigation
+        { Name MessageToSignalSent }
+        { Label "Signal in Sending Object Class" }
+        { UseMappings (MessageInstanceMapping) }
+        { TargetFunc "FindMessageSignal(${link.id},\"UmlSignalSends\");"}
+   }
+}
+
+CntxSymbol OperationMessageCntxSymbols
+{
+    { ParseCondition "!is_validator_available(\"standalone\");" }
+    { Navigation
+        { Name MessageToOperation }
+        { Label "Operation in Receiving Object Class" }
+        { UseMappings (MessageInstanceMapping) }
+        { TargetFunc "FindMessageOperation(${link.id});"}
+   }
+   { Navigation
+        { Name MessageToStateDiagram }
+        { Label "State Diagram for Message" }
+        { UseMappings ( MessageInstanceMapping) }
+        { TargetFunc "FindMessageStateMachine(${link.id},\"UmlStateDiagram\");"}
+   }
+   { Navigation
+        { Name MessageToActivityDiagram }
+        { Label "Activity Diagram for Message" }
+        { UseMappings ( MessageInstanceMapping) }
+        { TargetFunc "FindMessageStateMachine(${link.id},\"UmlActivityDiagram\");"}
+   }
+}
+
+CntxSymbol SignalMessageCntxSymbols
+{
+    { ParseCondition "!is_validator_available(\"standalone\");" }
+    { Navigation
+        { Name MessageToSignalRecvd }
+        { Label "Signal in Receiving Object Class" }
+        { UseMappings (MessageInstanceMapping) }
+        { TargetFunc "FindMessageSignal(${link.id},\"UmlSignalReceives\");"}
+   }
+    { Navigation
+        { Name MessageToSignalSent }
+        { Label "Signal in Sending Object Class" }
+        { UseMappings (MessageInstanceMapping) }
+        { TargetFunc "FindMessageSignal(${link.id},\"UmlSignalSends\");"}
+   }
+}
+       
+Command GenericCmdTargetNotFound
+{
+    { PrintName "Target not found" }
+    { SuccessMessage "Target not found." }
+}
+
+// Begin Add ECR 6633
+Command DecomposeUmlClassTable
+{
+    { PrintName "Class table doesn't exist. Do you want to create it?" }
+    { ObjectRequired True }
+    { StartMessage "Executing Create Class Table..." }
+    { FailureMessage "Create Class Table failed." }
+    { SuccessMessage "Create Class Table completed." }
+	{ Builtin "EditorQrlEvalNoSave UmlClassTableInitializeFromSeqCollab(${node.id});" }
+}
+// End add ECR 6633
+
+///////////////////////////////////////////////////////
+
+NodeSymbol Actor
+{
+    { Navigation
+	{ Name ScenarioInvolvingActor }
+	{ Label "Scenario Involving Actor" }
+	{ Query "node_ref[file[UmlSequenceDiagram || UmlCollaborationDiagram] && node[UmlActor && name = '${node.name}']]"  }
+ 	//{ FailureCmd FindScenarioInvolvingActor }
+    }
+    { Navigation
+	{ Name UseCaseInvolvingActor }
+	{ Label "Use Case Diagram Involving Actor" }
+	{ Query "node_ref[file[UmlUseCaseDiagram] && node[UmlActor && name = '${node.name}']]"  }
+ 	//{ FailureCmd FindUseCaseInvolvingActor }
+    }
+}
+
+Command FindUseCaseInvolvingActor
+{
+    //{ PrintName "Find another Use Case diagram involving Actor" }
+    { PrintName "There are no Use Case diagrams involving Actor" }
+    //{ Builtin "EditorQrlEvalNoSave uml_print_message(\"Actor\");" }
+    //{ StartMessage "Find/Create Use Case ..." }
+    { SuccessMessage "Target not found." }
+    //{ FailureMessage "Use Case target not found." }
+}
+
+Command FindScenarioInvolvingActor
+{
+    //{ PrintName "Find scenario involving Actor" }
+    { PrintName "There are no other scenarios involving Actor" }
+    //{ Builtin "EditorQrlEvalNoSave uml_print_message(\"Actor\");" }
+    //{ StartMessage "Find/Create Use Case ..." }
+    { SuccessMessage "Target not found (no such scenario)." }
+    //{ FailureMessage "Use Case target not found (no such scenario)." }
+}
+
+///////////////////////////////////////////////////////
+
+NodeSymbol ScenarioInstance
+{
+    { Navigation
+	{ Name ParentUseCase }
+        { Label "Parent Use Case" }
+        //{ Query "node_ref[file[UmlClassDiagram] && node[UmlClass && name = '${node.name}']]"  }
+ 	{ TargetFunc "FindScenarioParent(${node.id});" }
+ 	//{ FailureCmd GenericCmdTargetNotFound } // FindScenarioParent
+    }
+    { Navigation
+	{ Name SiblingUseCaseScenario }
+        { Label "Sibling Use Case Scenario" }
+ 	{ TargetFunc "FindScenarioSibling(0${node.id});" }
+ 	//{ FailureCmd GenericCmdTargetNotFound } // FindScenarioSibling
+    }
+}
+
+///////////////////////////////////////////////////////
+

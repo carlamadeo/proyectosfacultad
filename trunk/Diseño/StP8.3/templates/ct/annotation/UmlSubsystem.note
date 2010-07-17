@@ -1,0 +1,22 @@
+
+//     StP/UML
+//     Confidential property of Aonix
+//     Copyright (c) 1997
+//     All rights reserved
+
+// SPR 4052 - Model Management
+Note 801973
+{
+    { AppType UmlSubsystem }
+    { HelpText "The Subsystem property lets you add an item that defines the subsystem to which this diagram or table belongs." }
+    { PrintName "Subsystem" }
+    { Bounds { Min 0 } { Max 1 } }
+    { Item
+      { AppType UmlSubsystemName }
+      { HelpText "The Subsystem item lets you specify the subsystem to which this diagram or table belongs." }
+      { PrintName "SubsystemName" }
+      { Bounds { Min 1 } { Max 1} }
+      { InitValue "unassigned" }
+    }
+}
+

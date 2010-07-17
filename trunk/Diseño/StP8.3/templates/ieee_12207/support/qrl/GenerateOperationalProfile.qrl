@@ -1,0 +1,439 @@
+#include "val/qrl/include/table.inc"
+
+  struct initiator_type
+    {
+      int scenario_id;
+      string scenario_name;
+      int actor_id;
+      string actor;
+    };
+
+  struct actor_info
+    {
+      int id;
+      string name;
+    };
+
+  struct row_type
+    {
+       string actor_name;
+       string scenario_name;
+       float  actor_occurrences;
+       float  scenario_occurrences;
+       float  frequency;
+    };
+
+  list TABLE;
+  float TOTAL = 0.0;
+  list ACTORS;
+  list INITIATORS;
+
+  string MODE;
+
+  const int width_1 = 500;
+  const int width_2 = 300;
+  const int width_3 = 500;
+  const int width_4 = 300;
+  const int width_5 = 300;
+  const int width_6 = 300;
+
+
+void
+main ()
+{
+
+
+  print_message ("Start Report Generation");
+
+  format ("ValidatorDocuments.rtf");
+
+
+  string q = "note[OperationalMode && node [UmlScenarioInstance] ] sort by name";
+  list notelist = list_select(q);
+  note notevar;
+  int count = list_count(notelist);
+  int i;
+
+  if (count == 0)
+    {
+      print_error ("There are no modes defined for the scenarios");
+      return;
+    }
+
+  ACTORS = GetActors();
+  INITIATORS = GetInitiatorActors();
+
+  TABLE = list_create("row_type",0);
+
+  PrintTitlePage();
+
+  set modeset = set_create("string");
+
+  for (i=0;i<count;i++)
+    {
+       notevar = list_get(notelist,i);
+
+       set_add (modeset, notevar.name);
+
+    }
+
+  count = set_count(modeset);
+
+  for (i=0;i<count;i++)
+    {
+       MODE = set_get_element(modeset,i);
+
+       paragraph ("Heading 1");
+       print ("Operational Profile for mode \"" + MODE + "\"");
+
+       AVG_OperationProfile();
+       Max_Max_OperationProfile();
+    }
+}
+
+
+
+void
+AVG_OperationProfile()
+{
+  paragraph ("Heading 2");
+  print ("Average Load");
+
+  paragraph ("Paragraph");
+  print ("Average Number of Actors and Average Number of Scenario Occurrences");
+
+
+  list_clear (TABLE);
+  TOTAL = 0.0;
+  GetTable("AVG", "AVG");
+
+  PrintTable("Mode " + MODE + " Average Load Operational Profile", TABLE, TOTAL);
+
+}
+
+
+void
+Max_Max_OperationProfile()
+{
+  paragraph ("Heading 2");
+  print ("Maximum Load");
+
+  paragraph ("Paragraph");
+  print ("Maximum Number of Actors and Maximum Number of Scenario Occurrences");
+
+  list_clear (TABLE);
+  TOTAL = 0.0;
+  GetTable("Max", "Max");
+
+  PrintTable("Mode " + MODE + " Maximum Load Operational Profile", TABLE, TOTAL);
+}
+
+
+void
+PrintTable(string caption, list table, float total)
+{
+  int i;
+  int count = list_count(table);
+  row_type row;
+  float totalprobability = 0.0;
+  float frequency;
+  float probability;
+  string c1,c2,c3,c4,c5,c6;
+
+  InitializeTable();
+
+
+  for (i=0;i<count;i++)
+    {
+      row = list_get(table,i);
+
+      probability = row.frequency / total;
+      totalprobability = totalprobability + probability;
+
+      c1 = row.actor_name;
+      c2 = to_string(row.actor_occurrences);
+      c3 = row.scenario_name;
+      c4 = to_string(row.scenario_occurrences);
+      c5 = to_string(row.frequency);
+      c6 = to_string(probability);
+
+      PrintTableRow(c1, c2, c3, c4, c5, c6);
+
+    }
+
+  PrintTableRow( "TOTAL", " ", " ", " ", to_string(total), to_string(totalprobability) );
+
+  End_Table();
+
+  print_table(row.actor_name, caption);
+
+  print_message ("Table Printed");
+}
+
+
+void
+GetTable(string actor_range, string scenario_range)
+{
+  int count = list_count (ACTORS);
+  int i;
+  node actor;
+
+  for (i=0;i<count;i++)
+    {
+      actor = list_get (ACTORS, i);
+      GetRows (actor_range, scenario_range, actor.name);
+    }
+
+}
+
+void
+GetRows(string actor_range, string scenario_range, string actorname)
+{
+  int count = list_count(INITIATORS);
+  int i;
+  initiator_type initiator;
+
+  int actor_occurrences;
+  float scenario_occurrences;
+
+  row_type row;
+
+  for (i=0;i<count;i++)
+    {
+      initiator = list_get (INITIATORS, i);
+      if (actorname == initiator.actor) 
+        {
+           row.actor_name = actorname;
+           row.scenario_name = initiator.scenario_name;
+           row.actor_occurrences = GetOccurrences(actor_range, initiator.actor_id);
+           row.scenario_occurrences = GetOccurrences(scenario_range, initiator.scenario_id);
+
+           row.frequency = row.actor_occurrences * row.scenario_occurrences;
+           list_append (TABLE, row);
+           TOTAL = TOTAL + row.frequency;
+        }
+    }
+
+
+}
+
+float
+GetOccurrences(string range, int id)
+{
+  float min_frequency = 0.0;
+  float max_frequency= 0.0;
+  float frequency=0.0;
+
+  string min_q = "item [MinOccurrence && obj_id == ${id} && note[name == '${MODE}'] ]";
+  item min_itemvar = find_by_query(min_q);
+
+  if (min_itemvar != NULL)
+    min_frequency = to_float(min_itemvar.value);
+
+
+  string max_omstype = "MaxOccurrence";
+  string max_q = "item [MaxOccurrence && obj_id == ${id} && note[name == '${MODE}'] ]";
+
+  item max_itemvar = find_by_query(max_q);
+
+  if (max_itemvar != NULL)
+    max_frequency = to_float(max_itemvar.value);
+
+
+  if (range == "Min")
+    return (min_frequency);
+  else if (range == "Max")
+    return (max_frequency);
+  else if (range == "AVG")
+    return ( (max_frequency + min_frequency) / 2);
+  else 
+    return (0.0);
+
+}
+
+
+list
+GetInitiatorActors()
+{
+  list tmplist = list_create("initiator_type",0);
+
+  initiator_type tmp;
+  actor_info tmp_actor;
+
+  string q = "node[UmlScenarioInstance && node_refs] sort by name";
+  list listvar = list_select(q);
+  node scenario;
+
+  
+  int count = list_count(listvar);
+  int i;
+
+  list_clear (tmplist);
+
+  for (i=0;i<count;i++)
+    {
+      scenario = list_get(listvar,i);
+
+      tmp.scenario_id = scenario.id;
+      tmp.scenario_name = scenario.name;
+      tmp_actor = GetInitiator(scenario.id);
+      tmp.actor_id = tmp_actor.id;
+      tmp.actor = tmp_actor.name;
+
+      list_append(tmplist,tmp);
+    }
+  return (tmplist);
+}
+
+
+
+
+
+actor_info
+GetInitiator( int id)
+{
+ 
+  actor_info tmp;
+  tmp.id = 0;
+  tmp.name = "ERROR";
+
+
+  string q1 = "link_ref[ file[node_refs[node[${id}]]] && link[umlsimplemessage && from_node[UmlActor]]] sort by ycoord";
+
+  string q2 = "node[node_refs[out_link_refs[${linkrefvar.id}]]]";
+
+  link_ref linkrefvar = find_by_query (q1);
+  node nodevar;
+
+  if (linkrefvar != NULL)
+    {
+      nodevar = find_by_query(q2);
+      tmp.id = nodevar.id;
+      tmp.name = nodevar.name;
+    }
+
+  return (tmp);
+ 
+}
+
+
+
+
+
+list
+GetActors()
+{
+  string q = "node[UmlActor && node_refs] sort by name";
+
+  return (list_select(q));
+
+}
+
+
+
+void
+PrintTableRow( string c1, string c2, string c3, string c4, string c5, string c6 )
+{
+
+      Begin_Row();
+
+      Make_Cell(width_1, NULL, NULL, NULL, NULL, NULL, c1);
+      Make_Cell(width_2, NULL, NULL, NULL, NULL, NULL, RoundDecimal3(c2) );
+      Make_Cell(width_3, NULL, NULL, NULL, NULL, NULL, c3);
+      Make_Cell(width_4, NULL, NULL, NULL, NULL, NULL, RoundDecimal3(c4) );
+      Make_Cell(width_5, NULL, NULL, NULL, NULL, NULL, RoundDecimal3(c5) );
+      Make_Cell(width_6, NULL, NULL, NULL, NULL, NULL, RoundDecimal3(c6) );
+
+      End_Row();
+
+}
+
+
+
+void 
+InitializeTable()
+{
+
+   string frequency = "Frequency per " + toolinfo_variable("PeriodOfOperation");
+
+   table_caption_placement_set(Top);
+   table_width_set(7.0);
+
+   table_caption_paragraph_format_set ("TableTitle");
+   table_cell_bold_paragraph_format_set ("CellBody");
+   table_cell_paragraph_format_set ("CellBodyleft");
+
+
+   // create title bar
+
+   Begin_Table(6);
+
+
+   Begin_Row();
+
+   Make_Cell(width_1, NULL, "Shade0", NULL, NULL, NULL, "Initiator Actor Name");
+   Make_Cell(width_2, NULL, "Shade0", NULL, NULL, NULL, "Actor Occurrences");
+   Make_Cell(width_3, NULL, "Shade0", NULL, NULL, NULL, "Scenario Name");
+   Make_Cell(width_4, NULL, "Shade0", NULL, NULL, NULL, "Scenario Occurrences");
+   Make_Cell(width_5, NULL, "Shade0", NULL, NULL, NULL, frequency);
+   Make_Cell(width_6, NULL, "Shade0", NULL, NULL, NULL, "Probability of Occurrence");
+
+   End_Row();
+
+
+}
+
+string
+RoundDecimal3(string str)
+{
+  int point = string_find(str,0,".");
+  int len = point+4;
+
+  if (point == string_length(str) )
+    return (str);
+  else
+    return ( string_extract (str,0,len) );
+
+
+}
+
+
+
+void
+PrintTitlePage()
+{
+
+  paragraph ("Title");
+  print ("");
+
+  paragraph ("BTitle");
+  print ("Operational Profiles");
+
+  paragraph ("BSubTitle");
+  print ("");
+
+  paragraph ("BSubTitle");
+  print ("for");
+
+  paragraph ("BSubTitle");
+  print ("");
+
+  paragraph ("BTitle");
+  print ( current_system() );
+
+  paragraph ("BSubTitle");
+  print ("");
+
+  paragraph ("BSubTitle");
+  print ( "on");
+
+  paragraph ("BSubTitle");
+  print ("");
+
+  paragraph ("BSubTitle");
+  print ( time_to_string (time_now(), NULL));
+
+}
+
+
+

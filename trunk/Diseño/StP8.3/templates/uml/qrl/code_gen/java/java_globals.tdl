@@ -1,0 +1,122 @@
+/************************************************** 
+ * java_globals.tdl
+ * ----------------
+ *
+ * Used to initialize global variables for Java
+ * Codegeneration. This is the place where users
+ * can influence the codegeneration after modeling.
+ * 
+ * Author:  Frank Lippert
+ * Company: Aonix GmbH
+ * Date:    20.10.2001
+ *
+ * Copyright 2001, Aonix, San Diego
+ **************************************************/
+
+proc initGlobals()
+    [AUTHOR]              = "YOUR_NAME";
+    [COMPANY]             = "YOUR_COMPANY";
+    
+    [JAVA_EXTENSION]      = ".java";    // Could be ".jav" for old 8+3 systems ;-)
+  
+    [EXCLUSIONS]          = "TRUE";     // Determines, if classes annotated as "external"
+                                        // should be excluded from codegeneration or not.
+                                        // Note that this can prevent your project from
+                                        // compiling correctly! In this case, you must 
+                                        // ensure, that the excluded classes are in some
+                                        // library enlisted in your CLASS_PATH environment
+                                        // variable.
+                                        
+    [ACCESSOR_METHODS]    = "TRUE";     // Switches creation of accessor methods
+                                        // (getter/setter) globally on or of. 
+                                        // Users can now override this behavaiour
+                                        // elementwise by assigning the TaggedValue 
+                                        // (accessors=true/false) to an attribute.
+                                        
+    // Base class of exceptions, in case no base class is modeled. 
+    // User provided base classes must be directly or indirectly derived 
+    // from either "java.lang.Exception" or "java.lang.RuntimeException". 
+    // Exceptions derived from the latter and thrown by some methods
+    // don't need to be caugth in "try-catch"-clauses.
+    [EXCEPTION_BASE_CLASS]="java.lang.RuntimeException";
+    
+    [DEF_ATTR_VISIB]      = "private";  // Determines default visbility for attributes, if
+                                        // nothing else is modeled.
+                                        
+    [DEF_OP_VISIB]        = "public";   // Determines default visbility for methods, if
+                                        // not directly assigned in the model.
+                                        
+    [DEF_CLASS_VISIB]     = "public";   // Denotes the default visibility for classes and
+                                        // interfaces, if nothing else is modeled. Should
+                                        // be "public", because Javas's default visibility
+                                        // (= _no_ visibility modifier) is too restrictive.
+                                        
+    [DEF_ROLE_VISIB]      = "protected"; // Visiblity of attributes, created by looping over
+                                         // associations (you can't give association ends a
+                                         // visibility yet in StP/UML). In case of "protected"
+                                         // subclasses "inherit" associations of their superclasses
+                                         // and have a chance to use operations of those classes
+                                         // that are referenced via assocations.
+                                        
+    [DEF_COLL_CLASS]      = "Vector";   // Default collection class for attributes from 
+                                        // associations with multiplicity "many".
+                                        
+    [COMMENT_CLASSES]     = "TRUE";     // Should comments for classes be generated or not?
+    [COMMENT_ATTRIBUTES]  = "TRUE";     // Should comments for attributes be generated or not?
+    [COMMENT_METHODS]     = "TRUE";     // Should comments for operations be generated or not?
+    
+    [CREATE_DEF_CTOR]     = "TRUE";     // Create default constructor, if none is modeled
+    
+    [CREATE_FULL_CTOR]    = "TRUE";     // A "full" constructor initializes all non-derivated,
+                                        // non-static fields of a class. Switches that creation
+                                        // on or off;
+                                        //
+                                        // NOTE!! Setting this option to "TRUE" sets automatically
+                                        // [CREATE_DEF_CTOR] = "TRUE". Creating a constructor with
+                                        // arguments without creating a non-arg constructor would
+                                        // otherwise lead to all sorts of compiling errors.
+                                        // Most patterns and additional code would not work anymore!
+                                        // See Java Language Spec. 2.0, § 8.8.7
+    
+    [DEF_CTOR_VISIB]      = "public";   // Default visibility for artificially created constructor.
+                                        // Could be set to "protected" or "private" to
+                                        // prevent instantiation of instances from the outside.
+                                        
+    [CREATE_DEF_RETURN]   = "TRUE";     // Whether or not, a default return value for operations
+                                        // is generated. 
+                                        //
+                                        // NOTE!! Setting this variable to "FALSE" probably prevents 
+                                        // compiling, if you didn't provide an implementation code 
+                                        // either in the user-defined section or as a source code
+                                        // annotation! On the other hand, you have 100% control over
+                                        // the method implementation this way!
+                                        
+    [CREATE_FINALIZER]    = "TRUE";     // Determines, whether a finalizer should be created
+                                        // or not.
+                                        
+    [CREATE_ABSTRACT_IMPL]= "FALSE";    // Whether or not a non-abstract class should implement                                    
+                                        // abstract methods of an abstract superclass automatically.
+                                        // Beware: setting this option to TRUE can lead to an
+                                        // situation where your code is correct, but your model
+                                        // is inconsistent! Since subclasses are not obeyed to
+                                        // implement abstract methods (being therefore abstract
+                                        // itself) the situation is really different from 
+                                        // implementing interfaces, where the implementation of
+                                        // methods is mandatory!
+                                        // 
+                                        // (De)activate this option together with the next!
+                                        
+    [SET_CLASS_ABSTRACT]  = "FALSE";    // Should classes automatically be set to "abstract", if
+                                        // they contain any abstract methods?
+                                        // Again, this can lead to inconsistent modells, so be
+                                        // careful!
+                                        
+    [CREATE_STANDARD_OPS] = "TRUE";     // Whether standard operations like "toString()","equals()"
+                                        // etc. are to be created.
+    
+    [CREATE_MAKEFILES]    = "TRUE";     // Whether or not makefiles are to be created
+    [MAKEFILE_TYPE]       = "ant";      // Can be "make" or "ant" or "all";
+    [ANT_NAME]            = "build";    
+    [ANT_EXT]             = ".xml";
+    [ANT_FILE_NAME]       = [ANT_NAME][ANT_EXT];
+end proc

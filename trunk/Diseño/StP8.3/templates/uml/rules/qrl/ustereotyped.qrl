@@ -1,0 +1,306 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+//
+
+const string PREDEF_STEREOTYPES = "actor application becomes bind call constraint copy derived document enumeration extends facade file friend import instance interface library metaclass page powertype process refinement requirement role send signal stub subclass subtype table thread trace uses utility";
+
+#include "rules/qrl/uml.inc"
+#include "rules/qrl/gde_qrl_std.inc"
+#include "rules/qrl/ustereotyped.ps.qrl"
+#include "rules/qrl/uml_stereotypes.inc"
+#include "qrl/include/appids.inc"
+#include "qrl/include/export_to_doors.inc"
+
+// ECR4052 Model Management
+#include "rules/qrl/model_management.inc"
+
+// Begin ECR947, ECR 4494
+#include "rules/qrl/note_link.inc"
+
+#include "rules/qrl/default_arc_type.inc" //ECR 6469
+
+const    int    ACTIVE_FUNC_IS_UNDEFINED = -1; // SAME AS OMT
+
+list    the_last_selection = NULL; // SAME AS OMT
+
+int    idehook_note_link_active_func_lv = ACTIVE_FUNC_IS_UNDEFINED;
+
+boolean
+idehook_invalidate_all()
+{
+    idehook_note_link_active_func_lv = ACTIVE_FUNC_IS_UNDEFINED;
+    return(True);
+}
+
+// SAME AS OMT
+void
+idehook_force_new_selection()
+{
+    the_last_selection = NULL;
+    idehook_invalidate_all();
+}
+
+// SAME AS OMT
+boolean
+idehook_did_selection_change()
+{
+    list    symbols;
+
+    symbols = gde_selected_symbols();
+
+    if (the_last_selection == NULL)
+    {
+    the_last_selection = symbols;
+    return(idehook_invalidate_all());
+    }
+    if (list_count(symbols) != list_count(the_last_selection))
+    {
+    the_last_selection = symbols;
+    return(idehook_invalidate_all());
+    }
+    if (lists_equal(symbols, the_last_selection) == False)
+    {
+    the_last_selection = symbols;
+    return(idehook_invalidate_all());
+    }
+    return(False);
+}
+
+list
+uml_note_link_symbols()
+{
+    string link_types = "StereotypeInheritance";
+    return string_to_list(link_types, " ");
+}
+// End ECR947, ECR 4494
+
+boolean init_ustereotype_sc_done = False;
+set PredefSt=set_create("string");
+
+// Navigation
+
+list UstereotypedNavUsage(string name)
+
+{
+    list l0, l = list_create("all", 0);
+
+    l0 = list_select("node_ref[node[items[UmlStereotype && value = '${name}']]]");
+    list_concatenate(l, l0);
+    l0 = list_select("link_ref[link[items[UmlStereotype && value = '${name}']]]");
+    list_concatenate(l, l0);
+    l0 = list_select("cntx_ref[cntx[items[UmlStereotype && value = '${name}']]]");
+    list_concatenate(l, l0);
+
+    return l;
+}
+
+
+// Semantics Checks
+
+void
+init_ustereotyped_semantics_check()
+
+{
+    list l;
+    int i;
+    string s;
+
+    if (init_ustereotype_sc_done)
+        return;
+    init_ustereotype_sc_done = True;
+
+    l = string_to_list(PREDEF_STEREOTYPES, " ");
+
+    for (i=0; i<list_count(l); i++)
+    {
+        s = list_get(l, i);
+        set_add(PredefSt, s);
+    }
+    return;
+}
+
+
+int 
+ustereotyped_check_circularity(list nl, list al)
+
+{
+    int i, j, errs = 0;
+    set nodes = set_create("node"); 
+    set gdelinks = set_create("gde_link");
+    set links = set_create("link");
+    node n;
+    link l;
+    list ll, gl;
+    graph g;
+    string dname = gde_diagram_name();
+    file f;
+
+    gde_node current_gde_node;
+    list current_oms_node_list;
+
+    for (i=0; i<list_count(nl); i++)
+    {
+	current_gde_node = list_get(nl, i);
+	current_oms_node_list = gde_node_oms_nodes(current_gde_node);    
+
+        if (list_count(current_oms_node_list) > 0)
+	    n = list_get(current_oms_node_list, 0);
+        else
+        {
+            gde_print_error("Stereotype symbol has no repository object. Skipping " +
+                            "this symbol as part of circular inheritance check.",
+                             gde_node_psymid(current_gde_node));
+            errs++;
+            continue;
+        }
+
+	if (n != NULL)
+	    set_add(nodes, n);
+    }
+
+    for (i=0; i<list_count(al); i++)
+    {
+        gl = gde_arc_links(list_get(al, i));
+        for (j=0; j<list_count(gl); j++)
+        {
+            ll = gde_link_oms_links(list_get(gl, j));
+            if (ll != NULL)
+	        set_add(links, list_get(ll, 0));
+        }
+    }
+
+    // create the graph
+    g = uml_build_stereotype_graph(links, nodes);
+    if (! graph_is_acyclic(g))
+    {
+	f = find_by_query("file[UmlStereotypeDiagram && name = '${dname}']");
+	for (i=0; i<set_count(nodes); i++)
+	{
+	    n = set_get_element(nodes, i);
+	    errs += check_stereotype_cycles(g, n, n.name, f);
+	}
+    }
+    
+    return errs;
+}
+
+
+int
+check_stereotype_cycles(graph G, node st, string st_name, file file)
+{
+    int             i, n;
+ 
+    if (G == NULL)
+        return 0;
+ 
+    // if the st doesn't participate, forget it 
+    if ((!graph_is_node(G, st_name)) ||
+        (!graph_is_indirect_arc(G, st_name, st_name)))
+        return 0;
+ 
+    print_error("Error: Stereotype '" + st_name + "' appears in a stereotype cycle.", node_appids(st, file));
+ 
+    return 1;
+}
+
+
+int 
+ustereotyped_check_predef(list stl)
+
+{
+    int i, errs = 0;
+    string name;
+    gde_node st;
+
+    for (i = 0; i<list_count(stl); i++)
+    {
+        st = list_get(stl, i);
+        name = to_lower(gde_node_label(st));
+        if (set_is_member(PredefSt, name) && (list_count(gde_node_outarcs(st)) != 0))
+        {
+            print_error("Error: Predefined Stereotypes can only be root elements", gde_node_psymid(st));
+            errs++;
+        }
+    }
+    return errs;
+}
+
+
+
+int
+ustereotyped_CheckSemantics()
+
+{
+    int errs = 0;
+    list stereotypel = gde_nodes_find_by_type(gde_all_symbols(), "Stereotype");
+    list connectorl = gde_arcs_find_by_type(gde_all_symbols(), "StereotypeInheritance");
+
+    init_ustereotyped_semantics_check();
+
+    // check for circularity
+
+    errs += ustereotyped_check_circularity(stereotypel, connectorl);
+ 
+    // check to be sure that each symbol which is NOT a root
+    // is not a predefined stereotype.
+
+    errs += ustereotyped_check_predef(stereotypel);
+    
+    return errs;
+}
+
+
+boolean LabelPredefFirst = True;
+
+void
+LabelPredefinedStereotypeSymbol()
+
+{
+    // pop up the property sheet
+    ui_prop_sheet_pop_up("UmlPredefinedStereotype_ps");
+
+    // fill the list
+    if (LabelPredefFirst)
+    {
+        LabelPredefFirst = False;
+         
+        ui_list_append(to_ui_prop("UmlPredefinedStereotype_ps", "Predefs"), string_to_list(PREDEF_STEREOTYPES, " "));
+    }
+    return;
+}
+
+
+int
+PredefinedStereotype_ps_cb(ui_event_tp event, ui_prop prop, int id, string value)
+
+{
+    int rc;
+    int txn;
+
+    gde_node gn;
+    list l;
+
+    gn = to_gde_node(list_get(gde_selected_symbols(), 0));
+    l = ui_list_selected_items(to_ui_prop("UmlPredefinedStereotype_ps", "Predefs"));
+
+    if (list_count(l) == 1)
+    {
+        gde_save_state();
+        txn = gde_start_edit_transaction();
+        gde_node_set_label(gn, list_get(l, 0));
+        gde_end_edit_transaction(GDE_CMD_INSERT, txn, False);
+    }
+
+    if (ui_button_is_ok(prop))
+        rc = 1;
+    else
+        rc = 0;
+
+    return rc;
+}
+
+//  Add any user customizations to the file included below:
+#include_if_exists "user/uml/rules/qrl/user_ustereotyped.qrl"

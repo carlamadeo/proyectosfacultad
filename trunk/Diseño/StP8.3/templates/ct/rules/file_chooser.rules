@@ -1,0 +1,99 @@
+// Generic File Chooser
+
+
+Global 1 FileChooser
+
+{
+    { Properties
+	{ List
+	    { Name "DirSelector" }
+	    { Label "Directories:" }
+            { ShowImages True }
+	    { Rows 8 }
+	    { Width 40 }
+	    { Exclusive False }
+	    { LabelAbove True }
+	    { Event
+            { Type EventDoubleClickRow }
+            { Callback "StPFileChooserDoubleClick_cb" }
+	    }
+	}
+
+	{ Button
+	    { Name "ChooserDirectoryButton" }
+	    { Label "Filter:" }
+	    { Event
+		{ Type Select }
+		{ Callback "DirChooserFill_cb" }
+	    }
+	}
+	{ Text
+	    { Name "ChooserDirectory" }
+	    { Label "" }
+	    { MinLength 0 }
+	    { DispLength 72 }
+	    { MaxLength 1024 }
+	    { InitVal "${projdir}${system}/*" }
+	    { Event
+		 { Type NewLine }
+		 { Callback "DirChooserFill_cb" }
+	    }
+	}
+    
+	{ Group
+	    { Name "ChooserFilterGroup" }
+	    { Type Horizontal }
+	    { Align Top }
+	    { HorizontalSpacing 0 }
+	    { Members ( ChooserDirectoryButton ChooserDirectory ) }
+	}
+	
+	// the files
+	{ List
+	    { Name "Files" }
+	    { Label "" }
+	    { Rows 8 }
+	    { Width 40 }
+	    { Exclusive False }
+	    { LabelAbove True }
+	}
+
+	{ Button
+	    { Name "AddFile" }
+	    { Label "->" }
+	    { Event
+		{ Type Select }
+		{ Callback "StPFileAdd" }
+	    }
+	}
+
+	{ Button
+	    { Name "RemoveFile" }
+	    { Label "<-" }
+	    { Event
+		{ Type Select }
+		{ Callback "StPRemoveFile" }
+	    }
+	}
+
+	{ Group
+	    { Name "AddRemoveGroup" }
+	    { Type Vertical }
+	    { Members ( AddFile RemoveFile ) }
+	}
+	
+	{ Group
+	    { Name "SelectionGroup" }
+	    { Type Horizontal }
+	    { Align Left }
+	    { Members ( DirSelector AddRemoveGroup Files ) }
+	}
+
+	{ Group
+	    { Name "CompleteFileGroup" }
+	    { Type Vertical }
+	    { Align Left }
+	    { Members ( ChooserFilterGroup SelectionGroup ) }
+	}
+    }
+}

@@ -1,0 +1,123 @@
+external string use_case_name;
+
+
+#include "qrl/tsdl_extract.inc"
+#include "qrl/basic_textract_dt.inc"
+#include "qrl/include/error.inc"
+
+#include "val/qrl/include/table.inc"
+#include "val/qrl/include/TConfig.inc"
+#include "val/qrl/include/TUseCase.inc"
+#include "val/qrl/include/CreateDir.inc"
+
+
+string OUTPUTPATH = current_projdir() + current_system() + "/test_files/";
+string OUTPUTDIR;
+
+string CDFFILE;
+string FILETEXT="";
+
+
+void 
+main ()
+{
+  string sysdir = current_projdir() + current_system() + "/";
+//  system ("date > " + sysdir + "start");
+
+
+  format ("ValidatorDocuments.mif");
+  string test_unit_id;
+
+  test_unit_id = Get_T_test_unit_id(use_case_name, "");
+
+  OUTPUTDIR = OUTPUTPATH + test_unit_id;
+
+
+  tdriverDesign (test_unit_id);
+
+  FormatTraceData (test_unit_id);
+
+
+//  system ("date > " + sysdir + "stop");
+
+//  AddTime("DesignTestCases", OUTPUTDIR);
+
+}
+
+
+void
+FormatTraceData (string test_unit_id)
+{
+
+
+  message ("Generating Data for Use Case: " + use_case_name); 
+
+  Create_CDF_Header();
+
+
+  Create_CDF_Footer();
+
+
+  CDFFILE = OUTPUTPATH + test_unit_id + "/" + test_unit_id + "1.cdf";
+  WriteFileText (CDFFILE, FILETEXT);
+  FILETEXT = "";
+
+  message ("");
+  message ("Formatting Test Case Data");
+
+  FormatTestCases (OUTPUTDIR, CDFFILE, test_unit_id);
+}
+
+
+void 
+FormatTestCases(string OUTPUTDIR, string CDFFILE, string test_unit_id )
+{
+
+  if (CheckForSDF(OUTPUTDIR, "TDDB"))
+     tdriverPrepare (test_unit_id, CDFFILE, "UseCaseTestScripts");
+  else
+     message ("TDDB file for " + test_unit_id + " does not exist.");
+
+
+}
+
+
+
+void
+WriteFileText (string OUTPUTDIR, string FILETEXT)
+{
+  string outputfile = OUTPUTDIR;
+  write_file (outputfile, FILETEXT);
+
+}
+
+
+void
+Create_CDF_Header()
+{
+  FILETEXT = FILETEXT + "BEGIN " + "\n";
+  FILETEXT = FILETEXT + "  {" + "\n";
+  FILETEXT = FILETEXT + "    open  report \"scenario.rpt\";    /* file name for summary */" + "\n";
+  //FILETEXT = FILETEXT + "    print HEADER ;" + "\n";
+  FILETEXT = FILETEXT + "  }" + "\n";
+
+  FILETEXT = FILETEXT + "CASE " + "\n";
+  FILETEXT = FILETEXT + "  {" + "\n";
+}
+
+void
+Create_CDF_Footer()
+{
+
+  FILETEXT = FILETEXT + "  print    ACTION_NAME \":\" CASE_NAME ;" + "\n";
+  FILETEXT = FILETEXT + "}" + "\n";
+
+  FILETEXT = FILETEXT + "END" + "\n";
+  FILETEXT = FILETEXT + "  {" + "\n";
+  FILETEXT = FILETEXT + "    close report;" + "\n";
+  FILETEXT = FILETEXT + "  }" + "\n";
+
+}
+
+
+

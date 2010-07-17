@@ -1,0 +1,50 @@
+FileObject 1
+{
+    { Name "a81" }
+    { Type ObjectAnnotation }
+    { GUID "UID_8E79B8E7-1CD2-473e-84F3-078BC228052F" }
+}
+
+NodeObject 99999
+{
+    { Name "NegativeAmountException" }
+    { Type UmlClass }
+    { ObjectId 554 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_EDC3B884-0FFD-11d5-8C6E-000000000000" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 556 }
+}
+
+ItemObject 3
+{
+    { Type UmlStereotype }
+    { Value "Exception" }
+    { NoteId 2 }
+    { ObjectId 557 }
+}
+
+NoteObject 4
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 559 }
+}
+
+ItemObject 5
+{
+    { Type ObjectName }
+    { Value "NegativeAmountException" }
+    { NoteId 4 }
+    { ObjectId 560 }
+}
+

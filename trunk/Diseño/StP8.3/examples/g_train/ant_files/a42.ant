@@ -1,0 +1,80 @@
+FileObject 1
+{
+    { Name "a42" }
+    { Type ObjectAnnotation }
+    { GUID "UID_012BFB17-5D1A-4038-BC09-274EE26F2D07" }
+}
+
+NodeObject 99999
+{
+    { Name "display on screen" }
+    { Type Process }
+    { ObjectId 3279 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_4AB6693B-44B9-4199-A627-EFEFF95341DD" }
+}
+
+NodeObject 99998
+{
+    { Name "convert to kilograms" }
+    { Type Process }
+    { ObjectId 3242 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_97C54156-6803-4c94-AE85-3A264A96C73A" }
+}
+
+LinkObject 99997
+{
+    { Name "N_Kgs" }
+    { Type DataFlow }
+    { ObjectId 3793 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_EC11FB9D-75A6-4fc9-9F8B-964E59599ED8" }
+}
+
+NoteObject 2
+{
+    { Type InterfaceDesign }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3795 }
+}
+
+ItemObject 3
+{
+    { Type InterfaceName }
+    { Value "N_Kgs" }
+    { NoteId 2 }
+    { ObjectId 3796 }
+}
+
+ItemObject 4
+{
+    { Type InterfacePriority }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 3797 }
+}
+
+NoteObject 5
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3799 }
+    { DescLine "This is the weight reading in kilograms." }
+}
+
+ItemObject 6
+{
+    { Type ObjectName }
+    { Value "N_Kgs" }
+    { NoteId 5 }
+    { ObjectId 3800 }
+}
+

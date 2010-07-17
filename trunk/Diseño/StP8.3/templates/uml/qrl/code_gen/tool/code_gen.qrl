@@ -1,0 +1,1721 @@
+
+#include "qrl/code_gen/code_gen.inc"
+#include "rules/qrl/oper_parse.inc"
+#include "rules/qrl/uml.inc"
+//
+//  External variables specific to TOOL
+//
+ 
+external string generate_bodies = "None";
+external_help = "None:  Generate method bodies.  Choices are None, All or UseAnnotation.";
+
+external boolean generate_default_display_method_bodies = True;
+external_help = "True:  For window class display methods without bodies, generate default body.   generate_bodies must not equal 'None'";
+
+external boolean generate_default_init_method_bodies = True;
+external_help = "True:  For class init methods without bodies, generate default body.  generate_bodies must not equal 'None'";
+
+external boolean tool_3x_release = True;
+external_help = "True:  For Forte 3.x only ";
+
+/* globals */
+const string    SD = ".";	/* scope delimiter */
+const string    MINDENT = "    ";	/* member indent */
+
+list
+UmlAttributeItems(node attribute)
+{
+    return list_select("item[obj_id=${attribute.id} & note[UmlAttributeTOOLImplementation]]");
+}
+
+list
+UmlOperationItems(node operation)
+{
+// MB Changed query, now it is much faster
+//    return list_select("item[obj_id=${operation.id} & (note[UmlOperationTOOLImplementation] || note[UmlOperationTOOLCode])]");
+    return list_select("item[obj_id=${operation.id} & note[(UmlOperationTOOLImplementation || UmlOperationTOOLCode)]]");
+}
+
+note
+UmlOperationCode(node operation)
+{
+    return find_by_query("note[obj_id=${operation.id} & UmlOperationTOOLCode]");
+}
+
+list
+UmlRoleItems(link role)
+{
+    return list_select("item[obj_id=${role.id} & note[UmlRoleTOOLImplementation]]");
+}
+
+list
+UmlAssociationItems(node association)
+{
+    return list_create("item", 0); 
+}
+
+list
+UmlGeneralizationItems(link superclass)
+{
+    return list_create("item", 0);
+}
+
+list
+UmlClassItems(node class)
+{
+    return list_select("item[obj_id=${class.id} & note[UmlClassTOOLImplementation]]");
+
+}
+void
+LanguageUmlGeneralizations(list generalizations, node class)
+{
+    int i, n;
+    link implements_link, corresponding_generalization_link, link;
+    node parent, parent_elaborated;
+
+    // we do not want to have generalization from instantiated class
+    for (i = 0; i < list_count(generalizations); i = i + 1) 
+    {
+	link = list_get(generalizations, i);
+        parent = find_by_query("node[id=${link.to_node_id}]");
+	parent_elaborated = class_elaborated_type(parent);
+	if (parent_elaborated != NULL && 
+	    parent_elaborated.type == "UmlInstantiatedClass")
+	{
+	    list_delete(generalizations, i);
+	    i = i - 1;  // adjust loop counter for deleted item
+        }
+    }
+
+    if (!tool_3x_release)  
+    {
+        
+        // get the UmlImplements links for this class
+        list implementations = list_select("link[UmlImplements & from_node_id=${class.id} & link_refs]");
+
+        // append each implements link to the generalizations list, but
+        // not if there is already a corresponding generalization link
+        for (i = 0, n = list_count(implementations); i < n; i = i + 1) {
+	    implements_link = list_get(implementations, i);
+	    corresponding_generalization_link = find_by_query("link[UmlGeneralization & from_node_id=${implements_link.from_node_id} & to_node_id=${implements_link.to_node_id} & link_refs]");
+	    if(corresponding_generalization_link == NULL)
+	        list_append(generalizations, implements_link);
+        }
+    }
+    
+}
+
+
+/*----------------------------------------------------------------------------*/
+
+struct typedef_struct
+{
+    list   scope_list;
+    string definition;
+};
+ClassCodeVariant
+ClassCodeVariant(node class)
+{
+    /* ctor */
+    ClassCodeVariant self;
+
+    /* initialize */
+    self.is_template = False;
+    self.template_prefix = "";
+    self.template_parameters = "";
+    self.constructor_initialization_list = "";
+    self.static_attribute_initializers = "";
+    self.instantiated_class_typedefs = list_create("typedef_struct", 0);
+
+    //***    self.superclasses = list_create("string", 0);
+    self.generalizations = list_create("string", 0);
+    self.associations = list_create("string", 0);
+    self.is_userwindow = False;
+    self.is_interface = False;
+    return self;
+}
+
+void
+ClassCodeVariant__Compile(ClassCodeVariant self, ClassCodeDescriptor c)
+{
+    return;
+}
+
+void
+ClassCodeVariant__AppendGeneralizations(ClassCodeVariant self, ClassCodeDescriptor c, string superclass)
+{
+    list_append(self.generalizations, superclass);
+    return;
+}
+
+void
+ClassCodeVariant__AppendAssociations(ClassCodeVariant self, ClassCodeDescriptor c, string association)
+{
+    list_append(self.associations, association);
+    return;
+}
+
+/*----------------------------------------------------------------------------*/
+
+void
+ClassCodeFile__AdjustName(ClassCodeFile self, ClassCodeDescriptor c)
+{
+    return;
+}
+
+/*----------------------------------------------------------------------------*/
+
+void
+ClassCodeDefinition__SetIdentifier(ClassCodeDefinition self, ClassCodeDescriptor c)
+{
+    self.language_base_name = language_make_base_name(c.oms_class);
+}
+
+void
+ClassCodeDefinition__SetDefinitionHeader(ClassCodeDefinition self, ClassCodeDescriptor c)
+{
+    UmlGeneralization  uml_generalization;
+    list interfaces;
+    node implements_oms_node;
+    item interface_stereotype_oms_item;
+    node   super;
+    int    i, n;
+    string superclass = "";
+    string tool_implements_delimiter = ""; 
+    string interface_string = ""; 
+
+    
+    self.definition_header = "";
+    if (comment_classes == True)
+	self.definition_header = self.definition_header + generic_generate_object_comment(c.oms_class, "Class", "", "//", "", "");
+
+    /* class <identifier> [is mapped] inherites <scoped_name> */
+
+    if (tool_3x_release)  
+    {
+        interface_stereotype_oms_item = find_by_query("item[obj_id = " + c.oms_class.id + 
+                                                  " && UmlStereotype && value = 'interface']");
+
+        if (interface_stereotype_oms_item != NULL)
+            c.var.is_interface = True;
+        
+    }
+    
+    if (c.var.is_interface &&  tool_3x_release)
+    {
+        self.definition_header = self.definition_header + "interface " + 
+                                 self.language_base_name;
+    }
+    else if (c.var.is_interface && tool_3x_release)
+    {
+        self.definition_header = self.definition_header + "interface " + 
+                                 self.language_base_name;
+    }
+    else
+        self.definition_header = self.definition_header + "class " + 
+                                 self.language_base_name;
+
+    
+    if(list_count(c.uml_class.UmlGeneralizations) == 0)
+        if (!c.var.is_interface)  
+            superclass = "Framework.Object";
+    
+    for (i = 0, n = list_count(c.uml_class.UmlGeneralizations); i < n; i = i + 1) 
+    {
+	if (i != 0)
+        {
+	ide_warning("Warning: Class '" + class_base_name(c.oms_class) + "' has multiple inheritance. ");
+        break;
+        }
+        
+	uml_generalization = list_get(c.uml_class.UmlGeneralizations, i);
+	superclass = language_make_base_name(uml_generalization.class);
+	ClassCodeVariant__AppendGeneralizations(c.var, c, superclass);
+	if((to_lower(superclass) == "userwindow") || 
+	   (to_lower(superclass) == "displayproject.userwindow"))
+	    c.var.is_userwindow = True;
+    }
+    
+    if(c.var.is_userwindow)
+	self.definition_header = self.definition_header + " is mapped";
+
+    if (superclass != "")
+        self.definition_header = self.definition_header + " inherits from " + 
+	    superclass;
+    
+    self.definition_header = self.definition_header + "\n";
+
+    if (tool_3x_release)  
+    {
+        interfaces = list_select("node[UMLClass && node_refs && " + 
+                 "in_links[link_refs && from_node_id = " + c.oms_class.id + 
+                 " && UmlImplements]]");
+
+        for (i = 0; i<list_count(interfaces); i=i+1) 
+        {
+	    implements_oms_node = list_get(interfaces, i);
+
+            if (i==0)
+                tool_implements_delimiter = "implements ";
+            else 
+                tool_implements_delimiter = ", ";
+
+            interface_string = interface_string + tool_implements_delimiter + 
+                           implements_oms_node.name; 
+        }
+        if (interface_string != "")
+            self.definition_header = self.definition_header +
+                interface_string + ";\n";
+    }
+    
+    return;
+}
+
+void
+ClassCodeDefinition__SetDefinition(ClassCodeDefinition self, ClassCodeDescriptor c)
+{
+    string          associations = "", attributes = "", operations = "", declarations = "";
+
+    if (is_class_table_defined(c.oms_class) == False &&
+        c.oms_class.type == "UmlClass")   // Don't warn for pseudo-classes
+        ide_warning("  Warning: Class '" + self.language_base_name + "' does not have a class table definition.");
+
+    /* attributes */
+    attributes = generate_attributes(c, c.uml_class.UmlAttributes);
+
+    /* operations */
+    operations = generate_operations(c, c.uml_class.UmlOperations);
+
+    /* associations */
+    associations = generate_associations(c, c.uml_class.UmlAssociations);
+    
+
+    self.definition = declarations + attributes + associations + operations;
+
+    return;
+}
+
+/*----------------------------------------------------------------------------*/
+
+string
+generate_attributes(ClassCodeDescriptor c, list UmlAttributes)
+{
+    string          generated = "";
+    int             i, n;
+    UmlAttribute    uml_attribute;
+    string          name, type, privilege, get, set,default;
+
+    // Attributes are not always generated for classes with stereotype
+    // of 'type' or 'interface'
+    if (class_is_uml_type(c.uml_class) &&
+	!should_generate_uml_type_attributes(c.uml_class))
+	return generated;
+
+    
+    for (i = 0, n = list_count(UmlAttributes); i < n; i = i + 1)
+    {
+	uml_attribute = list_get(UmlAttributes, i);
+    	name = make_attribute_name(uml_attribute);
+    	type = make_attribute_type(uml_attribute);
+	privilege = UmlAttribute__GetItemValue(uml_attribute,
+					       "UmlTOOLAttributePrivilege");
+	if(privilege != "")
+	    privilege = "has " + privilege + " ";
+	else
+	    privilege = "";
+	
+	generated = generated + MINDENT + privilege;
+	
+	get = UmlAttribute__GetItemValue(uml_attribute,
+					 "UmlTOOLVirtualAttributeGet");
+	set = UmlAttribute__GetItemValue(uml_attribute,
+				 "UmlTOOLVirtualAttributeSet");
+	
+	if(get != "")
+	{
+	    generated = generated + "virtual attribute " + name + " : " + type
+		+ " = (get = " + get;
+	    if(set != "")
+		generated = generated + ", set = " + set;
+	    generated = generated + ");\n";
+	    continue;
+	}
+	
+	default = UmlAttribute__GetItemValue(uml_attribute,
+				 "UmlAttributeDefaultValue");
+	if(default != "")
+	    if(type != "")
+		ide_warning("Warning: Attribute '" + class_base_name(c.oms_class)
+			      + "." + name + "' has both a type and a default value, default value will be ignored");
+	    else
+	    {
+		generated = generated + "constant " + name + " = " +
+		  default + ";\n";
+		continue;
+	    }
+	
+	if((string_length(type) == 0) || (type == ""))
+	{
+	    ide_warning("Warning: Attribute '" + class_base_name(c.oms_class)
+			      + "." + name + "' has no type");
+	    continue;
+	}
+	generated = generated + "attribute " + name  + " : " 
+	    + type + ";\n";
+    }
+    return generated;
+}
+
+string
+generate_operations(ClassCodeDescriptor c, list UmlOperations)
+{
+    string          generated = "";
+    int             i, n;
+    UmlOperation    uml_operation;
+    string          operation_kind;
+    string          name, type, args, privilege,copy,return_event,exception_event;
+    
+    for (i = 0, n = list_count(UmlOperations); i < n; i = i + 1)
+    {
+	uml_operation = list_get(UmlOperations, i);
+	name = uml_operation.operation.name;
+	type = get_operation_type(uml_operation);
+
+        // argument list
+        args = uml_operation.operation.sig;
+        if (args != "")
+	    args = uml_args_to_format(args , Canonical);
+        //	args = get_operation_args(Uml_operation);
+
+	privilege = UmlOperation__GetItemValue(uml_operation,
+					       "UmlTOOLOperationPrivilege");
+	if(privilege != "")
+	    privilege = "has " + privilege + " ";
+	else
+	    privilege = "";
+	
+	operation_kind = 
+	    UmlOperation__GetItemValue(uml_operation,"UmlTOOLOperationKind");
+	
+/*conversion from True to Event for backward compatibilty*/
+	if((operation_kind == "True") || (operation_kind == "Event"))
+	    operation_kind = "event";
+	else if(operation_kind == "EventHandler")
+	    operation_kind = "event handler";
+	else
+	    operation_kind = "method";
+	
+	generated = generated + MINDENT + privilege;
+	generated = generated + operation_kind + " " + 
+	    name + "(" + args + ")";
+    
+	if(operation_kind != "method")
+	{
+	    if(type != "")
+		ide_warning("Warning: " + 
+			      operation_kind +" '" + class_base_name(c.oms_class)
+			      + "." + name + 
+			      "' has a type which will be ignored");
+	}
+	else
+	{
+	    if(UmlOperation__GetItemValue(uml_operation,
+					  "UmlTOOLOperationCopyReturn")
+	       == "True")
+		copy = "copy ";
+	    else
+		copy = "";
+	    
+	    if(type != "")
+		generated = generated + " : " + copy + type;
+	    if(copy != "" && type == "")
+		ide_warning("Warning: Method '" + class_base_name(c.oms_class)
+			      + "." + name + 
+			      "' specifies copy return, but no return type");
+	    return_event = 
+		UmlOperation__GetItemValue(uml_operation,
+					   "UmlTOOLOperationReturnEvent");
+	    
+	    exception_event = 
+		UmlOperation__GetItemValue(uml_operation,
+					   "UmlTOOLOperationExceptionEvent");
+	    
+	    if((return_event != "") || (exception_event != ""))
+	    {
+		generated = generated + "\n" + MINDENT + 
+		    "where completion = (";
+		if(return_event != "")
+		{
+		    generated = generated + "return = " + return_event;
+		    if(exception_event != "")
+			generated = generated + ",";
+		}
+		if(exception_event != "")
+		    generated = generated + "exception = " + exception_event;
+		
+		generated = generated + ")";
+	    }
+	    
+	}
+	
+	generated = generated + "\n";
+	generated = generated + MINDENT  + 
+	    "has property extended = (StPSignature = '" + 
+		args + "');\n";
+    }
+    return generated;
+}
+
+boolean
+generate_default(ClassCodeDescriptor c, UmlOperation o)
+{
+    boolean generate = False;
+    
+    if(generate_bodies == "All")
+    {
+	if(o.UmlOperationCode == NULL)
+	    generate = True;
+	else if(o.UmlOperationCode.desc == "")
+	    generate = True;
+    }
+    else // generate_bodies == "UseAnnotation"
+	if((o.UmlOperationCode != NULL) && (o.UmlOperationCode.desc == "")
+	   && (UmlOperation__GetItemValue(o,
+				      "UmlTOOLOperationCodeGenerate") 
+	   == "True"))
+	    generate = True;
+    
+    return generate;
+}
+
+string
+generate_default_init(ClassCodeDescriptor c)
+{
+    return "method " + class_base_name(c.oms_class) + 
+	".Init\nbegin\nsuper.init;\nend method;\n\n";
+}
+
+string
+generate_default_display(ClassCodeDescriptor c)
+{
+    return "method " + class_base_name(c.oms_class) + 
+	".Display\nbegin\nopen;\n" + 
+	    "event loop\n\twhen task.shutdown do\n\t\texit;\nend event;\n" +
+		"close;\nend method;\n\n";
+}
+
+string
+generate_operation_bodies(ClassCodeDescriptor c)
+{
+    string          generated = "";
+    int             i, n;
+    UmlOperation    Uml_operation;
+    string          name, type, args, copy;
+    boolean         generate_default_body = False;
+    string          operation_kind;
+    
+    if(generate_bodies == "None")
+	return "";
+
+    if(tool_3x_release && c.var.is_interface)
+	return "";
+    
+    for (i = 0, n = list_count(c.uml_class.UmlOperations); i < n; i = i + 1)
+    {
+	Uml_operation = list_get(c.uml_class.UmlOperations, i);
+
+	name = Uml_operation.operation.name;
+	type = get_operation_type(Uml_operation);
+	args = get_operation_args(Uml_operation);
+	operation_kind = 
+	    UmlOperation__GetItemValue(Uml_operation,"UmlTOOLOperationKind");
+
+	if((to_lower(name) == "init") && (type == "") && 
+	   (args == "") && generate_default_init_method_bodies)
+	    if(generate_default(c,Uml_operation))
+	    {
+		generated = generated + generate_default_init(c);
+		continue;
+	    }
+		
+
+	if(c.var.is_userwindow && 
+	   (to_lower(name) == "display") && (type == "") && 
+	   (args == "") && generate_default_display_method_bodies)
+	    if(generate_default(c,Uml_operation))
+	    {
+		generated = generated + generate_default_display(c);
+		continue;
+	    }
+		
+	if(Uml_operation.UmlOperationCode == NULL)
+	    continue;
+
+	if((generate_bodies == "UseAnnotation") && 
+	   UmlOperation__GetItemValue(Uml_operation,
+				      "UmlTOOLOperationCodeGenerate") 
+	   != "True")
+	    continue;
+	
+	if((operation_kind == "Event") || (operation_kind == "True"))
+	{
+	    ide_warning("Warning: Event '" + class_base_name(c.oms_class)
+			  + "." + name + 
+			  "' has a body which will be ignored");
+	    continue;
+	}
+	
+	if(operation_kind == "EventHandler")
+	    operation_kind = "event handler";
+	else
+	    operation_kind = "method";
+
+	generated = generated + operation_kind + " " + class_base_name(c.oms_class) + "." 
+	    + name + "(" + args + ")";
+	
+	if(UmlOperation__GetItemValue(Uml_operation,
+				      "UmlTOOLOperationCopyReturn")
+	   == "True")
+	    copy = "copy ";
+	else
+	    copy = "";
+	
+	if(type != "")
+	    generated = generated + " : " + copy + type;
+	if(copy != "" && type == "")
+	    ide_warning("Warning: Method '" + class_base_name(c.oms_class)
+			  + "." + name + 
+			  "' specifies copy return, but no return type");
+	generated = generated + "\nbegin\n";
+	generated = generated + Uml_operation.UmlOperationCode.desc 
+	    + "\nend method;\n\n";
+	
+    }
+
+    if(generated != "")
+	generated = "\n\n" + START_OP_IMPLEMENTATION_TAG + "\n" +
+	    generated + END_OP_IMPLEMENTATION_TAG;
+    
+    return generated;
+}
+     
+string
+generate_property(string property,
+		  string value,
+		  string override,
+		  string default_value,
+		  string default_override)
+{
+     if(value == "")
+	value = default_value;
+    
+    if(override == "")
+	override = default_override;
+    
+    string generated = MINDENT + property + " = (";
+    
+    if(value == "Allowed")
+	generated = generated + " allow = on, default = off, ";
+    else if(value == "Disallowed")
+	generated = generated + " allow = off, ";
+    else if(value == "IsDefault")
+	generated = generated + " allow = on, default = on, ";
+    
+    generated = generated + "override = ";
+    if(override== "True")
+	generated = generated + "on";
+    else
+	generated = generated + "off";
+
+    generated = generated + ");\n";
+    return generated;
+}
+
+string
+generate_properties(ClassCodeDescriptor c)
+{
+    string generated = "";
+    string item_value;
+    string override_value;
+    boolean first = True;
+    
+
+    item_value = UmlClass__GetItemValue(c.uml_class,
+					"UmlTOOLClassSharedProperty");
+    if(item_value != "")
+    {
+	if(first)
+	{
+	    generated = generated + "has property\n";
+	    first = False;
+	}
+	
+	override_value =  
+	    UmlClass__GetItemValue(c.uml_class,
+				   "UmlTOOLClassSubclassOverrideShared");
+	generated = generated + generate_property("shared",
+						  item_value,
+						  override_value,
+						  "Disallowed",
+						  "False");
+    }
+    
+    item_value = UmlClass__GetItemValue(c.uml_class,
+					"UmlTOOLClassDistributedProperty");
+
+    if(item_value != "")
+    {
+	if(first)
+	{
+	    generated = generated + "has property\n";
+	    first = False;
+	}
+	
+	override_value =  
+	    UmlClass__GetItemValue(c.uml_class,
+				   "UmlTOOLClassSubclassOverrideDistributed");
+	generated = generated + generate_property("distributed",
+						  item_value,
+						  override_value,
+						  "Disallowed",
+						  "True");
+    }
+        
+    item_value = UmlClass__GetItemValue(c.uml_class,
+					"UmlTOOLClassMonitoredProperty");
+    if(item_value != "")
+    {
+	if(first)
+	{
+	    generated = generated + "has property\n";
+	    first = False;
+	}
+	
+	override_value =  
+	    UmlClass__GetItemValue(c.uml_class,
+				   "UmlTOOLClassSubclassOverrideMonitoreded");
+	generated = generated + generate_property("monitored",
+						  item_value,
+						  override_value,
+						  "Allowed",
+						  "True");
+    }
+    
+    item_value = UmlClass__GetItemValue(c.uml_class,
+					"UmlTOOLClassTransactionalProperty");
+    if(item_value != "")
+    {
+	if(first)
+	{
+	    generated = generated + "has property\n";
+	    first = False;
+	}
+	
+	override_value =  
+	    UmlClass__GetItemValue(c.uml_class,
+				   "UmlTOOLClassSubclassOverrideTransactional");
+	generated = generated + generate_property("transactional",
+						  item_value,
+						  override_value,
+						  "Disallowed",
+						  "False");
+    }
+    
+    item_value = UmlClass__GetItemValue(c.uml_class,
+			       "UmlTOOLClassRestricted");
+    if(item_value != "")
+    {
+	if(first)
+	{
+	    generated = generated + "has property\n";
+	    first = False;
+	}
+	
+	generated = generated + MINDENT + "restricted = ";
+	if(item_value == "True")
+	    generated = generated + "TRUE;\n";
+	else
+	    generated = generated + "FALSE;\n";
+    }
+    
+    if(UmlClass__GetItem(c.uml_class,"UmlTOOLWindowClassFilename") != NULL)
+	generated = generated + MINDENT + "has file '" + 
+	    UmlClass__GetItemValue(c.uml_class,"UmlTOOLWindowClassFilename")
+		+ "';\n";
+    
+    return generated;
+    
+}
+
+string
+generate_associations(ClassCodeDescriptor c, list UmlAssociations)
+{
+    string          generated = "";
+    int             i, j, m, n;
+    UmlRole         source, target;
+    UmlAssociation  uml_association;
+
+    for (i = 0, n = list_count(UmlAssociations); i < n; i = i + 1)
+    {
+	uml_association = list_get(UmlAssociations, i);
+	source = uml_association.UmlSourceRole;
+	if (list_count(uml_association.UmlTargetRoles) == 0)
+	    target = source;
+	else
+	    target = list_get(uml_association.UmlTargetRoles, 0);
+
+	generated = generated + generate_association(c, uml_association, source, target, uml_association.class);
+	/* look for reflexive associations */
+	for (j = 0, m = list_count(uml_association.UmlTargetRoles); j < m; j = j + 1)
+	{
+	    target = list_get(uml_association.UmlTargetRoles, j);
+	    if (source.role.from_node_id == target.role.from_node_id)
+		generated = generated + generate_association(c, uml_association, target, source, uml_association.class);
+	}
+    }
+    return generated +
+	generate_associations_from_association_class(c) +
+	generate_associations_from_pseudo_class(c);
+}
+
+
+/*
+ * constructs that are implemented as classes, e.g., ternary associations
+ */
+set            pseudo_classes = set_create("node");
+
+string
+generate_association(ClassCodeDescriptor c, UmlAssociation uml_association, UmlRole source, UmlRole target, node link_attribute_or_target_class)
+{
+    boolean is_binary, is_navigable_forward, 
+	is_aggregation = False, is_composition = False;
+    string  association_identifier, role_visibility, role_pattern_family;
+    node target_elaborated_type;
+    string assn_prop;
+    
+
+    string          association_type, generated;
+    boolean         is_multiple;
+    string          multiplicity;
+
+    if (tool_3x_release && c.var.is_interface)
+	    return "";
+
+
+    is_binary = (list_count(uml_association.UmlTargetRoles) < 2);
+
+
+    if (is_binary)
+    {
+	is_navigable_forward = 
+	    (UmlRole__GetItemValue(target, "UmlRoleNavigability") == "True");
+
+	is_aggregation = 
+	    (UmlRole__GetItemValue(source, "UmlAggregationType") == "Aggregation") ||
+	    (UmlRole__GetItemValue(target, "UmlAggregationType") == "Aggregation");
+
+	is_composition = 
+	    (UmlRole__GetItemValue(source, "UmlAggregationType") == "Composition") ||
+	    (UmlRole__GetItemValue(target, "UmlAggregationType") == "Composition");
+
+	// Remedy 2632. (C.L.) Return empty string if link is cannot be 
+	// navigable forward and it is not a composition or aggregation.
+	if (!(is_navigable_forward || is_composition || is_aggregation))
+	  return "";
+	
+	// Also return empty string if it is composition or aggragation 
+	// target.
+	if (is_composition && !(UmlRole__GetItemValue(source, "UmlAggregationType")=="Composition"))
+	  return "";
+
+	if (is_aggregation && !(UmlRole__GetItemValue(source, "UmlAggregationType")=="Aggregation"))
+	  return "";
+	// End Remedy 2632.
+
+    
+	if (link_attribute_or_target_class == NULL)
+	    link_attribute_or_target_class = find_by_query("node[id=${target.role.from_node_id} & node_refs]");
+
+	// Do not implement association to a parameterized class.
+	target_elaborated_type = 
+	    class_elaborated_type(link_attribute_or_target_class);
+
+	if (target_elaborated_type != NULL && 
+             target_elaborated_type.type == "UmlInstantiatedClass")
+	    return "";
+
+	association_identifier = language_make_identifier(target.role.name);
+
+	//
+	//  Don't use the name of the association because it only makes
+	//  sense in one direction.
+	//
+
+        if (association_identifier == "")
+	    association_identifier = "assn" + language_make_identifier(class_base_name(link_attribute_or_target_class));
+	ClassCodeVariant__AppendAssociations(c.var, c, language_make_base_name(link_attribute_or_target_class));
+    } else
+    {
+	if (link_attribute_or_target_class == NULL)
+	{
+	    link_attribute_or_target_class = uml_association.association;
+	    set_add(pseudo_classes, link_attribute_or_target_class);
+	    association_identifier = "assn" + language_make_identifier(class_base_name(link_attribute_or_target_class));
+	    ClassCodeVariant__AppendAssociations(c.var, c, language_make_base_name(link_attribute_or_target_class));
+	} else
+	{
+	    association_identifier = "assn" + language_make_identifier(class_base_name(link_attribute_or_target_class));
+	    ClassCodeVariant__AppendAssociations(c.var, c, language_make_base_name(link_attribute_or_target_class));
+	} 
+    }
+
+    association_type = language_make_base_name(link_attribute_or_target_class);
+    multiplicity = UmlRole__GetItemValue(target, "UmlMultiplicity");
+
+    is_multiple = (multiplicity != "" && 
+		   multiplicity != "0" && 
+		   multiplicity != "1" && 
+		   multiplicity != "0-1" && 
+		   multiplicity != "0,1" && 
+		   multiplicity != "0..1" && 
+		   multiplicity != "ExactlyOne" && 
+		   multiplicity != "exactlyone" && 
+		   multiplicity != "exactly_one" && 
+		   multiplicity != "One" && 
+		   multiplicity != "one" && 
+		   multiplicity != "Single" && 
+		   multiplicity != "single" && 
+		   multiplicity != "Optional" &&
+		   multiplicity != "optional");
+
+    if (is_multiple)
+    {
+	association_type = "Array of " + association_type;
+
+	if(UmlRole__GetItemValue(target,"UmlTOOLRoleUseLargeArray")
+	   == "True")
+	    association_type = "Large" + association_type;
+	association_type = "Framework." + association_type;
+	
+    }
+
+    generated = MINDENT;    
+    if(UmlRole__GetItemValue(target,"UmlTOOLRolePrivilege") != "")
+	generated = generated + "has " + 
+	    UmlRole__GetItemValue(target,"UmlTOOLRolePrivilege") + " ";
+    
+    if (is_aggregation)
+        assn_prop = "aggregation";
+    else if (is_composition)
+        assn_prop = "composition";
+    else 
+        assn_prop = "association";
+
+    return generated +  "attribute " + association_identifier + " : " 
+	+ association_type + "\n" + MINDENT + 
+	"has property extended = (StPAttribute = '" + assn_prop + "');\n";
+}
+
+string
+generate_associations_from_association_class(ClassCodeDescriptor c)
+{
+    string generated = "", association_identifier, association_type;
+    link   association_class_link, target_link;
+    set    link_set;
+    int    i, num_links;
+    UmlRole target_role;
+    node   target_class;
+
+    //
+    // If the class is an association class, we need to implement
+    // associations for it since navigation along the association goes through
+    // this class.  This needs to be implemented as a simple 1-1 association.
+    //
+
+    // for each association to which the association class is attached
+    for_each_in_select("link[UmlAssociationClassLink & to_node_id=${c.oms_class.id} & link_refs]", association_class_link)
+    {
+	// get links from each class involved in the association
+	link_set = set_select("link[((UmlRole & to_node_id=${association_class_link.from_node_id})) & link_refs]");
+	
+	// num_links == 1 for reflexive with no roles defined,
+	num_links = set_count (link_set);
+	
+	if (num_links == 1)
+        {
+            ide_warning ("  Warning: Roles are not defined for reflexive association.");
+        }
+        else 
+        {
+	    // generate association references to all involved classes
+	    for (i=0; i < num_links; i=i+1)
+	    {
+		target_link = set_get_element (link_set, i);
+		
+                target_role = UmlRole (target_link);
+
+                target_class = find_by_query("node[id=${target_link.from_node_id}& node_refs]");
+                association_type = language_make_base_name(target_class);
+                
+                association_identifier = language_make_identifier(target_link.name);
+                if (association_identifier == "")
+	            association_identifier = "assn" + 
+	                language_make_identifier(class_base_name(target_class));
+    
+	    generated = generated + MINDENT;    
+    	    if(UmlRole__GetItemValue(target_role,"UmlTOOLRolePrivilege") != "")
+		generated = generated + "has " + 
+		UmlRole__GetItemValue(target_role,"UmlTOOLRolePrivilege") + " ";
+	    
+    	    generated  = generated +  "attribute " + association_identifier + 
+		" : " + association_type + "\n" + MINDENT + 
+		"has property extended = (StPAttribute = 'association');\n";
+	    }
+        }
+    }
+
+    return generated;
+}
+
+string
+generate_associations_from_pseudo_class(ClassCodeDescriptor c)
+{
+    string          generated = "";
+    string          association_type, association_identifier;
+    link            association, association_class;
+    node            class;
+
+    /* types of pseudo-classes:  ternary association w/o class, any others? */
+    if (c.oms_class.type == "UmlAssociation")
+    {
+	for_each_in_select("link[UmlRole & to_node_id=${c.oms_class.id} & link_refs]", association)
+	{
+	    class = find_by_query("node[id=${association.from_node_id} & node_refs]");
+	    association_type = language_make_base_name(class);
+	    association_identifier = language_make_identifier(association.name);
+	    if (association_identifier == "")
+		association_identifier = "pseudo" + language_make_identifier(class_base_name(class));
+	    ClassCodeVariant__AppendAssociations(c.var, c, language_make_base_name(class));
+	    generated = generated + MINDENT + "attribute " + association_identifier + 
+		" : " + association_type + "\n" + MINDENT + 
+		"has property extended = (StPAttribute = 'association');\n";
+	}
+    }
+
+    return generated;
+}
+
+/*----------------------------------------------------------------------------*/
+
+void
+language_check_options()
+{
+    if (interface_extension == "" || interface_extension == ".")
+	interface_extension = ".cex";
+    implementation_extension = interface_extension;
+    operation_extension = interface_extension;
+    if (use_module)
+	file_per_class = False;
+    generate_implementation_files = False;
+    generate_operation_files = False;
+    return;
+}
+string
+language_code_gen_id (UmlClass Uml_class)
+{
+    return "";
+}
+
+string 
+language_file_name (string class_file_name)
+{
+    return class_file_name;
+}
+
+set
+language_compile_preprocessing(set class_set)
+{
+    /*
+     * given the input classes, as a set of class nodes, perform any
+     * pre-processing
+     */
+    int             i, n;
+    node            class;
+    node            type;
+    set             classes = set_create("node");
+
+    /* filter classes */
+    for (i = 0, n = set_count(class_set); i < n; i = i + 1)
+    {
+	class = set_get_element(class_set, i);
+	if (class_base_name(class) == "") 
+        {
+	    ide_warning("Ignoring unnamed class with id " + class.id + "...");
+            continue;
+        }
+	if (is_class_excluded(class) == True) {
+	    ide_warning("Ignoring excluded class '" + class_base_name(class) + 
+			"'...");
+	    continue;
+	}
+        
+	type = class_elaborated_type(class);
+        
+	if (type != NULL && type.type == "UmlInstantiatedClass") 
+        {
+	    ide_warning("Ignoring instantiated class '" + class_base_name(class) + "'...");
+            continue;
+        }
+    
+	if (find_by_query("node[node_refs & UmlPackage & name = '${class.name}']") != NULL)
+        {
+            ide_warning("Ignoring package '" + class_base_name(class) + "'...");
+	    continue;
+        }
+        
+	set_add(classes, class);
+    }
+
+    return classes;
+}
+
+list
+language_compile_postprocessing(list classes)
+{
+    /*
+     * given the compiled classes, as a list of class descriptors, perform
+     * any post-processing
+     */
+    int             i, j, n, m;
+    string          class_name;
+    ClassCodeDescriptor c;
+    list            sorted_class_names, sorted_classes, class_names;
+    node            class;
+    graph           G;
+
+    /* pseudo_classes */
+    for (i = 0, n = set_count(pseudo_classes); i < n; i = i + 1)
+    {
+	class = set_get_element(pseudo_classes, i);
+	if (class.type == "UmlAssociation")
+	{
+	    ide_warning("Generating code for association pseudo-class '" + class_base_name(class) + "'...");
+	    c = ClassCodeDescriptor(class);
+	    ClassCodeDescriptor__FillFromRepository(c);
+	    if (ClassCodeDescriptor__IsOk(c) == False)
+	    {
+		global_errors = global_errors + 1;
+		continue;
+	    }
+	    ClassCodeDescriptor__Compile(c);
+	    list_append(classes, c);
+	}
+    }
+
+    // filter out classes
+    for (i = 0; i < list_count(classes); i = i + 1)
+    {
+        c = list_get(classes, i);
+ 
+        if (class_is_uml_type(c.uml_class) &&
+            !should_generate_uml_type(c.uml_class)) {
+            list_delete(classes, i);
+            i = i - 1;  // adjust loop counter for deleted item
+        }
+    }
+ 
+
+    /* project compiled classes' names */
+    class_names = list_create("string", 0);
+    for (i = 0; i < list_count(classes); i = i + 1)
+    {
+	c = list_get(classes, i);
+	list_append(class_names, class_base_name(c.oms_class));
+    }
+
+    /* create dependency graph */
+
+    /* subclasses depend on superclasses */
+    G = UmlClassGraph(NULL, list_select("link[UmlGeneralization && link_refs]"));
+
+    /* classes with embedded instances dependency? */
+
+    /* any others? */
+
+    /* finally, sort them topologically for lexical ordering */
+    sorted_class_names = graph_topological_sort(G);
+    m = list_count(class_names);
+    sorted_classes = list_create("ClassCodeDescriptor", 0);
+    for (i = 0, n = list_count(sorted_class_names); i < n; i = i + 1)
+    {
+	class_name = list_get(sorted_class_names, i);
+	/* only return it if it's in the compiled list */
+	if ((j = list_find(class_names, 0, class_name)) != m)
+	{
+	    c = list_get(classes, j);
+	    list_append(sorted_classes, c);
+	    /* maintain the parallelism in the two collections */
+	    list_delete(classes, j);
+	    list_delete(class_names, j);
+	    m = m - 1;
+	}
+    }
+
+    /*
+     * add the rest of the classes that didn't happen to be in the graph
+     */
+    for (i = 0, n = list_count(classes); i < n; i = i + 1)
+	list_append(sorted_classes, list_get(classes, i));
+
+    return sorted_classes;
+}
+
+/*----------------------------------------------------------------------------*/
+
+const string    START_CLASS_DECLARATION_TAG = "// stp class declarations";
+const string    END_CLASS_DECLARATION_TAG = "// stp class declarations end";
+const string    START_CLASS_DEFINITION_TAG = "// stp class definition ";
+const string    END_CLASS_DEFINITION_TAG = "// stp class definition end";
+const string    START_CLASS_BODY_TAG = "// stp class components";
+const string    END_CLASS_BODY_TAG = "// stp class components end";
+const string    START_CLASS_SECOND_BODY_TAG = "// stp class properties";
+const string    END_CLASS_SECOND_BODY_TAG = "// stp class properties end";
+const string    START_IMPLEMENTATION_DECLS_TAG = "// stp attributes";
+const string    END_IMPLEMENTATION_DECLS_TAG = "// stp attributes end";
+const string    START_OPERATION_TAG = "// stp operation ";
+const string    END_OPERATION_TAG = "// stp operation end";
+const string    START_OP_IMPLEMENTATION_TAG = "// stp code";
+const string    END_OP_IMPLEMENTATION_TAG = "// stp code end";
+const string    START_FOOTER_TAG = "// stp footer";
+const string    END_FOOTER_TAG = "// stp footer end";
+const string    START_INCLUDES_TAG = "// stp auto-include ";
+const string    END_INCLUDES_TAG = "// stp auto-include end";
+const string    START_CLASS_IMPLEMENTATION_TAG = "// stp class impl";
+const string    END_CLASS_IMPLEMENTATION_TAG = "// stp class impl end";
+const string    START_CLASS_DERIVATIVES_TAG = "// stp class derivatives ";
+const string    END_CLASS_DERIVATIVES_TAG = "// stp class derivatives end";
+const string    START_EXTRA_CLASS_DEFINITION_TAG = "// stp extra class definition ";
+const string    END_EXTRA_CLASS_DEFINITION_TAG = "// stp extra class definition end";
+const string    START_EXTRA_CLASS_IMPLEMENTATION_TAG = "// stp extra class impl";
+const string    END_EXTRA_CLASS_IMPLEMENTATION_TAG = "// stp extra class impl end";
+
+string
+language_generate_declaration_list(list classes, string file)
+{
+    /* generate a set of forward declarations */
+    string          generated = "";
+    int             i, n;
+    ClassCodeDescriptor c;
+    item interface_stereotype_oms_item = NULL;
+    list            mappeds = list_create("string",0);
+    set             forwards = set_create("string");
+    set             forwardsInterface = set_create("string");
+    
+    for (i = 0, n = list_count(classes); i < n; i = i + 1)
+    {
+	c = list_get(classes, i);
+	if (file == c.file.full_path_interface_name + c.file.interface_extension)
+	{
+            if ((!tool_3x_release) || (tool_3x_release &&
+                                          c.var.is_interface == False))  
+            {
+	        set_add(forwards,c.def.language_base_name);
+	        set_union(forwards,list_to_set(c.var.associations));
+                if(c.var.is_userwindow)
+                    list_append(mappeds, c.def.language_base_name);
+            }
+            if (tool_3x_release && c.var.is_interface)  
+            {
+	        set_add(forwardsInterface,c.def.language_base_name);
+	        set_union(forwardsInterface,list_to_set(c.var.associations));
+            }
+	}
+    }
+
+    for(i = 0, n = set_count(forwards);i < n;i++) 
+    {
+        if (list_find(mappeds, 0 , set_get_element(forwards,i)) != list_count(mappeds))
+	    generated = generated + "forward " + set_get_element(forwards,i) + " is mapped;\n";
+        else
+	    generated = generated + "forward " + set_get_element(forwards,i) + ";\n";
+    }
+    for(i = 0, n = set_count(forwardsInterface);i < n;i++)
+	generated = generated + "forward interface " + set_get_element(forwardsInterface,i) + ";\n";
+    return generated;
+}
+
+string
+generate_tagged_attribute(ClassCodeDescriptor c)
+{
+    return "";
+}
+
+string
+generate_tagged_operation(ClassCodeDescriptor c, int i)
+{
+    return "";
+}
+
+string
+generate_tagged_operation_header(ClassCodeDescriptor c, int i)
+{
+    return "";
+}
+
+string
+generate_tagged_operation_body(ClassCodeDescriptor c, int i)
+{
+    return "";
+}
+
+string
+generate_tagged_operation_footer(ClassCodeDescriptor c, int i)
+{
+    return "";
+}
+
+string
+generate_tagged_class(ClassCodeDescriptor c)
+{
+    string class_footer_str;
+    string class_second_body_str;
+    
+    if (tool_3x_release && c.var.is_interface) 
+    {
+        class_second_body_str = "";
+        class_footer_str = "end interface;\n";
+    }
+    else
+    {
+        class_second_body_str = generate_tagged_class_second_body(c);
+        class_footer_str = "end class;\n";
+    }
+    
+
+    return
+	generate_tagged_class_header(c) +
+	generate_tagged_class_body(c) +
+	class_second_body_str +
+	class_footer_str +
+	generate_tagged_class_footer(c) + 
+	generate_operation_bodies(c) + 
+	"\n";
+}
+
+string
+generate_tagged_class_header(ClassCodeDescriptor c)
+{
+    return
+	START_CLASS_DEFINITION_TAG + "\n" +
+	c.def.definition_header + "\n";
+}
+
+string
+generate_tagged_class_body(ClassCodeDescriptor c)
+{
+    return
+	START_CLASS_BODY_TAG + "\n" +
+	c.def.definition +
+	END_CLASS_BODY_TAG + "\n\n";
+}
+
+string
+generate_tagged_class_second_body(ClassCodeDescriptor c)
+{
+    return START_CLASS_SECOND_BODY_TAG + "\n" +
+	generate_properties(c) +
+	    END_CLASS_SECOND_BODY_TAG + "\n";
+}
+
+string
+generate_tagged_class_footer(ClassCodeDescriptor c)
+{
+    return
+	END_CLASS_DEFINITION_TAG +
+	"\n";
+}
+
+string
+generate_tagged_class_derivatives(ClassCodeDescriptor c)
+{
+    return "";
+}
+
+string
+generate_tagged_class_implementation(ClassCodeDescriptor c)
+{
+    return "";
+}
+ 
+string
+generate_tagged_class_implementation_header(ClassCodeDescriptor c)
+{
+    return "";
+}
+ 
+string
+generate_tagged_class_implementation_footer(ClassCodeDescriptor c)
+{
+    return "";
+ 
+}
+ 
+string
+generate_tagged_interface_file_footer(string file)
+{
+    return "";
+}
+
+string
+generate_tagged_includes(ClassCodeDescriptor c)
+{
+    return "";
+}
+
+string
+tag_declarations(string declarations)
+{
+
+    return
+	START_CLASS_DECLARATION_TAG + "\n" +
+	declarations +
+	END_CLASS_DECLARATION_TAG + "\n";
+}
+
+string
+generate_tagged_declarations(list classes, string file)
+{
+    /* generate all the declarations for the specified file */
+
+    return tag_declarations(language_generate_declaration_list(classes, file));
+}
+
+string
+generate_tagged_definitions(list classes, string file)
+{
+    string          generated = "";
+    int             i, n;
+    ClassCodeDescriptor c;
+
+    /* generate all the definitions for the specified file */
+    for (i = 0, n = list_count(classes); i < n; i = i + 1)
+    {
+	c = list_get(classes, i);
+	if (file == c.file.full_path_interface_name + c.file.interface_extension)
+	{
+	    generated = generated + generate_tagged_class(c);
+	    c.written = True;
+	    list_set(classes, i, c);
+	}
+    }
+    return generated;
+}
+
+string
+language_generate_include(string filename)
+{
+    return "";
+}
+
+list
+language_make_scope_list(node class)
+{
+    string scope_string, one_scope;
+    const string LIST_SEPARATOR = "?";
+    list scope_list;
+    int i, n;
+
+    // get string containing the enclosing scopes
+    scope_string = uml_class_qualified_name(class);
+
+    // prepare for conversion to list
+    scope_string = string_search_and_replace(scope_string, UML_PATH_SEPARATOR,
+					     LIST_SEPARATOR); 
+
+    // convert to list
+    scope_list = string_to_list(scope_string, LIST_SEPARATOR);
+
+    // delete the last item of the list, which is the class itself,
+    // leaving only the scopes
+    list_delete(scope_list, (list_count(scope_list)-1));
+
+    return scope_list;
+}
+string
+language_build_qualified_name(list scope_list, string base_name)
+{
+    if (list_count(scope_list) == 0)
+	return base_name;
+    else
+	return list_to_string(scope_list, SD) + SD + base_name;
+}
+
+
+string
+language_make_qualified_name(node class)
+{
+    node name_class;
+
+    // 'class_surrogate_node' is used here to handle the case of making
+    // a qualified name for an anonymous instantiation.  uclassd does
+    // not allow the complete qualified name to be used as a label,
+    // but we can still come up with the complete qualified name by
+    // finding the corresponding parameterized class.
+    name_class = class_surrogate_node(class);
+
+    return language_build_qualified_name(
+	language_make_scope_list(name_class), 
+	language_make_base_name(name_class));
+}
+
+
+int
+language_find_class_definition_start(string line)
+{
+    /*
+     * return an index to the start of the class definition, otherwise the
+     * length of line (same as string_find())
+     */
+    int             i;
+
+    i = string_find(line, 0, "{");
+    /* we need to try to make sure this is really the start of the class definition,
+	and not part of a comment or anything else */
+    return i;
+}
+
+int
+language_find_class_implementation_start(string line)
+{
+    return 0;
+}
+
+int
+language_find_operation_header_end(string line)
+{
+    return 0;
+}
+
+int
+language_find_operation_body_begin(string line)
+{
+    return 0;
+}
+
+string
+language_generate_file_header(ClassCodeDescriptor c)
+{
+    /* this is the string that is written at the top of the interface file */
+    return "// StP -- created on " + time_to_string(time_now(), NULL) + " for " + user() + "@" + hostname() + " from system " + current_system() + "\n\n";
+}
+
+const string    BAD_TOOL_IDENTIFERS_TRANSLATE_TABLE = " !@#$%^&*()+-=|\\{}[],./<>?~`;:'\"\n\t";
+const string    GOOD_TOOL_IDENTIFERS_TRANSLATE_TABLE = string_repeat("_", string_length(BAD_TOOL_IDENTIFERS_TRANSLATE_TABLE));
+string
+language_make_identifier(string s)
+{
+    /*
+     * given a string, translate it into a valid identifier for the language
+     */
+    return string_translate(s, BAD_TOOL_IDENTIFERS_TRANSLATE_TABLE, GOOD_TOOL_IDENTIFERS_TRANSLATE_TABLE);
+}
+
+const string    BAD_TOOL_CLASS_IDENTIFERS_TRANSLATE_TABLE = " !@#$%^&*()+-=|\\{},./<>?~`;'\"\n\t";
+const string    GOOD_TOOL_CLASS_IDENTIFERS_TRANSLATE_TABLE = string_repeat("_", string_length(BAD_TOOL_CLASS_IDENTIFERS_TRANSLATE_TABLE));
+string
+language_make_base_name(node class)
+{
+    /*
+     * given an Uml class, or some Uml construct that is supposed to be
+     * implemented as a class, translate it's name into a valid class 
+     * name for the language (ignore anything enclosed in <>'s, i.e.,
+     * template arguments, and filter out parse characters in the case that
+     * the )
+     */
+    string          s;
+    if (class.type == "UmlClass")
+	s = class_base_name(class);
+    else
+	s = language_make_identifier(class.name);
+
+    int             f = string_find(s, 0, "<");
+    int             l = string_length(s);
+    string          t = "";
+
+    if (f != l)
+    {
+	t = string_extract(s, f, l - f);
+	s = string_extract(s, 0, f);
+    }
+    return string_translate(s, BAD_TOOL_CLASS_IDENTIFERS_TRANSLATE_TABLE, GOOD_TOOL_CLASS_IDENTIFERS_TRANSLATE_TABLE) + t;
+}
+
+const string    BAD_TOOL_ATTR_IDENTIFERS_TRANSLATE_TABLE = " !@#$%^&*()+-=|\\{},./<>?~`;:'\"\n\t";
+const string    GOOD_TOOL_ATTR_IDENTIFERS_TRANSLATE_TABLE = string_repeat("_", string_length(BAD_TOOL_ATTR_IDENTIFERS_TRANSLATE_TABLE));
+string
+language_make_attribute_identifier(string s)
+{
+    /*
+     * given a string, translate it into a valid class identifier for the language
+     */
+    return string_translate(s, BAD_TOOL_ATTR_IDENTIFERS_TRANSLATE_TABLE, GOOD_TOOL_ATTR_IDENTIFERS_TRANSLATE_TABLE);
+}
+
+const string    BAD_TOOL_OPERATION_IDENTIFERS_TRANSLATE_TABLE = " @#$\\{}.?`;:'\"\n\t";
+const string    GOOD_TOOL_OPERATION_IDENTIFERS_TRANSLATE_TABLE = string_repeat("_", string_length(BAD_TOOL_OPERATION_IDENTIFERS_TRANSLATE_TABLE));
+string
+make_operation_identifier(string s)
+{
+    return string_translate(s, BAD_TOOL_OPERATION_IDENTIFERS_TRANSLATE_TABLE, GOOD_TOOL_OPERATION_IDENTIFERS_TRANSLATE_TABLE);
+}
+
+string
+make_attribute_name(UmlAttribute uml_attribute)
+{
+    string          attribute_name, attribute_type;
+
+    //***    attribute_type = get_attribute_type(Uml_attribute);
+    attribute_type = UmlAttribute__GetItemValue(uml_attribute, "UmlAttributeType");
+    attribute_name = language_make_attribute_identifier(uml_attribute.attribute.name);
+    return parse_array_syntax_from_name(attribute_name, attribute_type);
+}
+
+string
+make_attribute_type(UmlAttribute uml_attribute)
+{
+    string          attribute_type;
+
+    //***    attribute_type = get_attribute_type(Uml_attribute);
+    attribute_type = UmlAttribute__GetItemValue(uml_attribute, "UmlAttributeType");
+    return parse_array_syntax_from_type(attribute_type);
+}
+
+string
+get_attribute_type(UmlAttribute Uml_attribute)
+{
+    string          attribute_type;
+
+
+    attribute_type = UmlAttribute__GetItemValue(Uml_attribute, "UmlAttributeType");
+    return attribute_type;
+}
+
+string
+get_operation_type(UmlOperation Uml_operation)
+{
+    string          operation_type;
+
+
+    operation_type = UmlOperation__GetItemValue(Uml_operation, "UmlOperationReturnType");
+    return operation_type;
+}
+
+string
+get_operation_args(UmlOperation Uml_operation)
+{
+    string          operation_args;
+
+    operation_args = UmlOperation__GetItemValue(Uml_operation, 
+						"UmlTOOLOperationParamList");
+    if (operation_args == "")
+	operation_args = Uml_operation.operation.sig;
+    return operation_args;
+}
+
+string
+parse_array_syntax_from_name(string attribute_name, string attribute_type)
+{
+    int             array_open, array_close, i;
+
+    if (attribute_type != "")
+    {
+	array_open = string_find(attribute_type, 0, "[");
+	if (array_open < string_length(attribute_type))
+	{
+            //***	    array_close = string_find(attribute_type, array_open, "]");
+	    array_close = 0;
+	    for (i = 0; i < string_length(attribute_type); i = i + 1)
+		if (string_extract(attribute_type, i, 1) == "]")
+		    array_close = i;
+	    if (array_close < string_length(attribute_type))
+		attribute_name = attribute_name + string_extract(attribute_type, array_open, (array_close - array_open) + 1);
+	}
+    }
+    return attribute_name;
+}
+
+string
+parse_array_syntax_from_type(string attribute_type)
+{
+    int             array_open, array_close;
+
+    if (attribute_type != "")
+    {
+	array_open = string_find(attribute_type, 0, "[");
+	if (array_open < string_length(attribute_type))
+	{
+	    array_close = string_find(attribute_type, array_open, "]");
+	    if (array_close < string_length(attribute_type))
+		attribute_type = string_extract(attribute_type, 0, array_open);
+	}
+    }
+    return attribute_type;
+}
+boolean
+class_is_uml_type(UmlClass uml_class)
+{
+    string stereotype;
+    
+    stereotype = UmlClass__GetItemValue(uml_class, "UmlStereotype");
+    stereotype = to_lower(stereotype);
+    
+    return (stereotype == "type" || stereotype == "interface");
+}
+
+boolean
+should_generate_uml_type(UmlClass uml_class)
+{
+    string generate_type;
+    
+    generate_type = UmlClass__GetItemValue(uml_class, 
+					   "UmlGenerateClassIfType");
+
+    if (generate_type == "False")
+	return False;
+    else if (generate_type == "True")
+	return True;
+    else 
+	// no annotation on class, use external value
+	return generate_types_and_interfaces;
+}
+
+boolean
+should_generate_uml_type_attributes(UmlClass uml_class)
+{
+    string generate_type_attributes_item_value;
+    
+    generate_type_attributes_item_value = 
+	UmlClass__GetItemValue(uml_class, "UmlGenerateTypeAttributes");
+
+    if (generate_type_attributes_item_value == "False")
+	return False;
+    else if (generate_type_attributes_item_value == "True")
+	return True;
+    else 
+	// no annotation on class, use external value
+	return generate_type_attributes;
+}
+
+
+int
+main()
+{
+    return code_gen_main("TOOL");
+}
+
+// qrp -x classes 'A B C' 
+
+
+
+
+

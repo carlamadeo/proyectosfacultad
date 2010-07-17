@@ -1,0 +1,92 @@
+FileObject 1
+{
+    { Name "a490" }
+    { Type ObjectAnnotation }
+    { GUID "UID_E0D93205-C886-11d5-90AA-0050045C27F0" }
+}
+
+NodeObject 99999
+{
+    { Name "Weight" }
+    { Type UmlStateMachine }
+    { ObjectId 615 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_98A7016C-AC4F-11d4-BEDC-0060971B5EE0" }
+}
+
+NodeObject 99998
+{
+    { Name "Raise Weight" }
+    { Type UmlActionState }
+    { ObjectId 913 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_9DE7AF6F-AC4F-11d4-BEDC-0060971B5EE0" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 915 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 917 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Raise Weight" }
+    { NoteId 3 }
+    { ObjectId 918 }
+}
+
+NoteObject 5
+{
+    { Type REQAssignmentNote }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 920 }
+}
+
+ItemObject 6
+{
+    { Type REQAnalysisAssignmentItem }
+    { Value "1. Weight" }
+    { NoteId 5 }
+    { ObjectId 921 }
+}
+
+NoteObject 7
+{
+    { Type ClassNoteDeclaration }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 923 }
+}
+
+ItemObject 8
+{
+    { Type ClassNameDef }
+    { Value "" }
+    { NoteId 7 }
+    { ObjectId 924 }
+}
+
+ItemObject 9
+{
+    { Type ClassNamePosition }
+    { Value "" }
+    { NoteId 7 }
+    { ObjectId 925 }
+}
+

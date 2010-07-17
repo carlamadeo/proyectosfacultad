@@ -1,0 +1,87 @@
+
+
+// EH - A couple of functions to control property sheet behaviour for 
+// System Load command from the desktop. Bug # 11178 to add system 
+// user information to the current information that gets loaded.
+
+// Deactivates the check box to include user info when the prop sheet 
+// comes up.
+
+int
+LoadAddUserInit(ui_event_tp event, ui_prop theprop, int id, string value)
+{
+	// ECR 6211 begin
+
+    //ui_activate(theprop, False);
+    //return 0;
+
+    string writer_file;
+    string reader_file;
+
+    writer_file = current_projdir() + current_system() + "/dump/sys_writers";
+    reader_file = current_projdir() + current_system() + "/dump/sys_readers";
+
+    if ((file_exists(writer_file) && read_file_access(writer_file)) &&
+        (file_exists(reader_file) && read_file_access(reader_file)))
+	{
+        ui_activate(theprop, True);
+	}
+    else 
+    {
+        ui_set_value(theprop, 0);
+        ui_activate(theprop, False);
+    }
+
+    return 0;
+
+	// ECR 6211 end
+}
+
+
+// Checks for the existance of dumped user information files "sys_readers" 
+// and "sys_writers" in the dumpdir. Deactivates the check box option 
+// when these files are not found.
+
+int
+LoadAddUserActivate(ui_event_tp event, ui_prop theprop, int id, string value)
+{
+    string first_char = "";
+    string second_char = "";
+    string current_text = ui_text_value(theprop);
+    string rep_dir = current_text;
+    string writer_file = "";
+    string reader_file = "";
+
+    if (string_length(current_text) > 0)
+    first_char = string_extract(current_text, 0, 1);
+    if (string_length(current_text) > 1)
+    second_char = string_extract(current_text, 1, 1);
+
+    if (first_char != "/" && first_char != ".")
+    {
+        if (second_char != ":")
+        rep_dir = current_projdir() + current_system() + "/" + current_text;
+    }
+
+    writer_file = rep_dir + "/sys_writers";
+    reader_file = rep_dir + "/sys_readers";
+
+	// ECR 6211 begin
+
+	//if ((file_exists(writer_file) && read_file_access(writer_file)) ||
+    //    (file_exists(reader_file) && read_file_access(reader_file)))
+
+    if ((file_exists(writer_file) && read_file_access(writer_file)) &&
+        (file_exists(reader_file) && read_file_access(reader_file)))
+
+	// ECR 6211 end
+
+        ui_activate(to_ui_prop(to_ui_owner(theprop), "scripts_load_user_info"), True);
+    else 
+    {
+        ui_set_value(to_ui_prop(to_ui_owner(theprop), "scripts_load_user_info"), 0);
+        ui_activate(to_ui_prop(to_ui_owner(theprop), "scripts_load_user_info"), False);
+    }
+
+    return 0;
+}

@@ -1,0 +1,28 @@
+/* XPM */
+static char* note_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 6 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #000000	c #ff0000",
+"o	m #ffffff	c #c0c0c0",
+"x	m #000000	c #808080",
+/* pixels */
+".......X........",
+"OOOOOOX.XOO.....",
+"XXXXXXX.XXX.....",
+"X       XoXX....",
+"X    X  XoXXo...",
+"X xX Xo XoXXo...",
+"X    Xo XoXXo...",
+"X  X Xo XoXXo...",
+"X     XX oXXo...",
+"X  XxX oo XXo...",
+"X         XXo...",
+"X  XxXx x XXo...",
+"X         XXo...",
+"XXXXXXXXXXXXo...",
+".XXXXXXXXXXXo...",
+"..ooooooooooo..."};

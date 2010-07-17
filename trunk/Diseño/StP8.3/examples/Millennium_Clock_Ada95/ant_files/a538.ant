@@ -1,0 +1,52 @@
+FileObject 1
+{
+    { Name "a538" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65CC1-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "Clockwork" }
+    { Type UmlClass }
+    { ObjectId 502 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD92B0-6EAE-11d4-8044-00104BF16798" }
+}
+
+NodeObject 99998
+{
+    { Name "hour" }
+    { Type UmlAttribute }
+    { ObjectId 1343 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_91DD92B4-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1345 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 1347 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "hour" }
+    { NoteId 3 }
+    { ObjectId 1348 }
+}
+

@@ -1,0 +1,34 @@
+FileObject 1
+{
+    { Name "a167" }
+    { Type ObjectAnnotation }
+    { GUID "UID_22C453BA-1C79-47d6-A213-1F567229C701" }
+}
+
+NodeObject 99999
+{
+    { Name "change lights" }
+    { Type LibraryModule }
+    { ObjectId 2632 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_7E133D38-0851-415d-8B26-3038619633D7" }
+}
+
+NoteObject 2
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 2634 }
+}
+
+ItemObject 3
+{
+    { Type ObjectName }
+    { Value "change lights" }
+    { NoteId 2 }
+    { ObjectId 2635 }
+}
+

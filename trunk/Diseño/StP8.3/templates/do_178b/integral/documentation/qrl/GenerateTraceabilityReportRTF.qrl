@@ -1,0 +1,323 @@
+// This program gives all operations for which requirements
+// have been allocated.
+
+#include "val/qrl/include/table.inc"
+#include "val/qrl/include/TUseCase.inc"
+
+   struct testcasetype
+     {
+      string operation;
+      string testcases;
+     };
+
+   list TestCases;
+   string PRT="";
+
+   const int width_1 = 250;
+   const int width_2 = 250;
+   const int width_3 = 250;
+   const int width_4 = 550;
+
+
+void main ()
+{
+
+TestCases = list_create ("testcasetype", 0);
+
+format ("ValidatorDocuments.rtf");
+
+
+   Initialize();
+
+
+   CreateTraceTable();
+
+
+}
+
+void
+CreateTraceTable()
+{
+
+  node x;
+  node y;
+  item z;
+  int int1,int2,int3,int4;
+  list list1,list2,list3;
+  string query1;
+  string query2;
+  string query3;
+
+  if (VALIDATOR_BASE_PRODUCT == "UML")
+      query1 = "node[UmlUseCase && node_refs] sort by name";
+  else 
+      query1 = "node[OMTUseCase && node_refs] sort by name";
+
+  string ReqType;
+  string testcases, rqts;
+  string test_unit_id;
+
+  list1 = list_select( query1 );
+
+  int1 = list_count(list1);
+
+ 
+  if (int1 == 0 )
+  {
+     message ("No Use Cases found" );
+  }
+  else 
+  {
+     for (int2=0; int2< int1; int2 = int2 + 1)
+     {
+        x = list_get(list1,int2);
+
+      if (VALIDATOR_BASE_PRODUCT == "UML")
+          query2 = "node[UmlScenarioInstance && node_refs && 
+                    items [ UmlParentNameItem && value == '${x.name}'] &&
+                    items [ UmlParentTypeItem && value == 'UmlUseCase' ]  &&
+                    items[REQAnalysisAssignmentItem || REQDesignAssignmentItem ||
+                    REQImplementationAssignmentItem || REQTestAssignmentItem]]
+                    sort by name";
+      else 
+          query2 = "node[OMTScenarioName && node_refs &&
+                    scope_node[name=='${x.name}'] &&
+                    items[REQAnalysisAssignmentItem || REQDesignAssignmentItem ||
+                    REQImplementationAssignmentItem || REQTestAssignmentItem]]
+                    sort by name";
+
+        list2 = list_select( query2 );
+
+        int3 = list_count(list2);
+
+        if (int3 == 0 )
+        {
+           message ("No requirements found for Scenarios of Use Case: "+ x.name);
+        }
+        else 
+        {
+           test_unit_id = Get_T_test_unit_id(x.name, "");
+           GetTestCaseInfo(test_unit_id);
+
+           for (int4=0; int4< int3; int4 = int4 + 1)
+           {
+              y = list_get(list2,int4);
+
+              testcases = GetTestCases(y.name);
+              rqts = "";
+
+              query3 = "item[(REQAnalysisAssignmentItem ||
+                              REQDesignAssignmentItem || 
+                              REQImplementationAssignmentItem || 
+                              REQTestAssignmentItem) && ${y.id} == obj_id]";
+
+              for_each_in_select(query3, z)
+               {
+                  if (z.type == "REQAnalysisAssignmentItem")
+                     ReqType = "Analysis";
+                  else if (z.type == "REQDesignAssignmentItem")
+                     ReqType = "Design";
+                  else if (z.type == "REQImplementationAssignmentItem")
+                     ReqType = "Implementation";
+                  else if (z.type == "REQTestAssignmentItem")
+                     ReqType = "Test";
+
+                  if (rqts == "")
+                     rqts = z.value + ": " + ReqType;
+                  else
+                     rqts = rqts + "\\n" + z.value + ": " + ReqType;
+
+                } // end select query3
+
+
+              Begin_Row();
+
+              Make_Cell(width_1, NULL, NULL,
+                   NULL, NULL, NULL, x.name + ":\\n" + y.name);
+              Make_Cell(width_2, NULL, NULL,
+                         NULL, NULL, NULL, rqts);
+              Make_Cell(width_3, NULL, NULL,
+                         NULL, NULL, NULL, test_unit_id);
+              Make_Cell(width_4, NULL, NULL,
+                         NULL, NULL, NULL,  testcases);
+
+              End_Row();
+
+           } // end int4 < int3
+         } // end else int3 > 0
+  }  // end int2 < int 1
+}  // end if int1 > 0
+End_Table();
+
+print_table("REQ_ALLOC", "Requirements Allocation Table");
+
+
+//message (PRT);
+}
+
+
+void 
+Initialize()
+{
+    table_caption_placement_set(Top);
+    table_width_set(8.5);
+
+    table_caption_paragraph_format_set ("TableTitle");
+    table_cell_bold_paragraph_format_set ("CellHeading");
+    table_cell_paragraph_format_set ("CellBody");
+
+
+   // create title bar
+
+   Begin_Table(4);
+
+
+   Begin_Row();
+
+
+   Make_Cell(width_1, NULL, "Shade0",
+                      NULL, NULL, NULL, "USE CASE:\\nSCENARIO NAME");
+   Make_Cell(width_2, NULL, "Shade0",
+                      NULL, NULL, NULL, "REQUIREMENTS");
+   Make_Cell(width_3, NULL, "Shade0",
+                      NULL, NULL, NULL, "TEST UNIT NAME");
+   Make_Cell(width_4, NULL, "Shade0",
+                      NULL, NULL, NULL, "TEST CASES");
+
+   End_Row();
+
+
+}
+
+
+void
+GetTestCaseInfo(string use_case_name)
+{
+list testcases;
+string rawtestcases;
+string pdir = current_projdir();
+string sys = current_system();
+string fname = pdir + sys + "/test_files/" + use_case_name + 
+               "/UseCaseTestScripts/scenario.rpt";
+
+if (file_exists(fname) )
+   {
+       testcases = list_create ("string",0);
+
+
+       rawtestcases = read_file(fname);
+
+       list_clear (testcases);
+
+       testcases = string_to_list(rawtestcases, "\n");
+
+       CreateTestCases(testcases, use_case_name);
+   }
+
+else
+   {
+      message ("No testcases found for " + use_case_name );
+   }
+
+
+}
+
+
+void
+CreateTestCases(list testcases, string use_case_name)
+{
+
+  int count,i,j;
+  string testcase, operation, prioroperation, op;
+  testcasetype optestcase;
+  list onetestcase;
+  int l1,l2;
+
+  count = list_count (testcases);
+  prioroperation = "";
+
+  list_clear (TestCases);
+
+  onetestcase = list_create("string",0);
+
+  message ("Generating traceability for Use Case: " + use_case_name);
+
+  for (i=0;i<count;i=i+1)
+    { 
+      testcase = list_get(testcases,i);
+
+      list_clear (onetestcase);
+
+      onetestcase = string_to_list (testcase, ":");
+      operation = list_get(onetestcase,0);
+
+      if (operation != prioroperation && i != 0)
+        list_append (TestCases, optestcase);
+
+      if (operation != prioroperation)
+        {
+          optestcase.operation = operation;
+          optestcase.testcases = list_get(onetestcase,1);
+          message ("  Scenario: " + optestcase.operation);
+        }
+      else
+        { optestcase.testcases = 
+            optestcase.testcases + ", " + list_get(onetestcase,1);
+        }
+
+      prioroperation = operation;
+
+     }
+
+   list_append (TestCases, optestcase);
+
+
+//   ListTestCases(use_case_name, TestCases);
+}
+
+
+void
+ListTestCases(string classname, list testcases)
+{
+  int count = list_count(testcases);
+  int i;
+  testcasetype testcase;
+
+  for (i=0;i<count;i=i+1)
+   {
+     testcase = list_get(testcases,i);
+     message (" ");
+     message ("CLASS: " + classname);
+     message (" ");
+     message (testcase.operation);
+     message (testcase.testcases);
+     message ("###");
+     message (" ");
+   }
+
+}
+
+
+string
+GetTestCases(string opname)
+{
+
+  int count, i, j;
+  boolean found = False;
+  testcasetype testcase;
+
+  count = list_count (TestCases);
+  i=0;
+
+  for (i=0;i<count;i=i+1)
+    {
+      testcase = list_get (TestCases,i);
+
+      if (testcase.operation == opname)
+           return (testcase.testcases);
+    }
+
+  return ( "No Test Cases");
+
+}
+

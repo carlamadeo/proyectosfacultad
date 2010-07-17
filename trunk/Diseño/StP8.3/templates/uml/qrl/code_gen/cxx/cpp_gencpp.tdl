@@ -1,0 +1,175 @@
+//*****************************************************************************
+// $RCSfile: cpp_gencpp.tdl,v $
+// $Revision: 1.10 $
+// $Date: 2002/04/04 14:31:52 $
+// Author: Markus Kern
+//*****************************************************************************
+/*
+Generates the body file for each instance of meta type MClass.
+genCPP is called by main (defined in cpp_main.tdl).
+*/
+
+template genCPP(MClass)
+#include <iostream.h>  
+#include "[MClass.name].h"
+
+[mergeOut("UDIF","includes")]
+
+[/* initialization of static attributes */]
+[genStaticAttributesInitialization([MClass])]
+
+[/* constructors and destructors body generation */] 
+[genConstructorsAndDestructorsBody([MClass])]
+
+[/* operations of MClass. The description in the model is put as comment in 
+    the header (outText([MOperation.description],"","//\t\t\t\t\t") */]
+[loop(MClass->MOperation where !isConstructorOrDestructor([MOperation], [MClass]) && !isInlineOperation([MOperation]) && !isAbstractOperation([MOperation]))]
+//------------------------------------------------------------------------------
+// Operation :      [MOperation.name] 
+// 
+// Description :    [outText([MOperation.description],"","//\t\t\t\t\t")]
+//
+//------------------------------------------------------------------------------
+[getDataType(returnType([MOperation]))] [MClass.name]::[MOperation.name]([genOpParaList([MOperation])])[constOperation([MOperation])]      
+{
+    [mergeOutOperation("UDOI::", [MOperation],"Operation Implementation")]
+}
+
+[end loop]
+
+[/* if the class has a state machine in the model, it is an active class. 
+    genStateMachineBody (defined in cpp_gensm.tdl) generates code for the state 
+    machine in this case. */]   
+[if([MClass.active])]
+[genStateMachineBody([MClass])]
+[end if]
+end template
+
+/* Initialization of static attributes */
+template genStaticAttributesInitialization(MClass)
+[loop(MClass->MAttribute where isStaticAttribute([MAttribute]) && hasAttDefVal([MAttribute]); setDelim("\n//--Initialization of static attributes-----------------------------------------\n\n"); setDelim(""))]
+[delim()][genAttConst([MAttribute])][getDataType([MAttribute.type])] [MClass.name]::[MAttribute.name][genAttDefVal([MAttribute])];
+[end loop]
+[loop(MClass->MAttribute where isStaticAttribute([MAttribute]) && !hasAttDefVal([MAttribute]); setDelim("\n//--Initialization of static attributes-----------------------------------------\n\n"); setDelim(""))]
+[delim()][genAttConst([MAttribute])][getDataType([MAttribute.type])] [MClass.name]::[MAttribute.name];
+[end loop]
+end template
+
+/* generate initialization code for the base class of the given class instance, if any.
+   here we initialize the ActiveInstance's current state + non static attributes default values */
+template genCtorInit(MClass)
+[if([MClass.active])]
+: ActiveInstance([MClass.name]::\      
+[loop(MClass->MStatemachine->MState->MCreationState)]
+[MState.name])\
+[end loop]
+[setDelim(", ")]\
+[else]
+[setDelim(": ")]\
+[end if]
+[loop(MClass->MAttribute where !isStaticAttribute([MAttribute]) && hasAttDefVal([MAttribute]))]
+[delim()][MAttribute.name]([MAttribute.defaultValue])\  
+[setDelim(", ")]\
+[end loop]
+end template
+
+/* generate initialization code for the base class of the given class instance, if any.
+   here we initialize the ActiveInstance's current state + other constructor init list 
+   specified (if any) or non static attribute default values (if any).
+*/
+template genOperationCtorInit(MOperation, MClass)
+[if([MClass.active])]
+: ActiveInstance([MClass.name]::\      
+[loop(MClass->MStatemachine->MState->MCreationState)]
+[MState.name])\
+[end loop]
+[setDelim(", ")]\
+[else]
+[setDelim(": ")]\
+[end if]
+[loop (MOperation->Note->Item Where [Item.type] == "UmlOperationCxxCtorInitList" && [Item.value] != "")]
+[delim()][Item.value]\
+[setDelim(", ")]\
+[end loop]
+[loop(MClass->MAttribute where !isStaticAttribute([MAttribute]) && hasAttDefVal([MAttribute]))]
+[delim()][MAttribute.name]([MAttribute.defaultValue])\  
+[setDelim(", ")]\
+[end loop]
+end template
+
+/* constructor and destructor body generation */
+template genConstructorsAndDestructorsBody(MClass)
+
+//------------------------------------------------------------------------------
+// Constructors and destructors
+//
+//------------------------------------------------------------------------------
+[if (existSpecifiedConstructor([MClass]))]
+[/* constructor specified generated with the visiblity public */]
+[genSpecifiedConstructorsBodyWithVisibility([MClass], "public")]
+[else]
+[/* default public constructor body is generated automatically */]
+[genDefaultConstructorBody([MClass])]
+[end if]    
+\
+[if (existSpecifiedDestructor([MClass]))]
+[/* destructor specified generated with the visiblity public */]
+[genSpecifiedDestructorsBodyWithVisibility([MClass], "public")]
+[else]
+[/* default public destructor body is generated automatically */]
+[genDefaultDestructorBody([MClass])]
+[end if]    
+\
+[/* constructor and/or destructor specified generated with the visiblity protected */]
+[genSpecifiedConstructorsBodyWithVisibility([MClass], "protected")]
+[genSpecifiedDestructorsBodyWithVisibility([MClass], "protected")]
+\
+[/* constructor and/or destructor specified generated with the visiblity private */]
+[genSpecifiedConstructorsBodyWithVisibility([MClass], "private")]
+[genSpecifiedDestructorsBodyWithVisibility([MClass], "private")]
+end template
+
+/* default public constructor body is generated automatically */
+template genDefaultConstructorBody(MClass)
+[/* default constructor is generated automatically. genCtorInit (defined below)
+    puts the initialization code for the base class */]
+[MClass.name]::[MClass.name]() [genCtorInit([MClass])]
+{
+    [mergeOut("UDCC","Constructor Code")]
+}
+
+end template
+
+/* default public destructor body is generated automatically */
+template genDefaultDestructorBody(MClass)
+[/* default constructor is generated automatically. genCtorInit (defined below)
+    puts the initialization code for the base class */]
+[/* default destructor is generated automatically */]
+[MClass.name]::~[MClass.name]()
+{
+    [mergeOut("UDDC","Destructor Code")]
+}
+
+end template
+
+/* constructor specified with the given visibility generation */
+template genSpecifiedConstructorsBodyWithVisibility(MClass, Visibility)
+[loop(MClass->MOperation where isConstructor([MOperation], [MClass]) && getOperationVisibility([MOperation]) == [Visibility])]
+[MClass.name]::[MClass.name]([genOpParaList([MOperation])]) [genOperationCtorInit([MOperation], [MClass])]
+{
+    [mergeOutOperation("UDCC::", [MOperation], "Constructor Code")]
+}
+
+[end loop]
+end template
+
+/* destructor specified with the given visibility generation */
+template genSpecifiedDestructorsBodyWithVisibility(MClass, Visibility)
+[loop(MClass->MOperation where isDestructor([MOperation], [MClass]) && getOperationVisibility([MOperation]) == [Visibility])]
+[MClass.name]::~[MClass.name]()
+{
+    [mergeOutOperation("UDDC::", [MOperation], "Destructor Code")]
+}
+
+[end loop]
+end template

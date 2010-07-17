@@ -1,0 +1,24 @@
+
+Class 0 GenIDLCode
+{
+  { ParseCondition "(toolinfo_variable(\"IDLCode\") == \"True\");" }
+  { Label "Generate Code (IDL)" }
+  { Image "classes" }
+  { ShowOnDesktop True }
+  { OMSObjects
+      { Match "node[UmlClass && node_refs] sort by name" }
+  } 
+  { UseObjectCommand GenerateIDLCodeObjects }
+}
+
+Global 1 GenerateIDLCodeObjects
+{
+  { ObjectCommand
+      { Name "GenerateIDLCodeObjects" }
+      { Label "Generate IDL for Class..." }
+      { ShowPropsOnExec True }
+      { Type Nowin }
+      { Command "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} -x interface_extension '${prop.idlheader}' -x file_directory '${prop.output_dir}' -x file_name '${prop.output_file}' ${prop.file_per_class} ${prop.types_and_interfaces_choice} ${prop.type_attributes_choice} ${prop.comments} ${prop.format_comments} -x format_comments_line_length '${prop.format_comments_line_length}' -x exclusion_predicate \"${prop.exclusions}\" -x classes '${cmd.objects}' qrl/code_gen/idl/code_gen.qrl" }
+  }
+}
+

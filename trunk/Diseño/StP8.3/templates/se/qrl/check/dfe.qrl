@@ -1,0 +1,56 @@
+
+// 	StP/SE
+// 	Confidential property of Aonix
+// 	Copyright (c) 1992-1999
+// 	All rights reserved
+
+#include "qrl/check/check_common.inc"
+#include "qrl/check/newcheck_dfe.impl"
+#include "qrl/include/appids.inc"
+#include "qrl/include/files.inc"
+#include "qrl/include/general.inc"
+
+external string files = "";
+external_help = "The name(s) of the diagram(s) to be checked.";
+
+external int verbose = 0;
+external_help = "Print ongoing status information?";
+
+external int balance = 1;
+external_help = "Perform Store balance checks?";
+
+external int decomp = 1;
+external_help = "Perform Decomposition checks?";
+
+external int internalproc = 0;
+external_help = "Perform Process balance checks?";
+
+external int splitflows = 1;
+external_help = "Perform Split Flow balance checks?";
+
+external int pspec = 1;
+external_help = "Check that processes have either a decomposition or pspec?";
+
+external int cspec = 1;
+external_help = "Check that Cspec Bars have a table or diagram associated?";
+
+script_help = "This template performs semantic checks on DFE Diagrams";
+
+
+int
+main()
+{
+    int    	errors;
+    list  	filelist = file_list("DfeDiagram", files);
+
+    if (list_count(filelist) == 0) 
+    { 
+	print_error("No files found."); 
+	errors = 1;
+    } else
+    {
+	errors = DfeCheckSemanticsNow(filelist, balance, decomp, pspec, cspec, internalproc, splitflows, verbose);
+    }
+    return(errors);
+}
+

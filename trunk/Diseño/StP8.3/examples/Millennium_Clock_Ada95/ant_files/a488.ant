@@ -1,0 +1,58 @@
+FileObject 1
+{
+    { Name "a488" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65C91-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "Raise_the_weight" }
+    { Type UmlScenarioInstance }
+    { ObjectId 1202 }
+    { AnnotFileId 1 }
+    { Sig "Raiseweight_Raise_the_weight" }
+    { ScopeNodeId 0 }
+    { GUID "UID_A91134B4-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1204 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1206 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "Raise_the_weight" }
+    { NoteId 3 }
+    { ObjectId 1207 }
+}
+
+NoteObject 5
+{
+    { Type REQAssignmentNote }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1209 }
+}
+
+ItemObject 6
+{
+    { Type REQAnalysisAssignmentItem }
+    { Value "1. Weight" }
+    { NoteId 5 }
+    { ObjectId 1210 }
+}
+

@@ -1,0 +1,394 @@
+// This file contains several global lists that are used to
+// simulate one list of structures
+// these are the parameters
+Array stp_systems
+Array stp_omstypes
+Array stp_apptypes
+Array stp_guids
+Array stp_names
+Array stp_products
+Array stp_do_navigate
+int num_elem = -1
+int cur_elem = -1
+bool stp_is_sync = false
+
+// these functions bracket the synchronize operation. The first opens the 
+// module and sets all objects' "StP deleted" attributes to true. The second
+// is called after all objects have been synchronized. Any objects with the
+// flag still set have the string " (deleted)" appended to their titles
+void stp_start_sync(Module mod)
+{
+    // For backward compatibility, add this attribute as it is accessed
+    current = mod
+    if (! exists attribute "StP deleted")
+    {
+        create object type "boolean" attribute "StP deleted"
+    }
+    Object o;
+    for o in (mod) do
+        o."StP deleted" = true;
+}
+
+void stp_end_sync(Module mod)
+{
+    string delFlag = " (deleted)"
+    int len = length (delFlag)
+    int numDeleted = 0
+    bool isDel
+    if (null mod)
+    {
+        return
+    }
+    Object o;
+    for o in (mod) do
+    {
+        isDel = o."StP deleted"
+        if (isDel)
+        {
+            string lbl = o."Object Heading"
+            int lblLen = length(lbl)
+            if (lblLen <= len || lbl[lblLen-len:] != delFlag)
+            {
+                o."Object Heading" = lbl delFlag
+                numDeleted++
+            }
+        }
+    }
+    if (numDeleted > 0)
+        ack "Objects have been deleted in StP."
+}
+
+// reallocate the arrays of data so they can be filled
+// This is not really necessary, as the arrays will automatically resize, but
+// it is probably faster, and in any case, it can't hurt.
+// sync_system is empty for a normal navigation or export, but is set to the
+// name of the StP system during a Synchronize operation
+void stp_create_obj_init(int num, bool is_sync)
+{
+	num_elem = num
+	cur_elem = 0
+	
+    stp_is_sync = is_sync
+	stp_systems = create(num,1)
+	stp_omstypes = create(num,1)
+	stp_apptypes = create(num,1)
+	stp_guids = create(num,1)
+	stp_names = create(num,1)
+	stp_products = create(num,1)
+	stp_do_navigate = create(num,1)
+}
+
+void stp_create_obj_init(int num)
+{
+    stp_create_obj_init(num, false);
+}
+
+// add things to the arrays to be processed
+void stp_create_obj(string system, omstype, apptype, guid, name, prod, bool do_nav)
+{
+	put(stp_systems, system, cur_elem,0)
+	put(stp_omstypes, omstype, cur_elem,0)
+	put(stp_apptypes, apptype, cur_elem,0)
+	put(stp_guids, guid, cur_elem,0)
+	put(stp_names, name, cur_elem,0)
+	put(stp_products, prod, cur_elem,0)
+	put(stp_do_navigate, do_nav, cur_elem,0)
+	cur_elem++
+}
+
+// used in processing the arrays of objects to be added. This takes the
+// information provided and attempts to locate the object with ID=guid in the
+// module provided. If it is found, all its information is updated. If it is
+// not found, it is added to the end of the list as a new top-level object.
+// NOTE: It was written this way because existing objects must never be
+// removed and readded because the link information for them would be lost.
+//
+void stp_add_or_update_object(Module m, string sysname, omstype, apptype, guid, name, prod)
+{
+	Object o = stp_find_object_with_ID(m,guid)
+	bool obj_created = false
+	
+	// JED - objects that are found can be deleted. Since DXL does
+	// not support recovering them, we must hard delete them instead
+	if ( ! null o )
+    {
+        if (isDeleted o)
+        {
+            if (confirm("StP Objects have been soft-deleted. Purge them?"))
+            {
+                purgeObjects_(m)
+                o = null
+            } 
+        }
+    }
+	if (null o) {
+		obj_created = true
+		o = current(m)
+
+		if (null o) {
+			// first object
+			o = create(m)
+		} else {
+			o = create after last sibling o
+		}
+	}
+	if (null o) {
+		ack "Can't create object in module '" m."Name" "'."
+		halt
+		// This automatically halts the script
+	}
+	
+	o."StP CASE Type" = omstype
+	o."StP apptype" = apptype
+	o."StP name" = name
+	o."StP ID" = guid
+	o."StP deleted" = false
+	if (obj_created) {
+		// only do this on new objects because all objects can be re-exported
+		// from any product
+		o."StP Product" = prod
+	}
+
+	o."Object Heading" = apptype ":" name
+}
+
+
+// The following algorithm describes what is really going on. Because of the
+// way DOORS ignores all code after a show(), it is split up into various
+// callbacks that proceed from one state to another.
+// If there is no current project
+//   Make a modeless dialog and ask them to pick one 
+//     (OK checks that a project was selected, closes the dialog,
+//     proceeds to the second state)
+// else
+//   second sate:
+//   while there are elements remaining
+//     if there is a current module
+//       if it matches the system
+//         add the object
+//         continue
+//       fi  
+//     fi
+//     find the module
+//     if you can find the module
+//       add the object
+//       current Module = m
+//     else
+//       (state 3)
+//       pop up modal "add module dialog" (OK adds module if possible,
+//         creates attributes, calls stp_process_list())
+//     fi
+//   elihw
+// fi
+void stp_abort_cb(DB dlg)
+{
+    hide(dlg)
+	delete stp_systems
+	delete stp_omstypes
+	delete stp_apptypes
+	delete stp_guids
+	delete stp_names
+	delete stp_products
+	delete stp_do_navigate
+}
+
+// JED - kludge because you need the handle to the control to get its value
+DBE newModName = null
+string stp_current_system = ""
+
+// This function represents the second state in the pseudocode above
+void stp_state2_process_list(DB mod_create_dlg)
+{
+	Module mod = null
+    bool sync_started = false
+    string cursys = ""
+
+
+	// this part is state 3
+	if (! null mod_create_dlg) {
+		// The user has just clicked OK
+		// get the name of the new module from the dialog
+		string userInput = get(newModName)
+		cursys = (string get(stp_systems,cur_elem,0))
+
+		// if the module exists or can't be created
+		//   display warning
+		//   return
+		// fi
+		if (exists module userInput) {
+			ack (mod_create_dlg, "Module '" userInput "' already exists.")
+			return
+		}
+		current = create (userInput, "StP surrogate Module", "",1,false)
+		mod = current 
+		if (null mod) {
+			ack (mod_create_dlg, "Unable to create Module '" userInput "'.")
+			return
+		}
+		// add the attributes to the module
+		create module type "string" attribute "StP System"
+		create object type "string" attribute "StP Product"
+		create object type "string" attribute "StP CASE Type"
+		create object type "string" attribute "StP apptype"
+		create object type "string" attribute "StP name"
+		create object type "string" attribute "StP ID"
+		create object type "boolean" attribute "StP deleted"
+
+		mod."StP System" = cursys
+
+		// hide the dialog
+		hide(mod_create_dlg)
+	}
+
+
+	// begin of state 2
+	while (cur_elem < num_elem) {
+		cursys = (string get(stp_systems,cur_elem,0))
+		mod = current Module
+		if (! null mod)
+        {
+            if ( ! exists attribute "StP System")
+            {
+				mod = null
+				current = mod
+			} else
+            {
+				string val = mod."StP System"
+				if (val != cursys)
+                {
+					// current module is not the one for this object
+					string modName = stp_find_modname_for_system (cursys)
+					if (!null modName)
+                    {
+						mod = edit(modName,false)
+						if (null mod)
+                        {
+							// JED - TODO: If can't open, do error processing
+							ack ("Error! Unable to open module for editing: " modName)
+							halt
+						}
+					}
+                    else
+                    {
+						mod = null
+					}
+					if (!null mod)
+						current = mod
+				}
+			}
+		}
+        else
+        {
+			string modName = stp_find_modname_for_system (cursys)
+			if (!null modName) {
+				mod = edit(modName,false)
+				if (null mod) {
+					// JED - TODO: If can't open, do error processing
+					ack ("Error! Unable to open module for editing: " modName)
+					halt
+				}
+			}
+		}
+
+		// if we get this far, one of two things is true: 1) the mod is
+		// non-null, meaning we can add the current object to it, or 2)
+		// The module is null, in which case we have to prompt the user to
+		// create it
+		if (!null mod) {
+			// add object
+			string omstype, apptype, name, guid, prod;
+			bool do_nav;
+            string modsys = mod."StP System"
+            
+            // JED - assuming that batch syncs are grouped by system, we
+            // reinitialize the sync process when we encounter a new system
+            if (stp_is_sync && modsys != stp_current_system)
+            {
+                if (sync_started) // end the last sync
+                    stp_end_sync(mod)
+                sync_started = false
+                stp_current_system = modsys
+            }
+
+            if (stp_is_sync && ! sync_started)
+            {
+                stp_start_sync(mod)
+                sync_started = true
+            }
+
+			omstype = (string get(stp_omstypes,cur_elem,0))
+			apptype = (string get(stp_apptypes,cur_elem,0))
+			name = (string get(stp_names,cur_elem,0))
+			guid = (string get(stp_guids,cur_elem,0))
+			prod = (string get(stp_products,cur_elem,0))
+			do_nav = (bool get(stp_do_navigate,cur_elem,0))
+
+            // For backward compatibility, add this attribute as it is accessed
+            current = mod
+            if ( ! exists attribute "StP deleted")
+            {
+                create object type "boolean" attribute "StP deleted"
+            }
+
+			stp_add_or_update_object(mod,cursys,omstype,apptype,guid,name,prod)
+			
+			// JED - navigate if applicable
+			if (do_nav) {
+				stp_nav_to_doors(cursys,guid)
+			}
+			cur_elem++
+		} else {
+			DB create_mod_dlg = topMost("Create module")
+			DBE msg = label(create_mod_dlg,
+					("There is no Module for the StP System '" cursys "'. Please enter the name for a new Formal Module:"))
+			newModName = field(create_mod_dlg,"Module Name:",cursys,40)
+			DBE okbtn = apply(create_mod_dlg,"Create",stp_state2_process_list)
+			DBE cancelbtn = apply(create_mod_dlg,"Abort",stp_abort_cb)
+			close(create_mod_dlg,false,stp_abort_cb)
+			raise(create_mod_dlg)
+			show(create_mod_dlg)
+			// show terminates execution - no need to "break"
+		}
+
+	}
+    if (stp_is_sync)
+        stp_end_sync(current Module)
+}
+
+
+void stp_proj_continue_cb(DB dlg)
+{
+    if(!null(current Project)) {
+		hide(dlg)
+		// JED - is this wrong? 
+		// Module m = null
+		// current = m
+		stp_state2_process_list(null)
+    } 
+}
+void stp_process_list()
+{
+	// JED - NOTE: This code is cloned in stp_nav_to_stp because DOORS
+	// doesn't allow you to use show() in functions if you ever expect them to
+	// return
+    if (null current Project) {
+        DB  proj_dlg = topMost("Warning!")
+        DBE msg = label(proj_dlg,"No Project is currently open.")
+        DBE msg2 = label(proj_dlg, "Please open one before continuing")
+        DBE okbtn = apply(proj_dlg,"Continue",stp_proj_continue_cb)
+        DBE cancelbtn = apply(proj_dlg,"Abort",stp_abort_cb)
+        close(proj_dlg,false,stp_abort_cb)
+		// make it appear on top
+		raise(proj_dlg)
+        show(proj_dlg)
+    }
+	stp_state2_process_list(null)
+}
+
+// This is called by the dxlcode created by stp to process the list of data
+void stp_create_obj_finish()
+{
+	cur_elem = 0
+	stp_process_list()
+}
+

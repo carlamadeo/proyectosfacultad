@@ -1,0 +1,27 @@
+/* XPM */
+static char* whats_this_xpm[] = {
+/* width height ncolors cpp [x_hot y_hot] */
+"16 16 5 1 0 0",
+/* colors */
+".	m none	c none",
+"X	m #000000	c #000000",
+" 	m #ffffff	c #ffffff",
+"O	m #000000	c #800000",
+"o	m #000000	c #808080",
+/* pixels */
+"................",
+"X........OOOOO..",
+"XX......OO..oOO.",
+"XXX....OOo...OO.",
+"XXXX...OOo...OO.",
+"XXXXX..oOO..oOO.",
+"XXXXXX......OO..",
+"XXXXXXX....OO...",
+"XXXXXXXX..OOo...",
+"XXXXX.....OOo...",
+"XX.XX...........",
+"X...XX....OOO...",
+"....XX....OOO...",
+".....XX.........",
+".....XX.........",
+"................"};

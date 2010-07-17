@@ -1,0 +1,551 @@
+/////////////////////////////////////////////////////////////////////////////
+//
+// 	sccsid[] = @(#)sce.qrl	
+// 	StP/SE
+// 	Confidential property of Interactive Development Environments, Inc.
+// 	Copyright (c) 1992-1995
+// 	All rights reserved
+//
+//////////////////////////////////////////////////////////////////////////////
+
+#include "rules/qrl/decomp.inc"
+#include "rules/qrl/pdl.inc"
+#include "rules/qrl/gde_qrl_std.inc"
+#include "rules/qrl/anchors.inc"
+#include "rules/qrl/se_scope.inc"
+#include "rules/qrl/se_rename.inc"
+#include "qrl/include/se_defs.inc"
+#include "qrl/include/opt_displaymark.inc"
+#include "se/qrl/include/se_utils.inc"
+#include "qrl/code_gen/codegen.impl"
+#include "se/qrl/check/check_sce.impl"
+#include "rules/qrl/re_pe_label_funcs.inc"
+#include "rules/qrl/se_re.inc"
+#include "rules/qrl/nav_source.inc"
+#include "rules/qrl/codecenter_nav.inc"
+#include "qrl/properties/sce_props.inc"
+#include "rules/qrl/requirements_nav.inc"
+#include "rules/qrl/doors_nav.inc"
+#include "qrl/req_trace/export_to_doors.inc"
+
+#include "rules/qrl/default_arc_type.inc" //ECR 6469
+
+struct sv_cntx_tp
+{
+    string name;
+    string type;
+    int x;
+    int y;
+};
+
+void
+CreateNewSceDefinition(int id)
+
+{
+    string fname, fprop, dprop;
+    int txn, i, j;
+    gde_node anchor, decomp, gn;
+    gde_arc arc;
+    gde_link link;
+    gde_cntx cntx, ocntx;
+    sv_cntx_tp c, cele;
+    list arcl, cl, clist = list_create("sv_cntx_tp", 0);
+    node n;
+
+    // use the name from the repository here, because if the name has
+    // quotes in it, the FailureCommand causes erroneous syntax errors.
+    n = find_by_query("node[id = " + id + "]");
+    if (n == NULL)
+    {
+	print_error("Current selected object is not mapped to repository."); 
+	return;
+    }
+
+    gn = to_gde_node(list_get(gde_selected_symbols(), 0));
+    arcl = gde_node_inarcs_no_comments(gn);
+
+    if (arcl != NULL && (list_count(arcl) > 0))
+    {
+	arc = list_get(arcl, 0);
+	link = list_get(gde_arc_links(arc), 0);
+
+	if (link != NULL)
+	    cl = gde_link_cntxs(link);
+
+	for (i = 0; i < list_count(cl); i++) 
+	{
+	    ocntx = list_get(cl, i);
+	    c.name = gde_cntx_label(ocntx);
+	    c.type = gde_ct_name(gde_cntx_ct(ocntx));
+	    c.x = gde_cntx_x(ocntx);
+	    c.y = gde_cntx_y(ocntx);
+	    // put it in the correct place on clist
+
+	    for (j = 0; (j != -1 && j < list_count(clist)); j++)
+	    {
+		cele = list_get(clist, j);
+		if (cele.y < c.y)
+		    continue;
+
+		if ((cele.y == c.y) && (cele.x < c.x))
+		    continue;
+
+		list_insert(clist, j, c);
+		j = -1; 
+		break;
+	    }
+	    if (j != -1)
+		list_append(clist, c);
+	}
+    }
+
+    // save the file and directory properties up front
+    fprop = gde_node_prop(gn, "SEFile"); 
+    dprop = gde_node_prop(gn, "SEDirectory");
+
+    fname = to_oms_string(make_se_fname(n.name));
+    // get a new filename
+    while (find_by_query("file[name = '${fname}' && SceDiagram]") != NULL)
+        fname += "_";
+
+    gde_builtin("BufferClear");
+    if (list_count(gde_all_symbols()) != 0)
+    {
+        // must have pressed cancel!
+        print_error("Creation of definition for `" + n.name + "' cancelled.");
+        return;
+    }
+
+    EditorShowOnNavReceive();
+ 
+    gde_builtin("EditorSetFileName \"" + fname + "\"");
+
+    gde_save_state();
+    txn = gde_start_edit_transaction();
+
+    anchor = gde_node_create("Anchor", 250, 100 );
+    decomp = gde_node_create("Module", 250, 200 + (100 * list_count(clist)));
+    gde_node_set_label(decomp, n.name);
+    arc = gde_arc_create("ModuleCall", anchor, decomp);
+
+    if (str_has_val(fprop))
+	gde_node_set_prop(decomp, "SEFile", fprop);
+    
+    if (str_has_val(dprop))
+	gde_node_set_prop(decomp, "SEDirectory", dprop);
+
+    // parameters
+    for (j = 1, i = list_count(clist) - 1; i >= 0; j++, i--)
+    {
+        c = list_get(clist, i);
+        cntx = gde_cntx_create(c.type, arc, 260, 200 + (100 * list_count(clist)) - (j * 100));
+        gde_cntx_set_label(cntx, c.name);
+    }
+
+    // finally tweek the anchor
+    //gde_select_node(anchor);
+    //gde_builtin("SymbolMove 250 " + (1000 - ((j + 2) * 100))); 
+
+    gde_builtin("BufferCenter");
+    gde_map_all_symbols();
+    gde_builtin("BufferUpdateDmarks");
+
+    gde_end_edit_transaction(GDE_CMD_INSERT, txn, False);
+
+// ECR 6837 begin
+    gde_builtin("FileSaveas " + fname);
+// ECR 6837 end
+
+    return;
+}
+
+
+
+// for node replacement in decomp.  referenced by off_node_replace
+string sce_node_name;
+
+//
+// retrieves all the various children of the given root and
+// inserts a call to it on the given diagram.
+void
+InsertAllSceChildren(gde_node root, string label)
+{
+    string query;
+    node   child;
+    int    x_coord;
+    gde_node child_node;
+    int    count;
+    node   node;
+ 
+    query = "node[name == '" + to_oms_string(label) + "' && node_refs[file[SceDiagram]]]";
+    node = find_by_query(query);
+    if (node == NULL)
+    {
+	print_error("No object for " + to_oms_string(label) + ".  Is the diagram updated to the repository?");
+	return;
+    }
+
+ 
+    query = "node[in_links[from_node_id=${node.id}]]";
+ 
+    count = selection_count(query);
+    x_coord = 350 - (count/2)*175;
+      
+    for_each_in_select(query, child)
+    {
+        child_node = gde_node_create(child.type, x_coord, 300);
+        gde_node_set_label(child_node, child.name);
+        x_coord = x_coord + 175;
+        gde_arc_create("Component", root, child_node);
+    }    
+}
+
+
+void 
+DecomposeSceDiagram(string name)
+{
+    gde_builtin("EditorSetFileName \"" + name + "\"");   
+    sce_node_name = name;
+    general_decomp(MODULE);
+    sce_node_name = "";
+}
+
+//
+// CALLBACKS FOR GENERAL_DECOMP
+//
+
+//
+//  Replacing a node
+//
+//
+void 
+off_node_replace(gde_node old_node)
+{
+    string  	type = gde_nt_name(gde_node_nt(old_node));
+    list 	out_arcs = gde_node_outarcs_no_comments(old_node);
+    gde_node 	end_node;
+    int     	ix;
+
+    for (ix = 0; ix < list_count(out_arcs); ix = ix + 1)
+    {
+    	end_node = gde_arc_get_real_tonode(list_get(out_arcs, ix), False, NULL, NULL);
+    	/* if this node is calling our decomp node, make it a formal
+    	    caller */
+    	if (gde_node_label(end_node) == sce_node_name
+    	    && type != COMMENT && type != ANCHOR)
+    	{    	
+    	    gde_node_replace_nt(old_node, ANCHOR);
+    	    return;
+    	}
+    }
+}
+
+//
+//  Clearing a node
+//
+void 
+clear_node(gde_node the_node)
+{
+}
+
+//
+//  Preserving inherited arc labels.
+//
+void
+label_arc(gde_arc arc, list end_nodes)
+{
+}
+
+
+
+
+cntx
+get_proper_oms_cntx(gde_cntx gcntx)
+ 
+{
+    list clist;
+    cntx cntx;
+    int i;
+ 
+    clist = gde_cntx_oms_cntxs(gcntx);
+
+
+    if (list_count(clist) == 0)
+        return NULL;
+ 
+    for (i = 0; i < list_count(clist); i = i + 1)
+    {
+        cntx = list_get(clist, i);
+
+        if (cntx.type == "DataIn" || cntx.type == "DataOut" || cntx.type == "DataInOut" || cntx.type == "ControlIn" || cntx.type == "ControlOut")
+            return cntx;
+    }
+    return NULL;
+ 
+} // end of get_proper_oms_cntx()
+
+
+
+node
+get_proper_oms_node(gde_node gnode)
+ 
+{
+    list nlist;
+    node node;
+    int i;
+ 
+    nlist = gde_node_oms_nodes(gnode);
+ 
+    if (list_count(nlist) == 0)
+        return NULL;
+ 
+    for (i = 0; i < list_count(nlist); i = i + 1)
+    {
+        node = list_get(nlist, i);
+        if (node.type == "DataModule" || node.type == "Module")
+            return node;
+    }
+
+    return NULL;
+ 
+} // end of get_proper_oms_node()
+ 
+
+
+
+boolean 
+SCETypeDisplayMarkCond()
+{
+    return True;
+}
+
+
+
+
+// code generation func for sce
+
+void
+sce_code_generation()
+{
+    gde_builtin("PropertySheetShow SECodeGeneration");
+
+}
+
+
+
+// Object property sheet hooks
+ 
+void
+SCE_object_props_show()
+ 
+{
+    gde_builtin("PropertySheetShow ObjectDialog");
+
+    SceObjectDialog_Reset(NULL, NULL, -99, NULL);
+    sce_object_props_init();
+}
+ 
+
+
+void
+SceObjectDialog_ActionDone()
+
+{
+    SceObjectDialog_Reset(NULL, NULL, -99, NULL);
+    return;
+}
+
+
+
+void
+sce_double_click(gde_mapsymbol ms)
+{
+    SCE_object_props_show();
+}
+ 
+ 
+
+boolean SCEObjectPropsInitted = False;
+
+void
+sce_object_props_init()
+ 
+{
+    if (SCEObjectPropsInitted)
+      return;
+    SCEObjectPropsInitted = True;
+     
+    ui_text_set_readonly(to_ui_prop("ObjectDialog", "SceObjName"), True);  
+
+    // This sets the callback to reset the dialog when one object is choosen
+    gde_builtin("EditorActionDone 0214951137  SceObjectDialog_ActionDone();");
+
+    return;
+}
+
+
+int
+idehook_sce_object_props_active_func()
+{
+    list symbols;
+    gde_symbol sym;
+    int i;
+ 
+    symbols = gde_selected_symbols();
+
+    if (list_count(symbols) == 0)
+        return ACTIVE_FUNC_IS_INACTIVE;
+
+    if (list_count(symbols) ==
+        (list_count(gde_symbols_find_with_types(symbols, string_to_list("Module GlobalData InData OutData InOutData InFlag OutFlag", " ")))))
+        return ACTIVE_FUNC_IS_ACTIVE;
+ 
+    return ACTIVE_FUNC_IS_INACTIVE;
+ 
+}
+
+
+// end mark for global 
+
+string 
+SceChooseGlobalEndMark(int id)
+
+{
+    node glob;
+    item item;
+
+    // get the selected link
+
+    glob = find_by_query("node[DataModule && in_links[id = ${id}]]");
+
+    if (glob != NULL)
+	item = find_by_query("item[AccessMode && obj_id = ${id}]");
+
+    if (item == NULL || item.value == NULL)
+	return "";
+    else if (item.value == "read")
+	return "SmallCircle";
+    else if (item.value == "write")
+	return "FilledSmallCircle";
+    else if (item.value == "read-write")
+	return "FilledRect";
+    else 
+	return "";
+
+    return "";
+}
+
+// check semantics func for sce
+
+void
+checkSemantics()
+{
+    sceprop_tp  props;
+    string fn;
+
+    props.verbose = 0;
+
+    props.check_one = 1;
+    props.check_two = 1;
+    props.check_three = 1;
+    props.check_four = 1;
+    props.check_five = 1;
+    props.check_six = 1;
+    props.check_seven = 1;
+
+    fn = gde_diagram_name();
+    if (str_no_val(fn))
+    {
+	print_error("Save the diagram before running Check Semantics."); 
+	return;
+    }
+
+    props.diaglist = file_list("SceDiagram", fn);
+
+    checkSceSemanticsFromSce(props);
+
+}
+
+void
+checkSceSemanticsSelect()
+{
+    gde_builtin("PropertySheetShow SCESemanticChecks");
+}
+
+
+// Extra Syntax checking
+ 
+boolean
+SceCheckSyntax()
+{
+    boolean fine = True;
+
+    if (gde_default_check_syntax() == False)
+	fine = False;
+
+    return fine;
+} 
+
+list
+NavToFlowChart()
+
+{
+    gde_node gn = to_gde_node(list_get(gde_selected_symbols(), 0));
+    string label = gde_node_label(gn);
+
+    if (str_has_val(label))
+    {
+        label = to_underscore_name(label);
+	return list_select("file[FceDiagram && (name = '${label}' ||
+			    name $ '${label}.*')]");
+    }
+
+    return list_create("file", 0);
+}
+
+    
+list 
+NavToSceCaller( int node_id ) 
+{
+  int i;
+  node offpage;
+  list offpage_callers = list_create( "node_ref", 0 );
+
+  // these are the offpage connectors which call our module
+  list offpage_anchors = list_select( "node[Offpage && " +
+                 "out_links[to_node_id = ${node_id}]]" );
+
+
+  // these are the direct callers
+// spr 2686
+// The incorrect original query before fix for spr 2686
+//  list callers = list_select( "node_ref[node[Module && " +
+//                "out_links[to_node_id = ${node_id}]]]" );
+
+// correct query to fix spr 2686
+  list callers = list_select( "node_ref[node[Module && " +
+                "out_links[link_refs && to_node_id = ${node_id}]]]" );
+
+  // now iterate all found offpage connectors and see if we find
+  // any real modules which 'call' offpage connectors with the same name
+  for( i=0; i<list_count( offpage_anchors ); i++ ) {
+    offpage = list_get( offpage_anchors, i );
+    offpage_callers = list_select( "node_ref[node[Module && " +
+                   "out_links[to_node_id = ${offpage.id}]]]" );
+    list_concatenate( callers, offpage_callers );
+  }
+
+  return( callers );
+}
+
+
+string
+GetSceFileStoreDir()
+{
+    return path_compose(current_projdir(), current_system(), "sce_files");
+}
+
+//  Add any user customizations to the file included below:
+#include_if_exists "user/se/rules/qrl/user_sce.qrl"
+
+

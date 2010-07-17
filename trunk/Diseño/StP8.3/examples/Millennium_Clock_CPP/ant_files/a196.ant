@@ -1,0 +1,60 @@
+FileObject 1
+{
+    { Name "a196" }
+    { Type ObjectAnnotation }
+    { GUID "UID_E0D93130-C886-11d5-90AA-0050045C27F0" }
+}
+
+NodeObject 99999
+{
+    { Name "Display" }
+    { Type UmlClass }
+    { ObjectId 486 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_04328C60-544E-11d4-8778-00C04F8DEC45" }
+}
+
+NodeObject 99998
+{
+    { Name "showTime" }
+    { Type UmlOperation }
+    { ObjectId 499 }
+    { AnnotFileId 1 }
+    { Sig "hour:int, minute:int" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_066C8551-544E-11d4-8778-00C04F8DEC45" }
+}
+
+NoteObject 2
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 501 }
+}
+
+NoteObject 3
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99998 }
+    { ObjectId 503 }
+}
+
+ItemObject 4
+{
+    { Type ObjectName }
+    { Value "showTime" }
+    { NoteId 3 }
+    { ObjectId 504 }
+}
+
+ItemObject 5
+{
+    { Type UniqueID }
+    { Value "44" }
+    { NoteId 3 }
+    { ObjectId 505 }
+}
+

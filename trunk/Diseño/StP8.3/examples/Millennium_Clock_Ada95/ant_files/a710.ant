@@ -1,0 +1,66 @@
+FileObject 1
+{
+    { Name "a710" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65D12-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "CoocooClock" }
+    { Type UmlPackage }
+    { ObjectId 1671 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD932E-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlPackageDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1673 }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1675 }
+}
+
+ItemObject 4
+{
+    { Type UmlStereotype }
+    { Value "subsystem" }
+    { NoteId 3 }
+    { ObjectId 1676 }
+}
+
+ItemObject 5
+{
+    { Type UmlTaggedValue }
+    { Value "VMType=Segment" }
+    { NoteId 3 }
+    { ObjectId 1677 }
+}
+
+NoteObject 6
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 1679 }
+}
+
+ItemObject 7
+{
+    { Type ObjectName }
+    { Value "CoocooClock" }
+    { NoteId 6 }
+    { ObjectId 1680 }
+}
+

@@ -1,0 +1,111 @@
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/T
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1992-1994
+//      All rights reserved
+//
+ 
+//
+// create.rules: 
+//
+
+
+
+ 
+Global 5 TTGen
+{
+    { Properties
+        { Choice
+            { Name "tgen" }
+            { Type AbbrMenu }
+            { ChoiceItem
+                { Label "Generate Test Cases" }
+                // { OnValue "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} -x UseCases '${cmd.objects}'  -x T_extra_information ${prop.tlistextras} -x T_satisfy_preconditions ${prop.tsatisfypreconditions} -x T_spacing ${prop.tsummarylinespacing} -x T_message_level ${prop.tmsglevel} val/qrl/GenerateTestCases.qrl" } // <MAL>
+                { OnValue "qrp -p ${projdir} -s ${system} -x UseCases '${cmd.objects}'  -x T_extra_information ${prop.tlistextras} -x T_satisfy_preconditions ${prop.tsatisfypreconditions} -x T_spacing ${prop.tsummarylinespacing} -x T_message_level ${prop.tmsglevel} val/qrl/GenerateTestCases.qrl" }
+		{ Init On }
+		{ Activation
+		    { Target "tlistextras" }
+                    { On Activate }
+                }
+		{ Activation
+		    { Target "tsatisfypreconditions" }
+                    { On Activate }
+                }
+		{ Activation
+		    { Target "tsummarylinespacing" }
+                    { On Activate }
+                }
+		{ Activation
+		    { Target "tmsglevel" }
+                    { On Activate }
+                }
+
+            }
+            { ChoiceItem
+                { Label "    Extract Model" }
+                // { OnValue "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} -x UseCases '${cmd.objects}' val/qrl/ExtractModel.qrl" } // <MAL>
+                { OnValue "qrp -p ${projdir} -s ${system} -x UseCases '${cmd.objects}' val/qrl/ExtractModel.qrl" }
+		{ Activation
+		    { Target "tlistextras" }
+                    { On InActivate }
+                }
+		{ Activation
+		    { Target "tsatisfypreconditions" }
+                    { On InActivate }
+                }
+		{ Activation
+		    { Target "tsummarylinespacing" }
+                    { On InActivate }
+                }
+		{ Activation
+		    { Target "tmsglevel" }
+                    { On InActivate } 
+                }
+            }
+         
+            { ChoiceItem
+                { Label "    Verify Testability" }
+                // { OnValue "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} -x UseCases '${cmd.objects}'  -x T_extra_information ${prop.tlistextras}  -x T_message_level ${prop.tmsglevel} val/qrl/VerifyTestability.qrl" } // <MAL>
+                { OnValue "qrp -p ${projdir} -s ${system} -x UseCases '${cmd.objects}'  -x T_extra_information ${prop.tlistextras}  -x T_message_level ${prop.tmsglevel} val/qrl/VerifyTestability.qrl" }
+		{ Activation
+		    { Target "tlistextras" }
+                    { On Activate }
+                }
+		{ Activation
+		    { Target "tsatisfypreconditions" }
+                    { On InActivate }
+                }
+		{ Activation
+		    { Target "tsummarylinespacing" }
+                    { On InActivate }
+                }
+		{ Activation
+		    { Target "tmsglevel" }
+                    { On Activate }
+                }
+            }
+            { ChoiceItem
+                { Label "    Design Test Cases" }
+                // { OnValue "qrp -forward_messages ${msgd_handle} -p ${projdir} -s ${system} -x UseCases '${cmd.objects}'  -x T_satisfy_preconditions ${prop.tsatisfypreconditions} -x T_spacing ${prop.tsummarylinespacing} -x T_message_level ${prop.tmsglevel} val/qrl/DesignTestCases.qrl" } // <MAL>
+                { OnValue "qrp -p ${projdir} -s ${system} -x UseCases '${cmd.objects}'  -x T_satisfy_preconditions ${prop.tsatisfypreconditions} -x T_spacing ${prop.tsummarylinespacing} -x T_message_level ${prop.tmsglevel} val/qrl/DesignTestCases.qrl" }
+		{ Activation
+		    { Target "tlistextras" }
+                    { On InActivate }
+                }
+		{ Activation
+		    { Target "tsatisfypreconditions" }
+                    { On Activate }
+                }
+		{ Activation
+		    { Target "tsummarylinespacing" }
+                    { On Activate }
+                }
+		{ Activation
+		    { Target "tmsglevel" }
+                    { On Activate }
+                }
+            }
+        }
+    }
+}

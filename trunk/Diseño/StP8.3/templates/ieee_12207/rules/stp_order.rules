@@ -1,0 +1,207 @@
+//
+//	StP/UML
+//      ConfStP-UMLntial property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+//
+
+
+
+
+Category 0 ProcessImplementation
+{
+    { ShowOnDesktop True }
+    { ParseCondition "(toolinfo_variable(\"ProcessImplementation\") == \"True\");" }
+    { Label "Process Implementation" }
+    { Image "folder" }
+    { Group
+         (
+            ProcessModeler
+
+          )
+    }
+}
+
+Category 0 SystemRequirementsAnalysis
+{
+    { ShowOnDesktop True }
+    { ParseCondition "(toolinfo_variable(\"SystemRequirementsAnalysis\") == \"True\");" }
+    { Label "System Requirements Analysis" }
+    { Image "folder" }
+    { Group
+         (
+	     SysDOORS
+	     RqtsModeler_Sys_RqtsTables
+             RqtsModeler_Sys_UmlUseCaseDiagramFiles
+             RqtsModeler_Sys_UmlSequenceDiagramFiles
+             RqtsModeler_Sys_UmlActivityDiagramFiles
+             RqtsModeler_Sys_TestTypeTables
+
+          )
+    }
+}
+
+Category 0 SystemArchitecturalDesign
+{
+    { ShowOnDesktop True }
+    { ParseCondition "(toolinfo_variable(\"SystemArchitecturalDesign\") == \"True\");" }
+    { Label "System Architectural Design" }
+    { Image "folder" }
+    { Group
+         (
+	     SysDOORS
+             DeploymentModeler_UmlDeploymentDiagramFiles
+          )
+    }
+}
+
+Category 0 SoftwareRequirementsAnalysis
+{
+    { ShowOnDesktop True }
+    { ParseCondition "(toolinfo_variable(\"SoftwareRequirementsAnalysis\") == \"True\");" }
+    { Label "Software Requirements Analysis" }
+    { Image "folder" }
+    { Group
+       (
+          SwDOORS
+
+          RqtsModeler_Sw_RqtsTables
+          RqtsModeler_Sw_UmlUseCaseDiagramFiles
+          RqtsModeler_Sw_UmlSequenceDiagramFiles
+          RqtsModeler_Sw_UmlActivityDiagramFiles
+          RqtsModeler_Sw_TestTypeTables
+      )
+    }
+}
+
+Category 0 SoftwareArchitecturalDesign
+{
+    { ShowOnDesktop True }
+    { ParseCondition "(toolinfo_variable(\"SoftwareArchitecturalDesign\") == \"True\");" }
+    { Label "Software Architectural Design" }
+    { Image "folder" }
+    { Group
+         (
+	     ComponentModeler_UmlComponentDiagramFiles
+          )
+    }
+}
+
+Category 0 SoftwareDetailedDesign
+{
+    { ShowOnDesktop True }
+    { ParseCondition "(toolinfo_variable(\"SoftwareDetailedDesign\") == \"True\");" }
+    { Label "Software Detailed Design" }
+    { Image "folder" }
+    { Group
+         (
+	     UmlClassDiagramFiles
+	     UmlClassTableFiles
+	     UmlStateDiagramFiles
+	     UmlStateTableFiles
+	     UmlStereotypeDiagramFiles
+             UmlCollaborationDiagramFiles
+          )
+    }
+}
+
+Category 0 SoftwareCodingAndTesting
+{
+    { ShowOnDesktop True }
+    { ParseCondition "(toolinfo_variable(\"SoftwareCodingAndTesting\") == \"True\");" }
+    { Label "Software Coding and Testing" }
+    { Image "folder" }
+    { Group
+         (
+             GenCPPCode
+             GenJavaCode
+             GenAdaCode
+             GenIDLCode
+          )
+    }
+}
+
+
+Category 0 SoftwareIntegration
+{
+    { ShowOnDesktop True }
+    { ParseCondition "(toolinfo_variable(\"SoftwareIntegration\") == \"True\");" }
+    { Label "Software Integration" }
+    { Image "folder" }
+//    { Group
+//         (
+//	     TBD
+//         )
+//    }
+}
+
+
+Category 0 SoftwareQualificationTesting
+{
+    { ShowOnDesktop True }
+    { ParseCondition "(toolinfo_variable(\"SoftwareQualificationTesting\") == \"True\");" }
+    { Label "Software Qualification Testing" }
+    { Image "folder" }
+    { Group
+         (
+            ValidatorScripts
+	    MercuryIntegration
+	    SegueIntegration
+          )
+    }
+}
+
+Category 0 SystemIntegration
+{
+    { ShowOnDesktop True }
+    { ParseCondition "(toolinfo_variable(\"SystemIntegration\") == \"True\");" }
+    { Label "System Integration" }
+    { Image "folder" }
+//    { Group
+//         (
+//	     TBD
+//         )
+//    }
+}
+
+Category 0 SystemQualificationTesting
+{
+    { ShowOnDesktop True }
+    { ParseCondition "(toolinfo_variable(\"SystemQualificationTesting\") == \"True\");" }
+    { Label "System Qualification Testing" }
+    { Image "folder" }
+    { Group
+         (
+            ValidatorScripts
+	    MercuryIntegration
+	    SegueIntegration
+         )
+    }
+}
+
+Category 0 SoftwareInstallation
+{
+    { ShowOnDesktop True }
+    { ParseCondition "(toolinfo_variable(\"SoftwareInstallation\") == \"True\");" }
+    { Label "Software Installation" }
+    { Image "folder" }
+//    { Group
+//         (
+//	     TBD
+//         )
+//    }
+}
+
+
+Category 0 SoftwareAcceptanceSupport
+{
+    { ShowOnDesktop True }
+    { ParseCondition "(toolinfo_variable(\"SoftwareAcceptanceSupport\") == \"True\");" }
+    { Label "Software Acceptance Support" }
+    { Image "folder" }
+//    { Group
+//         (
+//	     TBD
+//         )
+//    }
+}

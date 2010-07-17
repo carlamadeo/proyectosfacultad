@@ -1,0 +1,119 @@
+
+//
+//      sccsid[] = %W% %Y% %D%
+//      StP/TestMaker
+//      Confidential property of Interactive Development Environments, Inc.
+//      Copyright (c) 1994
+//      All rights reserved
+//
+
+// TestUnits
+
+NodeObject 704001 TTestUnit  {}
+
+NodeObject 704002 TTestType  {}
+
+FileObject 404001 TTestUnitTable
+{
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"tut\\",\\"EditorQrlEval NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"tut\\",\\"EditorQrlEval NavLoadAndFind(\\\"${file.name}\\\",\\\"${symbol_ref.appid}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"tut\\",\\"EditorQrlEval NavLoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method
+        { Name  "Print" }
+        { Cmd   "tprint -ed tut -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+}
+
+FileObject 404002 TTypeTable
+{
+    { Method 
+	{ Name	"Navigate" }
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"tte\\",\\"EditorQrlEval T_LoadAndFind(\\\"${file.name}\\\",\\\"${item.value}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"SymbolNavigate" }
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"tte\\",\\"EditorQrlEval T_LoadAndFind(\\\"${file.name}\\\",\\\"${item.value}\\\");\\");\"" }
+    }
+    { Method 
+	{ Name	"FileNavigate" }
+	{ Builtin "EditorQrlEval \"NavigateSend(\\"tte\\",\\"EditorQrlEval T_LoadAndFind(\\\"${file.name}\\\",NULL);\\");\"" }
+    }
+    { Method
+        { Name  "Print" }
+        { Cmd   "tprint -ed tte -p ${projdir} -s ${system} -rules_print ${print_rules_file} -print_setting ${setting_name} ${file} &" } 
+    }
+
+//
+// added annotation link for Lifecycle desktop
+    { Annot "annotation/TTypeTable" }
+}
+    
+// App Types for notes defined by StP/TestMaker
+
+NoteObject 804001 TestAction         {}
+NoteObject 804002 TestDataType       {}
+NoteObject 804003 TestDataItem       {}
+NoteObject 804004 TestParticipation  {}
+NoteObject 804005 TestDescription    {} // for diagrams, tables
+NoteObject 804006 TUTInfo       {}
+
+
+// Items for TestAction
+
+ItemObject 504001 TIsSelectedBy     { { DataType "String" } }
+ItemObject 504002 TIsConcludedOn    { { DataType "String" } }
+ItemObject 504003 TActsOnlyIf       { { DataType "String" } }
+ItemObject 504004 TSatisfies        { { DataType "String" } }
+
+
+// Items for TestDataType
+
+ItemObject 504010 TDataTypeClass    { { DataType "TCG_DataTypetype" } }
+ItemObject 504011 TTestValue        { { DataType "String" } }
+ItemObject 504012 TTestUnits        { { DataType "String" } }
+ItemObject 504013 TInvalidSubdomain { { DataType "TCG_InvalidSubDomainType" } }
+ItemObject 504014 TMinimumValue     { { DataType "String" } }
+ItemObject 504015 TMaximumValue     { { DataType "String" } }
+ItemObject 504016 TResolution       { { DataType "String" } }
+ItemObject 504017 TFormat           { { DataType "String" } }
+ItemObject 504018 TParticipates     { { DataType "Boolean" } }
+ItemObject 504019 TDataTypeName     { { DataType "String" } }
+ItemObject 504020 TFalseValue       { { DataType "String" } }
+ItemObject 504021 TTrueValue        { { DataType "String" } }
+ItemObject 504022 TUnknownValue     { { DataType "String" } }
+
+// Items for TestDataItem
+
+ItemObject 504030 TUsed             { { DataType "Boolean" } }
+ItemObject 504031 TProduced         { { DataType "Boolean" } }
+ItemObject 504032 TExhaustive       { { DataType "String" } }
+ItemObject 504033 TDataItemName     { { DataType "String" } }
+
+// Items for TUT
+
+ItemObject 504041 TClassName        { { DataType "String" } }
+ItemObject 504042 TProcessName      { { DataType "String" } }
+ItemObject 504043 TStateName        { { DataType "String" } }
+ItemObject 504044 TExtractProps     { { DataType "T_ExtractProps" } }
+ItemObject 504045 TInheritance      { { DataType "T_Inheritance" } }
+ItemObject 504046 TAssociation      { { DataType "T_Association" } }
+ItemObject 504047 TS_PacketName     { { DataType "String" } }
+ItemObject 504048 TS_PacketSubject  { { DataType "String" } }
+ItemObject 504049 TS_PacketDesc     { { DataType "String" } }
+ItemObject 504050 TIncludeFile      { { DataType "String" } }
+ItemObject 504051 TDiagramName      { { DataType "String" } }
+ItemObject 504052 TModuleName       { { DataType "String" } }
+ItemObject 504053 THierarchy        { { DataType "T_Hierarchy" } }
+ItemObject 504054 TNameOrPnum       { { DataType "T_NameOrPnum" } }
+ItemObject 504055 TSEExtractProps   { { DataType "T_SEExtractProps" } }
+
+

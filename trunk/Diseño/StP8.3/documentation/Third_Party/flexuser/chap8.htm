@@ -1,0 +1,292 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="TEMPLATEBASE" content="Users Guide WebWorks Template">
+<meta name="LASTUPDATED" content="01/24/02 09:18:44">
+<title>Appendix A </title>
+</head>
+
+<body link="#0066CC" vlink="#800080" text="#000000" alink="#FF0000" bgcolor="#FFFFFF"
+background="graphics/backgrnd.gif">
+
+<p><img src="graphics/FLEX-lm.gif" align="left"
+alt="FLEXlm icon"> </p>
+
+<table width="331" border="0" align="right" cellpadding="0" cellspacing="0">
+  <tr>
+    <td><a href="TOC.htm#TOC"><img src="graphics/navtoc.gif" width="84" height="23"
+    border="0" alt="TOC"> </a></td>
+    <td><a href="chap7.htm"><img src="graphics/navprev.gif" width="80" height="23"
+    border="0" alt="PREV"> </a></td>
+    <td><a href="chap9.htm"><img src="graphics/navnext.gif" width="83" height="23"
+    border="0" alt="NEXT"> </a></td>
+    <td><a href="IX.htm"><img src="graphics/navidx.gif" width="84" height="23"
+    border="0" alt="INDEX"> </a></td>
+  </tr>
+</table>
+
+<p><br clear="all">
+</p>
+
+<hr align="left">
+
+<blockquote>
+<h2>
+  <a name="908664"> </a>Appendix A 
+</h2>
+
+
+<h2>
+  <a name="916173"> </a>	 Hostids for FLEX<em>lm</em>-Supported Machines
+</h2><hr>
+
+
+<p>
+  <a name="895042"> </a>FLEX<em>lm</em> uses different machine identifications for different machine architectures. For example, all Sun Microsystems machines have a unique hostid, whereas all DEC machines do not. For this reason, the ethernet address is used on some machine architectures as the hostid. An ethernet address is a 6-byte quantity, with each byte specified as two hexadecimal digits. Specify all twelve hex digits when using an ethernet address as a hostid. For example, if the ethernet address is "8:0:20:0:5:ac," you would specify "0800200005ac" as the hostid.
+</p>
+
+
+<h3>
+  <a name="895048"> </a>A.1	 Hostid Formats
+</h3>
+
+
+<p>
+  <a name="902362"> </a>Numeric, 32-bit hostids are normally used in hexadecimal format. On some systems, including HP and SGI, the system command returns the number in decimal format. Since v3.0 of FLEX<em>lm</em>, a "#" before the hostid indicates to FLEX<em>lm</em> that this is a decimal number. For example, if the HP <code>uname -i</code> command returns "2005771344," FLEX<em>lm</em> will accept "#2005771344." Or it can be converted to hexadecimal. On UNIX systems, you can convert to hex with the following script:
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="895058"> </a><CODE>echo 2005771344 16o p | dc</CODE>
+     <dt> <a name="895059"> </a><CODE>778DA450</CODE>
+  </dl>
+</dl>
+
+<h3>
+  <a name="902227"> </a>A.2	 Expected FLEX<em>lm</em> Hostids
+</h3>
+
+
+<p>
+  <a name="902228"> </a>The program <code>lmhostid</code> will print the exact hostid that FLEX<em>lm</em> expects to use on any given machine. The following table lists alternate methods to obtain the required hostid for each machine architecture. FLEX<em>lm</em> also supports a group of special hostids and vendor-defined hostids. 
+</p>
+
+
+<p>
+  <a name="902346"> </a>
+
+<table border="3">
+  <caption>
+<p>
+  <a name="902231"> </a>
+</p>
+
+</caption>
+  <tr>
+    <th><a name="902239"> </a><strong>Hardware 
+Platform
+</strong></th>
+    <th><a name="902241"> </a><strong>Hostid
+</strong></th>
+    <th><a name="902243"> </a><strong>Type this command on 
+the license server:
+</strong></th>
+    <th><a name="902245"> </a><strong> Example
+</strong></th>
+  </tr>
+  <tr>
+    <td><a name="902247"> </a>AIX <br>(RS/6000, <br>PPC)<br></td>
+    <td><a name="902249"> </a>32-bit <br>hostid<br></td>
+    <td><a name="902251"> </a><code>uname -m</code> (returns <br>000276513100), then <br>remove last two digits, <br>and use remaining last <br>eight digits<br></td>
+    <td><a name="902253"> </a>02765131<br></td>
+  </tr>
+  <tr>
+    <td><a name="902255"> </a>DEC Alpha<br></td>
+    <td><a name="902257"> </a>ethernet <br>address<br></td>
+    <td><a name="902259"> </a><code>netstat -i<br></code></td>
+    <td><a name="902261"> </a> 080020005532<br></td>
+  </tr>
+  <tr>
+    <td colspan=1 rowspan=2><a name="902263"> </a>HP<br></td>
+    <td><a name="902265"> </a>32-bit <br>hostid<br></td>
+    <td><a name="902267"> </a><code>uname -i </code>and convert <br>to hex, or prepend with <br>#<br></td>
+    <td><a name="902269"> </a>778DA450 or <br>#2005771344<br></td>
+  </tr>
+  <tr>
+    <td><a name="902273"> </a>ethernet <br>address <br></td>
+    <td><a name="902275"> </a><code>lanscan </code>(station <br>address without leading <br>"0x")<br></td>
+    <td><a name="902277"> </a>0000F0050185<br></td>
+  </tr>
+  <tr>
+    <td><a name="902279"> </a>Linux<br></td>
+    <td><a name="902281"> </a>ethernet <br>address<br></td>
+    <td><a name="902283"> </a><code>/sbin/ifconfig <br>eth0 </code>and remove <br>colons from HWaddr <br>00:40:05:16:E5:25<br></td>
+    <td><a name="902285"> </a>00400516E525<br></td>
+  </tr>
+  <tr>
+    <td><a name="902287"> </a>SCO<br></td>
+    <td><a name="902289"> </a>Hostid <br>String<br></td>
+    <td><a name="902291"> </a><code>uname -x </code>(Serial is <br>SCO00354), then prefix <br>with "ID_STRING="<br></td>
+    <td><a name="902293"> </a>ID_STRING=SCO00354<br></td>
+  </tr>
+  <tr>
+    <td><a name="902295"> </a>SGI<br></td>
+    <td><a name="902297"> </a>32-bit <br>hostid<br></td>
+    <td><a name="902299"> </a><code>/etc/sysinfo -s</code>, <br>convert to hex, or prefix <br># <br></td>
+    <td><a name="902301"> </a>69064C3C or <br>#1762020412<br></td>
+  </tr>
+  <tr>
+    <td><a name="902303"> </a>SUN<br></td>
+    <td><a name="902305"> </a>32-bit <br>hostid<br></td>
+    <td><a name="902307"> </a><code>hostid<br></code></td>
+    <td><a name="902309"> </a>170a3472<br></td>
+  </tr>
+  <tr>
+    <td colspan=1 rowspan=4><a name="902311"> </a>Windows<br></td>
+    <td><a name="902313"> </a>ethernet <br>address<br></td>
+    <td><a name="902315"> </a><code>lmutil lmhostid<br></code></td>
+    <td><a name="902317"> </a>00B0A9DF9A32<br></td>
+  </tr>
+  <tr>
+    <td><a name="902321"> </a>Disk serial <br>number<br></td>
+    <td><a name="902323"> </a>DIR C: (look for <br>"Volume Serial Number <br>is", and remove "-")<br></td>
+    <td><a name="902325"> </a>DISK_SERIAL_NUM=<br><br>3e2e17fd<br></td>
+  </tr>
+  <tr>
+    <td><a name="902329"> </a>FLEX<em>id</em> <br>parallel or <br>USB port <br>hardware <br>key <br>(dongle)<br></td>
+    <td><a name="902331"> </a><code>lmhostid -flexid<br></code></td>
+    <td><a name="902333"> </a>FLEXID=7-b28520b9<br></td>
+  </tr>
+  <tr>
+    <td><a name="902337"> </a>Pentium <br>III+ CPU, <br>v7.0d+ <br>only. Use <br>BIOS Setup <br>to enable.<br></td>
+    <td><a name="902339"> </a><code>lmhostid -cpu<br><br>lmhostid -cpu96<br></code><a name="902340"> </a>(The 32-bit version is <br>the last nine characters <br>from the full id.)<br></td>
+    <td><a name="902342"> </a>9077-5D77-0002-57C8-<br><br>95D2-1D3D (96-bit)<br><a name="902343"> </a><br><a name="902344"> </a><br><a name="902345"> </a>95D2-1D3D (32-bit)<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<p>
+  <a name="895179"> </a>
+</p>
+
+
+<h3>
+  <a name="895180"> </a>A.3	 Special FLEX<em>lm</em> Hostids
+</h3>
+
+
+<p>
+  <a name="898849"> </a>FLEX<em>lm</em> contains a number of "special" hostid types which apply to all platforms. These hostid types can be used on either a SERVER line or a FEATURE line, wherever a hostid is required. These are: 
+</p>
+
+
+<p>
+  <a name="898901"> </a>
+
+<table border="3">
+  <caption></caption>
+  <tr>
+    <td><a name="898853"> </a>ANY<br></td>
+    <td><a name="898855"> </a>Locks the software to any node (i.e., <br>does not lock anything).<br></td>
+  </tr>
+  <tr>
+    <td><a name="898858"> </a>DEMO<br></td>
+    <td><a name="898860"> </a>Similar to ANY, but only for use with <br>uncounted FEATURE lines.<br></td>
+  </tr>
+  <tr>
+    <td><a name="898862"> </a>DISK_SERIAL_NUM=<code><em>SN<br></em></code></td>
+    <td><a name="898864"> </a>Locks the software to a PC with C drive <br>serial number <code><em>SN</em></code>. (Windows only).<br></td>
+  </tr>
+  <tr>
+    <td><a name="898866"> </a>DISPLAY=<code><em>display<br></em></code></td>
+    <td><a name="898868"> </a>Locks the software to display <code><em>display</em></code>.<br></td>
+  </tr>
+  <tr>
+    <td><a name="898871"> </a>FLEXID=<code><em>id_string<br></em></code></td>
+    <td><a name="898873"> </a>Locks the software to a PC with a <br>FLEX<em>id</em> dongle with a serial number <br><code><em>id_string</em></code>. FLEX<em>id</em>s are made <br>available by your vendor. Your vendor <br>can also provide you with an installer <br>that will install drivers for all FLEX<em>id</em>s. <br>(Windows only). <br></td>
+  </tr>
+  <tr>
+    <td><a name="898875"> </a>HOSTNAME=<code><em>host<br></em></code></td>
+    <td><a name="898877"> </a>Locks the software to computer host <br>name <code><em>host</em></code>.<br></td>
+  </tr>
+  <tr>
+    <td><a name="898880"> </a>ID=<code><em>n<br></em></code></td>
+    <td><a name="898882"> </a>Functionally equivalent to the "ANY" <br>hostid-it will run on any node. The <br>difference is that the license is unique <br>and can be used to identify the customer. <br>This hostid can be used to lock the <br>license server (on the SERVER line) or <br>the client (on the <br>FEATURE/INCREMENT line). The <br>number can have dashes included for <br>readability-the dashes are ignored.<br><a name="898883"> </a>Examples:<br><a name="898884"> </a>ID=12345678 is the same as<br><a name="898885"> </a>ID=1234-5678 is the same as<br><a name="898886"> </a>ID=1-2-3-4-5-6-7-8<br></td>
+  </tr>
+  <tr>
+    <td><a name="898889"> </a>ID_STRING=<code><em>string<br></em></code></td>
+    <td><a name="898892"> </a>Used on SCO systems for hostid.<br></td>
+  </tr>
+  <tr>
+    <td><a name="898894"> </a>INTERNET=<br><br><code><em>###.###.###.###<br></em></code></td>
+    <td><a name="898896"> </a>Locks the software to an Internet IP <br>address, or group of IP addresses. <br>Wildcards are allowed. For example, <br>198.156.*.* means any host with a <br>matching internet IP address. The main <br>use is to limit usage access by subnet, <br>implying geographic area. For this <br>purpose, it would be used on the <br>FEATURE/INCREMENT line, as a <br>hostid lock.<br></td>
+  </tr>
+  <tr>
+    <td><a name="898898"> </a>USER=<code><em>user<br></em></code></td>
+    <td><a name="898900"> </a>Locks the software to user name <code><em>user</em></code>.<br></td>
+  </tr>
+</table>
+
+
+
+
+</p>
+
+
+<h5>
+  <a name="898937"> </a>Examples
+</h5>
+
+<dl>
+  <dl>
+     <dt> <a name="898938"> </a><CODE>FEATURE f1 demo 1.0 1-jan-2005 uncounted \</CODE>
+    <dl>
+       <dt> <a name="906576"> </a><CODE>HOSTID="HOSTNAME=globes HOSTNAME=mars" SIGN=AB28E0011DA1</CODE>
+    </dl>
+  </dl>
+</dl>
+
+<p>
+  <a name="898906"> </a>or
+</p>
+
+<dl>
+  <dl>
+     <dt> <a name="898907"> </a><CODE>FEATURE f1 demo 1.0 1-jan-2005 uncounted HOSTID=USER=joe \</CODE>
+    <dl>
+       <dt> <a name="898908"> </a><CODE>SIGN=EB78201163B0 </CODE>
+    </dl>
+  </dl>
+</dl>
+</blockquote>
+
+<hr>
+
+<table width="380" align="right" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align=left width="215"><em>FLEXlm  End Users Guide</em>
+  </tr>
+    <td align=left width="165"><em>February 2002</em></td>
+</table>
+
+<table width="331" border="0" align="left" cellpadding="0" cellspacing="0">
+  <tr>
+    <td><a href="TOC.htm#TOC"><img src="graphics/navtoc.gif" width="84" height="23"
+    border="0" alt="TOC"> </a></td>
+    <td><a href="chap7.htm"><img src="graphics/navprev.gif" width="80" height="23"
+    border="0" alt="PREV"> </a></td>
+    <td><a href="chap9.htm"><img src="graphics/navnext.gif" width="83" height="23"
+    border="0" alt="NEXT"> </a></td>
+    <td><a href="IX.htm"><img src="graphics/navidx.gif" width="84" height="23"
+    border="0" alt="INDEX"> </a></td>
+  </tr>
+</table>
+</body>
+</html>

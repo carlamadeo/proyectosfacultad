@@ -1,0 +1,115 @@
+FileObject 1
+{
+    { Name "a409" }
+    { Type ObjectAnnotation }
+    { GUID "UID_E0D9319C-C886-11d5-90AA-0050045C27F0" }
+}
+
+NodeObject 99999
+{
+    { Name "Owl" }
+    { Type UmlObjectClassScope }
+    { ObjectId 782 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_8F1FFB81-AC4F-11d4-BEDC-0060971B5EE0" }
+}
+
+NodeObject 99998
+{
+    { Name "%%object%%933079824_337" }
+    { Type UmlObjectInstance }
+    { ObjectId 783 }
+    { Sig "" }
+    { ScopeNodeId 99999 }
+    { GUID "UID_8F1FFB8B-AC4F-11d4-BEDC-0060971B5EE0" }
+}
+
+NodeObject 99997
+{
+    { Name "Clockwork" }
+    { Type UmlObjectClassScope }
+    { ObjectId 740 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_7CFB96D1-AC4F-11d4-BEDC-0060971B5EE0" }
+}
+
+NodeObject 99996
+{
+    { Name "%%object%%933083130_307" }
+    { Type UmlObjectInstance }
+    { ObjectId 741 }
+    { Sig "" }
+    { ScopeNodeId 99997 }
+    { GUID "UID_8F1FFB95-AC4F-11d4-BEDC-0060971B5EE0" }
+}
+
+LinkObject 99995
+{
+    { Name "cry(inthour)" }
+    { Type UmlSimpleMessage }
+    { ObjectId 784 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99998 }
+    { FromNodeId 99996 }
+    { GUID "UID_8F1FFBA4-AC4F-11d4-BEDC-0060971B5EE0" }
+}
+
+NoteObject 2
+{
+    { Type UmlMessageDefinition }
+    { Name "" }
+    { OwnerId 99995 }
+    { ObjectId 786 }
+}
+
+ItemObject 3
+{
+    { Type UmlMessageDirection }
+    { Value "Activation" }
+    { NoteId 2 }
+    { ObjectId 787 }
+}
+
+ItemObject 4
+{
+    { Type UmlMessageIsCreation }
+    { Value "False" }
+    { NoteId 2 }
+    { ObjectId 788 }
+}
+
+ItemObject 5
+{
+    { Type UmlMessageIsDestruction }
+    { Value "False" }
+    { NoteId 2 }
+    { ObjectId 789 }
+}
+
+NoteObject 6
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99995 }
+    { ObjectId 791 }
+}
+
+NoteObject 7
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99995 }
+    { ObjectId 793 }
+}
+
+ItemObject 8
+{
+    { Type ObjectName }
+    { Value "cry(inthour)" }
+    { NoteId 7 }
+    { ObjectId 794 }
+}
+

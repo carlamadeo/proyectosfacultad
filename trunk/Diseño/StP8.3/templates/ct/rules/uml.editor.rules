@@ -1,0 +1,224 @@
+
+//      StP/UML
+//      Confidential property of Aonix
+//      Copyright (c) 1997
+//      All rights reserved
+
+
+
+Editor uclassd
+{
+    { PrintName "StP/UML Class Diagram Editor" }
+    { IconFile "uclassd" }
+    { RulesFile "rules/uclassd.rules" }
+    { CreationCommand "stp_startup -C 'gde -p ${projdir} -s ${system} -ed uclassd'" }
+    { QrlFile "rules/qrl/uclassd.qrl" }
+    { FileType Diagram }
+    { EditorFile
+	{ AppType UmlClassDiagram }
+	{ PrintName "UML Class Diagram" }
+	{ Suffix ".uclassd" }
+	{ FileStore "uclassd_files" }
+	{ IsRepSource True }
+    }
+}
+
+
+
+
+Editor uclasst
+{
+    { PrintName "StP/UML Class Table Editor" }
+    { IconFile "uclasst" }
+    { RulesFile "rules/uclasst.rules" }
+    { CreationCommand "stp_startup -C 'gte -p ${projdir} -s ${system} -ed uclasst'" }
+    { QrlFile "rules/qrl/uclasst.qrl" }
+    { FileType Table }
+    { EditorFile
+	{ AppType UmlClassTable }
+	{ PrintName "UML Class Table" }
+	{ Suffix ".uclasst" }
+	{ FileStore "uclasst_files" }
+	{ IsRepSource True }
+    }
+}
+
+
+
+
+Editor uusecased
+{
+    { PrintName "StP/UML Use Case Diagram Editor" }
+    { IconFile "uusecased" }
+    { RulesFile "rules/uusecased.rules" }
+    { CreationCommand "stp_startup -C 'gde -p ${projdir} -s ${system} -ed uusecased'" }
+    { QrlFile "rules/qrl/uusecased.qrl" }
+    { FileType Diagram }
+    { EditorFile
+	{ AppType UmlUseCaseDiagram }
+	{ PrintName "UML UseCase Diagram" }
+	{ Suffix ".uusecased" }
+	{ FileStore "uusecased_files" }
+	{ IsRepSource True }
+    }
+}
+
+
+
+
+Editor usequenced
+{
+    { PrintName "StP/UML Sequence Diagram Editor" }
+    { IconFile "usequenced" }
+    { RulesFile "rules/usequenced.rules" }
+    { CreationCommand "stp_startup -C 'gde -p ${projdir} -s ${system} -ed usequenced'" }
+    { QrlFile "rules/qrl/usequenced.qrl" }
+    { FileType Diagram }
+    { EditorFile
+	{ AppType UmlSequenceDiagram }
+	{ PrintName "UML Sequence Diagram" }
+	{ Suffix ".usequenced" }
+	{ FileStore "usequenced_files" }
+	{ IsRepSource True }
+    }
+}
+
+
+
+
+Editor ucollaborationd
+{
+    { PrintName "StP/UML Collaboration Diagram Editor" }
+    { IconFile "ucollaborationd" }
+    { RulesFile "rules/ucollaborationd.rules" }
+    { CreationCommand "stp_startup -C 'gde -p ${projdir} -s ${system} -ed ucollaborationd'" }
+    { QrlFile "rules/qrl/ucollaborationd.qrl" }
+    { FileType Diagram }
+    { EditorFile
+	{ AppType UmlCollaborationDiagram }
+	{ PrintName "UML Collaboration Diagram" }
+	{ Suffix ".ucollaborationd" }
+	{ FileStore "ucollaborationd_files" }
+	{ IsRepSource True }
+    }
+}
+
+
+
+
+Editor ustated
+{
+    { PrintName "StP/UML State Diagram Editor" }
+    { IconFile "ustated" }
+    { RulesFile "rules/ustated.rules" }
+    { CreationCommand "stp_startup -C 'gde -p ${projdir} -s ${system} -ed ustated'" }
+    { QrlFile "rules/qrl/ustated.qrl" }
+    { FileType Diagram }
+    { EditorFile
+	{ AppType UmlStateDiagram }
+	{ PrintName "UML State Diagram" }
+	{ Suffix ".ustated" }
+	{ FileStore "ustated_files" }
+	{ IsRepSource True }
+    }
+}
+
+
+
+
+Editor ustatet
+{
+    { PrintName "StP/UML State Table Editor" }
+    { IconFile "ustatet" }
+    { RulesFile "rules/ustatet.rules" }
+    { CreationCommand "stp_startup -C 'gte -p ${projdir} -s ${system} -ed ustatet'" }
+    { QrlFile "rules/qrl/ustatet.qrl" }
+    { FileType Table }
+    { EditorFile
+	{ AppType UmlStateTable }
+	{ PrintName "UML State Table" }
+	{ Suffix ".ustatet" }
+	{ FileStore "ustatet_files" }
+	{ IsRepSource True }
+    }
+}
+
+
+
+
+Editor uactivityd
+{
+    { PrintName "StP/UML Activity Diagram Editor" }
+    { IconFile "uactivityd" }
+    { RulesFile "rules/uactivityd.rules" }
+    { CreationCommand "stp_startup -C 'gde -p ${projdir} -s ${system} -ed uactivityd'" }
+    { QrlFile "rules/qrl/uactivityd.qrl" }
+    { FileType Diagram }
+    { EditorFile
+	{ AppType UmlActivityDiagram }
+	{ PrintName "UML Activity Diagram" }
+	{ Suffix ".uactivityd" }
+	{ FileStore "uactivityd_files" }
+	{ IsRepSource True }
+    }
+}
+
+
+
+
+
+Editor ucomponentd
+{
+    { PrintName "StP/UML Component Diagram Editor" }
+    { IconFile "ucomponentd" }
+    { RulesFile "rules/ucomponentd.rules" }
+    { CreationCommand "stp_startup -C 'gde -p ${projdir} -s ${system} -ed ucomponentd'" }
+    { QrlFile "rules/qrl/ucomponentd.qrl" }
+    { FileType Diagram }
+    { EditorFile
+	{ AppType UmlComponentDiagram }
+	{ PrintName "UML Component Diagram" }
+	{ Suffix ".ucomponentd" }
+	{ FileStore "ucomponentd_files" }
+	{ IsRepSource True }
+    }
+}
+
+
+
+Editor udeploymentd
+{
+    { PrintName "StP/UML Deployment Diagram Editor" }
+    { IconFile "udeploymentd" }
+    { RulesFile "rules/udeploymentd.rules" }
+    { CreationCommand "stp_startup -C 'gde -p ${projdir} -s ${system} -ed udeploymentd'" }
+    { QrlFile "rules/qrl/udeploymentd.qrl" }
+    { FileType Diagram }
+    { EditorFile
+	{ AppType UmlDeploymentDiagram }
+	{ PrintName "UML Deployment Diagram" }
+	{ Suffix ".udeploymentd" }
+	{ FileStore "udeploymentd_files" }
+	{ IsRepSource True }
+    }
+}
+
+
+
+Editor ustereotyped
+{
+    { PrintName "StP/UML Stereotype Diagram Editor" }
+    { IconFile "ustereotyped" }
+    { RulesFile "rules/ustereotyped.rules" }
+    { CreationCommand "stp_startup -C 'gde -p ${projdir} -s ${system} -ed ustereotyped'" }
+    { QrlFile "rules/qrl/ustereotyped.qrl" }
+    { FileType Diagram }
+    { EditorFile
+	{ AppType UmlStereotypeDiagram }
+	{ PrintName "UML Stereotype Diagram" }
+	{ Suffix ".ustereotyped" }
+	{ FileStore "ustereotyped_files" }
+	{ IsRepSource True }
+    }
+}
+

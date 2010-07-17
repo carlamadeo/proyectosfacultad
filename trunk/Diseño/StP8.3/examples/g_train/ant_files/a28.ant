@@ -1,0 +1,224 @@
+FileObject 1
+{
+    { Name "a28" }
+    { Type ObjectAnnotation }
+    { GUID "UID_3B3D416C-994E-4d1a-AEC2-AC664563978D" }
+}
+
+NodeObject 99999
+{
+    { Name "calculate speed" }
+    { Type Process }
+    { ObjectId 2773 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_FE0D14F1-962A-4d05-8162-A423686C7B8E" }
+}
+
+NodeObject 99998
+{
+    { Name "calculate delay" }
+    { Type Process }
+    { ObjectId 2838 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_B1D57930-51C9-4387-B98A-BB30487DD9DD" }
+}
+
+LinkObject 99997
+{
+    { Name "delay" }
+    { Type DataFlow }
+    { ObjectId 3013 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ToNodeId 99999 }
+    { FromNodeId 99998 }
+    { GUID "UID_0AF97C76-AD67-4594-B778-6BC0D92555CB" }
+}
+
+NoteObject 2
+{
+    { Type InterfaceRequirement }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3015 }
+}
+
+ItemObject 3
+{
+    { Type InterfaceName }
+    { Value "delay" }
+    { NoteId 2 }
+    { ObjectId 3016 }
+}
+
+ItemObject 4
+{
+    { Type Synchronization }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 3017 }
+}
+
+ItemObject 5
+{
+    { Type InterruptPriority }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 3018 }
+}
+
+ItemObject 6
+{
+    { Type PriorityLevel }
+    { Value "N/A" }
+    { NoteId 2 }
+    { ObjectId 3019 }
+}
+
+NoteObject 7
+{
+    { Type InterfaceDesign }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3021 }
+}
+
+ItemObject 8
+{
+    { Type InterfaceName }
+    { Value "delay" }
+    { NoteId 7 }
+    { ObjectId 3022 }
+}
+
+ItemObject 9
+{
+    { Type InterfacePriority }
+    { Value "N/A" }
+    { NoteId 7 }
+    { ObjectId 3023 }
+}
+
+NoteObject 10
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3025 }
+    { DescLine "This is the calculated delay between the pulses." }
+}
+
+ItemObject 11
+{
+    { Type ObjectName }
+    { Value "delay" }
+    { NoteId 10 }
+    { ObjectId 3026 }
+}
+
+NoteObject 12
+{
+    { Type Requirement }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3028 }
+}
+
+ItemObject 13
+{
+    { Type RequirementName }
+    { Value "speed-sub-system" }
+    { NoteId 12 }
+    { ObjectId 3029 }
+}
+
+ItemObject 14
+{
+    { Type RequirementDocument }
+    { Value "g_train_specifications" }
+    { NoteId 12 }
+    { ObjectId 3030 }
+}
+
+ItemObject 15
+{
+    { Type RequirementParagraph }
+    { Value "speed" }
+    { NoteId 12 }
+    { ObjectId 3031 }
+}
+
+ItemObject 16
+{
+    { Type ParagraphNumber }
+    { Value "2" }
+    { NoteId 12 }
+    { ObjectId 3032 }
+}
+
+NoteObject 17
+{
+    { Type Document }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3034 }
+}
+
+ItemObject 18
+{
+    { Type DocumentName }
+    { Value "SRS" }
+    { NoteId 17 }
+    { ObjectId 3035 }
+}
+
+ItemObject 19
+{
+    { Type DocumentNumber }
+    { Value "3" }
+    { NoteId 17 }
+    { ObjectId 3036 }
+}
+
+ItemObject 20
+{
+    { Type ParagraphNumber }
+    { Value "5" }
+    { NoteId 17 }
+    { ObjectId 3037 }
+}
+
+NoteObject 21
+{
+    { Type Document }
+    { Name "" }
+    { OwnerId 99997 }
+    { ObjectId 3034 }
+}
+
+ItemObject 22
+{
+    { Type DocumentName }
+    { Value "SDD" }
+    { NoteId 21 }
+    { ObjectId 3039 }
+}
+
+ItemObject 23
+{
+    { Type DocumentNumber }
+    { Value "8" }
+    { NoteId 21 }
+    { ObjectId 3040 }
+}
+
+ItemObject 24
+{
+    { Type ParagraphNumber }
+    { Value "5" }
+    { NoteId 21 }
+    { ObjectId 3037 }
+}
+

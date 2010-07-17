@@ -1,0 +1,28 @@
+
+
+Include "rules/ProcessImplementation.rules"
+
+Include "rules/Sys_RqtsModeler.rules"
+
+Include "rules/Sw_RqtsModeler.rules"
+
+Include "rules/testtypes.rules"
+
+Include "rules/DeploymentModeler.rules"
+
+Include "rules/ComponentModeler.rules"
+
+Include "rules/ClassModeler.rules"
+
+Include "rules/Code_CPP.rules"
+
+Include "rules/Code_Ada.rules"
+
+Include "rules/Code_Java.rules"
+
+Include "rules/Code_IDL.rules"
+
+Include "rules/SwQualificationTesting.rules"
+
+
+

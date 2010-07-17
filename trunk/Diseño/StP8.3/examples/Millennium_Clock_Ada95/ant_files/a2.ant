@@ -1,0 +1,74 @@
+FileObject 1
+{
+    { Name "a2" }
+    { Type ObjectAnnotation }
+    { GUID "UID_20D65BB3-34FB-11d6-8DB9-00500445CF96" }
+}
+
+NodeObject 99999
+{
+    { Name "Pendulum" }
+    { Type UmlClass }
+    { ObjectId 592 }
+    { AnnotFileId 1 }
+    { Sig "" }
+    { ScopeNodeId 0 }
+    { GUID "UID_91DD92B1-6EAE-11d4-8044-00104BF16798" }
+}
+
+NoteObject 2
+{
+    { Type UmlClassDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 594 }
+}
+
+NoteObject 3
+{
+    { Type UmlExtensibilityDefinition }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 596 }
+}
+
+ItemObject 4
+{
+    { Type UmlTaggedValue }
+    { Value "Gen_Signal_Handler=true" }
+    { NoteId 3 }
+    { ObjectId 597 }
+}
+
+NoteObject 5
+{
+    { Type GenericObject }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 599 }
+}
+
+ItemObject 6
+{
+    { Type ObjectName }
+    { Value "Pendulum" }
+    { NoteId 5 }
+    { ObjectId 600 }
+}
+
+NoteObject 7
+{
+    { Type REQAssignmentNote }
+    { Name "" }
+    { OwnerId 99999 }
+    { ObjectId 602 }
+}
+
+ItemObject 8
+{
+    { Type REQAnalysisAssignmentItem }
+    { Value "2. Pendulum" }
+    { NoteId 7 }
+    { ObjectId 603 }
+}
+
