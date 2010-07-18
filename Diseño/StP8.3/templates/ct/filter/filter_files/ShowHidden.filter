@@ -1,6 +1,0 @@
-viewfile1
-Operator: LOAD_HIDDEN_SYMBOLS
-Operator: STORE<HiddenSegments>
-Operator: SHOW
-Operator: FEEDBACK
-Operator: HIDE

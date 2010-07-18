@@ -1,1 +1,0 @@
-FillTable TedTable{{Hsect {Index 1}{Vsect{Row{Cell {Index 1}{Width 200}{Label "Data Element"}{Bold True}}{Cell {Index 2}{Width 200}{Label "Messages"}{Bold True}}}}}}

@@ -1,9 +1,0 @@
-number of passengers ::= integer
-number of passengers ::= *Precision N/Anumber of passengers ::= *Units none*
-N_Kgs ::= integer
-N_Kgs ::= *Precision N/AN_Kgs ::= *Units Kgs*
-Ts ::= integer
-Ts ::= *Precision N/ATs ::= *Units Km/hr*
-location ::= integer
-location ::= *Precision approximatelocation ::= *Units Km*
-display information ::= number of passengers + N_Kgs + Ts + location

@@ -1,5 +1,0 @@
-S_packet                  <S_PacketID>
-    has subject           <product_identifier>;
-    has content version   <version_of_content>;
-    has description       <description_string>;
-.

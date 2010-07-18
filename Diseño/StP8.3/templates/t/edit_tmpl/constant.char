@@ -1,5 +1,0 @@
-Constant                 <ConstantID>
-    is valuetype         character;
-    has internal value   <c_value>; 
-    has description      <description_string>;
-.
