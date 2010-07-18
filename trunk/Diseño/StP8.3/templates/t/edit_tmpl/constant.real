@@ -1,5 +1,0 @@
-Constant                 <ConstantID>
-    is valuetype         real;
-    has internal value   <r_value>;
-    has description      <description_string>;
-.

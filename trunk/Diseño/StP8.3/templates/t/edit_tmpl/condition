@@ -1,4 +1,0 @@
-Condition             <ConditionID>
-    has description   <description_string>;
-    is true if        <condexp_value>;
-.

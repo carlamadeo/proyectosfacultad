@@ -1,653 +1,0 @@
-<html>
-
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
-<meta name="TEMPLATEBASE" content="Users Guide WebWorks Template">
-<meta name="LASTUPDATED" content="01/24/02 09:18:59">
-<title>Appendix E </title>
-</head>
-
-<body link="#0066CC" vlink="#800080" text="#000000" alink="#FF0000" bgcolor="#FFFFFF"
-background="graphics/backgrnd.gif">
-
-<p>
-<img src="graphics/FLEX-lm.gif" align="left"
-alt="FLEXlm icon" width="214" height="53"> </p>
-
-<table width="331" border="0" align="right" cellpadding="0" cellspacing="0">
-  <tr>
-    <td><a href="TOC.htm#TOC"><img src="graphics/navtoc.gif" width="84" height="23"
-    border="0" alt="TOC"> </a></td>
-    <td><a href="chap11.htm"><img src="graphics/navprev.gif" width="80" height="23"
-    border="0" alt="PREV"> </a></td>
-    <td><a href="chap13.htm"><img src="graphics/navnext.gif" width="83" height="23"
-    border="0" alt="NEXT"> </a></td>
-    <td><a href="IX.htm"><img src="graphics/navidx.gif" width="84" height="23"
-    border="0" alt="INDEX"> </a></td>
-  </tr>
-</table>
-
-<p><br clear="all">
-</p>
-
-<hr align="left">
-
-<blockquote>
-<h2>
-  <a name="916722"> </a>Appendix E 
-</h2>
-
-
-<h2>
-  <a name="916728"> </a>FLEX<em>lm</em> Error Codes
-</h2><hr>
-
-
-<h3>
-  <a name="896794"> </a>E.1	 Error Message Format
-</h3>
-
-
-<p>
-  <a name="896798"> </a>FLEX<em>lm</em> error messages presented by applications have the following components:
-</p>
-
-<ul>
-
-
-  <li ><a name="896802"> </a>FLEX<em>lm</em> Error Number-a negative number starting at -1.
-  <li ><a name="896806"> </a>FLEX<em>lm</em> Error Text-short sentence (&lt; 80 characters) summarizing problem.
-  <li ><a name="896810"> </a>FLEX<em>lm</em> Error Explanation (optional)-short paragraph (3-5 lines) explaining problem and possible solutions or workarounds.
-  <li ><a name="896814"> </a>FLEX<em>lm</em> Minor Error Number-a positive number starting at 1. These numbers are unique error identifiers and are used by FLEX<em>lm</em> vendors for more advanced support assistance. Their meaning is not documented.
-  <li ><a name="896818"> </a>System Error Number (optional)-a UNIX or Windows OS error code last set by the operating system.
-  <li ><a name="896819"> </a>System Error Explanation (optional)-a short sentence (&lt; 80 characters) explaining the system error.
-  <li ><a name="896820"> </a>Other supporting information (optional)
-</ul>
-
-<p>
-  <a name="896824"> </a>Error messages were improved in v6. FLEX<em>lm</em> Error Explanation, and supporting information are only available in applications using v6.0+.
-</p>
-
-
-<p>
-  <a name="896828"> </a>These error messages may occur in two formats available with FLEX<em>lm</em> or may appear in a format customized by the application.
-</p>
-
-
-<h4>
-  <a name="896829"> </a>E.1.1	 Format 1 (short):
-</h4>
-
-<dl>
-  <dl>
-     <dt> <a name="896830"> </a><CODE>FLEXlm error text (-<code><em>lm_errno</em></code>, <code><em>minor_num</em></code>[:<code><em>sys_errno</em></code>]) [<code><em>sys_error_text</em></code>]</CODE>
-  </dl>
-</dl>
-
-<p>
-  <a name="896831"> </a>The system error information may be missing.
-</p>
-
-
-<p>
-  <a name="896832"> </a>Example:
-</p>
-
-<dl>
-  <dl>
-     <dt> <a name="896833"> </a><CODE>Can't connect to license server (-15,12:61) Connection refused</CODE>
-  </dl>
-</dl>
-
-<h4>
-  <a name="896834"> </a>E.1.2	 Format 2 (long-version 6.0+):
-</h4>
-
-<dl>
-  <dl>
-     <dt> <a name="896835"> </a><CODE>FLEXlm error text<br> FLEXlm error explanation<br>[Optional Supporting information]<br>FLEXlm error: -<code><em>lm_errno</em></code>, <code><em>minor_num. </em></code>[System Error: <code><em>sys_errno</em></code>] ["<code><em>system_error_text</em></code>"]</CODE>
-  </dl>
-</dl>
-
-<p>
-  <a name="896836"> </a>Example:
-</p>
-
-<dl>
-  <dl>
-     <dt> <a name="896837"> </a><CODE>Cannot connect to license server<br> The server (lmgrd) has not been started yet, or<br> the wrong port@host or license file is being used, or the<br> port or hostname in the license file has been changed.<br>Feature:       f1<br>Server name:   localhost<br>License path: @localhost:license.dat:./*.lic<br>FLEXlm error:  -15,12.  System Error: 61 "Connection refused"</CODE>
-  </dl>
-</dl>
-
-<h3>
-  <a name="896839"> </a>E.2	 Error Code Descriptions
-</h3>
-
-
-<p>
-  <a name="896840"> </a>Errors marked with an " * " indicates errors which should not appear in shipping software. These are errors intended to help the programmer incorporate FLEX<em>lm</em> in their product, and should be fixed before shipping.
-</p>
-
-
-<p>
-  <a name="896844"> </a>Errors marked with " + " indicate errors due to an operating system failure.
-</p>
-
-
-<p>
-  <a name="897320"> </a>
-
-<table border="3">
-  <caption></caption>
-  <tr>
-    <td><a name="899145"> </a><strong>Error<br></strong></td>
-    <td><a name="899147"> </a><strong>Description<br></strong></td>
-  </tr>
-  <tr>
-    <td><a name="899149"> </a>-1<br></td>
-    <td><a name="899151"> </a>Cannot find license file.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899153"> </a>-2<br></td>
-    <td><a name="899155"> </a>Invalid license file syntax.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899157"> </a>-3<br></td>
-    <td><a name="899159"> </a>No server for this feature.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899161"> </a>-4<br></td>
-    <td><a name="899163"> </a>Licensed number of users already reached.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899165"> </a>-5<br></td>
-    <td><a name="899167"> </a>No such feature exists.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899169"> </a>-6<br></td>
-    <td><a name="899171"> </a>No port number in license file and FLEXlm service does <br>not exist. (pre-v6 only)<br></td>
-  </tr>
-  <tr>
-    <td><a name="899173"> </a>-7<br></td>
-    <td><a name="899175"> </a>No socket connection to license manager service.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899177"> </a>-8<br></td>
-    <td><a name="899179"> </a>Invalid (inconsistent) license key or signature.<br><a name="899180"> </a>The license key/signature and data for the feature do not <br>match. This usually happens when a license file has <br>been altered.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899182"> </a>-9<br></td>
-    <td><a name="899184"> </a>Invalid host.<br><a name="899185"> </a>The hostid of this system does not match the hostid <br>specified in the license file.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899187"> </a>-10<br></td>
-    <td><a name="899189"> </a>Feature has expired.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899191"> </a>-11<br></td>
-    <td><a name="899193"> </a>Invalid date format in license file.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899195"> </a>-12<br></td>
-    <td><a name="899197"> </a>Invalid returned data from license server.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899199"> </a>-13<br></td>
-    <td><a name="899201"> </a>No SERVER lines in license file.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899203"> </a>-14<br></td>
-    <td><a name="899205"> </a>Cannot find SERVER host name in network database.<br><a name="899206"> </a>The lookup for the host name on the SERVER line in <br>the license file failed. This often happens when NIS or <br>DNS or the hosts file is incorrect. Workaround: Use IP <br>address (e.g., 123.456.789.123) instead of host name.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899208"> </a>-15<br></td>
-    <td><a name="899210"> </a>Cannot connect to license server.<br><a name="899211"> </a>The server (<code>lmgrd</code>) has not been started yet, or the <br>wrong <code><em>port</em></code><code>@</code><code><em>host</em></code> or license file is being used, or the <br>port or host name in the license file has been changed.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899213"> </a>-16<br></td>
-    <td><a name="899215"> </a>Cannot read data from license server.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899217"> </a>-17<br></td>
-    <td><a name="899219"> </a>Cannot write data to license server.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899221"> </a>-18<br></td>
-    <td><a name="899223"> </a>License server does not support this feature.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899225"> </a>-19<br></td>
-    <td><a name="899227"> </a>Error in select system call.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899229"> </a>-20<br></td>
-    <td><a name="899231"> </a>[Obsolete]<br></td>
-  </tr>
-  <tr>
-    <td><a name="899233"> </a>-21<br></td>
-    <td><a name="899235"> </a>License file does not support this version.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899237"> </a>-22<br></td>
-    <td><a name="899239"> </a>Feature checkin failure detected at license server.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899241"> </a>-23<br></td>
-    <td><a name="899243"> </a>License server temporarily busy (new server <br>connecting).<br></td>
-  </tr>
-  <tr>
-    <td><a name="899245"> </a>-24<br></td>
-    <td><a name="899247"> </a>Users are queued for this feature.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899249"> </a>-25<br></td>
-    <td><a name="899251"> </a>License server does not support this version of this <br>feature.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899253"> </a>-26<br></td>
-    <td><a name="899255"> </a>Request for more licenses than this feature supports.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899257"> </a>-27<br></td>
-    <td><a name="899259"> </a>[Obsolete]<br></td>
-  </tr>
-  <tr>
-    <td><a name="899261"> </a>-28<br></td>
-    <td><a name="899263"> </a>[Obsolete]<br></td>
-  </tr>
-  <tr>
-    <td><a name="899265"> </a>-29<br></td>
-    <td><a name="899267"> </a>Cannot find ethernet device.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899269"> </a>-30<br></td>
-    <td><a name="899271"> </a>Cannot read license file.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899273"> </a>-31<br></td>
-    <td><a name="899275"> </a>Feature start date is in the future.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899277"> </a>-32<br></td>
-    <td><a name="899279"> </a>No such attribute.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899281"> </a>-33<br></td>
-    <td><a name="899283"> </a>Bad encryption handshake with daemon.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899285"> </a>-34<br></td>
-    <td><a name="899287"> </a>Clock difference too large between client and server.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899289"> </a>-35<br></td>
-    <td><a name="899291"> </a>In the queue for this feature.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899293"> </a>-36<br></td>
-    <td><a name="899295"> </a>Feature database corrupted in daemon.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899297"> </a>-37<br></td>
-    <td><a name="899299"> </a>Duplicate selection mismatch for this feature. Obsolete <br>with v8.0+ vendor daemon.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899301"> </a>-38<br></td>
-    <td><a name="899303"> </a>User/host on EXCLUDE list for feature.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899305"> </a>-39<br></td>
-    <td><a name="899307"> </a>User/host not on INCLUDE list for feature.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899309"> </a>-40<br></td>
-    <td><a name="899311"> </a>Cannot locate dynamic memory.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899313"> </a>-41<br></td>
-    <td><a name="899315"> </a>Feature was never checked out.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899317"> </a>-42<br></td>
-    <td><a name="899319"> </a>Invalid parameter.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899321"> </a>-43<br></td>
-    <td><a name="899323"> </a>* No FLEXlm key data supplied in initializing call.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899325"> </a>-44<br></td>
-    <td><a name="899327"> </a>* Invalid FLEXlm key data supplied.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899329"> </a>-45<br></td>
-    <td><a name="899331"> </a>* FLEXlm function not available in this version.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899333"> </a>-46<br></td>
-    <td><a name="899335"> </a>[Obsolete]<br></td>
-  </tr>
-  <tr>
-    <td><a name="899337"> </a>-47<br></td>
-    <td><a name="899339"> </a>Clock setting check not available in daemon.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899341"> </a>-48<br></td>
-    <td><a name="899343"> </a>* FLEXlm platform not enabled.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899345"> </a>-49<br></td>
-    <td><a name="899347"> </a>* Date invalid for binary format.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899349"> </a>-50<br></td>
-    <td><a name="899351"> </a>* FLEXlm key data has expired.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899353"> </a>-51<br></td>
-    <td><a name="899355"> </a>* FLEXlm not initialized.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899357"> </a>-52<br></td>
-    <td><a name="899359"> </a>FLEXlm vendor daemon did not respond within timeout <br>interval.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899361"> </a>-53<br></td>
-    <td><a name="899363"> </a>Checkout request rejected by vendor-defined checkout <br>filter.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899365"> </a>-54<br></td>
-    <td><a name="899367"> </a>No FEATURESET line in license file.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899369"> </a>-55<br></td>
-    <td><a name="899371"> </a>Incorrect FEATURESET line in license file.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899373"> </a>-56<br></td>
-    <td><a name="899375"> </a>Cannot compute FEATURESET data from license file.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899377"> </a>-57<br></td>
-    <td><a name="899379"> </a>+ socket() call failed.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899381"> </a>-58<br></td>
-    <td><a name="899383"> </a>[Obsolete]<br></td>
-  </tr>
-  <tr>
-    <td><a name="899385"> </a>-59<br></td>
-    <td><a name="899387"> </a>Message checksum failure.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899389"> </a>-60<br></td>
-    <td><a name="899391"> </a>Server message checksum failure.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899393"> </a>-61<br></td>
-    <td><a name="899395"> </a>Cannot read license file data from server.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899397"> </a>-62<br></td>
-    <td><a name="899399"> </a>Network software (TCP/IP) not available.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899401"> </a>-63<br></td>
-    <td><a name="899403"> </a>You are not a license administrator.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899405"> </a>-64<br></td>
-    <td><a name="899407"> </a>lmremove request before the minimum lmremove <br>interval.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899409"> </a>-65<br></td>
-    <td><a name="899411"> </a>* Unknown VENDORCODE struct type passed to <br>lm_init().<br></td>
-  </tr>
-  <tr>
-    <td><a name="899413"> </a>-66<br></td>
-    <td><a name="899415"> </a>* FLEXlm include file/library version mismatch.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899417"> </a>-67<br></td>
-    <td><a name="899419"> </a>No licenses to borrow.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899421"> </a>-68<br></td>
-    <td><a name="899423"> </a>License BORROW support not enabled.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899425"> </a>-69<br></td>
-    <td><a name="899427"> </a>FLOAT_OK can't run standalone on SERVER.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899433"> </a>-71<br></td>
-    <td><a name="899435"> </a>Invalid TZ environment variable.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899437"> </a>-72<br></td>
-    <td><a name="899439"> </a>* Old VENDORCODE (three-word) struct type passed <br>to lm_init().<br></td>
-  </tr>
-  <tr>
-    <td><a name="899441"> </a>-73<br></td>
-    <td><a name="899443"> </a>Local checkout filter rejected request.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899445"> </a>-74<br></td>
-    <td><a name="899447"> </a>Attempt to read beyond end of license file path.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899449"> </a>-75<br></td>
-    <td><a name="899451"> </a>+ SYS$SETIMR call failed (VMS).<br></td>
-  </tr>
-  <tr>
-    <td><a name="899453"> </a>-76<br></td>
-    <td><a name="899457"> </a>Internal FLEXlm error - please report to GLOBE<em>trotter</em> <br>Software.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899460"> </a>-77<br></td>
-    <td><a name="899462"> </a>Bad version number - must be floating-point number <br>with no letters.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899464"> </a>-78<br></td>
-    <td><a name="899466"> </a>* FLEXlm internal error -78.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899468"> </a>-79<br></td>
-    <td><a name="899470"> </a>* FLEXlm internal error -79.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899472"> </a>-80<br></td>
-    <td><a name="899474"> </a>* FLEXlm internal error -80.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899476"> </a>-81<br></td>
-    <td><a name="899478"> </a>* FLEXlm internal error -81.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899480"> </a>-82<br></td>
-    <td><a name="899482"> </a>Invalid PACKAGE line in license file.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899484"> </a>-83<br></td>
-    <td><a name="899486"> </a>FLEXlm version of client newer than server.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899488"> </a>-84<br></td>
-    <td><a name="899490"> </a>USER_BASED license has no specified users - see <br>server log.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899492"> </a>-85<br></td>
-    <td><a name="899494"> </a>License server doesn't support this request.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899496"> </a>-86<br></td>
-    <td><a name="899498"> </a>License object already in use (Java only).<br></td>
-  </tr>
-  <tr>
-    <td><a name="899500"> </a>-87<br></td>
-    <td><a name="899502"> </a>Checkout exceeds MAX specified in options file.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899504"> </a>-88<br></td>
-    <td><a name="899506"> </a>System clock has been set back.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899508"> </a>-89<br></td>
-    <td><a name="899510"> </a>This platform not authorized by license.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899512"> </a>-90<br></td>
-    <td><a name="899514"> </a>Future license file format or misspelling in license file.<br><a name="899518"> </a>The file was issued for a later version of FLEX<em>lm</em> than <br>this program understands.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899520"> </a>-91<br></td>
-    <td><a name="899522"> </a>ENCRYPTION_SEEDS are non-unique.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899524"> </a>-92<br></td>
-    <td><a name="899526"> </a>Feature removed during lmreread, or wrong SERVER <br>line hostid.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899528"> </a>-93<br></td>
-    <td><a name="899530"> </a>This feature is available in a different license pool.<br><a name="899531"> </a>This is a warning condition. The server has pooled one <br>or more INCREMENT lines into a single pool, and the <br>request was made on an INCREMENT line that has <br>been pooled.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899533"> </a>-94<br></td>
-    <td><a name="899535"> </a>Attempt to generate license with incompatible attributes.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899537"> </a>-95<br></td>
-    <td><a name="899539"> </a>Network connect to this_host failed.<br><a name="899540"> </a>The license file indicates <code>this_host</code>, and the server is <br>not running on this host. If it's running on a different <br>host, <code>this_host</code> should be changed to the correct host.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899542"> </a>-96<br></td>
-    <td><a name="899544"> </a>Server node is down or not responding. <br><a name="899545"> </a>See the system administrator about starting the server, or <br>make sure that you're referring to the right host (see <br><code>LM_LICENSE_FILE</code> environment variable).<br></td>
-  </tr>
-  <tr>
-    <td><a name="899550"> </a>-97<br></td>
-    <td><a name="899552"> </a>The desired vendor daemon is down. <br><a name="899553"> </a>1) Check the <code>lmgrd</code> log file, or 2) Try <font  face="Courier New" size="2">lmreread</font>.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899555"> </a>-98<br></td>
-    <td><a name="899557"> </a>This FEATURE line can't be converted to decimal <br>format.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899559"> </a>-99<br></td>
-    <td><a name="899561"> </a>The decimal format license is typed incorrectly.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899563"> </a>-100<br></td>
-    <td><a name="899565"> </a>Cannot remove a linger license.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899567"> </a>-101<br></td>
-    <td><a name="899569"> </a>All licenses are reserved for others.<br><a name="899570"> </a>The system administrator has reserved all the licenses <br>for others. Reservations are made in the options file. The <br>server must be restarted for options file changes to take <br>effect.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899572"> </a>-102<br></td>
-    <td><a name="899574"> </a>[Unused]<br></td>
-  </tr>
-  <tr>
-    <td><a name="899576"> </a>-103<br></td>
-    <td><a name="899578"> </a>Terminal Server remote client not allowed.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899580"> </a>-104<br></td>
-    <td><a name="899582"> </a>Cannot borrow that long.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899584"> </a>-105<br></td>
-    <td><a name="899586"> </a>[Unused]<br></td>
-  </tr>
-  <tr>
-    <td><a name="899588"> </a>-106<br></td>
-    <td><a name="899590"> </a>License server out of network connections.<br><a name="899591"> </a>The vendor daemon can't handle any more users. See the <br>debug log for further information.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899593"> </a>-107<br></td>
-    <td><a name="899595"> </a>[Unused]<br></td>
-  </tr>
-  <tr>
-    <td><a name="899597"> </a>-108<br></td>
-    <td><a name="899599"> </a>[Unused]<br></td>
-  </tr>
-  <tr>
-    <td><a name="899601"> </a>-109<br></td>
-    <td><a name="899603"> </a>[Unused]<br></td>
-  </tr>
-  <tr>
-    <td><a name="899605"> </a>-110<br></td>
-    <td><a name="899607"> </a>Dongle not attached, or can't read dongle.<br><a name="899608"> </a>Either the hardware dongle is unattached, or the <br>necessary software driver for this dongle type is not <br>installed.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899614"> </a>-112<br></td>
-    <td><a name="899616"> </a>Missing dongle driver.<br><a name="899617"> </a>In order to read the dongle hostid, the correct driver <br>must be installed. These drivers are available at <br>http://www.globetrotter.com or from your software <br>vendor.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899619"> </a>-113<br></td>
-    <td><a name="899639"> </a>2 FLEXlock checkouts attempted.<br><a name="899621"> </a>Only one checkout is allowed with FLEX<em>lock</em>-enabled <br>apps.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899627"> </a>-114<br></td>
-    <td><a name="899653"> </a>SIGN= keyword required, but missing from license.<br><a name="899629"> </a>This is probably because the license is older than the <br>application. You need to obtain a SIGN= version of this <br>license from your vendor.<br></td>
-  </tr>
-  <tr>
-    <td><a name="899623"> </a>-115<br></td>
-    <td><a name="899625"> </a>Error in Public Key package.<br></td>
-  </tr>
-  <tr>
-    <td><a name="906424"> </a>-116<br></td>
-    <td><a name="906426"> </a>CRO not supported for this platform.<br></td>
-  </tr>
-  <tr>
-    <td><a name="906420"> </a>-117<br></td>
-    <td><a name="906422"> </a>BORROW failed.<br></td>
-  </tr>
-  <tr>
-    <td><a name="906416"> </a>-118<br></td>
-    <td><a name="906418"> </a>BORROW period has expired.<br></td>
-  </tr>
-  <tr>
-    <td><a name="906412"> </a>-119<br></td>
-    <td><a name="906414"> </a>lmdown and lmreread must be run on license server <br>node.<br></td>
-  </tr>
-  <tr>
-    <td><a name="906408"> </a>-120<br></td>
-    <td><a name="906410"> </a>Cannot lmdown the server when licenses are borrowed.<br></td>
-  </tr>
-  <tr>
-    <td><a name="906404"> </a>-121<br></td>
-    <td><a name="906406"> </a>FLOAT_OK license must have exactly one dongle <br>hostid.<br></td>
-  </tr>
-</table>
-
-
-
-
-</p>
-</blockquote>
-
-<hr>
-
-<table width="380" align="right" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td align=left width="215"><em>FLEXlm  End Users Guide</em>
-  </tr>
-    <td align=left width="165"><em>February 2002</em></td>
-</table>
-
-<table width="331" border="0" align="left" cellpadding="0" cellspacing="0">
-  <tr>
-    <td><a href="TOC.htm#TOC"><img src="graphics/navtoc.gif" width="84" height="23"
-    border="0" alt="TOC"> </a></td>
-    <td><a href="chap11.htm"><img src="graphics/navprev.gif" width="80" height="23"
-    border="0" alt="PREV"> </a></td>
-    <td><a href="chap13.htm"><img src="graphics/navnext.gif" width="83" height="23"
-    border="0" alt="NEXT"> </a></td>
-    <td><a href="IX.htm"><img src="graphics/navidx.gif" width="84" height="23"
-    border="0" alt="INDEX"> </a></td>
-  </tr>
-</table>
-</body>
-</html>

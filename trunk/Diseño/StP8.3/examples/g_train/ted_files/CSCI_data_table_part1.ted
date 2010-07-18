@@ -1,1 +1,0 @@
-FillTable TedTable{{Hsect {Index 1}{Vsect{Row{Cell {Index 1}{Width 200}{Label "Identifier"}{Bold True}}{Cell {Index 2}{Width 200}{Label "Structure"}{Bold True}}{Cell {Index 3}{Width 800}{Label "Description"}{Bold True}}}{Row{Cell {Index 1}{Label "time_1"}}{Cell {Index 2}{Label "time_1"}}{Cell {Index 3}{Label "G-Train Database"}}}}}}

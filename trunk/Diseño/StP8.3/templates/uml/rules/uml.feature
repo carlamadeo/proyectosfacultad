@@ -1,5 +1,0 @@
-
-Features
-{
-    { Feature "uml" }
-}

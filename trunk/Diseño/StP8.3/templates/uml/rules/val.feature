@@ -1,5 +1,0 @@
-
-Features
-{
-    { Feature "valreq" }
-}

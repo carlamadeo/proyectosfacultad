@@ -1,7 +1,0 @@
-Dataitem                         <DataItemID>
-    has placeholder value        <p_value> { , <p_value> };
-    has description              <description_string>;
-    has format                   <data_format>;
-    has units                    <data_units>;
-    is an instance of datatype   <DataTypeID>;
-.

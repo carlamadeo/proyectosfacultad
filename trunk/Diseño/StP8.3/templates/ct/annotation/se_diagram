@@ -1,7 +1,0 @@
-//	SE Diagrams
-//
-
-Include "annotation/se_generic_object"
-
-//  Add any user customizations to the file included below:
-IncludeIfExists "user/ct/annotation/user_se_diagram"

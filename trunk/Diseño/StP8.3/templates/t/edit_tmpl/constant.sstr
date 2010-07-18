@@ -1,5 +1,0 @@
-Constant                 <ConstantID>
-    is valuetype         stringshort;
-    has internal value   <s_valueshort>;
-    has description      <description_string>;
-.

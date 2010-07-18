@@ -1,163 +1,0 @@
-<html>
-
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
-<meta name="TEMPLATEBASE" content="Users Guide WebWorks Template">
-<meta name="LASTUPDATED" content="01/24/02 09:18:55">
-<title>Appendix C </title>
-</head>
-
-<body link="#0066CC" vlink="#800080" text="#000000" alink="#FF0000" bgcolor="#FFFFFF"
-background="graphics/backgrnd.gif">
-
-<p>
-<img src="graphics/FLEX-lm.gif" align="left"
-alt="FLEXlm icon" width="214" height="53"> </p>
-
-<table width="331" border="0" align="right" cellpadding="0" cellspacing="0">
-  <tr>
-    <td><a href="TOC.htm#TOC"><img src="graphics/navtoc.gif" width="84" height="23"
-    border="0" alt="TOC"> </a></td>
-    <td><a href="chap9.htm"><img src="graphics/navprev.gif" width="80" height="23"
-    border="0" alt="PREV"> </a></td>
-    <td><a href="chap11.htm"><img src="graphics/navnext.gif" width="83" height="23"
-    border="0" alt="NEXT"> </a></td>
-    <td><a href="IX.htm"><img src="graphics/navidx.gif" width="84" height="23"
-    border="0" alt="INDEX"> </a></td>
-  </tr>
-</table>
-
-<p><br clear="all">
-</p>
-
-<hr align="left">
-
-<blockquote>
-<h2>
-  <a name="896402"> </a>Appendix C 
-</h2>
-
-
-<h2>
-  <a name="915955"> </a>FLEX<em>lm</em> Environment Variables
-</h2><hr>
-
-
-<p>
-  <a name="896409"> </a>Environment variables should never be required to use FLEX<em>lm</em>-licensed applications. Environment variables are normally used for debugging or for changing license default location.
-</p>
-
-
-<h3>
-  <a name="896411"> </a>C.1	 How to Set Environment Variables
-</h3>
-
-
-<p>
-  <a name="896415"> </a>FLEX<em>lm</em> environment variables are set in two different ways: 
-</p>
-
-<ul>
-
-
-  <li ><a name="896416"> </a>The normal <code>set</code> or <code>setenv</code> commands (or the System Control Panel on Windows NT)
-  <li ><a name="896417"> </a>The registry (Windows v6.0+) or in <code>$HOME/.flexlmrc</code> (UNIX v7.0+), which functions like the registry for FLEX<em>lm</em> on UNIX. 
-</ul>
-
-<h4>
-  <a name="896421"> </a>C.1.1	 Registry
-</h4>
-
-
-<p>
-  <a name="896425"> </a>On Windows, the FLEX<em>lm</em> registry location is:
-</p>
-
-<dl>
-  <dl>
-     <dt> <a name="896426"> </a><CODE>HKEY_LOCAL_MACHINE<font  face="Symbol" size="2"><img src="graphics/arrwrite.gif" width="15" height="10"></font>SOFTWARE<font  face="Symbol" size="2"><img src="graphics/arrwrite.gif" width="15" height="10"></font>FLEXlm License Manager</CODE>
-  </dl>
-</dl>
-
-<p>
-  <a name="896427"> </a>On UNIX, the equivalent information is stored in <code>$HOME/.flexlmrc</code>. In this file, the syntax is <code><em>variable</em></code><code>=</code><code><em>value</em></code>.
-</p>
-
-
-<h4>
-  <a name="896428"> </a>C.1.2	 Precedence
-</h4>
-
-
-<p>
-  <a name="896432"> </a>If the variable is <code>LM_LICENSE_FILE</code> or <code><em>VENDOR</em></code><code>_LICENSE_FILE</code>, then both the environment and the registry are used, with the environment used first, and the registry appended to the path.
-</p>
-
-
-<p>
-  <a name="896433"> </a>If it's a different variable, then if the environment set, only that is used, otherwise the registry is used. That is, the registry is only used if the environment is not set.
-</p>
-
-
-<h3>
-  <a name="896435"> </a>C.2	 Environment Variables
-</h3>
-
-
-<p>
-  <a name="896481"> </a>
-
-<table border="3">
-  <caption></caption>
-  <tr>
-    <td><a name="896438"> </a><strong>Variable<br></strong></td>
-    <td><a name="896443"> </a><strong>Use (</strong>FLEX<em>lm</em><strong> version introduced)<br></strong></td>
-  </tr>
-  <tr>
-    <td><a name="896445"> </a><code>FLEXLM_BATCH<br></code></td>
-    <td><a name="896447"> </a>Windows only: prevents interactive pop-<br>ups from appearing. Set to 1 if a batch <br>application. (Version 7.0+ clients)<br></td>
-  </tr>
-  <tr>
-    <td><a name="896449"> </a><code>FLEXLM_DIAGNOSTICS<br></code></td>
-    <td><a name="896451"> </a>Used for debugging where applications <br>don't print FLEX<em>lm</em> error message text. <br>Set to 1, 2, or 3, depending on the <br>amount of diagnostic information <br>desired. See <a href="chap9.htm#896119">Section B.2, <br>"FLEXLM_DIAGNOSTICS."</a> (Version <br>5.0+ clients)<br></td>
-  </tr>
-  <tr>
-    <td><a name="896459"> </a><code>LM_LICENSE_FILE</code> or<br><a name="896460"> </a><code><em>VENDOR</em></code><code>_LICENSE_FILE<br></code></td>
-    <td><a name="896462"> </a>Reset path to license file. Can be a <br>license-file list, separated by " : " on <br>UNIX and " ; " on Windows. If <br><code><em>VENDOR</em></code><code>_LICENSE_FILE</code> used, <code><em>VENDOR</em></code> <br>is the vendor daemon name used by this <br>application. For example, GLOBE<em>trotter</em> <br>Software products use <br><code>GSI_LICENSE_FILE</code>. Can be a file <br>name, or <code><em>port</em></code><code>@</code><code><em>host</em></code>. See also <a href="chap2.htm#893197">Section <br>2.1.2, "Setting the Path with an <br>Environment Variable."</a> <br>(<code><em>VENDOR</em></code><code>_LICENSE_FILE</code> requires v6.0+ <br>clients.)<br></td>
-  </tr>
-  <tr>
-    <td><a name="896472"> </a><code>LM_PROJECT<br></code></td>
-    <td><a name="896474"> </a><code>LM_PROJECT</code>'s value is logged in the <br>report log file and later reported on by <br>SAM<em>report</em>. Limited to 30 characters. <br>(v5.0+ client required.) <br><a name="896478"> </a>This can also be used to RESERVE, <br>INCLUDE, etc. licenses with PROJECT. <br>For example:<br><a name="896479"> </a>RESERVE 1 f1 PROJECT airplane<br><a name="896480"> </a>v5.0+ clients and v7.0+ vendor daemon <br>are required for this feature.<br></td>
-  </tr>
-</table>
-
-
-
-
-</p>
-</blockquote>
-
-<hr>
-
-<table width="380" align="right" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td align=left width="215"><em>FLEXlm  End Users Guide</em>
-  </tr>
-    <td align=left width="165"><em>February 2002</em></td>
-</table>
-
-<table width="331" border="0" align="left" cellpadding="0" cellspacing="0">
-  <tr>
-    <td><a href="TOC.htm#TOC"><img src="graphics/navtoc.gif" width="84" height="23"
-    border="0" alt="TOC"> </a></td>
-    <td><a href="chap9.htm"><img src="graphics/navprev.gif" width="80" height="23"
-    border="0" alt="PREV"> </a></td>
-    <td><a href="chap11.htm"><img src="graphics/navnext.gif" width="83" height="23"
-    border="0" alt="NEXT"> </a></td>
-    <td><a href="IX.htm"><img src="graphics/navidx.gif" width="84" height="23"
-    border="0" alt="INDEX"> </a></td>
-  </tr>
-</table>
-</body>
-</html>

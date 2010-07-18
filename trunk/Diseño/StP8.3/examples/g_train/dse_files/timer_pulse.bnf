@@ -1,5 +1,0 @@
-red pulse ::= boolean
-red pulse ::= *Precision N/Ared pulse ::= *Units N/A*
-green pulse ::= boolean
-green pulse ::= *Precision N/Agreen pulse ::= *Units N/A*
-timer pulse ::= red pulse + green pulse

@@ -1,6 +1,0 @@
-
-TYPE=REQTable
-
-
-# Generate a Section Title
-PARAGRAPH=$NAME

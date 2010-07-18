@@ -1,8 +1,0 @@
-S_Packet notes:
-
-<product_identifier> must be the name of a constant of subtype stringlong
-   or double-quoted text "...".
-<version_of_content> must be the name of a constant of subtype stringlong
-   or double-quoted text "...".
-<description_string> must be the name of a constant of subtype stringlong
-   or double-quoted text "...".

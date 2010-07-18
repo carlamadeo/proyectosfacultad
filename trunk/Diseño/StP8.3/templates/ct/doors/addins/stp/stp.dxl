@@ -1,6 +1,0 @@
-// Globals
-
-#include <addins/stp/stp_utils.dxl>
-#include <addins/stp/stp_nav_to_stp.dxl>
-#include <addins/stp/stp_nav_to_doors.dxl>
-#include <addins/stp/stp_create.dxl>

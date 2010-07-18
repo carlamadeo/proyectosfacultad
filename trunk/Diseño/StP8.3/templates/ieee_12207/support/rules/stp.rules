@@ -1,8 +1,0 @@
-
-Include "support/rules/documentation.rules"
-
-Include "support/rules/verification.rules"
-
-Include "support/rules/validation.rules"
-
-Include "support/rules/joint_reviews.rules"

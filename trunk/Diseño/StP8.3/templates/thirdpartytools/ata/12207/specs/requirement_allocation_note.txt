@@ -1,9 +1,0 @@
-
-Type=Note
-
-Name=REQAssignmentNote
-
-Section=Requirement Allocation ID
-
-Tag=paragraph
-Item=REQAnalysisAssignmentItem
