@@ -1,0 +1,30 @@
+A) Verdadero o falso. Justificar.
+
+-Los metaconocimeintos se adquieren a traves de la expriencia
+
+-El Analisis de protocolo es un tecnica que se utiliza para extraer estrategias de resolucion del experto
+
+-El entrenamiento en RNA consite en que la neurona incrementa su peso de acuerdo a una informacion de entrada
+
+-En AG, el metodo de seleccion Control por el numero esperado, garantiza que los individuos seleccionados tengan la funcion de aptitud por encima de la media
+
+
+
+B) EMPARRILLADO
+Te daban los arboles de elementos y caracteristicas
+
+1) Realizar el analisis de los arboles.
+2) Te daban 4 frases del experto y habia que ver si se podian hacer relaciones con las mismas y, en caso de ser asi, clasificarlas.
+
+
+
+c) METODOS DE BUSQUEDA
+
+Daba un arbol y pedia resolverlo con Bean Search con n = 2 y con n = 3
+
+
+Y despues pregutanba:
+1) Se llego a la solucion con n = 2? Porque?
+2) Se llego a la solucion con n = 3? Porque?
+3) Que hubiese pasado si n = 4?
+4) Que diferencias existen entre en algoritmo Bean Search y el A*?

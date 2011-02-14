@@ -1,0 +1,21 @@
+1) V o F (eran algo asi como):
+
+a) Para garantizar la robustez de un SI es necesario contar con un MI que ya haya sido probado satisfactoriamente en otros Sistemas.
+b) Si en una Red Neuronal las conexiones tienen pesos negativos la red es inhibidoras.
+
+2) RNA o AG:
+Te daban un ejemplo de una empresa de sistemas que debía calcular la cantidad de personas a asignar en proyectos y para ello contabas con ciertos parámetros que te daban. Además te decían que los proyectos duraban 12 meses. Pedian que dijeras si lo resolverias con RNA (habia que armar el cromosoma) o AG (aca no me acuerdo como había que justificarlo).
+
+3) Deducción Lógica:
+Te daban uno de Log. de 1er orden donde te daban 3 hipótesis, la tesis y te pedían hallar la 4ta hipótesis que necesitabas para que todo cierre.
+
+4) Protocolo:
+A partir de un texto médico:
+Tenias que armar la tabla de Concepto, Característica, Valor.
+Tenias que armar la Def. de la Búsqueda.
+Tenias que contestar una pregunta referida al texto.
+
+----------------------------------------------------------
+mira, teniendo en cuenta que el tp era el mismo problema, pero algunos lo resolvian con RNA y otros debian hacerlo con AG, creo q la respuesta podia ser cualquiera de las dos siempre y cuando justificaras bien.
+
+yo puse AG, porq en algun lugar tenia anotado que era no para encontrar la mejor solucion sino para mejorar cosas q ya tenias, como por ejemplo asignacion de personal. Pero tambien me dijeron muy buenas justificaciones para RNA.

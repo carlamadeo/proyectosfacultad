@@ -1,0 +1,11 @@
+Tomaron:
+A) V o F justificando, mas o menos eran asi:
+1) Todo proyecto de software tiene mantenimiento perfectivo, porque la metodologia IDEAL es la que mejor se ajusta (palabras mas, palabras menos).
+2) Despues de una sesion de educcion, hay que validar los conocimientos adquiridos con conocimientos publicos.
+3) En el analisis de protocolo se recolectan datos, noticias y conocimientos.
+ 
+B) Despues te planteaban la situacion de un laboratorio que necesitaba completar una formula y que los valores que podia tomar la misma eran ortogonales. Tenias que decir si usabas una RNA, un AG o un arbol, y explicar cual usarias en cada caso q eligieras.
+ 
+C) recorrer un arbol usando A* donde a mayor heuristica, mas deseable
+ 
+D) Te daban los arboles de Elementos y de Caracteristicas de un emparrillado ya resueltos, tenias que hacer el analisis de los mismos, y te daban un monton de relaciones y tenias que clasificarlas.

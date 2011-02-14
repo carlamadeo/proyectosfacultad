@@ -1,0 +1,9 @@
+Teoría: 4 V o F, cuya idea era la siguiente: 
+1. Si kohonen servía para reconocer patrones 
+2. Si el fin de la deducción automática era llevar las hipótesis con su tesis a FN. 
+3. Si lo que entraba a la etapa de formalización eran los modelos de la conceptualización 
+4. Si los SE necesitaban base de conocimientos explicita. 
+  
+Practica: 
+1. Un protocolo  
+2. Te daban 6 cromosomas con sus respectivas función aptitud y te decían que había que seleccionar 4 y cuales quedarían seleccionados con ranking y ruleta. Para el ruleta te daban 4 Randoms 

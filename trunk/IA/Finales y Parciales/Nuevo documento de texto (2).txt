@@ -1,0 +1,30 @@
+Final de IA 06/12/2010.
+
+Tiempo: 50 min
+
+1) 4 V o F a justificar
+Lo que recuerdo:
+- Para la formalización procedimental se puede usar Arbol de Concepto-
+Atributo-Valor.
+- La pericia es la caracteristica del experto que....
+- El experto es al único al que el IC, realiza entrevistas.
+
+
+2) Un Ejercicio de Analisis de Protocolo, pedian.
+- Tabla de conceptos, atributos, valores.
+- Relaciones implícitas entre conceptos.
+- Metacomentarios (Significado, Linea y Metacomentario) e
+incertidumbre encontrados.
+- Las reglas de razonamiento del experto (SI... ENTONCES...)
+
+El tema del ejercicio era algo así como "tipos de pintura", hablaba
+algo del Cubimos.
+
+3) Un ejercicio de usando todas las hipotesis dadas demostrar la
+tesis.
+ La tesis no tenía implicación. Por lo que no se podia partir
+suponiendo la parte de la
+izquierda de la implicacion de la tesis. Tenia una hipotesis con una
+disyuncion (ej Ax?Bx?Cx) y esa te permitia ir usando las demas
+hipotesis para llegar a la tesis que era de la forma
+Ex (Kx?Mx).
