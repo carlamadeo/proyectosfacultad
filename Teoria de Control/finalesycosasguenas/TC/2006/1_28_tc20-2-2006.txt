@@ -1,0 +1,31 @@
+Final de Teoría de Control
+20/2/2006
+
+1. Presentaba dos lazos de control que eran manejados por un sistema y
+ con distintos programas, dadas distintas condiciones la peligrosidad y
+  prioridad de los lazos de control variaba, . La pregunta era:
+   ¿Qué servicios debería prestar el sistema Operativo? Justificar.
+
+2.Dadas las siguientes situaciones: telemedición, teleacción, telecontrol,
+ telesupervisión. En donde es necesario un conversor A/D, en donde uno D/A
+  y en donde ambos?. Justificar
+
+3. Se tiene una válvula con un retardo de primer orden, bajo una acción de
+ control proporcional. Demostrar que el lazo completo es de primer orden.
+  Determinar la relación entre la constante de tiempo de la válvula y del
+   lazo completo. Cuál es mayor? Por qué?
+
+4. Dadas las siguientes exigencias:
+a. Certeza de ejecución
+b. Acceso a bits
+c. System Calls para intercambio de prioridades
+d. System Calls para asociar tareas a interrupciones
+
+y las siguientes situaciones:
+1. Computador realizando Control digital directo
+2. Computador cerrando lazos mediante un PLC Local.
+3. Computador cerrando lazos mediante dos PLC Remotos.
+4. Computador telesupervisando lazos de control.
+
+Para cada situación, escribir la combinación de exigencias (a).
+ a d).) estrictamente necesarias. Justificar brevemente.
